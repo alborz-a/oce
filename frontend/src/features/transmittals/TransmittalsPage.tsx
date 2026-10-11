@@ -39,10 +39,12 @@ import {
   CollapsibleSection,
 } from '@/shared/ui';
 import { PageHeader } from '@/shared/ui/PageHeader';
+import { RegisterExportButton, RecordPdfButton } from '@/shared/ui/RegisterExport';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { fetchProjectList } from '@/shared/lib/projectList';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import {
@@ -53,6 +55,8 @@ import {
   deleteTransmittal,
   addRecipient,
   deleteRecipient,
+  downloadTransmittalRegister,
+  downloadTransmittalPdf,
   type Transmittal,
   type TransmittalStatus,
   type TransmittalPurpose,
@@ -747,6 +751,12 @@ const TransmittalRow = React.memo(function TransmittalRow({
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
+            {/* The cover sheet. Outside the draft-only block on purpose: an
+                issued transmittal is the one that gets printed and signed. */}
+            <RecordPdfButton
+              download={(locale) => downloadTransmittalPdf(transmittal.id, locale, transmittal.transmittal_number)}
+              testId={`transmittal-pdf-${transmittal.id}`}
+            />
             {transmittal.status === 'draft' && (
               <>
                 <Button
@@ -1103,14 +1113,27 @@ export function TransmittalsPage() {
   });
   const transmittals = transmittalPage?.items ?? [];
 
+  // The register is exported whole (the route takes no filter), so "empty"
+  // means the unfiltered list came back empty, not that a status filter
+  // matched nothing.
+  const registerEmpty =
+    !statusFilter && !isLoading && !isError && (transmittalPage?.total ?? transmittals.length) === 0;
+  const exportTargets = useMemo(
+    () => [
+      {
+        id: 'register',
+        download: (format: 'pdf' | 'xlsx', locale: string) =>
+          downloadTransmittalRegister(projectId, format, locale),
+      },
+    ],
+    [projectId],
+  );
+
   // Client-side search
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return transmittals;
-    const q = searchQuery.toLowerCase();
-    return transmittals.filter(
-      (tr) =>
-        tr.subject.toLowerCase().includes(q) ||
-        tr.transmittal_number.toLowerCase().includes(q),
+    return transmittals.filter((tr) =>
+      matchesSearch(searchQuery, tr.subject, tr.transmittal_number),
     );
   }, [transmittals, searchQuery]);
 
@@ -1385,6 +1408,13 @@ export function TransmittalsPage() {
             {/* Sits after the guide pill, which the comment above claims as the
                 lead of this cluster, and before the primary action. */}
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
+            <RegisterExportButton
+              label={t('transmittals.export_register', { defaultValue: 'Export register' })}
+              projectId={projectId}
+              empty={registerEmpty}
+              targets={exportTargets}
+              testId="transmittals-export"
+            />
             <Button
               variant="primary"
               size="sm"

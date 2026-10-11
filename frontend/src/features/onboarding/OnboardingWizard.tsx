@@ -109,8 +109,20 @@ import {
   getCountryPack,
   type CountryPack,
 } from './countryPacks';
-import { packToPreselect, resolveCountryOffer } from './countryOffer';
-import { activeModuleCount, companyTypeToSave, groupProfilePresets } from './profileGroups';
+import {
+  modulesLeftOnByOneClick,
+  packSetupHref,
+  packToPreselect,
+  packVariantOf,
+  resolveCountryOffer,
+} from './countryOffer';
+import {
+  activeModuleCount,
+  companyTypeToSave,
+  groupProfilePresets,
+  packProfileToSave,
+} from './profileGroups';
+import { usePartnerPack, type PartnerPackResponse } from '@/shared/hooks/usePartnerPack';
 import { profileShapes } from '@/features/modules/profileDifference';
 import { packNameSlug } from '@/shared/lib/regionalPack';
 import { PackEmblem } from '@/shared/ui/PackEmblem';
@@ -182,6 +194,115 @@ function packDisplayName(t: TFunction, pack: InstalledPartnerPack): string {
   return t(`modules.pp_name_${packNameSlug(pack.slug)}`, {
     defaultValue: pack.partner_name,
   });
+}
+
+/**
+ * Marks a pack tile as a specialised variant of another pack.
+ *
+ * Two tiles for one country read as a duplicate unless one of them says what
+ * it is. The variant is never preselected (see `packToPreselect`), so this
+ * badge is what tells a reader the second tile is a deliberate choice.
+ */
+function PackVariantBadge({ pack }: { pack: InstalledPartnerPack }) {
+  const { t } = useTranslation();
+  if (!packVariantOf(pack)) return null;
+  return (
+    <span
+      data-testid={`pack-variant-${pack.slug}`}
+      className="rounded-full bg-surface-tertiary px-2 py-0.5 text-2xs font-medium text-content-secondary"
+    >
+      {t('onboarding.pp_variant_badge', { defaultValue: 'Specialised variant' })}
+    </span>
+  );
+}
+
+/**
+ * What a reader should know about the selected pack before a one-click setup.
+ *
+ * Two sentences, each shown only when it is true of the pack: that it is a
+ * variant of another pack, with the plain one named as the safe choice, and
+ * that it can switch modules off which this setup will leave on. The second
+ * used to be silent: the one-click install never sends the confirmation, the
+ * server reports the list as skipped, and nothing on this screen said so.
+ */
+function PackOneClickNotes({
+  pack,
+  packs,
+}: {
+  pack: InstalledPartnerPack;
+  packs: InstalledPartnerPack[];
+}) {
+  const { t } = useTranslation();
+  const parentSlug = packVariantOf(pack);
+  const parent = parentSlug ? packs.find((p) => p.slug === parentSlug) : undefined;
+  const leftOn = modulesLeftOnByOneClick(pack);
+  if (!parent && leftOn === 0) return null;
+  return (
+    <div
+      data-testid="pack-one-click-notes"
+      className="mt-2 space-y-1 text-center text-2xs text-content-tertiary"
+    >
+      {parent && (
+        <p>
+          {t('onboarding.pp_variant_hint', {
+            defaultValue:
+              '{{pack}} is built on {{base}} for one trade: the same country configuration with a shorter menu. If you are not sure, choose {{base}}.',
+            pack: packDisplayName(t, pack),
+            base: packDisplayName(t, parent),
+          })}
+        </p>
+      )}
+      {leftOn > 0 && (
+        <p>
+          {t('onboarding.pp_optional_disables', {
+            defaultValue:
+              'This pack can also switch off modules its users do not need ({{n}} in total). One-click setup leaves all of them on. To switch them off, open this pack on the Modules page, Packs tab, and tick the box in its setup dialog.',
+            n: leftOn,
+          })}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * On Finish: says a one-click install left a pack's optional switch-offs on,
+ * and links to the dialog that can apply them.
+ *
+ * The same packs query the pickers use, so this reads the cache they filled
+ * and fetches nothing new on the usual path.
+ */
+function PackModulesLeftOnNote({ slug, onLeave }: { slug: string; onLeave: () => void }) {
+  const { t } = useTranslation();
+  const { data } = useQuery({
+    queryKey: ['partner-pack', 'installed'],
+    queryFn: fetchInstalledPacks,
+    staleTime: 60_000,
+  });
+  const pack = data?.installed?.find((p) => p.slug === slug);
+  const leftOn = pack ? modulesLeftOnByOneClick(pack) : 0;
+  if (leftOn === 0) return null;
+  return (
+    <p
+      data-testid="pack-modules-left-on"
+      className="mt-4 max-w-md text-center text-xs text-content-tertiary"
+    >
+      {t('onboarding.pp_modules_left_on', {
+        defaultValue:
+          'Modules this pack can switch off, all left on by the one-click setup: {{n}}. Nothing was switched off.',
+        n: leftOn,
+      })}{' '}
+      <Link
+        to={packSetupHref(slug)}
+        onClick={onLeave}
+        className="font-medium text-oe-blue hover:underline"
+      >
+        {t('onboarding.pp_modules_left_on_link', {
+          defaultValue: 'Open the pack in Modules to switch them off',
+        })}
+      </Link>
+    </p>
+  );
 }
 
 // Every value here is a global-market catalogue, never a national norm base. A
@@ -1666,6 +1787,7 @@ export function ReadyPackPicker({
                     {name}
                   </span>
                 </div>
+                <PackVariantBadge pack={pack} />
                 <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 text-2xs text-content-quaternary">
                   <span className="inline-flex items-center gap-1">
                     <Languages size={11} />
@@ -1842,6 +1964,8 @@ export function ReadyPackPicker({
               })}
             </p>
           )}
+
+          {!installing && <PackOneClickNotes pack={selectedPack} packs={packs} />}
         </div>
       )}
 
@@ -3073,6 +3197,7 @@ function PartnerPackInstaller({
                   <div className="truncate text-2xs text-content-tertiary">
                     {pack.partner_name}
                   </div>
+                  <PackVariantBadge pack={pack} />
                   <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-2xs text-content-quaternary">
                     <span className="inline-flex items-center gap-1">
                       <Languages size={11} />
@@ -3093,6 +3218,9 @@ function PartnerPackInstaller({
       {/* Selected pack description — frosted-glass, expandable */}
       {!isLoading && selectedPack && (
         <PackDescriptionCard description={selectedPack.description} />
+      )}
+      {!isLoading && selectedPack && !installing && (
+        <PackOneClickNotes pack={selectedPack} packs={packs} />
       )}
 
       {/* Progress checklist — the five orchestrated steps */}
@@ -4399,11 +4527,15 @@ export function StepFinish({
   enabledModules,
   presets,
   packInstalled = false,
+  installedPackSlug = null,
 }: {
   onBack: () => void;
   companyType: string | null;
   enabledModules: Set<string>;
   presets: ApiCompanyPreset[];
+  /** Slug of the partner pack the one-click path installed, when it was one
+   *  (a curated market preset records ``country:<id>`` and is not a pack). */
+  installedPackSlug?: string | null;
   /** A ready-made pack already provisioned modules + regional config + sample
    *  data server-side. When true, Finish must NOT overwrite those module
    *  preferences or re-POST a generic onboarding payload, and it lands on the
@@ -4451,6 +4583,36 @@ export function StepFinish({
       // and sample data on the server. Don't clobber that here -- just mark
       // onboarding complete (which fires the tour-gating event) and open the
       // seeded projects.
+      //
+      // One thing the install does not do is choose a company profile, because
+      // the pack jumps past that step. When the pack names the profile its
+      // users start in, save it for the person who installed it, the way the
+      // profile step would have. This writes that user's own preferences, not
+      // the installation's module state the pack just set. A pack that names
+      // no profile saves nothing, as before.
+      try {
+        const current = await apiGet<PartnerPackResponse>('/v1/partner-pack/current');
+        const toSave = packProfileToSave(
+          current.active ? current.manifest?.default_company_profile : null,
+          presets,
+        );
+        if (toSave) {
+          const saved = await apiPost<MeOnboarding>('/v1/users/me/onboarding/', {
+            ...toSave,
+            completed: true,
+          });
+          queryClient.setQueryData(onboardingQueryKey, saved);
+          await syncFromServer();
+          try {
+            localStorage.setItem(COMPANY_TYPE_STORAGE_KEY, toSave.company_type);
+          } catch {
+            // Storage unavailable -- the server copy above is the one that counts.
+          }
+        }
+      } catch {
+        // Non-critical -- the pack's profile still reaches this user as the
+        // default of anybody who has chosen none.
+      }
       markOnboardingCompleted();
       setSaving(false);
       navigate('/projects');
@@ -4501,6 +4663,7 @@ export function StepFinish({
     enabledModules,
     navigate,
     packInstalled,
+    presets,
     queryClient,
     onboardingQueryKey,
     syncFromServer,
@@ -4608,6 +4771,10 @@ export function StepFinish({
         </Button>
       </div>
 
+      {installedPackSlug && !installedPackSlug.startsWith('country:') && (
+        <PackModulesLeftOnNote slug={installedPackSlug} onLeave={markOnboardingCompleted} />
+      )}
+
       {/* Explore-all CTA — links to /modules so users can see the full
           88-module marketplace post-onboarding. Persists onboarding-complete
           before navigation so users don't get bounced back into the wizard. */}
@@ -4671,6 +4838,44 @@ export function OnboardingWizard() {
       navigate('/', { replace: true });
     }
   }, [alreadyCompleted, navigate]);
+
+  /* A company that installed a pack naming its profile has already answered
+     everything this wizard asks: the language, the market and the menu. The
+     people who join that installation afterwards (site staff, mostly) have
+     nothing to set up and cannot install anything, and the card the wizard
+     recommends to them, Quick Start, would save the catch-all profile and
+     hand them the whole catalogue instead of the company's menu. So anyone
+     who is not an admin is marked as set up and sent on; the menu then
+     follows the pack's profile (`effectiveCompanyPresetKey`), and they can
+     still pick their own on Modules > Company Profiles. An admin, and any
+     installation whose pack names no profile, gets the wizard as before. */
+  const canInstallPacks = useCanInstallPartnerPacks();
+  const { data: activePack } = usePartnerPack();
+  const packProfile = activePack?.active ? (activePack.manifest?.default_company_profile ?? null) : null;
+  const passQueryClient = useQueryClient();
+  const passOnboardingKey = useMeOnboardingQueryKey();
+  useEffect(() => {
+    if (alreadyCompleted || canInstallPacks || !packProfile) return;
+    let cancelled = false;
+    // The dashboard sends back here anyone whose server record is not
+    // completed, and it reads that record from the shared cache entry. So the
+    // flag is written on the server first and its answer put into that entry
+    // before leaving; leaving on the local flag alone would bounce between the
+    // two screens. If the write fails the wizard simply stays.
+    void apiPost<MeOnboarding>('/v1/users/me/onboarding/complete/', undefined)
+      .then((saved) => {
+        if (cancelled) return;
+        passQueryClient.setQueryData(passOnboardingKey, saved);
+        markOnboardingCompleted();
+        navigate('/', { replace: true });
+      })
+      .catch(() => {
+        /* stay on the wizard */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [alreadyCompleted, canInstallPacks, packProfile, navigate, passQueryClient, passOnboardingKey]);
 
   // Track whether user chose "Quick Start" (skip profile + modules, go to data)
   const [quickStart, setQuickStart] = useState(false);
@@ -4969,6 +5174,7 @@ export function OnboardingWizard() {
                   enabledModules={enabledModules}
                   presets={presets}
                   packInstalled={packInstalledSlug !== null}
+                  installedPackSlug={packInstalledSlug}
                 />
               )}
             </StepTransition>

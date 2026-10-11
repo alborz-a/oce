@@ -394,6 +394,45 @@
     "valid_poz": {
       "fail": "Poz '{code}' är varken ett aktuellt nummer i enhetsprisboken (XX.XXX.XXXX) eller ett äldre nummer (XX.XXX/X)",
       "suggestion": "Använd bokens nummer, t.ex. 15.140.1002, eller 04.013/1 för ett äldre avtal; numrera egna analyserade poster som ÖZEL-1"
+    },
+    "chapter_recognised": {
+      "fail": "Poz '{code}' på post {ordinal} börjar med {chapter}, som inte är ett kapitel i någon prislista med enhetspriser som kontrollen känner till",
+      "suggestion": "Ministeriets bok numrerar byggarbeten 15, mekanisk installation 25 och elinstallation 35, resurspriser under 10 och maskinkalkyler under 19. Kontrollera numret mot listan det hämtats från, eller numrera din egen post ÖZEL-1"
+    },
+    "unit_recognised": {
+      "fail": "Enhet '{unit}' på post {ordinal} är inte en som enhetsprislistorna mäter i",
+      "suggestion": "Använd den enhet som listan anger för posten, till exempel m, m², m³, Ad, Tk, Kg, Ton, Sa"
+    },
+    "poz_unit_consistent": {
+      "fail": "Poz '{code}' mäts i {count} olika enheter i denna kalkyl ({units})",
+      "suggestion": "Ett poz-nummer är definierat i en enhet. För raderna till listans enhet, eller ge det avvikande arbetet ett eget nummer"
+    },
+    "poz_rate_consistent": {
+      "fail": "Poz '{code}' är prissatt med {count} olika enhetspriser i denna kalkyl ({rates})",
+      "suggestion": "Ett poz-nummer har ett enhetspris i en kalkyl. Använd ett pris, eller numrera den avvikande posten separat som egen post"
+    },
+    "own_item_analysed": {
+      "fail": "Egen post '{code}' på post {ordinal} saknar priskalkyl",
+      "suggestion": "En post som listan inte har prissätts med en egen kalkyl. Lägg till arbets-, material- och maskinresurserna under raden, eller skriv kalkylen i anmärkningen"
+    },
+    "profit_overhead_once": {
+      "fail": "Entreprenörens vinst och allmänna omkostnader läggs på {count} rader, {total} procent tillsammans, över de enkla {limit} procenten",
+      "suggestion": "De 25 procenten läggs på en gång. Behåll en rad, och ta bort den helt när priserna är publicerade enhetspriser, som redan innehåller dem"
+    },
+    "unit_matches_poz_definition": {
+      "fail": "Poz '{code}' på post {ordinal} är mätt i '{unit}', men den installerade enhetsprisboken definierar den i '{book_unit}'",
+      "suggestion": "Ett poz-nummer är definierat i en enhet. Mät raden i bokens enhet, eller numrera det avvikande arbetet som en egen post (ÖZEL-1)",
+      "not_installed": "Den nationella enhetsprisbasen ({region}) är inte installerad, så enheter och priser för {count} poz-nummer jämfördes inte med den utgivna boken. Ladda den från importsidan för kostnadsdatabasen",
+      "unavailable": "Den nationella enhetsprisbasen ({region}) kunde inte läsas, så enheter och priser för {count} poz-nummer jämfördes inte med den utgivna boken"
+    },
+    "unit_rate_within_published_price": {
+      "below": "Poz '{code}' på post {ordinal}: priset {rate} ligger {percent} procent under det utgivna priset {published} i den installerade enhetsprisboken",
+      "above": "Poz '{code}' på post {ordinal}: priset {rate} ligger {percent} procent över det utgivna priset {published} i den installerade enhetsprisboken",
+      "fail": "Det är mer än de {limit} procent som är inställda för den här kontrollen",
+      "suggestion": "Jämförelsen använder den enhetsprisbas som är installerad här, och den registrerar inte årtalet för sin bok. De utgivna priserna för bygg-, maskin- och elkapitlen innehåller redan {markup} procent för entreprenörens vinst och allmänna kostnader. Ett pris under det utgivna priset är vanligt efter en anbudsrabatt; kontrollera att skillnaden är avsiktlig",
+      "repriced": "Den nationella enhetsprisbasen ({region}) har ställts om till en annan marknad eller valuta, så priserna jämfördes inte med de utgivna priserna. Återställ basen till sin hemmamarknad för att köra den här kontrollen",
+      "currency_differs": "Priserna på {count} rader är i {currency} medan enhetsprisboken är i {book_currency}, så de jämfördes inte med de utgivna priserna",
+      "currency_unknown": "Valutan för {count} rader är inte registrerad, så deras priser jämfördes inte med de utgivna priserna i {book_currency}"
     }
   },
   "sekisan": {

@@ -23,7 +23,6 @@ import {
   AlertTriangle,
   Trash2,
   Globe2,
-  FileDown,
   Send,
   Upload,
   Users,
@@ -59,6 +58,8 @@ import { useDisplayQuantity } from '@/shared/hooks/useDisplayQuantity';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { PageHeader } from '@/shared/ui/PageHeader';
+import { RecordPdfButton } from '@/shared/ui/RegisterExport';
+import { DIARY_DOCUMENT_LOCALES } from '@/shared/lib/documentExport';
 import { useToastStore } from '@/stores/useToastStore';
 import { useActiveProjectId } from '@/shared/hooks/useActiveProjectId';
 import { apiGet, getErrorMessage, type Page } from '@/shared/lib/api';
@@ -128,6 +129,7 @@ import { PublishRecordModal } from '@/features/record-publishing/PublishRecordMo
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildDailyDiaryInsights } from './dailyDiaryInsights';
 import { fmtList } from '@/shared/lib/formatters';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 
 type Tab = 'diaries' | 'today' | 'archive';
 
@@ -1069,15 +1071,6 @@ function TodayTab({
     onSettled: () => confirmCtx.setLoading(false),
   });
 
-  const exportPdfMut = useMutation({
-    mutationFn: (d: DailyDiary) => downloadDiaryPdf(d.id, d.diary_date),
-    onSuccess: () =>
-      addToast({
-        type: 'success',
-        title: t('daily_diary.pdf_downloaded', { defaultValue: 'Diary PDF downloaded' }),
-      }),
-    onError: (err) => addToast({ type: 'error', title: getErrorMessage(err) }),
-  });
 
   // Readiness signal shown as a traffic-light chip before signing, and the
   // workforce roll-up surfaced beside the diary meta - both are headline
@@ -1268,17 +1261,16 @@ function TodayTab({
           )}
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            icon={<FileDown size={14} />}
-            onClick={() => exportPdfMut.mutate(diary)}
-            loading={exportPdfMut.isPending}
-            data-testid="daily-diary-export-pdf"
-            aria-label={t('daily_diary.export_pdf', { defaultValue: 'Export PDF' })}
-          >
-            {t('daily_diary.export_pdf', { defaultValue: 'Export PDF' })}
-          </Button>
+          {/* The diary in the reader's language by default, or another one
+              it is printed in: the site keeps it in one language and the
+              employer's representative may read another. */}
+          <RecordPdfButton
+            label={t('daily_diary.export_pdf', { defaultValue: 'Export PDF' })}
+            download={(locale) => downloadDiaryPdf(diary.id, diary.diary_date, locale)}
+            locales={DIARY_DOCUMENT_LOCALES}
+            successTitle={t('daily_diary.pdf_downloaded', { defaultValue: 'Diary PDF downloaded' })}
+            testId="daily-diary-export-pdf"
+          />
           <Button
             variant="secondary"
             size="sm"
@@ -3174,9 +3166,8 @@ function ExistingFilePicker({
   }, [photosQ.data, docsQ.data]);
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return assets;
-    return assets.filter((a) => a.label.toLowerCase().includes(q));
+    if (!search.trim()) return assets;
+    return assets.filter((a) => matchesSearch(search, a.label));
   }, [assets, search]);
 
   // The picker draws from two registers, photos and documents, and offers a

@@ -22,7 +22,6 @@ import {
   Clock,
   AlertTriangle,
   Trash2,
-  Download,
   Sparkles,
   ShoppingCart,
   HelpCircle,
@@ -35,6 +34,8 @@ import {
 import { Button, Card, Badge, EmptyState, Breadcrumb, InfoHint, DismissibleInfo, IntroRichText, ConfirmDialog, RecoveryCard, SkeletonTable, SkeletonCard, ModuleGuideButton } from '@/shared/ui';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PageHeader } from '@/shared/ui/PageHeader';
+import { RegisterExportButton, RecordPdfButton } from '@/shared/ui/RegisterExport';
+import type { DocumentExportItem } from '@/shared/ui/DocumentExportMenu';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import {
@@ -53,6 +54,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { listContracts } from '@/features/contracts/api';
 import { contractDeepLink, linkedVariationDeepLink } from '@/shared/lib/changeChainLinks';
 import { boqDeepLink, changeOrderWriteback, FINANCE_BUDGETS_LINK } from '@/shared/lib/awardChainLinks';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 import { ProvabilityGauge, EvidenceThreadPanel } from '@/features/claims-evidence';
 import { ApprovalTimeline } from './ApprovalTimeline';
 import { ImpactSimulator, type SavedScenario } from './ImpactSimulator';
@@ -61,6 +63,8 @@ import { AIDraftModal } from './AIDraftModal';
 import { changeordersGuide } from './changeordersGuide';
 import {
   advanceApproval,
+  downloadChangeOrderPdf,
+  downloadChangeOrderRegister,
   getApprovals,
   isWritebackRefusal,
   startApprovalChain,
@@ -811,13 +815,8 @@ function BoqPositionPickerDialog({
 
   const positions = useMemo(() => {
     const rows = boqDetail?.positions ?? [];
-    const q = search.trim().toLowerCase();
-    const filtered = q
-      ? rows.filter(
-          (p) =>
-            (p.description || '').toLowerCase().includes(q) ||
-            (p.ordinal || '').toLowerCase().includes(q),
-        )
+    const filtered = search.trim()
+      ? rows.filter((p) => matchesSearch(search, p.description, p.ordinal))
       : rows;
     return filtered.slice(0, 300);
   }, [boqDetail, search]);
@@ -1002,16 +1001,10 @@ function ApprovalChainBuilderDialog({
 
   const chosenIds = useMemo(() => new Set(chosen.map((u) => u.id)), [chosen]);
   const matches = useMemo(() => {
-    const q = search.trim().toLowerCase();
     const pool = users.filter((u) => !chosenIds.has(u.id));
-    if (!q) return pool.slice(0, 8);
+    if (!search.trim()) return pool.slice(0, 8);
     return pool
-      .filter(
-        (u) =>
-          userLabel(u).toLowerCase().includes(q) ||
-          (u.email || '').toLowerCase().includes(q) ||
-          (u.role || '').toLowerCase().includes(q),
-      )
+      .filter((u) => matchesSearch(search, userLabel(u), u.email, u.role))
       .slice(0, 8);
   }, [users, chosenIds, search]);
 
@@ -1608,6 +1601,11 @@ function DetailView({
             variation_request_id?: string;
           };
           if (meta.origin !== 'variations.convert_vr_to_vo') return null;
+          // "VO-" and "VR-" stay untranslated on purpose. They are the series
+          // prefixes the variations module stores in a record's code
+          // (`VO-0001`, `VR-0001`), so a reader matches this reference to the
+          // register by them in any language. The words that say what the
+          // reference is are the translated labels rendered beside it.
           const voRef = meta.variation_order_id
             ? `VO-${meta.variation_order_id.slice(0, 8)}`
             : null;
@@ -1737,6 +1735,12 @@ function DetailView({
           </div>
 
           <div className="flex gap-2 items-center">
+            {/* The printed form with its line items, in any status. Open to
+                every reader, unlike the workflow actions beside it. */}
+            <RecordPdfButton
+              download={(locale) => downloadChangeOrderPdf(order.id, locale, order.code)}
+              testId="changeorder-pdf"
+            />
             {order.status === 'draft' && (
               <Button variant="primary" size="sm" onClick={async () => {
                 const ok = await confirm({
@@ -2459,6 +2463,31 @@ export function ChangeOrdersPage() {
     }
   }, [filteredOrders, project, t, addToast]);
 
+  // The register as a document. It is exported whole (the route takes no
+  // filter); the CSV kept under it is the other thing, the rows on screen.
+  const exportTargets = useMemo(
+    () => [
+      {
+        id: 'register',
+        download: (format: 'pdf' | 'xlsx', locale: string) =>
+          downloadChangeOrderRegister(projectId, format, locale),
+      },
+    ],
+    [projectId],
+  );
+  const exportExtras = useMemo<DocumentExportItem[]>(
+    () => [
+      {
+        id: 'csv-view',
+        label: t('changeorders.export_csv_view', { defaultValue: 'CSV of the rows shown' }),
+        kind: 'other',
+        disabled: filteredOrders.length === 0,
+        run: () => handleExportCSV(),
+      },
+    ],
+    [filteredOrders.length, handleExportCSV, t],
+  );
+
   // Detail view
   if (selectedOrderId) {
     return (
@@ -2491,9 +2520,15 @@ export function ChangeOrdersPage() {
           <>
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <ModuleGuideButton content={changeordersGuide} />
-            <Button variant="secondary" icon={<Download size={14} />} onClick={handleExportCSV} disabled={!filteredOrders || filteredOrders.length === 0}>
-              {t('changeorders.export_csv', { defaultValue: 'Export CSV' })}
-            </Button>
+            <RegisterExportButton
+              label={t('changeorders.export_register', { defaultValue: 'Export register' })}
+              projectId={projectId}
+              empty={!isLoading && !isError && orders.length === 0}
+              targets={exportTargets}
+              extraItems={exportExtras}
+              size="md"
+              testId="changeorders-export"
+            />
             <Button variant="secondary" onClick={() => setShowAIDraft(true)} disabled={!projectId}>
               <Sparkles size={16} className="mr-1.5" />
               {t('changeorders.ai_draft', { defaultValue: 'AI Draft' })}

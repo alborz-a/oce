@@ -125,6 +125,10 @@
       "de",
       "en",
       "ru"
+    ],
+    "backend/app/modules/submittals/messages": [
+      "en",
+      "tr"
     ]
   }
 }

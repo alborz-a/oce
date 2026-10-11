@@ -95,6 +95,7 @@ import { financeGuide } from './financeGuide';
 import { DEFAULT_FINANCE_TAB, isFinanceTab, type FinanceTab } from './financeTabs';
 import { UnlinkedTwinBanner } from '@/features/subcontractors/UnlinkedTwinBanner';
 import { fmtList, fmtPercent, fmtFixed, fmtNumberForInput } from '@/shared/lib/formatters';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 
 // English fallbacks for the computed `finance.payment_status_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1520,13 +1521,14 @@ function BudgetsTab({ projectId }: { projectId: string }) {
   const filtered = useMemo(() => {
     if (!budgets) return [];
     if (!search) return budgets;
-    const q = search.toLowerCase();
-    return budgets.filter(
-      (b) =>
-        (b.wbs_id ?? '').toLowerCase().includes(q) ||
-        wbsLabel(b.wbs_id, wbsNodes, b.wbs_label).text.toLowerCase().includes(q) ||
-        b.category.toLowerCase().includes(q) ||
-        budgetCategoryLabel(t, b.category).toLowerCase().includes(q),
+    return budgets.filter((b) =>
+      matchesSearch(
+        search,
+        b.wbs_id,
+        wbsLabel(b.wbs_id, wbsNodes, b.wbs_label).text,
+        b.category,
+        budgetCategoryLabel(t, b.category),
+      ),
     );
   }, [budgets, search]);
 
@@ -2382,11 +2384,8 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
       result = result.filter((inv) => inv.status === statusFilter);
     }
     if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (inv) =>
-          (inv.invoice_number ?? '').toLowerCase().includes(q) ||
-          (inv.counterparty_name ?? '').toLowerCase().includes(q),
+      result = result.filter((inv) =>
+        matchesSearch(search, inv.invoice_number, inv.counterparty_name),
       );
     }
     return result;
@@ -2952,6 +2951,12 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
           onClose={() => setEinvoiceFor(null)}
           invoiceId={einvoiceFor.id}
           invoiceNumber={einvoiceFor.invoice_number}
+          // A return (IADE) names the invoice it answers. The register is
+          // already loaded, so the other invoices of the project are offered
+          // from it instead of being typed in by id.
+          returnCandidates={(invoices ?? [])
+            .filter((inv) => inv.id !== einvoiceFor.id)
+            .map((inv) => ({ id: inv.id, invoice_number: inv.invoice_number }))}
         />
       )}
 

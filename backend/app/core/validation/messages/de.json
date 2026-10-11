@@ -394,6 +394,45 @@
     "valid_poz": {
       "fail": "Poz '{code}' ist weder eine aktuelle Nummer des Einheitspreisbuchs (XX.XXX.XXXX) noch eine ältere (XX.XXX/X)",
       "suggestion": "Die Nummer aus dem Buch verwenden, z. B. 15.140.1002, oder 04.013/1 bei älteren Verträgen; eigene kalkulierte Positionen als ÖZEL-1 nummerieren"
+    },
+    "chapter_recognised": {
+      "fail": "Poz '{code}' in Position {ordinal} beginnt mit {chapter}, das kein Kapitel eines dieser Prüfung bekannten Einheitspreisverzeichnisses ist",
+      "suggestion": "Das Ministeriumsbuch nummeriert Hochbauarbeiten mit 15, mechanische Installation mit 25 und Elektroinstallation mit 35, Ressourcenpreise unter 10 und Gerätekalkulationen unter 19. Die Nummer mit dem Verzeichnis abgleichen, aus dem sie stammt, oder die eigene Position als ÖZEL-1 nummerieren"
+    },
+    "unit_recognised": {
+      "fail": "Einheit '{unit}' in Position {ordinal} ist keine, in der die Einheitspreisverzeichnisse messen",
+      "suggestion": "Die Einheit verwenden, die das Verzeichnis für die Position angibt, z. B. m, m², m³, Ad, Tk, Kg, Ton, Sa"
+    },
+    "poz_unit_consistent": {
+      "fail": "Poz '{code}' wird in diesem Leistungsverzeichnis in {count} verschiedenen Einheiten gemessen ({units})",
+      "suggestion": "Eine Poz-Nummer ist in genau einer Einheit definiert. Die Zeilen auf die Einheit des Verzeichnisses bringen oder der abweichenden Leistung eine eigene Nummer geben"
+    },
+    "poz_rate_consistent": {
+      "fail": "Poz '{code}' ist in diesem Leistungsverzeichnis mit {count} verschiedenen Einheitspreisen bepreist ({rates})",
+      "suggestion": "Eine Poz-Nummer hat in einem Leistungsverzeichnis einen Einheitspreis. Einen Preis verwenden oder die abweichende Position separat als eigene Position nummerieren"
+    },
+    "own_item_analysed": {
+      "fail": "Eigene Position '{code}' in Position {ordinal} hat keine Preisermittlung",
+      "suggestion": "Eine Position, die das Verzeichnis nicht kennt, wird über eine eigene Kalkulation bepreist. Lohn-, Stoff- und Geräteressourcen unter der Zeile ergänzen oder die Kalkulation in die Bemerkung schreiben"
+    },
+    "profit_overhead_once": {
+      "fail": "Unternehmergewinn und allgemeine Geschäftskosten werden auf {count} Zeilen angesetzt, zusammen {total} Prozent, über den einmaligen {limit} Prozent",
+      "suggestion": "Die 25 Prozent werden einmal aufgeschlagen. Eine Zeile behalten und ganz entfernen, wenn die Preise veröffentlichte Einheitspreise sind, die ihn bereits enthalten"
+    },
+    "unit_matches_poz_definition": {
+      "fail": "Poz '{code}' an Position {ordinal} ist in '{unit}' gemessen, das installierte Einheitspreisbuch definiert sie aber in '{book_unit}'",
+      "suggestion": "Eine poz-Nummer ist in genau einer Einheit definiert. Messen Sie die Zeile in der Einheit des Buchs oder nummerieren Sie die abweichende Leistung als eigene Position (ÖZEL-1)",
+      "not_installed": "Die nationale Einheitspreisbasis ({region}) ist nicht installiert, daher wurden Einheiten und Preise von {count} poz-Nummern nicht mit dem veröffentlichten Buch abgeglichen. Laden Sie sie über die Importseite der Kostendatenbank",
+      "unavailable": "Die nationale Einheitspreisbasis ({region}) konnte nicht gelesen werden, daher wurden Einheiten und Preise von {count} poz-Nummern nicht mit dem veröffentlichten Buch abgeglichen"
+    },
+    "unit_rate_within_published_price": {
+      "below": "Poz '{code}' an Position {ordinal}: Der Preis {rate} liegt {percent} Prozent unter dem veröffentlichten Preis von {published} im installierten Einheitspreisbuch",
+      "above": "Poz '{code}' an Position {ordinal}: Der Preis {rate} liegt {percent} Prozent über dem veröffentlichten Preis von {published} im installierten Einheitspreisbuch",
+      "fail": "Das übersteigt die für diese Prüfung eingestellten {limit} Prozent",
+      "suggestion": "Der Vergleich nutzt die hier installierte Einheitspreisbasis, die das Jahr ihres Buchs nicht erfasst. Die veröffentlichten Preise der Kapitel Hochbau, Maschinentechnik und Elektrotechnik enthalten bereits {markup} Prozent Unternehmergewinn und Gemeinkosten. Ein Preis unter dem veröffentlichten Preis ist nach einem Ausschreibungsnachlass üblich; prüfen Sie, ob die Abweichung beabsichtigt ist",
+      "repriced": "Die nationale Einheitspreisbasis ({region}) wurde auf einen anderen Markt oder eine andere Währung umgestellt, daher wurden die Preise nicht mit den veröffentlichten Preisen verglichen. Setzen Sie die Basis auf ihren Heimatmarkt zurück, um diese Prüfung auszuführen",
+      "currency_differs": "Die Preise von {count} Zeilen sind in {currency}, das Einheitspreisbuch ist aber in {book_currency}, daher wurden sie nicht mit den veröffentlichten Preisen verglichen",
+      "currency_unknown": "Die Währung von {count} Zeilen ist nicht erfasst, daher wurden ihre Preise nicht mit den veröffentlichten Preisen in {book_currency} verglichen"
     }
   },
   "sekisan": {

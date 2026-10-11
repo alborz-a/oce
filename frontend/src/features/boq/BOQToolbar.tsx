@@ -329,7 +329,7 @@ export function BOQToolbar({
         {/* ── Row 1: the primary "build the BOQ" actions ──────────────────── */}
         <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
           {/* Quality ring + Add group */}
-          <div className="flex items-center gap-1.5" data-testid="boq-quality-ring">
+          <div className="flex flex-wrap items-center gap-1.5" data-testid="boq-quality-ring">
             {hasPositions && qualityScoreRing}
             {!readOnly && <>
             <Button
@@ -368,7 +368,7 @@ export function BOQToolbar({
           <div className="w-px h-6 bg-border-light hidden sm:block" />
 
           {/* Hot quality/AI actions surfaced as buttons + overflow menu */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5">
             <Button
               variant="secondary"
               size="sm"
@@ -772,10 +772,16 @@ export function BOQToolbar({
           {/* Meta line: counts + quality status badges */}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-2xs text-content-tertiary">
-              {t('boq.toolbar_summary_aria', {
-                defaultValue: '{{sections}} sections · {{positions}} positions',
-                sections: summary.sectionCount,
-                positions: summary.positionCount,
+              {t('boq.sections_count', {
+                count: summary.sectionCount,
+                defaultValue_one: '{{count}} section',
+                defaultValue: '{{count}} sections',
+              })}
+              {' · '}
+              {t('boq.positions_count', {
+                count: summary.positionCount,
+                defaultValue_one: '{{count}} position',
+                defaultValue: '{{count}} positions',
               })}
             </span>
             {summary.errorCount > 0 && (

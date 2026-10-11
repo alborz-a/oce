@@ -58,6 +58,7 @@ import { PageHeader } from '@/shared/ui/PageHeader';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { useCreateShortcut } from '@/shared/hooks/useCreateShortcut';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 import { useToastStore } from '@/stores/useToastStore';
 import { useModuleStore } from '@/stores/useModuleStore';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -218,6 +219,7 @@ interface ContactFormData {
   legal_name: string;
   party_kind: PartyKind | '';
   vat_number: string;
+  tax_office: string;
   first_name: string;
   last_name: string;
   contact_type: ContactType;
@@ -238,6 +240,7 @@ const EMPTY_FORM: ContactFormData = {
   legal_name: '',
   party_kind: '',
   vat_number: '',
+  tax_office: '',
   first_name: '',
   last_name: '',
   contact_type: 'client',
@@ -309,6 +312,7 @@ export function contactFormData(contact?: Contact): ContactFormData {
     legal_name: contact.legal_name || '',
     party_kind: contact.party_kind ?? '',
     vat_number: contact.vat_number || '',
+    tax_office: contact.tax_office || '',
     first_name: contact.first_name || '',
     last_name: contact.last_name || '',
     contact_type: contact.contact_type,
@@ -349,6 +353,7 @@ export function buildContactPatch(
   if (form.legal_name !== base.legal_name) data.legal_name = form.legal_name || null;
   if (form.party_kind !== base.party_kind) data.party_kind = form.party_kind || null;
   if (form.vat_number !== base.vat_number) data.vat_number = form.vat_number || null;
+  if (form.tax_office !== base.tax_office) data.tax_office = form.tax_office || null;
   if (form.email !== base.email) data.primary_email = form.email || null;
   if (form.phone !== base.phone) data.primary_phone = form.phone || null;
   if (form.website !== base.website) data.website = form.website || null;
@@ -534,6 +539,25 @@ function AddContactModal({
             onChange={(e) => set('vat_number', e.target.value)}
             className={inputCls}
             placeholder={t('contacts.vat_placeholder', { defaultValue: 'e.g. DE123456789' })}
+          />
+        </WideModalField>
+
+        {/* Beside the tax number because the two are read together: a Turkish
+            e-Fatura identifies a company by its tax number and the tax office
+            that holds its file, and refuses a buyer that names only one. */}
+        <WideModalField
+          label={t('contacts.tax_office', { defaultValue: 'Tax office' })}
+          htmlFor="contact-tax-office"
+          hint={t('contacts.tax_office_hint', {
+            defaultValue: 'Needed on a Turkish e-Fatura. Leave empty where no tax office is named.',
+          })}
+        >
+          <input
+            id="contact-tax-office"
+            value={form.tax_office}
+            onChange={(e) => set('tax_office', e.target.value)}
+            className={inputCls}
+            maxLength={100}
           />
         </WideModalField>
       </WideModalSection>
@@ -1627,13 +1651,8 @@ export function ContactsPage() {
   const filtered = useMemo(() => {
     let list = contacts;
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      list = list.filter(
-        (c) =>
-          (c.company_name || '').toLowerCase().includes(q) ||
-          (c.first_name || '').toLowerCase().includes(q) ||
-          (c.last_name || '').toLowerCase().includes(q) ||
-          (c.primary_email || '').toLowerCase().includes(q),
+      list = list.filter((c) =>
+        matchesSearch(searchQuery, c.company_name, c.first_name, c.last_name, c.primary_email),
       );
     }
     if (countryFilter.trim()) {
@@ -1761,6 +1780,7 @@ export function ContactsPage() {
         legal_name: formData.legal_name || undefined,
         party_kind: formData.party_kind || undefined,
         vat_number: formData.vat_number || undefined,
+        tax_office: formData.tax_office || undefined,
         primary_email: formData.email || undefined,
         primary_phone: formData.phone || undefined,
         website: formData.website || undefined,

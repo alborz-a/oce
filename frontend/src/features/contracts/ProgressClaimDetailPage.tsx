@@ -62,6 +62,7 @@ import { PopulatePreviewModal } from './PopulatePreviewModal';
 import { ProgressClaimLineTable } from './ProgressClaimLineTable';
 import { AIAApplicationPanel } from './AIAApplicationPanel';
 import { GaebInvoicePanel } from './GaebInvoicePanel';
+import { HakedisPanel, claimMayHaveHakedis, recordHakedisRefusal } from './hakedis';
 import { SubRollupPanel } from './SubRollupPanel';
 import { ClaimInvoicePreview } from '@/features/finance';
 import { projectsApi } from '@/features/projects/api';
@@ -159,6 +160,13 @@ export function ProgressClaimDetailPage() {
 
   const claim = claimQ.data;
   const aiaEligible = projectQ.data?.is_aia_eligible === true;
+  // The certificate is asked for only where the project's country or the
+  // contract's own terms give it a layout; anywhere else the answer is a 404.
+  const hakedisMayApply = claimMayHaveHakedis(
+    projectQ.data,
+    contractQ.data,
+    projectQ.isError || contractQ.isError,
+  );
 
   // Everything the claim's lines feed, the stored totals among them. Named in
   // one place so a screen that writes a line cannot keep figures from before it.
@@ -178,7 +186,21 @@ export function ProgressClaimDetailPage() {
         // A refused Submit is when the report matters most, and the claim may
         // have changed since the panel last read it.
         qc.invalidateQueries({ queryKey: claimValidationKey(claimId as string) });
-        addToast({ type: 'error', title: getErrorMessage(err) });
+        // A certification refused over the payment certificate is shown on the
+        // certificate itself, against the lines it names.
+        const overCertificate = recordHakedisRefusal(
+          qc,
+          { kind: 'progress_claim', id: claimId as string },
+          err,
+        );
+        addToast({
+          type: 'error',
+          title: overCertificate
+            ? t('hakedis.certify.refused', {
+                defaultValue: 'The payment certificate is not ready to certify. See what is missing on the certificate.',
+              })
+            : getErrorMessage(err),
+        });
       },
     });
 
@@ -497,6 +519,13 @@ export function ProgressClaimDetailPage() {
       {aiaEligible && (
         <AIAApplicationPanel claimId={claimId as string} currency={claim.currency} />
       )}
+
+      {/* Payment certificate (hakedis). Renders nothing unless the server says
+          the contract has a certificate layout. */}
+      <HakedisPanel
+        source={{ kind: 'progress_claim', id: claimId as string }}
+        enabled={hakedisMayApply}
+      />
 
       {/* GAEB X89 invoice, collapsed until opened. */}
       <GaebInvoicePanel claimId={claimId as string} claimNumber={claim.claim_number} />

@@ -1662,6 +1662,218 @@ PAYMENT_REGIMES: tuple[dict[str, Any], ...] = (
         ),
     },
     {
+        "code": "tr_ttk_1530",
+        "jurisdiction": "Türkiye",
+        "country_code": "TR",
+        "statute": "Türk Ticaret Kanunu (Law 6102)",
+        "statute_reference": "Article 1530(2)-(7), https://www.mevzuat.gov.tr/MevzuatMetin/1.5.6102.pdf",
+        "due_date_basis": "application_date",
+        "due_date_days": 0,
+        "due_date_day_basis": "calendar",
+        "payment_notice_basis": "application_date",
+        "payment_notice_days": None,
+        "payment_notice_day_basis": "calendar",
+        "final_date_basis": "application_date",
+        "final_date_days": 30,
+        "final_date_day_basis": "calendar",
+        "pay_less_days": None,
+        "pay_less_day_basis": "calendar",
+        "no_notice_effect": "none",
+        "interest_basis": "prescribed_rate",
+        "interest_reference_rate": (
+            "the communique the Central Bank of the Republic of Türkiye issues each January under Article 1530(7)"
+        ),
+        "interest_margin_percent": None,
+        "interest_fixed_percent": None,
+        "interest_statute": "Article 1530(7); Law 3095 sets the commercial default rate the announced rate must exceed",
+        "notes": (
+            "An interest basis rather than a notice regime, the same shape as the EU Late Payment "
+            "Directive: Article 1530 sets a payment term between commercial enterprises for the supply "
+            "of goods and services and the interest that runs when it is missed, with no payment or "
+            "pay-less notice, so no_notice_effect is none. Where the contract names a payment date or "
+            "term, the debtor is in default on it without any notice (paragraph 2). Where it names none, "
+            "or names one that breaches paragraph 5, default begins thirty days after the invoice or an "
+            "equivalent request for payment is received, or thirty days after the goods or services are "
+            "received where that is later or the date of the invoice is uncertain, or thirty days after "
+            "acceptance where the law or the contract provides an acceptance procedure (paragraph 4). "
+            "That thirty days from the application is written here as the final date for payment. An "
+            "agreed term may run to sixty days at most; a longer one needs express agreement and must not "
+            "be grossly unfair to the creditor, and it may not exceed sixty days at all where the "
+            "creditor is a small or medium-sized enterprise or an agricultural producer, or the debtor "
+            "is a large enterprise (paragraph 5), so state the agreed final date on the application "
+            "where a contract sets one. A clause excluding default interest is void (paragraph 6). "
+            "Where no rate is agreed, the rate is the one the Central Bank announces each January "
+            "together with a minimum amount for recovery costs; the law requires it to be at least "
+            "eight points above the commercial default rate of Law 3095 and does not itself state a "
+            "number, so none is encoded: read the communique of the year (for 2026, Resmî Gazete "
+            "2 January 2026, no. 33125). Where the price is paid in instalments the terms above apply "
+            "to the first instalment and each unpaid part bears the same interest (paragraph 8); that "
+            "second clock is not computed. The article was read in full in the consolidated text on "
+            "mevzuat.gov.tr on 2026-10-10. It speaks of dealings between commercial enterprises, and "
+            "whether a contract with a public body falls under it was not established, so this row is "
+            "not confirmed for a public Turkish contract. Pending review by a Turkish lawyer."
+        ),
+    },
+    {
+        "code": "hu_ptk_6_130",
+        "jurisdiction": "Hungary",
+        "country_code": "HU",
+        "statute": "Polgári Törvénykönyv (2013. évi V. törvény)",
+        "statute_reference": "6:130. § and 6:155. §, https://njt.jog.gov.hu/jogszabaly/2013-5-00-00",
+        "due_date_basis": "application_date",
+        "due_date_days": 0,
+        "due_date_day_basis": "calendar",
+        "payment_notice_basis": "application_date",
+        "payment_notice_days": None,
+        "payment_notice_day_basis": "calendar",
+        "final_date_basis": "application_date",
+        "final_date_days": 30,
+        "final_date_day_basis": "calendar",
+        "pay_less_days": None,
+        "pay_less_day_basis": "calendar",
+        "no_notice_effect": "none",
+        "interest_basis": "reference_rate_plus_margin",
+        "interest_reference_rate": (
+            "Magyar Nemzeti Bank base rate (jegybanki alapkamat) in force on the first day of the calendar half-year"
+        ),
+        "interest_margin_percent": Decimal("8.000"),
+        "interest_fixed_percent": None,
+        "interest_statute": "6:155. § (1)",
+        "notes": (
+            "An interest basis rather than a notice regime, the same shape as the EU Late Payment "
+            "Directive these sections transpose: 6:130. § sets when a money debt is to be paid and "
+            "6:155. § the interest that runs when it is not, with no payment or pay-less notice, so "
+            "no_notice_effect is none. Where the contract sets no time, the debt is to be paid within "
+            "thirty days of receipt of the creditor's demand for payment or invoice (6:130. § (1)), "
+            "written here as the final date for payment. The thirty days run from the creditor's own "
+            "performance instead, which for a contract for works is the end of the handover procedure, "
+            "where the demand or invoice arrived before it, where the date of its receipt cannot be "
+            "established, or where the debtor has to pay without waiting for one (6:130. § (2)); the "
+            "handover procedure itself lasts thirty days (6:247. § (2)). Between undertakings a term "
+            "longer than sixty days that departs from these rules unilaterally and without "
+            "justification to the creditor's detriment is presumed unfair and can be challenged "
+            "(6:130. § (4)), so state the agreed final date on the application where a contract sets "
+            "one. Where the debtor is a contracting authority the term may exceed thirty days only by "
+            "agreed deferral that the nature of the contract justifies, and never sixty; the part "
+            "beyond sixty days is void (6:130. § (3)). Late interest between undertakings, and on a "
+            "contracting authority's debt to an undertaking, is the central bank base rate in force on "
+            "the first day of the calendar half-year the delay falls in, plus eight percentage points, "
+            "that rate holding for the whole half-year; for a debt in a foreign currency the base rate "
+            "of that currency's issuing central bank takes its place (6:155. § (1)). A clause "
+            "excluding late interest is void unless the debtor owes a penalty for the delay "
+            "(6:155. § (4)). Recovery costs are governed by a separate act, 2016. évi IX. törvény, "
+            "which was not read, so no amount is stated. The sections were read on 2026-10-10 in the "
+            "text in force from 2026-10-01 as republished at net.jogtar.hu, because the official "
+            "Nemzeti Jogszabálytár page named in the reference did not serve Book Six that day; "
+            "confirm against the official text before relying on the wording. The public procurement "
+            "rules on paying for construction works and subcontractors were not read, so this row is not confirmed for a Hungarian "
+            "public works contract beyond what 6:130. § itself says of contracting authorities. "
+            "Pending review by a Hungarian lawyer."
+        ),
+    },
+    {
+        "code": "es_ley_3_2004",
+        "jurisdiction": "Spain",
+        "country_code": "ES",
+        "statute": "Ley 3/2004, de 29 de diciembre, de medidas de lucha contra la morosidad en las operaciones comerciales",
+        "statute_reference": "Articles 4, 7, 8 and 9, https://www.boe.es/buscar/act.php?id=BOE-A-2004-21830",
+        "due_date_basis": "application_date",
+        "due_date_days": 0,
+        "due_date_day_basis": "calendar",
+        "payment_notice_basis": "application_date",
+        "payment_notice_days": None,
+        "payment_notice_day_basis": "calendar",
+        "final_date_basis": "application_date",
+        "final_date_days": 30,
+        "final_date_day_basis": "calendar",
+        "pay_less_days": None,
+        "pay_less_day_basis": "calendar",
+        "no_notice_effect": "none",
+        "interest_basis": "reference_rate_plus_margin",
+        "interest_reference_rate": (
+            "European Central Bank rate on its most recent main refinancing operation before the first day "
+            "of the calendar half-year"
+        ),
+        "interest_margin_percent": Decimal("8.000"),
+        "interest_fixed_percent": None,
+        "interest_statute": "Article 7(2); the resulting rate is published in the Boletín Oficial del Estado each half-year",
+        "notes": (
+            "An interest basis rather than a notice regime, the same shape as the EU Late Payment "
+            "Directive this law transposes: Article 4 sets a payment term and Article 7 the interest "
+            "that runs when it is missed, with no payment or pay-less notice, so no_notice_effect is "
+            "none. The law covers payments between undertakings and between a main contractor and its "
+            "suppliers and subcontractors (Article 3). Where the contract sets no date or term, payment "
+            "is due thirty calendar days after the goods are received or the services performed, even "
+            "if the invoice arrived earlier (Article 4(1)); that clock starts at receipt or performance "
+            "and not at the invoice, so enter that date as the application date. Where the law or the "
+            "contract provides an acceptance or verification procedure, it may last thirty calendar "
+            "days at most from receipt or performance, and payment is due thirty days after the "
+            "acceptance (Article 4(2)). The parties may agree a longer term, but never more than sixty "
+            "calendar days (Article 4(3)): unlike the Directive, the sixty days are a ceiling with no "
+            "exception, which is why this is a national row. State the agreed final date on the "
+            "application where a contract sets one. The supplier is to deliver the invoice within "
+            "fifteen calendar days of receipt or performance (Article 4(1)). The statutory rate, where "
+            "none is agreed, is the European Central Bank rate on its most recent main refinancing "
+            "operation before the first day of the calendar half-year plus eight percentage points, "
+            "applied for the six months that follow (Article 7(2)). A debtor in default also owes a "
+            "fixed 40 euros for recovery costs without any request (Article 8(1)). A clause excluding "
+            "late interest or that sum is void, and an agreed rate seventy percent below the statutory "
+            "one is treated as abusive unless shown otherwise (Article 9(1)). Ley 32/2006 on "
+            "subcontracting in construction was read for a payment rule and has none: it regulates "
+            "the chain of subcontracting, registration and documentation. Read in the consolidated "
+            "text on boe.es on 2026-10-10. Pending review by a Spanish lawyer."
+        ),
+    },
+    {
+        "code": "es_lcsp_198",
+        "jurisdiction": "Spain (public)",
+        "country_code": "ES",
+        "statute": "Ley 9/2017, de 8 de noviembre, de Contratos del Sector Público",
+        "statute_reference": "Articles 198(4), 216 and 240, https://www.boe.es/buscar/act.php?id=BOE-A-2017-12902",
+        "due_date_basis": "application_date",
+        "due_date_days": 0,
+        "due_date_day_basis": "calendar",
+        "payment_notice_basis": "application_date",
+        "payment_notice_days": None,
+        "payment_notice_day_basis": "calendar",
+        "final_date_basis": "application_date",
+        "final_date_days": 30,
+        "final_date_day_basis": "calendar",
+        "pay_less_days": None,
+        "pay_less_day_basis": "calendar",
+        "no_notice_effect": "none",
+        "interest_basis": "reference_rate_plus_margin",
+        "interest_reference_rate": (
+            "European Central Bank rate on its most recent main refinancing operation before the first day "
+            "of the calendar half-year"
+        ),
+        "interest_margin_percent": Decimal("8.000"),
+        "interest_fixed_percent": None,
+        "interest_statute": "Article 198(4), which applies the interest and recovery costs of Ley 3/2004, Articles 7 and 8",
+        "notes": (
+            "The payment term of a Spanish public works contract, which has two steps where this "
+            "table has one clock. The Administration must approve the works certificate, or the "
+            "document confirming conformity, within thirty days of the actual delivery or "
+            "performance, and must pay within thirty days of that approval (Article 198(4)). The "
+            "thirty days written here as the final date for payment are the second step, so enter the "
+            "date the certificate was approved as the application date; the approval period before it "
+            "is not computed. Works certificates are issued monthly, within the first ten days after "
+            "the month they cover, and are payments on account subject to the final measurement "
+            "(Article 240(1)). Past the thirty days the contractor is owed the late interest and the "
+            "recovery costs of Ley 3/2004, provided it filed the invoice with the administrative "
+            "register within thirty days of delivery; filed late, interest starts only thirty days "
+            "after a correct filing (Article 198(4)). A delay of more than four months entitles the "
+            "contractor to suspend performance on one month's notice, and more than six months to "
+            "terminate (Article 198(5) and (6)). Down the chain, the contractor's terms to its "
+            "subcontractors and suppliers may be no less favourable than those of Ley 3/2004 and run "
+            "from acceptance, which must come within thirty days of delivery and is deemed given if "
+            "it does not (Article 216(2) and (3)); a subcontractor cannot waive those rights "
+            "(Article 216(6)). Use es_ley_3_2004 for that subcontract clock. No notice sequence, so "
+            "no_notice_effect is none. Read in the consolidated text on boe.es on 2026-10-10. Pending "
+            "review by a Spanish lawyer."
+        ),
+    },
+    {
         "code": "ng_ppa_2007",
         "jurisdiction": "Nigeria (public)",
         "country_code": "NG",

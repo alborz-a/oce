@@ -61,6 +61,7 @@ import {
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { PageHeader } from '@/shared/ui/PageHeader';
+import { RegisterExportButton, RecordPdfButton, type RegisterExportTarget } from '@/shared/ui/RegisterExport';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { getErrorMessage } from '@/shared/lib/api';
 import { fetchProjectList } from '@/shared/lib/projectList';
@@ -69,6 +70,7 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useActiveProjectId } from '@/shared/hooks/useActiveProjectId';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import { useTabKeyboardNav } from '@/shared/hooks/useTabKeyboardNav';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 import {
   listNotices,
   listVariationRequests,
@@ -91,6 +93,8 @@ import {
   deleteVO,
   deleteDaywork,
   deleteEoT,
+  downloadVariationRegister,
+  downloadVariationRequestPdf,
   submitVR,
   approveVR,
   rejectVR,
@@ -134,12 +138,27 @@ import { VariationSourcePicker } from './VariationSourcePicker';
 import { variationsGuide } from './variationsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildVariationsInsights, classLabel, statusLabel, urgencyLabel } from './variationsInsights';
+import {
+  DEFAULT_VARIATIONS_TAB,
+  VARIATIONS_TABS,
+  isVariationsTab,
+  type VariationsTab,
+} from './variationsTabs';
 
-const VARIATIONS_TAB_IDS = ['notices', 'requests', 'orders', 'daywork', 'eot'] as const;
-type Tab = (typeof VARIATIONS_TAB_IDS)[number];
+type Tab = VariationsTab;
+const VARIATIONS_TAB_IDS = VARIATIONS_TABS;
+const isTab = isVariationsTab;
 
-const isTab = (value: string | null): value is Tab =>
-  (VARIATIONS_TAB_IDS as readonly string[]).includes(value ?? '');
+/** The register the export button offers first on each tab: the one the tab
+ *  is a view of. Orders and daywork have no register of their own, so they
+ *  lead with the variation register they belong to. */
+const REGISTER_BY_TAB: Record<Tab, 'variation' | 'claim' | 'notice'> = {
+  notices: 'notice',
+  requests: 'variation',
+  orders: 'variation',
+  daywork: 'variation',
+  eot: 'claim',
+};
 
 /** The record whose drawer is open, keyed by the tab it lives on. */
 type Selection =
@@ -457,9 +476,29 @@ export function VariationsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const highlightedTab = searchParams.get('tab');
   const highlightedId = searchParams.get('highlight');
-  const [tab, setTab] = useState<Tab>(isTab(highlightedTab) ? highlightedTab : 'notices');
+  // The address is the one place the open tab is kept. A menu row, a deep
+  // link and the browser's back button all change the address while this page
+  // stays mounted, and a tab held in state would not hear any of them. A
+  // missing or unknown value shows the default tab.
+  const tab: Tab = isTab(highlightedTab) ? highlightedTab : DEFAULT_VARIATIONS_TAB;
+  const setTab = (next: Tab) => {
+    if (next === tab) return;
+    // Pushed, not replaced: back returns to the tab the reader came from. The
+    // highlight names a record on the tab being left, so it does not travel.
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set('tab', next);
+      params.delete('highlight');
+      return params;
+    });
+  };
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('');
+  // A filter belongs to the tab it was set on, however the tab was left.
+  useEffect(() => {
+    setSearch('');
+    setStatusFilter('');
+  }, [tab]);
   /* Both of these narrow every tab, and the status one is sent to the
      endpoint, which applies it before counting. So while either is set the
      `total` on the envelope describes the query rather than the register and
@@ -473,10 +512,7 @@ export function VariationsPage() {
   const onTabKeyDown = useTabKeyboardNav<Tab>({
     ids: VARIATIONS_TAB_IDS,
     activeId: tab,
-    onChange: (next) => {
-      setTab(next);
-      clearFilters();
-    },
+    onChange: setTab,
     orientation: 'horizontal',
   });
   const [selected, setSelected] = useState<Selection>(() =>
@@ -604,56 +640,60 @@ export function VariationsPage() {
     refetchOnWindowFocus: true,
   });
 
+  // The three registers the module prints. Each is exported whole: the routes
+  // take no filter, and the claims register also lists the disruption claims,
+  // which no tab here shows.
+  const exportTargets = useMemo<RegisterExportTarget[]>(
+    () => [
+      {
+        id: 'variation',
+        title: t('variations.export_register', { defaultValue: 'Variation register' }),
+        download: (format, locale) => downloadVariationRegister('variation', projectId, format, locale),
+      },
+      {
+        id: 'notice',
+        title: t('variations.export_notices', { defaultValue: 'Notice register' }),
+        download: (format, locale) => downloadVariationRegister('notice', projectId, format, locale),
+      },
+      {
+        id: 'claim',
+        title: t('variations.export_claims', {
+          defaultValue: 'Claims register (disruption and extension of time)',
+        }),
+        download: (format, locale) => downloadVariationRegister('claim', projectId, format, locale),
+      },
+    ],
+    [projectId, t],
+  );
+
   const filteredNotices = useMemo(() => {
     const items = noticesQ.data?.items ?? [];
     if (!search.trim()) return items;
-    const s = search.toLowerCase();
-    return items.filter(
-      (n) =>
-        n.code.toLowerCase().includes(s) ||
-        (n.title || '').toLowerCase().includes(s) ||
-        (n.description || '').toLowerCase().includes(s),
-    );
+    return items.filter((n) => matchesSearch(search, n.code, n.title, n.description));
   }, [noticesQ.data, search]);
 
   const filteredRequests = useMemo(() => {
     const items = requestsQ.data?.items ?? [];
     if (!search.trim()) return items;
-    const s = search.toLowerCase();
-    return items.filter(
-      (r) =>
-        r.code.toLowerCase().includes(s) ||
-        (r.title || '').toLowerCase().includes(s) ||
-        (r.description || '').toLowerCase().includes(s),
-    );
+    return items.filter((r) => matchesSearch(search, r.code, r.title, r.description));
   }, [requestsQ.data, search]);
 
   const filteredOrders = useMemo(() => {
     const items = ordersQ.data?.items ?? [];
     if (!search.trim()) return items;
-    const s = search.toLowerCase();
-    return items.filter(
-      (o) =>
-        o.code.toLowerCase().includes(s) || (o.title || '').toLowerCase().includes(s),
-    );
+    return items.filter((o) => matchesSearch(search, o.code, o.title));
   }, [ordersQ.data, search]);
 
   const filteredDaywork = useMemo(() => {
     const items = dayworkQ.data?.items ?? [];
     if (!search.trim()) return items;
-    const s = search.toLowerCase();
-    return items.filter(
-      (d) =>
-        d.sheet_number.toLowerCase().includes(s) ||
-        (d.description || '').toLowerCase().includes(s),
-    );
+    return items.filter((d) => matchesSearch(search, d.sheet_number, d.description));
   }, [dayworkQ.data, search]);
 
   const filteredEot = useMemo(() => {
     const items = eotQ.data?.items ?? [];
     if (!search.trim()) return items;
-    const s = search.toLowerCase();
-    return items.filter((e) => (e.description || '').toLowerCase().includes(s));
+    return items.filter((e) => matchesSearch(search, e.description));
   }, [eotQ.data, search]);
 
   // Module Insights - the toggleable visualization panel for this module. It
@@ -750,6 +790,17 @@ export function VariationsPage() {
           <>
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <ModuleGuideButton content={variationsGuide} />
+            {/* Never called empty: one tab's list says nothing about the
+                other two registers, and the claims register holds records
+                this screen does not list. */}
+            <RegisterExportButton
+              label={t('variations.export_registers', { defaultValue: 'Export registers' })}
+              projectId={projectId}
+              targets={exportTargets}
+              primaryTargetId={REGISTER_BY_TAB[tab]}
+              size="md"
+              testId="variations-export"
+            />
             <Button variant="primary" icon={<Plus size={14} />} onClick={() => setCreateOpen(true)}>
               {tab === 'notices'
                 ? t('variations.new_notice', { defaultValue: 'New Notice' })
@@ -966,10 +1017,7 @@ export function VariationsPage() {
                 aria-selected={isActive}
                 aria-controls={`variations-panel-${tabItem.id}`}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => {
-                  setTab(tabItem.id);
-                  clearFilters();
-                }}
+                onClick={() => setTab(tabItem.id)}
                 className={clsx(
                   'flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors',
                   tab === tabItem.id
@@ -2696,7 +2744,14 @@ export function DetailDrawer({
     request?.code ||
     order?.code ||
     sheet?.sheet_number ||
-    (claim ? `EoT ${claim.id.slice(0, 8)}` : '');
+    // An extension of time claim has no stored code, unlike the four records
+    // above, so the word in front of its id is a label and is translated.
+    (claim
+      ? t('variations.eot_heading', {
+          defaultValue: 'EoT claim {{ref}}',
+          ref: claim.id.slice(0, 8),
+        })
+      : '');
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -2720,14 +2775,24 @@ export function DetailDrawer({
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border-light bg-surface-elevated px-5 py-3">
           <h2 className="text-base font-semibold">{heading}</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded p-1 hover:bg-surface-secondary"
-            aria-label={t('common.close', { defaultValue: 'Close' })}
-          >
-            <X size={16} />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Only a request has a printed form of its own; notices, orders,
+                daywork sheets and claims are printed as registers. */}
+            {request && (
+              <RecordPdfButton
+                download={(locale) => downloadVariationRequestPdf(request.id, locale, request.code)}
+                testId="variation-request-pdf"
+              />
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded p-1 hover:bg-surface-secondary"
+              aria-label={t('common.close', { defaultValue: 'Close' })}
+            >
+              <X size={16} />
+            </button>
+          </div>
         </div>
 
         <div className="space-y-4 p-5">

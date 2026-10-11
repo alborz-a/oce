@@ -75,6 +75,8 @@ const COUNTED = [
   'cases_for_module.steps_count',
   'boq.rs_resources_count',
   'boq.positions_count',
+  'boq.sections_count',
+  'processes.restarts',
   'bim.requirements.warnings_count',
   'explorer.missingness_columns_count',
   'costs.import_rows_processed_count',
@@ -130,6 +132,41 @@ describe('counted labels agree with their number', () => {
     expect(ru.t('contracts.compliance.errors_count', { count: 5 })).toBe('5 ошибок');
     expect(ru.t('contracts.compliance.errors_count', { count: 21 })).toBe('21 ошибка');
     expect(ru.t('contracts.register_count', { count: 3 })).toBe('3 контракта');
+  });
+
+  it('the BOQ summary counts sections and positions each in its own form', () => {
+    const ru = alone('ru');
+    expect([1, 3, 5, 21].map((count) => ru.t('boq.sections_count', { count }))).toEqual([
+      '1 раздел',
+      '3 раздела',
+      '5 разделов',
+      '21 раздел',
+    ]);
+    const ar = alone('ar');
+    expect([1, 2, 3, 11, 100].map((count) => ar.t('boq.sections_count', { count }))).toEqual([
+      'قسم واحد',
+      'قسمان',
+      '3 أقسام',
+      '11 قسمًا',
+      '100 قسم',
+    ]);
+    expect(ar.t('boq.positions_count', { count: 2 })).toBe('بندان');
+    const de = alone('de');
+    expect(de.t('boq.sections_count', { count: 1 })).toBe('1 Abschnitt');
+  });
+
+  it('a singular form shared with 21 carries the number instead of saying "once"', () => {
+    // Russian, Ukrainian and Croatian pick the singular for 21 and 31, and
+    // Filipino for most counts, so the word "once" cannot live in that form.
+    expect(alone('ru').t('processes.restarts', { count: 21 })).toBe(
+      'Автоматически перезапускалась 21 раз с запуска сервера.',
+    );
+    for (const code of ['ru', 'uk', 'hr', 'fil']) {
+      const instance = alone(code);
+      for (const count of [1, 21, 31]) {
+        expect(instance.t('processes.restarts', { count })).toContain(String(count));
+      }
+    }
   });
 
   it('Polish separates 2-4 from 5 and up', () => {

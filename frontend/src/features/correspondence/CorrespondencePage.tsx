@@ -51,6 +51,7 @@ import {
 } from '@/shared/ui';
 import { ContactSearchInput } from '@/shared/ui/ContactSearchInput';
 import { PageHeader } from '@/shared/ui/PageHeader';
+import { RegisterExportButton, RecordPdfButton } from '@/shared/ui/RegisterExport';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { apiGet, type Page } from '@/shared/lib/api';
@@ -64,6 +65,8 @@ import {
   deleteCorrespondence,
   uploadCorrespondenceAttachment,
   downloadCorrespondenceAttachment,
+  downloadCorrespondenceLog,
+  downloadCorrespondencePdf,
   attachmentDisplayName,
   CORRESPONDENCE_TYPES,
   type Correspondence,
@@ -78,6 +81,7 @@ import { CreateTaskFromSourceDialog } from '@/features/tasks';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildCorrespondenceInsights } from './correspondenceInsights';
 import { fmtList } from '@/shared/lib/formatters';
+import { matchesSearch } from '@/shared/lib/highlightMatch';
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -1325,6 +1329,12 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-1">
+            {/* The printed form of this entry, to attach to a letter. Open to
+                every reader, unlike the edits beside it. */}
+            <RecordPdfButton
+              download={(locale) => downloadCorrespondencePdf(item.id, locale, item.reference_number)}
+              testId={`correspondence-pdf-${item.id}`}
+            />
             <Button
               variant="secondary"
               size="sm"
@@ -1595,16 +1605,32 @@ export function CorrespondencePage() {
   // on every render would change the identity every dependent useMemo reads.
   const items = useMemo(() => page?.items ?? [], [page]);
 
+  // The log is exported whole (the route takes no filter), so "empty" means
+  // the unfiltered list came back empty, not that a filter matched nothing.
+  const registerEmpty =
+    !directionFilter && !typeFilter && !statusFilter && !isLoading && !isError && (page?.total ?? items.length) === 0;
+  const exportTargets = useMemo(
+    () => [
+      {
+        id: 'register',
+        download: (format: 'pdf' | 'xlsx', locale: string) =>
+          downloadCorrespondenceLog(projectId, format, locale),
+      },
+    ],
+    [projectId],
+  );
+
   // Client-side search
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return items;
-    const q = searchQuery.toLowerCase();
-    return items.filter(
-      (c) =>
-        c.subject.toLowerCase().includes(q) ||
-        c.reference_number.toLowerCase().includes(q) ||
-        (c.from_contact_id || '').toLowerCase().includes(q) ||
-        (c.to_contact_ids ?? []).some((tc) => tc.toLowerCase().includes(q)),
+    return items.filter((c) =>
+      matchesSearch(
+        searchQuery,
+        c.subject,
+        c.reference_number,
+        c.from_contact_id,
+        ...(c.to_contact_ids ?? []),
+      ),
     );
   }, [items, searchQuery]);
 
@@ -1802,6 +1828,13 @@ export function CorrespondencePage() {
           <>
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <ModuleGuideButton content={correspondenceGuide} />
+            <RegisterExportButton
+              label={t('correspondence.export_log', { defaultValue: 'Export log' })}
+              projectId={projectId}
+              empty={registerEmpty}
+              targets={exportTargets}
+              testId="correspondence-export"
+            />
             <Button
               variant="primary"
               size="sm"

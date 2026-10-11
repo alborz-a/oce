@@ -34,6 +34,7 @@ from app.core.validation.engine import (
     rule_registry,
 )
 from app.core.validation.messages import DEFAULT_LOCALE, is_key_present, translate
+from app.core.validation.poz_catalogue import POZ_CATALOGUE_KEY, PozCatalogue, PozCatalogueState, PozEntry
 
 logger = logging.getLogger(__name__)
 
@@ -5462,7 +5463,7 @@ class BirimFiyatCodeRequired(ValidationRule):
     standard = "birimfiyat"
     severity = Severity.ERROR
     category = RuleCategory.COMPLIANCE
-    description = "BOQ positions must have a Bayındırlık birim fiyat poz number"
+    description = "BOQ positions must have a poz number from a unit-price list"
 
     async def validate(self, context: ValidationContext) -> list[RuleResult]:
         locale = _get_locale(context)
@@ -5507,9 +5508,8 @@ class BirimFiyatValidPoz(ValidationRule):
     description = "Poz numbers should follow the published unit-price book format (XX.XXX.XXXX, or XX.XXX/X)"
 
     # The two shapes a Turkish poz number has had. The ministry's unit-price
-    # book has numbered its items XX.XXX.XXXX since the 2014 renumbering
-    # ("15.140.1002"), and that is what every current bill and the Istanbul demo
-    # carry. The older Bayındırlık numbering, XX.XXX/X with an optional "Y."
+    # book numbers its items XX.XXX.XXXX ("15.150.1005"), and that is what
+    # every current bill carries. The older Bayındırlık numbering, XX.XXX/X with an optional "Y."
     # for building works and an optional letter variant ("Y.16.050/04",
     # "04.613/1A"), is still found on revised older contracts. Only the older
     # shape was accepted, so a correctly numbered current bill warned on every
@@ -5566,6 +5566,859 @@ class BirimFiyatValidPoz(ValidationRule):
                     suggestion=suggestion,
                 )
             )
+        return results
+
+
+# The first group of a current poz number is the chapter of the list it was
+# taken from. The five below are the chapters of the unit-price book of the
+# Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (Yüksek Fen Kurulu
+# Başkanlığı), read from the 2025 edition as the national cost base carries
+# it; the 2026 edition was announced on 15 January 2026:
+# https://yfk.csb.gov.tr/1-ocak-2026-tarihinden-itibaren-gecerli-2026-yili-rayic-insaat-ve-tesisat-birim-fiyatlari-ve-analizleri-ile-rayic-tuik-eslestirme-endeksleri-yayinlanmistir-duyuru-469596
+# review_status: read from the data, not from a table of chapters the
+# ministry publishes; pending review by a Turkish quantity surveyor.
+_TR_MINISTRY_CHAPTERS: dict[str, str] = {
+    "10": "Rayiçler",
+    "15": "İnşaat",
+    "19": "Makine saatlik ücret analizleri",
+    "25": "Mekanik tesisat",
+    "35": "Elektrik tesisatı",
+}
+
+# First groups other public bodies number their own lists under in the same
+# three-group shape (İLBANK, MSB, DSİ, AYGM, PTT), again as the 2024 to 2026
+# lists in the national cost base carry them. They are accepted so that a bill
+# written against one of those lists is not told its chapter is unknown.
+# review_status: unconfirmed against the publishers' own documents.
+_TR_OTHER_PUBLISHER_CHAPTERS: frozenset[str] = frozenset({"41", "43", "48", "51", "52", "55", "56", "74", "75", "77"})
+
+_TR_CURRENT_POZ_RE = re.compile(r"^(\d{2})\.\d{3}\.\d{4}(?:/[A-Z0-9]{1,2})?$")
+_TR_SECTION_POZ_RE = re.compile(r"^(\d{2})(?:\.\d{3})?$")
+
+# The units the lists measure in, by the key a typed unit reduces to, each
+# mapped to one spelling so that "Ad" and "adet" on two lines of one poz are
+# the same unit. Collected from the unit column of the lists in the national
+# cost base; chapters 25 and 35 themselves use only Ad, m, m², Tk, Kg and m³.
+# "gün" is the day a labour or hire line is measured in. The last six are the
+# platform's own tokens, which the bill editor stores when a unit is picked
+# from its list rather than typed.
+_TR_UNITS: dict[str, str] = {
+    "m": "m",
+    "mt": "m",
+    "metre": "m",
+    "m2": "m2",
+    "metrekare": "m2",
+    "m3": "m3",
+    "metreküp": "m3",
+    "dm3": "dm3",
+    "mm": "mm",
+    "cm": "cm",
+    "km": "km",
+    "ad": "adet",
+    "adet": "adet",
+    "tk": "takım",
+    "takım": "takım",
+    "takim": "takım",
+    "kg": "kg",
+    "kilogram": "kg",
+    "g": "g",
+    "gr": "g",
+    "ton": "ton",
+    "t": "ton",
+    "sa": "saat",
+    "saat": "saat",
+    "gün": "gün",
+    "gun": "gün",
+    "ay": "ay",
+    "lt": "litre",
+    "l": "litre",
+    "litre": "litre",
+    "kwh": "kwh",
+    "ha": "hektar",
+    "hektar": "hektar",
+    "da": "dekar",
+    "dekar": "dekar",
+    "nokta": "nokta",
+    "paket": "paket",
+    "kt": "kt",
+    "pcs": "adet",
+    "set": "takım",
+    "lsum": "lsum",
+    "hr": "saat",
+    "day": "gün",
+    "month": "ay",
+}
+
+# "100 m²", "1000 Ad": the lists write a bulk unit as a count in front of the
+# unit, and it is a different unit from the plain one.
+_TR_UNIT_MULTIPLE_RE = re.compile(r"^(\d+)(\D.*)$")
+
+# Yapım İşleri İhaleleri Uygulama Yönetmeliği, Madde 11(1): the estimated cost
+# is built from prices that carry no contractor profit and general expenses,
+# to which 25 percent is then added, once. In force as consolidated on
+# mevzuat.gov.tr, read 2026-10-10:
+# https://www.mevzuat.gov.tr/MevzuatMetin/yonetmelik/7.5.12916.pdf
+_TR_PROFIT_AND_GENERAL_EXPENSES_PERCENT = Decimal("25")
+
+_TR_PROFIT_LINE_NAME_RE = re.compile(r"(?:yüklenici|müteahhit|muteahhit|yuklenici)\s+k[âa]r|genel\s+gider")
+
+
+def _tr_fold(text: str) -> str:
+    """Case-fold Turkish text without leaving the dot of a folded ``İ`` behind.
+
+    Python folds "İ" to "i" plus a combining dot above, so "LİTRE" would not
+    equal "litre". The dot is dropped; the dotless "ı" is left as it is, and
+    the lists that need it hold both spellings.
+    """
+    return unicodedata.normalize("NFKC", text).casefold().replace("̇", "")
+
+
+def _tr_poz(pos: dict[str, Any]) -> str:
+    """The poz number on a position, upper-cased with white space collapsed."""
+    return re.sub(r"\s+", " ", _national_code(pos, "birimfiyat")).upper()
+
+
+def _tr_unit(unit: Any) -> tuple[str, bool]:
+    """The unit a typed unit names, and whether the lists measure in it.
+
+    Returns:
+        The spelling two lines are compared by, and ``True`` when the unit is
+        one of :data:`_TR_UNITS`, with or without a count in front. An
+        unrecognised unit is returned as its own key, so two lines carrying
+        the same unknown unit still agree with each other.
+    """
+    key = _national_unit_key(str(unit or "")).replace("̇", "")
+    multiple = ""
+    match = _TR_UNIT_MULTIPLE_RE.match(key)
+    if match:
+        multiple, key = match.group(1), match.group(2)
+    known = _TR_UNITS.get(key)
+    spelling = known or key
+    if multiple and multiple != "1":
+        spelling = f"{multiple} {spelling}"
+    return spelling, known is not None
+
+
+class BirimFiyatChapterRecognised(ValidationRule):
+    """A current poz number has to start with a chapter some list has.
+
+    The shape check passes ``99.999.9999``; only the first group says whether
+    a number can be in a book at all. Older numbers and the bill's own items
+    are not judged, because their first group never was a chapter of the
+    current book.
+    """
+
+    rule_id = "birimfiyat.chapter_recognised"
+    name = "Poz Chapter Recognised"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.COMPLIANCE
+    description = "The first group of a poz number should be a chapter of a published unit-price list"
+
+    @staticmethod
+    def chapter_of(code: str, *, is_section: bool = False) -> str | None:
+        """The chapter a poz number names, or ``None`` when it names none to judge."""
+        match = _TR_CURRENT_POZ_RE.match(code)
+        if match is None and is_section:
+            match = _TR_SECTION_POZ_RE.match(code)
+        return match.group(1) if match else None
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        results: list[RuleResult] = []
+        leaf_ids = {id(pos) for pos in _get_leaf_positions(context)}
+        for pos in _get_positions(context):
+            code = _tr_poz(pos)
+            chapter = self.chapter_of(code, is_section=id(pos) not in leaf_ids)
+            if chapter is None:
+                continue
+            passed = chapter in _TR_MINISTRY_CHAPTERS or chapter in _TR_OTHER_PUBLISHER_CHAPTERS
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.chapter_recognised.fail",
+                    locale=locale,
+                    code=code,
+                    chapter=chapter,
+                    ordinal=pos.get("ordinal", "?"),
+                )
+                suggestion = translate("birimfiyat.chapter_recognised.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={
+                        "given_code": code,
+                        "chapter": chapter,
+                        "chapter_name": _TR_MINISTRY_CHAPTERS.get(chapter),
+                    },
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatUnitRecognised(ValidationRule):
+    """A line should be measured in a unit the unit-price lists use."""
+
+    rule_id = "birimfiyat.unit_recognised"
+    name = "Birim Fiyat Unit Recognised"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.COMPLIANCE
+    description = "Units should be ones the published unit-price lists measure in"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        results: list[RuleResult] = []
+        for pos in _get_leaf_positions(context):
+            unit = str(pos.get("unit") or "").strip()
+            if not unit:
+                continue
+            spelling, passed = _tr_unit(unit)
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.unit_recognised.fail",
+                    locale=locale,
+                    unit=unit,
+                    ordinal=pos.get("ordinal", "?"),
+                )
+                suggestion = translate("birimfiyat.unit_recognised.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={"given_unit": unit, "read_as": spelling},
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatPozUnitConsistent(ValidationRule):
+    """One poz number is measured in one unit throughout a bill.
+
+    A poz is defined in a single unit, so two lines of one bill citing the
+    same number in two units cannot both be right. Which of them is wrong
+    needs the list itself; that they disagree does not.
+    """
+
+    rule_id = "birimfiyat.poz_unit_consistent"
+    name = "Poz Measured In One Unit"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = "A poz number should carry the same unit on every line that cites it"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        units_by_poz: dict[str, list[str]] = {}
+        for pos in _get_leaf_positions(context):
+            code = _tr_poz(pos)
+            unit = str(pos.get("unit") or "").strip()
+            if not code or not unit:
+                continue
+            spelling = _tr_unit(unit)[0]
+            seen = units_by_poz.setdefault(code, [])
+            if spelling not in seen:
+                seen.append(spelling)
+
+        results: list[RuleResult] = []
+        for pos in _get_leaf_positions(context):
+            code = _tr_poz(pos)
+            if not code or not str(pos.get("unit") or "").strip():
+                continue
+            units = units_by_poz.get(code, [])
+            passed = len(units) <= 1
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.poz_unit_consistent.fail",
+                    locale=locale,
+                    code=code,
+                    count=len(units),
+                    units=", ".join(units),
+                )
+                suggestion = translate("birimfiyat.poz_unit_consistent.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={"given_code": code, "units": list(units)},
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatPozRateConsistent(ValidationRule):
+    """One poz number in one unit has one unit price throughout a bill.
+
+    Lines that are not priced yet are left out, so a half-priced bill is not
+    reported as inconsistent. Rates are compared at two decimals, which is
+    what the lira is quoted to.
+    """
+
+    rule_id = "birimfiyat.poz_rate_consistent"
+    name = "Poz Priced At One Rate"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = "A poz number should carry the same unit rate on every line that cites it"
+
+    @staticmethod
+    def _key_and_rate(pos: dict[str, Any]) -> tuple[tuple[str, str], Decimal] | None:
+        code = _tr_poz(pos)
+        if not code:
+            return None
+        rate = _to_number(pos.get("unit_rate"))
+        if rate is None or rate is _NOT_A_NUMBER or float(rate) <= 0:  # type: ignore[arg-type]
+            return None
+        unit = _tr_unit(pos.get("unit"))[0]
+        return (code, unit), Decimal(str(rate)).quantize(Decimal("0.01"))
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        rates_by_poz: dict[tuple[str, str], list[Decimal]] = {}
+        for pos in _get_leaf_positions(context):
+            keyed = self._key_and_rate(pos)
+            if keyed is None:
+                continue
+            seen = rates_by_poz.setdefault(keyed[0], [])
+            if keyed[1] not in seen:
+                seen.append(keyed[1])
+
+        results: list[RuleResult] = []
+        for pos in _get_leaf_positions(context):
+            keyed = self._key_and_rate(pos)
+            if keyed is None:
+                continue
+            rates = rates_by_poz.get(keyed[0], [])
+            passed = len(rates) <= 1
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.poz_rate_consistent.fail",
+                    locale=locale,
+                    code=keyed[0][0],
+                    count=len(rates),
+                    rates=", ".join(_fmt_decimal(float(rate)) for rate in sorted(rates)),
+                )
+                suggestion = translate("birimfiyat.poz_rate_consistent.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={
+                        "given_code": keyed[0][0],
+                        "unit": keyed[0][1],
+                        "unit_rates": [str(rate) for rate in sorted(rates)],
+                    },
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatOwnItemAnalysed(ValidationRule):
+    """An own item (özel poz) is priced by its own analysis.
+
+    A number from the book stands for the book's analysis. A number the bill
+    gives itself stands for nothing until the bill shows the build-up, so the
+    line has to carry one: the resources under it, or the analysis written
+    into its note.
+    """
+
+    rule_id = "birimfiyat.own_item_analysed"
+    name = "Own Item Carries An Analysis"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.COMPLETENESS
+    description = "An item numbered by the bill (özel poz) should carry its price analysis"
+
+    _NOTE_KEYS = ("analysis", "analiz", "notes", "note", "comment")
+
+    @classmethod
+    def has_analysis(cls, pos: dict[str, Any]) -> bool:
+        """Whether a position carries a resource build-up or an analysis note."""
+        meta = _position_metadata(pos)
+        resources = meta.get("resources")
+        if isinstance(resources, list) and any(isinstance(entry, dict) and entry for entry in resources):
+            return True
+        return any(isinstance(meta.get(key), str) and meta[key].strip() for key in cls._NOTE_KEYS)
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        locale = _get_locale(context)
+        results: list[RuleResult] = []
+        for pos in _get_leaf_positions(context):
+            code = _tr_poz(pos)
+            if not BirimFiyatValidPoz._SPECIAL_PATTERN.match(code):
+                continue
+            passed = self.has_analysis(pos)
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.own_item_analysed.fail",
+                    locale=locale,
+                    code=code,
+                    ordinal=pos.get("ordinal", "?"),
+                )
+                suggestion = translate("birimfiyat.own_item_analysed.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={"given_code": code},
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatProfitOverheadOnce(ValidationRule):
+    """Contractor profit and general expenses are added once.
+
+    The Turkish 25 percent is one combined line. A stack that carries it on
+    two lines, or as an overhead line and a profit line that together exceed
+    it, has counted it twice. A single line is never questioned, whatever its
+    percentage: a private contract is free to agree another figure.
+
+    Whether the rates under the stack are published unit prices, which
+    already contain the 25 percent, cannot be read from a bill line and is
+    not judged here.
+    """
+
+    rule_id = "birimfiyat.profit_overhead_once"
+    name = "Profit And General Expenses Applied Once"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.CONSISTENCY
+    description = "The combined contractor profit and general expenses percentage should be applied once"
+
+    @staticmethod
+    def _lines(context: ValidationContext) -> list[dict[str, Any]] | None:
+        data = context.data
+        raw = data.get("markups") if isinstance(data, dict) else None
+        if not isinstance(raw, list):
+            return None
+        active = [m for m in raw if isinstance(m, dict) and m.get("is_active", True)]
+        replaced = {str(m.get("overrides_id")) for m in active if m.get("overrides_id")}
+        lines: list[dict[str, Any]] = []
+        for markup in active:
+            if markup.get("scope_position_id") or str(markup.get("id")) in replaced:
+                continue
+            if str(markup.get("markup_type") or "percentage").strip().lower() != "percentage":
+                continue
+            category = str(markup.get("category") or "").strip().lower()
+            named = _TR_PROFIT_LINE_NAME_RE.search(_tr_fold(str(markup.get("name") or "")))
+            if category in {"overhead", "profit"} or named:
+                lines.append(markup)
+        return lines
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        lines = self._lines(context)
+        if lines is None:
+            return []
+        locale = _get_locale(context)
+        total = Decimal("0")
+        for markup in lines:
+            try:
+                total += Decimal(str(markup.get("percentage") or "0"))
+            except InvalidOperation:
+                continue
+        limit = _TR_PROFIT_AND_GENERAL_EXPENSES_PERCENT
+        passed = not (len(lines) > 1 and total > limit)
+        if passed:
+            message = _ok(locale)
+            suggestion = None
+        else:
+            message = translate(
+                "birimfiyat.profit_overhead_once.fail",
+                locale=locale,
+                count=len(lines),
+                total=_fmt_decimal(float(total)),
+                limit=_fmt_decimal(float(limit), 0),
+            )
+            suggestion = translate("birimfiyat.profit_overhead_once.suggestion", locale=locale)
+        return [
+            RuleResult(
+                rule_id=self.rule_id,
+                rule_name=self.name,
+                severity=self.severity,
+                category=self.category,
+                passed=passed,
+                message=message,
+                element_ref=None,
+                details={
+                    "lines": [str(markup.get("name") or "") for markup in lines],
+                    "total_percent": str(total),
+                    "limit_percent": str(limit),
+                },
+                suggestion=suggestion,
+            )
+        ]
+
+
+# ── Birim Fiyat rules that read the installed unit-price base ───────────
+#
+# The two rules below compare a line with the book it cites. The book reaches
+# them as data: the caller looks the bill's poz numbers up once, in its own
+# session, and puts the answer in the payload
+# (:mod:`app.core.validation.poz_catalogue`). Value, held, silence:
+#
+# * key absent, nobody asked: nothing is said;
+# * book not installed, unreadable or priced into another market: ONE
+#   information result for the bill saying the check did not run and why,
+#   never one per line, never a pass and never a failure of the bill;
+# * a line with no poz, an own item, an older number, a number of another
+#   publisher's list or a number the installed book does not have: nothing
+#   from these two rules. ``code_required``, ``valid_poz``,
+#   ``chapter_recognised`` and ``own_item_analysed`` speak about the first
+#   four. Nothing speaks about a well-formed number of a Ministry chapter
+#   that the installed book does not carry: it may be mistyped, or it may be
+#   new in an edition later than the one installed, and the base does not say
+#   which edition it is.
+#
+# "Ministry" is read off the first group of the number, because the base does
+# not store which institution published a row.
+
+
+def ministry_poz_of(pos: dict[str, Any]) -> str | None:
+    """The poz on a position when it is a current number of a Ministry chapter.
+
+    Returns:
+        The number as :func:`_tr_poz` normalises it, which is the key the
+        installed base is looked up by, or ``None`` for anything else.
+    """
+    code = _tr_poz(pos)
+    match = _TR_CURRENT_POZ_RE.match(code)
+    if match is None or match.group(1) not in _TR_MINISTRY_CHAPTERS:
+        return None
+    return code
+
+
+def _tr_poz_catalogue(context: ValidationContext) -> PozCatalogue | None:
+    """The looked-up book in the payload, or ``None`` when no caller supplied one."""
+    data = context.data
+    found = data.get(POZ_CATALOGUE_KEY) if isinstance(data, dict) else None
+    return found if isinstance(found, PozCatalogue) else None
+
+
+def _tr_line_against_book(pos: dict[str, Any], catalogue: PozCatalogue) -> tuple[str, PozEntry, str, str, str] | None:
+    """A line and the book's entry for its poz, when the two can be compared.
+
+    Returns:
+        ``(poz, entry, unit as typed, unit as read, book unit as read)``, or
+        ``None`` when the line is not one these rules judge: no Ministry poz,
+        a poz the book does not have, no unit on the line, a unit
+        ``birimfiyat.unit_recognised`` already reports, or a book row whose
+        own unit cannot be read.
+    """
+    code = ministry_poz_of(pos)
+    entry = catalogue.entries.get(code) if code else None
+    if code is None or entry is None:
+        return None
+    unit = str(pos.get("unit") or "").strip()
+    if not unit or not entry.unit:
+        return None
+    read_as, known = _tr_unit(unit)
+    book_read_as, book_known = _tr_unit(entry.unit)
+    if not known or not book_known:
+        return None
+    return code, entry, unit, read_as, book_read_as
+
+
+def _tr_book_not_read(rule: ValidationRule, catalogue: PozCatalogue, locale: str) -> RuleResult:
+    """The one result that says the book was not read, so nothing was checked against it."""
+    reason = "not_installed" if catalogue.state is PozCatalogueState.NOT_INSTALLED else "unavailable"
+    return RuleResult(
+        rule_id=rule.rule_id,
+        rule_name=rule.name,
+        severity=Severity.INFO,
+        category=rule.category,
+        passed=False,
+        message=translate(
+            f"birimfiyat.unit_matches_poz_definition.{reason}",
+            locale=locale,
+            region=catalogue.region,
+            count=catalogue.asked,
+        ),
+        element_ref=None,
+        details={"held": reason, "region": catalogue.region, "poz_numbers_asked": catalogue.asked},
+    )
+
+
+class BirimFiyatUnitMatchesPoz(ValidationRule):
+    """A line citing a Ministry poz is measured in the unit the book defines it in.
+
+    ``birimfiyat.poz_unit_consistent`` can say that two lines of one bill
+    disagree; only the book says which of them is right. Units are compared
+    the way ``birimfiyat.unit_recognised`` reads them, so "adet" on the bill
+    and "Ad" in the book are one unit, and "1000 Ad" is not "Ad".
+
+    The check is against the base installed here. It does not know the year
+    of that book, so a poz redefined in a later edition is judged by the
+    installed one.
+    """
+
+    rule_id = "birimfiyat.unit_matches_poz_definition"
+    name = "Unit Is The One The Book Defines"
+    standard = "birimfiyat"
+    severity = Severity.WARNING
+    category = RuleCategory.COMPLIANCE
+    description = "A line citing a poz should be measured in the unit the installed unit-price book defines it in"
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        catalogue = _tr_poz_catalogue(context)
+        if catalogue is None:
+            return []
+        locale = _get_locale(context)
+        if catalogue.state in (PozCatalogueState.NOT_INSTALLED, PozCatalogueState.UNAVAILABLE):
+            return [_tr_book_not_read(self, catalogue, locale)]
+        # A base priced into another market keeps its units, so this rule
+        # still judges; the rate rule is the one that holds.
+        results: list[RuleResult] = []
+        for pos in _get_leaf_positions(context):
+            line = _tr_line_against_book(pos, catalogue)
+            if line is None:
+                continue
+            code, entry, unit, read_as, book_read_as = line
+            passed = read_as == book_read_as
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    "birimfiyat.unit_matches_poz_definition.fail",
+                    locale=locale,
+                    code=code,
+                    ordinal=pos.get("ordinal", "?"),
+                    unit=unit,
+                    book_unit=entry.unit,
+                )
+                suggestion = translate("birimfiyat.unit_matches_poz_definition.suggestion", locale=locale)
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=self.severity,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={
+                        "given_code": code,
+                        "given_unit": unit,
+                        "read_as": read_as,
+                        "book_unit": entry.unit,
+                        "book_unit_read_as": book_read_as,
+                        "region": catalogue.region,
+                    },
+                    suggestion=suggestion,
+                )
+            )
+        return results
+
+
+class BirimFiyatRateAgainstPublished(ValidationRule):
+    """A line's rate is set beside the price the installed book publishes for its poz.
+
+    A bill is legitimately priced below the published price (a tender discount
+    is ordinary) or above it. What difference makes a finding is not known
+    here, so it is data: ``published_price_comparison`` in the pack's
+    ``bayindirlik_unit_prices`` document carries one percentage for each
+    direction, and both ship unset. Unset, the rule only states the
+    difference, as information. A direction that is set escalates a larger
+    difference to a warning.
+
+    The published prices of the building, mechanical and electrical chapters
+    contain the 25 percent contractor profit and general expenses; the rule
+    compares with the stored price as it stands and derives nothing from it.
+
+    What it cannot check: the base stores neither the year of the book nor
+    its publisher, so no message names an edition, and a bill for one year is
+    compared with whatever year is installed. Rates are compared only in the
+    base's own currency; a bill in another currency is held, with the reason.
+    A line whose unit differs from the book's gets no verdict here, because
+    ``birimfiyat.unit_matches_poz_definition`` reports it and a rate per
+    another unit compares with nothing.
+    """
+
+    rule_id = "birimfiyat.unit_rate_within_published_price"
+    name = "Rate Beside The Published Price"
+    standard = "birimfiyat"
+    # What the rule says with the shipped, unset thresholds. A result past a
+    # threshold the document sets is raised as a warning.
+    severity = Severity.INFO
+    category = RuleCategory.COMPLIANCE
+    description = "States how far a line's rate is from the price the installed unit-price book publishes for its poz"
+
+    @staticmethod
+    def _unit_rule_reports() -> bool:
+        """Whether the unit rule is there to say, once, that the book was not read."""
+        rule = rule_registry.get_rule(BirimFiyatUnitMatchesPoz.rule_id)
+        return rule is not None and rule.enabled
+
+    def _held(self, locale: str, reason: str, **params: Any) -> RuleResult:
+        return RuleResult(
+            rule_id=self.rule_id,
+            rule_name=self.name,
+            severity=Severity.INFO,
+            category=self.category,
+            passed=False,
+            message=translate(f"birimfiyat.unit_rate_within_published_price.{reason}", locale=locale, **params),
+            element_ref=None,
+            details={"held": reason, **{key: str(value) for key, value in params.items()}},
+        )
+
+    async def validate(self, context: ValidationContext) -> list[RuleResult]:
+        catalogue = _tr_poz_catalogue(context)
+        if catalogue is None:
+            return []
+        locale = _get_locale(context)
+        if catalogue.state in (PozCatalogueState.NOT_INSTALLED, PozCatalogueState.UNAVAILABLE):
+            # One result for the bill, not one from each rule.
+            return [] if self._unit_rule_reports() else [_tr_book_not_read(self, catalogue, locale)]
+        if catalogue.state is PozCatalogueState.REPRICED:
+            return [self._held(locale, "repriced", region=catalogue.region)]
+
+        record = context.data.get("project_record") if isinstance(context.data, dict) else None
+        project_currency = str(record.get("currency") or "").strip().upper() if isinstance(record, dict) else ""
+        tolerance = catalogue.tolerance
+        book_currency = catalogue.home_currency
+        cent = Decimal("0.01")
+        results: list[RuleResult] = []
+        other_currencies: dict[str, int] = {}
+        currency_unknown = 0
+        for pos in _get_leaf_positions(context):
+            line = _tr_line_against_book(pos, catalogue)
+            if line is None:
+                continue
+            code, entry, _unit, read_as, book_read_as = line
+            if read_as != book_read_as or entry.rate is None:
+                continue
+            number = _to_number(pos.get("unit_rate"))
+            if number is None or number is _NOT_A_NUMBER or float(number) <= 0:  # type: ignore[arg-type]
+                continue
+            currency = _position_currency(pos) or project_currency
+            if not currency:
+                currency_unknown += 1
+                continue
+            if currency != book_currency:
+                other_currencies[currency] = other_currencies.get(currency, 0) + 1
+                continue
+
+            rate = Decimal(str(number)).quantize(cent)
+            published = entry.rate.quantize(cent)
+            percent = (abs(rate - published) / published * 100).quantize(Decimal("0.1"))
+            below = rate < published
+            passed = percent == 0
+            limit = tolerance.warn_below_percent if below else tolerance.warn_above_percent
+            beyond = not passed and limit is not None and percent > limit
+            if passed:
+                message = _ok(locale)
+                suggestion = None
+            else:
+                message = translate(
+                    f"birimfiyat.unit_rate_within_published_price.{'below' if below else 'above'}",
+                    locale=locale,
+                    code=code,
+                    ordinal=pos.get("ordinal", "?"),
+                    rate=sentence_amount(rate, book_currency),
+                    percent=_fmt_decimal(float(percent), 1),
+                    published=sentence_amount(published, book_currency),
+                )
+                if beyond:
+                    # ``fail`` is the sentence that makes the stated difference a finding.
+                    message += " " + translate(
+                        "birimfiyat.unit_rate_within_published_price.fail",
+                        locale=locale,
+                        limit=_fmt_decimal(float(limit), 1),  # type: ignore[arg-type]
+                    )
+                suggestion = translate(
+                    "birimfiyat.unit_rate_within_published_price.suggestion",
+                    locale=locale,
+                    markup=_fmt_decimal(float(_TR_PROFIT_AND_GENERAL_EXPENSES_PERCENT), 0),
+                )
+            results.append(
+                RuleResult(
+                    rule_id=self.rule_id,
+                    rule_name=self.name,
+                    severity=Severity.WARNING if beyond else Severity.INFO,
+                    category=self.category,
+                    passed=passed,
+                    message=message,
+                    element_ref=pos.get("id"),
+                    details={
+                        "given_code": code,
+                        "unit_rate": str(rate),
+                        "published_price": str(published),
+                        "currency": book_currency,
+                        "difference_percent": str(percent),
+                        "direction": "equal" if passed else ("below" if below else "above"),
+                        "warn_above_percent": None
+                        if tolerance.warn_above_percent is None
+                        else str(tolerance.warn_above_percent),
+                        "warn_below_percent": None
+                        if tolerance.warn_below_percent is None
+                        else str(tolerance.warn_below_percent),
+                        "tolerance_review_status": tolerance.review_status,
+                        # The base stores no year and no publisher for a row.
+                        "edition": None,
+                        "region": catalogue.region,
+                    },
+                    suggestion=suggestion,
+                )
+            )
+
+        if other_currencies:
+            results.append(
+                self._held(
+                    locale,
+                    "currency_differs",
+                    count=sum(other_currencies.values()),
+                    currency=", ".join(sorted(other_currencies)),
+                    book_currency=book_currency,
+                )
+            )
+        if currency_unknown:
+            results.append(self._held(locale, "currency_unknown", count=currency_unknown, book_currency=book_currency))
         return results
 
 
@@ -10535,6 +11388,14 @@ def register_builtin_rules() -> None:
         # Birim Fiyat (Turkey)
         (BirimFiyatCodeRequired(), None),
         (BirimFiyatValidPoz(), None),
+        (BirimFiyatChapterRecognised(), None),
+        (BirimFiyatUnitRecognised(), None),
+        (BirimFiyatPozUnitConsistent(), None),
+        (BirimFiyatPozRateConsistent(), None),
+        (BirimFiyatOwnItemAnalysed(), None),
+        (BirimFiyatProfitOverheadOnce(), None),
+        (BirimFiyatUnitMatchesPoz(), None),
+        (BirimFiyatRateAgainstPublished(), None),
         # Sekisan (Japan)
         (SekisanCodeRequired(), None),
         (SekisanMetricUnits(), None),
