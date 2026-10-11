@@ -237851,10 +237851,10 @@
     },
     {
       "name": "contracts",
-      "ts_files": 83,
+      "ts_files": 89,
       "css_files": 0,
-      "test_files": 36,
-      "total_files": 83
+      "test_files": 39,
+      "total_files": 89
     },
     {
       "name": "coordination",
@@ -240256,7 +240256,7 @@
     "total_schemas": 3605,
     "total_python_files": 2354,
     "frontend_features": 194,
-    "frontend_ts_files": 3068,
+    "frontend_ts_files": 3074,
     "frontend_backend_mapped": 172
   },
   "frontend_backend_mapping": {
