@@ -106,6 +106,9 @@ _MIN_KEYS = 900
 # instead of reporting a green loop over an empty dictionary.
 _OVERLAYS = frozenset({"en-GB", "en-US"})
 
+#: The CLDR plural categories i18next appends to a counted key.
+_PLURAL_SUFFIXES = ("_zero", "_one", "_two", "_few", "_many", "_other")
+
 
 def _names(value: str) -> set[str]:
     """Variable names only: `{{count}}` and `{{count, number}}` are one slot."""
@@ -185,7 +188,17 @@ def main() -> int:
                 continue  # orphan guard's territory
             checked += 1
             want, got = _names(source[key]), _names(value)
-            if got - want:
+            allowed = set(want)
+            if key.endswith(_PLURAL_SUFFIXES) and key.rsplit("_", 1)[0] + "_other" in source:
+                # A plural form is only ever reached through a call that passes
+                # ``count``: that is how i18next picks the form. English words
+                # its ``_one`` without the number, but the same category holds
+                # 21 and 31 in Russian, Ukrainian and Croatian and most numbers
+                # in Filipino, so the number belongs in those translations.
+                # A key that merely ends in ``_one`` with no ``_other`` beside
+                # it is no plural and gets no such allowance.
+                allowed.add("count")
+            if got - allowed:
                 failures.append((path, key, source[key], value))
             elif want - got:
                 omissions.append((path, key, sorted(want - got)))
