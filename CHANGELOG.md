@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Background services panel no longer says a service restarted "once" in Russian, Ukrainian, Croatian and Filipino when it restarted 21 or 31 times; those languages use the same singular form for such numbers, so the sentence now carries the number.
 - The row of actions above the BOQ grid wraps onto a second line when it does not fit, so in German, Russian or Chinese at 1440 pixels, and on a phone, the page no longer scrolls sideways. On a phone the breadcrumb and the quality and add button groups of the BOQ toolbar wrap as well.
 - A failed save that the screen already explains, such as a section that could not be added, no longer shows a second generic "Operation failed" message next to it.
+- The desktop app picks up the fixed releases of its HTTP/2 library (a denial of service through empty data frames), its XML reader (quadratic and unbounded work on hostile attributes and namespaces) and its error type (an unsound downcast).
 
 ## [18.5.0] - 2026-10-10
 
