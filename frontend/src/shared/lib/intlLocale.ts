@@ -68,6 +68,8 @@ export const LOCALE_MAP: Record<string, string> = {
   bg: 'bg-BG',
   ar: 'ar-SA',
   zh: 'zh-CN',
+  // [RSC-IRAN] Persian (Iran) locale mapping
+  fa: 'fa-IR',
 };
 
 /** Returns the Intl-compatible locale string for the current i18next language. */

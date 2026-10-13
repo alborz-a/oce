@@ -35,6 +35,8 @@ import { dateOnlyFormatOptions } from './dates';
 // preferences store can import without closing a cycle back through this file.
 // Re-exported here because this is where the rest of the app looks for it.
 export { getIntlLocale, useIntlLocale } from './intlLocale';
+// [RSC-IRAN] Re-export Jalali date utilities
+export * from './jalali';
 
 /** Currency-style number formatter (e.g. 1,234.56) using current locale. */
 export function fmtNumber(value: number | string | null | undefined, decimals = 2): string {

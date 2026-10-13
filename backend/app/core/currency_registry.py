@@ -84,6 +84,8 @@ CURRENCIES: dict[str, dict[str, Any]] = {
     "GTQ": {"symbol": "Q", "name": "Guatemalan Quetzal", "decimals": 2},
     "CRC": {"symbol": "₡", "name": "Costa Rican Colón", "decimals": 2},
     # Middle East & Africa
+    # [RSC-IRAN] IRR - Iranian Rial: 0 minor units, symbol ﷼
+    "IRR": {"symbol": "﷼", "name": "Iranian Rial", "decimals": 0, "numeric": "364"},
     "AED": {"symbol": "د.إ", "name": "UAE Dirham", "decimals": 2},
     "SAR": {"symbol": "﷼", "name": "Saudi Riyal", "decimals": 2},
     "QAR": {"symbol": "﷼", "name": "Qatari Riyal", "decimals": 2},

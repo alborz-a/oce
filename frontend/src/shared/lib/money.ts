@@ -296,6 +296,16 @@ export function formatCurrency(
   const digits = resolveFractionDigits(options, { minimum: natural, maximum: natural });
 
   try {
+    // [RSC-IRAN] IRR: format with symbol ﷼ (U+FDFC) before the number: ﷼ ۱۲٬۳۴۵٬۶۷۸
+    if (code === 'IRR') {
+      const numKey = `formatNumber|${loc}|${options?.signDisplay ?? ''}|${digits.minimumFractionDigits}|${digits.maximumFractionDigits}`;
+      const numStr = reuseNumberFormat(numKey, () => new Intl.NumberFormat(loc, {
+        ...(options?.signDisplay ? { signDisplay: options.signDisplay } : {}),
+        ...digits,
+      })).format(amount);
+      return `﷼ ${numStr}`;
+    }
+
     // The key names every input of the options below; see reuseNumberFormat.
     const key =
       `formatCurrency|${loc}|${isValid ? code : ''}|${options?.signDisplay ?? ''}` +

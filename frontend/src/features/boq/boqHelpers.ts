@@ -817,7 +817,7 @@ export const CURRENCY_SYMBOL: Record<string, string> = {
   CAD: '$', AUD: '$', NZD: '$', SGD: '$', HKD: '$', KRW: '₩',
   INR: '₹', BRL: 'R$', MXN: '$', ZAR: 'R', TRY: '₺', RUB: '₽',
   PLN: 'zł', CZK: 'Kč', HUF: 'Ft', SEK: 'kr', NOK: 'kr', DKK: 'kr', RON: 'lei',
-  AED: 'د.إ', SAR: '﷼', QAR: '﷼', ILS: '₪',
+  AED: 'د.إ', SAR: '﷼', QAR: '﷼', IRR: '﷼', ILS: '₪',
   THB: '฿', IDR: 'Rp', MYR: 'RM', PHP: '₱', VND: '₫',
 };
 

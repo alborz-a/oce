@@ -224,4 +224,10 @@ describe('formatCurrency fraction-digit safety', () => {
     expect(formatCurrency('1234', 'HUF', 'hu-HU')).not.toMatch(/,00/);
     expect(formatCurrency('1234', 'IDR', 'en-US')).not.toMatch(/\.00/);
   });
+
+  it('formats IRR with symbol ﷼ before the number', () => {
+    const out = formatCurrency('12345678', 'IRR', 'fa-IR');
+    expect(out.startsWith('﷼')).toBe(true);
+    expect(out).toContain('۱۲٬۳۴۵٬۶۷۸');
+  });
 });

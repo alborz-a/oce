@@ -60,6 +60,7 @@ export const CURRENCY_GROUPS: OptionGroup[] = [
   {
     group: 'Asia & Middle East',
     options: [
+      { value: 'IRR', label: 'IRR (﷼) - Iranian Rial' },
       { value: 'CNY', label: 'CNY (¥) - Chinese Yuan' },
       { value: 'JPY', label: 'JPY (¥) - Japanese Yen' },
       { value: 'KRW', label: 'KRW (₩) - South Korean Won' },

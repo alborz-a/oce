@@ -1,0 +1,51 @@
+# Protected Paths for OCE Iran Lock
+# Lists all upstream components and elements hidden under [RSC-IRAN] markers.
+
+hidden_elements:
+  header:
+    file: "frontend/src/app/layout/Header.tsx"
+    items:
+      - name: "LearnTopBarButton"
+        reason: "Upstream learning / video tutorials button"
+        marker: "[RSC-IRAN] hidden: Upstream learn button hidden"
+      - name: "ModuleBuilderButton"
+        reason: "Upstream module builder button"
+        marker: "[RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden"
+      - name: "SupportUsButton"
+        reason: "Upstream Support Us button"
+        marker: "[RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden"
+      - name: "SubscribeButton"
+        reason: "Upstream Subscribe CTA"
+        marker: "[RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden"
+      - name: "BugReportMenu"
+        reason: "Upstream Bug report button and dialog"
+        marker: "[RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden"
+      - name: "HelpMenu docs link"
+        reason: "Outbound link to openconstructionerp.com/docs"
+        marker: "[RSC-IRAN] hidden: Upstream docs link hidden"
+      - name: "HelpMenu feedback & mail"
+        reason: "Outbound feedback and email to datadrivenconstruction.io"
+        marker: "[RSC-IRAN] hidden: Upstream feedback and mail links hidden"
+
+  sidebar:
+    file: "frontend/src/app/layout/Sidebar.tsx"
+    items:
+      - name: "RequestCustomModule"
+        reason: "Upstream custom module request dialog and CTA"
+        marker: "[RSC-IRAN] hidden: Request custom module button hidden"
+      - name: "LearnSection"
+        reason: "Videos and cases section at top of sidebar"
+        marker: "[RSC-IRAN] hidden: LearnSection (videos & cases) hidden"
+      - name: "Sidebar Footer"
+        reason: "GitHub, Community/Telegram, and AGPL-3.0 upstream links in footer"
+        marker: "[RSC-IRAN] hidden: Upstream GitHub, Community, and AGPL footer hidden"
+
+  branding:
+    file: "frontend/src/app/layout/CustomBranding.tsx"
+    items:
+      - name: "by OpenConstructionERP"
+        reason: "Upstream brand attribution beneath company logo"
+        marker: "[RSC-IRAN] hidden: 'by OpenConstructionERP' attribution hidden"
+      - name: "openconstructionerp.com link"
+        reason: "Outbound links to upstream marketing site"
+        marker: "[RSC-IRAN] Company logo & name brand"
