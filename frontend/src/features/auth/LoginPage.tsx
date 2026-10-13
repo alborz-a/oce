@@ -31,6 +31,7 @@ import { safeNextPath } from './nextPath';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
+import { COMPANY_INFO } from '@/app/companyInfo.fa';
 
 /* Segmented theme switch (Light / Dark / System) for the login page. */
 function ThemeSwitch() {
@@ -474,7 +475,8 @@ export function LoginPage() {
       {/* Theme + Language - top right (enlarged for /login so discoverable). */}
       <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
         <ThemeSwitch />
-        <div className="relative" ref={langRef}>
+        {/* [RSC-IRAN] hidden: Region Lock - Farsi only, language selector hidden */}
+        <div className="relative hidden" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
           className="flex items-center gap-2 rounded-xl border border-border-light bg-surface-elevated/85 backdrop-blur-sm px-4 py-2 text-sm font-medium text-content-secondary hover:bg-surface-elevated hover:border-oe-blue/30 transition-colors shadow-sm"
@@ -713,9 +715,8 @@ export function LoginPage() {
         <div className="mt-4 space-y-1 animate-stagger-in" style={{ animationDelay: '380ms' }}>
           <div className="flex items-center gap-2 text-[11px] text-content-quaternary/60">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="opacity-40"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            <a href="/api/source" target="_blank" rel="noopener noreferrer" className="hover:text-content-tertiary transition-colors">AGPL-3.0</a>
-            <span className="opacity-30">&middot;</span>
-            <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-tertiary transition-colors">OpenConstructionERP.com</a>
+            <a href={COMPANY_INFO.forkRepoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-content-tertiary transition-colors">AGPL-3.0</a>
+            {/* [RSC-IRAN] hidden: OpenConstructionERP.com link hidden — do not delete */}
           </div>
         </div>
       </div>
@@ -766,11 +767,11 @@ export function LoginPage() {
                       {brandName}
                     </span>
                   )}
-                  {/* "by OpenConstructionERP" - subordinate attribution that
-                      stays visible (AGPL-3.0). Mirrors CustomBranding.tsx. */}
+                  {/* [RSC-IRAN] hidden: "by OpenConstructionERP" */}
                   <span
-                    className="mt-2 block text-[11px] leading-none text-content-tertiary"
+                    className="hidden mt-2 text-[11px] leading-none text-content-tertiary"
                     style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '0.02em' }}
+                    aria-hidden="true"
                   >
                     by{' '}
                     <span className="font-semibold tracking-tight">
@@ -781,13 +782,22 @@ export function LoginPage() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
-                  <Logo size="md" animate />
+                  <img src={COMPANY_INFO.logoPath} alt={COMPANY_INFO.name} className="h-8 w-8 object-contain" />
                   <span
-                    className="text-2xl font-medium text-content-primary whitespace-nowrap"
-                    style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '-0.02em' }}
+                    className="text-2xl font-bold text-content-primary whitespace-nowrap"
                   >
-                    Open<span className="text-oe-blue">Construction</span><span className="text-content-quaternary">ERP</span>
+                    {COMPANY_INFO.name}
                   </span>
+                  {/* [RSC-IRAN] hidden: OpenConstructionERP logo and wordmark */}
+                  <div className="hidden" aria-hidden="true">
+                    <Logo size="md" animate />
+                    <span
+                      className="text-2xl font-medium text-content-primary whitespace-nowrap"
+                      style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '-0.02em' }}
+                    >
+                      Open<span className="text-oe-blue">Construction</span><span className="text-content-quaternary">ERP</span>
+                    </span>
+                  </div>
                 </div>
               )}
               {/* White-label trigger - same editor as the in-app sidebar
@@ -804,12 +814,12 @@ export function LoginPage() {
               </button>
             </div>
             <p className="mt-2 text-sm text-content-tertiary">
-              {t('login.workspace_tagline', { defaultValue: 'Professional construction project workspace' })}
+              {COMPANY_INFO.tagline}
             </p>
           </div>
 
-          {/* Open-source banner (mobile) */}
-          <div className="lg:hidden mb-4 animate-stagger-in" style={{ animationDelay: '100ms' }}>
+          {/* [RSC-IRAN] hidden: Open-source banner (mobile) */}
+          <div className="hidden lg:hidden mb-4 animate-stagger-in" style={{ animationDelay: '100ms' }} aria-hidden="true">
             <div className="rounded-xl bg-gradient-to-r from-oe-blue/10 via-violet-500/10 to-emerald-500/10 border border-oe-blue/20 px-4 py-3 text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <span className="relative flex h-2 w-2">
@@ -1015,12 +1025,8 @@ export function LoginPage() {
           </div>
           )}
 
-          {/* GitHub + Community - two primary entry points for the
-              open-source project (replaces the old single "Learn more"
-              link). Premium two-line cards with a tinted icon badge:
-              graphite for the source repo, oe-blue gradient for the
-              community hub. Mirrors the page's login-glass-pro language. */}
-          <div className="mt-4 grid grid-cols-2 gap-3 animate-stagger-in" style={{ animationDelay: '520ms' }}>
+          {/* [RSC-IRAN] hidden: GitHub + Community - promo cards hidden */}
+          <div className="hidden mt-4 grid-cols-2 gap-3 animate-stagger-in" style={{ animationDelay: '520ms' }} aria-hidden="true">
             <a
               href="https://github.com/datadrivenconstruction/OpenConstructionERP"
               target="_blank"
@@ -1068,7 +1074,8 @@ export function LoginPage() {
               />
             </a>
           </div>
-          <div className="lg:hidden mt-2 text-center text-2xs text-content-quaternary">
+          {/* [RSC-IRAN] hidden: mobile promo footer */}
+          <div className="hidden lg:hidden mt-2 text-center text-2xs text-content-quaternary" aria-hidden="true">
             <div className="flex items-center justify-center gap-3">
               <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">OpenConstructionERP.com</a>
               <span>·</span>
@@ -1219,12 +1226,10 @@ export function LoginPage() {
             {/* Footer */}
             <div className="px-6 py-4 border-t border-border-light flex items-center justify-between">
               <div className="flex items-center gap-3 text-2xs text-content-quaternary">
-                <a href="/api/source" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">AGPL-3.0</a>
-                <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">OpenConstructionERP.com</a>
-                <a href="https://github.com/datadrivenconstruction/OpenConstructionERP" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">GitHub</a>
+                <a href={COMPANY_INFO.sourceRepoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">بر پایهٔ OpenConstructionERP (AGPL-3.0) · کد منبع</a>
               </div>
               <Button variant="primary" size="sm" onClick={() => setShowInfo(false)}>
-                {t('about.close', 'Got it')}
+                {t('about.close', 'بستن')}
               </Button>
             </div>
           </div>

@@ -3,6 +3,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useTranslation as useI18nTranslation } from 'react-i18next';
+import { REGION_LOCK, LOCKED } from './regionLock';
 
 export const SUPPORTED_LANGUAGES = [
   // Plain English names no region, and the two entries under it are how a
@@ -433,6 +434,8 @@ export async function loadLocaleResource(code: string): Promise<void> {
  * are swallowed there (English fallback), so the switch still proceeds.
  */
 export async function changeLanguage(code: string): Promise<void> {
+  // [RSC-IRAN] Region lock: prevent switching away from Farsi
+  if (REGION_LOCK && code !== LOCKED.language) return;
   await loadLocaleResource(code);
   await i18n.changeLanguage(code);
 }
@@ -465,6 +468,9 @@ export function applyModuleTranslations(
  * guarded so the function returns ``'en'`` when called outside a browser.
  */
 export function resolveInitialLanguage(): string {
+  // [RSC-IRAN] Region lock: always default to locked language (Farsi)
+  if (REGION_LOCK) return LOCKED.language;
+
   const supported = SUPPORTED_LANGUAGES.map((l) => l.code);
   const isValid = (code: string | null | undefined): code is string =>
     !!code && supported.includes(code);

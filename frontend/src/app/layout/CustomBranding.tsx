@@ -118,15 +118,13 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
       );
     }
     return (
-      <a
-        href="https://openconstructionerp.com/?utm_source=app"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to="/"
         className="hover:opacity-80 transition-opacity"
-        title="OpenConstructionERP"
+        title="Royal Stars"
       >
         <Logo size="sm" />
-      </a>
+      </Link>
     );
   }
 
@@ -170,10 +168,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
                   {companyName}
                 </span>
               )}
-              {/* "by OpenConstructionERP" — minimal subordinate attribution
-                  under the user's brand. AGPL-3.0 attribution requirement
-                  is satisfied while the user's logo stays the dominant
-                  visual; font is small + muted on purpose. */}
+              {/* [RSC-IRAN] hidden: "by OpenConstructionERP" attribution hidden — do not delete
               <span
                 className="mt-1 block text-[8px] leading-none text-content-quaternary truncate"
                 style={{
@@ -187,31 +182,25 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
                   <span className="text-content-quaternary">ERP</span>
                 </span>
               </span>
+              */}
             </button>
           ) : (
-            <a
-              href="https://openconstructionerp.com/?utm_source=app"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/"
               className="flex items-center gap-1 hover:opacity-80 transition-opacity"
-              title="OpenConstructionERP"
+              title="رویال استارز"
             >
-              {/* Compact wordmark — 13px text + smaller gap to fit
-                  the 248px sidebar minus the 32px edit button without
-                  visual crowding. Standard LogoWithText size="xs" used
-                  15px and clipped against the pencil. */}
+              {/* [RSC-IRAN] Company logo & name brand */}
               <Logo size="xs" />
               <span
                 className="text-[13px] font-medium text-content-primary whitespace-nowrap leading-none"
                 style={{
-                  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
                   letterSpacing: '-0.02em',
                 }}
               >
-                Open<span className="text-oe-blue">Construction</span>
-                <span className="text-content-quaternary">ERP</span>
+                رویال استارز
               </span>
-            </a>
+            </Link>
           )}
         </div>
 

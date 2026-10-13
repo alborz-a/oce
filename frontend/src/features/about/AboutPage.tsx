@@ -23,6 +23,7 @@ import { CheckForUpdatesButton, UpdateInlineNotice } from '@/shared/ui/UpdateChe
 import { Changelog, getRecentReleases } from './Changelog';
 import { ThirdPartyLicenses } from './ThirdPartyLicenses';
 import { CONTRIBUTORS, SPONSORS, acknowledgedUrl, type Acknowledged } from './acknowledgments';
+import { COMPANY_INFO } from '@/app/companyInfo.fa';
 
 const REPO_URL = 'https://github.com/datadrivenconstruction/OpenConstructionERP';
 // Clean product URL - "?source=search" is G2's search-result tracking.
@@ -164,7 +165,71 @@ export function AboutPage() {
   }, [hash, key]);
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto py-4 px-2" dir="rtl">
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: 'درباره ما' }]} />
+
+      {/* [RSC-IRAN] Company Profile Card */}
+      <Card padding="lg" className="border-border-light bg-surface-primary shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-border-light">
+          <img
+            src={COMPANY_INFO.logoPath}
+            alt={COMPANY_INFO.name}
+            className="h-16 w-auto object-contain"
+          />
+          <div className="text-center sm:text-right">
+            <h1 className="text-2xl font-bold text-content-primary">
+              {COMPANY_INFO.name}
+            </h1>
+            <p className="text-sm font-medium text-oe-blue mt-1">
+              {COMPANY_INFO.tagline}
+            </p>
+            <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-secondary text-content-secondary border border-border-light">
+              نسخه: {COMPANY_INFO.version}
+            </span>
+          </div>
+        </div>
+
+        {/* Intro */}
+        <div className="py-6 border-b border-border-light">
+          <h2 className="text-base font-semibold text-content-primary mb-2">
+            درباره سامانه
+          </h2>
+          <p className="text-sm text-content-secondary leading-relaxed">
+            {COMPANY_INFO.description}
+          </p>
+        </div>
+
+        {/* Contact info */}
+        <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-3 rounded-lg bg-surface-secondary/40 border border-border-light">
+            <span className="text-xs text-content-tertiary block">پشتیبانی و ارتباط</span>
+            <span className="text-sm font-medium text-content-primary">{COMPANY_INFO.supportEmail}</span>
+          </div>
+          <div className="p-3 rounded-lg bg-surface-secondary/40 border border-border-light">
+            <span className="text-xs text-content-tertiary block">وب‌سایت رسمی</span>
+            <a href={COMPANY_INFO.website} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-oe-blue hover:underline">
+              {COMPANY_INFO.website}
+            </a>
+          </div>
+        </div>
+      </Card>
+
+      {/* Legal AGPL-3.0 §13 Attribution Line */}
+      <div className="text-center py-4 text-xs text-content-quaternary">
+        بر پایهٔ OpenConstructionERP (AGPL-3.0) ·{' '}
+        <a
+          href={COMPANY_INFO.forkRepoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-oe-blue hover:underline"
+        >
+          کد منبع
+        </a>
+      </div>
+
+      {/* [RSC-IRAN] hidden: Original upstream About content preserved below — do not delete */}
+      <div className="hidden" aria-hidden="true">
       {/* Breadcrumb — single-item trail auto-hides (canonical top block). */}
       <Breadcrumb items={[{ label: t('nav.about', { defaultValue: 'About' }) }]} />
 
@@ -1466,6 +1531,7 @@ export function AboutPage() {
           </a>
         </p>
         <p className="mt-1">&copy; 2026 Data Driven Construction. All rights reserved.</p>
+      </div>
       </div>
     </div>
   );

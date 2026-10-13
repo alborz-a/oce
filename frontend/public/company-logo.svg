@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60" fill="none">
+  <!-- Royal Stars Brand Logo Placeholder -->
+  <defs>
+    <linearGradient id="rsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F2C5F" />
+      <stop offset="100%" stop-color="#1E40AF" />
+    </linearGradient>
+  </defs>
+  <!-- Star / Construction Geometric Icon -->
+  <rect x="10" y="10" width="40" height="40" rx="8" fill="url(#rsGrad)" />
+  <path d="M30 18L33.5 25.5L41.5 26.5L35.5 32L37 40L30 36L23 40L24.5 32L18.5 26.5L26.5 25.5Z" fill="#FBBF24" />
+  <!-- Brand Text -->
+  <text x="65" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#0F2C5F">ROYAL STARS</text>
+  <text x="65" y="46" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#64748B" letter-spacing="1.5">CONSTRUCTION ERP</text>
+</svg>

@@ -535,25 +535,20 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             The "ask the user for something" CTAs (Support / Subscribe) stay
             adjacent; Bug + Help sit on the right edge so a user filing a
             report doesn't have to scan past the marketing CTAs. */}
-        {/* Only while the Learn card is hidden from the menu: its way back,
-            at every width. */}
+        {/* [RSC-IRAN] hidden: Upstream learn button hidden — do not delete
         <LearnTopBarButton />
+        */}
         {/* Background services: what the platform keeps loaded, at every
             width, because it is the way back to a feature that stopped. */}
         <ProcessesButton />
         <NotificationBell />
         <HeaderNewsButton />
-        {/* Building a module is something you do from wherever you noticed the
-            platform was missing one, so it lives here rather than in the
-            sidebar. Renders nothing for anyone who may not install one.
-            Hidden below xl to reduce crowding on narrower screens. */}
-        {/* Shown from 2xl only: at 125% and 150% text size a 1280-1440px bar
-            had no room for these three next to the project picker, and the
-            right cluster ran off screen. */}
+        {/* [RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden — do not delete
         <div className="hidden 2xl:block"><ModuleBuilderButton /></div>
         <div className="hidden 2xl:block"><SupportUsButton /></div>
         <div className="hidden 2xl:block"><SubscribeButton /></div>
         <BugReportMenu />
+        */}
         <HelpMenu />
 
         {/* Hairline divider between Zone 3 and Zone 4. */}
@@ -561,13 +556,11 @@ export function Header({ title, onMenuClick }: HeaderProps) {
 
         {/* ── Zone 4 (Account) ─────────────────────────────────────── */}
         <UploadQueueIndicator />
-        <LanguageSwitcher
+        {/* [RSC-IRAN] hidden: Region Lock - Farsi only, language switcher hidden */}
+        {/* <LanguageSwitcher
           currentLang={currentLang}
-          // Load the target locale's lazy chunk BEFORE switching so every
-          // string flips to the new language immediately, with no English
-          // flash and no reload. See ``changeLanguage`` in app/i18n.
           onSelect={(code) => void changeLanguage(code)}
-        />
+        /> */}
         <ThemeToggle />
         <UserMenu />
       </div>
@@ -1099,8 +1092,7 @@ function HelpMenu() {
           </button>
           <div className="my-1 border-t border-border-light" role="separator" />
 
-          {/* External resources. Documentation points at the official docs
-              site so users land on the maintained guides, not the raw repo. */}
+          {/* [RSC-IRAN] hidden: Upstream docs link hidden — do not delete
           <a
             role="menuitem"
             href="https://openconstructionerp.com/docs"
@@ -1113,9 +1105,11 @@ function HelpMenu() {
             <span className="flex-1">{t('nav.docs', { defaultValue: 'Documentation' })}</span>
             <ExternalLink size={11} className="text-content-quaternary shrink-0" />
           </a>
+          */}
+          {/* [RSC-IRAN] Fork source link */}
           <a
             role="menuitem"
-            href="https://github.com/datadrivenconstruction/OpenConstructionERP"
+            href="https://github.com/alborz-a/oce"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
@@ -1157,9 +1151,8 @@ function HelpMenu() {
             </button>
           )}
 
+          {/* [RSC-IRAN] hidden: Upstream feedback and mail links hidden — do not delete
           <div className="my-1 border-t border-border-light" role="separator" />
-
-          {/* Feedback / report flows */}
           <button
             type="button"
             role="menuitem"
@@ -1169,11 +1162,6 @@ function HelpMenu() {
             <MessageSquarePlus size={14} className="text-content-tertiary shrink-0" />
             <span>{t('feedback.title', { defaultValue: 'Send feedback' })}</span>
           </button>
-          {/* Bug-reporting lives in the dedicated Bug menu (the bug-icon button
-              next to this one), which already offers a pre-filled GitHub issue,
-              the web form, an email channel and a log download. Keeping those
-              flows out of here leaves Help for docs and general feedback and
-              gives bug reporting a single, obvious home. */}
           <a
             role="menuitem"
             href="mailto:info@datadrivenconstruction.io?subject=OpenConstructionERP%20Issue%20Report"
@@ -1183,6 +1171,7 @@ function HelpMenu() {
             <Mail size={14} className="text-content-tertiary shrink-0" />
             <span>{t('header.email_issues', { defaultValue: 'Email the team' })}</span>
           </a>
+          */}
         </div>
       )}
     </div>

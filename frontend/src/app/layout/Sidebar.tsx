@@ -1314,6 +1314,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         {/* Learn: videos and cases, above everything else, Pinned included.
             Hidden from its own header into a cap in the top bar, and restored
             from there. */}
+        {/* [RSC-IRAN] hidden: LearnSection (videos & cases) hidden — do not delete
         {learnGroup && learnItems.length > 0 && (
           <LearnSection
             label={learnLabel}
@@ -1326,6 +1327,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             <ul className="space-y-0.5">{learnItems.map(renderRow)}</ul>
           </LearnSection>
         )}
+        */}
         {/* Pinned section — appears at the top when the user has
             pinned at least one item. No collapsible chevron; just a
             small label + the pinned items in their stored order. */}
@@ -1632,6 +1634,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              on purpose: contributors who want to build a module
              themselves use the guide; users who want us to build it
              for them use this dialog. */}
+        {/* [RSC-IRAN] hidden: Request custom module button hidden — do not delete
         <div className={clsx('pt-1 pb-3', iconified ? 'px-0 flex justify-center' : 'px-3')}>
           <button
             type="button"
@@ -1670,6 +1673,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             )}
           </button>
         </div>
+        */}
       </nav>
 
       {/* Admin / setup surfaces — rendered as a 2-column button grid
@@ -1752,10 +1756,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             The GitHub link uses Lucide's Github mark — keeps the row aligned
             with the rest of the sidebar's lucide icons and gives a clear
             visual entry point to the source repo. */}
+        {/* [RSC-IRAN] hidden: Upstream GitHub, Community, and AGPL footer hidden — do not delete
         {iconified ? (
-          // Icon-only footer: GitHub + Telegram stacked. The expand
-          // toggle lives on the floating edge-pill, not down here, so
-          // users see only one toggle entry-point — no duplicate UI.
           <div className="pt-2 pb-1 flex flex-col items-center gap-1">
             <a
               href="https://github.com/datadrivenconstruction/OpenConstructionERP"
@@ -1781,15 +1783,6 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             </a>
           </div>
         ) : (
-          // GitHub / Community / version row.
-          //
-          // The horizontal padding here MUST mirror AdminGrid's column geometry
-          // (the parent `<div>` already gives us `px-2`; AdminGrid's `<ul>` uses
-          // `grid-cols-2 gap-1` with no extra inner padding). Earlier this row
-          // wrapped its buttons in another `px-2`, which made each button
-          // ~8 px narrower than every admin tile above. The buttons are now
-          // siblings of the admin grid in the layout coordinate space:
-          // same outer `px-2`, same `gap-1` between the two cards.
           <div className="pb-2 pt-1 flex flex-col gap-1.5">
             <div className="grid grid-cols-2 gap-1">
               <a
@@ -1843,6 +1836,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             </div>
           </div>
         )}
+        */}
       </div>
       {/* Mounted at the aside root so the dialog escapes any
           z-index / overflow trap imposed by the inner nav scroller.
