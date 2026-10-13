@@ -60,7 +60,7 @@ export const CURRENCY_GROUPS: OptionGroup[] = [
   {
     group: 'Asia & Middle East',
     options: [
-      { value: 'IRR', label: 'IRR (﷼) - Iranian Rial' },
+      { value: 'IRR', label: 'IRR (ریال) - ریال ایران' },
       { value: 'CNY', label: 'CNY (¥) - Chinese Yuan' },
       { value: 'JPY', label: 'JPY (¥) - Japanese Yen' },
       { value: 'KRW', label: 'KRW (₩) - South Korean Won' },
@@ -178,6 +178,7 @@ export const COUNTRY_DEFAULTS: Readonly<Record<string, CountryDefault>> = {
   // offered for a new project at all. A project saved in HRK before then
   // still shows its code; the picker renders an unlisted code as custom.
   hr: { region: 'Croatia', currency: 'EUR' },
+  ir: { region: 'Iran', currency: 'IRR' },
   tr: { region: 'Turkey', currency: 'TRY' },
   ru: { region: 'Russia', currency: 'RUB' },
   us: { region: 'US', currency: 'USD' },

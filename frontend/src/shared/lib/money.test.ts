@@ -225,9 +225,9 @@ describe('formatCurrency fraction-digit safety', () => {
     expect(formatCurrency('1234', 'IDR', 'en-US')).not.toMatch(/\.00/);
   });
 
-  it('formats IRR with symbol ﷼ before the number', () => {
+  it('formats IRR with Persian word ریال', () => {
     const out = formatCurrency('12345678', 'IRR', 'fa-IR');
-    expect(out.startsWith('﷼')).toBe(true);
+    expect(out.endsWith('ریال')).toBe(true);
     expect(out).toContain('۱۲٬۳۴۵٬۶۷۸');
   });
 });
