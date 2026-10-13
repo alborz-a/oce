@@ -7,7 +7,45 @@ permissions:
   contents: read
   packages: write
 jobs:
+  checks:
+    name: Iran & Code Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Iran Regional Checks
+        run: |
+          npm run check:iran
+          npm run check:fa
+
+      - name: Run Python Iran Primitives Test
+        run: |
+          python -c "from app.core.jalali import format_jalali; print(format_jalali('2026-10-11'))"
+          python -c "from app.core.digits import normalize_number_string; print(normalize_number_string('۱۲٬۳۴۵'))"
+        working-directory: backend
+
+      - name: Install Frontend Dependencies
+        run: npm ci --prefer-offline || npm install
+        working-directory: frontend
+
+      - name: Run Frontend Money Unit Tests (Vitest)
+        run: npx vitest run src/shared/lib/money.test.ts
+        working-directory: frontend
+
   build:
+    name: Build & Push Docker Image
+    needs: [checks]
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
