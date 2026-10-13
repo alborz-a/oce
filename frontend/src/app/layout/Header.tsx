@@ -36,6 +36,10 @@ import { SubscribeButton } from './SubscribeButton';
 // [RSC-IRAN] suppress TS6133 unused locals when hidden
 void SupportUsButton;
 void SubscribeButton;
+void BookOpen;
+void changeLanguage;
+void LearnTopBarButton;
+void ModuleBuilderButton;
 import { ProjectJourneyButton } from './ProjectJourney';
 import { PresenceAvatarStack } from '@/features/global_presence';
 import { getRouteIcon } from './routeIcons';
