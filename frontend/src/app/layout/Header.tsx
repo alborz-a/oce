@@ -33,6 +33,9 @@ import { useI18nReady } from '@/shared/lib/useI18nReady';
 import { isTauri, openAppInBrowser, openLink } from '@/shared/lib/desktop';
 import { SupportUsButton } from './SupportUsButton';
 import { SubscribeButton } from './SubscribeButton';
+// [RSC-IRAN] suppress TS6133 unused locals when hidden
+void SupportUsButton;
+void SubscribeButton;
 import { ProjectJourneyButton } from './ProjectJourney';
 import { PresenceAvatarStack } from '@/features/global_presence';
 import { getRouteIcon } from './routeIcons';
@@ -362,6 +365,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
   // renders and the layout is unchanged).
   const RouteIcon = getRouteIcon(location.pathname);
   const currentLang = getLanguageByCode(i18n.language) ?? { code: 'en', name: 'English (International)', flag: '', country: 'xx' };
+  void currentLang;
   const openCommandPalette = useCallback(() => {
     // Dispatch Ctrl+K to open the CommandPalette managed by App.tsx
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
@@ -1052,6 +1056,7 @@ function HelpMenu() {
     });
     openLink(`https://openconstructionerp.com/contact.html?${params}`);
   };
+  void handleFeedback;
 
   return (
     <div className="relative hidden sm:block" ref={ref} data-testid="header-help-menu">
@@ -1255,6 +1260,7 @@ function LanguageSwitcher({
     </div>
   );
 }
+void LanguageSwitcher;
 
 /* ── User Menu ─────────────────────────────────────────────────────────── */
 

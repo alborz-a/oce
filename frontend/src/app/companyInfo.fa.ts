@@ -23,6 +23,7 @@ export const COMPANY_INFO = {
   // اطلاعات نسخه
   version: '۱۸.۵.۰-ir',
   forkRepoUrl: 'https://github.com/alborz-a/oce',
+  sourceRepoUrl: 'https://github.com/alborz-a/oce',
 
   // مسیر لوگوی شرکت
   logoPath: '/company-logo.svg',

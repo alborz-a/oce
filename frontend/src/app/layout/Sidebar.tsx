@@ -67,6 +67,11 @@ import {
 } from '@/features/projects/useProjectProfile';
 import { getIntlLocale } from '@/shared/lib/formatters';
 
+// [RSC-IRAN] suppress TS6133 unused locals when hidden
+void Sparkles;
+void Github;
+void APP_VERSION;
+
 
 
 /** An admin-grid tile. Extends NavItem with an optional `onClick`: when set,
@@ -1082,6 +1087,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       { duration: 8000 },
     );
   };
+  void learnItems;
+  void learnLabel;
+  void hideLearn;
   // Edit mode opens "More modules" so a row hidden in there can be found and
   // switched back on.
   const moreExpanded = moreOpen || editMode;
@@ -2117,6 +2125,7 @@ function LearnSection({
     </section>
   );
 }
+void LearnSection;
 
 function SidebarItem({
   item,
