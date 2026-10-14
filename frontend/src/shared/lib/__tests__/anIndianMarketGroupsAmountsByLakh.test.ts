@@ -28,7 +28,7 @@
 //     becoming a second answer to "which locale does the reader read numbers
 //     in".
 import i18next from 'i18next';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { formatCurrency } from '../money';
 import { getMarketNumberLocale, setMarketNumberLocale } from '../marketNumberLocale';

@@ -1,6 +1,6 @@
 // [RSC-IRAN] Jalali (شمسی) drop-in for <input type="date">. Value/onChange stay Gregorian ISO YYYY-MM-DD.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ChangeEvent, InputHTMLAttributes } from 'react';
+import type { ChangeEvent, FocusEvent, InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { REGION_LOCK } from '@/app/regionLock';
 import {
@@ -16,6 +16,7 @@ import {
 type NativeProps = InputHTMLAttributes<HTMLInputElement>;
 export type JalaliDateInputProps = Omit<NativeProps, 'type' | 'value' | 'defaultValue' | 'onChange' | 'min' | 'max'> & {
   value?: string | null;
+  defaultValue?: string | null;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   min?: string;
   max?: string;
@@ -57,14 +58,18 @@ function satIndex(gy: number, gm: number, gd: number): number {
 
 export function JalaliDateInput(props: JalaliDateInputProps) {
   if (!REGION_LOCK) {
-    const { value, onChange, ...rest } = props;
+    const { value, defaultValue, onChange, ...rest } = props;
+    if (value === undefined) {
+      return <input {...rest} type="date" defaultValue={defaultValue ?? ''} onChange={onChange} />;
+    }
     return <input {...rest} type="date" value={value ?? ''} onChange={onChange} />;
   }
   return <JalaliDateInputInner {...props} />;
 }
 
 function JalaliDateInputInner({
-  value,
+  value: valueProp,
+  defaultValue,
   onChange,
   min,
   max,
@@ -79,6 +84,8 @@ function JalaliDateInputInner({
   ...rest
 }: JalaliDateInputProps) {
   const [open, setOpen] = useState(false);
+  const [inner, setInner] = useState<string | null>(valueProp ?? defaultValue ?? null);
+  const value = valueProp !== undefined ? valueProp : inner;
   const rootRef = useRef<HTMLDivElement>(null);
   const sel = parseIso(value);
   const base = sel ?? parseIso(todayIso())!;
@@ -103,9 +110,12 @@ function JalaliDateInputInner({
 
   const emit = useCallback(
     (next: string) => {
-      onChange?.({ target: { value: next, name: name ?? '' }, currentTarget: { value: next, name: name ?? '' } } as unknown as ChangeEvent<HTMLInputElement>);
+      setInner(next);
+      const t = { value: next, name: name ?? '' };
+      onChange?.({ target: t, currentTarget: t } as unknown as ChangeEvent<HTMLInputElement>);
+      onBlur?.({ target: t, currentTarget: t } as unknown as FocusEvent<HTMLInputElement>);
     },
-    [onChange, name],
+    [onChange, onBlur, name],
   );
 
   const cells = useMemo(() => {
@@ -148,7 +158,6 @@ function JalaliDateInputInner({
         id={id}
         disabled={disabled}
         onClick={openPopup}
-        onBlur={onBlur as unknown as React.FocusEventHandler<HTMLButtonElement>}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-required={required || undefined}

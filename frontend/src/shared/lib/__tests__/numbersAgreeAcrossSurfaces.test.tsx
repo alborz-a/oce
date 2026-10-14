@@ -29,7 +29,7 @@
 //   * the census half checks that there is only one place the answer can come
 //     from. Fixing the two rows in the screenshot would have left every other
 //     surface free to invent its own locale, and we would be back here.
-import { describe, it, expect, beforeEach, afterEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, afterAll, vi } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { render, cleanup } from '@testing-library/react';
