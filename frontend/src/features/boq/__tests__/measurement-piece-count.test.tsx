@@ -18,6 +18,8 @@ import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/re
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 interface SentLine {
   formula: string;
   variables: Record<string, string>;

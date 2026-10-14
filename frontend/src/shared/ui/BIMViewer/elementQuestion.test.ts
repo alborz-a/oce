@@ -1,9 +1,11 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import type { BIMElementData } from './ElementManager';
 import { buildElementQuestion } from './elementQuestion';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 /** Minimal element: only the two always-present fields. */
 function bare(overrides: Partial<BIMElementData> = {}): BIMElementData {

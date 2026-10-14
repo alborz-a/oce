@@ -24,7 +24,7 @@ import { apiGet } from '@/shared/lib/api';
 
 const SESSION_KEY = 'oe_demo_modal_dismissed';
 
-export function DemoBanner() {
+function DemoBannerUpstream() {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -250,4 +250,11 @@ export function DemoBanner() {
       )}
     </>
   );
+}
+
+/* [RSC-IRAN] hidden: upstream demo banner with upstream links — do not delete */
+void DemoBannerUpstream;
+export function DemoBanner() {
+  
+  return null;
 }

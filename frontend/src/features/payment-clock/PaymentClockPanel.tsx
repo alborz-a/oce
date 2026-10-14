@@ -43,6 +43,8 @@ import {
   refreshRegister,
 } from './api';
 import { isOverdue, severityVariant } from './clockStatus';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const STATUS_VARIANT: Record<ApplicationStatus, 'neutral' | 'blue' | 'success' | 'warning' | 'error'> = {
   open: 'blue',
@@ -561,8 +563,7 @@ function NewClockForm({
 
       <label className="flex flex-col gap-1 text-sm">
         {t('payment_clock.field_application_date', { defaultValue: 'Application date' })}
-        <input
-          type="date"
+        <JalaliDateInput
           value={applicationDate}
           onChange={(e) => setApplicationDate(e.target.value)}
           className="rounded border border-border-light bg-surface-primary p-2"

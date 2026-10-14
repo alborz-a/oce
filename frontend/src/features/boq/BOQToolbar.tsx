@@ -68,6 +68,7 @@ import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { formatCurrency } from '@/shared/lib/money';
 import { useBoqDescDensityStore, type BoqDescDensity } from '@/stores/useBoqDescDensityStore';
 import { useModuleStore } from '@/stores/useModuleStore';
+import { REGION_LOCK } from '@/app/regionLock';
 
 export interface BOQToolbarProps {
   t: (key: string, options?: Record<string, string | number>) => string;
@@ -702,25 +703,32 @@ export function BOQToolbar({
                 <span className="hidden lg:inline text-2xs text-content-quaternary">
                   {t('boq.display_in', { defaultValue: 'Display in' })}:
                 </span>
-                <select
-                  value={summary.displayCurrency}
-                  onChange={(e) => summary.onChangeDisplayCurrency(e.target.value)}
-                  aria-label={t('boq.display_currency_aria', {
-                    defaultValue: 'Choose currency for grand total display',
-                  })}
-                  className="bg-surface-elevated border border-border-light rounded px-1.5 py-0.5
+                {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+                {REGION_LOCK ? (
+                  <div className="bg-surface-elevated border border-border-light rounded px-1.5 py-0.5
                              text-content-primary text-2xs cursor-pointer
-                             focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
-                >
-                  <option value="">
-                    {summary.currencyCode || t('boq.display_base', { defaultValue: 'Base' })}
-                  </option>
-                  {summary.fxRates.map((fx) => (
-                    <option key={fx.currency} value={fx.currency}>
-                      {fx.currency}
+                             focus:outline-none focus:ring-1 focus:ring-oe-blue/40">ریال</div>
+                ) : (
+                  <select
+                    value={summary.displayCurrency}
+                    onChange={(e) => summary.onChangeDisplayCurrency(e.target.value)}
+                    aria-label={t('boq.display_currency_aria', {
+                      defaultValue: 'Choose currency for grand total display',
+                    })}
+                    className="bg-surface-elevated border border-border-light rounded px-1.5 py-0.5
+                               text-content-primary text-2xs cursor-pointer
+                               focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
+                  >
+                    <option value="">
+                      {summary.currencyCode || t('boq.display_base', { defaultValue: 'Base' })}
                     </option>
-                  ))}
-                </select>
+                    {summary.fxRates.map((fx) => (
+                      <option key={fx.currency} value={fx.currency}>
+                        {fx.currency}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </span>
             )}
           </div>

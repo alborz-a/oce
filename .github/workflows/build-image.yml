@@ -43,6 +43,14 @@ jobs:
         run: npx vitest run src/shared/lib/money.test.ts
         working-directory: frontend
 
+      - name: Typecheck (fail fast before image build)
+        run: npm run typecheck
+        working-directory: frontend
+
+      - name: Iran lock unit tests (Vitest)
+        run: npx vitest run src/shared/ui/JalaliDateInput.test.tsx src/shared/ui/Gantt src/shared/lib/formatters.jalali.test.ts src/shared/lib/weekStart.test.ts src/shared/lib/__tests__/numbersAgreeAcrossSurfaces.test.tsx
+        working-directory: frontend
+
   build:
     name: Build & Push Docker Image
     needs: [checks]
@@ -60,13 +68,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read fork version
+        id: ver
+        run: echo "v=$(tr -d '[:space:]' < RSD_VERSION)" >> "$GITHUB_OUTPUT"
       - uses: docker/build-push-action@v6
         with:
           context: .
           file: deploy/docker/Dockerfile.unified
           push: true
           tags: |
-            ghcr.io/alborz-a/oce:v18.5.0-ir.${{ github.run_number }}
+            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
+            ghcr.io/alborz-a/oce:sha-${{ github.sha }}
             ghcr.io/alborz-a/oce:latest-ir
           cache-from: type=gha
           cache-to: type=gha,mode=max

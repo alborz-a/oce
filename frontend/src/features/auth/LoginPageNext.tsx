@@ -467,6 +467,8 @@ export function LoginPageNext() {
       </div>
 
       {/* Language switcher */}
+      {/* [RSC-IRAN] hidden: language dropdown (Farsi only) — do not delete */}
+      {false && (
       <div className="absolute top-4 right-4 z-30" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
@@ -495,9 +497,11 @@ export function LoginPageNext() {
           </div>
         )}
       </div>
+      )}
 
-      <div className="relative z-10 grid min-h-screen grid-cols-1 lg:grid-cols-2">
-        {/* ── LEFT: hero + module tiles grid ──────────────────────────── */}
+      <div className="relative z-10 grid min-h-screen grid-cols-1">
+        {/* [RSC-IRAN] hidden: left hero panel (modules, linkedin, mailto, OpenConstructionERP credit) — do not delete */}
+        {false && (
         <div
           ref={heroRef}
           onMouseMove={onHeroMouseMove}
@@ -582,6 +586,7 @@ export function LoginPageNext() {
             · <a href="mailto:info@datadrivenconstruction.io" className="hover:text-content-secondary transition-colors">info@datadrivenconstruction.io</a>
           </div>
         </div>
+        )}
 
         {/* ── RIGHT: clean white form pane ─────────────────────────────── */}
         <div className="flex items-center justify-center px-5 py-10 sm:px-10 relative z-10">
@@ -711,7 +716,8 @@ export function LoginPageNext() {
 
               {/* Demo accounts - shown only when the server confirms demo
                   accounts exist (SEED_DEMO on). Production installs hide it. */}
-              {demoEnabled === true && (
+              {/* [RSC-IRAN] hidden: demo accounts (demo@openconstructionerp.com) — do not delete */}
+              {false && demoEnabled === true && (
               <div className="mt-6 animate-stagger-in" style={{ animationDelay: '260ms' }}>
                 <button
                   type="button"
@@ -758,7 +764,8 @@ export function LoginPageNext() {
               </div>
               )}
 
-              {/* Footer */}
+              {/* [RSC-IRAN] hidden: register link (owner order: login only) — do not delete */}
+              {false && (
               <div className="mt-7 animate-stagger-in" style={{ animationDelay: '340ms' }}>
                 <p className="text-center text-xs text-content-secondary dark:text-white/60">
                   {t('auth.no_account', "Don't have an account?")}{' '}
@@ -770,6 +777,7 @@ export function LoginPageNext() {
                   </Link>
                 </p>
               </div>
+              )}
             </div>
           </div>
         </div>

@@ -40,6 +40,7 @@ import { RegionalSettings } from './RegionalSettings';
 import * as api from '@/shared/lib/api';
 import { usePreferencesStore, resolveNumberLocale } from '@/stores/usePreferencesStore';
 import { formatCurrency } from '@/shared/lib/money';
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 const apiGetMock = vi.mocked(api.apiGet);
 const apiPatchMock = vi.mocked(api.apiPatch);

@@ -46,6 +46,8 @@ import {
   labelCls,
   textareaCls,
 } from './shared';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const INSPECTION_TYPES: InspectionType[] = ['mir', 'wir', 'ir', 'hidden_works', 'acceptance'];
 const PARTY_ROLES: PartyRole[] = ['qc', 'qa', 'tpi', 'ahj'];
@@ -610,9 +612,9 @@ function CreateInspectionModal({
             <label htmlFor="cc-insp-scheduled" className={labelCls}>
               {t('construction_control.field.scheduled_at', { defaultValue: 'Scheduled date' })}
             </label>
-            <input
+            <JalaliDateInput
               id="cc-insp-scheduled"
-              type="date"
+             
               value={form.scheduled_at}
               onChange={(e) => set('scheduled_at', e.target.value)}
               className={inputCls}

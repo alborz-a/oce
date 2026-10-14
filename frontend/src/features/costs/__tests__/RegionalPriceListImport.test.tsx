@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import en from '@/app/locales/en';
 import { RegionalPriceListImport } from '../RegionalPriceListImport';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 const preview = {
   source: {
     format: 'toscana_xml',

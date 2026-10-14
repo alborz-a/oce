@@ -36,6 +36,8 @@ import { useToastStore } from '@/stores/useToastStore';
 import { apiGet, apiDelete, getErrorMessage, getAuthToken, API_BASE } from '@/shared/lib/api';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { listAgreements, listPaymentApplications, type PaymentApplication } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // Six values to match the backend ``_VALID_WAIVER_TYPES`` enum. Each is
 // labelled by ``subcontractors.waiver_type.<value>``, kept short so it fits a
@@ -272,8 +274,7 @@ export function LienWaiverPanel({ subcontractorId, country }: LienWaiverPanelPro
             ))}
           </select>
           {!isTaxForm(uploadType) && (
-            <input
-              type="date"
+            <JalaliDateInput
               value={throughDate}
               onChange={(e) => setThroughDate(e.target.value)}
               className="h-8 rounded-md border border-border-light bg-surface-primary px-2 text-xs"

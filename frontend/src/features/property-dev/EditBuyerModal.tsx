@@ -40,6 +40,7 @@ import {
   type UpdateBuyerPayload,
 } from './api';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { REGION_LOCK } from '@/app/regionLock';
 
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -349,6 +350,8 @@ export function EditBuyerModal({
             maxLength={40}
           />
         </WideModalField>
+        {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+        {!REGION_LOCK && (
         <WideModalField
           label={t('propdev.edit.language', { defaultValue: 'Language' })}
         >
@@ -366,6 +369,7 @@ export function EditBuyerModal({
             ))}
           </select>
         </WideModalField>
+        )}
       </WideModalSection>
 
       <WideModalSection

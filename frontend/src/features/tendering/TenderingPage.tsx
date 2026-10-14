@@ -83,6 +83,8 @@ import { useAwardOutcome } from '@/shared/hooks/useAwardOutcome';
 import { contractDeepLink } from '@/shared/lib/changeChainLinks';
 import { bidPackageDeepLink, boqDeepLink, PROCUREMENT_LINK, RFQ_LINK } from '@/shared/lib/awardChainLinks';
 import { listPackages as listBidPackages } from '@/features/bid-management/api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `tendering.prequal_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -571,8 +573,7 @@ function CreatePackageDialog({
           />
         </WideModalField>
         <WideModalField label={t('tendering.deadline', 'Deadline')}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             className={fieldCls}

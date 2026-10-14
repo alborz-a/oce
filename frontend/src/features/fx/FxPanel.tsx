@@ -88,6 +88,9 @@ import {
   verdictTone,
 } from './fxRates';
 import { fmtList } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'convert' | 'sets' | 'policy';
 
@@ -255,8 +258,7 @@ function ConvertTab({ projectId }: { projectId: string | null }) {
           <span className="text-xs text-content-secondary">
             {t('fx.field_on_date', { defaultValue: 'As it stood on' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             className="mt-1 w-full rounded-md border border-border bg-surface-primary px-2 py-1.5 text-sm"
             value={onDate}
             onChange={(e) => setOnDate(e.target.value)}
@@ -542,9 +544,9 @@ function PolicyTab({ projectId }: { projectId: string }) {
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<FxPolicyRequest>({
-    estimating_currency: 'EUR',
-    procurement_currency: 'EUR',
-    reporting_currency: 'EUR',
+    estimating_currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
+    procurement_currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
+    reporting_currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
     rate_mode: 'live',
     pinned_rate_set_id: null,
     max_rate_age_days: 7,

@@ -35,7 +35,10 @@
  * region-neutral and `en-GB` became an entry a reader picks for themselves,
  * which resolves to itself and so cannot disagree with itself.
  */
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+// Legacy (non-locked) behaviour: these assertions describe REGION_LOCK=false.
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
+
 import i18next from 'i18next';
 
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';

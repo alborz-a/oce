@@ -12,6 +12,7 @@ import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import { getUnitsForLocale } from '@/features/boq/boqHelpers';
 import { unitLabel } from '@/shared/lib/unitLabels';
 import { assembliesApi, type CreateAssemblyData } from './api';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 
 /* -- Constants ------------------------------------------------------------ */
 
@@ -62,7 +63,7 @@ export function CreateAssemblyModal({ open, onClose }: CreateAssemblyModalProps)
   // USD/GBP/BRL who doesn't open the dropdown would otherwise silently stamp
   // their assemblies as EUR. The field stays editable below.
   const rawPreferredCurrency = usePreferencesStore((s) => s.currency);
-  const preferredCurrency = /^[A-Z]{3}$/.test(rawPreferredCurrency) ? rawPreferredCurrency : 'EUR';
+  const preferredCurrency = REGION_LOCK ? LOCKED.currency : /^[A-Z]{3}$/.test(rawPreferredCurrency) ? rawPreferredCurrency : 'EUR'; // [RSC-IRAN] region lock IRR default
   // Locale/imperial-aware unit dropdown, same primitive the BOQ editor uses:
   // the list carries imperial + locale-specific tokens (not metric-only), and
   // the seeded default follows the user's measurement system so an imperial

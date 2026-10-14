@@ -66,6 +66,8 @@ import {
   type RosterVocabularyEntry,
 } from './api';
 import { fmtList } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** Days left on a ticket below which it is worth warning about. */
 const TICKET_WARN_DAYS = 30;
@@ -579,9 +581,9 @@ function AddPeopleModal({
         </WideModalField>
 
         <WideModalField label={t('teams.roster_field_starts', 'First day')} htmlFor="roster-add-start">
-          <input
+          <JalaliDateInput
             id="roster-add-start"
-            type="date"
+           
             value={startsOn}
             onChange={(e) => setStartsOn(e.target.value)}
             className={INPUT_CLASS}
@@ -824,18 +826,18 @@ function EditMemberModal({
           />
         </WideModalField>
         <WideModalField label={t('teams.roster_field_starts', 'First day')} htmlFor="roster-edit-start">
-          <input
+          <JalaliDateInput
             id="roster-edit-start"
-            type="date"
+           
             value={form.starts_on ?? ''}
             onChange={(e) => set('starts_on', e.target.value || null)}
             className={INPUT_CLASS}
           />
         </WideModalField>
         <WideModalField label={t('teams.roster_field_ends', 'Last day')} htmlFor="roster-edit-end">
-          <input
+          <JalaliDateInput
             id="roster-edit-end"
-            type="date"
+           
             value={form.ends_on ?? ''}
             onChange={(e) => set('ends_on', e.target.value || null)}
             className={INPUT_CLASS}
@@ -883,8 +885,7 @@ function EditMemberModal({
                 }
                 className={`${INPUT_CLASS} flex-1`}
               />
-              <input
-                type="date"
+              <JalaliDateInput
                 value={c.valid_until}
                 aria-label={t('teams.roster_ticket_until', 'Valid until')}
                 onChange={(e) =>

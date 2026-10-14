@@ -53,6 +53,7 @@ import { getUnitsForLocale } from '@/features/boq/boqHelpers';
 import { copyToClipboard } from '@/shared/lib/browser';
 import { currencyFractionDigits } from '@/shared/lib/money';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 
 // English fallbacks for the computed `catalog.assembly_cat_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -2797,7 +2798,7 @@ function CreateResourceModal({
   // open the dropdown would otherwise silently stamp their catalog resource
   // as EUR. Falls back to 'EUR' if the stored preference is malformed.
   const rawPreferredCurrency = usePreferencesStore((s) => s.currency);
-  const preferredCurrency = /^[A-Z]{3}$/.test(rawPreferredCurrency) ? rawPreferredCurrency : 'EUR';
+  const preferredCurrency = REGION_LOCK ? LOCKED.currency : /^[A-Z]{3}$/.test(rawPreferredCurrency) ? rawPreferredCurrency : 'EUR'; // [RSC-IRAN] region lock IRR default
   // Locale/imperial-aware unit list + measurement-system-seeded default (same
   // primitive the BOQ editor uses) so an imperial user opens on sqft and the
   // dropdown carries imperial + locale tokens instead of metric only.

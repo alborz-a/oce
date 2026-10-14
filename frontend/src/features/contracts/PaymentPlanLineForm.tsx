@@ -48,6 +48,8 @@ import {
   type PaymentPlanLine,
 } from './api';
 import { ScheduleMilestonePicker } from './ScheduleMilestonePicker';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Basis = 'amount' | 'percent';
 
@@ -528,8 +530,7 @@ export function PaymentPlanLineForm({
           <span className={labelCls}>
             {t('contracts.plan_field_planned_date', { defaultValue: 'Date in the contract' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             className={inputCls}
             value={draft.planned_date}
             onChange={(e) => set('planned_date', e.target.value)}

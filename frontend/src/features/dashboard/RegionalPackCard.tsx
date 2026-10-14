@@ -52,6 +52,7 @@ import { SUPPORTED_LANGUAGES, normalizePackLocale } from '@/app/i18n';
 import { CountryFlag, Skeleton } from '@/shared/ui';
 import { usePartnerPack } from '@/shared/hooks/usePartnerPack';
 import { packCountryCode, packNameSlug } from '@/shared/lib/regionalPack';
+import { REGION_LOCK } from '@/app/regionLock';
 import { ruleSetLabel } from '@/features/validation/ruleSetLabels';
 
 /** Where a reader with no pack goes to pick one. Same destination the
@@ -97,7 +98,13 @@ function OnMark({ label }: { label: string }) {
   );
 }
 
+// [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete
 export function RegionalPackCard() {
+  if (REGION_LOCK) return null;
+  return <RegionalPackCardUpstream />;
+}
+
+function RegionalPackCardUpstream() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data, isLoading, isError, refetch } = usePartnerPack();

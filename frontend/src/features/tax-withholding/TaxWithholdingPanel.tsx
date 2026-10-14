@@ -53,6 +53,8 @@ import {
   seedRegimes,
 } from './api';
 import { type StandingState, bandRate, findBand, standingState, standingVariant } from './withholdingStatus';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** The window the expiring list asks about, and the one the badges agree with. */
 const EXPIRY_WINDOW_DAYS = 60;
@@ -383,8 +385,7 @@ function PreviewSection({
 
           <label className="flex flex-col gap-1 text-sm sm:col-span-2">
             {t('tax_withholding.field_as_of', { defaultValue: 'Judge the standing as of' })}
-            <input
-              type="date"
+            <JalaliDateInput
               value={asOf}
               onChange={(e) => setAsOf(e.target.value)}
               className="rounded border border-border-light bg-surface-primary p-2"

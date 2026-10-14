@@ -49,6 +49,8 @@ import {
 } from './api';
 import { useRfqAwardOrders, type RfqOrderLookup } from './useRfqAwardOrders';
 import type { AwardLookup, AwardOrderLite } from '@/shared/hooks/useAwardOutcome';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** A bidder is stored as a contact id; this is how the page names it. */
 type BidderName = (contactId: string) => string;
@@ -1348,8 +1350,7 @@ function CreateRFQDialog({
             <label className="mb-1 block text-sm font-medium text-content-secondary">
               {t('rfq_bidding.field_due_date', { defaultValue: 'Due Date' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               className="w-full rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-sm

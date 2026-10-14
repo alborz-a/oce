@@ -87,6 +87,8 @@ import {
   type ReviewFilter,
   type ReviewSort,
 } from './reviewFilters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Small helpers ─────────────────────────────────────────────────────── */
 
@@ -578,8 +580,7 @@ function ReviewIssueDetail({
             <span className="mb-0.5 block text-2xs font-semibold uppercase tracking-wider text-content-quaternary">
               {t('bcf.field_due_date', { defaultValue: 'Due date' })}
             </span>
-            <input
-              type="date"
+            <JalaliDateInput
               value={toDateInput(topic.due_date)}
               disabled={busy}
               onChange={(e) => onEdit({ due_date: e.target.value || null })}

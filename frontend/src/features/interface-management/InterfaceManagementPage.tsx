@@ -64,6 +64,8 @@ import {
 } from './api';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildInterfaceManagementInsights } from './interfaceManagementInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Vocabulary display maps ---------------------------------------------- */
 
@@ -607,9 +609,9 @@ function InterfaceModal({
               <label htmlFor="if-need-by" className="mb-1.5 block text-sm font-medium text-content-primary">
                 {t('interface_management.field_need_by_date', { defaultValue: 'Need-by date' })}
               </label>
-              <input
+              <JalaliDateInput
                 id="if-need-by"
-                type="date"
+               
                 value={form.need_by_date}
                 onChange={(e) => set('need_by_date', e.target.value)}
                 className={inputCls}
@@ -891,8 +893,7 @@ function ActionsPanel({
           placeholder={t('interface_management.action_party_placeholder', { defaultValue: 'Owner' })}
           className={clsx(inputCls, 'h-9 sm:w-32')}
         />
-        <input
-          type="date"
+        <JalaliDateInput
           value={due}
           onChange={(e) => setDue(e.target.value)}
           aria-label={t('interface_management.action_due', { defaultValue: 'Due date' })}

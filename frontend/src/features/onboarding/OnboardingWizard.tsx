@@ -65,6 +65,7 @@ import {
   SUPPORTED_LANGUAGES,
 } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
+import { REGION_LOCK } from '@/app/regionLock';
 import { useToastStore } from '@/stores/useToastStore';
 import {
   useBackgroundInstallStore,
@@ -1147,7 +1148,8 @@ function StepWelcome({
         })}
       </p>
 
-      {/* Language grid — 24 languages, flag + native name. */}
+      {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+      {!REGION_LOCK && (
       <div className="mt-5 w-full">
         <div className="mb-2 flex items-center justify-center gap-2 text-xs font-medium text-content-tertiary uppercase tracking-wider">
           <span className="h-px w-8 bg-border-light" aria-hidden />
@@ -1186,6 +1188,7 @@ function StepWelcome({
           })}
         </div>
       </div>
+      )}
 
       <Button
         variant="primary"
@@ -1286,7 +1289,8 @@ function StepStartChoice({
             provisions modules, regional config and sample data in one click,
             then skips straight to the finish step. Offered to admins only:
             the server refuses the install to anyone else. */}
-        {canInstallPacks && (
+        {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+        {canInstallPacks && !REGION_LOCK && (
         <button
           onClick={onReadyPack}
           className={clsx(

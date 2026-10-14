@@ -98,6 +98,8 @@ import { meetingsGuide } from './meetingsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildMeetingsInsights } from './meetingsInsights';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Constants ------------------------------------------------------------- */
 
@@ -991,8 +993,7 @@ function EditMeetingModal({
               : undefined
           }
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.date?.split('T')[0] || form.date}
             onChange={(e) => {
               set('date', e.target.value);

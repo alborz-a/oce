@@ -128,6 +128,8 @@ import { PublishRecordModal } from '@/features/record-publishing/PublishRecordMo
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildDailyDiaryInsights } from './dailyDiaryInsights';
 import { fmtList } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'diaries' | 'today' | 'archive';
 
@@ -2651,8 +2653,7 @@ function CreateDiaryModal({
               'Today or a past day you are back-filling. Future-dated site diaries are not allowed.',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={diaryDate}
             max={maxIso}
             onChange={(e) => setDiaryDate(e.target.value)}
@@ -3744,8 +3745,7 @@ function SclBundleModal({
     >
       <WideModalSection columns={2}>
         <WideModalField label={t('daily_diary.scl_from', { defaultValue: 'From' })} required>
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateFrom}
             max={dateTo}
             onChange={(e) => setDateFrom(e.target.value)}
@@ -3753,8 +3753,7 @@ function SclBundleModal({
           />
         </WideModalField>
         <WideModalField label={t('daily_diary.scl_to', { defaultValue: 'To' })} required>
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateTo}
             min={dateFrom}
             onChange={(e) => setDateTo(e.target.value)}

@@ -16,6 +16,8 @@ import {
   type CreateInspectionPayload,
   type UpdateInspectionPayload,
 } from '../api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -280,8 +282,7 @@ export function InspectionFormModal({
                   })}{' '}
                   <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={inspectedAt}
                   onChange={(e) => setInspectedAt(e.target.value)}
                   className={inputCls}
@@ -294,8 +295,7 @@ export function InspectionFormModal({
                   })}{' '}
                   <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={validUntil}
                   onChange={(e) => setValidUntil(e.target.value)}
                   className={inputCls}

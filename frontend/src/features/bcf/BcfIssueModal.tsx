@@ -31,6 +31,8 @@ import {
   type RaiseIssueInput,
   type RaiseIssueResult,
 } from './useBcfCapture';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** An assignable user for the assignee dropdown. */
 export interface BcfMember {
@@ -352,9 +354,9 @@ export function BcfIssueModal({
           label={t('bcf.field_due_date', { defaultValue: 'Due date' })}
           htmlFor="bcf-due"
         >
-          <input
+          <JalaliDateInput
             id="bcf-due"
-            type="date"
+           
             value={form.dueDate}
             onChange={(e) => set('dueDate', e.target.value)}
             className={inputCls}

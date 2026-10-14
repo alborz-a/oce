@@ -114,6 +114,8 @@ import {
 } from '@/features/property-dev/api';
 import { BulkRoomAddModal } from './BulkRoomAddModal';
 import { AccommodationCalendar } from './AccommodationCalendar';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** Visual badge palette for the per-row booking-status pill. */
 const BOOKING_STATUS_BADGE: Record<BookingStatus, string> = {
@@ -870,8 +872,7 @@ function AssignOccupantModal({
           label={t('accommodation.assign.check_in', { defaultValue: 'Check-in' })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
             className={inputCls}
@@ -890,8 +891,7 @@ function AssignOccupantModal({
               : undefined
           }
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={checkOut}
             min={checkIn || undefined}
             onChange={(e) => setCheckOut(e.target.value)}
@@ -2302,8 +2302,7 @@ function AddChargeModal({
             defaultValue: 'Period start',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodStart}
             onChange={(e) => setPeriodStart(e.target.value)}
             className={inputCls}
@@ -2314,8 +2313,7 @@ function AddChargeModal({
             defaultValue: 'Period end',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodEnd}
             onChange={(e) => setPeriodEnd(e.target.value)}
             className={inputCls}
@@ -2489,8 +2487,7 @@ function EditChargeModal({
             defaultValue: 'Period start',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodStart}
             onChange={(e) => setPeriodStart(e.target.value)}
             className={inputCls}
@@ -2501,8 +2498,7 @@ function EditChargeModal({
             defaultValue: 'Period end',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodEnd}
             onChange={(e) => setPeriodEnd(e.target.value)}
             className={inputCls}

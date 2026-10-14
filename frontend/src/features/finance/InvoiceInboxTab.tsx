@@ -32,6 +32,8 @@ import {
   downloadWithAuth,
 } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -734,8 +736,7 @@ function CaptureDetail({
                 label={t('finance.inbox.date', { defaultValue: 'Invoice date' })}
                 conf={capture.field_confidence?.['invoice_date']}
               >
-                <input
-                  type="date"
+                <JalaliDateInput
                   className={inputCls}
                   disabled={!editable}
                   value={draft.invoice_date ?? ''}
@@ -743,8 +744,7 @@ function CaptureDetail({
                 />
               </Field>
               <Field label={t('finance.inbox.due_date', { defaultValue: 'Due date' })}>
-                <input
-                  type="date"
+                <JalaliDateInput
                   className={inputCls}
                   disabled={!editable}
                   value={draft.due_date ?? ''}

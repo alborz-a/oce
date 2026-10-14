@@ -33,6 +33,8 @@ import {
   type Agreement,
 } from './api';
 import { gateErrorMessage } from './complianceReasons';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -320,16 +322,14 @@ export function AgreementFormModal({
         </WideModalField>
         <div />
         <WideModalField label={t('subcontractors.agreement_start')}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.start_date}
             onChange={(e) => set('start_date', e.target.value)}
             className={inputCls}
           />
         </WideModalField>
         <WideModalField label={t('subcontractors.agreement_end')}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.end_date}
             onChange={(e) => set('end_date', e.target.value)}
             className={inputCls}
@@ -434,16 +434,14 @@ export function PaymentApplicationFormModal({
     >
       <WideModalSection title={t('subcontractors.section_pay_app')} columns={2}>
         <WideModalField label={t('subcontractors.pay_app_period_start')}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodStart}
             onChange={(e) => setPeriodStart(e.target.value)}
             className={inputCls}
           />
         </WideModalField>
         <WideModalField label={t('subcontractors.pay_app_period_end')}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={periodEnd}
             onChange={(e) => setPeriodEnd(e.target.value)}
             className={inputCls}

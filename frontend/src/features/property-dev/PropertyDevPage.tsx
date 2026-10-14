@@ -184,6 +184,8 @@ import { DevelopmentsGrid } from './tabs/DevelopmentsTab';
 import { PlotsTab } from './tabs/PlotsTab';
 import { HouseTypesTab } from './tabs/HouseTypesTab';
 import { fmtList, fmtFixed } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `propdev.development.sales_phase.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -2359,8 +2361,7 @@ function ConvertLeadModal({
                 'Date the reservation auto-expires unless converted to SPA. Defaults to today + 30 days.',
             })}
           >
-            <input
-              type="date"
+            <JalaliDateInput
               className={inputCls}
               value={form.expires_at}
               onChange={(e) => setForm({ ...form, expires_at: e.target.value })}
@@ -2857,8 +2858,7 @@ function CreateReservationModal({
           />
         </WideModalField>
         <WideModalField label={t('propdev.freeze_until', { defaultValue: 'Freeze until' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.expires_at}
             onChange={(e) => setForm({ ...form, expires_at: e.target.value })}
             className={inputCls}
@@ -2932,8 +2932,7 @@ function ConvertReservationModal({
     >
       <WideModalSection columns={2}>
         <WideModalField label={t('propdev.signing_date', { defaultValue: 'Signing date' })} required>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.signing_date}
             onChange={(e) => setForm({ ...form, signing_date: e.target.value })}
             className={inputCls}
@@ -3753,8 +3752,7 @@ function MarkPaidModal({
           </p>
         </WideModalField>
         <WideModalField label={t('propdev.paid_on', { defaultValue: 'Paid on' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.paid_at}
             onChange={(e) => setForm({ ...form, paid_at: e.target.value })}
             className={inputCls}
@@ -3886,8 +3884,7 @@ function GenerateScheduleModal({
           )}
         </WideModalField>
         <WideModalField label={t('propdev.start_date', { defaultValue: 'Start date' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className={inputCls}
@@ -4545,8 +4542,7 @@ function HandoverPlotRow({ plot, buyer }: { plot: Plot; buyer: Buyer | undefined
               label={t('propdev.scheduled_date', { defaultValue: 'Scheduled date' })}
               span={2}
             >
-              <input
-                type="date"
+              <JalaliDateInput
                 value={scheduledAt}
                 onChange={(e) => setScheduledAt(e.target.value)}
                 className={inputCls}
@@ -4691,8 +4687,7 @@ function CompleteHandoverModal({
           label={t('propdev.completed_at', { defaultValue: 'Completed at' })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.completed_at}
             onChange={(e) => setForm({ ...form, completed_at: e.target.value })}
             className={inputCls}
@@ -4703,8 +4698,7 @@ function CompleteHandoverModal({
             defaultValue: 'Keys handed over at',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.keys_handed_over_at}
             onChange={(e) =>
               setForm({ ...form, keys_handed_over_at: e.target.value })
@@ -5287,8 +5281,7 @@ function CreateWarrantyClaimModal({
           <span className="block mb-1 text-content-secondary">
             {t('propdev.warranty.sla_deadline', { defaultValue: 'SLA deadline (optional)' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.sla_deadline}
             onChange={(e) =>
               setForm((f) => ({ ...f, sla_deadline: e.target.value }))
@@ -5855,8 +5848,7 @@ function ReserveBlock({ plotId, onSuccess }: { plotId: string; onSuccess: () => 
           placeholder={t('propdev.email', { defaultValue: 'Email' })}
           className={inputCls}
         />
-        <input
-          type="date"
+        <JalaliDateInput
           value={form.reservation_deadline}
           onChange={(e) => setForm({ ...form, reservation_deadline: e.target.value })}
           className={inputCls}
@@ -6405,8 +6397,7 @@ function ContractBuyerBlock({ buyer }: { buyer: Buyer }) {
         <div className="grid grid-cols-2 gap-2">
           <div>
             <label className={labelCls}>{t('propdev.signed', { defaultValue: 'Signed' })}</label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.contract_signed_at}
               onChange={(e) => setForm({ ...form, contract_signed_at: e.target.value })}
               className={inputCls}
@@ -6414,8 +6405,7 @@ function ContractBuyerBlock({ buyer }: { buyer: Buyer }) {
           </div>
           <div>
             <label className={labelCls}>{t('propdev.freeze_deadline', { defaultValue: 'Freeze deadline' })}</label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.freeze_deadline}
               onChange={(e) => setForm({ ...form, freeze_deadline: e.target.value })}
               className={inputCls}
@@ -7399,8 +7389,7 @@ function DevelopmentFormBody({
             defaultValue: 'Construction start',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={devForm.start_date}
             onChange={(e) => set('start_date', e.target.value)}
             className={inputCls}
@@ -7411,8 +7400,7 @@ function DevelopmentFormBody({
             defaultValue: 'Sales launch',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={devForm.launch_date}
             onChange={(e) => set('launch_date', e.target.value)}
             className={inputCls}
@@ -7423,8 +7411,7 @@ function DevelopmentFormBody({
             defaultValue: 'Expected completion',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={devForm.completion_date}
             onChange={(e) => set('completion_date', e.target.value)}
             className={inputCls}

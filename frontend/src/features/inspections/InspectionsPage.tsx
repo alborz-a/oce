@@ -65,6 +65,8 @@ import {
 import { inspectionsGuide } from './inspectionsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildInspectionsInsights } from './inspectionsInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Constants ------------------------------------------------------------- */
 
@@ -416,9 +418,9 @@ function CreateInspectionModal({
                 {t('inspections.field_date', { defaultValue: 'Planned Date' })}{' '}
                 <span className="text-semantic-error">*</span>
               </label>
-              <input
+              <JalaliDateInput
                 id="inspection-date"
-                type="date"
+               
                 value={form.date}
                 onChange={(e) => {
                   set('date', e.target.value);

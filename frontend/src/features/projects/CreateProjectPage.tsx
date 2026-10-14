@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 import {
   useState, useEffect, useRef,
   type ChangeEvent, type KeyboardEvent,
@@ -32,6 +33,8 @@ import { lookupCountryDefault } from './currencyGroups';
 import { regionOptionLabel, type RegionOption } from './regionLabel';
 import { onlyChangedFields } from '@/shared/lib/apiHelpers';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `project_wizard.activity_opt.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -591,7 +594,9 @@ export function CreateProjectModal({
       setForm((prev) => ({
         ...prev,
         region: prev.region ? prev.region : countryDefault.region,
-        currency: prev.currency && prev.currency !== defaultCurrency ? prev.currency : countryDefault.currency,
+        currency: REGION_LOCK
+          ? LOCKED.currency // [RSC-IRAN]
+          : prev.currency && prev.currency !== defaultCurrency ? prev.currency : countryDefault.currency,
       }));
     }
     // OC-11: derive location precision from Nominatim addresstype.
@@ -810,8 +815,9 @@ export function CreateProjectModal({
     form.classification_standard === '__custom__'
       ? customStandard.trim()
       : (form.classification_standard ?? '');
-  const effectiveCurrency =
-    form.currency === '__custom__' ? customCurrency.trim() : (form.currency ?? '');
+  const effectiveCurrency = REGION_LOCK
+    ? LOCKED.currency // [RSC-IRAN]
+    : form.currency === '__custom__' ? customCurrency.trim() : (form.currency ?? '');
 
   // Any meaningful input → closing should confirm before discarding.
   const dirty =
@@ -928,8 +934,9 @@ export function CreateProjectModal({
           form.classification_standard === '__custom__'
             ? effectiveStandard
             : form.classification_standard,
-        currency:
-          form.currency === '__custom__' ? effectiveCurrency.toUpperCase() : form.currency,
+        currency: REGION_LOCK
+          ? LOCKED.currency // [RSC-IRAN]
+          : form.currency === '__custom__' ? effectiveCurrency.toUpperCase() : form.currency,
         regional_factor: clampFactor(regionalFactorStr),
         address: hasAnyAddress ? addressParts : null,
         // Optional Phase-12 expansion fields — only include when filled
@@ -1731,9 +1738,9 @@ export function CreateProjectModal({
                       text={t('projects.planned_start_date', { defaultValue: 'Planned start date' })}
                       optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
                     />
-                    <input
+                    <JalaliDateInput
                       id="qc-start"
-                      type="date"
+                     
                       value={plannedStart}
                       onChange={(e) => setPlannedStart(e.target.value)}
                       className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
@@ -1745,9 +1752,9 @@ export function CreateProjectModal({
                       text={t('projects.planned_end_date', { defaultValue: 'Planned end date' })}
                       optionalText={t('projects.create.optional_badge', { defaultValue: 'Optional' })}
                     />
-                    <input
+                    <JalaliDateInput
                       id="qc-end"
-                      type="date"
+                     
                       value={plannedEnd}
                       onChange={(e) => setPlannedEnd(e.target.value)}
                       min={plannedStart || undefined}

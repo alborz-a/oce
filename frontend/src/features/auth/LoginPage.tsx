@@ -394,7 +394,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="relative grid h-screen grid-cols-1 lg:grid-cols-2 bg-surface-secondary overflow-hidden">
+    <div className="relative grid h-screen grid-cols-1 bg-surface-secondary overflow-hidden">
       <AuthBackground />
 
       {/* Local style block - premium glass variant + drifting orb keyframes
@@ -515,6 +515,8 @@ export function LoginPage() {
       {/* ── Right column on lg+: marketing & benefits.
           Order swap (lg:order-2) puts the form on the left so it's the
           first thing the eye lands on - primary action priority. */}
+      {/* [RSC-IRAN] hidden: marketing panel (Open Source badge, headline, stats, hex grid, AGPL/GitHub) — do not delete */}
+      {false && (
       <div className="hidden lg:flex relative z-10 lg:order-2 flex-col justify-center pl-14 xl:pl-20 pr-12 xl:pr-16 py-6 overflow-hidden">
         {/* Marketing column showcase - color lives here. Sky/cyan mesh +
             slow-drifting orbs + faint noise grain. The form column on the
@@ -720,6 +722,7 @@ export function LoginPage() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Center column removed - tags moved to left panel footer */}
 
@@ -935,18 +938,22 @@ export function LoginPage() {
               </div>
             )}
 
+            {/* [RSC-IRAN] hidden: register link (owner order: login only) — do not delete */}
+            {false && (
             <div className="mt-4 border-t border-border-light pt-3.5 animate-stagger-in" style={{ animationDelay: '460ms' }}>
               <p className="text-center text-xs text-content-secondary">
                 {t('auth.no_account', "Don't have an account?")}{' '}
                 <Link to="/register" className="font-medium text-oe-blue hover:text-oe-blue-hover transition-colors">{t('auth.create_account', 'Create account')}</Link>
               </p>
             </div>
+            )}
           </div>
 
           {/* Demo Access - shown by default. Hidden only when the server
               reports demo is off (SEED_DEMO=false, or an admin turned it off in
               Settings), which flips demoEnabled to false in the effect above. */}
-          {demoEnabled && (
+          {/* [RSC-IRAN] hidden: demo accounts (demo@openconstructionerp.com) — do not delete */}
+          {false && demoEnabled && (
           <div className="relative mt-3 animate-stagger-in" style={{ animationDelay: '500ms' }}>
             <div className="login-glass-pro relative rounded-2xl overflow-hidden">
               <div
@@ -1085,9 +1092,12 @@ export function LoginPage() {
           {/* Running build version - always visible so it's obvious which
               version is live on a fresh open. Matches the Sidebar / About
               treatment (v{APP_VERSION}). */}
+          {/* [RSC-IRAN] hidden: build version label — do not delete */}
+          {false && (
           <div className="mt-3 text-center text-2xs font-mono text-content-quaternary/80 tabular-nums">
             v{APP_VERSION}
           </div>
+          )}
         </div>
       </div>
 
@@ -1095,7 +1105,8 @@ export function LoginPage() {
       {brandOpen && <BrandingEditorModal onClose={() => setBrandOpen(false)} />}
 
       {/* ── About modal ── */}
-      {showInfo && (
+      {/* [RSC-IRAN] hidden: About modal (OpenConstructionERP marketing) — do not delete */}
+      {false && showInfo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" onClick={() => setShowInfo(false)} />
 

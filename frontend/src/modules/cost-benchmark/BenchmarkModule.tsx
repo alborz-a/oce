@@ -26,6 +26,7 @@ import { useDisplayQuantity } from '@/shared/hooks/useDisplayQuantity';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
 import { formatCurrency as formatMoney } from '@/shared/lib/money';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { REGION_LOCK } from '@/app/regionLock';
 
 /* ── Helpers ───────────────────────────────────────────────────────── */
 
@@ -430,6 +431,8 @@ export default function BenchmarkModule() {
           </div>
 
           {/* Region */}
+          {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+          {!REGION_LOCK && (
           <div>
             <label className="block text-xs font-medium text-content-tertiary mb-1">
               {t('benchmarks.region', { defaultValue: 'Region' })}
@@ -444,6 +447,7 @@ export default function BenchmarkModule() {
               ))}
             </select>
           </div>
+          )}
 
           {/* GFA */}
           <div>

@@ -78,6 +78,8 @@ import { CreateTaskFromSourceDialog } from '@/features/tasks';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildCorrespondenceInsights } from './correspondenceInsights';
 import { fmtList } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -753,9 +755,9 @@ function CreateCorrespondenceModal({
                 })
           }
         >
-          <input
+          <JalaliDateInput
             id="corr-date-sent"
-            type="date"
+           
             value={form.date_sent}
             onChange={(e) => set('date_sent', e.target.value)}
             className={inputCls}
@@ -775,9 +777,9 @@ function CreateCorrespondenceModal({
                 })
           }
         >
-          <input
+          <JalaliDateInput
             id="corr-date-received"
-            type="date"
+           
             value={form.date_received}
             onChange={(e) => set('date_received', e.target.value)}
             className={inputCls}
@@ -836,9 +838,9 @@ function CreateCorrespondenceModal({
             defaultValue: 'Optional - the date a reply is contractually due. Leave blank if none.',
           })}
         >
-          <input
+          <JalaliDateInput
             id="corr-response-by"
-            type="date"
+           
             value={form.response_required_by}
             onChange={(e) => set('response_required_by', e.target.value)}
             className={inputCls}

@@ -75,6 +75,8 @@ import {
   WELL_KNOWN_ACTIONS,
 } from './api';
 import { fmtList, getIntlLocale } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const DEFAULT_LIMIT = 50;
 const LIMIT_OPTIONS = [25, 50, 100, 200] as const;
@@ -437,8 +439,7 @@ function FilterBar({
           <label className="block text-xs font-medium text-content-secondary mb-1">
             {t('audit.filter_from', { defaultValue: 'From' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={draft.dateFrom ? draft.dateFrom.slice(0, 10) : ''}
             onChange={(e) => {
               onPresetChange('custom');
@@ -453,8 +454,7 @@ function FilterBar({
           <label className="block text-xs font-medium text-content-secondary mb-1">
             {t('audit.filter_to', { defaultValue: 'To' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={draft.dateTo ? draft.dateTo.slice(0, 10) : ''}
             onChange={(e) => {
               onPresetChange('custom');

@@ -25,6 +25,8 @@ import {
   type MeetingActions,
 } from './api';
 import { SeriesActionRegisterDialog } from './SeriesActionRegisterDialog';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface ActionRegisterPanelProps {
   meetingId: string;
@@ -118,8 +120,7 @@ function ActionRow({
         className={inputCls + ' w-28'}
         disabled={busy}
       />
-      <input
-        type="date"
+      <JalaliDateInput
         value={due}
         onChange={(e) => setDue(e.target.value)}
         onBlur={commitDue}
@@ -340,8 +341,7 @@ export function ActionRegisterPanel({ meetingId, seriesId }: ActionRegisterPanel
               aria-label={t('meetings.action_owner', { defaultValue: 'Owner' })}
               className={inputCls + ' w-28'}
             />
-            <input
-              type="date"
+            <JalaliDateInput
               value={due}
               onChange={(e) => setDue(e.target.value)}
               aria-label={t('meetings.action_due', { defaultValue: 'Due' })}

@@ -37,6 +37,7 @@ import {
   type GanttDependencyType,
   type ViewMode,
   ROW_HEIGHT,
+  COLUMN_WIDTH,
   HEADER_HEIGHT,
   TABLE_WIDTH,
   dateToPx,
@@ -44,6 +45,7 @@ import {
   daysBetween,
   addDays,
   generateTimeHeaders,
+  getLockedWeekendDays,
   calculateLinkPath,
   getDateRange,
   getTimelineWidth,
@@ -1452,6 +1454,21 @@ export function GanttChart({
                 opacity={0.3}
               />
             ))}
+
+            {/* Weekend (Friday) shading, REGION_LOCK day view only */}
+            {viewMode === 'day' &&
+              getLockedWeekendDays(timelineStart, timelineEnd).map((d) => (
+                <rect
+                  key={`weekend-${d.getTime()}`}
+                  data-testid="gantt-weekend"
+                  x={dateToPx(d, viewMode, timelineStart)}
+                  y={0}
+                  width={COLUMN_WIDTH.day}
+                  height={bodyHeight}
+                  fill="var(--color-surface-secondary, #f8fafc)"
+                  opacity={0.6}
+                />
+              ))}
 
             {/* Horizontal row separators */}
             {activities.map((_a, idx) => (

@@ -66,6 +66,8 @@ import {
   type Holder,
 } from './deleteGuard';
 import { buildSiteInventoryInsights } from './siteInventoryInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Shared styling + small helpers --------------------------------------- */
 
@@ -868,8 +870,7 @@ function RecordMovementModal({
           )}
         </Field>
         <Field label={t('site_inventory.field_date', { defaultValue: 'Date' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className={inputCls}

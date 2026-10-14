@@ -81,6 +81,8 @@ import {
 } from './api';
 import { getIntlLocale } from '@/shared/lib/formatters';
 import { normalizeRole } from '@/shared/lib/roles';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants & helpers ───────────────────────────────────────────────── */
 
@@ -1207,8 +1209,7 @@ function DeliveryBoard({
             size={14}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
           />
-          <input
-            type="date"
+          <JalaliDateInput
             value={day}
             onChange={(e) => setDay(e.target.value)}
             className={inputCls + ' pl-9 w-auto'}
@@ -2280,8 +2281,7 @@ function GateTimeline({
               size={14}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
             />
-            <input
-              type="date"
+            <JalaliDateInput
               value={day}
               onChange={(e) => setDay(e.target.value || todayInput())}
               className={inputCls + ' pl-9 w-auto'}

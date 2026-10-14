@@ -2851,7 +2851,7 @@ function DashboardPageInner() {
 
       {/* ─── 2. Hero · row B - thin meta-strip ───────────────────────── */}
       <div className="flex items-center flex-wrap gap-x-4 gap-y-2 pl-2 animate-stagger-in" style={{ animationDelay: '140ms' }}>
-        {/* DDC attribution - slim inline link with tiny logo */}
+        {/* [RSC-IRAN] hidden: upstream DDC attribution + upstream GitHub link — do not delete
         <a
           href="https://datadrivenconstruction.io/?utm_source=erp"
           target="_blank"
@@ -2870,7 +2870,6 @@ function DashboardPageInner() {
 
         <span aria-hidden className="h-3 w-px bg-border-light" />
 
-        {/* Open-source pill - slimmer (was a heavy gradient card) */}
         <a
           href="https://github.com/datadrivenconstruction/OpenConstructionERP"
           target="_blank"
@@ -2886,6 +2885,8 @@ function DashboardPageInner() {
         </a>
 
         <span aria-hidden className="h-3 w-px bg-border-light" />
+
+        */}
 
         {/* System status pills */}
         <SystemStatusSummary
@@ -3537,3 +3538,6 @@ function SystemStatus() {
 /* ── Activity Feed ───────────────────────────────────────────────────── */
 
 /* ActivityFeed is now provided by @/shared/ui/ActivityFeed (cross-module, audit-log-based) */
+
+// [RSC-IRAN] hidden: keep import used (upstream attribution block hidden) — do not delete
+void ExternalLink;

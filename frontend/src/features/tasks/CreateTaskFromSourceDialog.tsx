@@ -30,6 +30,8 @@ import { Button } from '@/shared/ui/Button';
 import { UserSearchInput } from '@/shared/ui/UserSearchInput';
 import { useToastStore } from '@/stores/useToastStore';
 import { createTask, type Task } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** The record kinds this quick action can spawn a task from. */
 export type TaskSourceType = 'correspondence' | 'rfi' | 'inbound_capture';
@@ -217,8 +219,7 @@ export function CreateTaskFromSourceDialog({
               <span className="text-start text-xs font-medium text-content-secondary">
                 {t('tasks.from_source_due_label', { defaultValue: 'Due date' })}
               </span>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 className={INPUT_CLASS}

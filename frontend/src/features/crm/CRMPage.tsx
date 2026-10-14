@@ -127,6 +127,9 @@ import {
   type ActivityKind,
   type RemovalRefusal,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type View = 'pipeline' | 'list' | 'leads' | 'activities' | 'insights';
 
@@ -2085,7 +2088,7 @@ function LeadDrawer({
     account_id: '',
     stage_id: '',
     estimated_value: '0',
-    currency: 'EUR',
+    currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
     probability_percent: '20',
   });
 
@@ -2907,7 +2910,7 @@ function CreateModal({
     new_account_name: '',
     title: '',
     estimated_value: '0',
-    currency: 'EUR',
+    currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
     probability_percent: '20',
     stage_id: stages[0]?.id || '',
     expected_close_date: '',
@@ -3160,8 +3163,7 @@ function CreateModal({
               })}
               span={2}
             >
-              <input
-                type="date"
+              <JalaliDateInput
                 value={dealForm.expected_close_date}
                 onChange={(e) =>
                   setDealForm({
@@ -3333,8 +3335,7 @@ function CreateModal({
             </select>
           </WideModalField>
           <WideModalField label={t('crm.due', { defaultValue: 'Due' })}>
-            <input
-              type="date"
+            <JalaliDateInput
               value={actForm.due_at}
               onChange={(e) =>
                 setActForm({ ...actForm, due_at: e.target.value })

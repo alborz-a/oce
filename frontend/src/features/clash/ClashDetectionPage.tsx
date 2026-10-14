@@ -123,6 +123,8 @@ import { ClashCostImpactColumn } from './ClashCostImpactColumn';
 import { clashGuide } from './clashGuide';
 import { fmtFixed, getIntlLocale } from '@/shared/lib/formatters';
 import { IssueHubLink } from '@/features/issues/IssueHubLink';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const EMPTY_SET: ClashSelectionSet = {
   disciplines: [],
@@ -6138,8 +6140,7 @@ function ClashDetailPanel({
               {t('clash.due_date', { defaultValue: 'Due date' })}
             </label>
             <div className="mt-1 flex items-center gap-2">
-              <input
-                type="date"
+              <JalaliDateInput
                 value={due}
                 onChange={(e) => setDue(e.target.value)}
                 className="h-8 min-w-0 flex-1 rounded-md border border-border bg-surface-primary px-2 text-sm"

@@ -1,6 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   classifyIndex,
   formatIndex,
@@ -15,6 +15,8 @@ import {
   SNAPSHOT_STATUS_ORDER,
 } from './evm';
 import type { EvmSummary, ScheduleSnapshot } from './api';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 describe('classifyIndex', () => {
   it('bands an index around the 1.0 baseline with an epsilon', () => {

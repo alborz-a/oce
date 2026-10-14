@@ -117,6 +117,7 @@ import { copyToClipboard, readClipboard } from '@/shared/lib/browser';
 import { parseDecimalInput } from '@/shared/lib/parseDecimal';
 import { useHasPermission } from '@/shared/lib/permissionGates';
 import { isAltOrAltGraph } from './boqShortcuts';
+import { REGION_LOCK } from '@/app/regionLock';
 
 /* ── Column width persistence ─────────────────────────────────────── */
 
@@ -3715,41 +3716,46 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                 <label className="block text-[11px] font-medium text-content-secondary mb-1">
                   {t('boq.resource_currency', { defaultValue: 'Currency' })}
                 </label>
-                <select
-                  value={manualResourceDialog.currency || currencyCode}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    setManualResourceDialog({
-                      ...manualResourceDialog,
-                      currency: v === currencyCode ? '' : v,
-                    });
-                  }}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
-                  title={t('boq.resource_currency_hint', {
-                    defaultValue: 'Currency for this resource. Defaults to project base currency.',
-                  })}
-                >
-                  {/* Base currency always first */}
-                  <option value={currencyCode}>{currencyCode}</option>
-                  {/* Project FX template currencies */}
-                  {(fxRates ?? [])
-                    .filter((fx) => fx.currency !== currencyCode)
-                    .map((fx) => (
-                      <option key={`fx-${fx.currency}`} value={fx.currency}>
-                        {fx.currency}
-                      </option>
-                    ))}
-                  {/* All other ISO currencies (collapsed list) */}
-                  {ALL_CURRENCY_OPTIONS
-                    .filter(
-                      (c) =>
-                        c.value !== currencyCode &&
-                        !(fxRates ?? []).some((fx) => fx.currency === c.value),
-                    )
-                    .map((c) => (
-                      <option key={`all-${c.value}`} value={c.value}>{c.value}</option>
-                    ))}
-                </select>
+                {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+                {REGION_LOCK ? (
+                  <div className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue">ریال</div>
+                ) : (
+                  <select
+                    value={manualResourceDialog.currency || currencyCode}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setManualResourceDialog({
+                        ...manualResourceDialog,
+                        currency: v === currencyCode ? '' : v,
+                      });
+                    }}
+                    className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
+                    title={t('boq.resource_currency_hint', {
+                      defaultValue: 'Currency for this resource. Defaults to project base currency.',
+                    })}
+                  >
+                    {/* Base currency always first */}
+                    <option value={currencyCode}>{currencyCode}</option>
+                    {/* Project FX template currencies */}
+                    {(fxRates ?? [])
+                      .filter((fx) => fx.currency !== currencyCode)
+                      .map((fx) => (
+                        <option key={`fx-${fx.currency}`} value={fx.currency}>
+                          {fx.currency}
+                        </option>
+                      ))}
+                    {/* All other ISO currencies (collapsed list) */}
+                    {ALL_CURRENCY_OPTIONS
+                      .filter(
+                        (c) =>
+                          c.value !== currencyCode &&
+                          !(fxRates ?? []).some((fx) => fx.currency === c.value),
+                      )
+                      .map((c) => (
+                        <option key={`all-${c.value}`} value={c.value}>{c.value}</option>
+                      ))}
+                  </select>
+                )}
               </div>
             </div>
 
@@ -3862,37 +3868,42 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
             <label className="block text-[11px] font-medium text-content-secondary mb-1">
               {t('boq.resource_currency', { defaultValue: 'Currency' })}
             </label>
-            <select
-              value={positionCurrencyDialog.code || currencyCode}
-              onChange={(e) =>
-                setPositionCurrencyDialog({
-                  ...positionCurrencyDialog,
-                  code: e.target.value,
-                })
-              }
-              className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
-            >
-              {/* Base currency first (selecting it clears the override). */}
-              <option value={currencyCode}>
-                {currencyCode} {t('boq.currency_base_suffix', { defaultValue: '(base)' })}
-              </option>
-              {(fxRates ?? [])
-                .filter((fx) => fx.currency !== currencyCode)
-                .map((fx) => (
-                  <option key={`fx-${fx.currency}`} value={fx.currency}>
-                    {fx.currency}
+            {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+            {REGION_LOCK ? (
+              <div className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue">ریال</div>
+            ) : (
+              <select
+                value={positionCurrencyDialog.code || currencyCode}
+                onChange={(e) =>
+                  setPositionCurrencyDialog({
+                    ...positionCurrencyDialog,
+                    code: e.target.value,
+                  })
+                }
+                className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary outline-none focus:border-oe-blue"
+              >
+                {/* Base currency first (selecting it clears the override). */}
+                <option value={currencyCode}>
+                  {currencyCode} {t('boq.currency_base_suffix', { defaultValue: '(base)' })}
+                </option>
+                {(fxRates ?? [])
+                  .filter((fx) => fx.currency !== currencyCode)
+                  .map((fx) => (
+                    <option key={`fx-${fx.currency}`} value={fx.currency}>
+                      {fx.currency}
+                    </option>
+                  ))}
+                {ALL_CURRENCY_OPTIONS.filter(
+                  (c) =>
+                    c.value !== currencyCode &&
+                    !(fxRates ?? []).some((fx) => fx.currency === c.value),
+                ).map((c) => (
+                  <option key={`all-${c.value}`} value={c.value}>
+                    {c.value}
                   </option>
                 ))}
-              {ALL_CURRENCY_OPTIONS.filter(
-                (c) =>
-                  c.value !== currencyCode &&
-                  !(fxRates ?? []).some((fx) => fx.currency === c.value),
-              ).map((c) => (
-                <option key={`all-${c.value}`} value={c.value}>
-                  {c.value}
-                </option>
-              ))}
-            </select>
+              </select>
+            )}
             <div className="flex gap-2 justify-end mt-5">
               <button
                 onClick={() => setPositionCurrencyDialog(null)}

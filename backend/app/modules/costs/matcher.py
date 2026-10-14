@@ -39,6 +39,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.costs.models import CostItem
+from app.core.region_lock import LOCKED_CURRENCY, REGION_LOCK
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class MatchResult(BaseModel):
     description: str = Field(..., description="Human-readable description")
     unit: str = Field(..., description="Unit of measurement (m, m2, m3, ...)")
     unit_rate: float = Field(..., description="Numeric unit rate (0 if unparseable)")
-    currency: str = Field(default="EUR", description="ISO 4217 currency code")
+    currency: str = Field(default=LOCKED_CURRENCY if REGION_LOCK else "EUR", description="ISO 4217 currency code")  # [RSC-IRAN] region lock IRR default
     score: float = Field(..., ge=0.0, le=1.0, description="Relevance score 0..1 (higher = better)")
     source: str = Field(
         default="lexical",

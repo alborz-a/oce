@@ -32,6 +32,8 @@ import {
   formatHours,
   type WorkingTimeWorkerDay,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** First day of the month `todayISO` falls in, as an ISO date. */
 function monthStart(todayISO: string): string {
@@ -145,8 +147,7 @@ export function WorkingTimeRecordPanel({
           <span className="mb-1 text-2xs font-medium text-content-tertiary">
             {t('field_time.date_from', { defaultValue: 'From date' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             className={fieldCls}
@@ -156,8 +157,7 @@ export function WorkingTimeRecordPanel({
           <span className="mb-1 text-2xs font-medium text-content-tertiary">
             {t('field_time.date_to', { defaultValue: 'To date' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
             className={fieldCls}

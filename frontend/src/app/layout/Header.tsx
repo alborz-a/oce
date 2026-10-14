@@ -474,7 +474,9 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             project picker instead of truncating its name. The column keeps
             room for the globe, so the readout shrinks to its icon and tooltip
             rather than vanishing, which is the one thing it must not do. */}
+        {/* [RSC-IRAN] hidden: upstream region-pack chip hidden — do not delete
         <ActivePackChip className="min-w-0" />
+        */}
         {showCoBrand && <PartnerLogoBadge variant="nav" />}
       </div>
 
@@ -550,14 +552,18 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             width, because it is the way back to a feature that stopped. */}
         <ProcessesButton />
         <NotificationBell />
+        {/* [RSC-IRAN] hidden: upstream news/changelog button hidden — do not delete
         <HeaderNewsButton />
+        */}
         {/* [RSC-IRAN] hidden: Upstream module builder, support, subscribe, bug report buttons hidden — do not delete
         <div className="hidden 2xl:block"><ModuleBuilderButton /></div>
         <div className="hidden 2xl:block"><SupportUsButton /></div>
         <div className="hidden 2xl:block"><SubscribeButton /></div>
         <BugReportMenu />
         */}
+        {/* [RSC-IRAN] hidden: upstream help/docs/feedback menu hidden — do not delete
         <HelpMenu />
+        */}
 
         {/* Hairline divider between Zone 3 and Zone 4. */}
         <div className="hidden sm:block h-4 w-px bg-border-light/70" aria-hidden />
@@ -1186,6 +1192,10 @@ function HelpMenu() {
     </div>
   );
 }
+// [RSC-IRAN] hidden: HelpMenu/ActivePackChip/HeaderNewsButton unused upstream UI — do not delete
+void HelpMenu;
+void ActivePackChip;
+void HeaderNewsButton;
 
 /* ── Language Switcher Dropdown ─────────────────────────────────────────── */
 

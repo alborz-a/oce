@@ -24,6 +24,8 @@ import {
 } from './api';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { parseDecimalInput, toDecimalPayloadString } from '@/shared/lib/parseDecimal';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
   'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -185,8 +187,7 @@ export function PaymentApplicationForm({
                 <label className="mb-1 block text-2xs font-medium uppercase tracking-wide text-content-tertiary">
                   {t('payportal.period_start', { defaultValue: 'Period start' })}
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={periodStart}
                   onChange={(e) => setPeriodStart(e.target.value)}
                   className={inputCls}
@@ -196,8 +197,7 @@ export function PaymentApplicationForm({
                 <label className="mb-1 block text-2xs font-medium uppercase tracking-wide text-content-tertiary">
                   {t('payportal.period_end', { defaultValue: 'Period end' })}
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={periodEnd}
                   onChange={(e) => setPeriodEnd(e.target.value)}
                   className={inputCls}

@@ -95,6 +95,8 @@ import { financeGuide } from './financeGuide';
 import { DEFAULT_FINANCE_TAB, isFinanceTab, type FinanceTab } from './financeTabs';
 import { UnlinkedTwinBanner } from '@/features/subcontractors/UnlinkedTwinBanner';
 import { fmtList, fmtPercent, fmtFixed, fmtNumberForInput } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `finance.payment_status_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -3316,8 +3318,7 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
               label={t('finance.due_date', { defaultValue: 'Due Date' })}
               span={2}
             >
-              <input
-                type="date"
+              <JalaliDateInput
                 value={invoiceForm.due_date}
                 onChange={(e) => setInvoiceForm((f) => ({ ...f, due_date: e.target.value }))}
                 className={inputCls}

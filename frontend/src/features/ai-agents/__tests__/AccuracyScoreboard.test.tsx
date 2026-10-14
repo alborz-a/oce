@@ -16,6 +16,8 @@ import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 
 import type { AccuracyScore } from '../api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 /* -- i18n shim - return defaultValue with interpolation. -------------- */
 
 vi.mock('react-i18next', () => ({

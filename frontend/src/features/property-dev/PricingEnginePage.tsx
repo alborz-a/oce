@@ -117,6 +117,9 @@ import {
 import { formatCurrency } from '@/shared/lib/money';
 import { getIntlLocale } from '@/shared/lib/formatters';
 import { compareNames } from '@/shared/lib/collator';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const RULE_TYPES: PricingRuleType[] = [
   'early_bird',
@@ -227,6 +230,16 @@ function CurrencySelect({
 }: CurrencySelectProps): JSX.Element {
   // If the saved value isn't in the top-30, prepend it so the select can
   // still render it (avoids silently swapping to EUR on edit).
+  // [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete
+  if (REGION_LOCK) {
+    void onChange;
+    void ariaLabel;
+    return (
+      <span id={id} className={clsx(inputCls, 'inline-flex items-center', className)}>
+        ریال
+      </span>
+    );
+  }
   const inList = CURRENCY_OPTIONS.some((o) => o.code === value);
   const extra = !inList && value ? [{ code: value, label: value }] : [];
   return (
@@ -501,9 +514,9 @@ function TimeWindowPicker({
           <label className={labelCls} htmlFor="rule-from">
             {t('propdev.pricing.time.from', 'Valid from')}
           </label>
-          <input
+          <JalaliDateInput
             id="rule-from"
-            type="date"
+           
             className={validationErr ? inputErrCls : inputCls}
             value={from}
             onChange={(e) => onChange({ from: e.target.value, to })}
@@ -518,9 +531,9 @@ function TimeWindowPicker({
               </Badge>
             )}
           </label>
-          <input
+          <JalaliDateInput
             id="rule-to"
-            type="date"
+           
             className={validationErr ? inputErrCls : inputCls}
             value={to ?? ''}
             onChange={(e) => onChange({ from, to: e.target.value || null })}
@@ -845,7 +858,7 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
   const [form, setForm] = useState({
     name: '',
     effective_from: todayISO(),
-    currency: 'EUR',
+    currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN]
     notes: '',
   });
 
@@ -928,9 +941,9 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
               <label className={labelCls} htmlFor="pl-from">
                 {t('propdev.pricing.effective_from', 'Effective from')}
               </label>
-              <input
+              <JalaliDateInput
                 id="pl-from"
-                type="date"
+               
                 className={inputCls}
                 value={form.effective_from}
                 onChange={(e) =>
@@ -2252,9 +2265,9 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
             <label className={labelCls} htmlFor="hist-from">
               {t('propdev.pricing.history.filter_from', 'From')}
             </label>
-            <input
+            <JalaliDateInput
               id="hist-from"
-              type="date"
+             
               className={inputCls}
               value={filterFrom}
               onChange={(e) => setFilterFrom(e.target.value)}
@@ -2264,9 +2277,9 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
             <label className={labelCls} htmlFor="hist-to">
               {t('propdev.pricing.history.filter_to', 'To')}
             </label>
-            <input
+            <JalaliDateInput
               id="hist-to"
-              type="date"
+             
               className={inputCls}
               value={filterTo}
               onChange={(e) => setFilterTo(e.target.value)}

@@ -208,6 +208,8 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
             doesn't crowd the wordmark). User asked for it to be
             permanent (not hover-only) so discoverability of the
             white-labelling feature is high. */}
+        {/* [RSC-IRAN] admin-only: branding pencil, non-admins do not see it — do not delete */}
+        {isAdmin && (
         <button
           type="button"
           onClick={() => setEditing(true)}
@@ -226,6 +228,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
         >
           <Pencil size={13} strokeWidth={2.25} />
         </button>
+        )}
       </div>
 
       {editing && (

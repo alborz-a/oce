@@ -35,7 +35,7 @@ function getInitialSubscribed(): boolean {
   }
 }
 
-export function SubscribeButton() {
+function SubscribeButtonUpstream() {
   const { t } = useTranslation();
   const [subscribed, setSubscribed] = useState<boolean>(getInitialSubscribed);
 
@@ -107,4 +107,11 @@ export function SubscribeButton() {
       </button>
     </>
   );
+}
+
+/* [RSC-IRAN] hidden: upstream subscribe button — do not delete */
+void SubscribeButtonUpstream;
+export function SubscribeButton() {
+  
+  return null;
 }

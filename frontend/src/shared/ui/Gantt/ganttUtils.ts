@@ -5,6 +5,14 @@
  * time header generation, dependency arrow paths, and date range calculations.
  */
 
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
+import {
+  PERSIAN_MONTH_NAMES,
+  dateToJalali,
+  jalaliToGregorian,
+  toPersianDigits,
+} from '@/shared/lib/jalali';
+
 export type ViewMode = 'day' | 'week' | 'month' | 'quarter' | 'year';
 
 /** Pixels per unit for each zoom level */
@@ -101,6 +109,120 @@ export interface TimeHeaders {
   bottomRow: HeaderCell[];
 }
 
+/* ── Jalali (REGION_LOCK) headers ──────────────────────────────── */
+
+type JalaliUnit = 'month' | 'quarter' | 'year';
+
+function jalaliStart(jy: number, jm: number): Date {
+  const { gy, gm, gd } = jalaliToGregorian(jy, jm, 1);
+  return new Date(gy, gm - 1, gd);
+}
+
+/** Jalali months/quarters/years overlapping [start, end], clipped to it. */
+function jalaliPeriods(
+  start: Date,
+  end: Date,
+  unit: JalaliUnit,
+): Array<{ jy: number; jm: number; from: Date; to: Date }> {
+  const step = unit === 'month' ? 1 : unit === 'quarter' ? 3 : 12;
+  const first = dateToJalali(start);
+  let jy = first.jy;
+  let jm = unit === 'month' ? first.jm : unit === 'quarter' ? Math.floor((first.jm - 1) / 3) * 3 + 1 : 1;
+  const out: Array<{ jy: number; jm: number; from: Date; to: Date }> = [];
+  for (;;) {
+    const from = jalaliStart(jy, jm);
+    if (from > end) break;
+    let ny = jy;
+    let nm = jm + step;
+    while (nm > 12) {
+      nm -= 12;
+      ny += 1;
+    }
+    const to = addDays(jalaliStart(ny, nm), -1);
+    out.push({ jy, jm, from: from < start ? start : from, to: to > end ? end : to });
+    jy = ny;
+    jm = nm;
+  }
+  return out;
+}
+
+function generateJalaliTimeHeaders(startDate: Date, endDate: Date, viewMode: ViewMode): TimeHeaders {
+  const topRow: HeaderCell[] = [];
+  const bottomRow: HeaderCell[] = [];
+  const span = (from: Date, to: Date, label: string): HeaderCell => {
+    const x = dateToPx(from, viewMode, startDate);
+    return { label, x, width: dateToPx(addDays(to, 1), viewMode, startDate) - x };
+  };
+  const monthLabel = (jy: number, jm: number) => `${PERSIAN_MONTH_NAMES[jm - 1]} ${toPersianDigits(jy)}`;
+
+  if (viewMode === 'day' || viewMode === 'week') {
+    for (const p of jalaliPeriods(startDate, endDate, 'month')) {
+      topRow.push(span(p.from, p.to, monthLabel(p.jy, p.jm)));
+    }
+    if (viewMode === 'day') {
+      const d = new Date(startDate);
+      while (d <= endDate) {
+        bottomRow.push({
+          label: toPersianDigits(dateToJalali(d).jd),
+          x: dateToPx(d, viewMode, startDate),
+          width: COLUMN_WIDTH.day,
+        });
+        d.setDate(d.getDate() + 1);
+      }
+    } else {
+      // Weeks start on the locked week start (Saturday).
+      const d = new Date(startDate);
+      const dow = d.getDay();
+      if (dow !== LOCKED.weekStart) d.setDate(d.getDate() + ((LOCKED.weekStart - dow + 7) % 7));
+      let weekNum = 1;
+      while (d <= endDate) {
+        bottomRow.push({
+          label: `هفته ${toPersianDigits(weekNum)}`,
+          x: dateToPx(d, viewMode, startDate),
+          width: COLUMN_WIDTH.week,
+        });
+        d.setDate(d.getDate() + 7);
+        weekNum++;
+      }
+    }
+  } else if (viewMode === 'month' || viewMode === 'quarter') {
+    for (const p of jalaliPeriods(startDate, endDate, 'year')) {
+      topRow.push(span(p.from, p.to, toPersianDigits(p.jy)));
+    }
+    for (const p of jalaliPeriods(startDate, endDate, viewMode)) {
+      const label =
+        viewMode === 'month'
+          ? PERSIAN_MONTH_NAMES[p.jm - 1] || ''
+          : `سه‌ماهه ${toPersianDigits(Math.floor((p.jm - 1) / 3) + 1)}`;
+      bottomRow.push(span(p.from, p.to, label));
+    }
+  } else {
+    const years = jalaliPeriods(startDate, endDate, 'year');
+    const x0 = dateToPx(startDate, viewMode, startDate);
+    const xLast = dateToPx(addDays(endDate, 1), viewMode, startDate);
+    topRow.push({
+      label: `${toPersianDigits(years[0]!.jy)} - ${toPersianDigits(years[years.length - 1]!.jy)}`,
+      x: x0,
+      width: xLast - x0,
+    });
+    for (const p of years) bottomRow.push(span(p.from, p.to, toPersianDigits(p.jy)));
+  }
+  return { topRow, bottomRow };
+}
+
+/** Weekend (Friday) days in [start, end] under REGION_LOCK; empty otherwise. */
+export function getLockedWeekendDays(start: Date, end: Date): Date[] {
+  if (!REGION_LOCK) return [];
+  const out: Date[] = [];
+  const d = new Date(start);
+  d.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7));
+  while (d <= end) {
+    out.push(new Date(d));
+    d.setDate(d.getDate() + 7);
+  }
+  return out;
+}
+
 /** Generate two-row time header labels for the given date range and zoom. */
 export function generateTimeHeaders(
   startDate: Date,
@@ -108,6 +230,7 @@ export function generateTimeHeaders(
   viewMode: ViewMode,
   locale: string,
 ): TimeHeaders {
+  if (REGION_LOCK) return generateJalaliTimeHeaders(startDate, endDate, viewMode);
   const topRow: HeaderCell[] = [];
   const bottomRow: HeaderCell[] = [];
 

@@ -26,6 +26,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 vi.mock('@/shared/lib/api', async (importOriginal) => {
   const actual = await importOriginal();
   return { ...actual, apiGet: vi.fn(), apiPost: vi.fn() };

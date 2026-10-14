@@ -147,6 +147,8 @@ export function RegisterPage() {
       <AuthBackground />
 
       {/* Language — top right */}
+      {/* [RSC-IRAN] hidden: language dropdown (Farsi only) — do not delete */}
+      {false && (
       <div className="absolute top-3 end-3 z-30" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
@@ -175,8 +177,10 @@ export function RegisterPage() {
           </div>
         )}
       </div>
+      )}
 
-      {/* ── Left: benefits (desktop) ── */}
+      {/* [RSC-IRAN] hidden: left marketing panel (benefits, Open Source · AGPL-3.0, openconstructionerp.com) — do not delete */}
+      {false && (
       <div className="hidden lg:flex lg:w-[460px] xl:w-[500px] shrink-0 relative z-10 flex-col justify-center ps-14 xl:ps-20 pe-8 xl:pe-10 py-6">
         <div className="mb-4 animate-stagger-in" style={{ animationDelay: '0ms' }}>
           <h2 className="text-xl font-bold text-content-primary leading-snug">
@@ -229,6 +233,7 @@ export function RegisterPage() {
           <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">OpenConstructionERP.com</a>
         </div>
       </div>
+      )}
 
       {/* ── Right: logo + form ── */}
       <div className="flex flex-1 items-center justify-center p-4 sm:p-6 relative z-10">
@@ -327,10 +332,11 @@ export function RegisterPage() {
                     >
                       <option value="">{t('auth.how_found_select', '- Select -')}</option>
                       <option value="google">{t('auth.how_found_google', 'Google Search')}</option>
-                      <option value="github">{t('auth.how_found_github', 'GitHub')}</option>
-                      <option value="linkedin">{t('auth.how_found_linkedin', 'LinkedIn')}</option>
+                      {/* [RSC-IRAN] hidden: github/linkedin/youtube how-found options — do not delete */}
+                      {false && <option value="github">{t('auth.how_found_github', 'GitHub')}</option>}
+                      {false && <option value="linkedin">{t('auth.how_found_linkedin', 'LinkedIn')}</option>}
                       <option value="reddit">{t('auth.how_found_reddit', 'Reddit')}</option>
-                      <option value="youtube">{t('auth.how_found_youtube', 'YouTube')}</option>
+                      {false && <option value="youtube">{t('auth.how_found_youtube', 'YouTube')}</option>}
                       <option value="recommendation">{t('auth.how_found_recommendation', 'Recommendation')}</option>
                       <option value="conference">{t('auth.how_found_conference', 'Conference / Event')}</option>
                       <option value="other">{t('auth.how_found_other', 'Other')}</option>
@@ -468,6 +474,8 @@ export function RegisterPage() {
                   {t('auth.login', 'Sign in')}
                 </Link>
               </p>
+              {/* [RSC-IRAN] hidden: demo account button — do not delete */}
+              {false && (
               <button
                 type="button"
                 onClick={() => navigate('/login')}
@@ -475,10 +483,12 @@ export function RegisterPage() {
               >
                 {t('auth.try_demo', 'Try demo account →')}
               </button>
+              )}
             </div>
           </div>
 
-          {/* Mobile footer */}
+          {/* [RSC-IRAN] hidden: mobile footer (openconstructionerp.com, GitHub) — do not delete */}
+          {false && (
           <div className="lg:hidden mt-3 text-center text-2xs text-content-quaternary">
             <div className="flex items-center justify-center gap-3">
               <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">OpenConstructionERP.com</a>
@@ -486,6 +496,7 @@ export function RegisterPage() {
               <a href="https://github.com/datadrivenconstruction/OpenConstructionERP" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">GitHub</a>
             </div>
           </div>
+          )}
         </div>
       </div>
     </div>

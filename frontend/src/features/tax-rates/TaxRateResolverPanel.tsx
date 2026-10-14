@@ -37,6 +37,8 @@ import {
 } from './api';
 import { PendingConfirmations } from './PendingConfirmations';
 import { classifyResolution, offerableSubdivisions, type Classification } from './resolution';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const STALE = 5 * 60 * 1000;
 
@@ -164,8 +166,7 @@ export function TaxRateResolverPanel() {
 
           <label className="flex flex-col gap-1 text-sm">
             {t('tax_rates.field_date', { defaultValue: 'Priced at' })}
-            <input
-              type="date"
+            <JalaliDateInput
               value={onDate}
               onChange={(e) => setOnDate(e.target.value)}
               className="rounded border border-border-light bg-surface-primary p-2"

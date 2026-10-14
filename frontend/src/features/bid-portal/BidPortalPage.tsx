@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDown, ChevronRight, CheckCircle2, Clock, Lock, AlertTriangle } from 'lucide-react';
 
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
+import { REGION_LOCK } from '@/app/regionLock';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { Button, ConfirmDialog } from '@/shared/ui';
 import { useConfirm } from '@/shared/hooks/useConfirm';
@@ -562,6 +563,8 @@ function Shell({ children }: { children: React.ReactNode }) {
           <span className="text-sm font-medium text-content-primary">
             {t('bid_portal.brand', { defaultValue: 'Price entry' })}
           </span>
+          {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+          {!REGION_LOCK && (
           <label className="flex items-center gap-2 text-xs text-content-secondary">
             <span className="sr-only">{t('bid_portal.language', { defaultValue: 'Language' })}</span>
             <select
@@ -577,6 +580,7 @@ function Shell({ children }: { children: React.ReactNode }) {
               ))}
             </select>
           </label>
+          )}
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">{children}</main>

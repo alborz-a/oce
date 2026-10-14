@@ -93,6 +93,8 @@ import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/featur
 import { buildEquipmentInsights } from './equipmentInsights';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
 import { parseDecimalInput } from '@/shared/lib/parseDecimal';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `equipment.ownership_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -2863,8 +2865,7 @@ function EquipmentFormModal({
                     defaultValue: 'Purchase / start date',
                   })}
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={form.purchase_date}
                   onChange={(e) => set('purchase_date', e.target.value)}
                   className={inputCls}

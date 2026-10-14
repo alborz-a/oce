@@ -24,6 +24,7 @@ import { Button } from '@/shared/ui/Button';
 import { compareNames } from '@/shared/lib/collator';
 
 import type { ClearanceMeta, ClearanceProfile, CountryRegime, ProfileWriteBody } from './api';
+import { REGION_LOCK } from '@/app/regionLock';
 
 /** The three registration fields any country can ask for, in a fixed order. */
 const PROFILE_FIELD_ORDER = [
@@ -55,7 +56,7 @@ export function ClearanceRegistrationForm({
   const { t } = useTranslation();
 
   const [companyKey, setCompanyKey] = useState(initial?.company_key ?? '');
-  const [country, setCountry] = useState(initial?.country ?? '');
+  const [country, setCountry] = useState(initial?.country ?? (REGION_LOCK ? 'IR' : '')); // [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete
   const [taxId, setTaxId] = useState(initial?.tax_registration_id ?? '');
   const [participantId, setParticipantId] = useState(initial?.network_participant_id ?? '');
   const [certificate, setCertificate] = useState(initial?.certificate_reference ?? '');
@@ -164,31 +165,36 @@ export function ClearanceRegistrationForm({
 
       <label className="flex flex-col gap-1 text-sm">
         {t('einvoice_clearance.field_country', { defaultValue: 'Country platform' })}
-        <select
-          value={country}
-          onChange={(e) => {
-            setCountry(e.target.value);
-            setAdapterKey('');
-          }}
-          required
-          className="rounded border border-border-light bg-surface-primary p-2"
-        >
-          <option value="">
-            {t('einvoice_clearance.field_country_none', { defaultValue: 'Choose a country' })}
-          </option>
-          {grouped.map(([regime, entries]) => (
-            <optgroup
-              key={regime}
-              label={t(`einvoice_clearance.regime.${regime}`, { defaultValue: regime })}
-            >
-              {entries.map((entry) => (
-                <option key={entry.country} value={entry.country}>
-                  {entry.label}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+        {REGION_LOCK ? (
+          <div className="rounded border border-border-light bg-surface-primary p-2">ایران</div>
+        ) : (
+          <select
+            value={country}
+            onChange={(e) => {
+              setCountry(e.target.value);
+              setAdapterKey('');
+            }}
+            required
+            className="rounded border border-border-light bg-surface-primary p-2"
+          >
+            <option value="">
+              {t('einvoice_clearance.field_country_none', { defaultValue: 'Choose a country' })}
+            </option>
+            {grouped.map(([regime, entries]) => (
+              <optgroup
+                key={regime}
+                label={t(`einvoice_clearance.regime.${regime}`, { defaultValue: regime })}
+              >
+                {entries.map((entry) => (
+                  <option key={entry.country} value={entry.country}>
+                    {entry.label}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        )}
       </label>
 
       {/* What this country does, said before anything is typed rather than

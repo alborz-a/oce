@@ -104,6 +104,8 @@ import {
   type BookingStatus,
   type Charge,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type CalendarView = 'week' | 'month';
 const CALENDAR_VIEW_IDS: readonly CalendarView[] = ['week', 'month'];
@@ -1371,8 +1373,7 @@ function CreateBookingModal({
           })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
             className={inputCls}
@@ -1384,8 +1385,7 @@ function CreateBookingModal({
             defaultValue: 'Check-out (optional)',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             className={inputCls}

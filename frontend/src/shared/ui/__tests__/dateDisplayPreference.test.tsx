@@ -12,12 +12,14 @@
 // store instead of reading it once, because a preference that only takes
 // effect after navigating away is indistinguishable from a broken one.
 
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import i18next from 'i18next';
 import { DateDisplay } from '../DateDisplay';
 import { fmtDate } from '../../lib/formatters';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 const DUE = '2026-03-14';
 

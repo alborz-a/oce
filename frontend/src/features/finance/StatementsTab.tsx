@@ -17,6 +17,8 @@ import { Card, Badge, EmptyState, RecoveryCard, SkeletonTable } from '@/shared/u
 import { MoneyDisplay } from '@/shared/ui/MoneyDisplay';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { apiGet, ApiError } from '@/shared/lib/api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Types (mirror backend finance/schemas.py GAAP responses) ───────────── */
 
@@ -734,8 +736,7 @@ export function StatementsTab({ projectId }: { projectId: string }) {
             <span className="text-2xs font-medium uppercase tracking-wider text-content-tertiary">
               {t('finance.stmt_period_from', { defaultValue: 'From' })}
             </span>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dateFrom}
               max={dateTo || undefined}
               onChange={(e) => setDateFrom(e.target.value)}
@@ -749,8 +750,7 @@ export function StatementsTab({ projectId }: { projectId: string }) {
                 ? t('finance.stmt_as_of', { defaultValue: 'As of' })
                 : t('finance.stmt_period_to', { defaultValue: 'To' })}
             </span>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dateTo}
               min={dateFrom || undefined}
               onChange={(e) => setDateTo(e.target.value)}

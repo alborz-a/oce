@@ -62,6 +62,8 @@ import {
 } from './api';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ──────────────────────────────────────────────────────────────────────
  * Status palette - sales-desk colours match the task spec:
@@ -1249,8 +1251,7 @@ function HoldModal({
               defaultValue: 'Hold until (optional)',
             })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             value={until}
             onChange={(e) => onUntilChange(e.target.value)}
             className="mt-1 w-full rounded border border-divider/60 px-2 py-1.5 text-sm"

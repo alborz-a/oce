@@ -49,6 +49,8 @@ import {
   type ResultDecision,
 } from '../api';
 import { SectionToolbar, StatusBadge, ElementLinks, inputCls, labelCls, textareaCls } from './shared';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // EN 10204 inspection-document grades plus the EU CPR / UKCA markings and a
 // generic certificate of conformity. Mirrors CERT_TYPE_PATTERN in the schema.
@@ -895,9 +897,9 @@ function CreateMaterialModal({
               <label htmlFor="cc-mat-valid-until" className={labelCls}>
                 {t('construction_control.field.valid_until', { defaultValue: 'Valid until' })}
               </label>
-              <input
+              <JalaliDateInput
                 id="cc-mat-valid-until"
-                type="date"
+               
                 value={form.valid_until}
                 onChange={(e) => set('valid_until', e.target.value)}
                 className={inputCls}

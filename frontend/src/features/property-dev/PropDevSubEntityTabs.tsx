@@ -106,6 +106,8 @@ import type {
   RegulatorRef,
 } from './api';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -569,8 +571,7 @@ function PhaseFormModal({
             defaultValue: 'Planned start',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.planned_start}
             onChange={(e) =>
               setForm({ ...form, planned_start: e.target.value })
@@ -583,8 +584,7 @@ function PhaseFormModal({
             defaultValue: 'Planned end',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.planned_end}
             onChange={(e) => setForm({ ...form, planned_end: e.target.value })}
             className={inputCls}
@@ -2319,8 +2319,7 @@ function PriceMatrixFormModal({
           })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.effective_from}
             onChange={(e) =>
               setForm({ ...form, effective_from: e.target.value })
@@ -2333,8 +2332,7 @@ function PriceMatrixFormModal({
             defaultValue: 'Effective to',
           })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.effective_to}
             onChange={(e) =>
               setForm({ ...form, effective_to: e.target.value })
@@ -3080,8 +3078,7 @@ function EscrowAccountFormModal({
           label={t('propdev.escrow.opened_at', { defaultValue: 'Opened at' })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.opened_at}
             onChange={(e) =>
               setForm({ ...form, opened_at: e.target.value })
@@ -3454,8 +3451,7 @@ function EscrowTransactionFormModal({
           })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.transaction_date}
             onChange={(e) =>
               setForm({ ...form, transaction_date: e.target.value })

@@ -12,6 +12,8 @@ import {
   breakdownByElement,
 } from './data/benchmarks';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // Phase 2/3 wiring: the page now lists the tenant's projects and fetches an
 // own-portfolio distribution. Stub both so the unit render stays offline and
 // the picker stays hidden (zero projects) - the page then behaves exactly as

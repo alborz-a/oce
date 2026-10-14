@@ -125,7 +125,7 @@ function writeSeenAt(): void {
   }
 }
 
-export function SupportUsButton({ condensed = false }: { condensed?: boolean } = {}) {
+function SupportUsButtonUpstream({ condensed = false }: { condensed?: boolean } = {}) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -645,4 +645,11 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
   );
 
   return createPortal(panel, document.body);
+}
+
+/* [RSC-IRAN] hidden: upstream support/sponsor/GitHub/social button — do not delete */
+void SupportUsButtonUpstream;
+export function SupportUsButton(props: { condensed?: boolean } = {}) {
+  void props;
+  return null;
 }

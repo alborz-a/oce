@@ -40,6 +40,7 @@ import { QuantityDisplay } from '@/shared/ui/QuantityDisplay';
 import { formatCurrency } from '@/shared/lib/money';
 import { fmtWithCurrency } from '@/features/boq/boqHelpers';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 const SRC = join(__dirname, '..', '..', '..');
 

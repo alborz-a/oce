@@ -19,6 +19,8 @@ import { Send, X } from 'lucide-react';
 import { boqApi, type TenderPackageRef } from './api';
 import { useToastStore } from '@/stores/useToastStore';
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 export interface SendToTenderDialogProps {
   boqId: string;
@@ -270,8 +272,7 @@ export function SendToTenderDialog({
             <span className="text-xs font-medium text-content-secondary">
               {t('boq.tender_deadline_label', { defaultValue: 'Bid deadline (optional)' })}
             </span>
-            <input
-              type="date"
+            <JalaliDateInput
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
               className="mt-1 w-full h-9 rounded-md border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30"

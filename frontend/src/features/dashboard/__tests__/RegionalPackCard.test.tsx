@@ -53,6 +53,8 @@ import { RegionalPackCard } from '../RegionalPackCard';
 import { isOnboardingCompleted } from '@/features/onboarding';
 import { apiGet } from '@/shared/lib/api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // The shared setup (`src/test/setup.ts`) replaces `useNavigate` with a fresh
 // no-op spy for every test in the suite. That is why no existing test could
 // have caught this defect even in principle: under that mock every navigation

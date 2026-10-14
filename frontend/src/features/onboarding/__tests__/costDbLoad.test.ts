@@ -10,6 +10,8 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 const api = vi.hoisted(() => ({
   apiGet: vi.fn(),
   apiPost: vi.fn(),

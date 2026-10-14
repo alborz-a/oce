@@ -101,6 +101,8 @@ import { fieldreportsGuide } from './fieldreportsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildFieldReportsInsights } from './fieldReportsInsights';
 import { fmtFixed, fmtList, getIntlLocale } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 declare global {
   interface Window {
@@ -1883,8 +1885,7 @@ function ReportModal({
           disabled={isEdit && effectiveReport?.status === 'approved'}
         />
         <WideModalField label={t('fieldreports.report_date', { defaultValue: 'Date' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={reportDate}
             onChange={(e) => setReportDate(e.target.value)}
             className={inputCls}

@@ -11,6 +11,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 type TauriWindow = { __TAURI__?: unknown };
 
 /** `isTauri` is fixed when desktop.ts loads, so each case renders a fresh module graph. */

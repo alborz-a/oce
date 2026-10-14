@@ -10,7 +10,10 @@
  * clip has to be attached to every top-row label, sized to that label's own
  * cell, and scoped to the chart instance.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+// Legacy (non-locked) behaviour: these assertions describe REGION_LOCK=false.
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
+
 import { render } from '@testing-library/react';
 import { GanttChart } from './GanttChart';
 import type { GanttActivity } from './ganttUtils';

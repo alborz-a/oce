@@ -11,6 +11,8 @@ import { Download, Search, X } from 'lucide-react';
 import { Card } from '@/shared/ui';
 import { CHANNELS, DIRECTIONS, channelLabel, directionLabel } from './labels';
 import type { PhoneChannel, PhoneDirection, PhoneLog } from './types';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 export interface PhoneLogFilterState {
   /** Free text matched against parties, summary, transcript, and instructions. */
@@ -142,8 +144,7 @@ export function PhoneLogFilters({
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <label className="inline-flex items-center gap-1.5 text-xs text-content-secondary">
           {t('phonelog.date_from', { defaultValue: 'From' })}
-          <input
-            type="date"
+          <JalaliDateInput
             value={value.from}
             max={value.to || undefined}
             onChange={(e) => set('from', e.target.value)}
@@ -152,8 +153,7 @@ export function PhoneLogFilters({
         </label>
         <label className="inline-flex items-center gap-1.5 text-xs text-content-secondary">
           {t('phonelog.date_to', { defaultValue: 'To' })}
-          <input
-            type="date"
+          <JalaliDateInput
             value={value.to}
             min={value.from || undefined}
             onChange={(e) => set('to', e.target.value)}

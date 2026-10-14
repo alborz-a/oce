@@ -134,6 +134,8 @@ import { VariationSourcePicker } from './VariationSourcePicker';
 import { variationsGuide } from './variationsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildVariationsInsights, classLabel, statusLabel, urgencyLabel } from './variationsInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const VARIATIONS_TAB_IDS = ['notices', 'requests', 'orders', 'daywork', 'eot'] as const;
 type Tab = (typeof VARIATIONS_TAB_IDS)[number];
@@ -3681,8 +3683,7 @@ function CreateModal({
             label={t('variations.target_response', { defaultValue: 'Response by' })}
             span={2}
           >
-            <input
-              type="date"
+            <JalaliDateInput
               value={noticeForm.target_response_date}
               onChange={(e) =>
                 setNoticeForm({ ...noticeForm, target_response_date: e.target.value })
@@ -3906,8 +3907,7 @@ function CreateModal({
       {kind === 'daywork' && (
         <WideModalSection columns={2}>
           <WideModalField label={t('variations.work_date')}>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dwForm.work_date}
               onChange={(e) => setDwForm({ ...dwForm, work_date: e.target.value })}
               className={inputCls}
@@ -3987,8 +3987,7 @@ function CreateModal({
                   defaultValue: 'Period start',
                 })}
               >
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={eotForm.claim_period_start}
                   onChange={(e) =>
                     setEotForm({
@@ -4004,8 +4003,7 @@ function CreateModal({
                   defaultValue: 'Period end',
                 })}
               >
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={eotForm.claim_period_end}
                   onChange={(e) =>
                     setEotForm({ ...eotForm, claim_period_end: e.target.value })

@@ -31,6 +31,8 @@ import {
   getMarkupDueDate,
   type MarkupPriority,
 } from './issueTracking';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const PRESET_COLORS = [
   { name: 'Red', value: '#EF4444' },
@@ -365,9 +367,9 @@ export function EditMarkupModal({
                 <CalendarClock size={12} />
                 {t('markups.due_date', { defaultValue: 'Due date' })}
               </label>
-              <input
+              <JalaliDateInput
                 id="edit-markup-due"
-                type="date"
+               
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 className={inputCls + ' w-full'}

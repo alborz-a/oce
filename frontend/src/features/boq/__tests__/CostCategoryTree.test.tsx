@@ -16,6 +16,8 @@ import type { TFunction } from 'i18next';
 import { CostCategoryTree } from '../CostCategoryTree';
 import type { CategoryTreeNode } from '../api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // Minimal t() that honours `defaultValue` — matches what the test setup mocks
 // for `useTranslation` so behaviour stays consistent across the suite.
 const t = ((key: string, opts?: Record<string, unknown>) => {

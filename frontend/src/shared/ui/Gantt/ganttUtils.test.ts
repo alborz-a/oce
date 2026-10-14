@@ -8,7 +8,10 @@
  * the renderer depends on: cells tile the timeline without overlapping, and a
  * cell can be far narrower than the label it carries.
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+// Legacy (non-locked) behaviour: these assertions describe REGION_LOCK=false.
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
+
 import { generateTimeHeaders, COLUMN_WIDTH, type ViewMode } from './ganttUtils';
 
 const LOCALE = 'en-US';

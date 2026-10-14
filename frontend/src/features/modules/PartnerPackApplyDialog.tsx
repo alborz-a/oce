@@ -29,6 +29,7 @@
  * all a viewer account saw after a 403.
  */
 
+import { REGION_LOCK } from '@/app/regionLock';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -1220,6 +1221,8 @@ export function PartnerPackApplyDialog({
                 {plan.branding.powered_by}
               </Row>
 
+              {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+              {!REGION_LOCK && (
               <Row
                 icon={<Coins size={15} />}
                 label={t('modules.pack_currency_locale', {
@@ -1240,6 +1243,7 @@ export function PartnerPackApplyDialog({
                   ))}
                 </span>
               </Row>
+              )}
 
               {plan.default_methodology && (
                 <Row

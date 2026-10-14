@@ -19,6 +19,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X, ListChecks, Loader2, Plus } from 'lucide-react';
 import { createTask, type TaskType, type TaskPriority } from '@/features/tasks/api';
 import { useToastStore } from '@/stores/useToastStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface CreateTaskFromDwgModalProps {
   projectId: string;
@@ -236,8 +238,7 @@ export default function CreateTaskFromDwgModal({
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
               {t('dwg_takeoff.task_due_date', { defaultValue: 'Due date (optional)' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               className="w-full px-2 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"

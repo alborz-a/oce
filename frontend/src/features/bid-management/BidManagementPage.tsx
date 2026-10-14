@@ -103,6 +103,8 @@ import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/featur
 import { buildBidManagementInsights } from './bidManagementInsights';
 import { fmtList, fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `bid_management.prequal_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -2984,8 +2986,7 @@ function CreatePackageModal({
         <WideModalField
           label={t('bid_management.deadline', { defaultValue: 'Submission deadline' })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.submission_deadline}
             onChange={(e) => setForm({ ...form, submission_deadline: e.target.value })}
             className={inputCls}

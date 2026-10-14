@@ -70,6 +70,7 @@ import { compareNames } from '@/shared/lib/collator';
 import { SemanticSearchOffHint, useSemanticSearchOff } from '@/features/settings/SemanticSearchOffHint';
 import { ModuleProcessesNotice } from '@/features/processes';
 import { SEMANTIC_PROCESS_IDS } from '@/features/processes/api';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -2804,7 +2805,7 @@ function CreateCostItemModal({
   const [form, setForm] = useState(() => ({
     ...INITIAL_COST_ITEM_FORM,
     unit: defaultUnit,
-    currency: projectCurrency,
+    currency: REGION_LOCK ? LOCKED.currency : projectCurrency, // [RSC-IRAN]
   }));
   const selectedCatalog = catalogs?.find((c) => c.id === itemCatalogId) ?? null;
 
@@ -2959,16 +2960,21 @@ function CreateCostItemModal({
             </div>
             <div>
               <label className="text-xs font-medium text-content-secondary mb-1 block">{t('costs.currency', 'Currency')}</label>
-              <select
-                value={form.currency}
-                onChange={(e) => setForm({ ...form, currency: e.target.value })}
-                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue"
-              >
-                <option value="">{t('costs_catalogs.currency_not_set', { defaultValue: 'Not set' })}</option>
-                {['EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD', 'AED', 'RUB', 'CNY', 'INR', 'BRL'].map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+              {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+              {REGION_LOCK ? (
+                <div className="flex items-center h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue">ریال</div>
+              ) : (
+                <select
+                  value={form.currency}
+                  onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                  className="h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue"
+                >
+                  <option value="">{t('costs_catalogs.currency_not_set', { defaultValue: 'Not set' })}</option>
+                  {['EUR', 'USD', 'GBP', 'CHF', 'CAD', 'AUD', 'AED', 'RUB', 'CNY', 'INR', 'BRL'].map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
@@ -3062,7 +3068,7 @@ function EditCostItemModal({
     description: item.description,
     unit: item.unit,
     rate: String(item.rate ?? ''),
-    currency: (item.currency || '').trim().toUpperCase(),
+    currency: REGION_LOCK ? LOCKED.currency : (item.currency || '').trim().toUpperCase(), // [RSC-IRAN]
     category: (item.classification?.collection ?? '').trim(),
     massPerUnit: item.mass_per_unit ?? '',
     massBasis: ((item.mass_basis as '' | 't' | 'kg') ?? '') as '' | 't' | 'kg',
@@ -3216,16 +3222,21 @@ function EditCostItemModal({
             </div>
             <div>
               <label className="text-xs font-medium text-content-secondary mb-1 block">{t('costs.currency', 'Currency')}</label>
-              <select
-                value={form.currency}
-                onChange={(e) => setForm({ ...form, currency: e.target.value })}
-                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue"
-              >
-                <option value="">{t('costs_catalogs.currency_not_set', { defaultValue: 'Not set' })}</option>
-                {currencyOptions.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+              {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+              {REGION_LOCK ? (
+                <div className="flex items-center h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue">ریال</div>
+              ) : (
+                <select
+                  value={form.currency}
+                  onChange={(e) => setForm({ ...form, currency: e.target.value })}
+                  className="h-9 w-full rounded-lg border border-border bg-surface-primary px-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue"
+                >
+                  <option value="">{t('costs_catalogs.currency_not_set', { defaultValue: 'Not set' })}</option>
+                  {currencyOptions.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 

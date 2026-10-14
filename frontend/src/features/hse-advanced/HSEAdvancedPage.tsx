@@ -116,6 +116,8 @@ import {
 } from './api';
 import { hseAdvancedGuide } from './hseAdvancedGuide';
 import { PPECompanyRegisterNote } from './PPECompanyRegisterNote';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `hse_advanced.permit_status_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1378,8 +1380,7 @@ function IncidentsTab({
             <label className="block text-sm font-medium text-content-primary mb-1.5">
               {t('hse_advanced.started_at', { defaultValue: 'Started' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               className={inputCls}
               value={form.started_at}
               onChange={(e) => setForm((f) => ({ ...f, started_at: e.target.value }))}
@@ -1734,8 +1735,7 @@ function JSATab({ projectId }: { projectId: string }) {
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('hse_advanced.work_date', { defaultValue: 'Work date' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 className={inputCls}
                 value={form.work_date}
                 onChange={(e) => setForm((f) => ({ ...f, work_date: e.target.value }))}
@@ -2973,8 +2973,7 @@ function ToolboxTab({ projectId }: { projectId: string }) {
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('hse_advanced.conducted_at', { defaultValue: 'Conducted at' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 className={inputCls}
                 value={form.conducted_at}
                 onChange={(e) => setForm((f) => ({ ...f, conducted_at: e.target.value }))}
@@ -3304,8 +3303,7 @@ function PPETab({ projectId }: { projectId: string }) {
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('hse_advanced.issued_at', { defaultValue: 'Issued at' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 className={inputCls}
                 value={form.issued_at}
                 onChange={(e) => setForm((f) => ({ ...f, issued_at: e.target.value }))}
@@ -3326,8 +3324,7 @@ function PPETab({ projectId }: { projectId: string }) {
             <label className="block text-sm font-medium text-content-primary mb-1.5">
               {t('hse_advanced.valid_until', { defaultValue: 'Valid until' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               className={inputCls}
               value={form.valid_until}
               onChange={(e) => setForm((f) => ({ ...f, valid_until: e.target.value }))}
@@ -3665,8 +3662,7 @@ function AuditsTab({ projectId }: { projectId: string }) {
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('hse_advanced.conducted_at', { defaultValue: 'Conducted at' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 className={inputCls}
                 value={form.conducted_at}
                 onChange={(e) => setForm((f) => ({ ...f, conducted_at: e.target.value }))}
@@ -4485,8 +4481,7 @@ function CreateCAPADialog({
           <label className="block text-sm font-medium text-content-primary mb-1.5">
             {t('hse_advanced.target_date', { defaultValue: 'Target date' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             className={inputCls}
             value={form.target_date}
             onChange={(e) => setForm((f) => ({ ...f, target_date: e.target.value }))}

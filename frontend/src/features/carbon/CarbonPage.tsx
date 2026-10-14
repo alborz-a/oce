@@ -111,6 +111,8 @@ import {
 } from './api';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'inventory' | 'wholelife' | 'epds' | 'targets' | 'reports';
 
@@ -2079,8 +2081,7 @@ function CreateInventoryModal({
             <label className={labelCls}>
               {t('carbon.col_as_of', { defaultValue: 'As of' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.as_of_date ?? ''}
               onChange={(e) => setForm({ ...form, as_of_date: e.target.value })}
               className={inputCls}
@@ -2435,8 +2436,7 @@ function GenerateReportModal({
             <label className={labelCls}>
               {t('carbon.period_start', { defaultValue: 'Period start' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.period_start}
               onChange={(e) => setForm({ ...form, period_start: e.target.value })}
               className={inputCls}
@@ -2446,8 +2446,7 @@ function GenerateReportModal({
             <label className={labelCls}>
               {t('carbon.period_end', { defaultValue: 'Period end' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.period_end}
               onChange={(e) => setForm({ ...form, period_end: e.target.value })}
               className={inputCls}
@@ -3490,8 +3489,7 @@ function ScopeEntryModal({
             <label className={labelCls}>
               {t('carbon.period_start', { defaultValue: 'Period start' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.period_start}
               onChange={(e) =>
                 setForm({ ...form, period_start: e.target.value })
@@ -3503,8 +3501,7 @@ function ScopeEntryModal({
             <label className={labelCls}>
               {t('carbon.period_end', { defaultValue: 'Period end' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.period_end}
               onChange={(e) =>
                 setForm({ ...form, period_end: e.target.value })
@@ -3984,8 +3981,7 @@ function EPDModal({
             <label className={labelCls}>
               {t('carbon.validity_until', { defaultValue: 'Valid until' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.validity_until ?? ''}
               onChange={(e) =>
                 setForm({ ...form, validity_until: e.target.value })

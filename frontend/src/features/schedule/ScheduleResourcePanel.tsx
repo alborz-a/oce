@@ -66,6 +66,8 @@ import {
   type LevelPreviewResult,
   type LevelApplyResult,
 } from '@/features/schedule-advanced/api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface ScheduleResourcePanelProps {
   scheduleId: string;
@@ -313,9 +315,9 @@ function HistogramTab({ projectId }: { projectId: string }) {
             <label htmlFor="res-histo-start" className={labelCls}>
               {t('schedule.resources.start', { defaultValue: 'Start' })}
             </label>
-            <input
+            <JalaliDateInput
               id="res-histo-start"
-              type="date"
+             
               value={start}
               onChange={(e) => setStart(e.target.value)}
               className={inputCls}
@@ -325,9 +327,9 @@ function HistogramTab({ projectId }: { projectId: string }) {
             <label htmlFor="res-histo-end" className={labelCls}>
               {t('schedule.resources.end', { defaultValue: 'End' })}
             </label>
-            <input
+            <JalaliDateInput
               id="res-histo-end"
-              type="date"
+             
               value={end}
               onChange={(e) => setEnd(e.target.value)}
               className={inputCls}

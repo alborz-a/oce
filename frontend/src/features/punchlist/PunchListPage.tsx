@@ -86,6 +86,8 @@ import { fmtDate } from '@/shared/lib/formatters';
 import { PunchContractField } from './PunchContractField';
 import { isDateOnlyPast } from '@/shared/lib/dates';
 import { IssueHubLink } from '@/features/issues/IssueHubLink';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // The pin board pulls in the PDF renderer (pdfjs-dist), which is heavy. Keep it
 // off the punchlist page's initial chunk so users who only use the list and
@@ -711,9 +713,9 @@ function AddPunchModal({
           label={t('punch.field_due_date', { defaultValue: 'Due Date' })}
           htmlFor="punch-due-date"
         >
-          <input
+          <JalaliDateInput
             id="punch-due-date"
-            type="date"
+           
             value={form.due_date}
             onChange={(e) => set('due_date', e.target.value)}
             className={inputCls}

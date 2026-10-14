@@ -2302,7 +2302,8 @@ function DataPackagesTab() {
         </>
       )}
 
-      {/* Community / Build Your Own */}
+      {/* [RSC-IRAN] hidden: upstream custom-module proposal block (email/GitHub/Telegram) — do not delete */}
+      {(false as boolean) && (
       <div className="mt-12">
         <Card>
           <div className="relative overflow-hidden">
@@ -2348,6 +2349,7 @@ function DataPackagesTab() {
           </div>
         </Card>
       </div>
+      )}
       <ConfirmDialog {...confirmProps} />
     </div>
   );

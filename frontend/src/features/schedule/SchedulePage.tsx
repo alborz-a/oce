@@ -93,6 +93,8 @@ import type {
   CriticalPathResponse,
   RiskAnalysisResponse,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -2450,8 +2452,7 @@ export function ScheduleDetail({
             <label className="block text-sm font-medium text-content-primary mb-1.5">
               {t('schedule.project_start_date', 'Project Start Date')}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={generateStartDate}
               onChange={(e) => setGenerateStartDate(e.target.value)}
               className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
@@ -2466,8 +2467,7 @@ export function ScheduleDetail({
             <label className="block text-sm font-medium text-content-primary mb-1.5">
               {t('schedule.project_end_date', { defaultValue: 'Project End Date' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               data-testid="generate-end-date"
               value={generateEndDate}
               min={generateStartDate || undefined}

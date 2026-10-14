@@ -43,6 +43,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { formatCurrency } from '@/shared/lib/money';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // `src/test/setup.ts` mocks `useParams` globally to `{}`, which would leave the
 // pricing page with no development id and nothing to load.
 vi.mock('react-router-dom', async () => {

@@ -28,6 +28,7 @@
  * were lifted out so any feature can reuse them.
  */
 import { getNumberLocale, usePreferencesStore, type DateFormat } from '@/stores/usePreferencesStore';
+import { REGION_LOCK } from '@/app/regionLock';
 import { getIntlLocale } from './intlLocale';
 import { dateOnlyFormatOptions } from './dates';
 
@@ -37,6 +38,49 @@ import { dateOnlyFormatOptions } from './dates';
 export { getIntlLocale, useIntlLocale } from './intlLocale';
 // [RSC-IRAN] Re-export Jalali date utilities
 export * from './jalali';
+import {
+  PERSIAN_MONTH_NAMES,
+  PERSIAN_WEEKDAY_NAMES,
+  gregorianToJalali,
+  dateToJalali,
+  toPersianDigits,
+} from './jalali';
+
+/**
+ * REGION_LOCK: render a date-only option set (no time fields) as a Jalali
+ * string with Persian digits. Returns null when the options ask for a time,
+ * or the value does not parse, so the caller falls back to Intl.
+ */
+export function formatJalaliWithOptions(value: string | Date, options: Intl.DateTimeFormatOptions): string | null {
+  if (options.hour || options.minute || options.second || options.timeStyle || options.dateStyle) return null;
+  let jy: number;
+  let jm: number;
+  let jd: number;
+  let dow: number;
+  const iso = typeof value === 'string' ? value.match(/^(\d{4})-(\d{2})-(\d{2})$/) : null;
+  if (iso) {
+    const [gy, gm, gd] = [Number(iso[1]), Number(iso[2]), Number(iso[3])];
+    ({ jy, jm, jd } = gregorianToJalali(gy, gm, gd));
+    dow = new Date(Date.UTC(gy, gm - 1, gd)).getUTCDay();
+  } else {
+    const d = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(d.getTime())) return null;
+    ({ jy, jm, jd } = dateToJalali(d));
+    dow = d.getDay();
+  }
+  const textMonth = options.month === 'long' || options.month === 'short' || options.month === 'narrow';
+  const day = options.day ? toPersianDigits(options.day === '2-digit' ? String(jd).padStart(2, '0') : jd) : '';
+  const year = options.year ? toPersianDigits(options.year === '2-digit' ? String(jy % 100).padStart(2, '0') : jy) : '';
+  const month = options.month
+    ? textMonth
+      ? (PERSIAN_MONTH_NAMES[jm - 1] ?? '')
+      : toPersianDigits(options.month === '2-digit' ? String(jm).padStart(2, '0') : jm)
+    : '';
+  const weekday = options.weekday ? (PERSIAN_WEEKDAY_NAMES[(dow + 1) % 7] ?? '') : '';
+  const body = textMonth ? [day, month, year] : [year, month, day];
+  const text = body.filter(Boolean).join(textMonth ? ' ' : '/');
+  return [weekday, text].filter(Boolean).join('، ');
+}
 
 /** Currency-style number formatter (e.g. 1,234.56) using current locale. */
 export function fmtNumber(value: number | string | null | undefined, decimals = 2): string {
@@ -383,6 +427,10 @@ export function fmtDate(dateStr: string, options?: Intl.DateTimeFormatOptions): 
     year: 'numeric',
   };
   const opts = options || defaults;
+  if (REGION_LOCK) {
+    const j = formatJalaliWithOptions(dateStr, opts);
+    if (j !== null) return j;
+  }
   // A date-only string (YYYY-MM-DD) is parsed by `new Date()` as UTC
   // midnight, so rendering it in the browser's local zone shifts it a day
   // back at negative UTC offsets (a diary date of 2026-07-01 shows as
@@ -414,6 +462,10 @@ export function formatDateValue(
 ): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
+  if (REGION_LOCK) {
+    const j = formatJalaliWithOptions(value, options);
+    if (j !== null) return j;
+  }
   return new Intl.DateTimeFormat(locale, dateOnlyFormatOptions(value, options)).format(date);
 }
 

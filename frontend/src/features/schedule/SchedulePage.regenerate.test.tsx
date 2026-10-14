@@ -19,6 +19,8 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ApiError } from '@/shared/lib/api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 const state = vi.hoisted(() => ({
   activities: [] as any[],
   generateCalls: [] as any[],

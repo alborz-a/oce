@@ -26,6 +26,8 @@ import { PageHeader } from '@/shared/ui/PageHeader';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { fetchProjectTimeline, type TimelineEntry, type TimelineFilters } from './api';
 import { ASSISTANT_MODULE, assistantRecordRoute } from './assistantRoute';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const LIMIT = 50;
 
@@ -439,8 +441,7 @@ export function TimelinePage() {
             </div>
             <div>
               <label className="mb-1 block text-2xs font-medium text-gray-500 uppercase">{t('timeline.since', { defaultValue: 'From Date' })}</label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={sinceFilter}
                 onChange={(e) => setSinceFilter(e.target.value)}
                 className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -448,8 +449,7 @@ export function TimelinePage() {
             </div>
             <div>
               <label className="mb-1 block text-2xs font-medium text-gray-500 uppercase">{t('timeline.until', { defaultValue: 'To Date' })}</label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={untilFilter}
                 onChange={(e) => setUntilFilter(e.target.value)}
                 className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"

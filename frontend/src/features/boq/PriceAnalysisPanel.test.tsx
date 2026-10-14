@@ -25,6 +25,8 @@ import { apiGet, downloadWithAuth } from '@/shared/lib/api';
 import { PriceAnalysisPanel } from './PriceAnalysisPanel';
 import type { PriceAnalysisPresetInfo, PriceAnalysisResponse } from './api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 vi.mock('@/shared/lib/api', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/shared/lib/api')>();
   return {

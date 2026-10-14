@@ -88,6 +88,8 @@ import { ApprovalInstanceCard } from '@/features/approval-routes';
 import { createPunchItem, type CreatePunchPayload, type PunchPriority } from '@/features/punchlist/api';
 import { getIntlLocale } from '@/shared/lib/formatters';
 import { IssueHubLink } from '@/features/issues/IssueHubLink';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -624,8 +626,7 @@ function AddMarkupModal({
                 <CalendarClock size={12} />
                 {t('markups.due_date', { defaultValue: 'Due date' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 className={inputCls + ' w-full'}

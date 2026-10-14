@@ -48,6 +48,8 @@ import {
   type NcrSeverity,
 } from '../api';
 import { ElementLinks, SectionToolbar, StatusBadge, inputCls, labelCls, textareaCls } from './shared';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `construction_control.accuracy_class.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1171,9 +1173,9 @@ function RecordSurveyModal({
             <label htmlFor="cc-ab-survey-date" className={labelCls}>
               {t('construction_control.field.survey_date', { defaultValue: 'Survey date' })}
             </label>
-            <input
+            <JalaliDateInput
               id="cc-ab-survey-date"
-              type="date"
+             
               value={surveyDate}
               onChange={(e) => setSurveyDate(e.target.value)}
               className={inputCls}

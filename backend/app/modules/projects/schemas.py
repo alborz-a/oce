@@ -9,6 +9,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
 
+from app.core.region_lock import LOCKED_CURRENCY, REGION_LOCK
+
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _CURRENCY_CODE_RE = re.compile(r"^[A-Z]{3}$")
 _DECIMAL_RE = re.compile(r"^[0-9]+(\.[0-9]+)?$")
@@ -331,7 +333,7 @@ class ProjectCreate(BaseModel):
         examples=["din276"],
     )
     currency: str = Field(
-        default="",
+        default=LOCKED_CURRENCY if REGION_LOCK else "",  # [RSC-IRAN]
         max_length=10,
         description="ISO 4217 currency code (e.g. EUR, GBP, USD). User must choose, no default bias",
         examples=["EUR"],

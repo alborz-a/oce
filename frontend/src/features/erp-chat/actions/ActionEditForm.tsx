@@ -26,6 +26,8 @@ import {
 } from './actionFormat';
 import { ActionButton } from './ActionControls';
 import type { ActionField, ChatAction } from './types';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 export interface ActionEditFormProps {
   action: ChatAction;
@@ -154,7 +156,7 @@ export function ActionEditForm({ action, busy, serverFieldErrors = {}, onSubmit,
           </select>
         );
       case 'date':
-        return <input {...common} type="date" value={value} onChange={(e) => setDraft(field.key, e.target.value)} />;
+        return <JalaliDateInput {...common} value={value} onChange={(e) => setDraft(field.key, e.target.value)} />;
       case 'number':
       case 'money':
       case 'percent': {

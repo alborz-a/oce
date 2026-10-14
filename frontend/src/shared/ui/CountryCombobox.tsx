@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { Check, ChevronDown, Search, X } from 'lucide-react';
 import clsx from 'clsx';
 
+import { REGION_LOCK } from '@/app/regionLock';
 import { CountryFlag } from '@/shared/ui/CountryFlag';
 import {
   COUNTRIES,
@@ -215,6 +216,21 @@ export function CountryCombobox({
     );
   } else {
     triggerInner = <span className="text-content-tertiary">{resolvedPlaceholder}</span>;
+  }
+
+  // [RSC-IRAN] hidden: region lock IR/IRR — do not delete
+  if (REGION_LOCK) {
+    return (
+      <span
+        id={id}
+        className={clsx(
+          'flex h-9 w-full items-center rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary',
+          className,
+        )}
+      >
+        ایران
+      </span>
+    );
   }
 
   return (

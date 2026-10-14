@@ -15,6 +15,8 @@ import { ActivityDeleteDialog, activityDeleteTarget, type ActivityDeleteTarget }
 import { scheduleErrorMessage } from './errors';
 import { fmtList } from '@/shared/lib/formatters';
 import { useHasPermission } from '@/shared/lib/permissionGates';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const TYPES = ['task', 'milestone', 'summary'] as const;
 
@@ -574,8 +576,7 @@ export function ActivityGrid({
                       })()}
                     </td>
                     <td className="px-2 py-1.5 align-middle">
-                      <input
-                        type="date"
+                      <JalaliDateInput
                         key={`start-${a.id}-${a.start_date}`}
                         data-testid={`grid-start-${a.id}`}
                         aria-label={t('schedule.start_date', { defaultValue: 'Start date' })}
@@ -586,8 +587,7 @@ export function ActivityGrid({
                       />
                     </td>
                     <td className="px-2 py-1.5 align-middle">
-                      <input
-                        type="date"
+                      <JalaliDateInput
                         key={`end-${a.id}-${a.end_date}`}
                         data-testid={`grid-end-${a.id}`}
                         aria-label={t('schedule.end_date', { defaultValue: 'End date' })}

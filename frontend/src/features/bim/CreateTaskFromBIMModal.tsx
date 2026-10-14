@@ -20,6 +20,8 @@ import { X, CheckSquare, Loader2, Plus } from 'lucide-react';
 import { createTask, type TaskType, type TaskPriority } from '@/features/tasks/api';
 import type { BIMElementData } from '@/shared/ui/BIMViewer';
 import { useToastStore } from '@/stores/useToastStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface CreateTaskFromBIMModalProps {
   projectId: string;
@@ -223,8 +225,7 @@ export default function CreateTaskFromBIMModal({
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
               {t('bim.task_due_date', { defaultValue: 'Due date (optional)' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               className="w-full px-2 py-1.5 text-sm rounded border border-border-light bg-surface-primary focus:outline-none focus:ring-1 focus:ring-oe-blue"

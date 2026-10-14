@@ -22,6 +22,8 @@ import {
   addDaysIso,
   type SnapshotStatus,
 } from './evm';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface Snapshot4DViewProps {
   scheduleId: string;
@@ -153,8 +155,7 @@ export function Snapshot4DView({
               })}
               className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-surface-secondary accent-oe-blue [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-oe-blue [&::-webkit-slider-thumb]:shadow"
             />
-            <input
-              type="date"
+            <JalaliDateInput
               value={asOf}
               min={range.min}
               max={range.max}

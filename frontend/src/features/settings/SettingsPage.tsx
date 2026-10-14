@@ -59,6 +59,7 @@ import { DashboardLayoutManager } from '@/features/dashboard/DashboardLayoutMana
 import { UpdateInlineNotice } from '@/shared/ui/UpdateChecker';
 import { apiGet, apiPatch, apiPost, apiPut, apiDelete } from '@/shared/lib/api';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
+import { REGION_LOCK } from '@/app/regionLock';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -2036,7 +2037,8 @@ export function SettingsPage() {
           {/* ── REGIONAL ─────────────────────────────────────────── */}
           {activeTab === 'regional' && (
             <>
-              {/* Language picker */}
+              {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+              {!REGION_LOCK && (
               <Card className="lg:col-span-2">
                 <CardHeader
                   title={t('settings.language_title', { defaultValue: 'Language & Region' })}
@@ -2080,6 +2082,7 @@ export function SettingsPage() {
                   </div>
                 </CardContent>
               </Card>
+              )}
 
               {/* Regional Settings (timezone, units, formats, currency) */}
               <RegionalSettings />

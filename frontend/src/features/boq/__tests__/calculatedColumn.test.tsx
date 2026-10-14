@@ -19,13 +19,15 @@
  *   • Text/number columns still work (no regression in the legacy paths).
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { ValueGetterParams } from 'ag-grid-community';
 import {
   getCustomColumnDefs,
   type CustomColumnDef,
 } from '../grid/columnDefs';
 import type { Position } from '../api';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 /* ── Fixtures ───────────────────────────────────────────────────── */
 

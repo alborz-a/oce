@@ -15,6 +15,8 @@ import { render, screen, fireEvent, cleanup, waitFor, within } from '@testing-li
 import type { ApplyPreview } from '../partnerPacks';
 import type { StreamInstallEvent } from '@/features/onboarding/partnerPacksApi';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 /* ── Mocks ─────────────────────────────────────────────────────────────── */
 
 const packMock = vi.hoisted(() => ({ useApplyPreview: vi.fn() }));

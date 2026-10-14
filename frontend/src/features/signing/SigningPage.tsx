@@ -64,6 +64,8 @@ import {
 } from './api';
 import { signingGuide } from './signingGuide';
 import { fmtList } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -314,8 +316,7 @@ function SessionFormModal({
         </WideModalField>
 
         <WideModalField label={t('signing.field_expires_at', { defaultValue: 'Expires' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.expires_at}
             onChange={(e) => set('expires_at', e.target.value)}
             className={inputCls}
@@ -507,8 +508,7 @@ function AttestModal({
           <input value={certSubject} onChange={(e) => setCertSubject(e.target.value)} className={inputCls} />
         </WideModalField>
         <WideModalField label={t('signing.field_cert_valid_until', { defaultValue: 'Certificate valid until' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             value={certValidUntil}
             onChange={(e) => setCertValidUntil(e.target.value)}
             className={inputCls}

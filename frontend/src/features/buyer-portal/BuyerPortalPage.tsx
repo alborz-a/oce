@@ -86,6 +86,7 @@ import {
   type PortalOverviewResponse,
 } from './api';
 import { fmtFixed, formatDateValue } from '@/shared/lib/formatters';
+import { REGION_LOCK } from '@/app/regionLock';
 
 // English fallbacks for the computed `buyer_portal.documents.cat.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1873,6 +1874,8 @@ function ShellWrapper({
             </span>
           )}
           <ModuleGuideButton content={buyerPortalGuide} className="ml-auto" />
+          {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+          {!REGION_LOCK && (
           <nav
             aria-label={t('buyer_portal.locale.label', {
               defaultValue: 'Language',
@@ -1896,6 +1899,7 @@ function ShellWrapper({
               ))}
             </select>
           </nav>
+          )}
         </div>
       </header>
 

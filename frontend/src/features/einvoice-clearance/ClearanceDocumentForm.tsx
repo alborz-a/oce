@@ -21,6 +21,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/shared/ui/Button';
 
 import type { ClearanceMeta, ClearanceProfile, DocumentCreateBody } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /**
  * `partita_iva_issuer` reads as a field name. `Partita iva issuer` reads as a
@@ -158,8 +160,7 @@ export function ClearanceDocumentForm({
 
         <label className="flex flex-col gap-1 text-sm">
           {t('einvoice_clearance.field_invoice_date', { defaultValue: 'Invoice date' })}
-          <input
-            type="date"
+          <JalaliDateInput
             value={invoiceDate}
             onChange={(e) => setInvoiceDate(e.target.value)}
             required

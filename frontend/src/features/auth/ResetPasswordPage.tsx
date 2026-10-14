@@ -140,6 +140,8 @@ export function ResetPasswordPage() {
       <AuthBackground />
 
       {/* Language — top right */}
+      {/* [RSC-IRAN] hidden: language dropdown (Farsi only) — do not delete */}
+      {false && (
       <div className="absolute top-3 right-3 z-30" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
@@ -168,6 +170,7 @@ export function ResetPasswordPage() {
           </div>
         )}
       </div>
+      )}
 
       <div className="relative z-10 w-full max-w-[400px]">
         {/* Logo — glow entrance */}

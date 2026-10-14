@@ -69,6 +69,8 @@ import {
 } from '@/features/cde/api';
 import { transmittalsGuide } from './transmittalsGuide';
 import { buildTransmittalsInsights } from './transmittalsInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -313,9 +315,9 @@ function CreateTransmittalModal({
           label={t('transmittals.field_response_due', { defaultValue: 'Response Due' })}
           htmlFor="tr-response-due"
         >
-          <input
+          <JalaliDateInput
             id="tr-response-due"
-            type="date"
+           
             value={form.response_due}
             onChange={(e) => set('response_due', e.target.value)}
             className={inputCls}
@@ -901,8 +903,7 @@ function EditTransmittalModal({
               <label className="block text-xs font-medium text-content-secondary mb-1">
                 {t('transmittals.field_response_due', { defaultValue: 'Response due' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={responseDue}
                 onChange={(e) => setResponseDue(e.target.value)}
                 className="w-full px-3 py-2 text-sm bg-surface-secondary border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-oe-blue"

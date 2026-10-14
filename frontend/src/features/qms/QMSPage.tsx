@@ -98,6 +98,8 @@ import { qmsGuide } from './qmsGuide';
 import { listVariationOrders } from '@/features/variations/api';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildQMSInsights } from './qmsInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'itp' | 'inspections' | 'ncrs' | 'punch' | 'audits';
 
@@ -2667,8 +2669,7 @@ function CreateModal({
             </select>
           </WideModalField>
           <WideModalField label={t('qms.due_date')}>
-            <input
-              type="date"
+            <JalaliDateInput
               value={punchForm.due_date}
               onChange={(e) => setPunchForm({ ...punchForm, due_date: e.target.value })}
               className={inputCls}
@@ -2700,8 +2701,7 @@ function CreateModal({
             />
           </WideModalField>
           <WideModalField label={t('qms.planned_date', { defaultValue: 'Planned date' })} span={2}>
-            <input
-              type="date"
+            <JalaliDateInput
               value={auditForm.planned_date}
               onChange={(e) => setAuditForm({ ...auditForm, planned_date: e.target.value })}
               className={inputCls}

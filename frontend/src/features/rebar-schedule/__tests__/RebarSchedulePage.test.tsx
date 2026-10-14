@@ -15,6 +15,8 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (_key: string, opts?: { defaultValue?: string } & Record<string, unknown>) => {

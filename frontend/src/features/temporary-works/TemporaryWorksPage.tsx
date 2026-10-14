@@ -63,6 +63,8 @@ import {
 } from './api';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildTemporaryWorksInsights } from './temporaryWorksInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Vocabularies + presentation config ------------------------------------ */
 
@@ -248,7 +250,7 @@ function LabeledDate({
   return (
     <label className="block">
       <span className={labelCls}>{label}</span>
-      <input type="date" className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
+      <JalaliDateInput className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
     </label>
   );
 }

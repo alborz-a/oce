@@ -24,6 +24,7 @@ from pydantic import (
 from app.modules.costs.buildup import buildup_rate as _buildup_rate
 from app.modules.costs.hazards import hazards_in as _hazards_in
 from app.modules.costs.region_currency import REGION_CURRENCY
+from app.core.region_lock import LOCKED_CURRENCY, REGION_LOCK
 
 # Round-7 audit (2026-05-24): money / rate / factor fields are exchanged as
 # strings on the wire so JSON's float bridge never silently rounds a
@@ -482,7 +483,7 @@ class CostAutocompleteItem(BaseModel):
     # ISO 4217 currency. Non-optional for the frontend's apply path -
     # callers stamp it onto the BOQ resource entry so each rate keeps its
     # native currency instead of silently coercing to the BOQ base.
-    currency: str = "EUR"
+    currency: str = LOCKED_CURRENCY if REGION_LOCK else "EUR"  # [RSC-IRAN] region lock IRR default
     region: str | None = Field(
         default=None,
         description="Region tag (e.g. DE_BERLIN). Forwarded so the tooltip can label the rate.",

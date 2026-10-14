@@ -45,6 +45,8 @@ import type { PickOption } from './TimesheetLineRow';
 import { useFieldTimeOfflineSync } from './useFieldTimeOfflineSync';
 import { enqueueEntry, newEntryKey, entryKeyOf, workDateOf, OP_WITHDRAW } from './offlineQueue';
 import { recordOfflineEntry, formatHours, type LineCreatePayload } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const fieldCls =
   'h-8 w-full rounded-lg border border-border-light bg-surface-primary px-2.5 text-sm text-content-primary';
@@ -221,8 +223,7 @@ export function OfflineDayRecorder({ projectId, onRecorded }: OfflineDayRecorder
           <span className="mb-1 block text-2xs font-medium text-content-tertiary">
             {t('field_time.offline.work_date', { defaultValue: 'Day worked' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             value={date}
             className={fieldCls}
             onChange={(e) => setDate(e.target.value)}

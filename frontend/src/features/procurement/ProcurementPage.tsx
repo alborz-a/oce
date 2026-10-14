@@ -63,6 +63,8 @@ import { RecordDeliveryModal } from './RecordDeliveryModal';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { orderSource, rfqDeepLink } from '@/shared/lib/awardChainLinks';
 import { RelatedRecordLink } from '@/shared/ui/RelatedRecordLink';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `procurement.gr_status_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1235,8 +1237,7 @@ function PurchaseOrdersTab({
                   <label className="block text-sm font-medium text-content-primary mb-1.5">
                     {t('procurement.delivery_date', { defaultValue: 'Delivery Date' })}
                   </label>
-                  <input
-                    type="date"
+                  <JalaliDateInput
                     value={poForm.delivery_date}
                     onChange={(e) => setPoForm((f) => ({ ...f, delivery_date: e.target.value }))}
                     className={inputCls}

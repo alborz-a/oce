@@ -52,6 +52,8 @@ import { PageHeader } from '@/shared/ui/PageHeader';
 import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { getErrorMessage, triggerDownload, apiPost } from '@/shared/lib/api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const API_BASE = '/v1/property-dev';
 const MANAGER_PLUS = new Set(['admin', 'superuser', 'owner', 'manager']);
@@ -426,8 +428,7 @@ function ReservationExtendExpirySection() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <label className={labelCls}>{t('property_dev.bulk.new_expiry_label', { defaultValue: 'New expiry (ISO date)' })}</label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={newExpiry}
             onChange={(e) => setNewExpiry(e.target.value)}
             className={inputCls}

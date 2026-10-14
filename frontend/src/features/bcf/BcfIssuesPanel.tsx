@@ -82,6 +82,8 @@ import { buildIssueReportHtml, type IssueReportRow } from './issueReport';
 import { ReviewDashboard } from './ReviewDashboard';
 import { CoordinationMode } from './CoordinationMode';
 import { fmtList, getIntlLocale } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Small helpers ─────────────────────────────────────────────────────── */
 
@@ -569,8 +571,7 @@ function BcfTopicDetail({
             <FieldLabel icon={Calendar}>
               {t('bcf.field_due_date', { defaultValue: 'Due date' })}
             </FieldLabel>
-            <input
-              type="date"
+            <JalaliDateInput
               value={toDateInput(topic.due_date)}
               disabled={busy}
               onChange={(e) => updateMut.mutate({ due_date: e.target.value || null })}

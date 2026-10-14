@@ -20,6 +20,8 @@ import { render, screen, within, fireEvent, cleanup, waitFor } from '@testing-li
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 const api = vi.hoisted(() => ({
   apiGet: vi.fn(),
   apiPost: vi.fn(),

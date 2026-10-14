@@ -191,12 +191,16 @@ describe('RFQ list screen', () => {
     fireEvent.click(screen.getByRole('button', { name: /New RFQ/ }));
     const dialog = screen.getByRole('dialog');
     fireEvent.change(within(dialog).getByPlaceholderText(/Concrete supply/), { target: { value: 'Rebar' } });
-    fireEvent.change(dialog.querySelector('input[type="date"]')!, { target: { value: '2026-11-01' } });
+    // [RSC-IRAN] date field is a Jalali picker; pick "today" and compare ISO
+    const d = new Date();
+    const todayIso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    fireEvent.click(within(dialog).getByText('----/--/--'));
+    fireEvent.click(within(dialog).getByText('امروز'));
     fireEvent.click(within(dialog).getByRole('button', { name: /Create RFQ/ }));
 
     await waitFor(() => expect(mocks.createRFQ).toHaveBeenCalled());
     const payload = mocks.createRFQ.mock.calls[0]![0];
-    expect(payload).toMatchObject({ project_id: 'proj-1', title: 'Rebar', submission_deadline: '2026-11-01' });
+    expect(payload).toMatchObject({ project_id: 'proj-1', title: 'Rebar', submission_deadline: todayIso });
     expect('due_date' in payload).toBe(false);
   });
 });

@@ -195,7 +195,8 @@ export function VideoPlayerDialog({
 
             <div className="space-y-4 p-4">
               <div className="flex flex-wrap items-center gap-2">
-                {published && (
+                {/* [RSC-IRAN] hidden: upstream YouTube/subscribe links — do not delete */}
+                {(false as boolean) && published && (
                   <a
                     href={watchUrl(video.youtubeId!, start)}
                     target="_blank"
@@ -206,7 +207,7 @@ export function VideoPlayerDialog({
                     <ExternalLink size={12} aria-hidden />
                   </a>
                 )}
-                {!published && (
+                {(false as boolean) && !published && (
                   <a
                     href={subscribeUrl()}
                     target="_blank"

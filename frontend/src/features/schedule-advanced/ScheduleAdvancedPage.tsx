@@ -122,6 +122,8 @@ import {
   taskStatusLabel,
 } from './labels';
 import { fmtPercent } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `schedule_advanced.rnc.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -2458,11 +2460,11 @@ function PhaseFormModal({
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>{t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}</label>
-            <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className={inputCls} />
+            <JalaliDateInput value={start} onChange={(e) => setStart(e.target.value)} className={inputCls} />
           </div>
           <div>
             <label className={labelCls}>{t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}</label>
-            <input type="date" value={finish} onChange={(e) => setFinish(e.target.value)} className={inputCls} />
+            <JalaliDateInput value={finish} onChange={(e) => setFinish(e.target.value)} className={inputCls} />
           </div>
         </div>
         <div>
@@ -2587,7 +2589,7 @@ function PhaseTemplateModal({
         </div>
         <div>
           <label className={labelCls}>{t('schedule_advanced.template_start_date', { defaultValue: 'Start date (first phase)' })}</label>
-          <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className={clsx(inputCls, 'max-w-xs')} />
+          <JalaliDateInput value={start} onChange={(e) => setStart(e.target.value)} className={clsx(inputCls, 'max-w-xs')} />
         </div>
         <div>
           <div className="text-xs uppercase tracking-wide text-content-tertiary mb-2">{t('schedule_advanced.template_preview', { defaultValue: 'Preview' })}</div>
@@ -3673,8 +3675,7 @@ function NewConstraintModal({
           <label className={labelCls}>
             {t('schedule_advanced.target_clear', { defaultValue: 'Target clear' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={targetClear}
             onChange={(e) => setTargetClear(e.target.value)}
             className={inputCls}
@@ -4151,8 +4152,7 @@ function MasterFormModal({
             <label className={labelCls}>
               {t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={start}
               onChange={(e) => setStart(e.target.value)}
               className={inputCls}
@@ -4162,8 +4162,7 @@ function MasterFormModal({
             <label className={labelCls}>
               {t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={finish}
               onChange={(e) => setFinish(e.target.value)}
               className={inputCls}
@@ -4258,8 +4257,7 @@ function CreateWeeklyModal({
           <label className={labelCls}>
             {t('schedule_advanced.week_start', { defaultValue: 'Week start' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={start}
             onChange={(e) => setStart(e.target.value)}
             className={inputCls}
@@ -4269,8 +4267,7 @@ function CreateWeeklyModal({
           <label className={labelCls}>
             {t('schedule_advanced.week_end', { defaultValue: 'Week end' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={end}
             onChange={(e) => setEnd(e.target.value)}
             className={inputCls}
@@ -4331,8 +4328,7 @@ function CreateLookAheadModal({
           <label className={labelCls}>
             {t('schedule_advanced.period_start', { defaultValue: 'Period start' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={start}
             onChange={(e) => setStart(e.target.value)}
             className={inputCls}
@@ -4342,8 +4338,7 @@ function CreateLookAheadModal({
           <label className={labelCls}>
             {t('schedule_advanced.period_end', { defaultValue: 'Period end' })}
           </label>
-          <input
-            type="date"
+          <JalaliDateInput
             value={end}
             onChange={(e) => setEnd(e.target.value)}
             className={inputCls}

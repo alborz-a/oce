@@ -63,6 +63,8 @@ import { tasksGuide } from './tasksGuide';
 import { VoiceEntry, getField } from '@/features/voice';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildTasksInsights } from './tasksInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -515,8 +517,7 @@ function AddTaskModal({
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('tasks.field_due_date', { defaultValue: 'Due Date' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={form.due_date}
                 onChange={(e) => set('due_date', e.target.value)}
                 className={inputCls}

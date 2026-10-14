@@ -25,6 +25,8 @@ import { apiGet, apiPost, getErrorMessage, type Page } from '@/shared/lib/api';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { useToastStore } from '@/stores/useToastStore';
 import { invalidateFinanceFigures } from '@/features/finance/financeQueryKeys';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Wire types (subset of the backend POResponse / GR contract) ───────── */
 
@@ -350,8 +352,7 @@ export function RecordDeliveryModal({
               {t('procurement.receipt_date', { defaultValue: 'Date' })}{' '}
               <span className="text-semantic-error">*</span>
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={receiptDate}
               onChange={(e) => setReceiptDate(e.target.value)}
               className={fieldCls}

@@ -140,6 +140,8 @@ import { DEFAULT_CONTRACTS_TAB, isContractsTab, type ContractsTab } from './cont
 import { ClaimPeriod } from './ClaimPeriod';
 import { fmtList, fmtPercent } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `contracts.type_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -3306,8 +3308,7 @@ export function CreateContractModal({
         <WideModalField
           label={t('contracts.start_date', { defaultValue: 'Start' })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.start_date}
             onChange={(e) => setForm({ ...form, start_date: e.target.value })}
             className={inputCls}
@@ -3316,8 +3317,7 @@ export function CreateContractModal({
         <WideModalField
           label={t('contracts.end_date', { defaultValue: 'End' })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.end_date}
             onChange={(e) => setForm({ ...form, end_date: e.target.value })}
             className={inputCls}
@@ -3483,8 +3483,7 @@ export function NewClaimModal({
         <WideModalField
           label={t('contracts.period_start', { defaultValue: 'Period start' })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.period_start}
             onChange={(e) => setForm({ ...form, period_start: e.target.value })}
             className={inputCls}
@@ -3493,8 +3492,7 @@ export function NewClaimModal({
         <WideModalField
           label={t('contracts.period_end', { defaultValue: 'Period end' })}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={form.period_end}
             onChange={(e) => setForm({ ...form, period_end: e.target.value })}
             className={inputCls}

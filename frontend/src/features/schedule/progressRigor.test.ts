@@ -1,6 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   EVM_WARNING_DEFAULTS,
   PERCENT_TYPES,
@@ -10,6 +10,8 @@ import {
   type StepLike,
 } from './progressRigor';
 import type { EvmWarningKey } from './api';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 describe('rollupSteps', () => {
   it('returns 0 for no steps', () => {

@@ -19,6 +19,8 @@ import {
   type CreateDamageReportPayload,
   type UpdateDamageReportPayload,
 } from '../api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
   'h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -226,8 +228,7 @@ export function DamageReportFormModal({
                   })}{' '}
                   <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={occurredAt}
                   onChange={(e) => setOccurredAt(e.target.value)}
                   className={inputCls}

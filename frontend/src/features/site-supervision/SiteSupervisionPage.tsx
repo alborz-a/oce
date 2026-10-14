@@ -68,6 +68,8 @@ import {
   type UpdateVisitPayload,
 } from './api';
 import { siteSupervisionGuide } from './siteSupervisionGuide';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -212,16 +214,14 @@ function VisitFormModal({
     >
       <WideModalSection>
         <WideModalField label={t('site_supervision.planned_date', { defaultValue: 'Planned date' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             className={inputCls}
             value={form.planned_date}
             onChange={(e) => set('planned_date', e.target.value)}
           />
         </WideModalField>
         <WideModalField label={t('site_supervision.actual_date', { defaultValue: 'Actual date' })}>
-          <input
-            type="date"
+          <JalaliDateInput
             className={inputCls}
             value={form.actual_date}
             onChange={(e) => set('actual_date', e.target.value)}

@@ -67,6 +67,8 @@ import {
 import { submittalsGuide } from './submittalsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildSubmittalsInsights } from './submittalsInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -380,9 +382,9 @@ function SubmittalFormModal({
           span={2}
           htmlFor={`${idPrefix}-date-required`}
         >
-          <input
+          <JalaliDateInput
             id={`${idPrefix}-date-required`}
-            type="date"
+           
             value={form.date_required}
             onChange={(e) => set('date_required', e.target.value)}
             className={inputCls}

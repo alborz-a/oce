@@ -53,6 +53,8 @@ import {
   type ContractSecurityCreate,
   type ContractSecurityUpdate,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Enum labels ──────────────────────────────────────────────────────── */
 
@@ -790,9 +792,9 @@ export function ContractSecuritiesPanel({
                     defaultValue: 'Valid from',
                   })}
                 </span>
-                <input
+                <JalaliDateInput
                   className={inputCls}
-                  type="date"
+                 
                   value={draft.valid_from}
                   onChange={(e) => field('valid_from', e.target.value)}
                 />
@@ -804,9 +806,9 @@ export function ContractSecuritiesPanel({
                     defaultValue: 'Expiry',
                   })}
                 </span>
-                <input
+                <JalaliDateInput
                   className={inputCls}
-                  type="date"
+                 
                   value={draft.valid_to}
                   onChange={(e) => field('valid_to', e.target.value)}
                 />

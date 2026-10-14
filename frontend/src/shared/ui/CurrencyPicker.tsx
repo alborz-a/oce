@@ -25,6 +25,7 @@
 
 import { useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { REGION_LOCK } from '@/app/regionLock';
 import {
   CURRENCY_GROUPS,
   CURRENCY_CODES,
@@ -89,6 +90,25 @@ export function CurrencyPicker({
   };
 
   const customInvalid = showCustom && value.trim().length > 0 && !isValidCurrencyCode(value);
+
+  // [RSC-IRAN] hidden: region lock IR/IRR — do not delete
+  if (REGION_LOCK) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        {label && (
+          <label htmlFor={id} className="text-sm font-medium text-content-primary">
+            {label}
+          </label>
+        )}
+        <span
+          id={id}
+          className={`${selectClassName ?? DEFAULT_SELECT_CLASS} flex items-center`}
+        >
+          ریال
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1.5">

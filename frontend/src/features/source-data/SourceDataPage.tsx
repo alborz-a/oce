@@ -68,6 +68,8 @@ import {
   type UpdateSourceDocumentPayload,
 } from './api';
 import { sourceDataGuide } from './sourceDataGuide';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -362,9 +364,9 @@ function DocumentModal({
         columns={2}
       >
         <WideModalField label={t('source_data.field_issued_at', { defaultValue: 'Issued on' })} htmlFor="sd-issued">
-          <input
+          <JalaliDateInput
             id="sd-issued"
-            type="date"
+           
             value={form.issued_at}
             onChange={(e) => set('issued_at', e.target.value)}
             className={inputCls}
@@ -378,9 +380,9 @@ function DocumentModal({
             defaultValue: 'Leave blank for a document with no expiry.',
           })}
         >
-          <input
+          <JalaliDateInput
             id="sd-valid-until"
-            type="date"
+           
             value={form.valid_until}
             onChange={(e) => set('valid_until', e.target.value)}
             className={inputCls}

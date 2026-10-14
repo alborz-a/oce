@@ -76,6 +76,7 @@ import { useVideoContext } from './useVideoContext';
 import { useVideosStore } from './useVideosStore';
 import { useVideoLabels, type VideoLabels } from './videoLabels';
 import { useVideoHintsStore } from './videoRoutes';
+import { REGION_LOCK } from '@/app/regionLock';
 
 const ROLE_IDS = new Set<string>(ROLE_META.map((r) => r.id));
 const STAGE_IDS = new Set<string>(STAGE_META.map((s) => s.id));
@@ -362,24 +363,29 @@ function Recommended({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Acad
 
         <label className="inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-primary px-3 py-1 font-medium text-content-primary shadow-sm focus-within:border-oe-blue/50">
           <span className="text-content-tertiary">{t('videos.country', { defaultValue: 'Country' })}</span>
-          <select
-            value={marketChoice}
-            onChange={(e) => setMarket(e.target.value)}
-            data-testid="videos-market-select"
-            className="max-w-[12rem] cursor-pointer bg-transparent pr-1 font-medium focus:outline-none"
-          >
-            <option value="auto">
-              {ctx.marketSource && ctx.marketSource !== 'chosen' && ctx.marketSource !== 'any' && ctx.market
-                ? `${labels.country(ctx.market)} (${marketNote[ctx.marketSource]})`
-                : t('videos.market_auto', { defaultValue: 'Automatic' })}
-            </option>
-            <option value="any">{t('videos.market_any', { defaultValue: 'Any country' })}</option>
-            {catalogMarkets().map((m) => (
-              <option key={m} value={m}>
-                {labels.country(m)}
+          {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+          {REGION_LOCK ? (
+            <div className="max-w-[12rem] cursor-pointer bg-transparent pr-1 font-medium focus:outline-none">ایران</div>
+          ) : (
+            <select
+              value={marketChoice}
+              onChange={(e) => setMarket(e.target.value)}
+              data-testid="videos-market-select"
+              className="max-w-[12rem] cursor-pointer bg-transparent pr-1 font-medium focus:outline-none"
+            >
+              <option value="auto">
+                {ctx.marketSource && ctx.marketSource !== 'chosen' && ctx.marketSource !== 'any' && ctx.market
+                  ? `${labels.country(ctx.market)} (${marketNote[ctx.marketSource]})`
+                  : t('videos.market_auto', { defaultValue: 'Automatic' })}
               </option>
-            ))}
-          </select>
+              <option value="any">{t('videos.market_any', { defaultValue: 'Any country' })}</option>
+              {catalogMarkets().map((m) => (
+                <option key={m} value={m}>
+                  {labels.country(m)}
+                </option>
+              ))}
+            </select>
+          )}
         </label>
         {ctx.marketUncovered && ctx.market && (
           <p className="basis-full text-2xs text-content-tertiary sm:basis-auto">

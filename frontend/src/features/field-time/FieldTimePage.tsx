@@ -54,6 +54,8 @@ import {
   type FieldTimesheet,
   type TimesheetStatus,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
 
@@ -340,15 +342,13 @@ function FieldTimeContent() {
               </option>
             ))}
           </select>
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
             aria-label={t('field_time.date_from', { defaultValue: 'From date' })}
             className="h-9 rounded-lg border border-border-light bg-surface-primary px-3 text-sm text-content-primary"
           />
-          <input
-            type="date"
+          <JalaliDateInput
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}
             aria-label={t('field_time.date_to', { defaultValue: 'To date' })}

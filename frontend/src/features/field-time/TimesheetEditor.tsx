@@ -42,6 +42,8 @@ import {
   type LineCreatePayload,
   type LineUpdatePayload,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
 
@@ -363,8 +365,7 @@ export function TimesheetEditor({
                 <span className="mb-1.5 text-xs font-medium text-content-primary">
                   {t('field_time.date', { defaultValue: 'Date' })}
                 </span>
-                <input
-                  type="date"
+                <JalaliDateInput
                   defaultValue={timesheet.date}
                   disabled={!isDraft}
                   className="h-9 w-full rounded-lg border border-border-light bg-surface-primary px-3 text-sm text-content-primary disabled:opacity-60"

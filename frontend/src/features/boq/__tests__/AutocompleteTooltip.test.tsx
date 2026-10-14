@@ -1,8 +1,10 @@
 // @ts-nocheck
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { AutocompleteTooltip } from '../AutocompleteTooltip';
 import type { CostAutocompleteItem } from '../api';
+
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 function makeRect(overrides: Partial<DOMRect> = {}): DOMRect {
   const base: DOMRect = {

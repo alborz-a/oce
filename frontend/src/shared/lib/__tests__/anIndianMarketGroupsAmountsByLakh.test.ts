@@ -33,6 +33,7 @@ import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { formatCurrency } from '../money';
 import { getMarketNumberLocale, setMarketNumberLocale } from '../marketNumberLocale';
 import { numberLocaleForCountry, usePreferencesStore } from '@/stores/usePreferencesStore';
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 void i18next.init({ lng: 'en', resources: {}, initAsync: false });
 const originalLanguage = i18next.language;

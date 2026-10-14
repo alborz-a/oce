@@ -36,6 +36,8 @@ import {
 import { apiGet } from '@/shared/lib/api';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 vi.mock('@/shared/lib/api', async () => {
   const actual = await vi.importActual<typeof import('@/shared/lib/api')>('@/shared/lib/api');
   return { ...actual, apiGet: vi.fn() };

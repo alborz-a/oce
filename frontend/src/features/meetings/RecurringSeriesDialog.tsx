@@ -19,6 +19,8 @@ import {
   type WeekdayToken,
   WEEKDAY_TOKENS,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `meetings.day_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -163,8 +165,7 @@ export function RecurringSeriesDialog({
           </select>
         </WideModalField>
         <WideModalField label={t('meetings.start_date', { defaultValue: 'Start date' })} required>
-          <input
-            type="date"
+          <JalaliDateInput
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className={inputCls}
@@ -245,8 +246,7 @@ export function RecurringSeriesDialog({
           label={t('meetings.materialize_until', { defaultValue: 'Materialise until' })}
           span={2}
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={materializeUntil}
             onChange={(e) => setMaterializeUntil(e.target.value)}
             className={inputCls}

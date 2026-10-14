@@ -12,6 +12,8 @@ import { Paperclip, Search, X } from 'lucide-react';
 
 import { Input } from '@/shared/ui';
 import type { InboundMessage } from './types';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /** Refinement applied over the currently fetched page of captured messages. */
 export interface InboundFilterState {
@@ -148,9 +150,9 @@ export function InboundFilters({
         <label htmlFor="inbound-from" className={labelCls}>
           {t('inbound.filter_from_label', { defaultValue: 'From' })}
         </label>
-        <input
+        <JalaliDateInput
           id="inbound-from"
-          type="date"
+         
           value={value.from}
           max={value.to || undefined}
           onChange={(e) => set('from', e.target.value)}
@@ -162,9 +164,9 @@ export function InboundFilters({
         <label htmlFor="inbound-to" className={labelCls}>
           {t('inbound.filter_to_label', { defaultValue: 'To' })}
         </label>
-        <input
+        <JalaliDateInput
           id="inbound-to"
-          type="date"
+         
           value={value.to}
           min={value.from || undefined}
           onChange={(e) => set('to', e.target.value)}

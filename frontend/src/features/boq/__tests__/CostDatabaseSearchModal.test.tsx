@@ -24,6 +24,8 @@ import {
 } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // ── Mock react-i18next with interpolation ───────────────────────────────
 //
 // The global setup mocks `useTranslation` with a `defaultValue`-only stub

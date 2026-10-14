@@ -25,6 +25,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useLLMRun } from './hooks/useLLMRun';
+import { REGION_LOCK } from '@/app/regionLock';
 
 /* ── Types ──────────────────────────────────────────────────────── */
 
@@ -727,6 +728,8 @@ export function AdvisorPage() {
           </div>
 
           {/* Region selector */}
+          {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
+          {!REGION_LOCK && (
           <div className="flex items-center gap-2 shrink-0">
             <Globe size={13} className="text-content-tertiary" aria-hidden="true" />
             <select
@@ -754,6 +757,7 @@ export function AdvisorPage() {
               <option value="GR_NATIONAL">{t('ai.region_gr_national', { defaultValue: 'Greece (GGDE)' })}</option>
             </select>
           </div>
+          )}
 
           {messages.length > 0 && (
             <button

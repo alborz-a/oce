@@ -24,6 +24,8 @@ import type { ReactNode } from 'react';
 import { CustomColumnsDialog } from '../CustomColumnsDialog';
 import type { CustomColumnDef, Position, BOQVariable } from '../api';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 /* ── Mocks ──────────────────────────────────────────────────────── */
 
 const mockListCustomColumns =

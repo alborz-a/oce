@@ -15,6 +15,8 @@ import { Loader2 } from 'lucide-react';
 import { WideModal, Button } from '@/shared/ui';
 import { apiPost, getErrorMessage } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const fieldCls =
   'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -113,9 +115,9 @@ export function SupplierConfirmationModal({ po, projectId, onClose }: SupplierCo
           <label htmlFor="po-confirmed-date" className="mb-1 block text-xs font-medium text-content-secondary">
             {t('procurement.supplier_confirmed_delivery_date', { defaultValue: 'Confirmed delivery date' })}
           </label>
-          <input
+          <JalaliDateInput
             id="po-confirmed-date"
-            type="date"
+           
             value={confirmedDate}
             onChange={(e) => setConfirmedDate(e.target.value)}
             className={fieldCls}

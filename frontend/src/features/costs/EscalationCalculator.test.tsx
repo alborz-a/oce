@@ -3,6 +3,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { EscalationCalculator } from './EscalationCalculator';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 describe('EscalationCalculator', () => {
   it('should render with default values', () => {
     render(<EscalationCalculator />);

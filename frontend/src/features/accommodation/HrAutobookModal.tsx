@@ -27,6 +27,8 @@ import {
   createBooking,
   type SuggestFromHRResponse,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 export interface HrAutobookModalProps {
   onClose: () => void;
@@ -186,8 +188,7 @@ export function HrAutobookModal({ onClose }: HrAutobookModalProps) {
           })}
           required
         >
-          <input
-            type="date"
+          <JalaliDateInput
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className={inputCls}

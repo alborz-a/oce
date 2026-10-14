@@ -31,6 +31,8 @@ import {
 } from './api';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildDefectsLiabilityInsights } from './defectsLiabilityInsights';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
 
@@ -270,13 +272,13 @@ function WarrantyModal({ editing, isPending, onClose, onSubmit }: {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Field label={t('defects_liability.field_warranty_start', { defaultValue: 'Warranty start' })}>
-          <input type="date" value={form.warranty_start_date} onChange={(e) => set('warranty_start_date', e.target.value)} className={inputCls} />
+          <JalaliDateInput value={form.warranty_start_date} onChange={(e) => set('warranty_start_date', e.target.value)} className={inputCls} />
         </Field>
         <Field label={t('defects_liability.field_warranty_end', { defaultValue: 'Warranty end' })}>
-          <input type="date" value={form.warranty_end_date} onChange={(e) => set('warranty_end_date', e.target.value)} className={inputCls} />
+          <JalaliDateInput value={form.warranty_end_date} onChange={(e) => set('warranty_end_date', e.target.value)} className={inputCls} />
         </Field>
         <Field label={t('defects_liability.field_dlp_end', { defaultValue: 'DLP end date' })}>
-          <input type="date" value={form.dlp_end_date} onChange={(e) => set('dlp_end_date', e.target.value)} className={inputCls} />
+          <JalaliDateInput value={form.dlp_end_date} onChange={(e) => set('dlp_end_date', e.target.value)} className={inputCls} />
         </Field>
       </div>
 
@@ -419,10 +421,10 @@ function DefectModal({ warranties, preselectWarrantyId, isPending, onClose, onSu
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label={t('defects_liability.field_raised_date', { defaultValue: 'Raised date' })}>
-          <input type="date" value={form.raised_date} onChange={(e) => set('raised_date', e.target.value)} className={inputCls} />
+          <JalaliDateInput value={form.raised_date} onChange={(e) => set('raised_date', e.target.value)} className={inputCls} />
         </Field>
         <Field label={t('defects_liability.field_due_date', { defaultValue: 'Due date' })}>
-          <input type="date" value={form.due_date} onChange={(e) => set('due_date', e.target.value)} className={inputCls} />
+          <JalaliDateInput value={form.due_date} onChange={(e) => set('due_date', e.target.value)} className={inputCls} />
         </Field>
       </div>
     </ModalShell>

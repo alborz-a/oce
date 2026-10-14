@@ -57,6 +57,8 @@ import {
   type ResourceIndexValue,
   type WorkedExampleLabels,
 } from './resourceIndexApi';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const QK = {
   indices: ['price-index', 'resource-index', 'indices'] as const,
@@ -333,8 +335,7 @@ function ResourceIndexContent() {
             </label>
             <label className="flex flex-col gap-1 text-xs text-content-secondary">
               {t('price_index.ri.vat_date', { defaultValue: 'VAT date' })}
-              <input
-                type="date"
+              <JalaliDateInput
                 className={selectClass}
                 value={onDate}
                 onChange={(e) => setOnDate(e.target.value)}

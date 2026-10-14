@@ -93,6 +93,8 @@ import {
   varianceTone,
 } from './evmIndicators';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'progress' | 'curve' | 'forecast';
 
@@ -296,8 +298,7 @@ function MeasureForm({
           <span className="text-xs text-content-secondary">
             {t('full_evm.field_data_date', { defaultValue: 'As at' })}
           </span>
-          <input
-            type="date"
+          <JalaliDateInput
             className="mt-1 w-full rounded-md border border-border bg-surface-primary px-2 py-1.5 text-sm"
             value={dataDate}
             onChange={(e) => setDataDate(e.target.value)}

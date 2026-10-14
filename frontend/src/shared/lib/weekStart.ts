@@ -46,6 +46,7 @@
 import { useSyncExternalStore } from 'react';
 import i18next from 'i18next';
 
+import { LOCKED, REGION_LOCK } from '@/app/regionLock';
 import { getIntlLocale } from './intlLocale';
 
 /** CLDR first day of week: 1 = Monday through 7 = Sunday. Never 0. */
@@ -168,6 +169,7 @@ const subscribe = (cb: () => void) => {
  * the note at the top of this file.
  */
 export function getWeekStartsOn(): WeekStartsOn {
+  if (REGION_LOCK) return LOCKED.weekStart;
   return weekStartsOnFor(getIntlLocale());
 }
 

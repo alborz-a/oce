@@ -21,6 +21,8 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderToString } from 'react-dom/server';
 
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
+
 // Only the two calls this panel makes are replaced. The rest of the module
 // stays real because <Button> comes from the shared barrel, which drags in
 // every component beside it, and several of those read API_BASE or ApiError at

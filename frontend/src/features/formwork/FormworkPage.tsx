@@ -88,6 +88,7 @@ import {
   type FormworkAssignmentDetail,
   type FormworkFinding,
 } from './api';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 import { boqApi } from '@/features/boq/api';
 import {
   SystemChooser,
@@ -652,7 +653,7 @@ const EMPTY_SYSTEM_FORM: SystemFormState = {
   // published figure", which is not the same claim as "reused zero times".
   typical_reuses: '',
   cycle_days: '0',
-  currency: 'EUR',
+  currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] region lock IRR default
 };
 
 /* ── Main page ─────────────────────────────────────────────────────────── */

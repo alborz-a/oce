@@ -80,6 +80,8 @@ import {
 } from './api';
 import { RecurringSchedulesTab } from './RecurringSchedulesTab';
 import { serviceGuide } from './serviceGuide';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type Tab = 'tickets' | 'work_orders' | 'contracts' | 'assets' | 'recurring';
 
@@ -1914,8 +1916,7 @@ function CreateModal({
           <WideModalField
             label={t('service.scheduled_for', { defaultValue: 'Scheduled for' })}
           >
-            <input
-              type="date"
+            <JalaliDateInput
               value={woForm.scheduled_for}
               onChange={(e) => setWoForm({ ...woForm, scheduled_for: e.target.value })}
               className={inputCls}
@@ -1995,16 +1996,14 @@ function CreateModal({
             columns={3}
           >
             <WideModalField label={t('service.period_start', { defaultValue: 'Period start' })}>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={contractForm.period_start}
                 onChange={(e) => setContractForm({ ...contractForm, period_start: e.target.value })}
                 className={inputCls}
               />
             </WideModalField>
             <WideModalField label={t('service.period_end', { defaultValue: 'Period end' })}>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={contractForm.period_end}
                 onChange={(e) => setContractForm({ ...contractForm, period_end: e.target.value })}
                 className={inputCls}

@@ -13,6 +13,7 @@
  */
 
 import { create } from 'zustand';
+import { REGION_LOCK, LOCKED } from '@/app/regionLock';
 import { apiGet } from '@/shared/lib/api';
 import { getIntlLocale, useIntlLocale } from '@/shared/lib/intlLocale';
 import { getMarketNumberLocale, useMarketNumberLocale } from '@/shared/lib/marketNumberLocale';
@@ -81,11 +82,11 @@ interface Preferences {
 const RETIRED_KEYS = ['vatRate', 'defaultRegion', 'defaultStandard'] as const;
 
 const DEFAULTS: Preferences = {
-  currency: 'EUR',
+  currency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN] value IRR under lock
   measurementSystem: 'metric',
   dateFormat: 'auto',
   numberLocale: 'auto',
-  defaultCurrency: 'EUR',
+  defaultCurrency: REGION_LOCK ? LOCKED.currency : 'EUR', // [RSC-IRAN]
 };
 
 /**
@@ -112,6 +113,7 @@ function readPreferences(): Preferences {
     if (!raw) return DEFAULTS;
     const { _v: version, ...stored } = JSON.parse(raw) as Partial<Preferences> & { _v?: number };
     const prefs: Preferences = { ...DEFAULTS, ...stored };
+    if (REGION_LOCK) { prefs.currency = LOCKED.currency; prefs.defaultCurrency = LOCKED.currency; } // [RSC-IRAN]
     for (const key of RETIRED_KEYS) delete (prefs as unknown as Record<string, unknown>)[key];
     if ((version ?? 1) < SCHEMA_VERSION && prefs.numberLocale === LEGACY_NUMBER_LOCALE) {
       prefs.numberLocale = 'auto';
@@ -145,6 +147,8 @@ function persist(prefs: Preferences) {
  * by the market they are working in.
  */
 export function resolveNumberLocale(preference: NumberLocale): string {
+  // [RSC-IRAN] region lock: numbers always fa-IR (Persian digits), user preference ignored — do not delete
+  if (REGION_LOCK) return 'fa-IR';
   if (preference !== 'auto') return preference;
   return getMarketNumberLocale() ?? getIntlLocale();
 }
@@ -417,8 +421,8 @@ export const usePreferencesStore = create<PreferencesState>((set, get) => ({
       // An empty currency_code means "not chosen" on the account; only a real
       // ISO-4217 code overrides the local currency.
       if (r.currency_code && /^[A-Z]{3}$/.test(r.currency_code)) {
-        updates.currency = r.currency_code;
-        updates.defaultCurrency = r.currency_code;
+        updates.currency = REGION_LOCK ? LOCKED.currency : r.currency_code; // [RSC-IRAN]
+        updates.defaultCurrency = REGION_LOCK ? LOCKED.currency : r.currency_code;
       }
       if (Object.keys(updates).length === 0) return;
       // Write through to localStorage AND state, reusing the existing setter so

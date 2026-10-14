@@ -64,6 +64,8 @@ import {
   type GateStatus,
 } from './api';
 import { mobilisationGateState, type MobilisationGateState } from './mobilisationGate';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* -- Vocabulary labels ----------------------------------------------------- */
 
@@ -655,8 +657,7 @@ function ItemModal({
               <label className="mb-1.5 block text-sm font-medium text-content-primary">
                 {t('site_prep.field_due_date', { defaultValue: 'Due date' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={form.due_date}
                 onChange={(e) => set('due_date', e.target.value)}
                 className={inputCls}
@@ -788,8 +789,7 @@ function PlanModal({
             <label className="mb-1.5 block text-sm font-medium text-content-primary">
               {t('site_prep.field_target_start', { defaultValue: 'Target start date' })}
             </label>
-            <input
-              type="date"
+            <JalaliDateInput
               value={form.target_start_date}
               onChange={(e) => setForm((p) => ({ ...p, target_start_date: e.target.value }))}
               className={inputCls}

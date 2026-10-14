@@ -50,6 +50,8 @@ import {
 import type { RetrievalQuery, RetrievalResult, SavedSearch } from './types';
 import { fmtList, fmtFixed } from '@/shared/lib/formatters';
 import { compareNames } from '@/shared/lib/collator';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 type BadgeVariant = 'neutral' | 'blue' | 'success' | 'warning' | 'error';
 type SortMode = 'relevance' | 'date' | 'type';
@@ -502,8 +504,7 @@ export function RetrievalPage() {
             </label>
             <label className="flex flex-col gap-1 text-sm text-content-secondary">
               {t('retrieval.date_from', { defaultValue: 'From date' })}
-              <input
-                type="date"
+              <JalaliDateInput
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
                 onKeyDown={(e) => {
@@ -514,8 +515,7 @@ export function RetrievalPage() {
             </label>
             <label className="flex flex-col gap-1 text-sm text-content-secondary">
               {t('retrieval.date_to', { defaultValue: 'To date' })}
-              <input
-                type="date"
+              <JalaliDateInput
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
                 onKeyDown={(e) => {

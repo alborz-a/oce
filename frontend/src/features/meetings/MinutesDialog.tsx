@@ -45,6 +45,8 @@ import {
   type MinutesContent,
 } from './api';
 import { PublishRecordModal } from '@/features/record-publishing/PublishRecordModal';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 interface MinutesDialogProps {
   meetingId: string;
@@ -542,8 +544,7 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
             <WideModalField
               label={t('meetings.next_meeting_date', { defaultValue: 'Next meeting date' })}
             >
-              <input
-                type="date"
+              <JalaliDateInput
                 value={nextDate}
                 onChange={(e) => setNextDate(e.target.value)}
                 disabled={issued}

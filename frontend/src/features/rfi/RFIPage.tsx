@@ -75,6 +75,8 @@ import { CreateTaskFromSourceDialog } from '@/features/tasks';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildRFIInsights } from './rfiInsights';
 import { fmtDate, getIntlLocale } from '@/shared/lib/formatters';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 // English fallbacks for the computed `rfi.status_*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -1008,9 +1010,9 @@ export function CreateRFIModal({
             defaultValue: 'Typical: 14 business days from submission',
           })}
         >
-          <input
+          <JalaliDateInput
             id="rfi-due-date"
-            type="date"
+           
             value={form.due_date}
             onChange={(e) => set('due_date', e.target.value)}
             className={inputCls}

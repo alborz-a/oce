@@ -64,6 +64,8 @@ import {
   type CreatePrefabUnitPayload,
   type LinkPrefabUnitPayload,
 } from './api';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+// [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -395,8 +397,7 @@ function CreateUnitModal({
               <label className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('prefab.field_target_install', { defaultValue: 'Target install date' })}
               </label>
-              <input
-                type="date"
+              <JalaliDateInput
                 value={form.target_install_date}
                 onChange={(e) => set('target_install_date', e.target.value)}
                 className={inputCls}

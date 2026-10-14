@@ -25,7 +25,7 @@ const CATEGORIES: { key: FeedbackCategory; icon: typeof Bug; labelKey: string; d
 const GITHUB_ISSUES_URL =
   'https://github.com/datadrivenconstruction/OpenConstructionERP/issues/new';
 
-export function FeedbackDialog({ open, onClose }: FeedbackDialogProps) {
+function FeedbackDialogUpstream({ open, onClose }: FeedbackDialogProps) {
   const { t } = useTranslation();
   const location = useLocation();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -283,4 +283,11 @@ export function FeedbackDialog({ open, onClose }: FeedbackDialogProps) {
       </div>
     </div>
   );
+}
+
+/* [RSC-IRAN] hidden: upstream GitHub-issues feedback dialog — do not delete */
+void FeedbackDialogUpstream;
+export function FeedbackDialog(props: FeedbackDialogProps) {
+  void props;
+  return null;
 }
