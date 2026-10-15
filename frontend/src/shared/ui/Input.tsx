@@ -75,7 +75,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             )}
             {jalali ? (
               <JalaliDateInput
-                {...(({ type: _type, ...rest }) => rest)(props)}
+                {...(({ type: _type, value: _v, defaultValue: _dv, min: _min, max: _max, ...rest }) => rest)(props)}
+                value={props.value === undefined ? undefined : String(props.value)}
+                defaultValue={props.defaultValue === undefined ? undefined : String(props.defaultValue)}
+                min={props.min === undefined ? undefined : String(props.min)}
+                max={props.max === undefined ? undefined : String(props.max)}
                 {...identity}
                 id={inputId}
                 className={clsx(
