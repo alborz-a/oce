@@ -43,6 +43,7 @@ import {
 } from '@/shared/ui';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { SectionIntro } from '@/features/validation';
 import { SafetyTrendsChart } from './SafetyTrendsChart';
@@ -990,12 +991,13 @@ function IncidentsTab({
     days_lost: 0,
   });
   const [incidentErrors, setIncidentErrors] = useState<Record<string, string>>({});
-  const incidentDateRef = useRef<HTMLInputElement>(null);
 
   // Auto-focus incident date when modal opens
+  // [RSC-IRAN] Jalali: JalaliDateInput exposes no ref, focus via id
   useEffect(() => {
-    if (showCreate && incidentDateRef.current) {
-      setTimeout(() => incidentDateRef.current?.focus(), 100);
+    if (showCreate) {
+      const timer = setTimeout(() => document.getElementById('incident-date')?.focus(), 100);
+      return () => clearTimeout(timer);
     }
   }, [showCreate]);
 
@@ -1439,10 +1441,9 @@ function IncidentsTab({
               <label htmlFor="incident-date" className="block text-sm font-medium text-content-primary mb-1.5">
                 {t('safety.date', { defaultValue: 'Date' })} <span className="text-semantic-error">*</span>
               </label>
-              <input
+              {/* [RSC-IRAN] Jalali */}
+              <JalaliDateInput
                 id="incident-date"
-                ref={incidentDateRef}
-                type="date"
                 value={incidentForm.incident_date}
                 onChange={(e) => {
                   setIncidentForm((f) => ({ ...f, incident_date: e.target.value }));

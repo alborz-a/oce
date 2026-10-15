@@ -2142,7 +2142,6 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
     purchase_order_id: '',
   });
   const [invoiceErrors, setInvoiceErrors] = useState<Record<string, string>>({});
-  const invoiceDateRef = useRef<HTMLInputElement>(null);
   // When set, the invoice modal is in edit mode for this existing invoice.
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
   const isEditingInvoice = editingInvoice !== null;
@@ -2211,9 +2210,11 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
   };
 
   // Auto-focus invoice date when modal opens (create or edit)
+  // [RSC-IRAN] Jalali: JalaliDateInput exposes no ref, focus via id
   useEffect(() => {
-    if (invoiceModalOpen && invoiceDateRef.current) {
-      setTimeout(() => invoiceDateRef.current?.focus(), 100);
+    if (invoiceModalOpen) {
+      const timer = setTimeout(() => document.getElementById('invoice-date-input')?.focus(), 100);
+      return () => clearTimeout(timer);
     }
   }, [invoiceModalOpen]);
 
@@ -3155,9 +3156,9 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
               required
               error={invoiceErrors.invoice_date}
             >
-              <input
-                ref={invoiceDateRef}
-                type="date"
+              {/* [RSC-IRAN] Jalali */}
+              <JalaliDateInput
+                id="invoice-date-input"
                 value={invoiceForm.invoice_date}
                 onChange={(e) => {
                   setInvoiceForm((f) => ({ ...f, invoice_date: e.target.value }));

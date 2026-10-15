@@ -45,6 +45,7 @@ import { listAssignmentsForActivity, listResources } from '@/features/resources/
 import { listCalendars } from '@/features/schedule-advanced/api';
 import { ActivityGrid } from './ActivityGrid';
 import { useAuthStore } from '@/stores/useAuthStore';
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false })); // [RSC-IRAN] legacy non-locked behaviour
 
 const A = {
   id: 'a1',

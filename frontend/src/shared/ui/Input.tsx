@@ -3,6 +3,8 @@
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { AUTOCOMPLETE_OFF, isValidAutocomplete } from './autocompleteToken';
+import { REGION_LOCK } from '@/app/regionLock';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -50,8 +52,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     }
     const identity = { autoComplete, name: props.name ?? inputId };
 
+    // [RSC-IRAN] Jalali: date inputs render the Jalali picker; ref is ignored (JalaliDateInput has none).
+    const jalali = REGION_LOCK && props.type === 'date';
+
     /* Static label variant (original behavior, enhanced with transition) */
-    if (!floatingLabel || !label) {
+    if (!floatingLabel || !label || jalali) {
       return (
         <div className="flex flex-col gap-1.5">
           {label && (
@@ -68,6 +73,23 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                 {icon}
               </div>
             )}
+            {jalali ? (
+              <JalaliDateInput
+                {...(({ type: _type, ...rest }) => rest)(props)}
+                {...identity}
+                id={inputId}
+                className={clsx(
+                  icon && 'ps-10',
+                  suffix && 'pe-10',
+                  hasError && 'border-semantic-error',
+                  className,
+                )}
+                aria-invalid={hasError}
+                aria-describedby={
+                  hasError ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined
+                }
+              />
+            ) : (
             <input
               ref={ref}
               id={inputId}
@@ -92,6 +114,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               {...props}
               {...identity}
             />
+            )}
             {suffix && (
               <div className="absolute inset-y-0 end-0 flex items-center pe-3 text-content-tertiary transition-colors duration-fast ease-oe group-focus-within:text-oe-blue">
                 {suffix}

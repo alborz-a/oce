@@ -19,6 +19,7 @@ import {
   templateLanguageFor,
 } from './tabularImport';
 import { readExample } from './DateOrderChoice';
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
 
 const FILE = new File(['Name\nA\n'], 'plan.csv', { type: 'text/csv' });
 

@@ -103,6 +103,78 @@ import { buildFieldReportsInsights } from './fieldReportsInsights';
 import { fmtFixed, fmtList, getIntlLocale } from '@/shared/lib/formatters';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 // [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
+import { REGION_LOCK } from '@/app/regionLock';
+import {
+  dateToJalali,
+  gregorianToJalali,
+  jalaliToGregorian,
+  PERSIAN_MONTH_NAMES,
+  PERSIAN_WEEKDAY_NAMES,
+  toPersianDigits,
+} from '@/shared/lib/jalali';
+
+// [RSC-IRAN] Jalali: pure month-grid builder (Jalali under REGION_LOCK, else Gregorian).
+export interface CalendarCell<R = unknown> {
+  day: number | null;
+  dateStr: string;
+  reports: R[];
+}
+
+function isoOf(gy: number, gm: number, gd: number): string {
+  return `${gy}-${String(gm).padStart(2, '0')}-${String(gd).padStart(2, '0')}`;
+}
+
+export function jalaliMonthLength(jy: number, jm: number): number {
+  if (jm <= 6) return 31;
+  if (jm <= 11) return 30;
+  const g = jalaliToGregorian(jy, 12, 30);
+  const back = gregorianToJalali(g.gy, g.gm, g.gd);
+  return back.jm === 12 && back.jd === 30 ? 30 : 29;
+}
+
+/** Gregorian "YYYY-MM" months overlapped by a Jalali month (1 or 2 entries). */
+export function jalaliMonthGregorianMonths(jy: number, jm: number): string[] {
+  const a = jalaliToGregorian(jy, jm, 1);
+  const b = jalaliToGregorian(jy, jm, jalaliMonthLength(jy, jm));
+  const first = isoOf(a.gy, a.gm, 1).slice(0, 7);
+  const last = isoOf(b.gy, b.gm, 1).slice(0, 7);
+  return first === last ? [first] : [first, last];
+}
+
+export function buildCalendarGrid<R extends { report_date: string }>(
+  year: number,
+  month: number,
+  weekStart: number,
+  jalali: boolean,
+  reports: R[],
+): Array<CalendarCell<R>> {
+  const byDate: Record<string, R[]> = {};
+  for (const r of reports) (byDate[r.report_date] ??= []).push(r);
+  const cells: Array<CalendarCell<R>> = [];
+  let startDow: number;
+  let daysInMonth: number;
+  if (jalali) {
+    const g = jalaliToGregorian(year, month, 1);
+    // Saturday-first: Sat(6) -> 0
+    startDow = (new Date(Date.UTC(g.gy, g.gm - 1, g.gd)).getUTCDay() + 1) % 7;
+    daysInMonth = jalaliMonthLength(year, month);
+  } else {
+    startDow = (new Date(year, month - 1, 1).getDay() - weekStart + 7) % 7;
+    daysInMonth = new Date(year, month, 0).getDate();
+  }
+  for (let i = 0; i < startDow; i++) cells.push({ day: null, dateStr: '', reports: [] });
+  for (let d = 1; d <= daysInMonth; d++) {
+    let dateStr: string;
+    if (jalali) {
+      const g = jalaliToGregorian(year, month, d);
+      dateStr = isoOf(g.gy, g.gm, g.gd);
+    } else {
+      dateStr = isoOf(year, month, d);
+    }
+    cells.push({ day: d, dateStr, reports: byDate[dateStr] || [] });
+  }
+  return cells;
+}
 
 declare global {
   interface Window {
@@ -229,8 +301,9 @@ export function FieldReportsPage() {
 
   // Calendar state
   const now = new Date();
-  const [calYear, setCalYear] = useState(now.getFullYear());
-  const [calMonth, setCalMonth] = useState(now.getMonth() + 1);
+  const nowJ = dateToJalali(now);
+  const [calYear, setCalYear] = useState(REGION_LOCK ? nowJ.jy : now.getFullYear());
+  const [calMonth, setCalMonth] = useState(REGION_LOCK ? nowJ.jm : now.getMonth() + 1);
 
   // Filters for list view
   const [statusFilter, setStatusFilter] = useState<ReportStatus | ''>('');
@@ -248,7 +321,16 @@ export function FieldReportsPage() {
 
   const { data: calendarReports = [], isLoading: isCalendarLoading } = useQuery({
     queryKey: ['fieldreports', 'calendar', projectId, calMonthStr],
-    queryFn: () => fetchFieldReportCalendar(projectId, calMonthStr),
+    queryFn: REGION_LOCK
+      ? async () =>
+          (
+            await Promise.all(
+              jalaliMonthGregorianMonths(calYear, calMonth).map((m) =>
+                fetchFieldReportCalendar(projectId, m),
+              ),
+            )
+          ).flat()
+      : () => fetchFieldReportCalendar(projectId, calMonthStr),
     enabled: !!projectId && view === 'calendar',
   });
 
@@ -397,37 +479,10 @@ export function FieldReportsPage() {
 
   // ── Calendar grid data ───────────────────────────────────────────────
 
-  const calendarDays = useMemo(() => {
-    const firstDay = new Date(calYear, calMonth - 1, 1);
-    // Leading blank cells before day 1, rotated for the locale's week start
-    // (0 = Sunday through 6 = Saturday). For a Monday-first calendar, Sunday
-    // (getDay() === 0) sits at the end of the week, so it needs 6 leading
-    // cells. The arithmetic is general over all seven starts.
-    const startDow = (firstDay.getDay() - weekStart + 7) % 7;
-    const daysInMonth = new Date(calYear, calMonth, 0).getDate();
-
-    // Map reports by date string
-    const reportsByDate: Record<string, FieldReport[]> = {};
-    for (const r of calendarReports) {
-      const d = r.report_date;
-      if (!reportsByDate[d]) reportsByDate[d] = [];
-      reportsByDate[d].push(r);
-    }
-
-    const cells: Array<{ day: number | null; dateStr: string; reports: FieldReport[] }> = [];
-
-    // Leading empty cells
-    for (let i = 0; i < startDow; i++) {
-      cells.push({ day: null, dateStr: '', reports: [] });
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dateStr = `${calYear}-${String(calMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-      cells.push({ day: d, dateStr, reports: reportsByDate[dateStr] || [] });
-    }
-
-    return cells;
-  }, [calYear, calMonth, calendarReports, weekStart]);
+  const calendarDays = useMemo(
+    () => buildCalendarGrid(calYear, calMonth, weekStart, REGION_LOCK, calendarReports),
+    [calYear, calMonth, calendarReports, weekStart],
+  );
 
   // ── Handlers ─────────────────────────────────────────────────────────
 
@@ -478,10 +533,12 @@ export function FieldReportsPage() {
 
   // ── Month label ─────────────────────────────────────────────────────
 
-  const monthLabel = new Date(calYear, calMonth - 1).toLocaleDateString(getIntlLocale(), {
-    year: 'numeric',
-    month: 'long',
-  });
+  const monthLabel = REGION_LOCK
+    ? `${PERSIAN_MONTH_NAMES[calMonth - 1] ?? ''} ${toPersianDigits(calYear)}`
+    : new Date(calYear, calMonth - 1).toLocaleDateString(getIntlLocale(), {
+        year: 'numeric',
+        month: 'long',
+      });
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -691,12 +748,17 @@ export function FieldReportsPage() {
 
             {/* Day headers — rotated for the active locale's week start */}
             <div className="grid grid-cols-7 gap-px mb-1">
-              {rotatedWeekdays(weekStart).map((d) => (
+              {rotatedWeekdays(REGION_LOCK ? 6 : weekStart).map((d, i) => (
                 <div
                   key={d.key}
-                  className="py-2 text-center text-xs font-medium uppercase text-content-tertiary"
+                  className={clsx(
+                    'py-2 text-center text-xs font-medium uppercase text-content-tertiary',
+                    REGION_LOCK && d.key === 'fri' && 'bg-surface-secondary/60',
+                  )}
                 >
-                  {t(`fieldreports.day_${d.key}`, { defaultValue: d.label })}
+                  {REGION_LOCK
+                    ? PERSIAN_WEEKDAY_NAMES[i]
+                    : t(`fieldreports.day_${d.key}`, { defaultValue: d.label })}
                 </div>
               ))}
             </div>
@@ -715,6 +777,7 @@ export function FieldReportsPage() {
                     'min-h-[80px] bg-surface-primary p-2 transition-colors',
                     cell.day !== null && 'hover:bg-surface-secondary cursor-pointer',
                     cell.day === null && 'bg-surface-secondary/50',
+                    REGION_LOCK && idx % 7 === 6 && 'bg-surface-secondary/60',
                   )}
                   onClick={() => {
                     if (cell.day === null) return;
@@ -738,7 +801,7 @@ export function FieldReportsPage() {
                             : 'text-content-secondary',
                         )}
                       >
-                        {cell.day}
+                        {REGION_LOCK ? toPersianDigits(cell.day) : cell.day}
                       </span>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {cell.reports.map((r) => (

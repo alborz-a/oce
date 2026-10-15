@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Button, Badge, WideModal } from '@/shared/ui';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput'; // [RSC-IRAN] Jalali
 import { useToastStore } from '@/stores/useToastStore';
 import { ApiError, getErrorMessage } from '@/shared/lib/api';
 import {
@@ -819,17 +820,27 @@ function DefaultValueInput({ field, onPatch }: FieldConfigProps) {
       </select>
     );
   }
+  const defaultStr =
+    field.default == null
+      ? ''
+      : Array.isArray(field.default)
+        ? field.default.join(', ')
+        : String(field.default);
+  // [RSC-IRAN] Jalali
+  if (field.type === 'date') {
+    return (
+      <JalaliDateInput
+        className={cls}
+        value={defaultStr}
+        onChange={(e) => onPatch({ default: e.target.value || null })}
+      />
+    );
+  }
   return (
     <input
       className={cls}
-      type={field.type === 'number' ? 'number' : field.type === 'date' ? 'date' : 'text'}
-      value={
-        field.default == null
-          ? ''
-          : Array.isArray(field.default)
-            ? field.default.join(', ')
-            : String(field.default)
-      }
+      type={field.type === 'number' ? 'number' : 'text'}
+      value={defaultStr}
       onChange={(e) => onPatch({ default: e.target.value || null })}
     />
   );

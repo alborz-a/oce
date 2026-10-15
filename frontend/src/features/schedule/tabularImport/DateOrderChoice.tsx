@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { CalendarDays } from 'lucide-react';
 import clsx from 'clsx';
 
-import { getIntlLocale } from '@/shared/lib/formatters';
+import { fmtDate } from '@/shared/lib/formatters';
 import type { DateOrder } from './tabularImport';
 
 const NUMERIC = /^(\d{1,2})[./-](\d{1,2})[./-](\d{4}|\d{2})/;
@@ -27,7 +27,8 @@ export function readExample(example: string | null, order: DateOrder): string | 
   const [day, month] = order === 'dmy' ? [first, second] : [second, first];
   const date = new Date(Date.UTC(year, month - 1, day));
   if (date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
-  return date.toLocaleDateString(getIntlLocale(), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  // [RSC-IRAN] Jalali: fmtDate renders Jalali under REGION_LOCK
+  return fmtDate(date.toISOString(), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 }
 
 export interface DateOrderChoiceProps {

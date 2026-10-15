@@ -17,6 +17,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, AlertCircle } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { WideModal } from '@/shared/ui/WideModal';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput'; // [RSC-IRAN] Jalali
 import { useToastStore } from '@/stores/useToastStore';
 import { boqApi, type BOQVariable } from './api';
 import { getErrorMessage } from '@/shared/lib/api';
@@ -318,14 +319,23 @@ export function BOQVariablesDialog({ open, onClose, boqId, seed }: BOQVariablesD
                             </select>
                           </td>
                           <td className="px-3 py-2">
-                            <input
-                              type={d.type === 'date' ? 'date' : d.type === 'number' ? 'number' : 'text'}
-                              step={d.type === 'number' ? 'any' : undefined}
-                              value={d.value}
-                              onChange={(e) => patchRow(d.uid, { value: e.target.value })}
-                              placeholder={d.type === 'number' ? '1500' : ''}
-                              className="w-full rounded-md border border-border-light bg-surface-primary px-2 py-1 text-sm focus:border-oe-blue focus:outline-none"
-                            />
+                            {/* [RSC-IRAN] Jalali */}
+                            {d.type === 'date' ? (
+                              <JalaliDateInput
+                                value={d.value}
+                                onChange={(e) => patchRow(d.uid, { value: e.target.value })}
+                                className="w-full rounded-md border border-border-light bg-surface-primary px-2 py-1 text-sm focus:border-oe-blue focus:outline-none"
+                              />
+                            ) : (
+                              <input
+                                type={d.type === 'number' ? 'number' : 'text'}
+                                step={d.type === 'number' ? 'any' : undefined}
+                                value={d.value}
+                                onChange={(e) => patchRow(d.uid, { value: e.target.value })}
+                                placeholder={d.type === 'number' ? '1500' : ''}
+                                className="w-full rounded-md border border-border-light bg-surface-primary px-2 py-1 text-sm focus:border-oe-blue focus:outline-none"
+                              />
+                            )}
                           </td>
                           <td className="px-3 py-2">
                             <input

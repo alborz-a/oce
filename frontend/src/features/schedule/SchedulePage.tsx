@@ -49,6 +49,8 @@ import { GenerationPreviewPanel, isBudgetEstimate } from './GenerationPreviewPan
 import { ApiError, apiGet } from '@/shared/lib/api';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import { fmtDate, getIntlLocale } from '@/shared/lib/formatters';
+import { REGION_LOCK } from '@/app/regionLock';
+import { gregorianToJalali, jalaliToGregorian, PERSIAN_MONTH_NAMES, toPersianDigits } from '@/shared/lib/jalali';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { scheduleApi, type GenerationPreview } from './api';
@@ -558,18 +560,25 @@ function GanttChart({
       // a programme whose weeks are ISO weeks, and rotating them per language
       // would put the same task in two different weeks for two readers.
       const dayOfWeek = current.getUTCDay();
-      const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+      // [RSC-IRAN] Jalali: week gridlines align to Saturday
+      const daysUntilMonday = REGION_LOCK ? (13 - dayOfWeek) % 7 || 7 : dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
       current.setUTCDate(current.getUTCDate() + daysUntilMonday);
       while (current <= timelineEnd) {
         const dayOffset = daysBetween(timelineStart.toISOString(), current.toISOString());
         const pct = (dayOffset / totalDays) * 100;
         if (pct >= 0 && pct <= 100) {
           markers.push({
-            label: current.toLocaleDateString(getIntlLocale(), {
-              day: '2-digit',
-              month: 'short',
-              ...utcDateOpts,
-            }),
+            label: REGION_LOCK
+              ? (() => {
+                  // [RSC-IRAN] Jalali
+                  const j = gregorianToJalali(current.getUTCFullYear(), current.getUTCMonth() + 1, current.getUTCDate());
+                  return `${toPersianDigits(j.jd)} ${PERSIAN_MONTH_NAMES[j.jm - 1]}`;
+                })()
+              : current.toLocaleDateString(getIntlLocale(), {
+                  day: '2-digit',
+                  month: 'short',
+                  ...utcDateOpts,
+                }),
             offsetPct: pct,
           });
         }
@@ -577,13 +586,33 @@ function GanttChart({
       }
     } else if (zoomLevel === 'month') {
       // Month view — one marker per month
-      current.setUTCDate(1);
-      current.setUTCMonth(current.getUTCMonth() + 1);
+      // [RSC-IRAN] Jalali: markers sit on Jalali month starts
+      let jy = 0;
+      let jm = 0;
+      if (REGION_LOCK) {
+        const j0 = gregorianToJalali(current.getUTCFullYear(), current.getUTCMonth() + 1, current.getUTCDate());
+        jy = j0.jy;
+        jm = j0.jm;
+      }
+      const nextJalaliMonth = () => {
+        jm += 1;
+        if (jm > 12) {
+          jm = 1;
+          jy += 1;
+        }
+        const g = jalaliToGregorian(jy, jm, 1);
+        current.setTime(Date.UTC(g.gy, g.gm - 1, g.gd));
+      };
+      if (REGION_LOCK) nextJalaliMonth();
+      else {
+        current.setUTCDate(1);
+        current.setUTCMonth(current.getUTCMonth() + 1);
+      }
       while (current <= timelineEnd) {
         const dayOffset = daysBetween(timelineStart.toISOString(), current.toISOString());
         const pct = (dayOffset / totalDays) * 100;
         if (pct >= 0 && pct <= 100) {
-          markers.push({
+          markers.push(REGION_LOCK ? { label: `${PERSIAN_MONTH_NAMES[jm - 1]} ${toPersianDigits(jy)}`, offsetPct: pct } : {
             // Four digits, not two. The month markers are the only place on
             // this axis where a year is written at all, and a programme that
             // runs from 2026 into 2028 is exactly the one where "Aug 26" has
@@ -592,7 +621,8 @@ function GanttChart({
             offsetPct: pct,
           });
         }
-        current.setUTCMonth(current.getUTCMonth() + 1);
+        if (REGION_LOCK) nextJalaliMonth();
+        else current.setUTCMonth(current.getUTCMonth() + 1);
       }
     } else if (zoomLevel === 'quarter') {
       // Quarter view — one marker per quarter
