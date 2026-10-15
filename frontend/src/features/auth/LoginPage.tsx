@@ -79,6 +79,8 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const setTokens = useAuthStore((s) => s.setTokens);
+  // [RSC-IRAN] hidden: branding pencil only for authenticated admin — do not delete
+  const showBrandEdit = useAuthStore((s) => !!s.accessToken && s.userRole === 'admin');
   // White-label brand (same localStorage store the in-app sidebar editor
   // writes to). When a tenant has set a logo / company name we show it
   // on the login card instead of the default OpenConstructionERP wordmark.
@@ -806,6 +808,7 @@ export function LoginPage() {
               {/* White-label trigger - same editor as the in-app sidebar
                   brand control, available pre-auth so a tenant can put
                   their own logo on the sign-in screen. */}
+              {showBrandEdit && (
               <button
                 type="button"
                 onClick={() => setBrandOpen(true)}
@@ -815,6 +818,7 @@ export function LoginPage() {
               >
                 <Pencil size={13} strokeWidth={2.25} />
               </button>
+              )}
             </div>
             <p className="mt-2 text-sm text-content-tertiary">
               {COMPANY_INFO.tagline}

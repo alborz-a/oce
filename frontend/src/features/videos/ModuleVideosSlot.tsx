@@ -7,15 +7,17 @@
 
 import { lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
+import { REGION_LOCK } from '@/app/regionLock';
 import { useVideoHintsStore, videoRouteFor } from './videoRoutes';
 
 const ModuleVideosPanel = lazy(() => import('./ModuleVideosPanel'));
 
+// [RSC-IRAN] hidden under region lock: video chip
 export function ModuleVideosSlot() {
   const { pathname } = useLocation();
   const route = videoRouteFor(pathname);
   const hidden = useVideoHintsStore((s) => (route ? s.off || s.hidden.includes(route) : true));
-  if (!route || hidden) return null;
+  if (REGION_LOCK || !route || hidden) return null;
   return (
     <Suspense fallback={null}>
       <ModuleVideosPanel key={route} route={route} />

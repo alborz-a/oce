@@ -75,6 +75,7 @@ import { CaseFacePhoto } from "./CaseFacePhoto";
 import { CaseArt } from "./CaseArt";
 import { regionDisplayName } from "./regions";
 import { CaseConstellation } from "./CaseConstellation";
+import { REGION_LOCK } from "@/app/regionLock";
 import { modulesForPlaybook } from "./playbookModules";
 import { CaseCompanyHive } from "./CompanyHive";
 import { MarketPackPanel } from "./MarketPackPanel";
@@ -664,6 +665,7 @@ export interface PlaybookRunnerProps {
 // The videos for a case load with the catalogue behind them, so only for a
 // case the count index says has any.
 const CaseVideos = lazy(() => import("@/features/videos/CaseVideos"));
+// [RSC-IRAN] hidden: upstream YouTube case videos — do not delete
 
 export function PlaybookRunner({ playbook, onBack }: PlaybookRunnerProps) {
   const { t, i18n } = useTranslation();
@@ -1202,7 +1204,7 @@ export function PlaybookRunner({ playbook, onBack }: PlaybookRunnerProps) {
         </div>
       </header>
 
-      {VIDEO_COUNT_BY_CASE[playbook.id] ? (
+      {!REGION_LOCK && VIDEO_COUNT_BY_CASE[playbook.id] ? (
         <Suspense fallback={null}>
           <CaseVideos caseId={playbook.id} />
         </Suspense>
