@@ -27,6 +27,7 @@ import { CreateProjectModal } from './CreateProjectPage';
 import { projectsGuide } from './projectsGuide';
 import { ProjectStatusBadge, CURATED_PROJECT_STATUSES, useProjectStatusLabel } from './ProjectStatusBadge';
 import { BIMConverterStatusBanner } from '../bim/BIMConverterStatusBanner';
+import { REGION_LOCK } from '@/app/regionLock';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { invalidateProjectLists } from './invalidateProjectLists';
 import { DemoSeedingHint } from '@/features/processes/DemoSeedingHint';
@@ -538,8 +539,18 @@ export function ProjectsPage() {
         : currencyFmt.format(v);
 
   // Render a money figure with its ISO currency code, never a bare number.
-  const formatMoney = (v: number, currency: string) =>
-    `${formatBigValue(v)}${currency ? ` ${currency}` : ''}`;
+  const formatMoney = (v: number, currency: string) => {
+    // [RSC-IRAN] rial: Persian digits + Farsi units + « ریال» suffix
+    if (REGION_LOCK && currency === 'IRR') {
+      const fa = (n: number, d: number) =>
+        new Intl.NumberFormat('fa-IR', { maximumFractionDigits: d }).format(n);
+      const a = Math.abs(v);
+      if (a >= 1_000_000_000) return `${fa(v / 1_000_000_000, 1)} میلیارد ریال`;
+      if (a >= 1_000_000) return `${fa(v / 1_000_000, 1)} میلیون ریال`;
+      return `${fa(v, 0)} ریال`;
+    }
+    return `${formatBigValue(v)}${currency ? ` ${currency}` : ''}`;
+  };
 
   // Available region filter values — only regions actually present in the
   // user's project list (no globally hard-coded country/region inventory).

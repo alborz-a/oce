@@ -1752,7 +1752,7 @@ export function ScheduleDetail({
           {schedule.description && (
             <p className="mt-1 text-sm text-content-secondary">{schedule.description}</p>
           )}
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge variant="blue" size="sm">
               {t(`schedule.status_${schedule.status}`, { defaultValue: schedule.status })}
             </Badge>
@@ -2181,6 +2181,9 @@ export function ScheduleDetail({
                 <SVGGanttChart
                   activities={svgGanttActivities}
                   viewMode={zoomLevel as GanttViewMode}
+                  // [RSC-IRAN] explicit schedule date range
+                  startDate={schedule.start_date}
+                  endDate={schedule.end_date}
                   showBaseline={showBaseline}
                   showDependencies={true}
                   showCriticalPath={!!cpmResult}

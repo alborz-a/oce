@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { listCalendars } from '@/features/schedule-advanced/api';
 import { apiGet } from '@/shared/lib/api';
 import { fmtList } from '@/shared/lib/formatters';
+import { gregorianToJalali, toPersianDigits } from '@/shared/lib/jalali';
 import type { HolidayCoverage, Schedule, WorkCalendarResponse } from './api';
 
 const answered = new Set(['declared', 'project', 'platform']);
@@ -46,7 +47,9 @@ export function calendarCoverageProblems(schedule: Schedule, regional?: HolidayC
 }
 
 export function CalendarCoverageNotice({ schedule }: { schedule: Schedule }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const fa = (i18n.language || '').toLowerCase().startsWith('fa');
+  const yearLabel = (y: number) => (fa ? toPersianDigits(gregorianToJalali(y, 6, 1).jy) : String(y));
   const own = object(schedule.metadata_?.calendar);
   const hasOwn = Array.isArray(own?.work_days) && own.work_days.length > 0;
   const manual = hasOwn && own !== undefined && !('regional_holiday_country' in own);
@@ -77,7 +80,7 @@ export function CalendarCoverageNotice({ schedule }: { schedule: Schedule }) {
     return <span role="status">{t('common.loading', { defaultValue: 'Loading...' })}</span>;
   }
   const { missing, partial } = calendarCoverageProblems(schedule, region.data?.holiday_coverage);
-  return <div className="min-w-0 max-w-full text-sm">
+  return <div className="w-full basis-full min-w-0 max-w-full whitespace-normal break-words text-sm">
     {!hasOwn && region.data && <span>{t('schedule.work_calendar', {
       defaultValue: '{{hours}}h/day, {{days}} days/week',
       hours: String(region.data.hours_per_day), days: String(region.data.work_days_per_week),
@@ -86,10 +89,10 @@ export function CalendarCoverageNotice({ schedule }: { schedule: Schedule }) {
       {t('schedule.calendar.week_fallback', { defaultValue: 'The regional working week is unavailable. A standard planning week is used.' })}
     </p>}
     {missing.length > 0 && <p role="status" className="text-semantic-warning">
-      {t('schedule.calendar.holidays_missing', { defaultValue: 'Public holidays are not available for {{years}}. Check the calendar before relying on these dates.', years: fmtList(missing.map(String)) })}
+      {t('schedule.calendar.holidays_missing', { defaultValue: 'Public holidays are not available for {{years}}. Check the calendar before relying on these dates.', years: fmtList(missing.map(yearLabel)) })}
     </p>}
     {partial.length > 0 && <p role="status" className="text-semantic-warning">
-      {t('schedule.calendar.holidays_partial', { defaultValue: 'Public holiday coverage is incomplete for {{years}}. Check the calendar before relying on these dates.', years: fmtList(partial.map(String)) })}
+      {t('schedule.calendar.holidays_partial', { defaultValue: 'Public holiday coverage is incomplete for {{years}}. Check the calendar before relying on these dates.', years: fmtList(partial.map(yearLabel)) })}
     </p>}
   </div>;
 }

@@ -84,6 +84,7 @@ function JalaliDateInputInner({
   ...rest
 }: JalaliDateInputProps) {
   const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const [inner, setInner] = useState<string | null>(valueProp ?? defaultValue ?? null);
   const value = valueProp !== undefined ? valueProp : inner;
   const rootRef = useRef<HTMLDivElement>(null);
@@ -140,6 +141,8 @@ function JalaliDateInputInner({
   const openPopup = () => {
     if (disabled || readOnly) return;
     setView({ jy: baseJ.jy, jm: baseJ.jm });
+    const rect = rootRef.current?.getBoundingClientRect();
+    setDropUp(!!rect && window.innerHeight - rect.bottom < 320 && rect.top > 320);
     setOpen((o) => !o);
   };
 
@@ -171,7 +174,7 @@ function JalaliDateInputInner({
         <div
           role="dialog"
           dir="rtl"
-          className="absolute z-50 mt-1 w-64 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg"
+          className={clsx('absolute z-50 w-64 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg', dropUp ? 'bottom-full mb-1' : 'mt-1')}
         >
           <div className="mb-2 flex items-center justify-between">
             <button type="button" onClick={() => shift(-1)} aria-label="ماه قبل" className="rounded px-2 py-1 hover:bg-surface-secondary">

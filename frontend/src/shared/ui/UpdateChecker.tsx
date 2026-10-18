@@ -47,6 +47,7 @@ import { copyToClipboard } from '@/shared/lib/browser';
 import { isTauri, openExternalUrl, openInNewTab } from '@/shared/lib/desktop';
 import { getIntlLocale } from '@/shared/lib/formatters';
 import { compareVersions, parseVersion } from '@/shared/lib/version';
+import { REGION_LOCK } from '@/app/regionLock';
 
 /* ── One-click upgrade — starts `pip install --upgrade` server-side ───
  *
@@ -347,6 +348,7 @@ function pickInstaller(assets: ReleaseAsset[], platform: InstallerPlatform): Rel
  * nothing to show.
  */
 async function fetchVersionCheck(force = false): Promise<VersionCheck | null> {
+  if (REGION_LOCK) return null; // [RSC-IRAN]
   try {
     // The endpoint answers signed-in callers only, and this notice lives
     // inside the signed-in shell, so the session's token goes with it.
@@ -542,7 +544,7 @@ export function useUpdateCheck(): VersionCheck | null {
     // Wrapped: react-query passes its context as the first argument, which
     // would otherwise land in `force`.
     queryFn: () => fetchVersionCheck(),
-    enabled: !UPDATE_CHECK_DISABLED,
+    enabled: !UPDATE_CHECK_DISABLED && !REGION_LOCK, // [RSC-IRAN] skip GitHub version fetch
     staleTime: VERSION_CHECK_TTL_MS,
     // Once a day, also in a window left open for days, which is how the
     // desktop app is used. The storm the old browser-side call produced was
@@ -610,6 +612,7 @@ export function CheckForUpdatesButton({ className = '' }: { className?: string }
     }
   }, [queryClient]);
 
+  if (REGION_LOCK) return null; // [RSC-IRAN]
   if (UPDATE_CHECK_DISABLED) return null;
 
   const message =
@@ -665,6 +668,7 @@ export function UpdateBadge() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { release } = useUndismissedUpdate();
+  if (REGION_LOCK) return null; // [RSC-IRAN]
   if (!release) return null;
 
   const label = t('about.check_updates_available', {
@@ -701,6 +705,7 @@ export function UpdateBadge() {
 export function UpdateInlineNotice({ className = '' }: { className?: string }) {
   const { t } = useTranslation();
   const { release } = useUndismissedUpdate();
+  if (REGION_LOCK) return null; // [RSC-IRAN]
   if (!release) return null;
   return (
     <div
@@ -740,6 +745,7 @@ export function UpdateNotification() {
     [release],
   );
 
+  if (REGION_LOCK) return null; // [RSC-IRAN]
   // Scoped to the version dismissed: a newer release speaks up on its own.
   if (!release) return null;
 

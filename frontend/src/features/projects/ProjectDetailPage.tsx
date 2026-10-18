@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { REGION_LOCK } from '@/app/regionLock';
 import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -2007,10 +2008,12 @@ export function ProjectDetailPage() {
                       project.classification_standard}
                   </Badge>
                   <Badge variant="neutral" size="sm">
-                    {currency ?? t('projects.currency_not_set', { defaultValue: 'Currency not set' })}
+                    {/* [RSC-IRAN] */}
+                    {REGION_LOCK && currency === 'IRR' ? 'ریال' : (currency ?? t('projects.currency_not_set', { defaultValue: 'Currency not set' }))}
                   </Badge>
                   <Badge variant="neutral" size="sm">
-                    {project.region}
+                    {/* [RSC-IRAN] */}
+                    {REGION_LOCK && project.region === 'IR' ? 'ایران' : project.region}
                   </Badge>
                   <span className="text-xs text-content-tertiary ml-2">
                     {t('projects.created', { date: formatDate(project.created_at, i18n.language) })}

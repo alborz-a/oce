@@ -13,6 +13,8 @@
  *      graceful empty states instead of the tiles.
  */
 
+// Legacy (non-locked) behaviour: assertions describe REGION_LOCK=false.
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ForecastInsightsPanel } from '../components/ForecastInsightsPanel';

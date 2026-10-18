@@ -22,6 +22,7 @@ import { apiGet } from '@/shared/lib/api';
 import { RecoveryCard, Skeleton } from '@/shared/ui';
 import { classifyVariance, type VarianceLevel } from './variance-thresholds';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
+import { REGION_LOCK } from '@/app/regionLock';
 
 export const PI_QUERY_STALE_MS = 60_000;
 
@@ -66,6 +67,14 @@ interface ProjectKPIHeroProps {
 function formatMoney(value: number, currency: string): string {
   if (!Number.isFinite(value)) return '—';
   const abs = Math.abs(value);
+  // [RSC-IRAN] rial: Persian digits + Farsi units + « ریال» suffix
+  if (REGION_LOCK && currency === 'IRR') {
+    const fa = (n: number, d: number) =>
+      new Intl.NumberFormat('fa-IR', { maximumFractionDigits: d }).format(n);
+    if (abs >= 1_000_000_000) return `${fa(value / 1_000_000_000, 2)} میلیارد ریال`;
+    if (abs >= 1_000_000) return `${fa(value / 1_000_000, 2)} میلیون ریال`;
+    return `${fa(value, 0)} ریال`;
+  }
   if (abs >= 1_000_000) return `${currency} ${fmtFixed(value / 1_000_000, 2)}M`;
   if (abs >= 1_000) return `${currency} ${fmtFixed(value / 1_000, 1)}k`;
   return `${currency} ${fmtFixed(value, 0)}`;
