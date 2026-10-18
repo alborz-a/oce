@@ -28,6 +28,7 @@ import { projectsGuide } from './projectsGuide';
 import { ProjectStatusBadge, CURATED_PROJECT_STATUSES, useProjectStatusLabel } from './ProjectStatusBadge';
 import { BIMConverterStatusBanner } from '../bim/BIMConverterStatusBanner';
 import { REGION_LOCK } from '@/app/regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { invalidateProjectLists } from './invalidateProjectLists';
 import { DemoSeedingHint } from '@/features/processes/DemoSeedingHint';
@@ -597,10 +598,12 @@ export function ProjectsPage() {
         srTitle={t('nav.projects', { defaultValue: 'Projects' })}
         subtitle={
           projects
-            ? t('projects.subtitle_count', {
-                defaultValue: 'Manage your construction estimation projects ({{count}} total)',
-                count: projects.length,
-              })
+            ? ((txt) => (REGION_LOCK ? toPersianDigits(txt) : txt))( // [RSC-IRAN]
+                t('projects.subtitle_count', {
+                  defaultValue: 'Manage your construction estimation projects ({{count}} total)',
+                  count: projects.length,
+                }),
+              )
             : t('common.loading', { defaultValue: 'Loading...' })
         }
         actions={
@@ -699,18 +702,24 @@ export function ProjectsPage() {
                 {t('projects.stats_total', { defaultValue: 'Total Projects' })}
               </div>
               <div className="mt-1 text-xl font-bold text-content-primary tabular-nums leading-none">
-                {stats.totalProjects}
+                {REGION_LOCK ? toPersianDigits(stats.totalProjects) : stats.totalProjects}{/* [RSC-IRAN] */}
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-1">
                 <Badge variant="success" size="sm" dot>
-                  {t('projects.stats_active', {
+                  {REGION_LOCK ? toPersianDigits(t('projects.stats_active', {
+                    defaultValue: '{{count}} active',
+                    count: stats.activeProjects,
+                  })) : t('projects.stats_active', {
                     defaultValue: '{{count}} active',
                     count: stats.activeProjects,
                   })}
                 </Badge>
                 {stats.archivedProjects > 0 && (
                   <Badge variant="neutral" size="sm" dot>
-                    {t('projects.stats_archived', {
+                    {REGION_LOCK ? toPersianDigits(t('projects.stats_archived', {
+                      defaultValue: '{{count}} archived',
+                      count: stats.archivedProjects,
+                    })) : t('projects.stats_archived', {
                       defaultValue: '{{count}} archived',
                       count: stats.archivedProjects,
                     })}

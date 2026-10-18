@@ -1316,6 +1316,10 @@ export function GanttChart({
           width={timelineWidth}
           height={bodyHeight + HEADER_HEIGHT}
           className="select-none"
+          // [RSC-IRAN] Under dir=rtl (fa) SVG text-anchor "start" flips to the right edge, so
+          // header month labels and bar labels grew leftwards out of their cell/bar and were
+          // clipped to a stub ("آ", "آبا"). Chart geometry is always left-to-right.
+          style={{ direction: 'ltr' }}
           // An image's children are presentational, so a chart with focusable
           // bars, handles and links has to be a group.
           role={keyboardNav ? 'group' : 'img'}
