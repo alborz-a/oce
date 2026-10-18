@@ -6,7 +6,7 @@
   },
   "nav": {
     "dashboard": "داشبورد",
-    "assemblies": "اسمبلی‌ها",
+    "assemblies": "آنالیز بها / ترکیب منابع",
     "ai_estimate": "برآورد هوش مصنوعی",
     "settings": "تنظیمات",
     "5d_cost_model": "مدل هزینه 5D",
@@ -52,23 +52,23 @@
   },
   "boq": {
     "title": "صورت مقادیر (BOQ)",
-    "position": "ردیف",
+    "position": "ردیف فهرست‌بها / آیتم کار",
     "ordinal": "شماره ردیف",
     "description": "شرح",
     "quantity": "مقدار",
     "unit": "واحد",
-    "unit_rate": "نرخ واحد",
+    "unit_rate": "بهای واحد",
     "total": "جمع کل",
-    "add_position": "افزودن موقعیت",
-    "add_section": "افزودن بخش",
-    "assembly": "مجموعه",
+    "add_position": "افزودن ردیف فهرست‌بها / آیتم کار",
+    "add_section": "افزودن فصل / سرفصل فهرست‌بها",
+    "assembly": "آنالیز بها / ترکیب منابع",
     "subtotal": "جمع جزء",
     "grand_total": "جمع کل",
     "direct_cost": "هزینه مستقیم",
     "net_total": "جمع خالص",
     "gross_total": "جمع ناخالص",
     "vat": "مالیات بر ارزش افزوده",
-    "add_markups": "افزودن افزودنی‌ها",
+    "add_markups": "افزودن ضرایب پیمان / بالاسری",
     "validate": "اعتبارسنجی",
     "export": "برون‌بری",
     "mvp": {
@@ -102,22 +102,22 @@
     "search_costs": "جست‌وجوی اقلام هزینه..."
   },
   "assemblies": {
-    "title": "اسمبلی‌ها",
+    "title": "آنالیز بها / ترکیب منابع",
     "description": "دستورهای هزینه‌ای قابل‌استفاده مجدد — مصالح، نیروی کار و ماشین‌آلات را در قالب‌های آماده ترکیب کنید",
-    "new_assembly": "اسمبلی جدید",
+    "new_assembly": "آنالیز بهای جدید",
     "from_database": "از پایگاه داده",
-    "apply_to_boq": "اعمال به صورت مقادیر",
+    "apply_to_boq": "اعمال به فهرست‌بها (BOQ)",
     "add_component": "افزودن جزء",
-    "no_assemblies": "هنوز مجموعه‌ای نیست",
-    "no_assemblies_hint": "اولین مجموعه خود را از پایگاه داده هزینه یا فهرست منابع بسازید",
-    "total_rate": "نرخ کل"
+    "no_assemblies": "هنوز آنالیز بهایی ثبت نشده است",
+    "no_assemblies_hint": "اولین آنالیز بهای خود را از پایگاه داده هزینه یا فهرست منابع بسازید",
+    "total_rate": "بهای واحد کل"
   },
   "catalog": {
     "title": "کاتالوگ منبع",
     "description": "مصالح، ماشین‌آلات، نرخ نیروی کار و اپراتورها را مرور و مدیریت کنید",
     "add_resource": "افزودن منبع",
     "import_region": "درون‌ریزی منطقه",
-    "build_assembly": "ساخت اسمبلی",
+    "build_assembly": "ساخت آنالیز بها (ترکیب منابع)",
     "my_catalog": "کاتالوگ من"
   },
   "validation": {
@@ -128,23 +128,23 @@
     "score": "امتیاز کیفیت",
     "run_validation": "اجرای اعتبارسنجی",
     "missing_quantity": "ردیف {position} فاقد مقدار است",
-    "missing_rate": "ردیف {position} فاقد نرخ واحد است",
+    "missing_rate": "ردیف {position} فاقد بهای واحد است",
     "missing_description": "ردیف {position} فاقد شرح است",
     "missing_classification": "ردیف {position} به کد طبقه‌بندی نیاز دارد",
     "duplicate_ordinal": "شماره ردیف تکراری: {ordinal}",
-    "rate_anomaly": "نرخ واحد {rate} از حد آستانه ({threshold}) فراتر رفته است"
+    "rate_anomaly": "بهای واحد {rate} از حد آستانه ({threshold}) فراتر رفته است"
   },
   "schedule": {
     "title": "زمان‌بندی 4D",
     "generated": {
       "position_label": "ردیف {ordinal}",
-      "section_label": "بخش {ordinal}",
+      "section_label": "فصل {ordinal}",
       "task_description": "به‌صورت خودکار از ردیف {ordinal} صورت مقادیر ایجاد شد ({quantity} {unit})",
       "section_description": "خلاصه: بخش {ordinal} صورت مقادیر",
       "start_milestone": "شروع پروژه",
-      "start_milestone_description": "نقطه عطف شروع پروژه",
+      "start_milestone_description": "مایلستون (رویداد کلیدی) شروع پروژه",
       "completion_milestone": "تکمیل پروژه",
-      "completion_milestone_description": "نقطه عطف تکمیل پروژه"
+      "completion_milestone_description": "مایلستون (رویداد کلیدی) تکمیل پروژه"
     }
   },
   "cad": {
@@ -152,10 +152,10 @@
     "upload": "بارگذاری فایل CAD",
     "supported_formats": "فرمت‌های پشتیبانی‌شده: DWG, DGN, RVT, IFC, PDF",
     "converting": "در حال تبدیل...",
-    "elements_found": "{count} عنصر یافت شد"
+    "elements_found": "{count} المان یافت شد"
   },
   "takeoff": {
-    "title": "متره مقادیر",
+    "title": "متره‌برداری (Takeoff) / ریزه‌متره",
     "auto_detect": "تشخیص خودکار",
     "manual_measure": "اندازه‌گیری دستی",
     "confidence": "اطمینان"
@@ -208,7 +208,7 @@
     "kg": "کیلوگرم",
     "t": "تن",
     "pcs": "عدد",
-    "lsum": "مقطوع",
+    "lsum": "مقطوع (چکی)",
     "h": "ساعت",
     "set": "دست"
   },
@@ -249,8 +249,8 @@
     "focus_area": "حوزه تمرکز"
   },
   "rfi": {
-    "title": "درخواست‌های اطلاعات",
-    "new_rfi": "RFI جدید",
+    "title": "درخواست‌های استعلام فنی (RFI)",
+    "new_rfi": "درخواست استعلام فنی جدید (RFI)",
     "subject": "موضوع",
     "question": "پرسش",
     "response": "پاسخ",
@@ -268,8 +268,8 @@
     "invoices": "فاکتورها",
     "payable": "پرداختنی",
     "receivable": "دریافتنی",
-    "payments": "پرداخت‌ها",
-    "evm": "ارزش کسب‌شده",
+    "payments": "صورت‌وضعیت موقت و پرداخت‌ها",
+    "evm": "ارزش کسب‌شده (EVM)",
     "invoice_number": "شماره فاکتور",
     "amount": "مبلغ",
     "status": "وضعیت",
@@ -285,7 +285,7 @@
   "procurement": {
     "title": "تدارکات",
     "purchase_orders": "سفارش‌های خرید",
-    "goods_receipts": "رسیدهای کالا",
+    "goods_receipts": "رسیدهای ورود به انبار (قبض انبار / GRN)",
     "new_po": "سفارش خرید جدید",
     "po_number": "شماره PO",
     "vendor": "فروشنده",
@@ -328,8 +328,8 @@
     "critical": "بحرانی"
   },
   "ncr": {
-    "title": "گزارش‌های عدم‌انطباق",
-    "new_ncr": "NCR جدید",
+    "title": "گزارش‌های عدم انطباق (NCR)",
+    "new_ncr": "گزارش عدم انطباق جدید (NCR)",
     "root_cause": "علت ریشه‌ای",
     "corrective_action": "اقدام اصلاحی",
     "preventive_action": "اقدام پیشگیرانه",
@@ -338,8 +338,8 @@
     "design": "طراحی"
   },
   "submittals": {
-    "title": "مدارک ارسالی",
-    "new_submittal": "مدرک ارسالی جدید",
+    "title": "مدارک ارسالی جهت تأیید (Submittal)",
+    "new_submittal": "مدرک ارسالی جدید (Submittal)",
     "spec_section": "بخش مشخصات فنی",
     "revision": "بازنگری",
     "submit": "ارسال",
@@ -373,8 +373,8 @@
     "revisions": "بازبینی‌ها"
   },
   "transmittals": {
-    "title": "ارسالی‌ها",
-    "new_transmittal": "ابلاغیه جدید",
+    "title": "برگه ارسال مدارک (Transmittal)",
+    "new_transmittal": "برگه ارسال مدارک جدید (Transmittal)",
     "purpose": "هدف",
     "for_approval": "برای تأیید",
     "for_information": "برای اطلاع",
@@ -404,7 +404,7 @@
   "bim": {
     "title": "مرکز BIM",
     "models": "مدل‌ها",
-    "elements": "عناصر",
+    "elements": "المان‌ها",
     "upload_model": "آپلود مدل",
     "processing": "در حال پردازش",
     "active": "فعال",
@@ -412,7 +412,7 @@
     "properties": "ویژگی‌ها",
     "quantities": "مقادیر",
     "wireframe": "سیم‌توری",
-    "section_box": "جعبه برش",
+    "section_box": "باکس برش (سکشن)",
     "measure": "اندازه‌گیری",
     "zoom_to_fit": "نمایش کامل"
   },
@@ -431,8 +431,8 @@
     "day": "روز",
     "week": "هفته",
     "month": "ماه",
-    "critical_path": "مسیر بحرانی",
-    "baseline": "خط مبنا",
+    "critical_path": "مسیر بحرانی (CPM)",
+    "baseline": "برنامه زمان‌بندی مبنا (Baseline)",
     "dependencies": "وابستگی‌ها",
     "today": "امروز"
   },

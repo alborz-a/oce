@@ -64,7 +64,7 @@ import type {
   ProjectVariationsPayload,
 } from '@/shared/api/dashboardRollup';
 import { fmtFixed } from '@/shared/lib/formatters';
-import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { formatCurrency } from '@/shared/lib/money';
 
 /* ── Rollup provider ──────────────────────────────────────────────────── */
 
@@ -341,10 +341,7 @@ interface ChangeOrderSummary {
 }
 
 function fmtMoney(value: number | string | null | undefined, currency = 'EUR'): string {
-  if (value == null) return `${currency} 0`;
-  const n = typeof value === 'string' ? Number(value) : value;
-  if (!Number.isFinite(n)) return `${currency} 0`;
-  return `${currency} ${n.toLocaleString(getNumberLocale(), { maximumFractionDigits: 0 })}`;
+  return formatCurrency(value ?? 0, currency);
 }
 
 export function ChangeOrdersPulseWidget({

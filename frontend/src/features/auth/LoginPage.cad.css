@@ -1,0 +1,223 @@
+/* [RSC-IRAN] Royal Star Construction - Interactive AutoCAD Floorplan Login Styles */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/Vazirmatn.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url('/fonts/Cinzel-Bold.woff2') format('woff2');
+  font-weight: 700 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --cad-bg: #14171c;
+  --cad-grid-minor: rgba(255, 255, 255, 0.025);
+  --cad-grid-major: rgba(255, 255, 255, 0.055);
+  --cad-wall: #d4dce6;
+  --cad-wall-inner: #6c7a89;
+  --cad-dim: #7f8ea3;
+  --royal-blue: #094183;
+  --royal-gold: #d5b368;
+}
+
+.cad-login-root {
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--cad-bg);
+  font-family: 'Vazirmatn', sans-serif;
+  color: #e2e8f0;
+  cursor: crosshair;
+  user-select: none;
+  background-image:
+    linear-gradient(to right, var(--cad-grid-minor) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--cad-grid-minor) 1px, transparent 1px),
+    linear-gradient(to right, var(--cad-grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--cad-grid-major) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+}
+
+.font-mono-cad {
+  font-family: 'JetBrains Mono', monospace;
+  direction: ltr;
+}
+
+.logo-precision-rim {
+  paint-order: stroke fill;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.cad-input-overlay {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f1f5f9;
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: clamp(0.82rem, 2.5vw, 0.92rem);
+  padding: 0 14px;
+  width: 100%;
+  height: 100%;
+  text-align: right;
+  direction: rtl;
+  user-select: text;
+  cursor: text;
+}
+
+.cad-input-overlay::placeholder {
+  color: #8796a8;
+  opacity: 0.85;
+}
+
+.cad-grip {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.cad-entity.cad-selected .cad-grip {
+  opacity: 1;
+}
+
+.cad-entity.cad-selected .entity-stroke {
+  stroke-dasharray: 4 2 !important;
+  filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.55));
+}
+
+#cadSelectionBox {
+  position: fixed;
+  pointer-events: none;
+  z-index: 60;
+  display: none;
+}
+
+.sel-window {
+  background: rgba(0, 102, 255, 0.14);
+  border: 1px solid #3b82f6;
+}
+
+.sel-crossing {
+  background: rgba(34, 197, 94, 0.14);
+  border: 1px dashed #22c55e;
+}
+
+@keyframes cadElevationScan {
+  0%, 100% { transform: translateY(0px); opacity: 0.35; }
+  50% { transform: translateY(-265px); opacity: 0.95; }
+}
+@keyframes cadElevatorMove {
+  0%, 100% { transform: translateY(0px); }
+  45%, 55% { transform: translateY(-135px); }
+}
+@keyframes cadFlowDash { to { stroke-dashoffset: -24; } }
+@keyframes cadCriticalFlow { to { stroke-dashoffset: -16; } }
+@keyframes cadRoomCycle1 { 0%, 24%, 100% { opacity: 0.18; } 5%, 20% { opacity: 0.85; } }
+@keyframes cadRoomCycle2 { 0%, 25%, 49%, 100% { opacity: 0.18; } 30%, 45% { opacity: 0.85; } }
+@keyframes cadRoomCycle3 { 0%, 50%, 74%, 100% { opacity: 0.18; } 55%, 70% { opacity: 0.85; } }
+@keyframes cadRoomCycle4 { 0%, 75%, 99% { opacity: 0.18; } 80%, 95% { opacity: 0.85; } }
+@keyframes cadPlanCrosshair {
+  0%, 100% { transform: translate(70px, 105px); }
+  25% { transform: translate(235px, 105px); }
+  50% { transform: translate(205px, 245px); }
+  75% { transform: translate(70px, 245px); }
+}
+@keyframes bimCraneTrolley {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(-82px); }
+}
+@keyframes bimCraneHook {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.85); }
+}
+@keyframes bimSlabWave {
+  0%, 100% { stroke: #7d8c9e; fill: rgba(125, 140, 158, 0.03); }
+  50% { stroke: #d5b368; fill: rgba(213, 179, 104, 0.14); }
+}
+@keyframes ganttPlayheadSweep {
+  0% { transform: translateX(0px); opacity: 0.25; }
+  10%, 90% { opacity: 0.95; }
+  100% { transform: translateX(-192px); opacity: 0.25; }
+}
+@keyframes ganttBarPulse {
+  0%, 100% { fill-opacity: 0.18; }
+  50% { fill-opacity: 0.42; }
+}
+@keyframes boqRowScanner {
+  0%, 15% { transform: translateY(0px); }
+  16.6%, 31.6% { transform: translateY(36px); }
+  33.3%, 48.3% { transform: translateY(72px); }
+  50%, 65% { transform: translateY(108px); }
+  66.6%, 81.6% { transform: translateY(144px); }
+  83.3%, 98.3% { transform: translateY(180px); }
+  100% { transform: translateY(0px); }
+}
+@keyframes cdeRowScanner {
+  0%, 23% { transform: translateY(0px); }
+  25%, 48% { transform: translateY(42px); }
+  50%, 73% { transform: translateY(84px); }
+  75%, 98% { transform: translateY(126px); }
+  100% { transform: translateY(0px); }
+}
+@keyframes treeScanLine {
+  0% { transform: translateY(0px); opacity: 0.2; }
+  50% { transform: translateY(148px); opacity: 0.85; }
+  100% { transform: translateY(0px); opacity: 0.2; }
+}
+@keyframes terminalCursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.anim-elevation-scan { animation: cadElevationScan 9s ease-in-out infinite; }
+.anim-elevator-cab { animation: cadElevatorMove 7s ease-in-out infinite; }
+.anim-dash-flow { animation: cadFlowDash 1.8s linear infinite; }
+.anim-cpm-flow { stroke-dasharray: 4 4; animation: cadCriticalFlow 1.1s linear infinite; }
+.anim-plan-crosshair { animation: cadPlanCrosshair 10s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.anim-room-1 { animation: cadRoomCycle1 10s ease-in-out infinite; }
+.anim-room-2 { animation: cadRoomCycle2 10s ease-in-out infinite; }
+.anim-room-3 { animation: cadRoomCycle3 10s ease-in-out infinite; }
+.anim-room-4 { animation: cadRoomCycle4 10s ease-in-out infinite; }
+.anim-crane-trolley { animation: bimCraneTrolley 8s ease-in-out infinite; }
+.anim-crane-hook { animation: bimCraneHook 4s ease-in-out infinite; transform-origin: 18px -12px; }
+.anim-slab-1 { animation: bimSlabWave 6s ease-in-out infinite 0s; }
+.anim-slab-2 { animation: bimSlabWave 6s ease-in-out infinite 0.9s; }
+.anim-slab-3 { animation: bimSlabWave 6s ease-in-out infinite 1.8s; }
+.anim-slab-4 { animation: bimSlabWave 6s ease-in-out infinite 2.7s; }
+.anim-slab-5 { animation: bimSlabWave 6s ease-in-out infinite 3.6s; }
+.anim-gantt-playhead { animation: ganttPlayheadSweep 7.5s linear infinite; }
+.anim-gantt-bar { animation: ganttBarPulse 3.2s ease-in-out infinite; }
+.anim-boq-scan { animation: boqRowScanner 9s steps(1) infinite; }
+.anim-cde-scan { animation: cdeRowScanner 6.4s steps(1) infinite; }
+.anim-tree-scan { animation: treeScanLine 5.5s ease-in-out infinite; }
+.anim-cursor-blink { animation: terminalCursorBlink 1s steps(1) infinite; }

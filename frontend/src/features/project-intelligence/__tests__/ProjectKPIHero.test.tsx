@@ -16,6 +16,8 @@
  *      cards do NOT — a failed load never masquerades as a healthy project.
  *   3. On success the real KPI cards render with the classified value.
  */
+// Legacy (non-locked) behaviour: assertions describe REGION_LOCK=false.
+vi.mock('@/app/regionLock', async (orig) => ({ ...(await orig<typeof import('@/app/regionLock')>()), REGION_LOCK: false }));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

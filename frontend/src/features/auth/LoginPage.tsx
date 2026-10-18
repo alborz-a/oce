@@ -32,6 +32,8 @@ import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { COMPANY_INFO } from '@/app/companyInfo.fa';
+import { REGION_LOCK } from '@/app/regionLock';
+import { CadLoginView } from './CadLoginView';
 
 /* Segmented theme switch (Light / Dark / System) for the login page. */
 function ThemeSwitch() {
@@ -392,6 +394,21 @@ export function LoginPage() {
           </p>
         </div>
       </div>
+    );
+  }
+
+  // [RSC-IRAN] Royal Star Construction AutoCAD Floorplan Login Gate
+  if (REGION_LOCK) {
+    return (
+      <CadLoginView
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        loading={loading}
+        error={error}
+        handleSubmit={handleSubmit}
+      />
     );
   }
 
