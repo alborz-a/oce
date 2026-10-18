@@ -48,6 +48,7 @@ import { Badge, Card, EmptyState, SkeletonTable } from '@/shared/ui';
 import { openInNewTab } from '@/shared/lib/desktop';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { BIMViewer } from '@/shared/ui/BIMViewer';
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { PortalProgressReportsTab } from './PortalProgressReportsTab';
@@ -446,6 +447,7 @@ const CO_STATUS_VARIANT: Record<string, 'neutral' | 'blue' | 'warning' | 'succes
 
 function money(amount: string | null, currency: string): string {
   if (amount === null) return '-';
+  if (REGION_LOCK && currency === 'IRR') return `${amount} ریال`; // [RSC-IRAN]
   return currency ? `${currency} ${amount}` : amount;
 }
 

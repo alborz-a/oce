@@ -25,6 +25,7 @@ import {
 import { fmtFixed } from '@/shared/lib/formatters';
 import { parseDecimalInput, toDecimalPayloadString } from '@/shared/lib/parseDecimal';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+import { REGION_LOCK } from '@/app/regionLock';
 // [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
 const inputCls =
@@ -38,6 +39,8 @@ function toNumber(v: string): number {
 
 function money(n: number, currency: string): string {
   const s = fmtFixed(n, 2);
+  // [RSC-IRAN] show « ریال» instead of IRR code
+  if (REGION_LOCK && currency === 'IRR') return `${s} ریال`;
   return currency ? `${currency} ${s}` : s;
 }
 

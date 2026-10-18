@@ -1564,12 +1564,14 @@ export function ProjectCard({
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
             <CurrencyIcon size={11} strokeWidth={2.25} />
-            {project.currency}
+            {/* [RSC-IRAN] */}
+            {REGION_LOCK && project.currency === 'IRR' ? 'ریال' : project.currency}
           </span>
           {project.region && (
             <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
               <Globe2 size={11} strokeWidth={2.25} />
-              {project.region}
+              {/* [RSC-IRAN] */}
+              {REGION_LOCK && project.region === 'IR' ? 'ایران' : project.region}
             </span>
           )}
           {project.address?.city && (
@@ -1620,7 +1622,8 @@ export function ProjectCard({
                 {currencyFmt.format(boqStats.totalValue)}
               </span>
               <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
-                {project.currency}
+                {/* [RSC-IRAN] */}
+                {REGION_LOCK && project.currency === 'IRR' ? 'ریال' : project.currency}
               </span>
             </div>
           </div>

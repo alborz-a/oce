@@ -31,6 +31,8 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fmtDate, getIntlLocale } from '@/shared/lib/formatters';
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { useToastStore } from '@/stores/useToastStore';
 import {
   type GanttActivity,
@@ -1293,7 +1295,8 @@ export function GanttChart({
                           : 'text-content-tertiary'
                     }`}
                   >
-                    {a.progress}
+                    {/* [RSC-IRAN] Persian digits + percent sign */}
+                    {REGION_LOCK ? `${toPersianDigits(a.progress)}٪` : a.progress}
                   </span>
                 </div>
               </div>

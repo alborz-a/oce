@@ -72,6 +72,7 @@ import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import { onlyChangedFields } from '@/shared/lib/apiHelpers';
 import { toNum, formatCurrency } from '@/shared/lib/money';
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import {
@@ -218,6 +219,7 @@ function formatMoney(amount: string | null | undefined, currency: string): strin
   const n = Number.parseFloat(amount || '0');
   if (!Number.isFinite(n) || n === 0) return '';
   const formatted = n.toLocaleString(getNumberLocale(), { maximumFractionDigits: 2 });
+  if (REGION_LOCK && currency === 'IRR') return `${formatted} ریال`; // [RSC-IRAN]
   return currency ? `${currency} ${formatted}` : formatted;
 }
 

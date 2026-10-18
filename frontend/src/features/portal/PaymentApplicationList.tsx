@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import { FileText, Plus, AlertCircle } from 'lucide-react';
 import { Button, Badge, Card, EmptyState, SkeletonTable } from '@/shared/ui';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
+import { REGION_LOCK } from '@/app/regionLock';
 import {
   listMyPaymentApplications,
   type PaymentApplicationListItem,
@@ -31,6 +32,8 @@ const STATUS_VARIANT: Record<string, 'neutral' | 'blue' | 'warning' | 'success' 
 function formatMoney(amount: string, currency: string): string {
   // Keep the backend's exact Decimal string; prefix the ISO currency so we
   // never invent a locale-specific symbol the agreement did not specify.
+  // [RSC-IRAN] show « ریال» instead of IRR code
+  if (REGION_LOCK && currency === 'IRR') return `${amount} ریال`;
   return currency ? `${currency} ${amount}` : amount;
 }
 

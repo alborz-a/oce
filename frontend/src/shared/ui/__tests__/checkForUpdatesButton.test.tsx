@@ -10,6 +10,9 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+// [RSC-IRAN] region lock hides update UI; tests exercise the unlocked upstream behaviour
+vi.mock('@/app/regionLock', () => ({ REGION_LOCK: false }));
+
 import { CheckForUpdatesButton } from '../UpdateChecker';
 
 function versionCheck(over: Record<string, unknown> = {}) {

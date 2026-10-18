@@ -14,6 +14,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+// [RSC-IRAN] region lock hides update UI; tests exercise the unlocked upstream behaviour
+vi.mock('@/app/regionLock', () => ({ REGION_LOCK: false }));
+
 import { UpdateBadge } from '../UpdateChecker';
 
 const DISMISS_KEY = 'oe_update_dismissed_version';

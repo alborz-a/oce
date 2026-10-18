@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { X, Loader2, AlertCircle } from 'lucide-react';
 import { Badge } from '@/shared/ui';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { getMyPaymentApplication } from './api';
 
 const STATUS_VARIANT: Record<string, 'neutral' | 'blue' | 'warning' | 'success' | 'error'> = {
@@ -23,6 +24,7 @@ const STATUS_VARIANT: Record<string, 'neutral' | 'blue' | 'warning' | 'success' 
 };
 
 function money(amount: string, currency: string): string {
+  if (REGION_LOCK && currency === 'IRR') return `${amount} ریال`; // [RSC-IRAN]
   return currency ? `${currency} ${amount}` : amount;
 }
 
