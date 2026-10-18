@@ -69,11 +69,9 @@ function formatMoney(value: number, currency: string): string {
   const abs = Math.abs(value);
   // [RSC-IRAN] rial: Persian digits + Farsi units + « ریال» suffix
   if (REGION_LOCK && currency === 'IRR') {
-    const fa = (n: number, d: number) =>
-      new Intl.NumberFormat('fa-IR', { maximumFractionDigits: d }).format(n);
-    if (abs >= 1_000_000_000) return `${fa(value / 1_000_000_000, 2)} میلیارد ریال`;
-    if (abs >= 1_000_000) return `${fa(value / 1_000_000, 2)} میلیون ریال`;
-    return `${fa(value, 0)} ریال`;
+    if (abs >= 1_000_000_000) return `${fmtFixed(value / 1_000_000_000, 2)} میلیارد ریال`;
+    if (abs >= 1_000_000) return `${fmtFixed(value / 1_000_000, 2)} میلیون ریال`;
+    return `${fmtFixed(value, 0)} ریال`;
   }
   if (abs >= 1_000_000) return `${currency} ${fmtFixed(value / 1_000_000, 2)}M`;
   if (abs >= 1_000) return `${currency} ${fmtFixed(value / 1_000, 1)}k`;

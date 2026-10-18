@@ -542,12 +542,10 @@ export function ProjectsPage() {
   const formatMoney = (v: number, currency: string) => {
     // [RSC-IRAN] rial: Persian digits + Farsi units + « ریال» suffix
     if (REGION_LOCK && currency === 'IRR') {
-      const fa = (n: number, d: number) =>
-        new Intl.NumberFormat('fa-IR', { maximumFractionDigits: d }).format(n);
       const a = Math.abs(v);
-      if (a >= 1_000_000_000) return `${fa(v / 1_000_000_000, 1)} میلیارد ریال`;
-      if (a >= 1_000_000) return `${fa(v / 1_000_000, 1)} میلیون ریال`;
-      return `${fa(v, 0)} ریال`;
+      if (a >= 1_000_000_000) return `${fmtFixed(v / 1_000_000_000, 1)} میلیارد ریال`;
+      if (a >= 1_000_000) return `${fmtFixed(v / 1_000_000, 1)} میلیون ریال`;
+      return `${fmtFixed(v, 0)} ریال`;
     }
     return `${formatBigValue(v)}${currency ? ` ${currency}` : ''}`;
   };
