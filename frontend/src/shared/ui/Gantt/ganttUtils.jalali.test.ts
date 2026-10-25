@@ -21,6 +21,13 @@ describe('ganttUtils Jalali headers (REGION_LOCK)', () => {
     expect(h.bottomRow[0]!.label).toBe('هفته ۱');
   });
 
+  it('week view: every week header uses Persian digits, no Latin digits', () => {
+    const h = generateTimeHeaders(new Date(2026, 9, 13), new Date(2026, 11, 31), 'week', 'fa-IR');
+    expect(h.bottomRow.length).toBeGreaterThanOrEqual(10);
+    expect(h.bottomRow[9]!.label).toBe('هفته ۱۰');
+    for (const c of h.bottomRow) expect(c.label).not.toMatch(/[0-9]/);
+  });
+
   it('weekend is Friday, not Saturday', () => {
     const days = getLockedWeekendDays(new Date(2026, 9, 13), new Date(2026, 9, 31));
     expect(days.every((d) => d.getDay() === 5)).toBe(true);

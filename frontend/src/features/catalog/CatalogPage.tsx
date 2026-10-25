@@ -261,6 +261,8 @@ const fmt = (n: number, currency?: string) => {
     maximumFractionDigits: digits,
   }).format(n);
 };
+// [RSC-IRAN] currency suffix: ' ریال' for IRR under region lock, else the code
+const curLabel = (c?: string) => (REGION_LOCK && c === 'IRR' ? ' ریال' : ` ${c}`);
 
 /* ── Mini Flag ─────────────────────────────────────────────────────────── */
 
@@ -604,7 +606,7 @@ function PriceBar({
         <div
           className="absolute top-0 h-full w-0.5 bg-content-primary rounded-full"
           style={{ left: `${Math.min(Math.max(avgPos, 2), 98)}%` }}
-          title={`${fmt(avg, currency)} ${currency}`}
+          title={`${fmt(avg, currency)}${curLabel(currency)}`}
         />
       </div>
       <span className="text-2xs text-content-quaternary tabular-nums whitespace-nowrap">
@@ -1422,9 +1424,9 @@ function BuildAssemblyModal({
             {' | '}
             {isMultiCurrency
               ? distinctCurrencies
-                  .map((code) => `${fmt(totalsByCurrency[code] ?? 0, code)} ${code}`)
+                  .map((code) => `${fmt(totalsByCurrency[code] ?? 0, code)}${curLabel(code)}`)
                   .join('  ·  ')
-              : `${fmt(total, currency)} ${currency}`}
+              : `${fmt(total, currency)}${curLabel(currency)}`}
           </span>
           <div className="flex items-center gap-2">
             <Button variant="secondary" size="sm" onClick={onClose}>

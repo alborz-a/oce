@@ -31,6 +31,8 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { fmtDate, getIntlLocale } from '@/shared/lib/formatters';
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { useToastStore } from '@/stores/useToastStore';
 import {
   type GanttActivity,
@@ -1293,7 +1295,8 @@ export function GanttChart({
                           : 'text-content-tertiary'
                     }`}
                   >
-                    {a.progress}
+                    {/* [RSC-IRAN] Persian digits + percent sign */}
+                    {REGION_LOCK ? `${toPersianDigits(a.progress)}٪` : a.progress}
                   </span>
                 </div>
               </div>
@@ -1313,6 +1316,10 @@ export function GanttChart({
           width={timelineWidth}
           height={bodyHeight + HEADER_HEIGHT}
           className="select-none"
+          // [RSC-IRAN] Under dir=rtl (fa) SVG text-anchor "start" flips to the right edge, so
+          // header month labels and bar labels grew leftwards out of their cell/bar and were
+          // clipped to a stub ("آ", "آبا"). Chart geometry is always left-to-right.
+          style={{ direction: 'ltr' }}
           // An image's children are presentational, so a chart with focusable
           // bars, handles and links has to be a group.
           role={keyboardNav ? 'group' : 'img'}

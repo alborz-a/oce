@@ -1,6 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { REGION_LOCK } from '@/app/regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -778,7 +779,7 @@ function ProjectHealthBar({
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-sm font-bold text-content-primary tabular-nums">{percent}%</span>
+            <span className="text-sm font-bold text-content-primary tabular-nums">{REGION_LOCK ? toPersianDigits(percent) : percent}%</span> {/* [RSC-IRAN] */}
           </div>
         </div>
 
@@ -790,7 +791,7 @@ function ProjectHealthBar({
             </span>
             <span className="text-2xs text-content-quaternary">·</span>
             <span className="text-2xs text-content-tertiary tabular-nums">
-              {doneCount}/{checks.length} {t('projects.health_complete', { defaultValue: 'complete' })}
+              {REGION_LOCK ? toPersianDigits(doneCount) : doneCount}/{REGION_LOCK ? toPersianDigits(checks.length) : checks.length} {/* [RSC-IRAN] */}{t('projects.health_complete', { defaultValue: 'complete' })}
             </span>
           </div>
           {nextStep && (
@@ -2451,14 +2452,19 @@ export function ProjectDetailPage() {
                         {t('projects.dash_open_items', { defaultValue: 'Open Items' })}
                       </p>
                       <p className="mt-0.5 text-xl font-bold text-content-primary tabular-nums leading-tight">
-                        {dashboardData.communication.open_rfis +
-                          dashboardData.communication.open_submittals +
-                          dashboardData.communication.open_tasks +
-                          dashboardData.quality.ncrs_open}
+                        {(() => {
+                          // [RSC-IRAN]
+                          const n =
+                            dashboardData.communication.open_rfis +
+                            dashboardData.communication.open_submittals +
+                            dashboardData.communication.open_tasks +
+                            dashboardData.quality.ncrs_open;
+                          return REGION_LOCK ? toPersianDigits(n) : n;
+                        })()}
                       </p>
                       <p className="text-xs text-content-secondary mt-1">
-                        {dashboardData.communication.open_rfis} RFIs,{' '}
-                        {dashboardData.communication.open_tasks} {t('projects.dash_tasks', { defaultValue: 'tasks' })}
+                        {REGION_LOCK ? toPersianDigits(dashboardData.communication.open_rfis) : dashboardData.communication.open_rfis} RFIs,{' '}
+                        {REGION_LOCK ? toPersianDigits(dashboardData.communication.open_tasks) : dashboardData.communication.open_tasks} {t('projects.dash_tasks', { defaultValue: 'tasks' })}
                       </p>
                     </div>
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#7c3aed]/10 text-[#7c3aed]">
@@ -2702,11 +2708,11 @@ export function ProjectDetailPage() {
                       </div>
                       <div className="flex items-center gap-4 text-xs text-content-secondary">
                         <span>
-                          <strong className="text-content-primary">{dashboardData.procurement.active_pos}</strong>{' '}
+                          <strong className="text-content-primary">{REGION_LOCK ? toPersianDigits(dashboardData.procurement.active_pos) : dashboardData.procurement.active_pos}</strong>{' '}
                           {t('projects.dash_active_pos', { defaultValue: 'active POs' })}
                         </span>
                         <span>
-                          <strong className="text-content-primary">{dashboardData.procurement.pending_delivery}</strong>{' '}
+                          <strong className="text-content-primary">{REGION_LOCK ? toPersianDigits(dashboardData.procurement.pending_delivery) : dashboardData.procurement.pending_delivery}</strong>{' '}
                           {t('projects.dash_pending_delivery', { defaultValue: 'pending delivery' })}
                         </span>
                       </div>
@@ -2922,16 +2928,16 @@ export function ProjectDetailPage() {
                       </p>
                       <div className="flex items-center gap-4 text-xs text-content-secondary">
                         <span className="flex flex-col">
-                          <strong className="text-lg leading-none text-content-primary">{dashboardData.documents.total}</strong>
+                          <strong className="text-lg leading-none text-content-primary">{REGION_LOCK ? toPersianDigits(dashboardData.documents.total) : dashboardData.documents.total}</strong>
                           <span className="mt-0.5 text-2xs text-content-tertiary uppercase tracking-wide">{t('projects.dash_total', { defaultValue: 'total' })}</span>
                         </span>
                         <span className="flex flex-col">
-                          <strong className="text-lg leading-none text-content-primary">{dashboardData.documents.published}</strong>
+                          <strong className="text-lg leading-none text-content-primary">{REGION_LOCK ? toPersianDigits(dashboardData.documents.published) : dashboardData.documents.published}</strong>
                           <span className="mt-0.5 text-2xs text-content-tertiary uppercase tracking-wide">{t('projects.dash_published', { defaultValue: 'published' })}</span>
                         </span>
                         {dashboardData.documents.pending_transmittals > 0 && (
                           <span className="flex flex-col">
-                            <strong className="text-lg leading-none text-amber-600">{dashboardData.documents.pending_transmittals}</strong>
+                            <strong className="text-lg leading-none text-amber-600">{REGION_LOCK ? toPersianDigits(dashboardData.documents.pending_transmittals) : dashboardData.documents.pending_transmittals}</strong>
                             <span className="mt-0.5 text-2xs text-amber-700/80 uppercase tracking-wide">{t('projects.dash_pending', { defaultValue: 'pending' })}</span>
                           </span>
                         )}

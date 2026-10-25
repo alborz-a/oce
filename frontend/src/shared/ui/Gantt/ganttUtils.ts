@@ -153,11 +153,21 @@ function generateJalaliTimeHeaders(startDate: Date, endDate: Date, viewMode: Vie
     const x = dateToPx(from, viewMode, startDate);
     return { label, x, width: dateToPx(addDays(to, 1), viewMode, startDate) - x };
   };
-  const monthLabel = (jy: number, jm: number) => `${PERSIAN_MONTH_NAMES[jm - 1]} ${toPersianDigits(jy)}`;
+  // [RSC-IRAN] Pick the longest label that fits the cell: name + year, name, else nothing (never a clipped stub).
+  const fitLabel = (jy: number, jm: number, width: number) => {
+    const name = PERSIAN_MONTH_NAMES[jm - 1] || '';
+    const full = `${name} ${toPersianDigits(jy)}`;
+    const need = (t: string) => t.length * 6.5 + 14;
+    if (width >= need(full)) return full;
+    if (width >= need(name)) return name;
+    return '';
+  };
 
   if (viewMode === 'day' || viewMode === 'week') {
     for (const p of jalaliPeriods(startDate, endDate, 'month')) {
-      topRow.push(span(p.from, p.to, monthLabel(p.jy, p.jm)));
+      const cell = span(p.from, p.to, '');
+      cell.label = fitLabel(p.jy, p.jm, cell.width); // [RSC-IRAN]
+      topRow.push(cell);
     }
     if (viewMode === 'day') {
       const d = new Date(startDate);
