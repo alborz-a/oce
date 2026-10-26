@@ -36,6 +36,7 @@ from app.core.validation.messages import translate
 from app.modules.bim_hub.models import BIMElement
 from app.modules.documents.activity_service import record_activity
 from app.modules.documents.models import Document, DocumentBIMLink, ProjectPhoto, Sheet
+from app.modules.documents import object_store
 from app.modules.documents.repository import DocumentRepository, PhotoRepository, SheetRepository
 from app.modules.documents.schemas import (
     PHOTO_CATEGORIES,
@@ -738,9 +739,16 @@ class DocumentService:
         # Build storage path with UUID prefix to avoid collisions
         file_uuid = uuid.uuid4().hex[:12]
         storage_name = f"{file_uuid}_{safe_name}"
-        upload_dir = UPLOAD_BASE / str(project_id)
-        upload_dir.mkdir(parents=True, exist_ok=True)
-        file_path = upload_dir / storage_name
+        s3_key: str | None = None
+        if object_store.s3_enabled():
+            s3_key = object_store.build_key(project_id, category, storage_name)
+            file_path_str = object_store.S3_PATH_PREFIX + s3_key
+            file_path = Path(file_path_str)
+        else:
+            upload_dir = UPLOAD_BASE / str(project_id)
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            file_path = upload_dir / storage_name
+            file_path_str = str(file_path)
 
         # Tag reality-capture assets so they are easy to find in the Documents
         # hub (which supports a tag/category filter) and so downstream consumers
@@ -756,7 +764,7 @@ class DocumentService:
             category=category,
             file_size=len(content),
             mime_type=stored_mime,
-            file_path=str(file_path),
+            file_path=file_path_str,
             uploaded_by=user_id,
             tags=doc_tags,
         )
@@ -764,7 +772,10 @@ class DocumentService:
 
         # Write file AFTER DB record so we can rollback cleanly
         try:
-            file_path.write_bytes(content)
+            if s3_key is not None:
+                await object_store.put_object(s3_key, content)
+            else:
+                file_path.write_bytes(content)
         except Exception:
             logger.exception("Failed to write file to disk: %s", file_path)
             raise HTTPException(
@@ -831,7 +842,7 @@ class DocumentService:
                         "project_id": str(project_id),
                         "document_id": str(document.id),
                         "name": safe_name,
-                        "file_path": str(file_path),
+                        "file_path": file_path_str,
                         "file_size": len(content),
                         "extension": reality_capture_ext,
                     },
@@ -954,12 +965,20 @@ class DocumentService:
 
         file_uuid = uuid.uuid4().hex[:12]
         storage_name = f"{file_uuid}_{safe_name}"
-        upload_dir = UPLOAD_BASE / str(document.project_id)
-        upload_dir.mkdir(parents=True, exist_ok=True)
-        file_path = upload_dir / storage_name
+        if object_store.s3_enabled():
+            rev_key = object_store.build_key(document.project_id, document.category, storage_name)
+            file_path = Path(object_store.S3_PATH_PREFIX + rev_key)
+        else:
+            rev_key = None
+            upload_dir = UPLOAD_BASE / str(document.project_id)
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            file_path = upload_dir / storage_name
 
         try:
-            file_path.write_bytes(content)
+            if rev_key is not None:
+                await object_store.put_object(rev_key, content)
+            else:
+                file_path.write_bytes(content)
         except Exception:
             logger.exception("Failed to write revision to disk: %s", file_path)
             raise HTTPException(
@@ -975,7 +994,7 @@ class DocumentService:
         repo = DocumentRepository(self.session)
         await repo.update_fields(
             document_id,
-            file_path=str(file_path),
+            file_path=file_path.as_posix() if rev_key is not None else str(file_path),
             file_size=len(content),
             mime_type=stored_mime,
         )
@@ -1746,9 +1765,16 @@ class PhotoService:
         # Build storage path
         file_uuid = uuid.uuid4().hex[:12]
         storage_name = f"{file_uuid}_{safe_name}"
-        upload_dir = PHOTO_BASE / str(project_id)
-        upload_dir.mkdir(parents=True, exist_ok=True)
-        file_path = upload_dir / storage_name
+        photo_key: str | None = None
+        if object_store.s3_enabled():
+            photo_key = object_store.build_key(project_id, "photos", storage_name)
+            photo_path_str = object_store.S3_PATH_PREFIX + photo_key
+            file_path = Path(photo_path_str)
+        else:
+            upload_dir = PHOTO_BASE / str(project_id)
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            file_path = upload_dir / storage_name
+            photo_path_str = str(file_path)
         # Thumbnail sits in a sibling directory with a stable .jpg extension
         # so the serve endpoint never has to guess the format.
         thumb_dir = PHOTO_THUMB_BASE / str(project_id)
@@ -1761,7 +1787,7 @@ class PhotoService:
         photo = ProjectPhoto(
             project_id=project_id,
             filename=safe_name,
-            file_path=str(file_path),
+            file_path=photo_path_str,
             thumbnail_path=None,
             caption=caption,
             gps_lat=gps_lat,
@@ -1776,7 +1802,10 @@ class PhotoService:
 
         # Write file AFTER DB record
         try:
-            file_path.write_bytes(content)
+            if photo_key is not None:
+                await object_store.put_object(photo_key, content)
+            else:
+                file_path.write_bytes(content)
         except Exception:
             logger.exception("Failed to write photo to disk: %s", file_path)
             raise HTTPException(
@@ -1842,7 +1871,7 @@ class PhotoService:
                     # Byte-identical to the photo's own path: this string is the
                     # only link between the two rows, and ``delete_photo`` finds
                     # the row to remove by matching on it.
-                    file_path=str(file_path),
+                    file_path=photo_path_str,
                     version=1,
                     uploaded_by=user_id or "",
                     tags=["photo", category or "site"],

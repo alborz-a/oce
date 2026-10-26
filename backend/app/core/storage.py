@@ -1047,6 +1047,7 @@ class S3StorageBackend(StorageBackend):
         secret_key: str,
         bucket: str,
         region: str,
+        key_prefix: str = "",
     ) -> None:
         try:
             import aioboto3  # noqa: F401  (import-time check only)
@@ -1065,10 +1066,16 @@ class S3StorageBackend(StorageBackend):
         self._secret_key: str = secret_key
         self._bucket: str = bucket
         self._region: str = region
+        # Every bucket key is ``key_prefix + logical key``; callers only ever see logical keys.
+        self._key_prefix: str = (key_prefix.strip("/") + "/") if key_prefix and key_prefix.strip("/") else ""
         # Lazy - a session is cheap but we still cache one instance.
         self._session: object | None = None
 
     # -- helpers --------------------------------------------------------
+
+    def _full_key(self, key: str) -> str:
+        """Validated logical key with the configured bucket prefix prepended (the single place keys are built)."""
+        return self._key_prefix + _normalise_key(key)
 
     def _get_session(self) -> object:
         if self._session is None:
@@ -1090,7 +1097,7 @@ class S3StorageBackend(StorageBackend):
     # -- public API -----------------------------------------------------
 
     async def put(self, key: str, content: bytes) -> None:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             await client.put_object(Bucket=self._bucket, Key=normalised, Body=content)
 
@@ -1101,7 +1108,7 @@ class S3StorageBackend(StorageBackend):
         for large files, so peak memory is bounded by the multipart
         chunk size (default 8 MB) regardless of source size.
         """
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
 
         # Open the source synchronously - aioboto3's upload_fileobj wants
         # a file-like, and the work happens off-loop inside the client.
@@ -1116,7 +1123,7 @@ class S3StorageBackend(StorageBackend):
             await asyncio.to_thread(handle.close)  # type: ignore[attr-defined]
 
     async def get(self, key: str) -> bytes:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             try:
                 resp = await client.get_object(Bucket=self._bucket, Key=normalised)
@@ -1128,7 +1135,7 @@ class S3StorageBackend(StorageBackend):
                 return await body.read()  # type: ignore[no-any-return]
 
     async def exists(self, key: str) -> bool:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             try:
                 await client.head_object(Bucket=self._bucket, Key=normalised)
@@ -1139,12 +1146,12 @@ class S3StorageBackend(StorageBackend):
                 raise
 
     async def delete(self, key: str) -> None:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             await client.delete_object(Bucket=self._bucket, Key=normalised)
 
     async def delete_prefix(self, prefix: str) -> int:
-        normalised = _normalise_key(prefix) if prefix else ""
+        normalised = self._full_key(prefix) if prefix else self._key_prefix
         removed = 0
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             continuation: str | None = None
@@ -1173,7 +1180,7 @@ class S3StorageBackend(StorageBackend):
         return removed
 
     async def size(self, key: str) -> int:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             try:
                 resp = await client.head_object(Bucket=self._bucket, Key=normalised)
@@ -1203,7 +1210,7 @@ class S3StorageBackend(StorageBackend):
         flat namespace with no sibling "back-compat" roots to consult.
         """
         _ = include_backcompat_roots
-        normalised = _normalise_key(prefix) if prefix else ""
+        normalised = self._full_key(prefix) if prefix else self._key_prefix
         out: list[tuple[str, int]] = []
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             continuation: str | None = None
@@ -1221,6 +1228,8 @@ class S3StorageBackend(StorageBackend):
                         size_bytes = int(obj["Size"])
                     except (KeyError, TypeError, ValueError):
                         continue
+                    if self._key_prefix and key.startswith(self._key_prefix):
+                        key = key[len(self._key_prefix) :]
                     out.append((key, size_bytes))
                 if not resp.get("IsTruncated"):
                     break
@@ -1228,7 +1237,7 @@ class S3StorageBackend(StorageBackend):
         return out
 
     async def open_stream(self, key: str) -> AsyncIterator[bytes]:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             try:
                 resp = await client.get_object(Bucket=self._bucket, Key=normalised)
@@ -1249,7 +1258,7 @@ class S3StorageBackend(StorageBackend):
         ``aioboto3`` presigning is sync-safe because it just signs
         strings; no network calls happen here.
         """
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         try:
             import boto3  # botocore comes in via aioboto3, but boto3 is the
 
@@ -1282,7 +1291,7 @@ class S3StorageBackend(StorageBackend):
         key: str,
         content_type: str | None = None,
     ) -> MultipartSession:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         kwargs: dict[str, object] = {"Bucket": self._bucket, "Key": normalised}
         if content_type:
             kwargs["ContentType"] = content_type
@@ -1293,7 +1302,7 @@ class S3StorageBackend(StorageBackend):
             meta["content_type"] = content_type
         return MultipartSession(
             upload_id=str(resp["UploadId"]),
-            key=normalised,
+            key=_normalise_key(key),
             backend="s3",
             started_at=datetime.now(UTC),
             metadata=meta,
@@ -1312,7 +1321,7 @@ class S3StorageBackend(StorageBackend):
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             resp = await client.upload_part(
                 Bucket=self._bucket,
-                Key=session.key,
+                Key=self._full_key(session.key),
                 UploadId=session.upload_id,
                 PartNumber=part_number,
                 Body=data,
@@ -1339,11 +1348,11 @@ class S3StorageBackend(StorageBackend):
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             resp = await client.complete_multipart_upload(
                 Bucket=self._bucket,
-                Key=session.key,
+                Key=self._full_key(session.key),
                 UploadId=session.upload_id,
                 MultipartUpload=multipart_payload,
             )
-            head = await client.head_object(Bucket=self._bucket, Key=session.key)
+            head = await client.head_object(Bucket=self._bucket, Key=self._full_key(session.key))
         total = int(head["ContentLength"])
         etag = str(resp.get("ETag", head.get("ETag", ""))).strip('"')
         # SHA-256 verification: S3 doesn't return SHA-256 by default; if
@@ -1363,7 +1372,7 @@ class S3StorageBackend(StorageBackend):
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
             await client.abort_multipart_upload(
                 Bucket=self._bucket,
-                Key=session.key,
+                Key=self._full_key(session.key),
                 UploadId=session.upload_id,
             )
 
@@ -1373,7 +1382,7 @@ class S3StorageBackend(StorageBackend):
         content_type: str | None = None,
         expires_seconds: int = 3600,
     ) -> PresignedUrl:
-        normalised = _normalise_key(key)
+        normalised = self._full_key(key)
         expires_at = datetime.now(UTC) + timedelta(seconds=int(expires_seconds))
         try:
             import boto3
@@ -1809,6 +1818,7 @@ def build_storage_backend(settings: Settings) -> StorageBackend:
             secret_key=settings.s3_secret_key,
             bucket=settings.s3_bucket,
             region=settings.s3_region,
+            key_prefix=getattr(settings, "s3_key_prefix", "") or "",
         )
 
     raise ValueError(f"Unknown storage backend {backend_name!r}. Expected one of: 'local', 's3'.")

@@ -14,5 +14,7 @@ def register_document_permissions() -> None:
             "documents.read": Role.VIEWER,
             "documents.update": Role.EDITOR,
             "documents.delete": Role.MANAGER,
+            # Register files that already sit in object storage (importers, migrations). Admin only.
+            "documents.admin_import": Role.ADMIN,
         },
     )

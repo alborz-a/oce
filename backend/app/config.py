@@ -405,6 +405,8 @@ class Settings(BaseSettings):
     s3_secret_key: str = ""
     s3_bucket: str = "openestimate"
     s3_region: str = "us-east-1"
+    # Prefix prepended to every key OCE writes (env S3_KEY_PREFIX), e.g. "oce-docs/". Empty = bucket root.
+    s3_key_prefix: str = ""
 
     # ── Basemap ──────────────────────────────────────────────────────────
     # Base URL of the OpenFreeMap-compatible tile server the geo-hub proxy
