@@ -597,11 +597,51 @@ export function formatNumber(n: number, currency?: string): string {
  * managers; callers showing wire-bytes should use the SI variant
  * elsewhere.
  */
-export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
+/**
+ * Human-readable byte size — locale-aware (e.g. ``523 B`` / ``12.4 KB`` / ``3.1 MB`` / ``1.2 GB``).
+ *
+ * In Farsi (`fa` or `fa-IR`):
+ * - outputs Persian digits with Persian decimal separator (٫)
+ * - Persian unit words: بایت (B), کیلوبایت (KB), مگابایت (MB), گیگابایت (GB)
+ * - wrapped in Unicode Bidi Isolate (U+2068 ... U+2069) so number and unit never reorder.
+ *
+ * Supports optional `localeOverride` for tests or specific contexts.
+ */
+export function formatFileSize(bytes: number, localeOverride?: string): string {
+  if (!Number.isFinite(bytes) || bytes < 0) bytes = 0;
+  const loc = localeOverride || getIntlLocale();
+  const isFa = loc.startsWith('fa');
+
+  let val: number;
+  let unit: string;
+
+  if (bytes < 1024) {
+    val = Math.round(bytes);
+    unit = isFa ? 'بایت' : 'B';
+    const numStr = isFa ? toPersianDigits(val) : String(val);
+    return isFa ? `\u2068${numStr} ${unit}\u2069` : `${numStr} ${unit}`;
+  } else if (bytes < 1024 * 1024) {
+    val = bytes / 1024;
+    unit = isFa ? 'کیلوبایت' : 'KB';
+  } else if (bytes < 1024 * 1024 * 1024) {
+    val = bytes / (1024 * 1024);
+    unit = isFa ? 'مگابایت' : 'MB';
+  } else {
+    val = bytes / (1024 * 1024 * 1024);
+    unit = isFa ? 'گیگابایت' : 'GB';
+  }
+
+  const numStr = isFa
+    ? new Intl.NumberFormat('fa-IR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(val)
+    : new Intl.NumberFormat(loc || getNumberLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(val);
+
+  return isFa ? `\u2068${numStr} ${unit}\u2069` : `${numStr} ${unit}`;
 }
+
+/** Standard aliases so local copies throughout the codebase resolve identically. */
+export const formatBytes = formatFileSize;
+export const formatSize = formatFileSize;
+export const humanFileSize = formatFileSize;
 
 /**
  * Extract the (lowercased) file extension from a name.
