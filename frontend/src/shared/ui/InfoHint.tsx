@@ -53,12 +53,12 @@ export function InfoHint({ text, className, style, inline, label }: InfoHintProp
           <Info size={14} strokeWidth={2} />
         </button>
         {open && (
-          <div className="absolute left-0 top-full z-20 mt-1.5 w-80">
+          <div className="absolute start-0 top-full z-20 mt-1.5 w-80">
             <div className="rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-xs text-content-secondary leading-relaxed shadow-lg">
               {text}
               <button
                 onClick={() => setOpen(false)}
-                className="ml-2 inline-flex align-middle text-content-tertiary hover:text-content-secondary transition-colors"
+                className="ms-2 inline-flex align-middle text-content-tertiary hover:text-content-secondary transition-colors"
                 aria-label={t('common.close', { defaultValue: 'Close' })}
               >
                 <X size={12} />

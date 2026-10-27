@@ -472,11 +472,11 @@ function HistogramTab({ projectId }: { projectId: string }) {
                         }`}
                         style={{ width: `${Math.max(2, demandPct)}%` }}
                       />
-                      <span className="absolute inset-y-0 left-2 flex items-center text-2xs font-medium tabular-nums text-content-primary">
+                      <span className="absolute inset-y-0 start-2 flex items-center text-2xs font-medium tabular-nums text-content-primary">
                         {formatUnits(c.demand_units)}
                       </span>
                     </div>
-                    <span className="w-16 shrink-0 text-right text-2xs tabular-nums text-content-tertiary">
+                    <span className="w-16 shrink-0 text-end text-2xs tabular-nums text-content-tertiary">
                       {c.demand_cost != null && String(c.demand_cost) !== '0'
                         ? formatUnits(Number(c.demand_cost))
                         : '-'}
@@ -500,7 +500,7 @@ function HistogramTab({ projectId }: { projectId: string }) {
                     {t('schedule.resources.legend_over', { defaultValue: 'Over-allocated' })}
                   </span>
                 </span>
-                <span className="w-16 shrink-0 text-right">
+                <span className="w-16 shrink-0 text-end">
                   {t('schedule.resources.cost_col', { defaultValue: 'Cost' })}
                 </span>
               </div>
@@ -824,13 +824,13 @@ function PreviewResult({
             <table className="w-full text-sm" data-testid="resource-peak-table">
               <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('schedule.resources.resource', { defaultValue: 'Resource' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('schedule.resources.peak_before_col', { defaultValue: 'Before' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('schedule.resources.peak_after_col', { defaultValue: 'After' })}
                   </th>
                 </tr>
@@ -842,11 +842,11 @@ function PreviewResult({
                   return (
                     <tr key={name} className="border-t border-border-light">
                       <td className="px-3 py-2">{name}</td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {formatUnits(before)}
                       </td>
                       <td
-                        className={`px-3 py-2 text-right font-mono tabular-nums ${
+                        className={`px-3 py-2 text-end font-mono tabular-nums ${
                           after < before ? 'text-semantic-success' : ''
                         }`}
                       >
@@ -882,16 +882,16 @@ function PreviewResult({
             <table className="w-full text-sm" data-testid="resource-shifts-table">
               <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('schedule.resources.activity', { defaultValue: 'Activity' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('schedule.resources.base_es', { defaultValue: 'Base start' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('schedule.resources.new_es', { defaultValue: 'New start' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('schedule.resources.delta_col', { defaultValue: 'Delta' })}
                   </th>
                 </tr>
@@ -904,9 +904,9 @@ function PreviewResult({
                         {nameFor(s.activity_id)}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-right font-mono tabular-nums">{s.base_es}</td>
-                    <td className="px-3 py-2 text-right font-mono tabular-nums">{s.new_es}</td>
-                    <td className="px-3 py-2 text-right font-mono font-semibold tabular-nums text-semantic-warning">
+                    <td className="px-3 py-2 text-end font-mono tabular-nums">{s.base_es}</td>
+                    <td className="px-3 py-2 text-end font-mono tabular-nums">{s.new_es}</td>
+                    <td className="px-3 py-2 text-end font-mono font-semibold tabular-nums text-semantic-warning">
                       {formatDelta(s.delta)}
                     </td>
                   </tr>

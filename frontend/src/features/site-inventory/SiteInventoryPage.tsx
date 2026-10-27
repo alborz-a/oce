@@ -468,7 +468,7 @@ function BoqPositionPickerDialog({
                       {p.ordinal || '-'}
                     </td>
                     <td className="px-3 py-2">{p.description}</td>
-                    <td className="px-3 py-2 text-right text-xs text-content-tertiary">
+                    <td className="px-3 py-2 text-end text-xs text-content-tertiary">
                       {p.unit || '-'}
                     </td>
                   </tr>
@@ -514,7 +514,7 @@ function PositionField({
         <button
           type="button"
           onClick={onOpen}
-          className={clsx(inputCls, 'flex-1 text-left', !pick && !linkedId && 'text-content-tertiary')}
+          className={clsx(inputCls, 'flex-1 text-start', !pick && !linkedId && 'text-content-tertiary')}
         >
           {pick || linkedId
             ? positionLabel(pick, linkedId)
@@ -813,7 +813,7 @@ function RecordMovementModal({
                 type="button"
                 onClick={() => setMovementType(mt)}
                 className={clsx(
-                  'flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-left transition-all',
+                  'flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 text-start transition-all',
                   selected
                     ? 'border-oe-blue bg-oe-blue-subtle text-content-primary'
                     : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
@@ -1571,7 +1571,7 @@ interface QueryLike {
   refetch: () => void;
 }
 
-const thCls = 'px-4 py-2.5 text-left font-medium';
+const thCls = 'px-4 py-2.5 text-start font-medium';
 const tdCls = 'px-4 py-3 text-content-primary';
 
 const STATUS_BADGE: Record<BalanceStatus, { variant: BadgeVariant; key: string; def: string }> = {
@@ -1630,7 +1630,7 @@ function StockPanel({
             <tr className="border-b border-border-light bg-surface-secondary/30 text-2xs uppercase tracking-wider text-content-tertiary">
               <th className={thCls}>{t('site_inventory.col_item', { defaultValue: 'Item' })}</th>
               <th className={thCls}>{t('site_inventory.col_unit', { defaultValue: 'Unit' })}</th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_on_hand', { defaultValue: 'On hand' })}
               </th>
               <th className={clsx(thCls, 'text-center')}>
@@ -1652,7 +1652,7 @@ function StockPanel({
                   <td
                     className={clsx(
                       tdCls,
-                      'text-right tabular-nums font-semibold',
+                      'text-end tabular-nums font-semibold',
                       st === 'negative' && 'text-semantic-error',
                     )}
                   >
@@ -1721,7 +1721,7 @@ function MovementsPanel({
             <th className={thCls}>{t('site_inventory.col_date', { defaultValue: 'Date' })}</th>
             <th className={thCls}>{t('site_inventory.col_type', { defaultValue: 'Type' })}</th>
             <th className={thCls}>{t('site_inventory.col_item', { defaultValue: 'Item' })}</th>
-            <th className={clsx(thCls, 'text-right')}>
+            <th className={clsx(thCls, 'text-end')}>
               {t('site_inventory.col_quantity', { defaultValue: 'Quantity' })}
             </th>
             <th className={thCls}>{t('site_inventory.col_location', { defaultValue: 'Location' })}</th>
@@ -1751,14 +1751,14 @@ function MovementsPanel({
                 </td>
                 <td className={tdCls}>
                   <Badge variant={cfg.variant} size="sm">
-                    <Icon size={12} className="mr-1" />
+                    <Icon size={12} className="me-1" />
                     {t(`site_inventory.movement_type_${m.movement_type.toLowerCase()}`, {
                       defaultValue: MOVEMENT_TYPE_LABEL[m.movement_type],
                     })}
                   </Badge>
                 </td>
                 <td className={clsx(tdCls, 'font-medium')}>{itemName(m.item_id)}</td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>
                   {m.quantity}
                   {unit ? ` ${unit}` : ''}
                 </td>
@@ -1818,16 +1818,16 @@ function ItemsPanel({
             <th className={thCls}>
               {t('site_inventory.col_bill_position', { defaultValue: 'Bill position' })}
             </th>
-            <th className={clsx(thCls, 'text-right')}>
+            <th className={clsx(thCls, 'text-end')}>
               {t('site_inventory.col_unit_cost', { defaultValue: 'Unit cost' })}
             </th>
-            <th className={clsx(thCls, 'text-right')}>
+            <th className={clsx(thCls, 'text-end')}>
               {t('site_inventory.col_reorder', { defaultValue: 'Reorder point' })}
             </th>
             <th className={clsx(thCls, 'text-center')}>
               {t('site_inventory.col_active', { defaultValue: 'Active' })}
             </th>
-            <th className={clsx(thCls, 'text-right')}>
+            <th className={clsx(thCls, 'text-end')}>
               {t('site_inventory.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1854,12 +1854,12 @@ function ItemsPanel({
                     : t('site_inventory.link_position', { defaultValue: 'Link to bill' })}
                 </Button>
               </td>
-              <td className={clsx(tdCls, 'text-right tabular-nums')}>
+              <td className={clsx(tdCls, 'text-end tabular-nums')}>
                 {it.standard_unit_cost
                   ? formatCurrency(it.standard_unit_cost, it.currency || undefined)
                   : '-'}
               </td>
-              <td className={clsx(tdCls, 'text-right tabular-nums')}>{it.reorder_point ?? '-'}</td>
+              <td className={clsx(tdCls, 'text-end tabular-nums')}>{it.reorder_point ?? '-'}</td>
               <td className={clsx(tdCls, 'text-center')}>
                 <Badge variant={it.is_active ? 'success' : 'neutral'} size="sm">
                   {it.is_active
@@ -1867,7 +1867,7 @@ function ItemsPanel({
                     : t('site_inventory.active_no', { defaultValue: 'No' })}
                 </Badge>
               </td>
-              <td className={clsx(tdCls, 'text-right')}>
+              <td className={clsx(tdCls, 'text-end')}>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -2042,22 +2042,22 @@ function BillPanel({
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/30 text-2xs uppercase tracking-wider text-content-tertiary">
               <th className={thCls}>{t('site_inventory.col_position', { defaultValue: 'Position' })}</th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_bill_qty', { defaultValue: 'In the bill' })}
               </th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_ordered', { defaultValue: 'Ordered' })}
               </th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_delivered', { defaultValue: 'Delivered' })}
               </th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_outstanding', { defaultValue: 'Still to arrive' })}
               </th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_on_site', { defaultValue: 'On site, unfixed' })}
               </th>
-              <th className={clsx(thCls, 'text-right')}>
+              <th className={clsx(thCls, 'text-end')}>
                 {t('site_inventory.col_installed_pct', { defaultValue: 'Installed' })}
               </th>
             </tr>
@@ -2082,25 +2082,25 @@ function BillPanel({
                     />
                   </div>
                 </td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>
                   {qty(line.bill_quantity)}
                   {line.bill_unit && (
-                    <span className="ml-1 text-2xs text-content-tertiary">{line.bill_unit}</span>
+                    <span className="ms-1 text-2xs text-content-tertiary">{line.bill_unit}</span>
                   )}
                 </td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>{qty(line.ordered_quantity)}</td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>{qty(line.delivered_quantity)}</td>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>{qty(line.ordered_quantity)}</td>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>{qty(line.delivered_quantity)}</td>
                 <td
                   className={clsx(
                     tdCls,
-                    'text-right tabular-nums',
+                    'text-end tabular-nums',
                     toNumber(line.outstanding_quantity) > 0 && 'text-semantic-warning',
                   )}
                 >
                   {qty(line.outstanding_quantity)}
                 </td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>{qty(line.on_hand_quantity)}</td>
-                <td className={clsx(tdCls, 'text-right tabular-nums')}>{pct(line.installed_pct)}</td>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>{qty(line.on_hand_quantity)}</td>
+                <td className={clsx(tdCls, 'text-end tabular-nums')}>{pct(line.installed_pct)}</td>
               </tr>
             ))}
           </tbody>
@@ -2151,7 +2151,7 @@ function LocationsPanel({
             <th className={clsx(thCls, 'text-center')}>
               {t('site_inventory.col_active', { defaultValue: 'Active' })}
             </th>
-            <th className={clsx(thCls, 'text-right')}>
+            <th className={clsx(thCls, 'text-end')}>
               {t('site_inventory.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -2172,7 +2172,7 @@ function LocationsPanel({
                     : t('site_inventory.active_no', { defaultValue: 'No' })}
                 </Badge>
               </td>
-              <td className={clsx(tdCls, 'text-right')}>
+              <td className={clsx(tdCls, 'text-end')}>
                 <Button
                   variant="ghost"
                   size="sm"

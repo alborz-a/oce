@@ -409,7 +409,7 @@ export const ACCOMMODATION_TOUR_STEPS: ProductTourStep[] = [
  *   4. Property search — column / operator / value query against the
  *      DDC Parquet, matches drive the isolation overlay.
  *   5. Asset Card — element register pop-up triggered by selection.
- *   6. Linked BOQ panel — the BIM-to-BOQ link badge / right-rail tab.
+ *   6. Linked BOQ panel — the BIM-to-BOQ link badge / end-rail tab.
  *   7. View on map / federation hub — cross-module navigation.
  */
 export const BIM_TOUR_STEPS: ProductTourStep[] = [
@@ -463,7 +463,7 @@ export const BIM_TOUR_STEPS: ProductTourStep[] = [
  *   1. Mode picker — Global / Project / Development scope segmented
  *      control at the top-right of every Geo page.
  *   2. Live HUD — cursor lat/lon, altitude and scale-bar overlay.
- *   3. Anchored Projects rail — left-side overlay listing every
+ *   3. Anchored Projects rail — start-side overlay listing every
  *      anchored project; click to fly the camera.
  *   4. Cesium canvas — the 3D globe itself (drag / scroll / pick pins).
  *   5. Overlay panel — pin a PDF or image to the globe.
@@ -662,7 +662,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Creates a new line under the section you last clicked. The Description cell opens for inline edit automatically - type, then Tab through unit, quantity and unit rate.',
   'tour.boq.step.3.title': 'The estimating grid',
   'tour.boq.step.3.body':
-    'Click any cell to edit; arrow keys / Tab navigate; formulas like =2*A1 are supported; right-click a row for duplicate, indent, link to BIM, or save-as-assembly.',
+    'Click any cell to edit; arrow keys / Tab navigate; formulas like =2*A1 are supported; end-click a row for duplicate, indent, link to BIM, or save-as-assembly.',
   'tour.boq.step.4.title': 'Quality & AI tools',
   'tour.boq.step.4.body':
     'Run validation against DIN 276 / GAEB / NRM, recalculate rates from the cost database, price-check against market medians, or open the AI assistant for plain-text BOQ generation.',
@@ -708,7 +708,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Every model you upload (RVT, IFC, DWG-to-IFC, CSV-with-geometry) lives here. Click a card to load it, the Plus tile to upload a new one, or the chevron to collapse the strip and reclaim the canvas.',
   'tour.bim.step.2.title': 'Active model',
   'tour.bim.step.2.body':
-    'Shows the name of the model currently in the 3D viewport - drag to rotate, scroll to zoom, right-drag to pan. Hover for the storage breakdown (artifacts + originals on disk).',
+    'Shows the name of the model currently in the 3D viewport - drag to rotate, scroll to zoom, end-drag to pan. Hover for the storage breakdown (artifacts + originals on disk).',
   'tour.bim.step.3.title': 'Filter & section box',
   'tour.bim.step.3.body':
     'Filter by storey, IFC class, discipline or any property - type a value or pick from the federation tree. Saved filter sets become reusable element groups. Hidden elements vanish from the canvas instantly.',
@@ -720,7 +720,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Toggle the floating Asset Card to see every property on the selected element - IFC params, materials, custom asset-register fields. Edit notes / status inline; changes sync to the Asset module.',
   'tour.bim.step.6.title': 'Linked BOQ',
   'tour.bim.step.6.body':
-    'Opens the right-rail panel showing which BOQ positions reference the selected element. Drag elements onto a position to link them, or click "Quick takeoff" on a filter to auto-create a position from a group.',
+    'Opens the end-rail panel showing which BOQ positions reference the selected element. Drag elements onto a position to link them, or click "Quick takeoff" on a filter to auto-create a position from a group.',
   'tour.bim.step.7.title': 'View on map & federation',
   'tour.bim.step.7.body':
     'Jump to the Geo Hub with this model anchored on the globe, federate multiple models together for clash detection, or open the extracted data in the Data Explorer for SQL-style analysis.',
@@ -737,7 +737,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Every project you can access that has a real-world anchor is listed here. Click the name to fly the camera to its pin, or "Open" to drop into that project\'s map. Collapse to a slim pill to reclaim canvas.',
   'tour.geo.step.4.title': '3D globe',
   'tour.geo.step.4.body':
-    'Drag to rotate, scroll to zoom, right-drag to pan. Click any pin (project, HSE incident, Punchlist defect, Daily Diary entry) to open it in its module. Tilesets fly into view as you zoom in.',
+    'Drag to rotate, scroll to zoom, end-drag to pan. Click any pin (project, HSE incident, Punchlist defect, Daily Diary entry) to open it in its module. Tilesets fly into view as you zoom in.',
   'tour.geo.step.5.title': 'Raster overlays',
   'tour.geo.step.5.body':
     'Pin a PDF site plan or a georeferenced image onto the globe - click Add, drop the file, then drag the corner handles to align. Use Crop to mask the title block. Opacity slider per overlay.',
@@ -1522,7 +1522,7 @@ export function ProductTour({ steps, defaultTourId = 'global' }: ProductTourProp
                 )}
                 aria-label={resolved.back}
               >
-                <ArrowLeft size={12} />
+                <ArrowLeft size={12} className="rtl:rotate-180" />
                 {resolved.back}
               </button>
             )}
@@ -1540,7 +1540,7 @@ export function ProductTour({ steps, defaultTourId = 'global' }: ProductTourProp
               aria-label={isLast ? resolved.finish : resolved.next}
             >
               {isLast ? resolved.finish : resolved.next}
-              {!isLast && <ArrowRight size={12} />}
+              {!isLast && <ArrowRight size={12} className="rtl:rotate-180" />}
             </button>
           </div>
         </div>

@@ -21,7 +21,7 @@ import { AlertCircle, Check, Download, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { fetchTileManifest, prefetchModelTiles } from './streaming/tileStreamer';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { formatBytes } from '@/shared/lib/formatters';
 
 type Phase = 'probing' | 'unavailable' | 'idle' | 'saving' | 'saved' | 'error';
 
@@ -30,19 +30,7 @@ interface OfflineModelButtonProps {
   className?: string;
 }
 
-/** Human-readable byte size, e.g. 12 MB. Empty string for unknown sizes. */
-function formatBytes(n: number): string {
-  if (!Number.isFinite(n) || n <= 0) return '';
-  const units = ['B', 'KB', 'MB', 'GB'];
-  let value = n;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = value < 10 && unit > 0 ? fmtFixed(value, 1) : String(Math.round(value));
-  return `${rounded} ${units[unit]}`;
-}
+
 
 export function OfflineModelButton({ modelId, className }: OfflineModelButtonProps) {
   const { t } = useTranslation();
@@ -128,7 +116,7 @@ export function OfflineModelButton({ modelId, className }: OfflineModelButtonPro
 
   if (phase === 'probing' || phase === 'unavailable') return null;
 
-  const sizeLabel = formatBytes(totalBytes);
+  const sizeLabel = totalBytes > 0 ? formatBytes(totalBytes) : '';
   const base =
     'flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm transition-colors';
 

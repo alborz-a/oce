@@ -408,7 +408,7 @@ function ItemRow({
       <span className="min-w-0 flex-1 basis-48 truncate text-sm text-content-primary">
         {item.title}
         {item.is_gate && (
-          <Badge variant="blue" size="sm" className="ml-2 align-middle">
+          <Badge variant="blue" size="sm" className="ms-2 align-middle">
             {t('site_prep.gate_flag', { defaultValue: 'Gate' })}
           </Badge>
         )}
@@ -428,7 +428,7 @@ function ItemRow({
           : t('site_prep.no_responsible', { defaultValue: 'Unassigned' })}
       </span>
 
-      <span className="w-24 text-right text-xs text-content-tertiary">
+      <span className="w-24 text-end text-xs text-content-tertiary">
         {item.due_date ? (
           <DateDisplay value={item.due_date} />
         ) : (
@@ -1171,7 +1171,7 @@ export function SitePrepPage() {
                   <span className="hidden w-40 md:block">
                     {t('site_prep.responsible_label', { defaultValue: 'Responsible' })}
                   </span>
-                  <span className="w-24 text-right">
+                  <span className="w-24 text-end">
                     {t('site_prep.due_label', { defaultValue: 'Due' })}
                   </span>
                   <span className="w-16" aria-hidden />

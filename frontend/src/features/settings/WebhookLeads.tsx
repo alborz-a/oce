@@ -535,7 +535,7 @@ export function WebhookLeads() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="ml-auto"
+                    className="ms-auto"
                     onClick={() => deleteMapping.mutate(m.id)}
                   >
                     <Trash2 className="w-3.5 h-3.5 text-red-500" />
@@ -571,20 +571,20 @@ export function WebhookLeads() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-content-tertiary border-b">
-                    <th className="py-2 pr-3">
+                  <tr className="text-start text-content-tertiary border-b">
+                    <th className="py-2 pe-3">
                       {t('webhook_leads.col_time', { defaultValue: 'Time' })}
                     </th>
-                    <th className="py-2 pr-3">
+                    <th className="py-2 pe-3">
                       {t('webhook_leads.col_status', {
                         defaultValue: 'Status',
                       })}
                     </th>
-                    <th className="py-2 pr-3">HTTP</th>
-                    <th className="py-2 pr-3">
+                    <th className="py-2 pe-3">HTTP</th>
+                    <th className="py-2 pe-3">
                       {t('webhook_leads.col_ip', { defaultValue: 'Remote IP' })}
                     </th>
-                    <th className="py-2 pr-3">
+                    <th className="py-2 pe-3">
                       {t('webhook_leads.col_detail', {
                         defaultValue: 'Lead / Error',
                       })}
@@ -594,18 +594,18 @@ export function WebhookLeads() {
                 <tbody>
                   {(logsQ.data ?? []).map((l) => (
                     <tr key={l.id} className="border-b border-border-light">
-                      <td className="py-2 pr-3 whitespace-nowrap text-content-tertiary">
+                      <td className="py-2 pe-3 whitespace-nowrap text-content-tertiary">
                         {l.received_at?.slice(0, 19).replace('T', ' ') ??
                           l.created_at.slice(0, 19).replace('T', ' ')}
                       </td>
-                      <td className="py-2 pr-3">
+                      <td className="py-2 pe-3">
                         <Badge variant={statusBadge(l.status)}>
                           {l.status}
                         </Badge>
                       </td>
-                      <td className="py-2 pr-3">{l.http_status}</td>
-                      <td className="py-2 pr-3">{l.remote_ip}</td>
-                      <td className="py-2 pr-3 max-w-xs truncate">
+                      <td className="py-2 pe-3">{l.http_status}</td>
+                      <td className="py-2 pe-3">{l.remote_ip}</td>
+                      <td className="py-2 pe-3 max-w-xs truncate">
                         {l.created_lead_id ? (
                           <span className="text-green-600">
                             {l.created_lead_id.slice(0, 8)}…

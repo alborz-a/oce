@@ -496,7 +496,7 @@ export function ScheduleInterchangePanel({
               type="file"
               accept="application/json,.json"
               onChange={(e) => handleFile(e.target.files?.[0])}
-              className="block w-full text-sm text-content-secondary file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
+              className="block w-full text-sm text-content-secondary file:me-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
             />
             {importFileName && (
               <span className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-content-secondary">
@@ -624,7 +624,7 @@ export function ScheduleInterchangePanel({
                 setVendorResult(null);
                 setVendorFile(e.target.files?.[0] ?? null);
               }}
-              className="block w-full text-sm text-content-secondary file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
+              className="block w-full text-sm text-content-secondary file:me-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
             />
             {vendorFile && (
               <span className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-content-secondary">

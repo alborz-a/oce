@@ -347,7 +347,7 @@ export function LienWaiverPanel({ subcontractorId, country }: LienWaiverPanelPro
                 step="0.01"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="h-8 w-28 rounded-md border border-border-light bg-surface-primary px-2 text-right text-xs tabular-nums"
+                className="h-8 w-28 rounded-md border border-border-light bg-surface-primary px-2 text-end text-xs tabular-nums"
                 aria-label={t('subcontractors.waiver_amount', { defaultValue: 'Waiver amount' })}
                 title={t('subcontractors.waiver_amount_hint', {
                   defaultValue:
@@ -386,22 +386,22 @@ export function LienWaiverPanel({ subcontractorId, country }: LienWaiverPanelPro
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.waiver_type_col', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.signed_date_col', { defaultValue: 'Signed' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.through_date_col', { defaultValue: 'Through' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.waiver_pay_app', { defaultValue: 'Pay application' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('subcontractors.amount', { defaultValue: 'Amount' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.uploaded', { defaultValue: 'Uploaded' })}
                 </th>
                 <th className="px-3 py-2" />
@@ -428,14 +428,14 @@ export function LienWaiverPanel({ subcontractorId, country }: LienWaiverPanelPro
                       ? (payAppById.get(w.payment_application_id)?.application_number ?? '…')
                       : '—'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {typeof w.amount === 'string' ? w.amount : fmtFixed(w.amount, 2)}{' '}
                     <span className="text-content-tertiary">{w.currency || ''}</span>
                   </td>
                   <td className="px-3 py-2 text-content-secondary">
                     <DateDisplay value={w.created_at} />
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <button
                       type="button"
                       onClick={() => handleDelete(w.id)}

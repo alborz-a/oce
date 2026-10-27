@@ -187,7 +187,7 @@ export function ActivityFeed({ projectId, limit = 15, className }: ActivityFeedP
             type="button"
             onClick={() => handleClick(entry)}
             className={clsx(
-              'flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left',
+              'flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-start',
               'hover:bg-surface-secondary transition-colors group',
             )}
           >

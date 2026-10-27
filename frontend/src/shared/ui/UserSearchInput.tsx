@@ -102,11 +102,11 @@ export function UserSearchInput({
   }, [onChange]);
 
   const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    'h-10 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <div ref={containerRef} className={`relative ${className || ''}`}>
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+      <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
         <User size={14} />
       </div>
       <input
@@ -122,20 +122,20 @@ export function UserSearchInput({
           type="button"
           onClick={handleClear}
           aria-label={t('common.clear', { defaultValue: 'Clear' })}
-          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary hover:text-content-primary"
+          className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary hover:text-content-primary"
         >
           <X size={14} />
         </button>
       )}
 
       {isOpen && filtered.length > 0 && (
-        <div className="absolute left-0 top-full mt-1 z-50 w-full max-h-48 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
+        <div className="absolute start-0 top-full mt-1 z-50 w-full max-h-48 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
           {filtered.map((u) => (
             <button
               key={u.id}
               type="button"
               onClick={() => handleSelect(u)}
-              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors"
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm hover:bg-surface-secondary transition-colors"
             >
               <div className="w-6 h-6 rounded-full bg-oe-blue flex items-center justify-center text-white text-2xs font-bold shrink-0">
                 {u.full_name?.[0]?.toUpperCase() || '?'}

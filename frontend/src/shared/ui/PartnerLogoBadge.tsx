@@ -101,7 +101,7 @@ export function PartnerLogoBadge({ variant, className = '' }: PartnerLogoBadgePr
   // variant === 'dashboard'
   return (
     <div
-      className={`flex items-center justify-between gap-3 rounded-lg border border-border border-l-[3px] bg-surface-secondary px-4 py-3 text-sm shadow-sm ${className}`}
+      className={`flex items-center justify-between gap-3 rounded-lg border border-border border-s-[3px] bg-surface-secondary px-4 py-3 text-sm shadow-sm ${className}`}
       style={{ borderLeftColor: accent, backgroundImage: dashBg }}
       data-testid="partner-logo-dashboard"
     >

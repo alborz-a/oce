@@ -1125,10 +1125,10 @@ export function SiteSupervisionPage() {
         <>
           <Card padding="sm" className="flex flex-wrap items-center gap-2">
             <div className="relative flex-1 min-w-[200px]">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+              <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
               <input
                 type="text"
-                className={clsx(inputCls, 'pl-9')}
+                className={clsx(inputCls, 'ps-9')}
                 placeholder={t('site_supervision.search_placeholder', { defaultValue: 'Search visitor or summary...' })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

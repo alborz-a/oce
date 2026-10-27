@@ -440,7 +440,7 @@ function ActivityProgressEditor({ scheduleId, activityId }: { scheduleId: string
       ) : hasSteps ? (
         <div className="rounded-md bg-surface-secondary px-3 py-2 text-xs text-content-secondary">
           <Badge variant="neutral">{t('schedule.managed_by_steps', { defaultValue: 'Managed by steps' })}</Badge>
-          <span className="ml-2">
+          <span className="ms-2">
             {t('schedule.rolled_up_pct', { defaultValue: 'Rolled-up: {{pct}}%', pct: view.progress_pct ?? '0' })}
           </span>
         </div>
@@ -541,7 +541,7 @@ function PercentSlider({
           onChange={(e) => setPct(Number(e.target.value))}
           className="flex-1 accent-oe-blue"
         />
-        <span className="w-12 text-right text-sm font-semibold text-content-primary">{pct}%</span>
+        <span className="w-12 text-end text-sm font-semibold text-content-primary">{pct}%</span>
       </div>
       <div className="flex flex-wrap items-center gap-3">
         {editableRemaining ? (
@@ -683,7 +683,7 @@ function StepChecklist({
         </div>
         <div className="text-xs text-content-secondary">
           {tw === 0 && steps.length > 0 && (
-            <Badge variant="warning" className="mr-2">
+            <Badge variant="warning" className="me-2">
               {t('schedule.all_steps_zero_weight', { defaultValue: 'All weights zero' })}
             </Badge>
           )}

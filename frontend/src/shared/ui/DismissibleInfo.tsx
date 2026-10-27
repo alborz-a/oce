@@ -75,7 +75,7 @@ export function IntroRichText({ text }: { text: string }) {
         const lines = block.split('\n').map((l) => l.trim()).filter(Boolean);
         if (lines.every((l) => l.startsWith('- '))) {
           return (
-            <ul key={bi} className="list-disc space-y-1 pl-5">
+            <ul key={bi} className="list-disc space-y-1 ps-5">
               {lines.map((l, li) => (
                 <li key={li}>{renderInline(l.slice(2))}</li>
               ))}
@@ -84,7 +84,7 @@ export function IntroRichText({ text }: { text: string }) {
         }
         if (lines.every((l) => /^\d+\.\s/.test(l))) {
           return (
-            <ol key={bi} className="list-decimal space-y-1 pl-5">
+            <ol key={bi} className="list-decimal space-y-1 ps-5">
               {lines.map((l, li) => (
                 <li key={li}>{renderInline(l.replace(/^\d+\.\s/, ''))}</li>
               ))}
@@ -182,7 +182,7 @@ export function DismissibleInfo({
   // out completely - the tint then reads as a solid plate. With the blur
   // gone the grid shows through the 8% tint and the card is visibly
   // translucent.
-  const wrapper = `group rounded-xl border border-oe-blue/20 border-l-2 border-l-oe-blue/70 bg-oe-blue/[0.045] dark:bg-oe-blue/[0.07] shadow-sm animate-fade-in ${
+  const wrapper = `group rounded-xl border border-oe-blue/20 border-s-2 border-s-oe-blue/70 bg-oe-blue/[0.045] dark:bg-oe-blue/[0.07] shadow-sm animate-fade-in ${
     className ?? ''
   }`;
 
@@ -249,7 +249,7 @@ export function DismissibleInfo({
           aria-expanded
           aria-label={t('common.collapse', { defaultValue: 'Collapse' })}
           title={t('common.collapse', { defaultValue: 'Collapse' })}
-          className="-mr-1 -mt-1 shrink-0 rounded-md p-1.5 text-content-tertiary opacity-60 transition-all hover:bg-surface-secondary hover:text-content-primary hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+          className="-me-1 -mt-1 shrink-0 rounded-md p-1.5 text-content-tertiary opacity-60 transition-all hover:bg-surface-secondary hover:text-content-primary hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
         >
           <X size={15} />
         </button>

@@ -220,8 +220,8 @@ function Hero({ labels, onPlay }: { labels: VideoLabels; onPlay: (v: AcademyVide
       data-testid="videos-hero"
       className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-[#0b2447] to-[#0a3d62] text-white shadow-lg ring-1 ring-white/10"
     >
-      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-sky-400/20 blur-3xl" />
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 left-10 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -end-24 -top-24 h-72 w-72 rounded-full bg-sky-400/20 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 start-10 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
       <div className="relative grid gap-6 p-5 sm:p-7 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-center">
         <div className="min-w-0">
           <p className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-sky-200 ring-1 ring-inset ring-white/15">
@@ -287,10 +287,10 @@ function Hero({ labels, onPlay }: { labels: VideoLabels; onPlay: (v: AcademyVide
           >
             <VideoCover src={start.cover} eager className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
             <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-            <span aria-hidden="true" className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-xl transition-transform group-hover:scale-105">
+            <span aria-hidden="true" className="absolute start-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-slate-900 shadow-xl transition-transform group-hover:scale-105">
               <Play size={26} className="translate-x-0.5" fill="currentColor" />
             </span>
-            <span className="absolute inset-x-0 bottom-0 p-3 text-left">
+            <span className="absolute inset-x-0 bottom-0 p-3 text-start">
               <span className="block text-2xs font-semibold uppercase tracking-wider text-sky-200">
                 {t('videos.start_here', { defaultValue: 'Start here' })}
               </span>
@@ -348,7 +348,7 @@ function Recommended({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Acad
           onClick={() => setPickerOpen((o) => !o)}
           aria-expanded={showPicker}
           data-testid="videos-role-button"
-          className="inline-flex items-center gap-2 rounded-full border border-border-light bg-surface-primary py-1 pl-1 pr-3 font-medium text-content-primary shadow-sm hover:border-oe-blue/40"
+          className="inline-flex items-center gap-2 rounded-full border border-border-light bg-surface-primary py-1 ps-1 pe-3 font-medium text-content-primary shadow-sm hover:border-oe-blue/40"
         >
           {ctx.role ? (
             <RoleAvatar role={ctx.role} className="h-6 w-6" />
@@ -365,13 +365,13 @@ function Recommended({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Acad
           <span className="text-content-tertiary">{t('videos.country', { defaultValue: 'Country' })}</span>
           {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
           {REGION_LOCK ? (
-            <div className="max-w-[12rem] cursor-pointer bg-transparent pr-1 font-medium focus:outline-none">ایران</div>
+            <div className="max-w-[12rem] cursor-pointer bg-transparent pe-1 font-medium focus:outline-none">ایران</div>
           ) : (
             <select
               value={marketChoice}
               onChange={(e) => setMarket(e.target.value)}
               data-testid="videos-market-select"
-              className="max-w-[12rem] cursor-pointer bg-transparent pr-1 font-medium focus:outline-none"
+              className="max-w-[12rem] cursor-pointer bg-transparent pe-1 font-medium focus:outline-none"
             >
               <option value="auto">
                 {ctx.marketSource && ctx.marketSource !== 'chosen' && ctx.marketSource !== 'any' && ctx.market
@@ -493,7 +493,7 @@ function LearningPath({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Aca
               data-testid="videos-path-stage"
               data-stage={stage.id}
               className={clsx(
-                'flex w-56 shrink-0 snap-start flex-col rounded-xl border border-border-light border-l-[3px] bg-surface-primary p-2.5',
+                'flex w-56 shrink-0 snap-start flex-col rounded-xl border border-border-light border-s-[3px] bg-surface-primary p-2.5',
                 stage.tint.accent,
                 list.length === 0 && 'opacity-70',
               )}
@@ -503,7 +503,7 @@ function LearningPath({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Aca
                   <Icon size={13} aria-hidden />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-xs font-semibold text-content-primary">
-                  <span className="mr-1 tabular-nums text-content-tertiary">{stage.num}</span>
+                  <span className="me-1 tabular-nums text-content-tertiary">{stage.num}</span>
                   {labels.stageShort(stage.id)}
                 </span>
                 <span className="text-2xs tabular-nums text-content-tertiary">{list.length}</span>
@@ -519,7 +519,7 @@ function LearningPath({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Aca
                       <button
                         type="button"
                         onClick={() => onOpen(video)}
-                        className="flex w-full items-start gap-2 rounded-lg p-1 text-left hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
+                        className="flex w-full items-start gap-2 rounded-lg p-1 text-start hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
                       >
                         <span className="relative block h-9 w-16 shrink-0 overflow-hidden rounded bg-slate-900">
                           <VideoCover src={video.cover} width={64} height={36} className="h-full w-full object-cover" />
@@ -617,7 +617,7 @@ function SeriesShelves({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Ac
                     onClick={() => onOpen(nextUp)}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-oe-blue-hover"
                   >
-                    {done > 0 ? <ArrowRight size={13} aria-hidden /> : <Play size={12} fill="currentColor" aria-hidden />}
+                    {done > 0 ? <ArrowRight size={13} className="rtl:rotate-180" aria-hidden /> : <Play size={12} fill="currentColor" aria-hidden />}
                     {done > 0
                       ? t('videos.continue', { defaultValue: 'Continue' })
                       : t('videos.start_series', { defaultValue: 'Start the series' })}
@@ -628,7 +628,7 @@ function SeriesShelves({ labels, onOpen }: { labels: VideoLabels; onOpen: (v: Ac
             <Rail>
               {videos.map((video) => (
                 <div key={video.id} className="relative w-56 shrink-0 snap-start sm:w-60">
-                  <span className="absolute -left-1 -top-1 z-10 flex h-6 min-w-6 items-center justify-center rounded-full bg-slate-900 px-1.5 text-2xs font-bold tabular-nums text-white ring-2 ring-surface-primary">
+                  <span className="absolute -start-1 -top-1 z-10 flex h-6 min-w-6 items-center justify-center rounded-full bg-slate-900 px-1.5 text-2xs font-bold tabular-nums text-white ring-2 ring-surface-primary">
                     {video.seriesOrder}
                   </span>
                   <VideoCard video={video} labels={labels} onOpen={onOpen} compact />
@@ -756,7 +756,7 @@ function Library({ labels, filters, setFilter, clearFilters, onOpen, patchParams
 
       <div className="space-y-2 rounded-2xl border border-border-light bg-surface-primary p-3 shadow-sm">
         <div className="relative">
-          <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" aria-hidden />
+          <Search size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" aria-hidden />
           <input
             type="search"
             value={filters.query}
@@ -764,7 +764,7 @@ function Library({ labels, filters, setFilter, clearFilters, onOpen, patchParams
             placeholder={t('videos.search_placeholder', { defaultValue: 'Search titles and chapters, for example "GAEB" or "invoice"' })}
             aria-label={t('common.search', { defaultValue: 'Search' })}
             data-testid="videos-search"
-            className="w-full rounded-xl border border-border-light bg-surface-secondary/50 py-2 pl-9 pr-3 text-sm text-content-primary placeholder:text-content-tertiary focus:border-oe-blue/50 focus:bg-surface-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/20"
+            className="w-full rounded-xl border border-border-light bg-surface-secondary/50 py-2 ps-9 pe-3 text-sm text-content-primary placeholder:text-content-tertiary focus:border-oe-blue/50 focus:bg-surface-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/20"
           />
         </div>
         {filters.route && (
@@ -772,7 +772,7 @@ function Library({ labels, filters, setFilter, clearFilters, onOpen, patchParams
             {t('videos.for_screen', { defaultValue: 'For the screen' })}
             <span
               data-testid="videos-route-chip"
-              className="inline-flex items-center gap-1 rounded-full border border-oe-blue/40 bg-oe-blue/[0.06] py-0.5 pl-2.5 pr-1 font-medium text-oe-blue"
+              className="inline-flex items-center gap-1 rounded-full border border-oe-blue/40 bg-oe-blue/[0.06] py-0.5 ps-2.5 pe-1 font-medium text-oe-blue"
             >
               {moduleName(filters.route)}
               <button
@@ -959,7 +959,7 @@ function CasesCta() {
         className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-oe-blue px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-oe-blue-hover"
       >
         {t('videos.cases_cta_button', { defaultValue: 'Open Cases' })}
-        <ArrowRight size={14} aria-hidden />
+        <ArrowRight size={14} className="rtl:rotate-180" aria-hidden />
       </Link>
     </div>
   );

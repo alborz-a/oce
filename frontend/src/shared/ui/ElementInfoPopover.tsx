@@ -266,7 +266,7 @@ export function ElementInfoPopover({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1 shrink-0 ml-2">
+        <div className="flex items-center gap-1 shrink-0 ms-2">
           <span className="text-[9px] text-content-quaternary uppercase tracking-wider font-medium">
             {sourceLabel(element.source, t)}
           </span>
@@ -298,10 +298,10 @@ export function ElementInfoPopover({
                   <td className="px-4 py-1.5 text-content-secondary font-medium whitespace-nowrap">
                     {row.label}
                   </td>
-                  <td className="px-4 py-1.5 text-right text-content-primary tabular-nums font-mono">
+                  <td className="px-4 py-1.5 text-end text-content-primary tabular-nums font-mono">
                     {row.value}
                     {row.unit && (
-                      <span className="ml-1 text-content-tertiary font-sans text-[10px]">
+                      <span className="ms-1 text-content-tertiary font-sans text-[10px]">
                         {row.unit}
                       </span>
                     )}

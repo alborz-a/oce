@@ -181,7 +181,7 @@ function DemoCard({
       <button
         onClick={onInstall}
         disabled={disabled || status === 'loading' || status === 'loaded'}
-        className="flex items-center gap-3 px-3.5 py-3 text-left active:scale-[0.98] transition-transform"
+        className="flex items-center gap-3 px-3.5 py-3 text-start active:scale-[0.98] transition-transform"
       >
         <CountryFlag code={demo.flagId} size={32} className="shadow-xs border border-black/5" />
         <div className="min-w-0 flex-1">

@@ -211,7 +211,7 @@ export function CountryCombobox({
         <span className="truncate text-content-primary">
           {formatCountryLabel(selectedCountry)}
         </span>
-        <span className="ml-1 text-xs text-content-tertiary">{selectedCountry.code}</span>
+        <span className="ms-1 text-xs text-content-tertiary">{selectedCountry.code}</span>
       </span>
     );
   } else {
@@ -251,7 +251,7 @@ export function CountryCombobox({
           'disabled:opacity-60 disabled:pointer-events-none',
         )}
       >
-        <span className="flex-1 min-w-0 text-left">{triggerInner}</span>
+        <span className="flex-1 min-w-0 text-start">{triggerInner}</span>
         <ChevronDown
           size={16}
           className={clsx(
@@ -398,7 +398,7 @@ export function CountryCombobox({
                         {c.nameLocal}
                       </span>
                     )}
-                    <span className="ml-1 font-mono text-[10px] uppercase text-content-tertiary">
+                    <span className="ms-1 font-mono text-[10px] uppercase text-content-tertiary">
                       {c.code}
                     </span>
                     {selected && <Check size={14} className="text-oe-blue" />}

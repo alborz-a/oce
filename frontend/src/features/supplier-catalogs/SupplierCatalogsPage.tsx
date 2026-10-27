@@ -177,7 +177,7 @@ function HowSupplierCatalogsWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -466,13 +466,13 @@ export function SupplierCatalogsPage({ embeddedTab }: SupplierCatalogsPageProps 
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+          <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         {tab === 'vendors' && (
@@ -715,7 +715,7 @@ function StarRating({ rating }: { rating: number | null }) {
           }
         />
       ))}
-      <span className="ml-1 text-2xs text-content-tertiary tabular-nums">{value}/5</span>
+      <span className="ms-1 text-2xs text-content-tertiary tabular-nums">{value}/5</span>
     </div>
   );
 }
@@ -755,13 +755,13 @@ function VendorTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.code', { defaultValue: 'Code' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.name', { defaultValue: 'Name' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.country', { defaultValue: 'Country' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.rating', { defaultValue: 'Rating' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.payment_terms', { defaultValue: 'Terms' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.actions', { defaultValue: 'Actions' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.code', { defaultValue: 'Code' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.name', { defaultValue: 'Name' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.country', { defaultValue: 'Country' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.rating', { defaultValue: 'Rating' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.payment_terms', { defaultValue: 'Terms' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.actions', { defaultValue: 'Actions' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -859,12 +859,12 @@ function CatalogTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.sku', { defaultValue: 'SKU' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.name', { defaultValue: 'Name' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.uom', { defaultValue: 'UoM' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.manufacturer', { defaultValue: 'Manufacturer' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.reorder', { defaultValue: 'Reorder' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.actions', { defaultValue: 'Actions' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.sku', { defaultValue: 'SKU' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.name', { defaultValue: 'Name' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.uom', { defaultValue: 'UoM' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.manufacturer', { defaultValue: 'Manufacturer' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.reorder', { defaultValue: 'Reorder' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.actions', { defaultValue: 'Actions' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -886,8 +886,8 @@ function CatalogTable({
               </td>
               <td className="px-4 py-2 text-content-secondary text-xs">{r.unit_of_measure}</td>
               <td className="px-4 py-2 text-content-secondary text-xs">{r.manufacturer || '—'}</td>
-              <td className="px-4 py-2 text-right text-xs tabular-nums">{String(r.reorder_point)}</td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end text-xs tabular-nums">{String(r.reorder_point)}</td>
+              <td className="px-4 py-2 text-end">
                 <div className="flex items-center justify-end gap-1 whitespace-nowrap">
                   <Button variant="ghost" size="sm" onClick={() => onSelectPrice(r)}>
                     {t('supplier_catalogs.compare_prices', { defaultValue: 'Compare prices' })}
@@ -978,7 +978,7 @@ function ProcurementHandoffPanel() {
         {stages.map((s) => (
           <div
             key={s.title}
-            className="rounded-xl border border-border-light bg-surface-secondary/40 p-4 text-left"
+            className="rounded-xl border border-border-light bg-surface-secondary/40 p-4 text-start"
           >
             <div className="mb-2 flex items-center gap-2">
               {s.icon}
@@ -1061,7 +1061,7 @@ function WarehousePanel({
             above, so its row actions belong to the selected one rather than
             to a table row. */}
         {selected && (
-          <div className="ml-auto flex items-center gap-1 whitespace-nowrap">
+          <div className="ms-auto flex items-center gap-1 whitespace-nowrap">
             <Button variant="ghost" size="sm" icon={<Pencil size={13} />} onClick={() => onEdit(selected)}>
               {t('common.edit', { defaultValue: 'Edit' })}
             </Button>
@@ -1080,12 +1080,12 @@ function WarehousePanel({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.item', { defaultValue: 'Item' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.batch', { defaultValue: 'Batch' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.on_hand', { defaultValue: 'On hand' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.reserved', { defaultValue: 'Reserved' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('supplier_catalogs.unit_cost_avg', { defaultValue: 'Avg cost' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('supplier_catalogs.last_moved', { defaultValue: 'Last moved' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.item', { defaultValue: 'Item' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.batch', { defaultValue: 'Batch' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.on_hand', { defaultValue: 'On hand' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.reserved', { defaultValue: 'Reserved' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('supplier_catalogs.unit_cost_avg', { defaultValue: 'Avg cost' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('supplier_catalogs.last_moved', { defaultValue: 'Last moved' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -1106,14 +1106,14 @@ function WarehousePanel({
                     )}
                   </td>
                   <td className="px-4 py-2 text-content-secondary text-xs">{b.batch_lot || '—'}</td>
-                  <td className="px-4 py-2 text-right text-xs tabular-nums">{String(b.quantity_on_hand)}</td>
-                  <td className="px-4 py-2 text-right text-xs tabular-nums">{String(b.quantity_reserved)}</td>
+                  <td className="px-4 py-2 text-end text-xs tabular-nums">{String(b.quantity_on_hand)}</td>
+                  <td className="px-4 py-2 text-end text-xs tabular-nums">{String(b.quantity_reserved)}</td>
                   {/* The average is money and carries its own ISO currency,
                       which is not the currency the operator picked in
                       settings. When the backend has no single-currency
                       average we say so rather than rendering a number under
                       a label that would be wrong either way. */}
-                  <td className="px-4 py-2 text-right text-xs tabular-nums">
+                  <td className="px-4 py-2 text-end text-xs tabular-nums">
                     {b.unit_cost_avg !== null && b.currency ? (
                       <MoneyDisplay amount={Number(b.unit_cost_avg)} currency={b.currency} />
                     ) : (

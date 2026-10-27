@@ -23,7 +23,7 @@ export function QtyTile({
       <div className="text-[10px] uppercase tracking-wide text-content-tertiary">{label}</div>
       <div className="font-mono text-sm font-semibold text-content-primary">
         {value.toLocaleString(getNumberLocale(), { maximumFractionDigits: 3 })}
-        <span className="ml-1 text-[10px] font-normal text-content-secondary">{unit}</span>
+        <span className="ms-1 text-[10px] font-normal text-content-secondary">{unit}</span>
       </div>
     </div>
   );

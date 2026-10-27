@@ -438,7 +438,7 @@ export function ActivityGrid({
               {columns.map((c) => (
                 <th
                   key={c.key}
-                  className={`px-3 py-2 font-semibold ${c.align === 'right' ? 'text-right' : 'text-left'}`}
+                  className={`px-3 py-2 font-semibold ${c.align === 'right' ? 'text-end' : 'text-start'}`}
                 >
                   {c.label}
                 </th>
@@ -502,7 +502,7 @@ export function ActivityGrid({
                             }
                             className="shrink-0 rounded p-0.5 text-content-tertiary hover:bg-surface-secondary"
                           >
-                            {collapsedIds?.has(a.id) ? <ChevronRight size={12} /> : <ChevronDown size={12} />}
+                            {collapsedIds?.has(a.id) ? <ChevronRight size={12} className="rtl:rotate-180" /> : <ChevronDown size={12} />}
                           </button>
                         ) : isSummary ? (
                           <Minus size={11} className="shrink-0 text-content-tertiary" />
@@ -599,11 +599,11 @@ export function ActivityGrid({
                     </td>
                     <td
                       data-testid={`grid-duration-${a.id}`}
-                      className="px-3 py-1.5 text-right align-middle tabular-nums text-content-secondary"
+                      className="px-3 py-1.5 text-end align-middle tabular-nums text-content-secondary"
                     >
                       {a.duration_days} {t('schedule.days_short', { defaultValue: 'd' })}
                     </td>
-                    <td className="px-3 py-1.5 text-right align-middle">
+                    <td className="px-3 py-1.5 text-end align-middle">
                       <Badge variant={isCritical ? 'error' : 'neutral'} size="sm">
                         {a.progress_pct}%
                       </Badge>
@@ -670,7 +670,7 @@ export function ActivityGrid({
                           : t('schedule.add_predecessor', { defaultValue: 'Add predecessor' })}
                       </button>
                     </td>
-                    <td className="px-2 py-1.5 text-right align-middle">
+                    <td className="px-2 py-1.5 text-end align-middle">
                       {canDelete && (
                         <button
                           type="button"

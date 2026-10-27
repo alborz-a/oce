@@ -304,7 +304,7 @@ function SectionCard({
                   count: section.superseded.length,
                 })}
               </summary>
-              <div className="mt-2 space-y-2 border-l-2 border-border-light pl-3">
+              <div className="mt-2 space-y-2 border-s-2 border-border-light ps-3">
                 {section.superseded.map((earlier, index) => (
                   <div key={index}>
                     <p className="whitespace-pre-wrap text-xs text-content-secondary">{earlier.text}</p>

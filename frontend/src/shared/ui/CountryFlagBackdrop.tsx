@@ -51,8 +51,8 @@ export function CountryFlagBackdrop({
       <div
         className={
           panel
-            ? 'absolute -right-20 -top-28 rotate-[-8deg] opacity-[0.13] blur-[1px] saturate-[1.25] dark:opacity-[0.10] dark:blur-[2px] dark:brightness-75'
-            : 'absolute -right-24 top-6 rotate-[-8deg] opacity-[0.06] blur-[1.5px] saturate-[1.2] dark:opacity-[0.05] dark:blur-[3px] dark:brightness-75'
+            ? 'absolute -end-20 -top-28 rotate-[-8deg] opacity-[0.13] blur-[1px] saturate-[1.25] dark:opacity-[0.10] dark:blur-[2px] dark:brightness-75'
+            : 'absolute -end-24 top-6 rotate-[-8deg] opacity-[0.06] blur-[1.5px] saturate-[1.2] dark:opacity-[0.05] dark:blur-[3px] dark:brightness-75'
         }
         style={{ maskImage: MASK, WebkitMaskImage: MASK }}
       >

@@ -182,11 +182,11 @@ export function ProjectPeopleSelect({
   );
 
   const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    'h-10 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <div ref={containerRef} className={`relative ${className || ''}`}>
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+      <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
         <User size={14} />
       </div>
       <input
@@ -209,14 +209,14 @@ export function ProjectPeopleSelect({
             setIsOpen(false);
           }}
           aria-label={t('common.clear', { defaultValue: 'Clear' })}
-          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary hover:text-content-primary"
+          className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary hover:text-content-primary"
         >
           <X size={14} />
         </button>
       )}
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
+        <div className="absolute start-0 top-full z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
           <p className="border-b border-border-light px-3 py-1.5 text-2xs text-content-tertiary">
             {fromRoster
               ? t('people.group_on_project', 'People on this project')
@@ -241,7 +241,7 @@ export function ProjectPeopleSelect({
                         'On the roster, but with no account. Only people who can sign in can be assigned work.',
                       )
                 }
-                className={`flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors ${
+                className={`flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition-colors ${
                   option.assignable
                     ? 'hover:bg-surface-secondary'
                     : 'cursor-not-allowed opacity-60'

@@ -761,20 +761,20 @@ function GanttChart({
             </div>
             <div className="space-y-2 opacity-40">
               <div className="flex items-center gap-3">
-                <span className="w-24 text-right text-2xs text-content-tertiary truncate">{t('schedule.preview_foundation', { defaultValue: 'Foundation' })}</span>
+                <span className="w-24 text-end text-2xs text-content-tertiary truncate">{t('schedule.preview_foundation', { defaultValue: 'Foundation' })}</span>
                 <div className="flex-1 h-6 rounded-md bg-oe-blue/15 relative">
                   <div className="h-full w-3/5 rounded-md bg-oe-blue/30" />
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="w-24 text-right text-2xs text-content-tertiary truncate">{t('schedule.preview_structural', { defaultValue: 'Structural' })}</span>
-                <div className="flex-1 h-6 rounded-md bg-semantic-success/15 relative ml-[15%]">
+                <span className="w-24 text-end text-2xs text-content-tertiary truncate">{t('schedule.preview_structural', { defaultValue: 'Structural' })}</span>
+                <div className="flex-1 h-6 rounded-md bg-semantic-success/15 relative ms-[15%]">
                   <div className="h-full w-2/5 rounded-md bg-semantic-success/30" />
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className="w-24 text-right text-2xs text-content-tertiary truncate">{t('schedule.preview_mep', { defaultValue: 'MEP Install' })}</span>
-                <div className="flex-1 h-6 rounded-md bg-semantic-warning/15 relative ml-[30%]">
+                <span className="w-24 text-end text-2xs text-content-tertiary truncate">{t('schedule.preview_mep', { defaultValue: 'MEP Install' })}</span>
+                <div className="flex-1 h-6 rounded-md bg-semantic-warning/15 relative ms-[30%]">
                   <div className="h-full w-1/4 rounded-md bg-semantic-warning/30" />
                 </div>
               </div>
@@ -801,7 +801,7 @@ function GanttChart({
     <Card padding="none" className="overflow-hidden">
       <div className="flex">
         {/* LEFT: fixed activity list */}
-        <div className="w-[280px] shrink-0 border-r border-border-light">
+        <div className="w-[280px] shrink-0 border-e border-border-light">
           {/* Header labels */}
           <div className="flex h-10 items-center border-b border-border-light bg-surface-secondary/50 px-3">
             <span className="text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
@@ -970,7 +970,7 @@ function GanttChart({
                           strokeWidth={1.5}
                         />
                         {isCritical && (
-                          <span className="absolute -top-3 left-1/2 -translate-x-1/2 flex h-4 items-center rounded bg-semantic-error px-1 text-[9px] font-bold leading-none text-white shadow-sm">
+                          <span className="absolute -top-3 start-1/2 -translate-x-1/2 flex h-4 items-center rounded bg-semantic-error px-1 text-[9px] font-bold leading-none text-white shadow-sm">
                             CP
                           </span>
                         )}
@@ -988,7 +988,7 @@ function GanttChart({
                         />
                         {/* CP badge for critical path activities */}
                         {isCritical && (
-                          <span className="absolute -top-2.5 -right-1 flex h-4 items-center rounded bg-semantic-error px-1 text-[9px] font-bold leading-none text-white shadow-sm">
+                          <span className="absolute -top-2.5 -end-1 flex h-4 items-center rounded bg-semantic-error px-1 text-[9px] font-bold leading-none text-white shadow-sm">
                             CP
                           </span>
                         )}
@@ -1008,7 +1008,7 @@ function GanttChart({
             {/* Dependency arrow SVG overlay — same scroll context */}
             {arrowPaths.length > 0 && (
               <svg
-                className="pointer-events-none absolute top-10 left-0"
+                className="pointer-events-none absolute top-10 start-0"
                 style={{ width: '100%', height: sortedActivities.length * ROW_HEIGHT }}
                 overflow="visible"
               >
@@ -1044,7 +1044,7 @@ function GanttChart({
                 className="absolute top-0 bottom-0 w-px bg-red-500 z-10 pointer-events-none"
                 style={{ left: `${todayPct}%` }}
               >
-                <div className="absolute -top-0 left-1/2 -translate-x-1/2 rounded bg-red-500 px-1.5 py-0.5 text-[9px] font-bold text-white whitespace-nowrap">
+                <div className="absolute -top-0 start-1/2 -translate-x-1/2 rounded bg-red-500 px-1.5 py-0.5 text-[9px] font-bold text-white whitespace-nowrap">
                   {t('schedule.today', { defaultValue: 'Today' })}
                 </div>
               </div>
@@ -1741,7 +1741,7 @@ export function ScheduleDetail({
         onClick={onBack}
         className="mb-4 flex items-center gap-1.5 text-sm text-content-secondary transition-colors hover:text-content-primary"
       >
-        <ArrowLeft size={14} />
+        <ArrowLeft size={14} className="rtl:rotate-180" />
         {t('schedule.back_to_schedules', 'Back to schedules')}
       </button>
 
@@ -2564,7 +2564,7 @@ export function ScheduleDetail({
                   key={boq.id}
                   type="button"
                   onClick={() => setSelectedBOQId(boq.id)}
-                  className={`w-full rounded-lg border px-4 py-3 text-left transition-all ${
+                  className={`w-full rounded-lg border px-4 py-3 text-start transition-all ${
                     selectedBOQId === boq.id
                       ? 'border-oe-blue bg-oe-blue-subtle'
                       : 'border-border bg-surface-primary hover:bg-surface-secondary'
@@ -2584,7 +2584,7 @@ export function ScheduleDetail({
                     {t(`boq.${boq.status}`, { defaultValue: boq.status })}
                   </Badge>
                   {isBudgetEstimate(boq.estimate_type) && (
-                    <Badge variant="warning" size="sm" className="mt-1 ml-1">
+                    <Badge variant="warning" size="sm" className="mt-1 ms-1">
                       {t('schedule.boq_budget_badge', {
                         defaultValue: 'Budget estimate: one bar per lump sum',
                       })}
@@ -2886,7 +2886,7 @@ export function ProjectSchedules({
         onClick={onBack}
         className="mb-4 flex items-center gap-1.5 text-sm text-content-secondary transition-colors hover:text-content-primary"
       >
-        <ArrowLeft size={14} />
+        <ArrowLeft size={14} className="rtl:rotate-180" />
         {t('schedule.back_to_projects', 'Back to projects')}
       </button>
 
@@ -3067,7 +3067,7 @@ export function ProjectSchedules({
                   {t(`schedule.status_${schedule.status}`, { defaultValue: schedule.status })}
                 </Badge>
                 <ScheduleLifecycleActions schedule={schedule} compact />
-                <ChevronRight size={16} className="shrink-0 text-content-tertiary" />
+                <ChevronRight size={16} className="shrink-0 text-content-tertiary rtl:rotate-180" />
               </div>
             </Card>
           ))}
@@ -3112,7 +3112,7 @@ export function ProjectSchedules({
                   setShowGenerateTarget(false);
                   setSelectedSchedule(s);
                 }}
-                className="flex w-full items-center gap-3 rounded-lg border border-border bg-surface-primary px-4 py-3 text-left transition-all hover:bg-surface-secondary"
+                className="flex w-full items-center gap-3 rounded-lg border border-border bg-surface-primary px-4 py-3 text-start transition-all hover:bg-surface-secondary"
               >
                 <CalendarDays size={16} className="shrink-0 text-oe-blue" />
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-content-primary">{s.name}</span>
@@ -3320,7 +3320,7 @@ function HowScheduleWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -3549,7 +3549,7 @@ export function SchedulePage() {
                 <Badge variant="blue" size="sm">
                   {project.classification_standard === 'din276' ? 'DIN 276' : project.classification_standard?.toUpperCase() || '-'}
                 </Badge>
-                <ChevronRight size={16} className="shrink-0 text-content-tertiary" />
+                <ChevronRight size={16} className="shrink-0 text-content-tertiary rtl:rotate-180" />
               </div>
             </Card>
           ))}

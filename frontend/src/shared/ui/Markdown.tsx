@@ -82,8 +82,8 @@ function isTableDelim(line: string): boolean {
 
 function alignClass(a: string): string {
   if (a === 'center') return 'text-center';
-  if (a === 'right') return 'text-right';
-  return 'text-left';
+  if (a === 'right') return 'text-end';
+  return 'text-start';
 }
 
 function consumeTable(lines: string[], start: number): { html: string; next: number } {
@@ -165,7 +165,7 @@ export function renderDocMarkdown(md: string): string {
       i += 1; // skip the closing fence
       const code = escapeHtml(buf.join('\n'));
       const label = lang
-        ? `<span class="absolute right-2 top-2 text-[9px] uppercase tracking-wider text-gray-400">${escapeHtml(lang)}</span>`
+        ? `<span class="absolute end-2 top-2 text-[9px] uppercase tracking-wider text-gray-400">${escapeHtml(lang)}</span>`
         : '';
       out.push(
         `<pre class="relative my-4 overflow-x-auto rounded-lg border border-border-light bg-gray-900 dark:bg-gray-950 p-4 pt-5 text-[12px] leading-relaxed font-mono text-gray-100">${label}<code class="whitespace-pre">${code}</code></pre>`,
@@ -203,7 +203,7 @@ export function renderDocMarkdown(md: string): string {
         i += 1;
       }
       out.push(
-        `<blockquote class="my-4 rounded-r-lg border-l-4 border-oe-blue/40 bg-surface-secondary/40 px-4 py-2.5 text-sm text-content-secondary">${inline(buf.join(' '))}</blockquote>`,
+        `<blockquote class="my-4 rounded-e-lg border-s-4 border-oe-blue/40 bg-surface-secondary/40 px-4 py-2.5 text-sm text-content-secondary">${inline(buf.join(' '))}</blockquote>`,
       );
       continue;
     }
@@ -226,7 +226,7 @@ export function renderDocMarkdown(md: string): string {
         i += 1;
       }
       const items = buf.map((it) => `<li class="my-1">${inline(it)}</li>`).join('');
-      out.push(`<ul class="my-3 list-disc space-y-1 pl-6 text-content-secondary">${items}</ul>`);
+      out.push(`<ul class="my-3 list-disc space-y-1 ps-6 text-content-secondary">${items}</ul>`);
       continue;
     }
 
@@ -239,7 +239,7 @@ export function renderDocMarkdown(md: string): string {
         i += 1;
       }
       const items = buf.map((it) => `<li class="my-1">${inline(it)}</li>`).join('');
-      out.push(`<ol class="my-3 list-decimal space-y-1 pl-6 text-content-secondary">${items}</ol>`);
+      out.push(`<ol class="my-3 list-decimal space-y-1 ps-6 text-content-secondary">${items}</ol>`);
       continue;
     }
 

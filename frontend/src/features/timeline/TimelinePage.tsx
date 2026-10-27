@@ -587,7 +587,7 @@ export function TimelinePage() {
               className="rounded p-1.5 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
               aria-label={t('common.previous_page', { defaultValue: 'Previous page' })}
             >
-              <ChevronLeft className="h-4 w-4" aria-hidden />
+              <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </button>
             <span className="px-2 py-1">{currentPage} / {pageCount}</span>
             <button
@@ -596,7 +596,7 @@ export function TimelinePage() {
               className="rounded p-1.5 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
               aria-label={t('common.next_page', { defaultValue: 'Next page' })}
             >
-              <ChevronRight className="h-4 w-4" aria-hidden />
+              <ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </button>
           </div>
         </div>
@@ -649,7 +649,7 @@ function TimelineRow({ entry, isSelected, onSelect, onNavigate, userMap }: {
           {entry.from_status && entry.to_status && (
             <span className="flex items-center gap-1 text-xs text-gray-500">
               <span className="rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-800">{entry.from_status}</span>
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
               <span className="rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-800">{entry.to_status}</span>
             </span>
           )}

@@ -472,7 +472,7 @@ function QualityDashboardSummary({
   // to their registers; Open Incidents scrolls to and activates the incidents tab
   // already on this page.
   const tileBtnCls =
-    'w-full p-3 text-left rounded-xl transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40';
+    'w-full p-3 text-start rounded-xl transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40';
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -657,7 +657,7 @@ function HowSafetyWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -1152,7 +1152,7 @@ function IncidentsTab({
       {/* Search + Export + New */}
       <div className="p-4 border-b border-border-light flex items-center gap-3">
         <div className="relative max-w-sm flex-1">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={16} />
           </div>
           <input
@@ -1196,10 +1196,10 @@ function IncidentsTab({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('safety.incident_number', { defaultValue: 'Incident #' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('safety.date', { defaultValue: 'Date' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -1208,7 +1208,7 @@ function IncidentsTab({
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                 {t('safety.severity', { defaultValue: 'Severity' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('safety.treatment', { defaultValue: 'Treatment' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -1217,7 +1217,7 @@ function IncidentsTab({
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                 {t('common.status', { defaultValue: 'Status' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('common.actions', { defaultValue: 'Actions' })}
               </th>
             </tr>
@@ -1286,7 +1286,7 @@ function IncidentsTab({
                     })}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-right whitespace-nowrap">
+                <td className="px-4 py-3 text-end whitespace-nowrap">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -1328,7 +1328,7 @@ function IncidentsTab({
             <div className="flex items-center justify-between mb-2">
               <div>
                 <span className="text-xs font-mono text-content-tertiary">{inc.incident_number}</span>
-                <span className="ml-2 text-xs text-content-secondary"><DateDisplay value={inc.date} /></span>
+                <span className="ms-2 text-xs text-content-secondary"><DateDisplay value={inc.date} /></span>
               </div>
               <Badge variant={INCIDENT_STATUS_COLORS[inc.status] ?? 'neutral'} size="sm">
                 {t(`safety.status_${inc.status}`, { defaultValue: inc.status })}
@@ -1565,9 +1565,9 @@ function IncidentsTab({
               disabled={createMut.isPending || !canSubmitIncident}
             >
               {createMut.isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : (
-                <Plus size={16} className="mr-1.5" />
+                <Plus size={16} className="me-1.5" />
               )}
               <span>{t('safety.report_incident', { defaultValue: 'Report Incident' })}</span>
             </Button>
@@ -1712,7 +1712,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
       {/* Search + Export + New */}
       <div className="p-4 border-b border-border-light flex items-center gap-3">
         <div className="relative max-w-sm flex-1">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={16} />
           </div>
           <input
@@ -1756,10 +1756,10 @@ function ObservationsTab({ projectId }: { projectId: string }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('safety.observation_number', { defaultValue: 'Observation #' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('safety.date', { defaultValue: 'Date' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -1831,7 +1831,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
                   {obs.risk_score > 15 && (
                     <div className="text-2xs text-red-600 mt-1">
                       {t('safety.high_risk_hint', { defaultValue: 'High risk \u2014 consider scheduling an inspection' })}
-                      <Button variant="ghost" size="sm" className="text-2xs ml-1" onClick={(e) => { e.stopPropagation(); navigate('/inspections'); }}>
+                      <Button variant="ghost" size="sm" className="text-2xs ms-1" onClick={(e) => { e.stopPropagation(); navigate('/inspections'); }}>
                         {t('safety.create_inspection_link', { defaultValue: 'Create Inspection \u2192' })}
                       </Button>
                     </div>
@@ -1854,7 +1854,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
             <div className="flex items-center justify-between mb-2">
               <div>
                 <span className="text-xs font-mono text-content-tertiary">{obs.observation_number}</span>
-                <span className="ml-2 text-xs text-content-secondary"><DateDisplay value={obs.date} /></span>
+                <span className="ms-2 text-xs text-content-secondary"><DateDisplay value={obs.date} /></span>
               </div>
               <Badge variant={OBS_STATUS_COLORS[obs.status] ?? 'neutral'} size="sm">
                 {t(`safety.obs_status_${obs.status}`, { defaultValue: OBS_STATUS_LABELS[obs.status] ?? obs.status.replace(/_/g, ' ') })}
@@ -1873,7 +1873,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
             {obs.risk_score > 15 && (
               <div className="text-2xs text-red-600 mt-2">
                 {t('safety.high_risk_hint', { defaultValue: 'High risk \u2014 consider scheduling an inspection' })}
-                <Button variant="ghost" size="sm" className="text-2xs ml-1" onClick={() => navigate('/inspections')}>
+                <Button variant="ghost" size="sm" className="text-2xs ms-1" onClick={() => navigate('/inspections')}>
                   {t('safety.create_inspection_link', { defaultValue: 'Create Inspection \u2192' })}
                 </Button>
               </div>
@@ -2005,7 +2005,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
                     </button>
                   ))}
                 </div>
-                <span className="text-sm font-medium text-content-secondary ml-2">
+                <span className="text-sm font-medium text-content-secondary ms-2">
                   {obsForm.severity}/5
                 </span>
               </div>
@@ -2043,7 +2043,7 @@ function ObservationsTab({ projectId }: { projectId: string }) {
                     </button>
                   ))}
                 </div>
-                <span className="text-sm font-medium text-content-secondary ml-2">
+                <span className="text-sm font-medium text-content-secondary ms-2">
                   {obsForm.likelihood}/5
                 </span>
               </div>
@@ -2080,9 +2080,9 @@ function ObservationsTab({ projectId }: { projectId: string }) {
               disabled={createObsMut.isPending || !canSubmitObs}
             >
               {createObsMut.isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : (
-                <Plus size={16} className="mr-1.5" />
+                <Plus size={16} className="me-1.5" />
               )}
               <span>{t('safety.record_observation', { defaultValue: 'Record Observation' })}</span>
             </Button>

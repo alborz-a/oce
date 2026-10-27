@@ -407,10 +407,10 @@ function ActivityChangesCard({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
               <tr>
-                <th className="px-4 py-2 text-left">{t('schedule.compare.change', { defaultValue: 'Change' })}</th>
-                <th className="px-4 py-2 text-left">{t('schedule.compare.activity', { defaultValue: 'Activity' })}</th>
-                <th className="px-4 py-2 text-left">{t('schedule.compare.fields', { defaultValue: 'Fields' })}</th>
-                <th className="px-4 py-2 text-right">{t('schedule.compare.finish_move', { defaultValue: 'Finish move' })}</th>
+                <th className="px-4 py-2 text-start">{t('schedule.compare.change', { defaultValue: 'Change' })}</th>
+                <th className="px-4 py-2 text-start">{t('schedule.compare.activity', { defaultValue: 'Activity' })}</th>
+                <th className="px-4 py-2 text-start">{t('schedule.compare.fields', { defaultValue: 'Fields' })}</th>
+                <th className="px-4 py-2 text-end">{t('schedule.compare.finish_move', { defaultValue: 'Finish move' })}</th>
                 <th className="px-4 py-2 text-center">{t('schedule.compare.cp', { defaultValue: 'CP' })}</th>
               </tr>
             </thead>
@@ -449,7 +449,7 @@ function ActivityChangesCard({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-4 py-2 text-end">
                       {move === 0 ? (
                         <span className="text-content-tertiary">-</span>
                       ) : (
@@ -504,9 +504,9 @@ function RelationshipChangesCard({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
             <tr>
-              <th className="px-4 py-2 text-left">{t('schedule.compare.change', { defaultValue: 'Change' })}</th>
-              <th className="px-4 py-2 text-left">{t('schedule.compare.link', { defaultValue: 'Link (pred -> succ)' })}</th>
-              <th className="px-4 py-2 text-left">{t('schedule.compare.fields', { defaultValue: 'Fields' })}</th>
+              <th className="px-4 py-2 text-start">{t('schedule.compare.change', { defaultValue: 'Change' })}</th>
+              <th className="px-4 py-2 text-start">{t('schedule.compare.link', { defaultValue: 'Link (pred -> succ)' })}</th>
+              <th className="px-4 py-2 text-start">{t('schedule.compare.fields', { defaultValue: 'Fields' })}</th>
             </tr>
           </thead>
           <tbody>

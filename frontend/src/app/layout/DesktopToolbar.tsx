@@ -145,7 +145,7 @@ export function DesktopToolbar() {
         aria-label={t('desktop.back', { defaultValue: 'Back' })}
         title={t('desktop.back', { defaultValue: 'Back' })}
       >
-        <ArrowLeft size={15} strokeWidth={1.9} />
+        <ArrowLeft size={15} strokeWidth={1.9} className="rtl:rotate-180" />
       </button>
       <button
         type="button"
@@ -154,7 +154,7 @@ export function DesktopToolbar() {
         aria-label={t('desktop.forward', { defaultValue: 'Forward' })}
         title={t('desktop.forward', { defaultValue: 'Forward' })}
       >
-        <ArrowRight size={15} strokeWidth={1.9} />
+        <ArrowRight size={15} strokeWidth={1.9} className="rtl:rotate-180" />
       </button>
       <button
         type="button"
@@ -186,7 +186,7 @@ export function DesktopToolbar() {
         type="button"
         onClick={openHere}
         className={clsx(
-          'ml-1 flex h-7 items-center gap-1.5 rounded-md px-2',
+          'ms-1 flex h-7 items-center gap-1.5 rounded-md px-2',
           'text-xs font-medium text-content-secondary',
           'transition-colors hover:bg-surface-secondary',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
@@ -240,7 +240,7 @@ export function DesktopToolbar() {
         {favOpen && (
           <div
             role="menu"
-            className="absolute right-0 top-full mt-1.5 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1.5 z-50"
+            className="absolute end-0 top-full mt-1.5 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1.5 z-50"
           >
             <div className="flex items-center justify-between px-3 pb-1.5">
               <span className="text-xs font-semibold text-content-primary">
@@ -278,7 +278,7 @@ export function DesktopToolbar() {
                         setFavOpen(false);
                         navigate(f.path);
                       }}
-                      className="flex min-w-0 flex-1 items-center gap-2 py-2 text-left"
+                      className="flex min-w-0 flex-1 items-center gap-2 py-2 text-start"
                     >
                       <Star
                         size={13}

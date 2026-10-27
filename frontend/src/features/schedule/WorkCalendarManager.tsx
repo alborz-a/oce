@@ -383,7 +383,7 @@ function CalendarCard({
             {holidays.map((h) => (
               <li
                 key={h}
-                className="flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary/50 py-0.5 pl-2 pr-1 text-xs tabular-nums text-content-secondary"
+                className="flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary/50 py-0.5 ps-2 pe-1 text-xs tabular-nums text-content-secondary"
               >
                 {h}
                 <button

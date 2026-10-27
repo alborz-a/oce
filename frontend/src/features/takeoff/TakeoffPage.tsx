@@ -555,10 +555,10 @@ function DocumentCard({
         <div className="mt-4 border-t border-border-light pt-4 animate-fade-in">
           <button
             onClick={() => setExpanded((prev) => !prev)}
-            className="flex w-full items-center gap-2 text-left"
+            className="flex w-full items-center gap-2 text-start"
           >
             <span className="text-content-tertiary">
-              {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} className="rtl:rotate-180" />}
             </span>
             <CheckCircle2 size={16} className="text-semantic-success" />
             <span className="text-sm font-medium text-content-primary">
@@ -661,7 +661,7 @@ function DocumentCard({
                   >
                     <Box size={13} />
                     {t('takeoff.open_in_bim', 'Open in BIM Viewer')}
-                    <ArrowRight size={11} className="text-content-quaternary" />
+                    <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
                   </a>
                   <a
                     href="/boq"
@@ -669,7 +669,7 @@ function DocumentCard({
                   >
                     <Link2 size={13} />
                     {t('takeoff.link_to_boq', 'Link to BOQ')}
-                    <ArrowRight size={11} className="text-content-quaternary" />
+                    <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
                   </a>
                 </div>
               </div>
@@ -878,17 +878,17 @@ function TakeoffDocFilmstrip({
         onClick={() => setExpanded((v) => !v)}
         className="flex items-center w-full px-4 py-2 cursor-pointer group hover:bg-surface-secondary/40 transition-colors"
       >
-        <Layers size={14} className="text-content-tertiary mr-2 shrink-0" />
+        <Layers size={14} className="text-content-tertiary me-2 shrink-0" />
         <span className="text-xs font-semibold text-content-primary">
           {t('takeoff.documents_panel', { defaultValue: 'Documents' })}
         </span>
-        <span className="text-[11px] text-content-quaternary ml-1.5">
+        <span className="text-[11px] text-content-quaternary ms-1.5">
           ({documents.length})
         </span>
         <ChevronDown
           size={14}
           className={clsx(
-            'ml-auto text-content-tertiary transition-transform duration-200',
+            'ms-auto text-content-tertiary transition-transform duration-200',
             expanded ? '' : '-rotate-90',
           )}
         />
@@ -1018,7 +1018,7 @@ function TakeoffDocFilmstrip({
                       }
                     }}
                     className={clsx(
-                      'absolute top-1 right-6 p-1 rounded transition-all',
+                      'absolute top-1 end-6 p-1 rounded transition-all',
                       isPinned
                         ? 'text-oe-blue opacity-100'
                         : 'text-content-quaternary hover:text-oe-blue-text hover:bg-oe-blue-subtle opacity-0 group-hover:opacity-100',
@@ -1049,7 +1049,7 @@ function TakeoffDocFilmstrip({
                         onDeleteDoc(doc.id);
                       }
                     }}
-                    className="absolute top-1 right-1 p-1 rounded text-content-quaternary hover:text-semantic-error hover:bg-semantic-error-bg opacity-0 group-hover:opacity-100 transition-all"
+                    className="absolute top-1 end-1 p-1 rounded text-content-quaternary hover:text-semantic-error hover:bg-semantic-error-bg opacity-0 group-hover:opacity-100 transition-all"
                     title={t('common.delete', 'Delete')}
                     aria-label={t('common.delete', 'Delete')}
                   >
@@ -1177,7 +1177,7 @@ function AiTakeoffNotice({ connected }: { connected: boolean }) {
               className="mt-3.5 inline-flex items-center gap-1.5 rounded-lg bg-oe-blue px-3.5 py-2 text-xs font-semibold text-content-inverse transition-colors hover:bg-oe-blue/90"
             >
               {t('takeoff.ai_setup.connect_cta', { defaultValue: 'Connect an AI provider' })}
-              <ArrowRight size={13} />
+              <ArrowRight size={13} className="rtl:rotate-180" />
             </Link>
           )}
         </div>
@@ -2176,7 +2176,7 @@ export function TakeoffPage() {
           ]}
         />
         <h1 className="sr-only">{t('nav.pdf_measurements', 'PDF Measurements')}</h1>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ms-auto flex shrink-0 items-center gap-2">
           <ModuleGuideButton
             content={takeoffGuide}
             onCta={() => setActiveTab('documents')}
@@ -2530,7 +2530,7 @@ export function TakeoffPage() {
                   href="/markups"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-oe-blue-text hover:bg-oe-blue-subtle transition-colors"
                 >
-                  <ArrowRight size={12} className="rotate-180" />
+                  <ArrowRight size={12} className="rotate-180 rtl:rotate-0" />
                   {t('takeoff.back_to_markups', { defaultValue: 'Back to Markups' })}
                 </a>
               </div>

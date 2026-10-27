@@ -390,7 +390,7 @@ function BillPositionPicker({
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+              className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
             />
             <input
               value={search}
@@ -399,7 +399,7 @@ function BillPositionPicker({
                 defaultValue: 'Search by item number or description',
               })}
               aria-label={t('siteLogistics.search_bill', { defaultValue: 'Search the bill' })}
-              className={inputCls + ' pl-9'}
+              className={inputCls + ' ps-9'}
               autoFocus
             />
           </div>
@@ -438,7 +438,7 @@ function BillPositionPicker({
                       onClick={() => onPick(row)}
                       disabled={picked}
                       className={clsx(
-                        'flex w-full items-center gap-3 px-6 py-2.5 text-left transition-colors',
+                        'flex w-full items-center gap-3 px-6 py-2.5 text-start transition-colors',
                         picked
                           ? 'cursor-not-allowed opacity-50'
                           : 'hover:bg-surface-secondary/60',
@@ -450,7 +450,7 @@ function BillPositionPicker({
                       <span className="min-w-0 flex-1 truncate text-sm text-content-primary">
                         {row.description}
                       </span>
-                      <span className="shrink-0 text-right text-xs tabular-nums">
+                      <span className="shrink-0 text-end text-xs tabular-nums">
                         <span className="block text-content-secondary">
                           {t('siteLogistics.outstanding_short', { defaultValue: 'Outstanding' })}{' '}
                           <QuantityDisplay
@@ -737,7 +737,7 @@ function BookDeliveryModal({
                 onClick={() => setPicking(true)}
                 disabled={!projectId}
               >
-                <Table2 size={13} className="mr-1 shrink-0" />
+                <Table2 size={13} className="me-1 shrink-0" />
                 {t('siteLogistics.add_from_bill', { defaultValue: 'Add from bill' })}
               </Button>
             </div>
@@ -762,7 +762,7 @@ function BookDeliveryModal({
                       {line.description}
                       {line.position_id === null && (
                         <span
-                          className="ml-1.5 inline-flex items-center gap-0.5 text-2xs text-content-tertiary"
+                          className="ms-1.5 inline-flex items-center gap-0.5 text-2xs text-content-tertiary"
                           title={t('siteLogistics.detached_line_hint', {
                             defaultValue:
                               'The estimate line this was booked against has been deleted. The delivery record stands.',
@@ -878,11 +878,11 @@ function BookDeliveryModal({
           </Button>
           <Button variant="primary" onClick={submit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : isEdit ? (
-              <Check size={16} className="mr-1.5 shrink-0" />
+              <Check size={16} className="me-1.5 shrink-0" />
             ) : (
-              <Truck size={16} className="mr-1.5 shrink-0" />
+              <Truck size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -1021,13 +1021,13 @@ function DeliveryRow({
       <div className="flex items-center gap-1.5 shrink-0">
         {canApprove && (delivery.status === 'requested' || delivery.status === 'rejected') && (
           <Button variant="primary" size="sm" disabled={busy} onClick={() => onApprove(delivery)}>
-            <Check size={13} className="mr-1" />
+            <Check size={13} className="me-1" />
             {t('siteLogistics.action_approve', { defaultValue: 'Approve' })}
           </Button>
         )}
         {canApprove && (delivery.status === 'requested' || delivery.status === 'approved') && (
           <Button variant="ghost" size="sm" disabled={busy} onClick={() => onReject(delivery)}>
-            <Ban size={13} className="mr-1" />
+            <Ban size={13} className="me-1" />
             {t('siteLogistics.action_reject', { defaultValue: 'Reject' })}
           </Button>
         )}
@@ -1039,7 +1039,7 @@ function DeliveryRow({
             onClick={() => onAdvance(delivery, 'arrived')}
             title={t('siteLogistics.action_mark_arrived', { defaultValue: 'Mark arrived' })}
           >
-            <LogIn size={13} className="mr-1" />
+            <LogIn size={13} className="me-1" />
             {t('siteLogistics.action_mark_arrived', { defaultValue: 'Mark arrived' })}
           </Button>
         )}
@@ -1051,7 +1051,7 @@ function DeliveryRow({
             onClick={() => onAdvance(delivery, 'completed')}
             title={t('siteLogistics.action_mark_completed', { defaultValue: 'Mark completed' })}
           >
-            <CheckCircle2 size={13} className="mr-1" />
+            <CheckCircle2 size={13} className="me-1" />
             {t('siteLogistics.action_mark_completed', { defaultValue: 'Mark completed' })}
           </Button>
         )}
@@ -1207,12 +1207,12 @@ function DeliveryBoard({
         <div className="relative">
           <Calendar
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
           />
           <JalaliDateInput
             value={day}
             onChange={(e) => setDay(e.target.value)}
-            className={inputCls + ' pl-9 w-auto'}
+            className={inputCls + ' ps-9 w-auto'}
             aria-label={t('siteLogistics.filter_day', { defaultValue: 'Filter by day' })}
           />
         </div>
@@ -1467,7 +1467,7 @@ function GatesPanel({ projectId }: { projectId: string }) {
               disabled={name.trim().length === 0 || closeTime <= openTime || createMut.isPending}
               onClick={() => createMut.mutate()}
             >
-              <Plus size={14} className="mr-1" />
+              <Plus size={14} className="me-1" />
               {t('siteLogistics.add_gate', { defaultValue: 'Add a gate' })}
             </Button>
           </div>
@@ -1691,7 +1691,7 @@ function GateEditForm({
           {t('common.cancel', { defaultValue: 'Cancel' })}
         </Button>
         <Button variant="primary" size="sm" onClick={submit} disabled={!canSave}>
-          <Check size={13} className="mr-1" />
+          <Check size={13} className="me-1" />
           {t('common.save', { defaultValue: 'Save' })}
         </Button>
       </div>
@@ -1817,7 +1817,7 @@ function LaydownPanel({ projectId }: { projectId: string }) {
               disabled={name.trim().length === 0 || createMut.isPending}
               onClick={() => createMut.mutate()}
             >
-              <Plus size={14} className="mr-1" />
+              <Plus size={14} className="me-1" />
               {t('siteLogistics.add_zone', { defaultValue: 'Add a laydown zone' })}
             </Button>
           </div>
@@ -1997,7 +1997,7 @@ function LaydownEditForm({
           {t('common.cancel', { defaultValue: 'Cancel' })}
         </Button>
         <Button variant="primary" size="sm" onClick={submit} disabled={!canSave}>
-          <Check size={13} className="mr-1" />
+          <Check size={13} className="me-1" />
           {t('common.save', { defaultValue: 'Save' })}
         </Button>
       </div>
@@ -2274,17 +2274,17 @@ function GateTimeline({
             onClick={() => setDay((d) => shiftDay(d, -1))}
             aria-label={t('siteLogistics.prev_day', { defaultValue: 'Previous day' })}
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={16} className="rtl:rotate-180" />
           </Button>
           <div className="relative">
             <Calendar
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+              className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
             />
             <JalaliDateInput
               value={day}
               onChange={(e) => setDay(e.target.value || todayInput())}
-              className={inputCls + ' pl-9 w-auto'}
+              className={inputCls + ' ps-9 w-auto'}
               aria-label={t('siteLogistics.filter_day', { defaultValue: 'Filter by day' })}
             />
           </div>
@@ -2294,7 +2294,7 @@ function GateTimeline({
             onClick={() => setDay((d) => shiftDay(d, 1))}
             aria-label={t('siteLogistics.next_day', { defaultValue: 'Next day' })}
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={16} className="rtl:rotate-180" />
           </Button>
           <Button variant="ghost" size="sm" onClick={() => setDay(todayInput())}>
             {t('siteLogistics.today', { defaultValue: 'Today' })}
@@ -2302,11 +2302,11 @@ function GateTimeline({
         </div>
         <div className="flex items-center gap-1.5">
           <Button variant="ghost" size="sm" onClick={exportCsv} disabled={!sortedActive.length}>
-            <Download size={14} className="mr-1" />
+            <Download size={14} className="me-1" />
             {t('siteLogistics.export_csv', { defaultValue: 'Export CSV' })}
           </Button>
           <Button variant="ghost" size="sm" onClick={printDay} disabled={!sortedActive.length}>
-            <Printer size={14} className="mr-1" />
+            <Printer size={14} className="me-1" />
             {t('siteLogistics.print', { defaultValue: 'Print' })}
           </Button>
         </div>
@@ -2337,13 +2337,13 @@ function GateTimeline({
             <div className="overflow-x-auto">
               <div className="flex min-w-max">
                 {/* Hour gutter */}
-                <div className="shrink-0 w-14 border-r border-border-light">
+                <div className="shrink-0 w-14 border-e border-border-light">
                   <div className="h-10 border-b border-border-light" />
                   <div className="relative" style={{ height: totalHeight }}>
                     {hours.map((h) => (
                       <div
                         key={h}
-                        className="absolute start-0 end-0 flex justify-end pr-1.5 -translate-y-1/2 text-2xs tabular-nums text-content-tertiary"
+                        className="absolute start-0 end-0 flex justify-end pe-1.5 -translate-y-1/2 text-2xs tabular-nums text-content-tertiary"
                         style={{ top: ((h - range.start) / 60) * HOUR_PX }}
                       >
                         {fmtHourLabel(h)}
@@ -2377,7 +2377,7 @@ function GateTimeline({
                   return (
                     <div
                       key={col.gate?.id ?? 'unassigned'}
-                      className="shrink-0 w-44 border-r border-border-light last:border-r-0"
+                      className="shrink-0 w-44 border-e border-border-light last:border-e-0"
                     >
                       <div className="h-10 flex items-center justify-between gap-1 px-2 border-b border-border-light bg-surface-secondary/40">
                         <div className="flex items-center gap-1 min-w-0">
@@ -2433,7 +2433,7 @@ function GateTimeline({
                                 delivery.window_end,
                               )}  ${delivery.supplier_name}`}
                               className={clsx(
-                                'absolute rounded-md border border-black/5 px-1.5 py-1 text-left overflow-hidden',
+                                'absolute rounded-md border border-black/5 px-1.5 py-1 text-start overflow-hidden',
                                 cfg.cls,
                                 canEdit
                                   ? 'cursor-pointer hover:shadow-md hover:ring-1 hover:ring-oe-blue/40 transition-shadow'
@@ -2533,7 +2533,7 @@ function BillCoveragePanel({ projectId }: { projectId: string }) {
         <div className="relative flex-1 min-w-[14rem]">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
           />
           <input
             value={search}
@@ -2542,7 +2542,7 @@ function BillCoveragePanel({ projectId }: { projectId: string }) {
               defaultValue: 'Search by item number or description',
             })}
             aria-label={t('siteLogistics.search_bill', { defaultValue: 'Search the bill' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
       </div>
@@ -2607,25 +2607,25 @@ function BillCoveragePanel({ projectId }: { projectId: string }) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border-light text-2xs uppercase tracking-wide text-content-tertiary">
-                  <th className="px-4 py-2 text-left font-medium">
+                  <th className="px-4 py-2 text-start font-medium">
                     {t('siteLogistics.col_item', { defaultValue: 'Item' })}
                   </th>
-                  <th className="px-4 py-2 text-left font-medium">
+                  <th className="px-4 py-2 text-start font-medium">
                     {t('siteLogistics.col_description', { defaultValue: 'Description' })}
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="px-4 py-2 text-end font-medium">
                     {t('siteLogistics.col_bill_quantity', { defaultValue: 'In the bill' })}
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="px-4 py-2 text-end font-medium">
                     {t('siteLogistics.col_booked', { defaultValue: 'Booked in' })}
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="px-4 py-2 text-end font-medium">
                     {t('siteLogistics.col_delivered', { defaultValue: 'On site' })}
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="px-4 py-2 text-end font-medium">
                     {t('siteLogistics.col_outstanding', { defaultValue: 'Outstanding' })}
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="px-4 py-2 text-end font-medium">
                     {t('siteLogistics.col_value_on_site', { defaultValue: 'Value on site' })}
                   </th>
                 </tr>
@@ -2665,18 +2665,18 @@ function BillCoveragePanel({ projectId }: { projectId: string }) {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-right align-top tabular-nums text-content-secondary">
+                    <td className="px-4 py-2 text-end align-top tabular-nums text-content-secondary">
                       <QuantityDisplay value={row.bill_quantity} unit={row.unit} />
                     </td>
-                    <td className="px-4 py-2 text-right align-top tabular-nums text-content-secondary">
+                    <td className="px-4 py-2 text-end align-top tabular-nums text-content-secondary">
                       <QuantityDisplay value={row.booked_quantity} unit={row.unit} />
                     </td>
-                    <td className="px-4 py-2 text-right align-top tabular-nums font-medium text-content-primary">
+                    <td className="px-4 py-2 text-end align-top tabular-nums font-medium text-content-primary">
                       <QuantityDisplay value={row.delivered_quantity} unit={row.unit} />
                     </td>
                     <td
                       className={clsx(
-                        'px-4 py-2 text-right align-top tabular-nums',
+                        'px-4 py-2 text-end align-top tabular-nums',
                         Number(row.outstanding_quantity) < 0
                           ? 'text-semantic-warning'
                           : 'text-content-secondary',
@@ -2684,7 +2684,7 @@ function BillCoveragePanel({ projectId }: { projectId: string }) {
                     >
                       <QuantityDisplay value={row.outstanding_quantity} unit={row.unit} />
                     </td>
-                    <td className="px-4 py-2 text-right align-top tabular-nums text-content-primary">
+                    <td className="px-4 py-2 text-end align-top tabular-nums text-content-primary">
                       <MoneyDisplay amount={row.delivered_value} currency={currency} />
                     </td>
                   </tr>
@@ -2910,7 +2910,7 @@ export function SiteLogisticsPage() {
             }}
             className="shrink-0 whitespace-nowrap"
           >
-            <Truck size={14} className="mr-1 shrink-0" />
+            <Truck size={14} className="me-1 shrink-0" />
             <span>{t('siteLogistics.book_delivery', { defaultValue: 'Book delivery' })}</span>
           </Button>
         }

@@ -618,7 +618,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     onClick={() => selectResult(item)}
                     onMouseEnter={() => setActiveIndex(idx)}
                     className={clsx(
-                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left',
+                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-start',
                       'text-sm transition-colors',
                       isActive
                         ? 'bg-oe-blue-subtle text-oe-blue-text'

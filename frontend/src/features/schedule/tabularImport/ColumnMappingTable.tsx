@@ -29,7 +29,7 @@ export function ColumnMappingTable({ columns, chosen, onChoose, sample = [], dis
 
   return (
     <div className="overflow-x-auto rounded-lg border border-border-light">
-      <table className="w-full text-left text-xs">
+      <table className="w-full text-start text-xs">
         <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-secondary">
           <tr>
             <th className="px-3 py-2 font-medium">

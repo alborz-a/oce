@@ -710,16 +710,16 @@ function ActivitiesCard({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">#</th>
-                <th className="px-4 py-2.5 text-left">{t('takt.activity', { defaultValue: 'Activity' })}</th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-start">#</th>
+                <th className="px-4 py-2.5 text-start">{t('takt.activity', { defaultValue: 'Activity' })}</th>
+                <th className="px-4 py-2.5 text-end">
                   {t('takt.planned', { defaultValue: 'Planned (d)' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">{t('takt.crew', { defaultValue: 'Crew' })}</th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">{t('takt.crew', { defaultValue: 'Crew' })}</th>
+                <th className="px-4 py-2.5 text-end">
                   {t('takt.actualCycleDays', { defaultValue: 'Actual (d)' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -729,19 +729,19 @@ function ActivitiesCard({
                   <td className="px-4 py-2 font-medium">
                     {a.name}
                     {a.activity_code && (
-                      <span className="ml-2 text-2xs text-content-tertiary">{a.activity_code}</span>
+                      <span className="ms-2 text-2xs text-content-tertiary">{a.activity_code}</span>
                     )}
                   </td>
-                  <td className="px-4 py-2 text-right tabular-nums">{a.planned_cycle_duration_days}</td>
-                  <td className="px-4 py-2 text-right tabular-nums">{a.crew_size}</td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end tabular-nums">{a.planned_cycle_duration_days}</td>
+                  <td className="px-4 py-2 text-end tabular-nums">{a.crew_size}</td>
+                  <td className="px-4 py-2 text-end">
                     <input
                       type="number"
                       min={0}
                       step="0.5"
                       defaultValue={a.actual_cycle_duration_days ?? ''}
                       placeholder="—"
-                      className="h-7 w-20 rounded border border-border bg-surface-primary px-2 text-right text-xs tabular-nums"
+                      className="h-7 w-20 rounded border border-border bg-surface-primary px-2 text-end text-xs tabular-nums"
                       onBlur={(e) => {
                         const raw = e.target.value.trim();
                         const value = raw === '' ? null : Number(raw);
@@ -753,7 +753,7 @@ function ActivitiesCard({
                       aria-label={t('takt.actualCycleDays', { defaultValue: 'Actual (d)' })}
                     />
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end">
                     <Button
                       size="sm"
                       variant="ghost"

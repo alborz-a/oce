@@ -190,7 +190,7 @@ export function PayAppLinesDialog({
       <WideModalSection>
         {loading ? (
           <p className="py-6 text-center text-sm text-content-tertiary">
-            <Loader2 size={16} className="mr-2 inline animate-spin" />
+            <Loader2 size={16} className="me-2 inline animate-spin" />
             {t('common.loading', { defaultValue: 'Loading…' })}
           </p>
         ) : lines.length === 0 ? (
@@ -207,16 +207,16 @@ export function PayAppLinesDialog({
             <table className="w-full text-sm" data-testid="pay-app-lines">
               <thead className="bg-surface-secondary text-xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('subcontractors.pay_app_col_package', { defaultValue: 'Work package' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('subcontractors.pay_app_col_claimed', { defaultValue: 'Claimed' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('subcontractors.pay_app_col_approved', { defaultValue: 'Approved' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('subcontractors.pay_app_col_not_approved', { defaultValue: 'Not approved' })}
                   </th>
                 </tr>
@@ -230,8 +230,8 @@ export function PayAppLinesDialog({
                   return (
                     <tr key={ln.id} className="border-t border-border-light align-top">
                       <td className="px-3 py-2 text-content-primary">{name}</td>
-                      <td className="px-3 py-2 text-right">{money(claimed)}</td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">{money(claimed)}</td>
+                      <td className="px-3 py-2 text-end">
                         {mode === 'approve' ? (
                           <>
                             <input
@@ -241,7 +241,7 @@ export function PayAppLinesDialog({
                               max={claimed}
                               value={typed[ln.id] ?? ''}
                               onChange={(e) => setTyped((prev) => ({ ...prev, [ln.id]: e.target.value }))}
-                              className="h-8 w-32 rounded-md border border-border-light bg-surface-primary px-2 text-right text-sm tabular-nums"
+                              className="h-8 w-32 rounded-md border border-border-light bg-surface-primary px-2 text-end text-sm tabular-nums"
                               aria-label={t('subcontractors.pay_app_approved_label', {
                                 name,
                                 defaultValue: 'Approved amount for {{name}}',
@@ -267,8 +267,8 @@ export function PayAppLinesDialog({
                       <td
                         className={
                           approvedKnown && gap > 0.004
-                            ? 'px-3 py-2 text-right text-amber-700 dark:text-amber-300'
-                            : 'px-3 py-2 text-right text-content-tertiary'
+                            ? 'px-3 py-2 text-end text-amber-700 dark:text-amber-300'
+                            : 'px-3 py-2 text-end text-content-tertiary'
                         }
                         data-testid="pay-app-line-gap"
                       >
@@ -281,11 +281,11 @@ export function PayAppLinesDialog({
               <tfoot>
                 <tr className="border-t border-border-light font-medium">
                   <td className="px-3 py-2">{t('subcontractors.pay_app_total', { defaultValue: 'Total' })}</td>
-                  <td className="px-3 py-2 text-right">{money(claimedTotal)}</td>
-                  <td className="px-3 py-2 text-right" data-testid="pay-app-approved-total">
+                  <td className="px-3 py-2 text-end">{money(claimedTotal)}</td>
+                  <td className="px-3 py-2 text-end" data-testid="pay-app-approved-total">
                     {approvedKnown ? money(approvedTotal) : '—'}
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     {approvedKnown && claimedTotal - approvedTotal > 0.004 ? money(claimedTotal - approvedTotal) : '—'}
                   </td>
                 </tr>

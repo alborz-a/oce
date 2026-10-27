@@ -62,7 +62,7 @@ export function SuggestionCard({
   return (
     <div
       className={clsx(
-        'rounded-md border border-border-light bg-surface-primary p-3 text-left',
+        'rounded-md border border-border-light bg-surface-primary p-3 text-start',
         className,
       )}
     >
@@ -118,7 +118,7 @@ export function SuggestionCard({
             <button
               type="button"
               onClick={onLearnMore}
-              className="ml-auto text-xs font-medium text-oe-blue-text hover:underline"
+              className="ms-auto text-xs font-medium text-oe-blue-text hover:underline"
             >
               {t('suggestion.learn_more', { defaultValue: 'Learn more' })}
             </button>

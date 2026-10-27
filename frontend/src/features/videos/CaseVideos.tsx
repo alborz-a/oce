@@ -48,7 +48,7 @@ export default function CaseVideos({ caseId }: { caseId: string }) {
         </div>
         <Link to="/videos" className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline">
           {t('videos.library_title', { defaultValue: 'All videos' })}
-          <ArrowRight size={12} aria-hidden />
+          <ArrowRight size={12} className="rtl:rotate-180" aria-hidden />
         </Link>
       </div>
       <div className="-mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">

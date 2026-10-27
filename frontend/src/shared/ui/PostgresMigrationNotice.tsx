@@ -90,7 +90,7 @@ export function PostgresMigrationNotice() {
       <button
         type="button"
         onClick={() => window.dispatchEvent(new CustomEvent('oe:open-bug-report'))}
-        className="ml-1 shrink-0 whitespace-nowrap underline underline-offset-2 hover:text-amber-900 dark:hover:text-amber-50"
+        className="ms-1 shrink-0 whitespace-nowrap underline underline-offset-2 hover:text-amber-900 dark:hover:text-amber-50"
       >
         {t('pg_notice.report', { defaultValue: 'Report a problem' })}
       </button>
@@ -98,7 +98,7 @@ export function PostgresMigrationNotice() {
         type="button"
         onClick={dismiss}
         aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-        className="ml-1 shrink-0 rounded p-0.5 hover:bg-amber-900/10 dark:hover:bg-amber-100/10"
+        className="ms-1 shrink-0 rounded p-0.5 hover:bg-amber-900/10 dark:hover:bg-amber-100/10"
       >
         <X size={13} />
       </button>

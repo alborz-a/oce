@@ -173,7 +173,7 @@ function DemoBannerUpstream() {
                 </strong>{' '}
                 {t('demo_banner.modal_intro_nothing_more')}
               </p>
-              <ul className="space-y-2 pl-1">
+              <ul className="space-y-2 ps-1">
                 <li className="flex gap-2.5">
                   <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5" />
                   <span>

@@ -46,7 +46,7 @@ import { getErrorMessage } from '@/shared/lib/api';
 import { IATE_ALLOWED_PREFIXES, isIateUrlAllowed } from './api';
 import { useTranslationStatus, useTriggerDownload } from './queries';
 import type { DictionaryEntry, InFlightTask, LookupKind } from './types';
-import { fmtList, fmtFixed } from '@/shared/lib/formatters';
+import { fmtList, formatBytes } from '@/shared/lib/formatters';
 
 /* ── Constants ─────────────────────────────────────────────────────────── */
 
@@ -83,17 +83,7 @@ const LANG_CODE_RE = /^[a-z]{2,3}$/i;
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-/** Format bytes as KB/MB/GB with one decimal place. */
-function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  const idx = Math.min(
-    units.length - 1,
-    Math.floor(Math.log(bytes) / Math.log(1024)),
-  );
-  const value = bytes / 1024 ** idx;
-  return `${fmtFixed(value, idx === 0 ? 0 : 1)} ${units[idx]}`;
-}
+
 
 /** Render a Unix epoch (seconds) as a relative time string ("3 minutes ago").
  *  We avoid date-fns here to keep the bundle slim. */
@@ -330,17 +320,17 @@ const DictionariesTable = memo(function DictionariesTable({
           data-testid="translation-dict-table"
         >
           <thead className="bg-surface-secondary/40">
-            <tr className="text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <tr className="text-start text-xs uppercase tracking-wide text-content-tertiary">
               <th className="px-4 py-2 font-medium">
                 {t('translation.dict.col_kind', { defaultValue: 'Source' })}
               </th>
               <th className="px-4 py-2 font-medium">
                 {t('translation.dict.col_pair', { defaultValue: 'Pair' })}
               </th>
-              <th className="px-4 py-2 font-medium text-right">
+              <th className="px-4 py-2 font-medium text-end">
                 {t('translation.dict.col_size', { defaultValue: 'Size' })}
               </th>
-              <th className="px-4 py-2 font-medium text-right">
+              <th className="px-4 py-2 font-medium text-end">
                 {t('translation.dict.col_modified', {
                   defaultValue: 'Modified',
                 })}
@@ -365,10 +355,10 @@ const DictionariesTable = memo(function DictionariesTable({
                 <td className="px-4 py-2.5 font-mono text-xs text-content-primary">
                   {entry.pair}
                 </td>
-                <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
                   {formatBytes(entry.size_bytes)}
                 </td>
-                <td className="px-4 py-2.5 text-right text-content-tertiary">
+                <td className="px-4 py-2.5 text-end text-content-tertiary">
                   {formatRelative(entry.modified_at, t)}
                 </td>
               </tr>
@@ -843,7 +833,7 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
                     defaultValue: task.status,
                   })}
                 </span>
-                <span className="ml-auto tabular-nums text-content-tertiary text-xs">
+                <span className="ms-auto tabular-nums text-content-tertiary text-xs">
                   {pct}%
                 </span>
               </div>

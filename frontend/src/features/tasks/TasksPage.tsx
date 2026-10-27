@@ -533,9 +533,9 @@ function AddTaskModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('tasks.create_task', { defaultValue: 'Create Task' })}</span>
           </Button>
@@ -634,7 +634,7 @@ const TaskCard = React.memo(function TaskCard({
 
       {/* Source / BIM indicators — inline, compact */}
       {(task.meeting_id || (task.metadata && typeof task.metadata.source === 'string') || (task.bim_element_ids && task.bim_element_ids.length > 0)) && (
-        <div className="flex items-center gap-2 mt-1 ml-6">
+        <div className="flex items-center gap-2 mt-1 ms-6">
           {(task.meeting_id || (task.metadata && typeof task.metadata.source === 'string')) &&
             (() => {
               // ``metadata.source`` is the cross-module back-link convention
@@ -1632,7 +1632,7 @@ export function TasksPage() {
             </button>
             <button
               onClick={() => handleRemoveCategory(cat.name)}
-              className="hidden group-hover:flex items-center justify-center w-4 h-4 rounded-full bg-surface-tertiary text-content-tertiary hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors -ml-1"
+              className="hidden group-hover:flex items-center justify-center w-4 h-4 rounded-full bg-surface-tertiary text-content-tertiary hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors -ms-1"
               title={t('tasks.remove_category', { defaultValue: 'Remove category' })}
               aria-label={t('tasks.remove_category_named', { defaultValue: 'Remove {{name}} category', name: cat.label })}
             >
@@ -1654,7 +1654,7 @@ export function TasksPage() {
             <Plus size={16} />
           </button>
           {showAddCategory && (
-            <div className="absolute left-0 top-full mt-1 z-20 w-64 rounded-xl border border-border bg-surface-elevated shadow-lg p-3 animate-fade-in">
+            <div className="absolute start-0 top-full mt-1 z-20 w-64 rounded-xl border border-border bg-surface-elevated shadow-lg p-3 animate-fade-in">
               <p className="text-xs font-semibold text-content-primary mb-2">
                 {t('tasks.new_category', { defaultValue: 'New Category' })}
               </p>
@@ -1672,7 +1672,7 @@ export function TasksPage() {
               />
               {/* Color picker */}
               <div className="flex items-center gap-1 mb-2">
-                <span className="text-2xs text-content-tertiary mr-1">
+                <span className="text-2xs text-content-tertiary me-1">
                   {t('tasks.category_color', { defaultValue: 'Color:' })}
                 </span>
                 {CUSTOM_CATEGORY_COLORS.map((c, idx) => (
@@ -1717,7 +1717,7 @@ export function TasksPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1725,7 +1725,7 @@ export function TasksPage() {
             placeholder={t('tasks.search_placeholder', {
               defaultValue: 'Search tasks...',
             })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -1820,7 +1820,7 @@ export function TasksPage() {
                   className={clsx(
                     'flex flex-col min-w-[240px] flex-1 transition-all duration-150',
                     isColumnDragging && 'opacity-50',
-                    isColumnDropTarget && 'border-l-2 border-oe-blue',
+                    isColumnDropTarget && 'border-s-2 border-oe-blue',
                   )}
                   onDragOver={(e) => {
                     // Distinguish card drags from column reorder drags
@@ -2110,9 +2110,9 @@ export function TasksPage() {
                   disabled={!importFile || importPending}
                 >
                   {importPending ? (
-                    <Loader2 size={16} className="animate-spin mr-1.5" />
+                    <Loader2 size={16} className="animate-spin me-1.5" />
                   ) : (
-                    <Upload size={16} className="mr-1.5" />
+                    <Upload size={16} className="me-1.5" />
                   )}
                   <span>{t('tasks.import_btn', { defaultValue: 'Import' })}</span>
                 </Button>

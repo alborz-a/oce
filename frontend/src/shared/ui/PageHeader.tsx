@@ -22,7 +22,7 @@ import clsx from 'clsx';
 export interface PageHeaderProps {
   /** One sentence, i18n, `text-content-tertiary` - NOT the module name. */
   subtitle?: ReactNode;
-  /** Primary action first, then secondary; rendered right-aligned. */
+  /** Primary action first, then secondary; rendered end-aligned. */
   actions?: ReactNode;
   /**
    * Accessible page heading for screen readers. The top bar is meant to show

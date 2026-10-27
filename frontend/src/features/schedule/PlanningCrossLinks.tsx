@@ -105,7 +105,7 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
       aria-label={t('planning.section_nav', { defaultValue: 'Planning & Control modules' })}
       className="flex flex-wrap items-center gap-1.5"
     >
-      <span className="mr-1 text-2xs font-semibold uppercase tracking-wider text-content-quaternary">
+      <span className="me-1 text-2xs font-semibold uppercase tracking-wider text-content-quaternary">
         {t('planning.section_label', { defaultValue: 'Planning & Control' })}
       </span>
       {links.map((l) => {

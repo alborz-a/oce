@@ -193,7 +193,7 @@ function HowTeamVisibilityWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -263,7 +263,7 @@ function ValidationBanner({ projectId }: { projectId: string }) {
               count: data.warning_count,
             })}
       </div>
-      <ul className="mt-1.5 space-y-1 pl-6">
+      <ul className="mt-1.5 space-y-1 ps-6">
         {data.findings.map((f: TeamsValidationFinding, i: number) => (
           <li
             key={`${f.rule_id}-${f.element_ref ?? i}`}
@@ -476,7 +476,7 @@ function MemberPanel({ team, projectId }: { team: Team; projectId: string }) {
               <span className="min-w-0 flex-1 truncate text-sm text-content-primary">
                 {m.full_name || m.email || m.user_id}
                 {!m.is_active ? (
-                  <Badge variant="warning" size="sm" className="ml-2">
+                  <Badge variant="warning" size="sm" className="ms-2">
                     {t('teams.member_inactive', 'Inactive')}
                   </Badge>
                 ) : null}
@@ -828,7 +828,7 @@ function RestrictedTab({ projectId }: { projectId: string }) {
               </code>
               {!row.enforced ? (
                 <Badge variant="warning" size="sm">
-                  <Info size={11} className="mr-1 inline" />
+                  <Info size={11} className="me-1 inline" />
                   {t('teams.not_enforced', 'Recorded, not enforced')}
                 </Badge>
               ) : null}
@@ -967,35 +967,35 @@ function MatrixTab({ projectId }: { projectId: string }) {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[36rem] text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-2xs uppercase tracking-wide text-content-tertiary">
-              <th className="py-2 pr-3 font-medium">{t('teams.col_person', 'Person')}</th>
-              <th className="py-2 pr-3 font-medium">{t('teams.col_teams', 'Teams')}</th>
-              <th className="py-2 pr-3 font-medium">{t('teams.col_can_open', 'Can open')}</th>
+            <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-content-tertiary">
+              <th className="py-2 pe-3 font-medium">{t('teams.col_person', 'Person')}</th>
+              <th className="py-2 pe-3 font-medium">{t('teams.col_teams', 'Teams')}</th>
+              <th className="py-2 pe-3 font-medium">{t('teams.col_can_open', 'Can open')}</th>
               <th className="py-2 font-medium">{t('teams.col_hidden', 'Hidden from them')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-light">
             {data.members.map((m) => (
               <tr key={m.user_id}>
-                <td className="py-2 pr-3">
+                <td className="py-2 pe-3">
                   <span className="text-content-primary">
                     {m.full_name || m.email || m.user_id}
                   </span>
                   {m.is_project_owner ? (
-                    <Badge variant="blue" size="sm" className="ml-2">
+                    <Badge variant="blue" size="sm" className="ms-2">
                       {t('teams.badge_owner', 'Owner')}
                     </Badge>
                   ) : null}
                   {m.is_system_admin ? (
-                    <Badge variant="neutral" size="sm" className="ml-2">
+                    <Badge variant="neutral" size="sm" className="ms-2">
                       {t('teams.badge_admin', 'Admin')}
                     </Badge>
                   ) : null}
                 </td>
-                <td className="py-2 pr-3 text-xs text-content-secondary">
+                <td className="py-2 pe-3 text-xs text-content-secondary">
                   {fmtList(m.team_names)}
                 </td>
-                <td className="py-2 pr-3 text-content-primary">{m.visible_restricted_count}</td>
+                <td className="py-2 pe-3 text-content-primary">{m.visible_restricted_count}</td>
                 <td
                   className={clsx(
                     'py-2',

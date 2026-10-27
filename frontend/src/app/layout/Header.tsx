@@ -404,7 +404,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         )}
 
         {/* Active project switcher (rendered first so the breadcrumb
-            reads left-to-right as ProjectName › PageTitle). */}
+            reads start-to-right as ProjectName › PageTitle). */}
         <ProjectSwitcher />
 
         {translatedTitle && (
@@ -520,7 +520,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         >
           <Search size={14} strokeWidth={1.75} className="shrink-0" />
           <span className="truncate">{t('common.search')}</span>
-          <kbd className="ml-auto inline-flex items-center gap-0.5 rounded border border-border-light bg-surface-primary px-1 py-px text-[9px] font-medium text-content-quaternary">
+          <kbd className="ms-auto inline-flex items-center gap-0.5 rounded border border-border-light bg-surface-primary px-1 py-px text-[9px] font-medium text-content-quaternary">
             ⌘K
           </kbd>
         </button>
@@ -856,7 +856,7 @@ export function BugReportMenu() {
         <Bug size={16} strokeWidth={1.75} />
         {errorCount > 0 && (
           <span
-            className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-surface-primary"
+            className="absolute top-1.5 end-1.5 h-1.5 w-1.5 rounded-full bg-red-500 ring-2 ring-surface-primary"
             aria-label={t('bug.errors_captured', {
               defaultValue: '{{count}} errors captured this session',
               count: errorCount,
@@ -872,7 +872,7 @@ export function BugReportMenu() {
         <div
           role="dialog"
           aria-label={t('bug.menu_heading', { defaultValue: 'Report a bug' })}
-          className="absolute right-0 top-full mt-1.5 w-80 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-2 z-40"
+          className="absolute end-0 top-full mt-1.5 w-80 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-2 z-40"
         >
           <div className="px-3 pb-2 border-b border-border-light">
             <div className="flex items-center gap-2">
@@ -881,7 +881,7 @@ export function BugReportMenu() {
                 {t('bug.menu_heading', { defaultValue: 'Report a bug' })}
               </span>
               {errorCount > 0 && (
-                <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-2xs font-semibold text-red-500">
+                <span className="ms-auto inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2 py-0.5 text-2xs font-semibold text-red-500">
                   <span className="h-1 w-1 rounded-full bg-red-500" />
                   {t('bug.errors_chip', {
                     defaultValue: '{{count}} captured',
@@ -908,7 +908,7 @@ export function BugReportMenu() {
               className="block text-2xs font-medium text-content-secondary"
             >
               {t('bug.description_label', { defaultValue: 'What happened?' })}
-              <span className="text-semantic-error ml-0.5" aria-hidden="true">*</span>
+              <span className="text-semantic-error ms-0.5" aria-hidden="true">*</span>
             </label>
             <p id={descriptionHintId} className="mt-0.5 text-2xs text-content-tertiary leading-snug">
               {t('bug.description_hint', {
@@ -980,7 +980,7 @@ export function BugReportMenu() {
                   onClick={ch.onClick}
                   disabled={blocked}
                   className={clsx(
-                    'flex w-full items-start gap-3 px-3 py-2 text-left transition-colors',
+                    'flex w-full items-start gap-3 px-3 py-2 text-start transition-colors',
                     blocked ? 'cursor-not-allowed opacity-60' : 'hover:bg-surface-secondary',
                   )}
                 >
@@ -1089,7 +1089,7 @@ function HelpMenu() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full mt-1.5 w-60 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1 z-40"
+          className="absolute end-0 top-full mt-1.5 w-60 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1 z-40"
         >
           {/* In-app guided explanation of every module - the "How it works"
               hub. Lives first so it is the most discoverable help action. */}
@@ -1103,7 +1103,7 @@ function HelpMenu() {
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <GraduationCap size={14} className="text-oe-blue shrink-0" />
-            <span className="flex-1 text-left">{t('howto.menu_item', { defaultValue: 'How it works' })}</span>
+            <span className="flex-1 text-start">{t('howto.menu_item', { defaultValue: 'How it works' })}</span>
           </button>
           <div className="my-1 border-t border-border-light" role="separator" />
 
@@ -1159,7 +1159,7 @@ function HelpMenu() {
               className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
             >
               <Globe size={14} className="text-content-tertiary shrink-0" />
-              <span className="flex-1 text-left">
+              <span className="flex-1 text-start">
                 {t('desktop.open_in_browser', { defaultValue: 'Open in your browser' })}
               </span>
               <ExternalLink size={11} className="text-content-quaternary shrink-0" />
@@ -1252,7 +1252,7 @@ function LanguageSwitcher({
       </button>
 
       {open && (
-        <div role="menu" className="absolute right-0 top-full mt-1.5 w-48 max-h-72 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1">
+        <div role="menu" className="absolute end-0 top-full mt-1.5 w-48 max-h-72 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1">
           {sortLanguagesByName(SUPPORTED_LANGUAGES).map((lang) => (
             <button
               key={lang.code}
@@ -1567,7 +1567,7 @@ function UserMenu() {
             repeating horizontal-scroll bug, not just a test artifact. */}
         <span
           aria-hidden
-          className="absolute -bottom-0.5 right-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden"
+          className="absolute -bottom-0.5 end-0 flex h-2.5 w-2.5 items-center justify-center overflow-hidden"
         >
           <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400/70 animate-ping" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-surface-primary" />
@@ -1575,7 +1575,7 @@ function UserMenu() {
       </button>
 
       {open && (
-        <div role="menu" className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1">
+        <div role="menu" className="absolute end-0 top-full mt-1.5 w-48 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-scale-in py-1">
           {userEmail && (
             <>
               <div className="px-3 py-1.5 text-2xs text-content-tertiary truncate" title={userEmail}>
@@ -1812,7 +1812,7 @@ function ProjectSwitcher() {
           className={clsx(
             // WCAG AA fix 2026-05-27: text-oe-blue-text (#0071e3) on bg-oe-blue-subtle
             // failed 4.35:1; text-oe-blue-text passes at 8.05:1.
-            'flex items-center gap-2 pl-1.5 pr-2 h-9 text-[13px] min-w-0',
+            'flex items-center gap-2 ps-1.5 pe-2 h-9 text-[13px] min-w-0',
             activeProjectId ? 'text-oe-blue-text' : 'text-oe-blue-text/85 hover:text-oe-blue-text',
           )}
           title={activeProjectId
@@ -1850,7 +1850,7 @@ function ProjectSwitcher() {
             // WCAG AA: text-oe-blue-text at /70 alpha on bg-oe-blue-subtle drops
             // below 4.5:1. Use oe-blue-dark for the icon color so axe scans
             // pass even though ChevronDown is presentational.
-            'flex items-center px-2 border-l transition-colors',
+            'flex items-center px-2 border-s transition-colors',
             activeProjectId
               ? 'border-oe-blue/20 text-oe-blue-text/70 hover:bg-oe-blue/10 hover:text-oe-blue-text'
               : 'border-oe-blue/25 border-dashed text-oe-blue-text/60 hover:bg-oe-blue/10 hover:text-oe-blue-text',
@@ -1866,7 +1866,7 @@ function ProjectSwitcher() {
       </div>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 z-50 w-72 rounded-xl border border-border bg-surface-elevated shadow-xl overflow-hidden animate-fade-in">
+        <div className="absolute top-full start-0 mt-1.5 z-50 w-72 rounded-xl border border-border bg-surface-elevated shadow-xl overflow-hidden animate-fade-in">
           <div className="px-4 py-2.5 border-b border-border-light bg-surface-secondary/50">
             <p className="text-xs font-semibold text-content-secondary">
               {t('schedule.switch_project', { defaultValue: 'Switch Project' })}
@@ -1938,7 +1938,7 @@ function ProjectSwitcher() {
                 </div>
                 <span className="truncate">{p.name}</span>
                 {p.id === activeProjectId && (
-                  <span className="ml-auto text-2xs text-oe-blue font-normal shrink-0">
+                  <span className="ms-auto text-2xs text-oe-blue font-normal shrink-0">
                     {t('common.active', { defaultValue: 'Active' })}
                   </span>
                 )}
@@ -2028,7 +2028,7 @@ function UploadQueueIndicator() {
           <Upload size={16} aria-hidden="true" />
         )}
         {(totalActive > 0 || errorTasks.length > 0) && (
-          <span className={`absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white ${
+          <span className={`absolute -top-0.5 -end-0.5 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold text-white ${
             errorTasks.length > 0 ? 'bg-semantic-error' : 'bg-oe-blue'
           }`}>
             {totalActive || errorTasks.length}
@@ -2037,7 +2037,7 @@ function UploadQueueIndicator() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-border-light bg-surface-elevated shadow-xl z-50 overflow-hidden">
+        <div className="absolute end-0 top-full mt-2 w-80 rounded-xl border border-border-light bg-surface-elevated shadow-xl z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border-light">
             <h3 className="text-xs font-semibold text-content-primary">
               {t('queue.title', { defaultValue: 'Processing Queue' })}

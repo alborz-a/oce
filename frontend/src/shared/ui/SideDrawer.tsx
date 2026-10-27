@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 //
-// SideDrawer — shared right-side slide-over panel for detail views.
+// SideDrawer — shared end-side slide-over panel for detail views.
 //
 // Why it exists: feature pages that show a master-detail flow (Property
 // Dev buyers/plots, CRM opportunities/leads, BIM assets, file
@@ -242,7 +242,7 @@ export function SideDrawer({
           // Safe-area inset on the right matters on iOS notch landscape;
           // the bottom inset is reserved for body padding so the close
           // button stays reachable above the home indicator.
-          'pr-[env(safe-area-inset-right,0)]',
+          'pe-[env(safe-area-inset-right,0)]',
           className,
         )}
         // Stop propagation so a click inside the panel does not bubble

@@ -221,7 +221,7 @@ export function ReferenceDataPanel() {
                           )}
                         </div>
                         {change.fields.length > 0 && (
-                          <ul className="ml-4 mt-0.5 space-y-0.5">
+                          <ul className="ms-4 mt-0.5 space-y-0.5">
                             {change.fields.map((f, i) => (
                               <li key={`${f.field}-${i}`} className="text-content-tertiary break-all">
                                 {`${f.field}: ${formatValue(f.before)} -> ${formatValue(f.after)}`}

@@ -22,6 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { Card, CardHeader, CardContent, Button, ConfirmDialog } from '@/shared/ui';
+import { formatBytes } from '@/shared/lib/formatters';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToastStore } from '@/stores/useToastStore';
 
@@ -116,15 +117,7 @@ async function restoreBackup(
   return resp.json();
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
-}
 
 // ── Component ────────────────────────────────────────────────────────────────
 

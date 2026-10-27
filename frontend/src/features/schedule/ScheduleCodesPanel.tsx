@@ -290,7 +290,7 @@ function DictionariesTab({
                       type="button"
                       onClick={() => setSelectedDictId(d.id)}
                       aria-pressed={active}
-                      className={`flex min-w-0 flex-1 items-center gap-2 px-4 py-3 text-left transition-colors ${
+                      className={`flex min-w-0 flex-1 items-center gap-2 px-4 py-3 text-start transition-colors ${
                         active ? 'bg-oe-blue-subtle/50' : 'hover:bg-surface-secondary/40'
                       }`}
                     >
@@ -307,14 +307,14 @@ function DictionariesTab({
                           </span>
                         )}
                       </span>
-                      <ChevronRight size={14} className="shrink-0 text-content-tertiary" />
+                      <ChevronRight size={14} className="shrink-0 text-content-tertiary rtl:rotate-180" />
                     </button>
                     <button
                       type="button"
                       onClick={() => onDeleteDict(d)}
                       disabled={deleteDictMut.isPending}
                       aria-label={t('schedule.codes.delete_dict', { defaultValue: 'Delete dictionary' })}
-                      className="mr-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-content-tertiary transition-colors hover:bg-semantic-error-bg hover:text-semantic-error"
+                      className="me-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-content-tertiary transition-colors hover:bg-semantic-error-bg hover:text-semantic-error"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -372,7 +372,7 @@ function DictionariesTab({
                 />
                 {t('schedule.codes.color_band', { defaultValue: 'Colour bands' })}
               </label>
-              <div className="ml-auto w-24">
+              <div className="ms-auto w-24">
                 <label htmlFor="codes-dict-sort" className={labelCls}>
                   {t('schedule.codes.sort_order', { defaultValue: 'Sort' })}
                 </label>
@@ -1547,28 +1547,28 @@ function GroupedGrid({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
             <tr>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('schedule.codes.col_activity', { defaultValue: 'Activity' })}
               </th>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('schedule.codes.col_start', { defaultValue: 'Start' })}
               </th>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('schedule.codes.col_end', { defaultValue: 'Finish' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('schedule.codes.col_duration', { defaultValue: 'Dur (d)' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('schedule.codes.col_progress', { defaultValue: 'Progress' })}
               </th>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('schedule.codes.col_status', { defaultValue: 'Status' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('schedule.codes.col_float', { defaultValue: 'Float' })}
               </th>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('schedule.codes.col_codes', { defaultValue: 'Codes' })}
               </th>
             </tr>
@@ -1587,12 +1587,12 @@ function GroupedGrid({
                       onClick={() => onToggle(id)}
                       aria-expanded={isOpen}
                       style={{ paddingLeft: `${band.depth * 18}px` }}
-                      className="flex items-center gap-2 text-left"
+                      className="flex items-center gap-2 text-start"
                     >
                       {isOpen ? (
                         <ChevronDown size={14} className="shrink-0 text-content-tertiary" />
                       ) : (
-                        <ChevronRight size={14} className="shrink-0 text-content-tertiary" />
+                        <ChevronRight size={14} className="shrink-0 text-content-tertiary rtl:rotate-180" />
                       )}
                       {band.color ? (
                         <span
@@ -1647,12 +1647,12 @@ function GroupedGrid({
                   <td className="px-3 py-2 tabular-nums text-content-secondary">
                     {r.end_date ?? '-'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">{r.duration_days}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">{Math.round(r.progress_pct)}%</td>
+                  <td className="px-3 py-2 text-end tabular-nums">{r.duration_days}</td>
+                  <td className="px-3 py-2 text-end tabular-nums">{Math.round(r.progress_pct)}%</td>
                   <td className="px-3 py-2">
                     <span className="text-xs text-content-secondary">{r.status}</span>
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {r.total_float ?? '-'}
                   </td>
                   <td className="px-3 py-2">
@@ -1686,7 +1686,7 @@ function GroupedGrid({
               total: totalPages,
             })}
           </span>
-          <label htmlFor="codes-page-size" className="ml-2">
+          <label htmlFor="codes-page-size" className="ms-2">
             {t('schedule.codes.page_size', { defaultValue: 'Per page' })}
           </label>
           <select

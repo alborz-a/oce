@@ -686,7 +686,7 @@ export function UpdateBadge() {
     >
       <Sparkles size={16} strokeWidth={2.25} />
       <span
-        className="absolute right-1 top-1 h-2 w-2 rounded-full bg-sky-500 ring-2 ring-surface-primary"
+        className="absolute end-1 top-1 h-2 w-2 rounded-full bg-sky-500 ring-2 ring-surface-primary"
         aria-hidden="true"
       />
     </button>
@@ -726,7 +726,7 @@ export function UpdateInlineNotice({ className = '' }: { className?: string }) {
           href={release.release_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-auto text-xs font-medium text-oe-blue hover:underline"
+          className="ms-auto text-xs font-medium text-oe-blue hover:underline"
         >
           {t('common.details', { defaultValue: 'Details' })}
         </a>
@@ -767,7 +767,7 @@ export function UpdateNotification() {
             defaultValue: 'View update details for v{{version}}',
             version: release.latest_version,
           })}
-          className="w-full text-left"
+          className="w-full text-start"
         >
           {/* Stacked layout — three rows so nothing truncates inside a 210px
               sidebar:
@@ -775,7 +775,7 @@ export function UpdateNotification() {
                 row 2  date · N changes
                 row 3  full-width Details chip
               Each row owns its own width, so we never have to fight flex
-              competition between version text and right-side chip (the old
+              competition between version text and end-side chip (the old
               row-flex layout was clipping the version on narrow sidebars). */}
           <div className="px-3 py-2.5">
             <div className="flex items-center gap-2">
@@ -801,7 +801,7 @@ export function UpdateNotification() {
               </span>
             </div>
             {(relativeDate || (grouped && grouped.totalCount > 0)) && (
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 pl-8 text-[11px] text-blue-700/75 dark:text-sky-300/65 tabular-nums">
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 ps-8 text-[11px] text-blue-700/75 dark:text-sky-300/65 tabular-nums">
                 {relativeDate && <span>{relativeDate}</span>}
                 {grouped && grouped.totalCount > 0 && (
                   <>
@@ -825,7 +825,7 @@ export function UpdateNotification() {
         <button
           onClick={handleDismiss}
           aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-          className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded text-sky-500/70 hover:text-blue-700 hover:bg-sky-500/20 dark:hover:bg-sky-400/20 transition-colors"
+          className="absolute top-1.5 end-1.5 flex h-5 w-5 items-center justify-center rounded text-sky-500/70 hover:text-blue-700 hover:bg-sky-500/20 dark:hover:bg-sky-400/20 transition-colors"
         >
           <X size={11} />
         </button>
@@ -868,7 +868,7 @@ function HighlightGroup({
           {label}
         </span>
       </div>
-      <ul className="space-y-0.5 ml-4">
+      <ul className="space-y-0.5 ms-4">
         {items.map((line, i) => (
           <li
             key={i}
@@ -1032,7 +1032,7 @@ function UpdateFullModal({
   // The desktop shell renders in a webview where a plain target="_blank" can
   // land nowhere, so the native bridge opens the reader's real browser. In an
   // ordinary browser the anchor is left to do its own job, which also keeps
-  // right-click and copy-link working.
+  // end-click and copy-link working.
   const openDownload = async (e: ReactMouseEvent<HTMLAnchorElement>, url: string): Promise<void> => {
     if (!isTauri) return;
     e.preventDefault();

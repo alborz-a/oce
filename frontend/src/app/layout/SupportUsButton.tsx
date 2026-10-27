@@ -194,7 +194,7 @@ function SupportUsButtonUpstream({ condensed = false }: { condensed?: boolean } 
           // co-brand chip gets a clean central slot; otherwise show the
           // full labelled pill from 2xl up.
           //
-          // 2xl, not md: the header's right-hand cluster is `shrink-0`, so it
+          // 2xl, not md: the header's end-hand cluster is `shrink-0`, so it
           // never compresses and its content width sets the width of the whole
           // document. At a 1280 viewport the labelled form pushed the page to
           // 1307 in English and 1401 in Uzbek, whose label for this button is
@@ -336,13 +336,13 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
           />
           <div
             aria-hidden
-            className="absolute -top-10 -right-8 w-56 h-56 rounded-full bg-amber-300/30 dark:bg-amber-500/15 blur-3xl"
+            className="absolute -top-10 -end-8 w-56 h-56 rounded-full bg-amber-300/30 dark:bg-amber-500/15 blur-3xl"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label={t('common.close', { defaultValue: 'Close' })}
-            className="absolute top-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
+            className="absolute top-3 end-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
           </button>
@@ -472,7 +472,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 ml-14">
+            <div className="flex flex-wrap gap-2 ms-14">
               <a
                 href={TWITTER_URL}
                 target="_blank"
@@ -583,7 +583,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 ml-14">
+            <div className="flex flex-wrap gap-2 ms-14">
               <a
                 href={PAYPAL_DONATE_URL}
                 target="_blank"
@@ -637,7 +637,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             {t('support.see_contributors', {
               defaultValue: 'See who is already building it with us',
             })}
-            <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
           </button>
         </div>
       </div>

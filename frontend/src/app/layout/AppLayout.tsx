@@ -113,7 +113,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   return (
     // `oe-ai-dock-shell` (index.css) pads the whole shell by
     // --oe-ai-dock-offset: the AI dock's width while it is open in push
-    // mode, 0 otherwise. On the ROOT rather than the `lg:pl-sidebar`
+    // mode, 0 otherwise. On the ROOT rather than the `lg:ps-sidebar`
     // wrapper, so the demo banner shrinks with the page and the RTL rule on
     // that wrapper (which rewrites both of its horizontal paddings) is never
     // in play. Full-bleed pages (`-mx-4 sm:-mx-7` inside <main>) follow the
@@ -141,14 +141,14 @@ export function AppLayout({ title, children }: AppLayoutProps) {
 
       {/* Sidebar — fixed on desktop, slide-in on mobile.
           In LTR the sidebar is anchored left; in RTL it is anchored right.
-          The CSS rules in index.css handle the `left-0`→`right-0` flip for
+          The CSS rules in index.css handle the `start-0`→`end-0` flip for
           `.oe-sidebar` when `dir="rtl"` is set on <html>. */}
       <div
         ref={sidebarRef}
         className={clsx(
           'oe-sidebar fixed inset-y-0 z-50 transition-transform duration-normal ease-oe',
           // LTR: attach to left edge; RTL: CSS overrides to right edge
-          'left-0',
+          'start-0',
           'lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
@@ -160,7 +160,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           Consistent padding (px-4 sm:px-7) across all modules.
           Full-bleed pages (BIM viewer, DWG takeoff, AI chat) negate it
           via `-mx-4 sm:-mx-7` on their root div. */}
-      <div className="lg:pl-sidebar">
+      <div className="lg:ps-sidebar">
         {/* Desktop-only browser-style chrome (Back/Forward/Reload/Home,
             address field, open-in-browser, favorites). Renders null in the
             normal web build. Sits above the Header so it reads as window

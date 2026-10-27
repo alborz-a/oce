@@ -89,7 +89,7 @@ export function ReviewPromptCard() {
       aria-label={t('review_ask.aria_label', { defaultValue: 'Rate OpenConstructionERP' })}
       data-testid="review-prompt-card"
       className={clsx(
-        'oe-dock-aware fixed bottom-4 right-4 z-[60] w-[min(22rem,calc(100vw-2rem))]',
+        'oe-dock-aware fixed bottom-4 end-4 z-[60] w-[min(22rem,calc(100vw-2rem))]',
         'rounded-xl border p-3.5 shadow-lg animate-card-in',
         'border-amber-300/60 bg-surface-elevated',
         'dark:border-amber-500/30',
@@ -99,12 +99,12 @@ export function ReviewPromptCard() {
         type="button"
         onClick={decline}
         aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-        className="absolute top-2 right-2 rounded-md p-1 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
+        className="absolute top-2 end-2 rounded-md p-1 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
       >
         <X size={14} />
       </button>
 
-      <div className="flex items-start gap-2.5 pr-6">
+      <div className="flex items-start gap-2.5 pe-6">
         <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-300">
           <Star size={16} className="fill-current" />
         </div>

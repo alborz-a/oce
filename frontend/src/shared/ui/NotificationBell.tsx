@@ -369,7 +369,7 @@ export function NotificationBell() {
         {unreadCount > 0 && (
           <span
             className={clsx(
-              'absolute -top-0.5 -right-0.5 flex h-4 min-w-[16px] items-center justify-center',
+              'absolute -top-0.5 -end-0.5 flex h-4 min-w-[16px] items-center justify-center',
               'rounded-full bg-semantic-error px-1 text-[10px] font-bold text-white',
             )}
           >
@@ -386,7 +386,7 @@ export function NotificationBell() {
              stack omitted z-index so it was sometimes covered by overlays.
              Max width on small screens prevents off-screen clipping. */
           className={clsx(
-            'absolute right-0 top-full mt-1.5 z-50',
+            'absolute end-0 top-full mt-1.5 z-50',
             'w-[min(360px,calc(100vw-1rem))]',
             'rounded-xl border border-border-light bg-surface-elevated shadow-xl',
             'animate-scale-in overflow-hidden',
@@ -529,7 +529,7 @@ export function NotificationBell() {
                         <div
                           key={notification.id}
                           className={clsx(
-                            'group relative flex items-start gap-2.5 px-4 py-2.5 text-left',
+                            'group relative flex items-start gap-2.5 px-4 py-2.5 text-start',
                             'hover:bg-surface-secondary transition-colors',
                             'border-b border-border-light/60 last:border-b-0',
                             !notification.is_read && 'bg-oe-blue-subtle/30',
@@ -542,7 +542,7 @@ export function NotificationBell() {
                           <button
                             type="button"
                             onClick={() => handleNotificationClick(notification)}
-                            className="flex items-start gap-2.5 flex-1 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
+                            className="flex items-start gap-2.5 flex-1 min-w-0 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
                           >
                             <span
                               className={clsx(
@@ -627,7 +627,7 @@ export function NotificationBell() {
               className="flex w-full items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-content-secondary hover:text-oe-blue hover:bg-surface-elevated transition-colors"
             >
               {t('notifications.view_all', { defaultValue: 'View all notifications' })}
-              <ArrowRight size={12} />
+              <ArrowRight size={12} className="rtl:rotate-180" />
             </button>
           </div>
         </div>

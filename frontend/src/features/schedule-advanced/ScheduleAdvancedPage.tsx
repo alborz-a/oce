@@ -297,7 +297,7 @@ function TaskPicker({
 
   return (
     <div ref={containerRef} className="relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+      <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
         <Search size={14} />
       </div>
       <input
@@ -310,7 +310,7 @@ function TaskPicker({
         }}
         onFocus={() => setOpen(true)}
         autoFocus={autoFocus}
-        className={clsx(inputCls, 'pl-9', value && 'pr-8')}
+        className={clsx(inputCls, 'ps-9', value && 'pe-8')}
         placeholder={t('schedule_advanced.task_picker_placeholder', {
           defaultValue: 'Search project tasks…',
         })}
@@ -326,7 +326,7 @@ function TaskPicker({
             setQuery('');
           }}
           aria-label={t('common.clear', { defaultValue: 'Clear' })}
-          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary hover:text-content-primary"
+          className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary hover:text-content-primary"
         >
           <X size={14} />
         </button>
@@ -335,7 +335,7 @@ function TaskPicker({
         <div
           id="task-picker-list"
           role="listbox"
-          className="absolute left-0 top-full z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md"
+          className="absolute start-0 top-full z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md"
         >
           {tasksQ.isLoading ? (
             <div className="flex items-center justify-center gap-2 px-3 py-3 text-xs text-content-tertiary">
@@ -371,7 +371,7 @@ function TaskPicker({
                   setOpen(false);
                 }}
                 className={clsx(
-                  'flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-secondary',
+                  'flex w-full items-center gap-2 px-3 py-2 text-start text-sm transition-colors hover:bg-surface-secondary',
                   tk.id === value && 'bg-oe-blue-subtle/40',
                 )}
               >
@@ -482,7 +482,7 @@ function HowScheduleAdvancedWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -1081,7 +1081,7 @@ function ProjectLpsDashboard({ projectId }: { projectId: string }) {
                       style={{ width: `${Math.max(4, widthPct)}%` }}
                     />
                   </div>
-                  <span className="w-10 shrink-0 text-right font-mono text-xs tabular-nums text-content-tertiary">
+                  <span className="w-10 shrink-0 text-end font-mono text-xs tabular-nums text-content-tertiary">
                     {count}
                   </span>
                 </li>
@@ -1203,11 +1203,11 @@ function MasterTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('common.name')}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('common.name')}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.planned_start', { defaultValue: 'Planned start' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.planned_finish', { defaultValue: 'Planned finish' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -1682,7 +1682,7 @@ function PhasesTab({
         <div
           role="tablist"
           aria-label={t('schedule_advanced.view', { defaultValue: 'View' })}
-          className="ml-auto inline-flex rounded-lg border border-border-light bg-surface-secondary p-0.5"
+          className="ms-auto inline-flex rounded-lg border border-border-light bg-surface-secondary p-0.5"
         >
           <ViewToggle active={view === 'cards'} onClick={() => setView('cards')} icon={<ListIcon size={12} />} label={t('schedule_advanced.view_cards', { defaultValue: 'Cards' })} />
           <ViewToggle active={view === 'table'} onClick={() => setView('table')} icon={<TableIcon size={12} />} label={t('schedule_advanced.view_table', { defaultValue: 'Table' })} />
@@ -1705,7 +1705,7 @@ function PhasesTab({
         aria-label={t('schedule_advanced.look_ahead_aria', { defaultValue: 'Look-ahead horizon' })}
         data-testid="phase-horizon-chips"
       >
-        <span className="text-content-tertiary mr-1">
+        <span className="text-content-tertiary me-1">
           {t('schedule_advanced.look_ahead', { defaultValue: 'Look-ahead' })}:
         </span>
         <FilterChip
@@ -1734,7 +1734,7 @@ function PhasesTab({
         />
         {activeBaseline && (
           <span
-            className="ml-auto text-content-tertiary"
+            className="ms-auto text-content-tertiary"
             data-testid="phase-baseline-ref"
             title={`Baseline: ${activeBaseline.name}`}
           >
@@ -1938,7 +1938,7 @@ function PhasesCardGrid({
           >
             {onCritical && (
               <span
-                className="absolute top-2 right-2 inline-flex items-center gap-0.5 rounded-md bg-rose-500/15 px-1.5 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300"
+                className="absolute top-2 end-2 inline-flex items-center gap-0.5 rounded-md bg-rose-500/15 px-1.5 py-px text-2xs font-semibold text-rose-700 dark:text-rose-300"
                 title={t('schedule_advanced.cp_tooltip', { defaultValue: 'On the critical path - slipping this phase delays the project finish' })}
                 data-testid="phase-cp-badge"
               >
@@ -1946,7 +1946,7 @@ function PhasesCardGrid({
                 CP
               </span>
             )}
-            <div className="flex items-start justify-between gap-2 pr-12">
+            <div className="flex items-start justify-between gap-2 pe-12">
               <h4 className="text-sm font-semibold truncate flex items-center gap-1.5" title={p.name}>
                 {milestone && (
                   <Diamond
@@ -2050,15 +2050,15 @@ function PhasesTableView({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">#</th>
-              <th className="px-4 py-2.5 text-left">{t('common.name')}</th>
-              <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_start', { defaultValue: 'Start' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('schedule_advanced.planned_finish', { defaultValue: 'Finish' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('schedule_advanced.duration_days', { defaultValue: 'Days' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('schedule_advanced.variance', { defaultValue: 'Δ' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('schedule_advanced.progress', { defaultValue: 'Progress' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+              <th className="px-4 py-2.5 text-start">#</th>
+              <th className="px-4 py-2.5 text-start">{t('common.name')}</th>
+              <th className="px-4 py-2.5 text-start">{t('schedule_advanced.planned_start', { defaultValue: 'Start' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('schedule_advanced.planned_finish', { defaultValue: 'Finish' })}</th>
+              <th className="px-4 py-2.5 text-end">{t('schedule_advanced.duration_days', { defaultValue: 'Days' })}</th>
+              <th className="px-4 py-2.5 text-end">{t('schedule_advanced.variance', { defaultValue: 'Δ' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+              <th className="px-4 py-2.5 text-end">{t('schedule_advanced.progress', { defaultValue: 'Progress' })}</th>
+              <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -2080,7 +2080,7 @@ function PhasesTableView({
                 >
                   <td className="px-4 py-2 text-xs text-content-tertiary tabular-nums">{idx + 1}</td>
                   <td className="px-4 py-2 font-medium">
-                    <button type="button" className="text-left hover:text-oe-blue flex items-center gap-1.5" onClick={() => onEdit(p)}>
+                    <button type="button" className="text-start hover:text-oe-blue flex items-center gap-1.5" onClick={() => onEdit(p)}>
                       {isPhaseMilestone(p) && <Diamond size={10} className="text-amber-500 rotate-45 shrink-0" aria-hidden />}
                       {p.name}
                       {onCritical && (
@@ -2094,8 +2094,8 @@ function PhasesTableView({
                   <td className="px-4 py-2 text-xs text-content-secondary">
                     {p.planned_finish ? <DateDisplay value={p.planned_finish} /> : '—'}
                   </td>
-                  <td className="px-4 py-2 text-right font-mono text-xs">{days == null ? '—' : days}</td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end font-mono text-xs">{days == null ? '—' : days}</td>
+                  <td className="px-4 py-2 text-end">
                     {variance != null ? <VarianceBadge days={variance} /> : <span className="text-content-tertiary">—</span>}
                   </td>
                   <td className="px-4 py-2">
@@ -2106,7 +2106,7 @@ function PhasesTableView({
                     </Badge>
                   </td>
                   <td className="px-4 py-2">
-                    <div className="ml-auto flex items-center justify-end gap-2">
+                    <div className="ms-auto flex items-center justify-end gap-2">
                       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-surface-secondary">
                         <div
                           className={clsx(
@@ -2120,7 +2120,7 @@ function PhasesTableView({
                           style={{ width: `${pct}%` }}
                         />
                       </div>
-                      <span className="font-mono text-2xs text-content-tertiary tabular-nums w-8 text-right">{pct}%</span>
+                      <span className="font-mono text-2xs text-content-tertiary tabular-nums w-8 text-end">{pct}%</span>
                     </div>
                   </td>
                   <td className="px-4 py-2">
@@ -2219,7 +2219,7 @@ function PhasesTimelineView({
               {isPhaseMilestone(p) && <Diamond size={12} className="text-amber-500 rotate-45 shrink-0" aria-label={t('schedule_advanced.milestone', { defaultValue: 'Milestone' })} />}
               <button
                 type="button"
-                className="flex-1 truncate text-left text-sm font-medium hover:text-oe-blue"
+                className="flex-1 truncate text-start text-sm font-medium hover:text-oe-blue"
                 onClick={() => onEdit(p)}
               >
                 {p.name}
@@ -2243,7 +2243,7 @@ function PhasesTimelineView({
             <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm bg-amber-500" />{t('schedule_advanced.legend_active', { defaultValue: 'Active' })}</span>
             <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm bg-emerald-500" />{t('schedule_advanced.legend_done', { defaultValue: 'Done' })}</span>
             <span className="inline-flex items-center gap-1"><span className="inline-block h-2 w-3 rounded-sm bg-rose-500" />{t('schedule_advanced.legend_delayed', { defaultValue: 'Delayed' })}</span>
-            <span className="inline-flex items-center gap-1 ml-2"><span className="inline-block h-3 w-px bg-rose-500" />{t('schedule_advanced.today', { defaultValue: 'Today' })}</span>
+            <span className="inline-flex items-center gap-1 ms-2"><span className="inline-block h-3 w-px bg-rose-500" />{t('schedule_advanced.today', { defaultValue: 'Today' })}</span>
           </span>
           <span><DateDisplay value={new Date(maxEnd).toISOString().slice(0, 10)} /></span>
         </div>
@@ -2286,7 +2286,7 @@ function PhasesTimelineView({
                 >
                   <button
                     type="button"
-                    className="truncate text-left text-sm font-medium text-content-primary hover:text-oe-blue flex items-center gap-1.5"
+                    className="truncate text-start text-sm font-medium text-content-primary hover:text-oe-blue flex items-center gap-1.5"
                     onClick={() => onEdit(p)}
                     title={p.name}
                   >
@@ -2576,7 +2576,7 @@ function PhaseTemplateModal({
               type="button"
               onClick={() => setTemplate(opt.key)}
               className={clsx(
-                'rounded-lg border p-3 text-left transition-all',
+                'rounded-lg border p-3 text-start transition-all',
                 template === opt.key
                   ? 'border-oe-blue bg-oe-blue-subtle/30 ring-1 ring-oe-blue'
                   : 'border-border-light hover:border-border hover:bg-surface-secondary',
@@ -2597,7 +2597,7 @@ function PhaseTemplateModal({
             {preview.map((p, idx) => (
               <li key={p.name} className="flex items-center justify-between rounded-md bg-surface-secondary/60 px-3 py-1.5">
                 <span className="flex items-center gap-2">
-                  <span className="font-mono text-2xs text-content-tertiary tabular-nums w-6 text-right">{idx + 1}.</span>
+                  <span className="font-mono text-2xs text-content-tertiary tabular-nums w-6 text-end">{idx + 1}.</span>
                   {t(`schedule_advanced.template_phase.${slug(p.name)}`, { defaultValue: p.name })}
                 </span>
                 <span className="font-mono text-2xs text-content-tertiary">{p.days} {t('schedule_advanced.days', { defaultValue: 'days' })}</span>
@@ -2692,11 +2692,11 @@ function LookAheadTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.period_start', { defaultValue: 'Start' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.period_end', { defaultValue: 'End' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.weeks', { defaultValue: 'Weeks' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.period_start', { defaultValue: 'Start' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.period_end', { defaultValue: 'End' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.weeks', { defaultValue: 'Weeks' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -2732,7 +2732,7 @@ function LookAheadTab({
                       {lookAheadStatusLabel(t, la.status)}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end">
                     {la.status !== 'published' && (
                       <Button
                         size="sm"
@@ -2898,11 +2898,11 @@ function WeeklyTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.week_start', { defaultValue: 'Week start' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.week_end', { defaultValue: 'Week end' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('schedule_advanced.ppc', { defaultValue: 'PPC' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('schedule_advanced.week_start', { defaultValue: 'Week start' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('schedule_advanced.week_end', { defaultValue: 'Week end' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-4 py-2.5 text-end">{t('schedule_advanced.ppc', { defaultValue: 'PPC' })}</th>
+                  <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -2926,10 +2926,10 @@ function WeeklyTab({
                         {weeklyStatusLabel(t, w.status)}
                       </Badge>
                     </td>
-                    <td className="px-4 py-2 text-right font-mono text-xs">
+                    <td className="px-4 py-2 text-end font-mono text-xs">
                       {fmtPercent(pctNumber(w.ppc_percent), 0)}
                     </td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-4 py-2 text-end">
                       {w.status === 'draft' && (
                         <Button
                           size="sm"
@@ -3015,11 +3015,11 @@ function WeeklyTab({
                 <table className="w-full text-sm">
                   <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                     <tr>
-                      <th className="px-4 py-2 text-left">{t('schedule_advanced.crew', { defaultValue: 'Crew' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule_advanced.promised', { defaultValue: 'Promised' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule_advanced.actual', { defaultValue: 'Actual' })}</th>
-                      <th className="px-4 py-2 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                      <th className="px-4 py-2 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                      <th className="px-4 py-2 text-start">{t('schedule_advanced.crew', { defaultValue: 'Crew' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule_advanced.promised', { defaultValue: 'Promised' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule_advanced.actual', { defaultValue: 'Actual' })}</th>
+                      <th className="px-4 py-2 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                      <th className="px-4 py-2 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -3039,10 +3039,10 @@ function WeeklyTab({
                           <td className="px-4 py-2 truncate max-w-[200px]">
                             {c.worker_or_crew || '—'}
                           </td>
-                          <td className="px-4 py-2 text-right font-mono text-xs">
+                          <td className="px-4 py-2 text-end font-mono text-xs">
                             {String(c.promised_qty)} {c.unit}
                           </td>
-                          <td className="px-4 py-2 text-right font-mono text-xs">
+                          <td className="px-4 py-2 text-end font-mono text-xs">
                             {c.actual_qty != null ? String(c.actual_qty) : '—'}
                           </td>
                           <td className="px-4 py-2">
@@ -3447,7 +3447,7 @@ function ConstraintsTab({
             </option>
           ))}
         </select>
-        <div className="flex items-center gap-2 ml-auto text-xs">
+        <div className="flex items-center gap-2 ms-auto text-xs">
           <span className="rounded-md bg-semantic-warning-bg px-2 py-1 text-[#b45309]">
             {t('schedule_advanced.open_count', { count: openCount, defaultValue: '{{count}} open' })}
           </span>
@@ -3493,11 +3493,11 @@ function ConstraintsTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.type', { defaultValue: 'Type' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.description', { defaultValue: 'Description' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('schedule_advanced.target_clear', { defaultValue: 'Target clear' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('schedule_advanced.type', { defaultValue: 'Type' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('common.description', { defaultValue: 'Description' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('schedule_advanced.target_clear', { defaultValue: 'Target clear' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -3836,10 +3836,10 @@ function BaselinesTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">{t('common.name', { defaultValue: 'Name' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('schedule_advanced.captured_at', { defaultValue: 'Captured' })}</th>
-                <th className="px-4 py-2.5 text-left">{t('common.status', { defaultValue: 'Status' })}</th>
-                <th className="px-4 py-2.5 text-right">{t('schedule_advanced.delta', { defaultValue: 'Delta vs current' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('common.name', { defaultValue: 'Name' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('schedule_advanced.captured_at', { defaultValue: 'Captured' })}</th>
+                <th className="px-4 py-2.5 text-start">{t('common.status', { defaultValue: 'Status' })}</th>
+                <th className="px-4 py-2.5 text-end">{t('schedule_advanced.delta', { defaultValue: 'Delta vs current' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -3869,7 +3869,7 @@ function BaselinesTab({
                       {baselineStatusLabel(t, b.status)}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end">
                     <Button
                       size="sm"
                       variant="ghost"

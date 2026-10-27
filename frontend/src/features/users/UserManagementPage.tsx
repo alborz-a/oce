@@ -507,7 +507,7 @@ function ModuleAccessPanel({
             />
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="text-2xs text-content-tertiary mr-1">
+            <span className="text-2xs text-content-tertiary me-1">
               {t('users.presets', { defaultValue: 'Presets' })}:
             </span>
             {PRESET_OPTIONS.map((p) => (
@@ -732,7 +732,7 @@ function RoleDropdown({
                 >
                   <RIcon size={13} className={rc.color} />
                   {t(`users.roles.${rc.labelKey}`)}
-                  {r === currentRole && <Check size={12} className="ml-auto text-oe-blue" />}
+                  {r === currentRole && <Check size={12} className="ms-auto text-oe-blue" />}
                 </button>
               );
             })}
@@ -1010,9 +1010,9 @@ export function UserManagementPage() {
       {/* Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-quaternary" />
+          <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-quaternary" />
           <input
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
             placeholder={t('users.search', { defaultValue: 'Search by name or email...' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -1044,22 +1044,22 @@ export function UserManagementPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-surface-secondary/50">
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-start px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.name', { defaultValue: 'Name' })}
                 </th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-start px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.email', { defaultValue: 'Email' })}
                 </th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-start px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.role', { defaultValue: 'Role' })}
                 </th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-start px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.status', { defaultValue: 'Status' })}
                 </th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-start px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.last_login', { defaultValue: 'Last Login' })}
                 </th>
-                <th className="text-right px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
+                <th className="text-end px-4 py-2.5 text-xs font-semibold text-content-secondary uppercase tracking-wider">
                   {t('users.actions', { defaultValue: 'Actions' })}
                 </th>
               </tr>
@@ -1137,7 +1137,7 @@ export function UserManagementPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 text-right">
+                    <td className="px-4 py-2.5 text-end">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setAccessUser(user)}

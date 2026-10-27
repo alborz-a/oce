@@ -208,14 +208,14 @@ export function ContactSearchInput({
   }, [allContacts, browseFilter]);
 
   const inputCls =
-    'h-10 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+    'h-10 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-8 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
   return (
     <div className={`relative ${className || ''}`}>
       <div className="flex items-center gap-2">
         {/* Search input */}
         <div ref={containerRef} className="relative flex-1">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={14} />
           </div>
           <input
@@ -234,7 +234,7 @@ export function ContactSearchInput({
               type="button"
               onClick={handleClear}
               aria-label={t('common.clear', { defaultValue: 'Clear' })}
-              className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary hover:text-content-primary"
+              className="absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary hover:text-content-primary"
             >
               <X size={14} />
             </button>
@@ -242,7 +242,7 @@ export function ContactSearchInput({
 
           {/* Search Dropdown */}
           {isOpen && (
-            <div className="absolute left-0 top-full mt-1 z-50 w-full max-h-48 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
+            <div className="absolute start-0 top-full mt-1 z-50 w-full max-h-48 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-md">
               {isLoading ? (
                 <div className="px-3 py-2 text-xs text-content-tertiary">
                   {t('common.searching', { defaultValue: 'Searching...' })}
@@ -257,7 +257,7 @@ export function ContactSearchInput({
                     key={c.id}
                     type="button"
                     onClick={() => handleSelect(c)}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors"
+                    className="flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-surface-secondary transition-colors"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="text-content-primary truncate">{getDisplayName(c)}</div>
@@ -296,11 +296,11 @@ export function ContactSearchInput({
 
             {/* Browse dropdown */}
             {browseOpen && (
-              <div className="absolute right-0 top-full mt-1 z-50 w-80 rounded-lg border border-border-light bg-surface-elevated shadow-lg">
+              <div className="absolute end-0 top-full mt-1 z-50 w-80 rounded-lg border border-border-light bg-surface-elevated shadow-lg">
                 {/* Filter input inside dropdown */}
                 <div className="p-2 border-b border-border-light">
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-2.5 text-content-tertiary">
+                    <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-2.5 text-content-tertiary">
                       <Search size={13} />
                     </div>
                     <input
@@ -333,7 +333,7 @@ export function ContactSearchInput({
                         key={c.id}
                         type="button"
                         onClick={() => handleSelect(c)}
-                        className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary transition-colors ${
+                        className={`flex w-full items-center gap-2 px-3 py-2 text-start text-sm hover:bg-surface-secondary transition-colors ${
                           value === c.id ? 'bg-oe-blue/5' : ''
                         }`}
                       >

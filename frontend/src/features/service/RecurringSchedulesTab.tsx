@@ -164,22 +164,22 @@ export function RecurringSchedulesTab({ contracts, projectId }: Props) {
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('service.recurring.col_name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('service.recurring.col_rrule', { defaultValue: 'RRULE' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('service.recurring.col_next', { defaultValue: 'Next run' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('service.recurring.col_last', { defaultValue: 'Last run' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('service.recurring.col_status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="px-4 py-2.5 text-right">
+                  <th className="px-4 py-2.5 text-end">
                     {t('common.actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -254,7 +254,7 @@ function ScheduleRow({
             : t('service.recurring.disabled', { defaultValue: 'Disabled' })}
         </Badge>
       </td>
-      <td className="px-4 py-2 text-right">
+      <td className="px-4 py-2 text-end">
         <div className="inline-flex items-center gap-1">
           <button
             type="button"
@@ -359,7 +359,7 @@ function CreateRecurringModal({
             onClick={() => create.mutate()}
           >
             {create.isPending ? (
-              <Loader2 size={14} className="mr-2 animate-spin" />
+              <Loader2 size={14} className="me-2 animate-spin" />
             ) : null}
             {t('common.create', { defaultValue: 'Create' })}
           </Button>

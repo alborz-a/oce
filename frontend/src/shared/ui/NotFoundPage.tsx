@@ -28,7 +28,7 @@ export function NotFoundPage() {
             onClick={() => window.history.back()}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface-elevated px-4 py-2.5 text-sm font-medium text-content-primary transition-colors hover:bg-surface-secondary"
           >
-            <ArrowLeft size={14} />
+            <ArrowLeft size={14} className="rtl:rotate-180" />
             {t('error.go_back', { defaultValue: 'Go back' })}
           </button>
           <Link

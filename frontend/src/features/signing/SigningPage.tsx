@@ -233,9 +233,9 @@ function SessionFormModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -455,9 +455,9 @@ function AttestModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <CheckCircle2 size={16} className="mr-1.5 shrink-0" />
+              <CheckCircle2 size={16} className="me-1.5 shrink-0" />
             )}
             {t('signing.attest_action', { defaultValue: 'Record signature' })}
           </Button>
@@ -568,9 +568,9 @@ function DeclineModal({
             disabled={isPending || !canSubmit}
           >
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <XCircle size={16} className="mr-1.5 shrink-0" />
+              <XCircle size={16} className="me-1.5 shrink-0" />
             )}
             {t('signing.decline_action', { defaultValue: 'Record decline' })}
           </Button>
@@ -722,7 +722,7 @@ const SessionRow = React.memo(function SessionRow({
           </Badge>
           {capabilityShortfall && (
             <Badge variant="warning" size="sm">
-              <AlertTriangle size={11} className="mr-1" />
+              <AlertTriangle size={11} className="me-1" />
               {deliveredCapabilityLabel}
             </Badge>
           )}
@@ -734,7 +734,7 @@ const SessionRow = React.memo(function SessionRow({
 
         {hasStale && (
           <Badge variant="warning" size="sm" className="shrink-0">
-            <AlertTriangle size={11} className="mr-1" />
+            <AlertTriangle size={11} className="me-1" />
             {t('signing.stale_badge', { defaultValue: 'Stale' })}
           </Badge>
         )}
@@ -750,7 +750,7 @@ const SessionRow = React.memo(function SessionRow({
       </div>
 
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Both values, always, whether or not they agree. The requirement is
               what was asked for; the delivered capability is what the platform
               could actually produce, and it is the one a reader needs to see
@@ -816,7 +816,7 @@ const SessionRow = React.memo(function SessionRow({
                                 : 'neutral'
                         }
                         size="sm"
-                        className="ml-auto"
+                        className="ms-auto"
                       >
                         {t(`signing.signer_state_${state}`, {
                           defaultValue:
@@ -1238,7 +1238,7 @@ export function SigningPage() {
               <div className="relative flex-1 min-w-[12rem]">
                 <Search
                   size={14}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                  className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
                 />
                 <input
                   value={searchQuery}
@@ -1246,7 +1246,7 @@ export function SigningPage() {
                   placeholder={t('signing.search_placeholder', {
                     defaultValue: 'Search by document, hash or signatory...',
                   })}
-                  className={clsx(inputCls, 'pl-8')}
+                  className={clsx(inputCls, 'ps-8')}
                 />
               </div>
               <select

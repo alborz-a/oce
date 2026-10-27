@@ -111,7 +111,7 @@ export function ImportIssuesList({ issues, columns = [], hideInfo = false, testI
             >
               {ICONS[issue.severity]}
               <div className="min-w-0">
-                {place && <span className="mr-1.5 font-medium text-content-primary">{place}:</span>}
+                {place && <span className="me-1.5 font-medium text-content-primary">{place}:</span>}
                 <span className="text-content-secondary">{issueText(t, issue)}</span>
               </div>
             </li>

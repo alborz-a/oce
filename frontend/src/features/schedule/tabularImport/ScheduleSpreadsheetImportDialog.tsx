@@ -429,7 +429,7 @@ export function ScheduleSpreadsheetImportDialog({
               accept={ACCEPT}
               disabled={busy}
               onChange={(e) => pickFile(e.target.files?.[0])}
-              className="block w-full text-sm text-content-secondary file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
+              className="block w-full text-sm text-content-secondary file:me-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium file:text-content-primary hover:file:bg-surface-secondary/70"
             />
             {file && (
               <span className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-content-secondary">
@@ -642,7 +642,7 @@ export function ScheduleSpreadsheetImportDialog({
                   </span>
                 </label>
                 {target === 'new' && (
-                  <div className="pl-6">
+                  <div className="ps-6">
                     <Input
                       label={t('schedule.tabular_import.name_label', { defaultValue: 'Schedule name' })}
                       placeholder={parsed?.schedule.name ?? ''}

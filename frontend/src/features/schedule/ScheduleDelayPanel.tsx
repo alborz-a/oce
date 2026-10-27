@@ -359,7 +359,7 @@ export function ScheduleDelayPanel({
                       type="button"
                       onClick={() => setSelectedId(a.id)}
                       aria-pressed={active}
-                      className={`flex w-full items-center gap-2 px-4 py-3 text-left transition-colors ${
+                      className={`flex w-full items-center gap-2 px-4 py-3 text-start transition-colors ${
                         active ? 'bg-oe-blue-subtle/50' : 'hover:bg-surface-secondary/40'
                       }`}
                     >
@@ -384,7 +384,7 @@ export function ScheduleDelayPanel({
                           </span>
                         )}
                       </div>
-                      <ChevronRight size={14} className="shrink-0 text-content-tertiary" />
+                      <ChevronRight size={14} className="shrink-0 text-content-tertiary rtl:rotate-180" />
                     </button>
                   </li>
                 );
@@ -679,25 +679,25 @@ function DelayDetail({
               <table className="w-full text-sm" data-testid="delay-windows">
                 <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                   <tr>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('schedule.delay.window', { defaultValue: 'Window' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.gross_slip', { defaultValue: 'Gross slip' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.resp_employer', { defaultValue: 'Employer' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.resp_contractor', { defaultValue: 'Contractor' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.resp_neutral', { defaultValue: 'Neutral' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.concurrent_short', { defaultValue: 'Concurrent' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('schedule.delay.net_entitlement', { defaultValue: 'Net entitlement' })}
                     </th>
                   </tr>
@@ -715,22 +715,22 @@ function DelayDetail({
                           </p>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {w.gross_slip_days}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {w.employer_days}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {w.contractor_days}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {w.neutral_days}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono tabular-nums">
                         {w.concurrent_days}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono font-semibold tabular-nums">
+                      <td className="px-3 py-2 text-end font-mono font-semibold tabular-nums">
                         {w.net_entitlement_days}
                       </td>
                     </tr>

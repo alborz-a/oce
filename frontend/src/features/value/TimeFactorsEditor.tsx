@@ -198,7 +198,7 @@ export function TimeFactorsEditor({ open, onClose }: TimeFactorsEditorProps) {
                       aria-invalid={invalid}
                       value={value}
                       onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))}
-                      className={`w-20 rounded-md border bg-surface-primary px-2 py-1 text-right text-sm text-content-primary ${
+                      className={`w-20 rounded-md border bg-surface-primary px-2 py-1 text-end text-sm text-content-primary ${
                         invalid ? 'border-semantic-error' : 'border-border-light'
                       }`}
                     />

@@ -512,7 +512,7 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
             </span>
             <button
               onClick={handleCancelReply}
-              className="ml-auto text-content-tertiary hover:text-content-primary transition-colors"
+              className="ms-auto text-content-tertiary hover:text-content-primary transition-colors"
               aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
             >
               <X size={12} />

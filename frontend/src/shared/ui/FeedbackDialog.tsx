@@ -188,7 +188,7 @@ function FeedbackDialogUpstream({ open, onClose }: FeedbackDialogProps) {
           <div>
             <label className="block text-xs font-medium text-content-secondary mb-1">
               {t('feedback.subject', { defaultValue: 'Subject' })}
-              <span className="text-semantic-error ml-0.5">*</span>
+              <span className="text-semantic-error ms-0.5">*</span>
             </label>
             <input
               type="text"
@@ -210,7 +210,7 @@ function FeedbackDialogUpstream({ open, onClose }: FeedbackDialogProps) {
           <div>
             <label className="block text-xs font-medium text-content-secondary mb-1">
               {t('feedback.description', { defaultValue: 'Description' })}
-              <span className="text-semantic-error ml-0.5">*</span>
+              <span className="text-semantic-error ms-0.5">*</span>
             </label>
             <textarea
               value={description}

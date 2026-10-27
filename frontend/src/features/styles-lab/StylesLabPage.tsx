@@ -41,9 +41,9 @@ export function StylesLabPage() {
       {/* Hero header */}
       <div className="relative overflow-hidden border-b border-border-light bg-surface-primary">
         <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute -top-20 -left-10 h-72 w-72 rounded-full bg-oe-blue/20 blur-3xl animate-float" />
-          <div className="absolute -top-10 right-20 h-64 w-64 rounded-full bg-fuchsia-400/15 blur-3xl animate-float-delayed" />
-          <div className="absolute top-20 left-1/3 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl animate-float-slow" />
+          <div className="absolute -top-20 -start-10 h-72 w-72 rounded-full bg-oe-blue/20 blur-3xl animate-float" />
+          <div className="absolute -top-10 end-20 h-64 w-64 rounded-full bg-fuchsia-400/15 blur-3xl animate-float-delayed" />
+          <div className="absolute top-20 start-1/3 h-56 w-56 rounded-full bg-cyan-400/15 blur-3xl animate-float-slow" />
         </div>
         <div className="relative mx-auto max-w-content px-8 py-10">
           <div className="text-2xs uppercase tracking-[0.18em] text-content-tertiary font-medium">
@@ -73,7 +73,7 @@ export function StylesLabPage() {
               >
                 {t.label}
                 <span className={[
-                  'ml-2 text-2xs',
+                  'ms-2 text-2xs',
                   section === t.key ? 'text-content-inverse/60' : 'text-content-tertiary',
                 ].join(' ')}>
                   {t.count}
@@ -169,7 +169,7 @@ function HeadingsSection() {
 
         <Specimen no={5} name="Numbered Watermark" family="Editorial" note="Огромная цифра-водяной-знак позади. Для wizard / пошаговых страниц.">
           <div className="relative">
-            <span aria-hidden className="absolute -top-6 -left-2 text-7xl font-bold text-content-primary/5 leading-none select-none">03</span>
+            <span aria-hidden className="absolute -top-6 -start-2 text-7xl font-bold text-content-primary/5 leading-none select-none">03</span>
             <h3 className="relative text-2xl font-semibold tracking-tight text-content-primary">Project overview</h3>
           </div>
         </Specimen>
@@ -272,7 +272,7 @@ function ButtonsSection() {
 
         <Specimen no={5} name="Brutalist Hard Shadow" family="Bold" note="Чёрный border + offset-shadow. Маркетинг, dev-инструменты. r=8px.">
           <button className="inline-flex h-10 items-center gap-2 px-5 rounded-[8px] text-sm font-bold bg-yellow-300 text-black border-2 border-black shadow-[3px_3px_0_0_#000] hover:shadow-[5px_5px_0_0_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-fast">
-            <ArrowRight className="h-4 w-4" /> Ship it
+            <ArrowRight className="h-4 w-4 rtl:rotate-180" /> Ship it
           </button>
         </Specimen>
 
@@ -326,7 +326,7 @@ function ButtonsSection() {
           <button className="group inline-flex items-center gap-1.5 text-sm font-medium text-oe-blue">
             <span className="relative">
               View pricing details
-              <span className="absolute -bottom-0.5 left-0 h-px w-0 group-hover:w-full bg-oe-blue transition-[width] duration-300 ease-oe" />
+              <span className="absolute -bottom-0.5 start-0 h-px w-0 group-hover:w-full bg-oe-blue transition-[width] duration-300 ease-oe" />
             </span>
             <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </button>
@@ -537,7 +537,7 @@ function TagsSection() {
             <div className="grid h-10 w-10 place-items-center rounded-[10px] bg-surface-tertiary text-content-secondary">
               <Bell className="h-5 w-5" strokeWidth={1.75} />
             </div>
-            <span className="absolute -top-1 -right-1 grid min-h-[18px] min-w-[18px] place-items-center rounded-full bg-semantic-error px-1 text-2xs font-bold text-white ring-2 ring-surface-primary">
+            <span className="absolute -top-1 -end-1 grid min-h-[18px] min-w-[18px] place-items-center rounded-full bg-semantic-error px-1 text-2xs font-bold text-white ring-2 ring-surface-primary">
               12
             </span>
           </div>
@@ -564,7 +564,7 @@ function TagsSection() {
             <Sparkles className="h-3 w-3"/> AI suggested
           </span>
           <span className="inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium text-content-secondary border border-border">Draft</span>
-          <ChevronRight className="h-3.5 w-3.5 text-content-quaternary" />
+          <ChevronRight className="h-3.5 w-3.5 text-content-quaternary rtl:rotate-180" />
           <span className="text-xs text-content-tertiary">12 more</span>
         </div>
       </div>
@@ -702,9 +702,9 @@ function BackgroundsSection() {
           note="Три цветных размытых блоба, медленный float. Для premium-фичей, AI-страниц, advisor."
         >
           <div className="absolute inset-0 bg-surface-secondary" />
-          <div className="absolute -top-8 -left-8 h-56 w-56 rounded-full bg-oe-blue/25 blur-3xl animate-float" />
-          <div className="absolute top-1/3 right-0 h-56 w-56 rounded-full bg-fuchsia-400/20 blur-3xl animate-float-delayed" />
-          <div className="absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-cyan-400/20 blur-3xl animate-float-slow" />
+          <div className="absolute -top-8 -start-8 h-56 w-56 rounded-full bg-oe-blue/25 blur-3xl animate-float" />
+          <div className="absolute top-1/3 end-0 h-56 w-56 rounded-full bg-fuchsia-400/20 blur-3xl animate-float-delayed" />
+          <div className="absolute bottom-0 start-1/3 h-48 w-48 rounded-full bg-cyan-400/20 blur-3xl animate-float-slow" />
           <SampleContent />
         </BgSpecimen>
 

@@ -512,7 +512,7 @@ export function OnboardingTour({
                 )}
                 aria-label={t('onboarding.previous', { defaultValue: 'Previous step' })}
               >
-                <ArrowLeft size={13} />
+                <ArrowLeft size={13} className="rtl:rotate-180" />
               </button>
             )}
             <button
@@ -533,7 +533,7 @@ export function OnboardingTour({
               {isLast
                 ? t('onboarding.finish', { defaultValue: 'Finish' })
                 : t('onboarding.next', { defaultValue: 'Next' })}
-              {!isLast && <ArrowRight size={13} />}
+              {!isLast && <ArrowRight size={13} className="rtl:rotate-180" />}
             </button>
           </div>
         </div>

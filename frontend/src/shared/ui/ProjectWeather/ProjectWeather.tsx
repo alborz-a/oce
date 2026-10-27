@@ -366,7 +366,7 @@ export function ProjectWeather({
       {loading && !days && (
         <div className="flex items-center justify-center py-6 text-content-tertiary">
           <Loader2 size={14} className="animate-spin" />
-          <span className="ml-2 text-xs">{t('common.loading', { defaultValue: 'Loading…' })}</span>
+          <span className="ms-2 text-xs">{t('common.loading', { defaultValue: 'Loading…' })}</span>
         </div>
       )}
 

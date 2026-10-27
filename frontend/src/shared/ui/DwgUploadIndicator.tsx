@@ -24,14 +24,9 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { useDwgUploadStore, type DwgUploadJob } from '@/stores/useDwgUploadStore';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { formatFileSize } from '@/shared/lib/formatters';
 
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-  return `${fmtFixed(bytes / (1024 * 1024 * 1024), 1)} GB`;
-}
+
 
 function elapsed(startedAt: number): string {
   const sec = Math.round((Date.now() - startedAt) / 1000);
@@ -119,7 +114,7 @@ export function DwgUploadIndicator() {
         type="button"
         data-testid="dwg-upload-dock"
         onClick={() => setExpanded(true)}
-        className="oe-dock-aware fixed bottom-36 right-4 z-[60] flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface-elevated border border-border-light shadow-lg hover:shadow-xl transition-all max-w-xs"
+        className="oe-dock-aware fixed bottom-36 end-4 z-[60] flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface-elevated border border-border-light shadow-lg hover:shadow-xl transition-all max-w-xs"
       >
         {isActive ? (
           <Loader2 size={14} className="text-oe-blue animate-spin shrink-0" />
@@ -128,7 +123,7 @@ export function DwgUploadIndicator() {
         ) : (
           <X size={14} className="text-red-500 shrink-0" />
         )}
-        <div className="flex-1 min-w-0 text-left">
+        <div className="flex-1 min-w-0 text-start">
           <p className="text-xs font-medium text-content-primary truncate">
             {primary.fileName}
           </p>
@@ -159,7 +154,7 @@ export function DwgUploadIndicator() {
   // Expanded panel
   return (
     <div
-      className="oe-dock-aware fixed bottom-36 right-4 z-[60] w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in"
+      className="oe-dock-aware fixed bottom-36 end-4 z-[60] w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in"
       data-testid="dwg-upload-dock-expanded"
     >
       <div className="flex items-center justify-between px-4 py-2.5 bg-surface-secondary/50 border-b border-border-light">
@@ -231,7 +226,7 @@ function DwgJobRow({
                   style={{ width: `${job.progress}%` }}
                 />
               </div>
-              <span className="text-[10px] text-oe-blue font-semibold tabular-nums w-8 text-right">
+              <span className="text-[10px] text-oe-blue font-semibold tabular-nums w-8 text-end">
                 {job.progress}%
               </span>
             </div>

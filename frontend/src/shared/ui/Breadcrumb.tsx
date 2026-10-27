@@ -37,7 +37,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
         const isLast = idx === items.length - 1;
         return (
           <span key={item.label} className="flex items-center gap-1">
-            <ChevronRight size={12} className="text-content-quaternary" />
+            <ChevronRight size={12} className="text-content-quaternary rtl:rotate-180" />
             {isLast || !item.to ? (
               <span className="text-content-primary font-medium truncate max-w-[200px]">
                 {item.label}

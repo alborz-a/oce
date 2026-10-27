@@ -516,7 +516,7 @@ export function ModuleGuide({ open, onClose, content, onCta }: ModuleGuideProps)
                       'transition-colors focus:outline-none focus:ring-2 focus:ring-oe-blue/40',
                     )}
                   >
-                    <ArrowLeft size={13} />
+                    <ArrowLeft size={13} className="rtl:rotate-180" />
                     <span className="hidden sm:inline">{prevLabel}</span>
                   </button>
                 )}
@@ -547,7 +547,7 @@ export function ModuleGuide({ open, onClose, content, onCta }: ModuleGuideProps)
                     )}
                   >
                     {nextLabel}
-                    <ArrowRight size={13} />
+                    <ArrowRight size={13} className="rtl:rotate-180" />
                   </button>
                 )}
               </div>

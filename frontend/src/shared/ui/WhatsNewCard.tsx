@@ -432,7 +432,7 @@ export function WhatsNewCard({ forceShow = false, versionOverride }: WhatsNewCar
             {t('whatsnew.changelog_link', {
               defaultValue: 'Full release notes',
             })}
-            <ArrowRight size={11} />
+            <ArrowRight size={11} className="rtl:rotate-180" />
           </button>
           <button
             type="button"
@@ -594,7 +594,7 @@ function ChipWithPopover({
                 className="mt-2 inline-flex items-center gap-0.5 text-[11px] font-medium text-blue-700 hover:text-blue-800 dark:text-sky-300 dark:hover:text-sky-100 transition-colors"
               >
                 {t('whatsnew.read_more', { defaultValue: 'Read more' })}
-                <ArrowRight size={11} />
+                <ArrowRight size={11} className="rtl:rotate-180" />
               </button>
             </div>,
             document.body,

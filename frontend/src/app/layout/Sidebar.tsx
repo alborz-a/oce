@@ -581,7 +581,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   );
 
   // Drive the global CSS variable so both the aside (`w-sidebar`) and
-  // the main-content offset (`lg:pl-sidebar`) shrink/grow in lockstep.
+  // the main-content offset (`lg:ps-sidebar`) shrink/grow in lockstep.
   // The variable lives on :root so it survives across remounts; we
   // reset it to the full width when the component unmounts only if it
   // was the one that shrunk it, to avoid stranding a 64px gutter when
@@ -1146,7 +1146,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       className="oe-sidebar relative flex h-full w-sidebar flex-col bg-surface-primary"
       style={{
         // Right-edge depth — 1px hairline + a soft 12px fade. Replaces
-        // the hard `border-r border-border-light` for a modern-SaaS
+        // the hard `border-e border-border-light` for a modern-SaaS
         // feel: definition without rigidity.
         boxShadow:
           '1px 0 0 rgba(15, 23, 42, 0.05), 4px 0 12px -8px rgba(15, 23, 42, 0.06)',
@@ -1162,7 +1162,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         .oe-sidebar .oe-stagger {
           animation: oeStaggerIn 220ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
         }
-        /* Hover-arrow: a subtle right-pointing chevron that fades in
+        /* Hover-arrow: a subtle end-pointing chevron that fades in
            on hover - hints "click to navigate" without taking space
            when idle. The opacity transition keeps the layout stable. */
         .oe-sidebar a .oe-hover-arrow {
@@ -1236,7 +1236,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           // half its width protruding into the main content area.
           // LTR → outer = right; RTL → outer = left.
           'hidden lg:flex absolute top-1/2 z-10',
-          isRTL ? 'left-0' : 'right-0',
+          isRTL ? 'start-0' : 'end-0',
           // Size + shape: tall pill, narrow.
           'h-12 w-5 items-center justify-center rounded-full',
           // Surface: clean white with a subtle ring; hover lifts to the
@@ -1422,7 +1422,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               <LayoutGrid size={13} strokeWidth={2} className="shrink-0 text-content-tertiary" aria-hidden />
               {!iconified && (
                 <>
-                  <span className="min-w-0 flex-1 truncate text-left text-[12px] font-medium">
+                  <span className="min-w-0 flex-1 truncate text-start text-[12px] font-medium">
                     {t('sidebar.more_modules', { defaultValue: 'More modules' })}
                   </span>
                   <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{moreCount}</span>
@@ -1562,7 +1562,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 onClick={onClose}
                 title={t('sidebar.manage_modules', { defaultValue: 'Manage modules' })}
                 aria-label={t('sidebar.manage_modules', { defaultValue: 'Manage modules' })}
-                className="ml-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
+                className="ms-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
               >
                 <Settings size={12} strokeWidth={2} aria-hidden />
               </NavLink>
@@ -1656,7 +1656,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 : undefined
             }
             className={clsx(
-              'group flex items-center rounded-lg border border-dashed border-purple-400/40 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-50/40 dark:from-purple-500/10 dark:via-transparent dark:to-slate-900/30 hover:border-purple-500 hover:from-purple-500/10 hover:shadow-sm transition-all text-left',
+              'group flex items-center rounded-lg border border-dashed border-purple-400/40 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-50/40 dark:from-purple-500/10 dark:via-transparent dark:to-slate-900/30 hover:border-purple-500 hover:from-purple-500/10 hover:shadow-sm transition-all text-start',
               iconified ? 'h-9 w-9 justify-center' : 'w-full gap-2.5 px-2.5 py-2',
             )}
             aria-haspopup="dialog"
@@ -1698,7 +1698,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         <div
           className={clsx(
             'absolute top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent',
-            iconified ? 'left-2 right-2' : 'left-3 right-3',
+            iconified ? 'start-2 end-2' : 'start-3 end-3',
           )}
         />
         <AdminGrid
@@ -1800,7 +1800,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 title={t('sidebar.github_repo', { defaultValue: 'GitHub repository' })}
                 aria-label={t('sidebar.github_repo', { defaultValue: 'GitHub repository' })}
                 className={clsx(
-                  'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-left transition-colors duration-fast ease-oe',
+                  'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-start transition-colors duration-fast ease-oe',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
                   'border-border-light/60 bg-surface-primary text-content-secondary hover:bg-surface-secondary hover:text-content-primary hover:border-border-medium',
                 )}
@@ -1817,7 +1817,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 title={t('sidebar.join_telegram', { defaultValue: 'Join the Telegram community' })}
                 aria-label={t('sidebar.telegram_community', { defaultValue: 'Telegram community' })}
                 className={clsx(
-                  'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-left transition-colors duration-fast ease-oe',
+                  'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-start transition-colors duration-fast ease-oe',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
                   'border-border-light/60 bg-surface-primary text-content-secondary hover:bg-surface-secondary hover:text-content-primary hover:border-border-medium',
                 )}
@@ -1917,7 +1917,7 @@ function NavGroupSection({
         }
         className={clsx(
           'flex flex-1 min-w-0 items-center justify-between gap-2 rounded-md',
-          'px-2 py-1 group cursor-pointer text-left',
+          'px-2 py-1 group cursor-pointer text-start',
           'hover:bg-surface-secondary/60 focus-visible:outline-none',
           'focus-visible:ring-1 focus-visible:ring-oe-blue/40',
           'transition-colors duration-150',
@@ -2239,7 +2239,7 @@ function SidebarItem({
         {hasBadge && (
           <span
             className={clsx(
-              'absolute top-1 right-1 h-1.5 w-1.5 rounded-full',
+              'absolute top-1 end-1 h-1.5 w-1.5 rounded-full',
               isActive ? 'bg-oe-blue' : 'bg-semantic-error/80',
             )}
             aria-hidden
@@ -2279,11 +2279,11 @@ function SidebarItem({
             // accent bar is the entire visual change for "active",
             // alongside the subtle background tint and bolded label.
             // This is the modern-SaaS pattern — solid, calm, fast.
-            'relative flex items-center rounded-md border-l-2 border-transparent',
+            'relative flex items-center rounded-md border-s-2 border-transparent',
             'transition-colors duration-fast ease-oe',
             compact
-              ? 'gap-1.5 pl-2 pr-1.5 py-[3px] text-[12px]'
-              : 'gap-2 pl-[10px] pr-2.5 py-1 text-[13px]',
+              ? 'gap-1.5 ps-2 pe-1.5 py-[3px] text-[12px]'
+              : 'gap-2 ps-[10px] pe-2.5 py-1 text-[13px]',
             item.highlight && !active
               ? 'font-medium bg-gradient-to-r from-[#7c3aed]/10 to-[#0ea5e9]/10 text-[#6d28d9] hover:from-[#7c3aed]/15 hover:to-[#0ea5e9]/15'
               : active
@@ -2570,7 +2570,7 @@ function AdminGrid({
               aria-pressed={editable ? isHidden : undefined}
               title={editable ? editLabel : label}
               className={clsx(
-                'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-left transition-colors duration-fast ease-oe',
+                'group flex h-8 w-full items-center justify-start gap-1.5 rounded-md border px-2 text-start transition-colors duration-fast ease-oe',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
                 isActive && !editMode
                   ? 'border-transparent bg-oe-blue/[0.14] text-oe-blue shadow-[inset_0_0_0_1px_rgba(0,122,255,0.18)] dark:bg-oe-blue/25'

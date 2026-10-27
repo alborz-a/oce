@@ -609,11 +609,11 @@ export function ScheduleRiskPanel({ scheduleId, activitiesById }: ScheduleRiskPa
                 <table className="w-full text-sm">
                   <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                     <tr>
-                      <th className="px-4 py-2 text-left">{t('schedule.risk.activity', { defaultValue: 'Activity' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule.risk.ci', { defaultValue: 'Criticality' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule.risk.cruciality', { defaultValue: 'Cruciality' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule.risk.sensitivity', { defaultValue: 'Sensitivity' })}</th>
-                      <th className="px-4 py-2 text-right">{t('schedule.risk.mean_dur', { defaultValue: 'Mean dur. (d)' })}</th>
+                      <th className="px-4 py-2 text-start">{t('schedule.risk.activity', { defaultValue: 'Activity' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule.risk.ci', { defaultValue: 'Criticality' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule.risk.cruciality', { defaultValue: 'Cruciality' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule.risk.sensitivity', { defaultValue: 'Sensitivity' })}</th>
+                      <th className="px-4 py-2 text-end">{t('schedule.risk.mean_dur', { defaultValue: 'Mean dur. (d)' })}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -624,7 +624,7 @@ export function ScheduleRiskPanel({ scheduleId, activitiesById }: ScheduleRiskPa
                             {nameFor(c.activity_id)}
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-right">
+                        <td className="px-4 py-2 text-end">
                           <span className="inline-flex items-center gap-2">
                             <span className="hidden h-1.5 w-16 overflow-hidden rounded-full bg-surface-secondary sm:inline-block">
                               <span
@@ -635,9 +635,9 @@ export function ScheduleRiskPanel({ scheduleId, activitiesById }: ScheduleRiskPa
                             <span className="font-mono tabular-nums">{fmtPct(c.criticality_index)}</span>
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-right font-mono tabular-nums">{fmtNum(c.cruciality, 2)}</td>
-                        <td className="px-4 py-2 text-right font-mono tabular-nums">{fmtNum(c.duration_sensitivity, 2)}</td>
-                        <td className="px-4 py-2 text-right font-mono tabular-nums">{fmtNum(c.mean_duration, 1)}</td>
+                        <td className="px-4 py-2 text-end font-mono tabular-nums">{fmtNum(c.cruciality, 2)}</td>
+                        <td className="px-4 py-2 text-end font-mono tabular-nums">{fmtNum(c.duration_sensitivity, 2)}</td>
+                        <td className="px-4 py-2 text-end font-mono tabular-nums">{fmtNum(c.mean_duration, 1)}</td>
                       </tr>
                     ))}
                   </tbody>

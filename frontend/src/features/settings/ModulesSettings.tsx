@@ -564,11 +564,11 @@ export function ModulesSettings() {
                     type="button"
                     onClick={() => toggleGroup(group.key)}
                     aria-expanded={!isCollapsed}
-                    className="flex w-full items-center justify-between gap-3 bg-surface-secondary px-4 py-2.5 text-left hover:bg-surface-tertiary"
+                    className="flex w-full items-center justify-between gap-3 bg-surface-secondary px-4 py-2.5 text-start hover:bg-surface-tertiary"
                   >
                     <span className="flex items-center gap-2">
                       {isCollapsed ? (
-                        <ChevronRight size={15} className="text-content-tertiary" aria-hidden />
+                        <ChevronRight size={15} className="text-content-tertiary rtl:rotate-180" aria-hidden />
                       ) : (
                         <ChevronDown size={15} className="text-content-tertiary" aria-hidden />
                       )}
@@ -614,7 +614,7 @@ export function ModulesSettings() {
             aria-expanded={showCore}
             className="flex items-center gap-2 text-sm font-medium text-oe-blue hover:underline"
           >
-            {showCore ? <ChevronDown size={15} aria-hidden /> : <ChevronRight size={15} aria-hidden />}
+            {showCore ? <ChevronDown size={15} aria-hidden /> : <ChevronRight size={15} className="rtl:rotate-180" aria-hidden />}
             {showCore
               ? t('settings.modules_core_hide', { defaultValue: 'Hide always-on modules' })
               : t('settings.modules_core_show', {

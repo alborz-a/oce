@@ -432,7 +432,7 @@ export function SmartViewsPanel({
                     data-testid={`smart-views-folder-toggle-${group.folder}`}
                   >
                     {collapsedFolders.has(group.folder) ? (
-                      <ChevronRight size={13} />
+                      <ChevronRight size={13} className="rtl:rotate-180" />
                     ) : (
                       <ChevronDown size={13} />
                     )}

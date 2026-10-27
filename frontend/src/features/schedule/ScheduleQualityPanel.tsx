@@ -234,10 +234,10 @@ export function ScheduleQualityPanel({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="px-4 py-2 text-left">{t('schedule.quality.path', { defaultValue: 'Path' })}</th>
-                  <th className="px-4 py-2 text-left">{t('schedule.quality.activities_col', { defaultValue: 'Activities' })}</th>
-                  <th className="px-4 py-2 text-right">{t('schedule.quality.length', { defaultValue: 'Length (d)' })}</th>
-                  <th className="px-4 py-2 text-right">{t('schedule.quality.relative_float', { defaultValue: 'Relative float (d)' })}</th>
+                  <th className="px-4 py-2 text-start">{t('schedule.quality.path', { defaultValue: 'Path' })}</th>
+                  <th className="px-4 py-2 text-start">{t('schedule.quality.activities_col', { defaultValue: 'Activities' })}</th>
+                  <th className="px-4 py-2 text-end">{t('schedule.quality.length', { defaultValue: 'Length (d)' })}</th>
+                  <th className="px-4 py-2 text-end">{t('schedule.quality.relative_float', { defaultValue: 'Relative float (d)' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -268,8 +268,8 @@ export function ScheduleQualityPanel({
                         ))}
                       </span>
                     </td>
-                    <td className="px-4 py-2 text-right font-mono tabular-nums">{p.length_days}</td>
-                    <td className="px-4 py-2 text-right font-mono tabular-nums">{p.relative_float}</td>
+                    <td className="px-4 py-2 text-end font-mono tabular-nums">{p.length_days}</td>
+                    <td className="px-4 py-2 text-end font-mono tabular-nums">{p.relative_float}</td>
                   </tr>
                 ))}
               </tbody>
@@ -285,7 +285,7 @@ export function ScheduleQualityPanel({
           <h3 className="text-sm font-semibold text-content-primary">
             {t('schedule.quality.qa_log', { defaultValue: 'Scheduling QA log' })}
           </h3>
-          <div className="ml-auto flex items-center gap-2 text-2xs">
+          <div className="ms-auto flex items-center gap-2 text-2xs">
             {qaCounts.error > 0 && (
               <Badge variant="error" dot>
                 {t('schedule.quality.errors', { defaultValue: '{{count}} errors', count: qaCounts.error })}
