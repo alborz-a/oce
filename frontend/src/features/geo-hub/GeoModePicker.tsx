@@ -191,7 +191,7 @@ export function GeoModePicker({
               {it.softDisabled && (
                 <span
                   aria-hidden
-                  className="ml-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-400/20 text-[9px] font-bold leading-none text-amber-700 ring-1 ring-amber-400/40 dark:text-amber-300"
+                  className="ms-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-400/20 text-[9px] font-bold leading-none text-amber-700 ring-1 ring-amber-400/40 dark:text-amber-300"
                   title={it.description}
                 >
                   ?
@@ -378,7 +378,7 @@ function ContextPickerDialog({ kind, onClose, onPick }: ContextPickerDialogProps
                     type="button"
                     onClick={() => onPick(it.id)}
                     className={[
-                      'flex w-full items-start gap-2 px-4 py-2 text-left',
+                      'flex w-full items-start gap-2 px-4 py-2 text-start',
                       'text-sm text-content-primary hover:bg-surface-secondary',
                     ].join(' ')}
                     data-testid="geo-context-picker-item"

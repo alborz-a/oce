@@ -134,7 +134,7 @@ export function IntegrityOverview({
             data-testid="integrity-refresh"
           >
             <RefreshCw
-              className={`mr-1 h-3 w-3 ${reportQuery.isFetching ? 'animate-spin' : ''}`}
+              className={`me-1 h-3 w-3 ${reportQuery.isFetching ? 'animate-spin' : ''}`}
             />
             {t('common.refresh', { defaultValue: 'Refresh' })}
           </Button>
@@ -247,10 +247,10 @@ function IntegrityTable({ report, columns, expanded, onToggleRow }: IntegrityTab
         <div role="columnheader">
           {t('dashboards.integrity_col_dtype', { defaultValue: 'Type' })}
         </div>
-        <div role="columnheader" className="text-right">
+        <div role="columnheader" className="text-end">
           {t('dashboards.integrity_col_nulls', { defaultValue: 'Nulls' })}
         </div>
-        <div role="columnheader" className="text-right">
+        <div role="columnheader" className="text-end">
           {t('dashboards.integrity_col_uniques', { defaultValue: 'Uniques' })}
         </div>
         <div role="columnheader">
@@ -295,14 +295,14 @@ function IntegrityRow({ column, rowCount, isExpanded, onToggle }: IntegrityRowPr
         role="row"
         onClick={onToggle}
         aria-expanded={isExpanded}
-        className="grid w-full grid-cols-[minmax(0,1fr)_120px_90px_90px_140px_minmax(0,1fr)] items-center gap-2 border-b border-border-light/60 px-2 py-1.5 text-left hover:bg-surface-secondary"
+        className="grid w-full grid-cols-[minmax(0,1fr)_120px_90px_90px_140px_minmax(0,1fr)] items-center gap-2 border-b border-border-light/60 px-2 py-1.5 text-start hover:bg-surface-secondary"
         data-testid={`integrity-row-button-${column.name}`}
       >
         <div role="cell" className="flex items-center gap-1.5 truncate">
           {isExpanded ? (
             <ChevronDown className="h-3 w-3 flex-shrink-0 text-content-tertiary" />
           ) : (
-            <ChevronRight className="h-3 w-3 flex-shrink-0 text-content-tertiary" />
+            <ChevronRight className="h-3 w-3 flex-shrink-0 text-content-tertiary rtl:rotate-180" />
           )}
           <span className="truncate font-mono text-content-primary" title={column.name}>
             {column.name}
@@ -313,10 +313,10 @@ function IntegrityRow({ column, rowCount, isExpanded, onToggle }: IntegrityRowPr
             {column.inferred_type}
           </Badge>
         </div>
-        <div role="cell" className="text-right text-content-secondary tabular-nums">
+        <div role="cell" className="text-end text-content-secondary tabular-nums">
           {column.null_count} <span className="text-content-tertiary">({nullPctLabel})</span>
         </div>
-        <div role="cell" className="text-right text-content-secondary tabular-nums">
+        <div role="cell" className="text-end text-content-secondary tabular-nums">
           {column.unique_count}
         </div>
         <div role="cell">
@@ -354,7 +354,7 @@ function CompletenessBar({ pct }: { pct: number }) {
       <div className="h-2 flex-1 overflow-hidden rounded bg-surface-secondary">
         <div className={`h-full ${fill}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="w-9 text-right text-content-tertiary tabular-nums">{pct}%</span>
+      <span className="w-9 text-end text-content-tertiary tabular-nums">{pct}%</span>
     </div>
   );
 }
@@ -374,7 +374,7 @@ function IssueBadge({ code }: { code: IntegrityIssueCode }) {
       data-testid={`integrity-issue-${code}`}
       title={label}
     >
-      <AlertTriangle className="mr-1 inline h-2.5 w-2.5" />
+      <AlertTriangle className="me-1 inline h-2.5 w-2.5" />
       {label}
     </span>
   );

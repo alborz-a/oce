@@ -226,7 +226,7 @@ export function IsoNameBuilder({
             <span className="text-xs font-medium text-content-secondary">
               {t(f.labelKey, { defaultValue: f.labelDefault })}
               {f.required && (
-                <span className="ml-0.5 text-semantic-error">*</span>
+                <span className="ms-0.5 text-semantic-error">*</span>
               )}
             </span>
             <input

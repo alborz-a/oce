@@ -202,7 +202,7 @@ export function DashboardMarketCasesCard() {
             defaultValue: 'Browse all {{count}} cases',
             count: PLAYBOOKS.length,
           })}
-          <ArrowRight size={13} aria-hidden="true" />
+          <ArrowRight className="rtl:rotate-180"  size={13} aria-hidden="true" />
         </button>
       </div>
     );
@@ -289,7 +289,7 @@ export function DashboardMarketCasesCard() {
             })}
             <ArrowRight
               size={13}
-              className="transition-transform group-hover:translate-x-0.5"
+              className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180"
               aria-hidden="true"
             />
           </button>
@@ -385,7 +385,7 @@ export function DashboardMarketCasesCard() {
                       {t('common.open', { defaultValue: 'Open' })}
                       <ArrowRight
                         size={12}
-                        className="transition-transform group-hover:translate-x-0.5"
+                        className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180"
                         aria-hidden="true"
                       />
                     </span>

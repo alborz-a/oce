@@ -291,7 +291,7 @@ export function GeoEmptyState({
         // stays visible behind it (#288: the centred card used to cover the
         // whole map). Other empty states stay centred.
         collapsible
-          ? 'pointer-events-none absolute left-3 top-3 z-10 w-full max-w-xs sm:max-w-sm'
+          ? 'pointer-events-none absolute start-3 top-3 z-10 w-full max-w-xs sm:max-w-sm'
           : 'pointer-events-none absolute inset-0 z-10 flex items-center justify-center p-6'
       }
     >
@@ -316,7 +316,7 @@ export function GeoEmptyState({
             type="button"
             onClick={() => setDismissed(true)}
             className={[
-              'absolute right-2 top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-md',
+              'absolute end-2 top-2 z-10 inline-flex h-7 w-7 items-center justify-center rounded-md',
               'text-slate-400 transition hover:bg-white/10 hover:text-slate-100',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
             ].join(' ')}

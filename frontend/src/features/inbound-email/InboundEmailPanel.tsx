@@ -26,7 +26,7 @@ import { getErrorMessage } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
 
 import { analyzeInboundEmail, type DelaySignal, type InboundEmailAnalysis } from './api';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { formatBytes } from '@/shared/lib/formatters';
 
 const ACCEPTED_EXTENSIONS = '.eml,message/rfc822';
 
@@ -52,11 +52,6 @@ function confidenceVariant(confidence: number): 'neutral' | 'blue' | 'warning' {
   return 'neutral';
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-}
 
 export function InboundEmailPanel() {
   const { t } = useTranslation();
@@ -326,7 +321,7 @@ function DelaySignals({ signals }: { signals: DelaySignal[] }) {
                   defaultValue: 'Starter activities for the fragnet',
                 })}
               </p>
-              <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-content-secondary">
+              <ul className="mt-1 list-disc space-y-0.5 ps-5 text-sm text-content-secondary">
                 {signal.suggested_activities.map((activity) => (
                   <li key={activity}>{activity}</li>
                 ))}

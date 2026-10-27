@@ -519,7 +519,7 @@ function HowHSEWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </Fragment>
@@ -763,7 +763,7 @@ function SearchBar({
   return (
     <div className="p-4 border-b border-border-light flex items-center gap-3 flex-wrap">
       <div className="relative max-w-sm flex-1">
-        <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+        <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
           <Search size={16} />
         </div>
         <input
@@ -1282,19 +1282,19 @@ function IncidentsTab({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.incident_ref', { defaultValue: 'Incident ref' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.method', { defaultValue: 'Method' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.started_at', { defaultValue: 'Started' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                   {t('common.status', { defaultValue: 'Status' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.lead', { defaultValue: 'Lead' })}
                 </th>
               </tr>
@@ -1642,13 +1642,13 @@ function JSATab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.task_description', { defaultValue: 'Task' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.location', { defaultValue: 'Location' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.work_date', { defaultValue: 'Work date' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -2144,19 +2144,19 @@ function PermitsTab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('common.number', { defaultValue: '#' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('common.description', { defaultValue: 'Description' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.permit_type', { defaultValue: 'Type' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                   {t('common.status', { defaultValue: 'Status' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.work_end', { defaultValue: 'Work end' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -2894,13 +2894,13 @@ function ToolboxTab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.topic_code', { defaultValue: 'Code' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.topic', { defaultValue: 'Topic' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.conducted_at', { defaultValue: 'Conducted' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -3164,13 +3164,13 @@ function PPETab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.item', { defaultValue: 'Item' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.issued_to', { defaultValue: 'Issued to' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.issued_at', { defaultValue: 'Issued at' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -3227,7 +3227,7 @@ function PPETab({ projectId }: { projectId: string }) {
                             {flag && (
                               <AlertTriangle
                                 size={12}
-                                className="inline ml-1 text-amber-600"
+                                className="inline ms-1 text-amber-600"
                               />
                             )}
                           </span>
@@ -3542,13 +3542,13 @@ function AuditsTab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.audit_type', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.conducted_at', { defaultValue: 'Conducted' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.summary', { defaultValue: 'Summary' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -4240,16 +4240,16 @@ function CAPALegacyTab({ projectId }: { projectId: string }) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light bg-surface-secondary/50">
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.source_type', { defaultValue: 'Source' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('common.title', { defaultValue: 'Title' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.owner', { defaultValue: 'Owner' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                   {t('hse_advanced.target_date', { defaultValue: 'Target' })}
                 </th>
                 <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -5149,16 +5149,16 @@ function CorrectiveActionsFSMTab({ projectId }: { projectId: string }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('hse.advanced.ca_col_description', { defaultValue: 'Description' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('hse.advanced.ca_col_due', { defaultValue: 'Due' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                 {t('common.status', { defaultValue: 'Status' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('hse.advanced.ca_col_verified_at', { defaultValue: 'Verified at' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">

@@ -255,7 +255,7 @@ function PanelBody() {
             defaultValue: 'Clear everything',
           })}
         </button>
-        <span className="ml-auto text-2xs text-content-tertiary">
+        <span className="ms-auto text-2xs text-content-tertiary">
           {t('geo_hub.cache_admin.policy_hint', {
             defaultValue:
               'Per Nominatim policy: cached 30 days, 1 req/sec, public service only.',

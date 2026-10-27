@@ -65,20 +65,20 @@ export function InvoiceLinesEditor({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead>
-            <tr className="text-left text-2xs uppercase tracking-wider text-content-tertiary">
-              <th className="pb-1 pr-2 font-medium">{labels.description}</th>
-              <th className="w-20 pb-1 pr-2 font-medium">{labels.quantity}</th>
-              <th className="w-20 pb-1 pr-2 font-medium">{labels.unit}</th>
-              <th className="w-28 pb-1 pr-2 font-medium">{labels.rate}</th>
-              <th className="w-20 pb-1 pr-2 font-medium">{labels.vat}</th>
-              <th className="w-28 pb-1 pr-2 text-right font-medium">{labels.net}</th>
+            <tr className="text-start text-2xs uppercase tracking-wider text-content-tertiary">
+              <th className="pb-1 pe-2 font-medium">{labels.description}</th>
+              <th className="w-20 pb-1 pe-2 font-medium">{labels.quantity}</th>
+              <th className="w-20 pb-1 pe-2 font-medium">{labels.unit}</th>
+              <th className="w-28 pb-1 pe-2 font-medium">{labels.rate}</th>
+              <th className="w-20 pb-1 pe-2 font-medium">{labels.vat}</th>
+              <th className="w-28 pb-1 pe-2 text-end font-medium">{labels.net}</th>
               <th className="w-8 pb-1" />
             </tr>
           </thead>
           <tbody>
             {lines.map((line, index) => (
               <tr key={line.key} className="align-top" data-testid="invoice-line">
-                <td className="py-1 pr-2">
+                <td className="py-1 pe-2">
                   <input
                     className={cellInput}
                     value={line.description}
@@ -86,7 +86,7 @@ export function InvoiceLinesEditor({
                     onChange={(e) => update(line.key, 'description', e.target.value)}
                   />
                 </td>
-                <td className="py-1 pr-2">
+                <td className="py-1 pe-2">
                   <input
                     type="number"
                     step="any"
@@ -97,7 +97,7 @@ export function InvoiceLinesEditor({
                     onChange={(e) => update(line.key, 'quantity', e.target.value)}
                   />
                 </td>
-                <td className="py-1 pr-2">
+                <td className="py-1 pe-2">
                   <input
                     className={cellInput}
                     value={line.unit}
@@ -105,7 +105,7 @@ export function InvoiceLinesEditor({
                     onChange={(e) => update(line.key, 'unit', e.target.value)}
                   />
                 </td>
-                <td className="py-1 pr-2">
+                <td className="py-1 pe-2">
                   <input
                     type="number"
                     step="0.01"
@@ -117,7 +117,7 @@ export function InvoiceLinesEditor({
                     onChange={(e) => update(line.key, 'unit_rate', e.target.value)}
                   />
                 </td>
-                <td className="py-1 pr-2">
+                <td className="py-1 pe-2">
                   <input
                     type="number"
                     step="any"
@@ -130,7 +130,7 @@ export function InvoiceLinesEditor({
                     onChange={(e) => update(line.key, 'vat_rate', e.target.value)}
                   />
                 </td>
-                <td className="py-1 pr-2 text-right tabular-nums leading-9">
+                <td className="py-1 pe-2 text-end tabular-nums leading-9">
                   <MoneyDisplay amount={lineNet(line)} currency={currency} />
                 </td>
                 <td className="py-1">
@@ -163,19 +163,19 @@ export function InvoiceLinesEditor({
       {error && <p className="text-xs font-medium text-semantic-error">{error}</p>}
 
       <dl
-        className="ml-auto grid w-full max-w-xs grid-cols-2 gap-x-4 gap-y-1 rounded-lg bg-surface-secondary/60 px-4 py-3 text-sm"
+        className="ms-auto grid w-full max-w-xs grid-cols-2 gap-x-4 gap-y-1 rounded-lg bg-surface-secondary/60 px-4 py-3 text-sm"
         data-testid="invoice-totals"
       >
         <dt className="text-content-secondary">{t('finance.total_net', { defaultValue: 'Net' })}</dt>
-        <dd className="text-right tabular-nums" data-testid="invoice-total-net">
+        <dd className="text-end tabular-nums" data-testid="invoice-total-net">
           <MoneyDisplay amount={totals.subtotal} currency={currency} />
         </dd>
         <dt className="text-content-secondary">{t('finance.total_vat', { defaultValue: 'VAT' })}</dt>
-        <dd className="text-right tabular-nums" data-testid="invoice-total-vat">
+        <dd className="text-end tabular-nums" data-testid="invoice-total-vat">
           <MoneyDisplay amount={totals.tax} currency={currency} />
         </dd>
         <dt className="font-semibold text-content-primary">{t('finance.total_gross', { defaultValue: 'Gross' })}</dt>
-        <dd className="text-right font-bold tabular-nums" data-testid="invoice-total-gross">
+        <dd className="text-end font-bold tabular-nums" data-testid="invoice-total-gross">
           <MoneyDisplay amount={totals.total} currency={currency} />
         </dd>
       </dl>

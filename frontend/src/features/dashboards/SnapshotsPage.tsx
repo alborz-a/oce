@@ -420,7 +420,7 @@ export function SnapshotsPage() {
               onClick={() => setCreateOpen(true)}
               data-testid="dashboards-empty-new-snapshot-btn"
             >
-              <Plus className="mr-1 h-4 w-4" />
+              <Plus className="me-1 h-4 w-4" />
               {t('dashboards.new_snapshot', { defaultValue: 'New snapshot' })}
             </Button>
           }
@@ -464,7 +464,7 @@ export function SnapshotsPage() {
               >
                 {snapshotsQuery.isFetchingNextPage ? (
                   <>
-                    <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
+                    <Loader2 className="me-1 h-3.5 w-3.5 animate-spin" />
                     {t('common.loading', { defaultValue: 'Loading…' })}
                   </>
                 ) : (
@@ -552,7 +552,7 @@ function SnapshotCard({
             onClick={onDelete}
             disabled={deleting}
             className="rounded p-1 text-neutral-500 hover:bg-rose-500/10 hover:text-rose-300 disabled:opacity-40"
-            aria-label="delete"
+            aria-label={t('common.delete', { defaultValue: 'Delete' })}
             data-testid={`snapshot-delete-${snapshot.id}`}
           >
             <Trash2 className="h-4 w-4" />
@@ -582,7 +582,7 @@ function SnapshotCard({
               .slice(0, 6)
               .map(([k, v]) => (
                 <Badge key={k} variant="neutral">
-                  <FileSpreadsheet className="mr-1 h-3 w-3" />
+                  <FileSpreadsheet className="me-1 h-3 w-3" />
                   {k}: {formatNumber(v)}
                 </Badge>
               ))}

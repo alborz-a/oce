@@ -207,7 +207,7 @@ export function LinkToEntityModal({
               type="text"
               value={targetLabel}
               onChange={(e) => setTargetLabel(e.target.value)}
-              placeholder="RFI-142"
+              placeholder={t('files.references.target_label_placeholder', { defaultValue: 'RFI-142' })}
               className="rounded-md border border-border bg-surface-primary px-2 py-1.5 text-sm focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
               data-testid="link-target-label"
             />
@@ -221,7 +221,7 @@ export function LinkToEntityModal({
               type="text"
               value={relation}
               onChange={(e) => setRelation(e.target.value)}
-              placeholder="references"
+              placeholder={t('files.references.relation_placeholder', { defaultValue: 'references' })}
               maxLength={32}
               className="rounded-md border border-border bg-surface-primary px-2 py-1.5 text-sm focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             />

@@ -131,7 +131,7 @@ export function SnapshotCreateModal({
             type="button"
             onClick={onClose}
             className="rounded p-1 text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-            aria-label="close"
+            aria-label={t('common.close', { defaultValue: 'Close' })}
           >
             <X className="h-4 w-4" />
           </button>
@@ -205,7 +205,7 @@ export function SnapshotCreateModal({
                         type="button"
                         onClick={() => removeFile(i)}
                         className="text-content-tertiary hover:text-rose-500"
-                        aria-label="remove"
+                        aria-label={t('common.remove', { defaultValue: 'Remove' })}
                       >
                         <Trash2 className="h-3 w-3" />
                       </button>

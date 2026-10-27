@@ -258,7 +258,7 @@ export function JobsPage() {
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder={t('jobs.search', { defaultValue: 'Search jobs...' })}
@@ -271,7 +271,7 @@ export function JobsPage() {
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2"
+              className="absolute end-3 top-1/2 -translate-y-1/2"
               aria-label={t('common.clear_search', { defaultValue: 'Clear search' })}
             >
               <X className="h-4 w-4 text-gray-400 hover:text-gray-600" aria-hidden />
@@ -335,7 +335,7 @@ export function JobsPage() {
       {/* Table */}
       {!isLoading && filtered.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-start text-sm">
             <thead className="border-b border-gray-200 bg-gray-50 text-xs font-medium uppercase text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
               <tr>
                 <th className="px-4 py-3">{t('jobs.col_kind', { defaultValue: 'Kind' })}</th>
@@ -444,7 +444,7 @@ export function JobsPage() {
               className="rounded p-1.5 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
               aria-label={t('common.previous_page', { defaultValue: 'Previous page' })}
             >
-              <ChevronLeft className="h-4 w-4" aria-hidden />
+              <ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </button>
             <span className="px-2 py-1">{currentPage} / {pageCount}</span>
             <button
@@ -453,7 +453,7 @@ export function JobsPage() {
               className="rounded p-1.5 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
               aria-label={t('common.next_page', { defaultValue: 'Next page' })}
             >
-              <ChevronRight className="h-4 w-4" aria-hidden />
+              <ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </button>
           </div>
         </div>

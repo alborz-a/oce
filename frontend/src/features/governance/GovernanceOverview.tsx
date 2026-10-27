@@ -133,7 +133,7 @@ function StatButton({
     <button
       type="button"
       onClick={onClick}
-      className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated p-4 text-left shadow-xs transition-all duration-normal ease-oe hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+      className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated p-4 text-start shadow-xs transition-all duration-normal ease-oe hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text">
         <Icon size={18} aria-hidden />

@@ -169,7 +169,7 @@ export function InsightsPanel({
                     color={def.color ?? 0}
                   />
                   {!def.builtin && (
-                    <div className="absolute right-1.5 top-1.5 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="absolute end-1.5 top-1.5 opacity-0 transition-opacity group-hover:opacity-100">
                       <CardControls onEdit={() => openEditor(def)} onRemove={() => onRemove(def.id)} />
                     </div>
                   )}

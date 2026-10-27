@@ -61,7 +61,7 @@ export function DraggablePaletteItem({ item, onActivate }: DraggablePaletteItemP
       data-block-color={item.color}
       onClick={() => onActivate?.(item)}
       className={clsx(
-        'group flex w-full items-start gap-2 rounded-md border px-2.5 py-2 text-left',
+        'group flex w-full items-start gap-2 rounded-md border px-2.5 py-2 text-start',
         'transition-all duration-fast ease-oe transform-gpu cursor-grab',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
         'hover:shadow-sm active:cursor-grabbing',

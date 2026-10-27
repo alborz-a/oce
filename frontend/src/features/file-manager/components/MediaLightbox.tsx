@@ -253,9 +253,9 @@ export function MediaLightbox({
             }}
             aria-label={t('common.previous', { defaultValue: 'Previous' })}
             data-testid="media-lightbox-prev"
-            className="absolute left-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
+            className="absolute start-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
           >
-            <ChevronLeft size={22} />
+            <ChevronLeft className="rtl:rotate-180"  size={22} />
           </button>
           <button
             type="button"
@@ -265,9 +265,9 @@ export function MediaLightbox({
             }}
             aria-label={t('common.next', { defaultValue: 'Next' })}
             data-testid="media-lightbox-next"
-            className="absolute right-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
+            className="absolute end-2 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
           >
-            <ChevronRight size={22} />
+            <ChevronRight className="rtl:rotate-180"  size={22} />
           </button>
         </>
       )}

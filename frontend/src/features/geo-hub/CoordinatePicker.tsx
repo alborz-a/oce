@@ -191,7 +191,7 @@ export function CoordinatePicker({
             onClick={onPickFromMap}
             disabled={disabled}
             className={[
-              'ml-auto inline-flex items-center gap-1 rounded-md border border-border',
+              'ms-auto inline-flex items-center gap-1 rounded-md border border-border',
               'px-2 py-1 text-2xs font-medium text-content-secondary',
               'hover:bg-surface-secondary hover:text-content-primary',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
@@ -225,7 +225,7 @@ export function CoordinatePicker({
               }
               className={[
                 'h-9 w-full rounded-md border bg-surface-primary px-2',
-                'pr-8 font-mono text-xs tabular-nums text-content-primary',
+                'pe-8 font-mono text-xs tabular-nums text-content-primary',
                 latState.error ? 'border-red-500' : 'border-border',
                 'focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent',
                 disabled ? 'opacity-60 cursor-not-allowed' : '',
@@ -234,7 +234,7 @@ export function CoordinatePicker({
             />
             <Pencil
               size={11}
-              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="pointer-events-none absolute end-2 top-1/2 -translate-y-1/2 text-content-tertiary"
               aria-hidden
             />
           </div>
@@ -267,7 +267,7 @@ export function CoordinatePicker({
               }
               className={[
                 'h-9 w-full rounded-md border bg-surface-primary px-2',
-                'pr-8 font-mono text-xs tabular-nums text-content-primary',
+                'pe-8 font-mono text-xs tabular-nums text-content-primary',
                 lonState.error ? 'border-red-500' : 'border-border',
                 'focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent',
                 disabled ? 'opacity-60 cursor-not-allowed' : '',
@@ -276,7 +276,7 @@ export function CoordinatePicker({
             />
             <Pencil
               size={11}
-              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="pointer-events-none absolute end-2 top-1/2 -translate-y-1/2 text-content-tertiary"
               aria-hidden
             />
           </div>

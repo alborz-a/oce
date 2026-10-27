@@ -77,12 +77,12 @@ export function ExportButton({ snapshotId, query }: ExportButtonProps) {
         onClick={() => setOpen((v) => !v)}
         data-testid="export-button-trigger"
       >
-        <Download className="mr-1 h-3 w-3" />
+        <Download className="me-1 h-3 w-3" />
         {t('common.export', { defaultValue: 'Export' })}
       </Button>
       {open && (
         <div
-          className="absolute right-0 z-30 mt-1 w-44 rounded border border-border-light bg-surface-primary shadow-lg"
+          className="absolute end-0 z-30 mt-1 w-44 rounded border border-border-light bg-surface-primary shadow-lg"
           data-testid="export-button-dropdown"
           role="menu"
         >
@@ -135,7 +135,7 @@ function ExportMenuItem({
       onClick={onClick}
       disabled={disabled}
       data-testid={testId}
-      className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs text-content-primary hover:bg-surface-secondary disabled:opacity-50"
+      className="flex w-full items-center gap-2 px-3 py-1.5 text-start text-xs text-content-primary hover:bg-surface-secondary disabled:opacity-50"
     >
       {icon}
       {label}

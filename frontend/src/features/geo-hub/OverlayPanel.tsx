@@ -152,7 +152,7 @@ export function OverlayPanel({
         type="button"
         onClick={() => setCollapsed(false)}
         className={[
-          'absolute top-3 right-3 z-20 inline-flex items-center gap-2',
+          'absolute top-3 end-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -163,7 +163,7 @@ export function OverlayPanel({
       >
         <Layers size={13} strokeWidth={2} className="text-sky-300" />
         <span className="tabular-nums">{overlays.length}</span>
-        <ChevronLeft size={13} strokeWidth={2.25} className="text-white/70" />
+        <ChevronLeft size={13} strokeWidth={2.25} className="text-white/70 rtl:rotate-180" />
       </button>
     );
   }
@@ -172,7 +172,7 @@ export function OverlayPanel({
     <aside
       data-testid="geo-overlay-panel"
       className={[
-        'absolute top-3 right-3 z-20 flex w-80 max-w-[calc(100vw-1.5rem)] flex-col',
+        'absolute top-3 end-3 z-20 flex w-80 max-w-[calc(100vw-1.5rem)] flex-col',
         'rounded-xl border border-white/15 bg-white/95 dark:bg-slate-900/90',
         'shadow-lg shadow-black/20 ring-1 ring-black/5 backdrop-blur-md',
         'hidden md:flex',
@@ -223,7 +223,7 @@ export function OverlayPanel({
               defaultValue: 'Hide overlays',
             })}
           >
-            <ChevronRight size={14} strokeWidth={2} />
+            <ChevronRight className="rtl:rotate-180"  size={14} strokeWidth={2} />
           </button>
         </div>
       </div>
@@ -320,7 +320,7 @@ export function OverlayPanel({
                     <button
                       type="button"
                       onClick={() => onSelectOverlay(isActive ? null : o.id)}
-                      className="min-w-0 flex-1 truncate text-left text-xs font-medium text-content-primary hover:text-oe-blue focus:outline-none focus-visible:underline"
+                      className="min-w-0 flex-1 truncate text-start text-xs font-medium text-content-primary hover:text-oe-blue focus:outline-none focus-visible:underline"
                       title={o.name}
                     >
                       {o.name || t('geo.overlays.untitled', {
@@ -334,7 +334,7 @@ export function OverlayPanel({
                       {o.source_kind}
                     </span>
                   </div>
-                  <div className="ml-9 mt-1.5 flex items-center gap-2 text-2xs text-content-tertiary">
+                  <div className="ms-9 mt-1.5 flex items-center gap-2 text-2xs text-content-tertiary">
                     <label className="flex flex-1 items-center gap-1">
                       <span className="sr-only">
                         {t('geo.overlays.opacity', {
@@ -359,14 +359,14 @@ export function OverlayPanel({
                           defaultValue: 'Opacity',
                         })}
                       />
-                      <span className="w-7 text-right tabular-nums">
+                      <span className="w-7 text-end tabular-nums">
                         {Math.round(Number(o.opacity) * 100)}%
                       </span>
                     </label>
                   </div>
                   {degenerate && (
                     <div
-                      className="ml-9 mt-1.5 flex flex-wrap items-center gap-1.5"
+                      className="ms-9 mt-1.5 flex flex-wrap items-center gap-1.5"
                       data-testid="geo-overlay-needs-corners"
                     >
                       <span
@@ -397,7 +397,7 @@ export function OverlayPanel({
                     </div>
                   )}
                   {isActive && (
-                    <div className="ml-9 mt-1.5 flex flex-wrap items-center gap-1">
+                    <div className="ms-9 mt-1.5 flex flex-wrap items-center gap-1">
                       <button
                         type="button"
                         onClick={() =>

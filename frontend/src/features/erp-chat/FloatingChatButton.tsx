@@ -116,7 +116,7 @@ export function FloatingChatButton() {
       {unreadCount > 0 && !isOpen && (
         <span
           aria-label={badgeLabel}
-          className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-semibold flex items-center justify-center border-2 border-white"
+          className="absolute -top-1 -end-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-xs font-semibold flex items-center justify-center border-2 border-white"
         >
           {unreadCount > 9 ? '9+' : unreadCount}
         </span>
@@ -128,7 +128,7 @@ export function FloatingChatButton() {
           aria-label={pendingLabel}
           title={pendingLabel}
           data-testid="floating-chat-pending-badge"
-          className="absolute -bottom-1 -left-1 flex h-5 min-w-[20px] items-center justify-center gap-0.5 rounded-full border-2 border-white bg-semantic-warning-vivid px-1 text-xs font-semibold text-neutral-950 dark:border-neutral-900"
+          className="absolute -bottom-1 -start-1 flex h-5 min-w-[20px] items-center justify-center gap-0.5 rounded-full border-2 border-white bg-semantic-warning-vivid px-1 text-xs font-semibold text-neutral-950 dark:border-neutral-900"
         >
           <ClipboardCheck size={10} strokeWidth={2.5} aria-hidden />
           {pendingCount > 9 ? '9+' : pendingCount}

@@ -170,7 +170,7 @@ function HowDeadlinesWork() {
       }),
     },
     {
-      icon: <ArrowRight size={14} className="text-oe-blue" />,
+      icon: <ArrowRight size={14} className="text-oe-blue rtl:rotate-180" />,
       title: t('deadlines.flow_4_title', { defaultValue: 'Act in the source' }),
       desc: t('deadlines.flow_4_desc', {
         defaultValue:
@@ -214,7 +214,7 @@ function HowDeadlinesWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </Fragment>
@@ -338,7 +338,7 @@ export function DeadlinesPage() {
             className="inline-flex items-center gap-1 text-sm font-medium text-oe-blue hover:underline"
           >
             {t('deadlines.settings_link', { defaultValue: 'Notification settings' })}
-            <ArrowRight size={14} />
+            <ArrowRight className="rtl:rotate-180"  size={14} />
           </Link>
         </div>
       </div>

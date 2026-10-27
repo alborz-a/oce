@@ -74,7 +74,7 @@ export function CostCodeAssist({ projectId, defaultText, onApply, disabled }: Co
       {open && (
         <div
           className={clsx(
-            'absolute right-0 z-30 mt-1 w-80 max-w-[80vw] rounded-lg border border-border-light',
+            'absolute end-0 z-30 mt-1 w-80 max-w-[80vw] rounded-lg border border-border-light',
             'bg-surface-elevated p-3 shadow-xl',
           )}
           role="dialog"
@@ -143,7 +143,7 @@ export function CostCodeAssist({ projectId, defaultText, onApply, disabled }: Co
                     }}
                     className={clsx(
                       'flex w-full items-center gap-2 rounded-md border border-border-light',
-                      'px-2.5 py-1.5 text-left transition-colors hover:bg-surface-secondary',
+                      'px-2.5 py-1.5 text-start transition-colors hover:bg-surface-secondary',
                     )}
                   >
                     <span className="font-mono text-xs font-semibold text-content-primary">

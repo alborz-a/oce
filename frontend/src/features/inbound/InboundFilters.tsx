@@ -133,7 +133,7 @@ export function InboundFilters({
           id="inbound-channel"
           value={value.channel}
           onChange={(e) => set('channel', e.target.value)}
-          className={`${controlCls} pr-8`}
+          className={`${controlCls} pe-8`}
         >
           <option value="">
             {t('inbound.filter_all_channels', { defaultValue: 'All channels' })}

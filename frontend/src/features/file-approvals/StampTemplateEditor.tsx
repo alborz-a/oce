@@ -138,7 +138,7 @@ export function StampTemplateEditor({
             onChange={(e) => setName(e.target.value)}
             maxLength={128}
             className="h-9 px-3 rounded-md border border-border bg-surface-primary text-sm"
-            placeholder="Project Hold"
+            placeholder={t('files.approvals.stamp_name_placeholder', { defaultValue: 'Project Hold' })}
           />
         </WideModalField>
         <WideModalField
@@ -153,7 +153,7 @@ export function StampTemplateEditor({
             onChange={(e) => setText(e.target.value)}
             maxLength={255}
             className="h-9 px-3 rounded-md border border-border bg-surface-primary text-sm"
-            placeholder="HOLD"
+            placeholder={t('files.approvals.stamp_text_placeholder', { defaultValue: 'HOLD' })}
           />
         </WideModalField>
         <WideModalField

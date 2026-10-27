@@ -152,7 +152,7 @@ export function MapLayerLegend({ projectId }: MapLayerLegendProps) {
         onClick={() => setCollapsed(false)}
         data-testid="geo-legend-pill"
         className={[
-          'absolute bottom-3 right-3 z-20 inline-flex items-center gap-2',
+          'absolute bottom-3 end-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -175,7 +175,7 @@ export function MapLayerLegend({ projectId }: MapLayerLegendProps) {
     <aside
       data-testid="geo-layer-legend"
       className={[
-        'absolute bottom-3 right-3 z-20 flex w-64 max-w-[calc(100vw-1.5rem)] flex-col',
+        'absolute bottom-3 end-3 z-20 flex w-64 max-w-[calc(100vw-1.5rem)] flex-col',
         'rounded-xl border border-white/15 bg-white/95 dark:bg-slate-900/90',
         'shadow-lg shadow-black/20 ring-1 ring-black/5 backdrop-blur-md',
         'hidden md:flex',
@@ -303,7 +303,7 @@ export function MapLayerLegend({ projectId }: MapLayerLegendProps) {
                   </div>
                   {/* Domain breakdown chips — only when meaningful. */}
                   {!empty && Object.keys(breakdown).length > 0 && (
-                    <div className="ml-7 mt-1 flex flex-wrap gap-1">
+                    <div className="ms-7 mt-1 flex flex-wrap gap-1">
                       {Object.entries(breakdown)
                         .sort((a, b) => b[1] - a[1])
                         .map(([bucket, count]) => (

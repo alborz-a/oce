@@ -150,7 +150,7 @@ export default function BIMCoverageCard() {
             </p>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-end">
           <div className={`text-2xl font-bold tabular-nums ${headlineColor}`}>
             {headlinePercent}%
           </div>
@@ -224,7 +224,7 @@ export default function BIMCoverageCard() {
           className="inline-flex items-center gap-1.5 text-xs text-oe-blue hover:underline"
         >
           {t('dashboard.bim_open_viewer', { defaultValue: 'Open BIM viewer' })}
-          <ArrowRight size={11} />
+          <ArrowRight className="rtl:rotate-180"  size={11} />
         </button>
       </div>
     </div>

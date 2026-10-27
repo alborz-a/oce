@@ -161,7 +161,7 @@ function Provenance({ asOf, source, origin, isLocked, requestedDate }: Provenanc
       )}
       {isLocked && (
         <Badge variant="blue" size="sm">
-          <Lock size={10} className="mr-0.5 inline" />
+          <Lock size={10} className="me-0.5 inline" />
           {t('fx.locked', { defaultValue: 'locked' })}
         </Badge>
       )}
@@ -449,7 +449,7 @@ function RateSetsTab() {
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <button
                   type="button"
-                  className="text-left text-sm text-content-primary hover:underline"
+                  className="text-start text-sm text-content-primary hover:underline"
                   onClick={() => setOpenId(openId === set.id ? null : set.id)}
                 >
                   <span className="font-medium">{set.base_currency}</span>{' '}
@@ -982,7 +982,7 @@ export function FxPanel() {
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-surface-primary p-3">
         <div className="flex flex-wrap items-center gap-1.5">
           <Badge variant={freshnessTone(freshness)} size="sm">
-            <CalendarClock size={10} className="mr-0.5 inline" />
+            <CalendarClock size={10} className="me-0.5 inline" />
             {freshness === 'pinned'
               ? t('fx.freshness_pinned', { defaultValue: 'pinned' })
               : freshness === 'current'
@@ -1014,7 +1014,7 @@ export function FxPanel() {
           )}
           {status && !status.network_ok && (
             <Badge variant="warning" size="sm">
-              <WifiOff size={10} className="mr-0.5 inline" />
+              <WifiOff size={10} className="me-0.5 inline" />
               {t('fx.offline', { defaultValue: 'feed unreachable' })}
             </Badge>
           )}

@@ -41,7 +41,7 @@ import {
   inboundChannels,
   type InboundFilterState,
 } from './InboundFilters';
-import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
+import { getIntlLocale, formatBytes } from '@/shared/lib/formatters';
 
 // How many messages we pull per page from the paginated read endpoint. The
 // search / filter refinement runs over whichever page is loaded.
@@ -56,20 +56,6 @@ function whenLabel(iso: string): string {
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleString(getIntlLocale());
 }
 
-// Human-readable byte size for an attachment; blank when the size is unknown so
-// the row shows just the filename rather than "0 B".
-function formatBytes(n: number): string {
-  if (!Number.isFinite(n) || n <= 0) return '';
-  const units = ['B', 'KB', 'MB', 'GB'];
-  let value = n;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = value >= 10 || unit === 0 ? Math.round(value).toString() : fmtFixed(value, 1);
-  return `${rounded} ${units[unit]}`;
-}
 
 // The attachment list surfaces each file's name (and size / type) instead of a
 // bare count. We do NOT fetch binaries here: the capture payload carries only a
@@ -85,7 +71,7 @@ function AttachmentList({ attachments }: { attachments: InboundAttachment[] }) {
       </span>
       <ul className="flex flex-col gap-0.5">
         {attachments.map((a, i) => {
-          const size = formatBytes(a.size_bytes);
+          const size = a.size_bytes ? formatBytes(a.size_bytes) : '';
           return (
             <li
               key={`${a.filename}-${i}`}
@@ -152,7 +138,7 @@ function CapturedRow({
         <div className="flex items-center justify-between gap-2">
           <span className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue-text">
             {t('inbound.open_record', { defaultValue: 'Open correspondence' })}
-            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
+            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 rtl:rotate-180" aria-hidden />
           </span>
           <Button
             variant="secondary"
@@ -272,7 +258,7 @@ export function InboundCapturePage() {
           className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-sm font-medium text-content-secondary hover:bg-surface-secondary"
         >
           {t('inbound.manage_sources', { defaultValue: 'Manage sources' })}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4 rtl:rotate-180" />
         </a>
       </header>
 
@@ -370,7 +356,7 @@ export function InboundCapturePage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        icon={<ChevronLeft className="h-4 w-4" aria-hidden />}
+                        icon={<ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />}
                         disabled={!canPrev || capturedQ.isFetching}
                         onClick={() => setOffset((o) => Math.max(0, o - PAGE_SIZE))}
                       >
@@ -379,7 +365,7 @@ export function InboundCapturePage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        icon={<ChevronRight className="h-4 w-4" aria-hidden />}
+                        icon={<ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />}
                         iconPosition="right"
                         disabled={!canNext || capturedQ.isFetching}
                         onClick={() => setOffset((o) => o + PAGE_SIZE)}

@@ -193,7 +193,7 @@ export function AnchorAdjustPanel({
         type="button"
         onClick={() => setCollapsed(false)}
         className={[
-          'pointer-events-auto absolute bottom-20 left-3 z-20 inline-flex items-center gap-2',
+          'pointer-events-auto absolute bottom-20 start-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -217,7 +217,7 @@ export function AnchorAdjustPanel({
         // Relocated off the top-right corner (which OverlayPanel owns) to the
         // free left side, lifted above the bottom-left HUD pods so the two
         // chrome panels stop overlapping (#284 follow-up items 7+8).
-        'pointer-events-auto absolute bottom-20 left-3 z-20',
+        'pointer-events-auto absolute bottom-20 start-3 z-20',
         'flex w-64 max-w-[calc(100vw-1.5rem)] flex-col gap-2',
         'rounded-lg border border-white/15 bg-slate-900/85 p-3',
         'text-xs text-slate-100 shadow-lg shadow-black/30 backdrop-blur-md',

@@ -142,7 +142,7 @@ export function CalibrationDialog({
     return (
       <div
         data-testid="dwg-calibration-banner"
-        className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 rounded-full border border-oe-blue/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 py-2 shadow-xl ring-1 ring-oe-blue/20"
+        className="absolute top-3 start-1/2 -translate-x-1/2 z-20 flex items-center gap-3 rounded-full border border-oe-blue/40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 py-2 shadow-xl ring-1 ring-oe-blue/20"
       >
         <MousePointer2 size={14} className="text-oe-blue" />
         <span className="text-xs font-medium text-slate-800 dark:text-slate-100">
@@ -152,7 +152,7 @@ export function CalibrationDialog({
           type="button"
           onClick={onCancel}
           aria-label={t('dwg_takeoff.cancel_calibration', { defaultValue: 'Cancel calibration' })}
-          className="ml-1 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800"
+          className="ms-1 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800"
         >
           <X size={14} />
         </button>
@@ -226,7 +226,7 @@ export function CalibrationDialog({
                   setLengthInput(e.target.value);
                   if (error) setError(null);
                 }}
-                placeholder="e.g. 5"
+                placeholder={t('dwg_takeoff.calibration_length_placeholder', { defaultValue: 'e.g. 5' })}
                 className="flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue"
               />
               <select

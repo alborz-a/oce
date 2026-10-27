@@ -409,7 +409,7 @@ export function DashboardProjectsMap({ projects, className, heightClass: heightC
       )}
 
       {/* Legend chip */}
-      <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-surface-elevated/90 backdrop-blur-sm px-2 py-1 shadow-sm">
+      <div className="pointer-events-none absolute start-3 top-3 inline-flex items-center gap-1.5 rounded-md bg-surface-elevated/90 backdrop-blur-sm px-2 py-1 shadow-sm">
         <MapIcon size={11} className="text-oe-blue" strokeWidth={2} />
         <span className="text-[11px] font-medium text-content-primary">
           {t('dashboard.map_title', { defaultValue: 'Project locations' })}

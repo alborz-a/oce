@@ -195,7 +195,7 @@ export function TransmittalLogPage() {
               ))}
             </select>
           </div>
-          <div className="ml-auto text-xs text-content-tertiary">
+          <div className="ms-auto text-xs text-content-tertiary">
             {t('files.transmittals.count', {
               defaultValue: '{{count}} transmittals',
               count: rows.length,
@@ -226,27 +226,27 @@ export function TransmittalLogPage() {
           <table className="w-full text-sm">
             <thead className="text-xs text-content-secondary border-b border-border-light bg-surface-secondary/20 sticky top-0">
               <tr>
-                <th className="text-left px-6 py-2 font-medium">
+                <th className="text-start px-6 py-2 font-medium">
                   {t('files.transmittals.col_number', { defaultValue: 'Number' })}
                 </th>
-                <th className="text-left px-3 py-2 font-medium">
+                <th className="text-start px-3 py-2 font-medium">
                   {t('files.transmittals.col_subject', { defaultValue: 'Subject' })}
                 </th>
-                <th className="text-left px-3 py-2 font-medium">
+                <th className="text-start px-3 py-2 font-medium">
                   {t('files.transmittals.col_reason', { defaultValue: 'Reason' })}
                 </th>
-                <th className="text-right px-3 py-2 font-medium">
+                <th className="text-end px-3 py-2 font-medium">
                   {t('files.transmittals.col_items', { defaultValue: 'Items' })}
                 </th>
-                <th className="text-right px-3 py-2 font-medium">
+                <th className="text-end px-3 py-2 font-medium">
                   {t('files.transmittals.col_recipients', {
                     defaultValue: 'Recipients',
                   })}
                 </th>
-                <th className="text-left px-3 py-2 font-medium">
+                <th className="text-start px-3 py-2 font-medium">
                   {t('files.transmittals.col_sent_at', { defaultValue: 'Sent' })}
                 </th>
-                <th className="text-left px-3 py-2 font-medium">
+                <th className="text-start px-3 py-2 font-medium">
                   {t('files.transmittals.col_status', { defaultValue: 'Status' })}
                 </th>
                 <th className="px-3 py-2" aria-hidden />
@@ -272,8 +272,8 @@ export function TransmittalLogPage() {
                     <td className="px-3 py-2 text-content-secondary">
                       {reasonLabel(row.reason_code)}
                     </td>
-                    <td className="px-3 py-2 text-right">{row.item_count}</td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">{row.item_count}</td>
+                    <td className="px-3 py-2 text-end">
                       {row.acknowledged_count}/{row.recipient_count}
                     </td>
                     <td className="px-3 py-2 text-content-secondary">
@@ -281,11 +281,11 @@ export function TransmittalLogPage() {
                     </td>
                     <td className="px-3 py-2">
                       <Badge variant={variant} dot>
-                        <StatusIcon size={10} className="mr-1" />
+                        <StatusIcon size={10} className="me-1" />
                         {statusLabel(row.status)}
                       </Badge>
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <button
                         type="button"
                         className="text-content-tertiary hover:text-oe-blue"

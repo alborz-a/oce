@@ -264,7 +264,7 @@ function HowEquipmentWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </Fragment>
@@ -525,14 +525,14 @@ export function EquipmentPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         <select
@@ -667,22 +667,22 @@ function AssetTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('equipment.col_code', { defaultValue: 'Code' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('equipment.col_name', { defaultValue: 'Name' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('equipment.col_type', { defaultValue: 'Type' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('equipment.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('equipment.col_location', { defaultValue: 'Location' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('equipment.col_hours', { defaultValue: 'Hours' })}
             </th>
           </tr>
@@ -728,7 +728,7 @@ function AssetTable({
                   '—'
                 )}
               </td>
-              <td className="px-4 py-2 text-right text-xs tabular-nums">
+              <td className="px-4 py-2 text-end text-xs tabular-nums">
                 {fmtFixed(toNum(r.hour_meter), 0)} h
               </td>
             </tr>
@@ -926,7 +926,7 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
             <button
               type="button"
               onClick={onClose}
-              className="ml-1 rounded p-1 hover:bg-surface-secondary"
+              className="ms-1 rounded p-1 hover:bg-surface-secondary"
               aria-label={t('common.close', { defaultValue: 'Close' })}
             >
               <X size={16} />
@@ -1392,19 +1392,19 @@ function UtilizationTab({
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.recorded_at', { defaultValue: 'Recorded at' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('equipment.col_hours', { defaultValue: 'Hours' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('equipment.km', { defaultValue: 'km' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('equipment.fuel_level', { defaultValue: 'Fuel %' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.engine_status', {
                     defaultValue: 'Engine',
                   })}
@@ -1417,17 +1417,17 @@ function UtilizationTab({
                   <td className="px-3 py-2 text-content-secondary">
                     <DateDisplay value={r.recorded_at} />
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {r.hour_meter !== null && r.hour_meter !== undefined
                       ? fmtFixed(toNum(r.hour_meter), 0)
                       : '—'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {r.odometer_km !== null && r.odometer_km !== undefined
                       ? fmtFixed(toNum(r.odometer_km), 0)
                       : '—'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {r.fuel_level !== null && r.fuel_level !== undefined
                       ? fmtPercent(toNum(r.fuel_level), 0)
                       : '—'}
@@ -1607,7 +1607,7 @@ function MeterReadingModal({
                 value={engineStatus}
                 onChange={(e) => setEngineStatus(e.target.value)}
                 className={inputCls}
-                placeholder="idle, running, off"
+                placeholder={t('equipment.engine_status_placeholder', { defaultValue: 'idle, running, off' })}
               />
             </div>
           </div>
@@ -1691,7 +1691,7 @@ function CostSummaryTab({
               <div>
                 <span className="text-content-secondary">{r.label}</span>
                 {r.sub && (
-                  <span className="ml-2 text-xs text-content-tertiary">{r.sub}</span>
+                  <span className="ms-2 text-xs text-content-tertiary">{r.sub}</span>
                 )}
               </div>
               <span className="tabular-nums font-medium">{r.value}</span>
@@ -1801,19 +1801,19 @@ function MaintenanceTab({
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.scheduled_for', { defaultValue: 'Scheduled' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.technician', { defaultValue: 'Technician' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.summary', { defaultValue: 'Summary' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('equipment.cost', { defaultValue: 'Cost' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.col_status', { defaultValue: 'Status' })}
                 </th>
                 <th className="px-3 py-2 w-[88px]" />
@@ -1834,7 +1834,7 @@ function MaintenanceTab({
                   <td className="px-3 py-2 truncate max-w-[200px]">
                     {r.work_summary || '—'}
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <MoneyDisplay
                       amount={toNum(r.cost)}
                       currency={r.currency || undefined}
@@ -1999,19 +1999,19 @@ function CertificationsTab({
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.inspection_type', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.inspected_at', { defaultValue: 'Inspected' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.valid_until', { defaultValue: 'Valid until' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.inspector', { defaultValue: 'Inspector' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('equipment.result', { defaultValue: 'Result' })}
                 </th>
                 <th className="px-3 py-2 w-[60px]" />
@@ -2039,7 +2039,7 @@ function CertificationsTab({
                     >
                       <DateDisplay value={r.valid_until} />
                       {expired && (
-                        <span className="ml-1 text-[10px] uppercase">
+                        <span className="ms-1 text-[10px] uppercase">
                           {t('equipment.expired', { defaultValue: 'expired' })}
                         </span>
                       )}
@@ -2365,13 +2365,13 @@ function TypesPage() {
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('equipment.type.code', { defaultValue: 'Code' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('equipment.type.name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="px-4 py-2.5 text-left">
+                  <th className="px-4 py-2.5 text-start">
                     {t('equipment.type.category', { defaultValue: 'Category' })}
                   </th>
                   <th className="px-4 py-2.5 w-[80px]" />
@@ -2736,7 +2736,7 @@ function EquipmentFormModal({
                   value={form.type_code}
                   onChange={(e) => set('type_code', e.target.value)}
                   className={inputCls}
-                  placeholder="excavator, crane, generator…"
+                  placeholder={t('equipment.type_code_placeholder', { defaultValue: 'excavator, crane, generator…' })}
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2783,7 +2783,7 @@ function EquipmentFormModal({
                   value={form.serial}
                   onChange={(e) => set('serial', e.target.value)}
                   className={inputCls}
-                  placeholder="VIN / serial / asset number"
+                  placeholder={t('equipment.serial_placeholder', { defaultValue: 'VIN / serial / asset number' })}
                 />
               </div>
               <div>

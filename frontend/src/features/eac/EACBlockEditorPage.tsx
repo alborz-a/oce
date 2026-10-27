@@ -43,7 +43,7 @@ export function EACBlockEditorPage() {
           <header className="flex items-center justify-between gap-3 border-b border-border bg-surface-secondary px-4 py-2">
             <h1 className="text-sm font-semibold text-content-primary">
               {t('eac.editor.title', { defaultValue: 'EAC Block Editor' })}
-              <span className="ml-2 font-normal text-content-tertiary">· {eacId}</span>
+              <span className="ms-2 font-normal text-content-tertiary">· {eacId}</span>
             </h1>
             <ModuleGuideButton content={eacGuide} />
           </header>

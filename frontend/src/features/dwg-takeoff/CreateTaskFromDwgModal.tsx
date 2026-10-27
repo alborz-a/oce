@@ -171,7 +171,7 @@ export default function CreateTaskFromDwgModal({
           <div>
             <label className="block text-[10px] font-semibold uppercase tracking-wider text-content-tertiary mb-1">
               {t('dwg_takeoff.task_title', { defaultValue: 'Title' })}
-              <span className="text-rose-500 ml-0.5">*</span>
+              <span className="text-rose-500 ms-0.5">*</span>
             </label>
             <input
               type="text"

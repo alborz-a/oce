@@ -41,7 +41,7 @@ function MoneyChips({ chips, emptyLabel }: { chips: CurrencyChip[]; emptyLabel: 
       {chips.map((c, i) => (
         <span key={c.currency} className="tabular-nums">
           {formatCurrency(c.amount, c.currency, undefined, { maximumFractionDigits: 0 })}
-          {i < chips.length - 1 && <span aria-hidden className="ml-2 text-content-quaternary">·</span>}
+          {i < chips.length - 1 && <span aria-hidden className="ms-2 text-content-quaternary">·</span>}
         </span>
       ))}
     </span>
@@ -112,7 +112,7 @@ export function FinanceSummaryCard() {
             className="inline-flex items-center gap-1 text-xs font-medium text-content-secondary hover:text-oe-blue transition-colors"
           >
             {t('dashboard.open_finance', { defaultValue: 'Open Finance' })}
-            <ArrowRight size={13} />
+            <ArrowRight className="rtl:rotate-180"  size={13} />
           </button>
         }
       />
@@ -122,7 +122,7 @@ export function FinanceSummaryCard() {
           <button
             type="button"
             onClick={() => navigate('/changeorders')}
-            className="group rounded-xl border border-border-light bg-surface-elevated/90 p-3 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30"
+            className="group rounded-xl border border-border-light bg-surface-elevated/90 p-3 text-start shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30"
           >
             <div className="flex items-center gap-1.5 text-2xs font-medium uppercase tracking-wider text-content-tertiary">
               <FileEdit size={12} className="text-violet-500" />
@@ -153,7 +153,7 @@ export function FinanceSummaryCard() {
                 : navigate('/finance')
             }
             className={[
-              'group rounded-xl border p-3 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30',
+              'group rounded-xl border p-3 text-start shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/30',
               overBudgetCount > 0
                 ? 'border-amber-300/60 bg-amber-50 dark:bg-amber-900/10'
                 : 'border-border-light bg-surface-elevated/90',

@@ -108,7 +108,7 @@ export function HowBasisWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </Fragment>

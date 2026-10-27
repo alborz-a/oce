@@ -135,7 +135,7 @@ export function DataTable({
                 <th
                   key={col}
                   onClick={() => handleHeaderClick(col)}
-                  className="cursor-pointer border-b border-border-light px-2 py-1 text-left font-semibold text-content-secondary hover:text-content-primary"
+                  className="cursor-pointer border-b border-border-light px-2 py-1 text-start font-semibold text-content-secondary hover:text-content-primary"
                   data-testid={`data-table-header-${col}`}
                   scope="col"
                 >

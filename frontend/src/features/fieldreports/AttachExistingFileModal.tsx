@@ -159,7 +159,7 @@ export default function AttachExistingFileModal({
         <div className="flex-1 overflow-y-auto p-3">
           {docsQuery.isLoading ? (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
-              <Loader2 size={16} className="animate-spin mr-2" />
+              <Loader2 size={16} className="animate-spin me-2" />
               {t('common.loading', { defaultValue: 'Loading…' })}
             </div>
           ) : filtered.length === 0 ? (

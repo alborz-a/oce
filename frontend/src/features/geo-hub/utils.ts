@@ -8,18 +8,8 @@
  */
 
 /** Format a byte count as KB/MB/GB with one decimal. */
-import { fmtFixed } from '@/shared/lib/formatters';
-export function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  let value = bytes;
-  let i = 0;
-  while (value >= 1024 && i < units.length - 1) {
-    value /= 1024;
-    i += 1;
-  }
-  return `${fmtFixed(value, value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
-}
+import { fmtFixed, formatBytes } from '@/shared/lib/formatters';
+export { formatBytes };
 
 /**
  * Format an ISO timestamp as a short relative-time string (en-US fixed

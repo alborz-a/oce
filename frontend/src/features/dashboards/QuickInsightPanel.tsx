@@ -176,7 +176,7 @@ export function QuickInsightPanel({
             data-testid="quick-insights-refresh"
           >
             <RefreshCw
-              className={`mr-1 h-3 w-3 ${insightsQuery.isFetching ? 'animate-spin' : ''}`}
+              className={`me-1 h-3 w-3 ${insightsQuery.isFetching ? 'animate-spin' : ''}`}
             />
             {t('common.refresh', { defaultValue: 'Refresh' })}
           </Button>

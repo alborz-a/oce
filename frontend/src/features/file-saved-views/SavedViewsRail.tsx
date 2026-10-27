@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 //
 // SavedViewsRail — vertical list of saved views shown under the
-// /files left-pane category tree. Each row is icon + name + use-count
+// /files start-pane category tree. Each row is icon + name + use-count
 // badge; right-click opens a context menu (rename / pin / delete /
 // share-toggle / duplicate). Clicking a row applies the filter and
 // bumps its ``use_count``.
@@ -143,11 +143,11 @@ export function SavedViewsRail({ projectId, onApply, compact = false }: SavedVie
         )}
         aria-expanded={expanded}
       >
-        {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+        {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3 rtl:rotate-180" />}
         <Bookmark className="h-3.5 w-3.5" />
         <span>{t('files.views.title', { defaultValue: 'Saved views' })}</span>
         {views.length > 0 && (
-          <span className="ml-auto text-[10px] text-content-tertiary">{views.length}</span>
+          <span className="ms-auto text-[10px] text-content-tertiary">{views.length}</span>
         )}
       </button>
       {expanded && (
@@ -170,7 +170,7 @@ export function SavedViewsRail({ projectId, onApply, compact = false }: SavedVie
                 onClick={() => handleClick(view)}
                 onContextMenu={(e) => handleContext(e, view)}
                 className={clsx(
-                  'group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm',
+                  'group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm',
                   'hover:bg-surface-secondary active:bg-surface-tertiary',
                   'border border-transparent hover:border-border-light',
                   view.is_pinned && 'bg-surface-secondary/60',
@@ -191,7 +191,7 @@ export function SavedViewsRail({ projectId, onApply, compact = false }: SavedVie
                 {!compact && view.use_count > 0 && (
                   <span
                     data-testid={`saved-view-usecount-${view.id}`}
-                    className="ml-auto rounded-full bg-surface-tertiary px-1.5 py-0.5 text-[10px] font-medium text-content-secondary"
+                    className="ms-auto rounded-full bg-surface-tertiary px-1.5 py-0.5 text-[10px] font-medium text-content-secondary"
                   >
                     {view.use_count}
                   </span>
@@ -284,7 +284,7 @@ function MenuButton({ icon, label, onClick, disabled = false, danger = false, te
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm',
+        'flex w-full items-center gap-2 px-3 py-1.5 text-start text-sm',
         'hover:bg-surface-secondary active:bg-surface-tertiary',
         'disabled:cursor-not-allowed disabled:opacity-50',
         danger && 'text-semantic-error',

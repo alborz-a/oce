@@ -187,7 +187,7 @@ export function TypeFormModal({
               value={code}
               onChange={(e) => setCode(e.target.value)}
               className={inputCls}
-              placeholder="excavator"
+              placeholder={t('equipment.type.code_placeholder', { defaultValue: 'excavator' })}
               disabled={isEdit}
               title={
                 isEdit
@@ -221,7 +221,7 @@ export function TypeFormModal({
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className={inputCls}
-              placeholder="earthworks, lifting, hauling…"
+              placeholder={t('equipment.type.category_placeholder', { defaultValue: 'earthworks, lifting, hauling…' })}
             />
           </div>
           {error && (

@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
- * ActivityDrawer — right-edge slide-over showing the full audit trail
+ * ActivityDrawer — end-edge slide-over showing the full audit trail
  * for a single document.
  *
  * Backed by ``GET /v1/documents/{id}/activity/?limit=N``, which answers
@@ -10,7 +10,7 @@
  * that maximum is exactly the file whose reader needs to be told.
  *
  * UX notes:
- *   - 360px wide right-anchored panel (vs FilePreviewPane's 320px)
+ *   - 360px wide end-anchored panel (vs FilePreviewPane's 320px)
  *   - Backdrop scrim, click-outside / Escape to close
  *   - Entries grouped by Today / Yesterday / Earlier with sticky labels
  *   - Each row: action chip, actor identifier, relative time
@@ -234,7 +234,7 @@ export function ActivityDrawer({
         aria-labelledby="activity-drawer-title"
         data-testid="activity-drawer"
         className={clsx(
-          'fixed top-0 right-0 z-50 h-full w-[360px] max-w-[100vw]',
+          'fixed top-0 end-0 z-50 h-full w-[360px] max-w-[100vw]',
           'border-s border-border-light bg-surface-elevated shadow-xl',
           'transition-transform duration-200 ease-oe',
           'flex flex-col',

@@ -105,7 +105,7 @@ export function ReferencedInPanel({
       <button
         type="button"
         onClick={() => setExpanded((e) => !e)}
-        className="flex w-full items-center justify-between text-left"
+        className="flex w-full items-center justify-between text-start"
         aria-expanded={expanded}
         data-testid="referenced-in-toggle"
       >

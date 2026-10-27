@@ -137,7 +137,7 @@ export function AnchorDriftIndicator({
               {t('geo_hub.drift.anchored_label', { defaultValue: 'Anchored' })}:
             </span>{' '}
             <span className="text-content-secondary">{anchoredAddress}</span>
-            <span className="ml-1 inline-flex items-center rounded-sm bg-surface-tertiary px-1 py-px text-2xs uppercase tracking-wider">
+            <span className="ms-1 inline-flex items-center rounded-sm bg-surface-tertiary px-1 py-px text-2xs uppercase tracking-wider">
               {t('geo_hub.drift.cached_chip', { defaultValue: 'cached' })}
             </span>
           </div>

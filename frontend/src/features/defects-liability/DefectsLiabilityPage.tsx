@@ -43,7 +43,7 @@ const inputCls =
 const textareaCls =
   'w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue resize-none';
 const selectCls =
-  'h-10 w-full appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  'h-10 w-full appearance-none rounded-lg border border-border bg-surface-primary ps-3 pe-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
 const WARRANTY_STATUS_VARIANT: Record<WarrantyStatus, BadgeVariant> = {
   in_dlp: 'blue', expiring: 'warning', expired: 'error', closed: 'success', on_hold: 'neutral',
@@ -104,7 +104,7 @@ function SelectShell({ children }: { children: ReactNode }) {
   return (
     <div className="relative">
       {children}
-      <ChevronDown size={14} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-content-tertiary" />
+      <ChevronDown size={14} className="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 text-content-tertiary" />
     </div>
   );
 }
@@ -531,20 +531,20 @@ function SubcontractorHealthCard({ register }: { register: DlpRegister }) {
       <div className="min-w-[560px]">
         <div className="flex items-center gap-3 border-b border-border-light bg-surface-secondary/30 px-4 py-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary">
           <span className="flex-1">{t('defects_liability.health_col_subcontractor', { defaultValue: 'Subcontractor' })}</span>
-          <span className="w-20 text-right">{t('defects_liability.health_col_total', { defaultValue: 'Entries' })}</span>
-          <span className="w-24 text-right">{t('defects_liability.health_col_open', { defaultValue: 'Open defects' })}</span>
-          <span className="w-20 text-right">{t('defects_liability.health_col_overdue', { defaultValue: 'Overdue' })}</span>
-          <span className="w-24 text-right">{t('defects_liability.health_col_score', { defaultValue: 'Defect-free' })}</span>
+          <span className="w-20 text-end">{t('defects_liability.health_col_total', { defaultValue: 'Entries' })}</span>
+          <span className="w-24 text-end">{t('defects_liability.health_col_open', { defaultValue: 'Open defects' })}</span>
+          <span className="w-20 text-end">{t('defects_liability.health_col_overdue', { defaultValue: 'Overdue' })}</span>
+          <span className="w-24 text-end">{t('defects_liability.health_col_score', { defaultValue: 'Defect-free' })}</span>
         </div>
         {register.subcontractors.map((s) => (
           <div key={s.subcontractor} className="flex items-center gap-3 border-b border-border-light px-4 py-2 text-sm last:border-b-0">
             <span className="flex-1 truncate text-content-primary">
               {s.subcontractor === 'unassigned' ? t('defects_liability.health_unassigned', { defaultValue: 'Unassigned' }) : s.subcontractor}
             </span>
-            <span className="w-20 text-right tabular-nums text-content-secondary">{s.total}</span>
-            <span className={clsx('w-24 text-right tabular-nums', s.open_defects > 0 ? 'font-semibold text-semantic-error' : 'text-content-secondary')}>{s.open_defects}</span>
-            <span className={clsx('w-20 text-right tabular-nums', s.overdue_defects > 0 ? 'font-semibold text-semantic-error' : 'text-content-secondary')}>{s.overdue_defects}</span>
-            <span className="w-24 text-right tabular-nums text-content-secondary">
+            <span className="w-20 text-end tabular-nums text-content-secondary">{s.total}</span>
+            <span className={clsx('w-24 text-end tabular-nums', s.open_defects > 0 ? 'font-semibold text-semantic-error' : 'text-content-secondary')}>{s.open_defects}</span>
+            <span className={clsx('w-20 text-end tabular-nums', s.overdue_defects > 0 ? 'font-semibold text-semantic-error' : 'text-content-secondary')}>{s.overdue_defects}</span>
+            <span className="w-24 text-end tabular-nums text-content-secondary">
               {s.health_score != null ? `${s.health_score}%` : t('defects_liability.health_na', { defaultValue: 'n/a' })}
             </span>
           </div>

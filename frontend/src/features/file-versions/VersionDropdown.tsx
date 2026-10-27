@@ -119,7 +119,7 @@ export function VersionDropdown({
           role="listbox"
           aria-label={t('files.versions.dropdown_aria', { defaultValue: 'File version history' })}
           className={clsx(
-            'absolute right-0 mt-1 w-72 max-h-80 overflow-y-auto',
+            'absolute end-0 mt-1 w-72 max-h-80 overflow-y-auto',
             'rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20',
           )}
         >

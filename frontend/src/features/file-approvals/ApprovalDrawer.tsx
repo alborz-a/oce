@@ -203,8 +203,8 @@ export function ApprovalDrawer({ open, workflowId, onClose }: ApprovalDrawerProp
           defaultValue: 'Approval workflow',
         })}
         className={clsx(
-          'fixed inset-y-0 right-0 z-50 w-full max-w-md',
-          'bg-surface-elevated border-l border-border-light shadow-2xl',
+          'fixed inset-y-0 end-0 z-50 w-full max-w-md',
+          'bg-surface-elevated border-s border-border-light shadow-2xl',
           'flex flex-col animate-slide-in-right',
         )}
       >
@@ -260,7 +260,7 @@ export function ApprovalDrawer({ open, workflowId, onClose }: ApprovalDrawerProp
                 </section>
               )}
 
-              <ol className="relative border-l-2 border-border-light pl-5 space-y-5">
+              <ol className="relative border-s-2 border-border-light ps-5 space-y-5">
                 {sortedSteps.map((step) => {
                   const Icon = DECISION_ICON[step.decision] ?? Clock;
                   const variant = DECISION_VARIANT[step.decision] ?? 'neutral';
@@ -272,7 +272,7 @@ export function ApprovalDrawer({ open, workflowId, onClose }: ApprovalDrawerProp
                     <li key={step.id} className="relative">
                       <span
                         className={clsx(
-                          'absolute -left-[28px] top-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 bg-surface-elevated',
+                          'absolute -start-[28px] top-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 bg-surface-elevated',
                           step.decision === 'approved'
                             ? 'border-semantic-success text-semantic-success'
                             : step.decision === 'rejected'

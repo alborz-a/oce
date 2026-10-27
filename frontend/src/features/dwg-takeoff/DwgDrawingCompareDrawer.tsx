@@ -555,7 +555,7 @@ export function DwgDrawingCompareDrawer({
                 ))}
               </select>
             </label>
-            <ArrowRight size={16} className="mb-2 shrink-0 text-content-tertiary" />
+            <ArrowRight size={16} className="mb-2 shrink-0 text-content-tertiary rtl:rotate-180" />
             <label className="flex-1 min-w-0">
               <span className="block text-[11px] font-medium text-content-tertiary mb-1">
                 {t('dwg_compare.to_version', { defaultValue: 'Target (after)' })}
@@ -586,9 +586,9 @@ export function DwgDrawingCompareDrawer({
             >
               {drawingName}
             </span>
-            <ArrowRight size={13} className="shrink-0 text-content-tertiary" />
+            <ArrowRight size={13} className="shrink-0 text-content-tertiary rtl:rotate-180" />
             <span
-              className="min-w-0 flex-1 truncate text-right font-medium text-content-primary"
+              className="min-w-0 flex-1 truncate text-end font-medium text-content-primary"
               title={targetDrawing?.name || targetDrawing?.filename || ''}
             >
               {targetDrawing?.name || targetDrawing?.filename || ''}
@@ -665,7 +665,7 @@ export function DwgDrawingCompareDrawer({
                 data-testid="dwg-compare-opacity"
                 className="w-28 accent-oe-blue"
               />
-              <span className="tabular-nums w-8 text-right">{Math.round(opacity * 100)}%</span>
+              <span className="tabular-nums w-8 text-end">{Math.round(opacity * 100)}%</span>
             </label>
           )}
         </div>
@@ -688,7 +688,7 @@ export function DwgDrawingCompareDrawer({
               <Icon size={13} />
               <span className="truncate">{label}</span>
               {count > 0 && (
-                <Badge variant="neutral" className="ml-0.5 text-[9px]">
+                <Badge variant="neutral" className="ms-0.5 text-[9px]">
                   {count}
                 </Badge>
               )}
@@ -816,7 +816,7 @@ function SummaryTab({
             n: summary.from_entity_count,
           })}
         </span>
-        <ArrowRight size={13} className="text-content-tertiary" />
+        <ArrowRight size={13} className="text-content-tertiary rtl:rotate-180" />
         <span>
           {t('dwg_compare.entity_count_to', {
             defaultValue: 'After: {{n}} entities',
@@ -880,11 +880,11 @@ function EntitiesTab({
       <table className="w-full text-xs">
         <thead className="bg-surface-secondary text-content-tertiary">
           <tr>
-            <th className="px-3 py-2 text-left font-medium">{t('dwg_compare.col_layer', { defaultValue: 'Layer' })}</th>
-            <th className="px-3 py-2 text-left font-medium">{t('dwg_compare.col_change', { defaultValue: 'Change' })}</th>
-            <th className="px-3 py-2 text-right font-medium">{t('dwg_compare.col_before', { defaultValue: 'Before' })}</th>
-            <th className="px-3 py-2 text-right font-medium">{t('dwg_compare.col_after', { defaultValue: 'After' })}</th>
-            <th className="px-3 py-2 text-right font-medium">{t('dwg_compare.col_delta', { defaultValue: 'Δ' })}</th>
+            <th className="px-3 py-2 text-start font-medium">{t('dwg_compare.col_layer', { defaultValue: 'Layer' })}</th>
+            <th className="px-3 py-2 text-start font-medium">{t('dwg_compare.col_change', { defaultValue: 'Change' })}</th>
+            <th className="px-3 py-2 text-end font-medium">{t('dwg_compare.col_before', { defaultValue: 'Before' })}</th>
+            <th className="px-3 py-2 text-end font-medium">{t('dwg_compare.col_after', { defaultValue: 'After' })}</th>
+            <th className="px-3 py-2 text-end font-medium">{t('dwg_compare.col_delta', { defaultValue: 'Δ' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -896,11 +896,11 @@ function EntitiesTab({
               <td className="px-3 py-2">
                 <ChangeBadge type={r.change_type} />
               </td>
-              <td className="px-3 py-2 text-right tabular-nums text-content-secondary">{r.old_count}</td>
-              <td className="px-3 py-2 text-right tabular-nums text-content-secondary">{r.new_count}</td>
+              <td className="px-3 py-2 text-end tabular-nums text-content-secondary">{r.old_count}</td>
+              <td className="px-3 py-2 text-end tabular-nums text-content-secondary">{r.new_count}</td>
               <td
                 className={clsx(
-                  'px-3 py-2 text-right tabular-nums font-semibold',
+                  'px-3 py-2 text-end tabular-nums font-semibold',
                   r.delta > 0 ? 'text-emerald-500' : r.delta < 0 ? 'text-red-500' : 'text-content-tertiary',
                 )}
               >
@@ -953,7 +953,7 @@ function AnnotationsTab({
             <span className="tabular-nums">
               {r.old_measurement != null ? fmtFixed(r.old_measurement, 2) : '—'}
             </span>
-            <ArrowRight size={12} className="text-content-tertiary" />
+            <ArrowRight size={12} className="text-content-tertiary rtl:rotate-180" />
             <span className="tabular-nums font-medium text-content-primary">
               {r.new_measurement != null ? fmtFixed(r.new_measurement, 2) : '—'}
             </span>

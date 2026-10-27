@@ -242,15 +242,15 @@ export function EquipmentHealthDashboard({
             <table className="w-full text-xs">
               <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('equipment.recorded_at', { defaultValue: 'Recorded at' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('equipment.health.anomaly_signal', {
                       defaultValue: 'Signal',
                     })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('equipment.health.anomaly_reason', {
                       defaultValue: 'Why it stood out',
                     })}

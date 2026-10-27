@@ -143,7 +143,7 @@ function DiffHeader({ diff }: { diff: SnapshotDiff }) {
       >
         {diff.a_label}
       </span>
-      <ArrowRight className="h-3 w-3 text-content-tertiary" />
+      <ArrowRight className="h-3 w-3 text-content-tertiary rtl:rotate-180" />
       <span
         className="font-medium text-content-primary"
         data-testid="snapshot-diff-b-label"
@@ -305,7 +305,7 @@ function ChangedList({
                 {c.name}
               </span>
               <span className="text-content-tertiary">{c.a_dtype}</span>
-              <ArrowRight className="h-3 w-3 text-content-tertiary" />
+              <ArrowRight className="h-3 w-3 text-content-tertiary rtl:rotate-180" />
               <span className="text-amber-300">{c.b_dtype}</span>
             </li>
           ))}

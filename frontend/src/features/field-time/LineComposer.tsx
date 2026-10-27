@@ -91,7 +91,7 @@ export function LineComposer({ projectId, labour, plant, variations, onAdd, busy
         <span className="text-xs font-semibold text-content-primary">
           {t('field_time.add_line', { defaultValue: 'Add a line' })}
         </span>
-        <div className="ml-1 inline-flex overflow-hidden rounded-lg border border-border-light">
+        <div className="ms-1 inline-flex overflow-hidden rounded-lg border border-border-light">
           <button
             type="button"
             onClick={() => switchKind('labour')}

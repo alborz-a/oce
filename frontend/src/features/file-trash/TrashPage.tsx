@@ -40,7 +40,7 @@ import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useFileTrash, useFileTrashStats, usePurgeTrash, useRestoreFromTrash } from './hooks';
 import { fileTrashGuide } from './fileTrashGuide';
 import type { TrashItem, TrashKind } from './types';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { formatBytes } from '@/shared/lib/formatters';
 
 // English fallbacks for the computed `files.kind.*` keys. The default used to be
 // the raw value, so until the key lands in a locale the screen shows the bare
@@ -63,13 +63,6 @@ const KIND_ICON: Record<TrashKind, typeof FileText> = {
   markup: PenTool,
 };
 
-function formatBytes(bytes: number): string {
-  if (!bytes) return '0 B';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-  return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
-}
 
 function daysUntilExpiry(trashedAt: string, retentionDays: number): number {
   const trashedMs = new Date(trashedAt).getTime();
@@ -192,7 +185,7 @@ export function TrashPage() {
             <Button
               variant="secondary"
               size="sm"
-              icon={<ArrowLeft size={14} />}
+              icon={<ArrowLeft className="rtl:rotate-180"  size={14} />}
               onClick={() => navigate('/files')}
             >
               {t('files.trash.back_to_files', { defaultValue: 'Back to files' })}

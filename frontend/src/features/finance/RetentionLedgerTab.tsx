@@ -208,7 +208,7 @@ export function RetentionLedgerTab({ projectId }: { projectId: string }) {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-content-secondary">
+                    <tr className="border-b border-border text-start text-xs uppercase tracking-wide text-content-secondary">
                       <th className="px-4 py-3 font-medium">
                         {t('finance.retention_col_counterparty', {
                           defaultValue: 'Counterparty',
@@ -217,16 +217,16 @@ export function RetentionLedgerTab({ projectId }: { projectId: string }) {
                       <th className="px-4 py-3 font-medium">
                         {t('finance.retention_col_direction', { defaultValue: 'Direction' })}
                       </th>
-                      <th className="px-4 py-3 text-right font-medium">
+                      <th className="px-4 py-3 text-end font-medium">
                         {t('finance.retention_col_held', { defaultValue: 'Held to date' })}
                       </th>
-                      <th className="px-4 py-3 text-right font-medium">
+                      <th className="px-4 py-3 text-end font-medium">
                         {t('finance.retention_col_released', { defaultValue: 'Released' })}
                       </th>
-                      <th className="px-4 py-3 text-right font-medium">
+                      <th className="px-4 py-3 text-end font-medium">
                         {t('finance.retention_col_outstanding', { defaultValue: 'Outstanding' })}
                       </th>
-                      <th className="px-4 py-3 text-right font-medium">
+                      <th className="px-4 py-3 text-end font-medium">
                         {t('finance.retention_col_payments', { defaultValue: 'Payments' })}
                       </th>
                       <th className="px-4 py-3 font-medium">
@@ -247,7 +247,7 @@ export function RetentionLedgerTab({ projectId }: { projectId: string }) {
                             t('finance.retention_unnamed', {
                               defaultValue: 'Unspecified counterparty',
                             })}
-                          <span className="ml-2 font-mono text-2xs text-content-tertiary">
+                          <span className="ms-2 font-mono text-2xs text-content-tertiary">
                             {row.currency_code}
                           </span>
                         </td>
@@ -256,25 +256,25 @@ export function RetentionLedgerTab({ projectId }: { projectId: string }) {
                             {directionLabel(t, row.direction)}
                           </Badge>
                         </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                        <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                           <MoneyDisplay
                             amount={row.held_to_date}
                             currency={row.currency_code || undefined}
                           />
                         </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                        <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
                           <MoneyDisplay
                             amount={row.released_to_date}
                             currency={row.currency_code || undefined}
                           />
                         </td>
-                        <td className="px-4 py-2.5 text-right font-medium tabular-nums text-content-primary">
+                        <td className="px-4 py-2.5 text-end font-medium tabular-nums text-content-primary">
                           <MoneyDisplay
                             amount={row.outstanding}
                             currency={row.currency_code || undefined}
                           />
                         </td>
-                        <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                        <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
                           {row.payment_count}
                         </td>
                         <td className="px-4 py-2.5 text-content-secondary">

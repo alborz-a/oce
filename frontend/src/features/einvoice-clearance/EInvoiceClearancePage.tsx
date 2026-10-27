@@ -42,7 +42,7 @@ export function EInvoiceClearancePage() {
               'In much of the world an invoice is not a private document between two parties. A tax authority sees it, and in many countries it is not legally valid until that authority has answered. This module records what the authority actually answered, in its own words, for every invoice sent to one.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('einvoice_clearance.flow_step1', {
               defaultValue:

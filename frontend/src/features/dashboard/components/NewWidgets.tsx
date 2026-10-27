@@ -477,7 +477,7 @@ export function BudgetVarianceWidget({ projects }: { projects?: ProjectRef[] }) 
                 </p>
               </div>
               <Badge variant={b.pct > 20 ? 'error' : 'warning'} size="sm">
-                <TrendingUp size={11} className="mr-1" />
+                <TrendingUp size={11} className="me-1" />
                 +{b.pct}%
               </Badge>
             </li>
@@ -689,7 +689,7 @@ export function ValidationHealthWidget(_props: { projects?: ProjectRef[] } = {})
             {t('dashboard.validation_latest', { defaultValue: 'Average score' })}
             : {`${Math.round(payload.avg * 100)}%`}
           </span>
-          <ArrowRight size={12} />
+          <ArrowRight className="rtl:rotate-180"  size={12} />
         </button>
       )}
     </WidgetCard>

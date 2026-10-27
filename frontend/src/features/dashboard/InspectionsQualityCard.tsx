@@ -107,7 +107,7 @@ export function InspectionsQualityCard() {
             className="inline-flex items-center gap-1.5 text-xs text-oe-blue hover:underline"
           >
             {t('dashboard.inspections_open', { defaultValue: 'Open inspections' })}
-            <ArrowRight size={11} />
+            <ArrowRight className="rtl:rotate-180"  size={11} />
           </button>
         }
       />

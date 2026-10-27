@@ -23,9 +23,9 @@ function severityOf(result: FieldTimeValidationResult): Severity {
 }
 
 const SEVERITY_STYLES: Record<Severity, { border: string; icon: string }> = {
-  error: { border: 'border-l-semantic-error', icon: 'text-semantic-error' },
-  warning: { border: 'border-l-semantic-warning', icon: 'text-semantic-warning' },
-  info: { border: 'border-l-oe-blue', icon: 'text-oe-blue' },
+  error: { border: 'border-s-semantic-error', icon: 'text-semantic-error' },
+  warning: { border: 'border-s-semantic-warning', icon: 'text-semantic-warning' },
+  info: { border: 'border-s-oe-blue', icon: 'text-oe-blue' },
 };
 
 function ResultIcon({ severity }: { severity: Severity }) {
@@ -74,7 +74,7 @@ export function ValidationPanel({ report, isLoading }: ValidationPanelProps) {
         <h4 className="text-sm font-semibold text-content-primary">
           {t('field_time.validation', { defaultValue: 'Validation' })}
         </h4>
-        <div className="ml-auto flex items-center gap-1.5">
+        <div className="ms-auto flex items-center gap-1.5">
           <span className="inline-flex items-center gap-1 rounded-full bg-semantic-error-bg px-2 py-0.5 text-2xs font-medium text-semantic-error">
             <XCircle size={11} />
             {t('field_time.validation_errors', { defaultValue: '{{count}} errors', count: errors })}
@@ -111,7 +111,7 @@ export function ValidationPanel({ report, isLoading }: ValidationPanelProps) {
               <li
                 key={r.rule_id}
                 className={clsx(
-                  'rounded-md border border-border-light border-l-2 bg-surface-secondary/40 p-2.5',
+                  'rounded-md border border-border-light border-s-2 bg-surface-secondary/40 p-2.5',
                   SEVERITY_STYLES[severity].border,
                 )}
               >

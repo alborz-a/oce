@@ -180,7 +180,7 @@ export function EInvoiceModal({ open, onClose, invoiceId, invoiceNumber }: EInvo
       footer={
         <div className="flex flex-wrap items-center justify-end gap-2">
           {downloadError && (
-            <span className="mr-auto text-sm text-semantic-error">{downloadError}</span>
+            <span className="me-auto text-sm text-semantic-error">{downloadError}</span>
           )}
           <Button variant="ghost" onClick={onClose}>
             {t('finance.einvoice.close')}
@@ -196,7 +196,7 @@ export function EInvoiceModal({ open, onClose, invoiceId, invoiceNumber }: EInvo
               disabled={!canExport}
               loading={downloading === 'pdf'}
             >
-              <Download size={14} className="mr-1.5" />
+              <Download size={14} className="me-1.5" />
               {t('finance.einvoice.downloadPdf')}
             </Button>
           )}
@@ -206,7 +206,7 @@ export function EInvoiceModal({ open, onClose, invoiceId, invoiceNumber }: EInvo
             disabled={!canExport}
             loading={downloading === 'xml'}
           >
-            <Download size={14} className="mr-1.5" />
+            <Download size={14} className="me-1.5" />
             {t('finance.einvoice.downloadXml')}
           </Button>
         </div>

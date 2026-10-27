@@ -92,7 +92,7 @@ export function EntityNameFilter({
       >
         <div className="flex items-center gap-1.5">
           {collapsed ? (
-            <ChevronRight size={13} className="text-muted-foreground" />
+            <ChevronRight size={13} className="text-muted-foreground rtl:rotate-180" />
           ) : (
             <ChevronDown size={13} className="text-muted-foreground" />
           )}
@@ -132,14 +132,14 @@ export function EntityNameFilter({
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+              className="absolute start-2 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('dwg_takeoff.search_names', 'Filter names...')}
-              className="w-full rounded-md border border-border bg-surface-secondary py-1 pl-7 pr-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
+              className="w-full rounded-md border border-border bg-surface-secondary py-1 ps-7 pe-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
             />
           </div>
 
@@ -160,7 +160,7 @@ export function EntityNameFilter({
                   )}
                 >
                   {visible ? <Eye size={13} /> : <EyeOff size={13} />}
-                  <span className="truncate flex-1 text-left font-mono text-[11px]">
+                  <span className="truncate flex-1 text-start font-mono text-[11px]">
                     {group.name}
                   </span>
                   <span className="text-muted-foreground tabular-nums">{group.count}</span>

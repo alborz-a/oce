@@ -210,7 +210,7 @@ export function EacBlockPalette({
         data-testid={testId ?? 'eac-block-palette'}
         data-collapsed="true"
         className={clsx(
-          'flex h-full w-10 shrink-0 flex-col items-center border-r border-border bg-surface-secondary py-2',
+          'flex h-full w-10 shrink-0 flex-col items-center border-e border-border bg-surface-secondary py-2',
         )}
       >
         <button
@@ -219,7 +219,7 @@ export function EacBlockPalette({
           onClick={() => setCollapsed(false)}
           className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-surface-tertiary"
         >
-          <ChevronRight size={16} aria-hidden="true" />
+          <ChevronRight className="rtl:rotate-180"  size={16} aria-hidden="true" />
         </button>
       </aside>
     );
@@ -235,7 +235,7 @@ export function EacBlockPalette({
       data-testid={testId ?? 'eac-block-palette'}
       data-collapsed="false"
       className={clsx(
-        'flex h-full w-[220px] shrink-0 flex-col border-r border-border bg-surface-secondary',
+        'flex h-full w-[220px] shrink-0 flex-col border-e border-border bg-surface-secondary',
       )}
       aria-label={t('eac.block_palette', { defaultValue: 'Block palette' })}
     >
@@ -249,7 +249,7 @@ export function EacBlockPalette({
           onClick={() => setCollapsed(true)}
           className="flex h-6 w-6 items-center justify-center rounded hover:bg-surface-tertiary"
         >
-          <ChevronLeft size={14} aria-hidden="true" />
+          <ChevronLeft className="rtl:rotate-180"  size={14} aria-hidden="true" />
         </button>
       </header>
       <div className="px-3 py-2">
@@ -258,7 +258,7 @@ export function EacBlockPalette({
           <Search
             size={14}
             aria-hidden="true"
-            className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="pointer-events-none absolute start-2 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="search"
@@ -267,7 +267,7 @@ export function EacBlockPalette({
             placeholder={t('eac.block_palette.search', { defaultValue: 'Search…' })}
             data-testid="eac-palette-search"
             className={clsx(
-              'h-8 w-full rounded-md border border-border bg-surface-primary pl-7 pr-2 text-sm',
+              'h-8 w-full rounded-md border border-border bg-surface-primary ps-7 pe-2 text-sm',
               'placeholder:text-content-tertiary',
               'focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue',
             )}

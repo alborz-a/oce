@@ -580,7 +580,7 @@ function CreateInspectionModal({
                 set('checklist', [...form.checklist, { question: '', critical: false, notes: '' }])
               }
             >
-              <Plus size={14} className="mr-1.5" />
+              <Plus size={14} className="me-1.5" />
               {t('inspections.checklist_add', { defaultValue: 'Add checklist item' })}
             </Button>
           </div>
@@ -593,11 +593,11 @@ function CreateInspectionModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : isEdit ? (
-              <Pencil size={16} className="mr-1.5 shrink-0" />
+              <Pencil size={16} className="me-1.5 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -717,7 +717,7 @@ function CompleteInspectionDialog({
                 type="button"
                 onClick={() => setResult(opt.value)}
                 className={clsx(
-                  'flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-all',
+                  'flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-start transition-all',
                   selected
                     ? opt.ringCls
                     : 'border-border bg-surface-primary hover:bg-surface-secondary',
@@ -748,9 +748,9 @@ function CompleteInspectionDialog({
             disabled={isPending}
           >
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <CheckCircle2 size={16} className="mr-1.5 shrink-0" />
+              <CheckCircle2 size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('inspections.record_result_confirm', { defaultValue: 'Record Result' })}</span>
           </Button>
@@ -836,7 +836,7 @@ const InspectionRow = React.memo(function InspectionRow({
           size={14}
           className={clsx(
             'text-content-tertiary transition-transform shrink-0',
-            expanded && 'rotate-90',
+            expanded ? 'rotate-90' : 'rtl:rotate-180',
           )}
         />
 
@@ -902,7 +902,7 @@ const InspectionRow = React.memo(function InspectionRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Checklist */}
           {inspection.checklist && inspection.checklist.length > 0 && (
             <div className="rounded-lg bg-surface-secondary p-3">
@@ -933,8 +933,8 @@ const InspectionRow = React.memo(function InspectionRow({
                         {item.description}
                       </span>
                       {item.critical && (
-                        <Badge variant="error" size="sm" className="ml-2">
-                          <AlertTriangle size={10} className="mr-0.5" />
+                        <Badge variant="error" size="sm" className="ms-2">
+                          <AlertTriangle size={10} className="me-0.5" />
                           {t('inspections.critical', { defaultValue: 'Critical' })}
                         </Badge>
                       )}
@@ -971,7 +971,7 @@ const InspectionRow = React.memo(function InspectionRow({
                   onStart(inspection.id);
                 }}
               >
-                <Play size={14} className="mr-1.5" />
+                <Play size={14} className="me-1.5" />
                 {t('inspections.action_start', { defaultValue: 'Start Inspection' })}
               </Button>
             )}
@@ -984,7 +984,7 @@ const InspectionRow = React.memo(function InspectionRow({
                   onComplete(inspection.id);
                 }}
               >
-                <CheckCircle2 size={14} className="mr-1.5" />
+                <CheckCircle2 size={14} className="me-1.5" />
                 {t('inspections.action_record_result', { defaultValue: 'Record Result' })}
               </Button>
             )}
@@ -998,7 +998,7 @@ const InspectionRow = React.memo(function InspectionRow({
                     onCreateDefect(inspection.id);
                   }}
                 >
-                  <XCircle size={14} className="mr-1.5" />
+                  <XCircle size={14} className="me-1.5" />
                   {t('inspections.create_defect', { defaultValue: 'Create Punchlist Item' })}
                 </Button>
                 <Button
@@ -1009,7 +1009,7 @@ const InspectionRow = React.memo(function InspectionRow({
                     onCreateNcr(inspection.id);
                   }}
                 >
-                  <AlertTriangle size={14} className="mr-1.5" />
+                  <AlertTriangle size={14} className="me-1.5" />
                   {t('inspections.create_ncr', { defaultValue: 'Create NCR' })}
                 </Button>
                 <span
@@ -1028,7 +1028,7 @@ const InspectionRow = React.memo(function InspectionRow({
             )}
 
             {/* Edit / Delete — always available (Delete is unguarded). */}
-            <div className="ml-auto flex items-center gap-1">
+            <div className="ms-auto flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="sm"
@@ -1178,7 +1178,7 @@ function HowInspectionsWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </React.Fragment>
@@ -1736,7 +1736,7 @@ export function InspectionsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1745,7 +1745,7 @@ export function InspectionsPage() {
               defaultValue: 'Search inspections...',
             })}
             aria-label={t('inspections.search_placeholder', { defaultValue: 'Search inspections...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 

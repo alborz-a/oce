@@ -331,7 +331,7 @@ export function InvoiceInboxTab({ projectId }: { projectId: string }) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-content-secondary">
+                <tr className="border-b border-border text-start text-xs uppercase tracking-wide text-content-secondary">
                   <th className="px-4 py-3 font-medium">
                     {t('finance.inbox.col_supplier', { defaultValue: 'Supplier' })}
                   </th>
@@ -341,7 +341,7 @@ export function InvoiceInboxTab({ projectId }: { projectId: string }) {
                   <th className="px-4 py-3 font-medium">
                     {t('finance.inbox.col_date', { defaultValue: 'Date' })}
                   </th>
-                  <th className="px-4 py-3 text-right font-medium">
+                  <th className="px-4 py-3 text-end font-medium">
                     {t('finance.inbox.col_gross', { defaultValue: 'Gross' })}
                   </th>
                   <th className="px-4 py-3 font-medium">
@@ -371,7 +371,7 @@ export function InvoiceInboxTab({ projectId }: { projectId: string }) {
                     <td className="px-4 py-3 text-content-secondary">
                       {c.invoice_date ? <DateDisplay value={c.invoice_date} /> : '-'}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-end">
                       <MoneyDisplay amount={c.amount_gross} currency={c.currency_code || 'EUR'} />
                     </td>
                     <td className="px-4 py-3">
@@ -379,7 +379,7 @@ export function InvoiceInboxTab({ projectId }: { projectId: string }) {
                         {t(`finance.inbox.status_${c.status}`, { defaultValue: c.status })}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-end">
                       <Button variant="ghost" size="sm" onClick={() => setSelectedId(c.id)}>
                         {t('finance.inbox.review', { defaultValue: 'Review' })}
                       </Button>

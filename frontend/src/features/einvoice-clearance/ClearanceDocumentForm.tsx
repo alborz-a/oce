@@ -188,7 +188,7 @@ export function ClearanceDocumentForm({
             inputMode="decimal"
             required
             placeholder="0.00"
-            className="rounded border border-border-light bg-surface-primary p-2 text-right font-mono"
+            className="rounded border border-border-light bg-surface-primary p-2 text-end font-mono"
           />
         </label>
       </div>

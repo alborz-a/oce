@@ -195,7 +195,7 @@ function ModuleCard({ module, index, expanded, onToggle, onLocate, onOpen }: Car
         onClick={onToggle}
         aria-expanded={expanded}
         aria-controls={panelId}
-        className="flex w-full items-start gap-3 rounded-2xl p-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+        className="flex w-full items-start gap-3 rounded-2xl p-4 text-start focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
       >
         <span
           aria-hidden="true"
@@ -203,7 +203,7 @@ function ModuleCard({ module, index, expanded, onToggle, onLocate, onOpen }: Car
         >
           <Icon size={19} strokeWidth={2} />
           {/* Sequence badge - makes the intended reading order obvious. */}
-          <span className="absolute -left-1.5 -top-1.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border border-surface-elevated bg-slate-900/85 px-1 text-2xs font-bold tabular-nums text-white shadow-sm dark:bg-slate-700">
+          <span className="absolute -start-1.5 -top-1.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full border border-surface-elevated bg-slate-900/85 px-1 text-2xs font-bold tabular-nums text-white shadow-sm dark:bg-slate-700">
             {index}
           </span>
         </span>
@@ -309,7 +309,7 @@ function ModuleCard({ module, index, expanded, onToggle, onLocate, onOpen }: Car
               className="inline-flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
             >
               {t('howto.open_module', { defaultValue: 'Open module' })}
-              <ArrowRight size={13} />
+              <ArrowRight className="rtl:rotate-180"  size={13} />
             </button>
           </div>
         </div>
@@ -530,7 +530,7 @@ export function HowItWorksPage() {
                   <div className="min-w-0">
                     <h2 className="text-base font-semibold text-content-primary">
                       {t(category.labelKey, { defaultValue: category.labelDefault })}
-                      <span className="ml-2 text-xs font-normal text-content-tertiary">
+                      <span className="ms-2 text-xs font-normal text-content-tertiary">
                         {modules.length}
                       </span>
                     </h2>
@@ -568,7 +568,7 @@ export function HowItWorksPage() {
                     </div>
                   )}
                 </div>
-                {/* Row-major grid so cards read left-to-right, top-to-bottom in
+                {/* Row-major grid so cards read start-to-right, top-to-bottom in
                     order (CSS columns filled one column fully first, which read
                     out of sequence). `items-start` keeps an expanded card from
                     stretching its row neighbour. */}

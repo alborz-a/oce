@@ -91,7 +91,7 @@ export function GeoOverlayHud({
   return (
     <>
       {/* Top-right: north arrow + altitude */}
-      <div className="pointer-events-none absolute top-3 right-3 z-10 flex flex-col items-end gap-1.5">
+      <div className="pointer-events-none absolute top-3 end-3 z-10 flex flex-col items-end gap-1.5">
         <div className={GLASS_CARD} aria-label={t('geo_hub.hud.north', { defaultValue: 'North' })}>
           <Compass
             size={12}
@@ -115,7 +115,7 @@ export function GeoOverlayHud({
 
       {/* Bottom-left: coordinates + scale bar */}
       <div
-        className="pointer-events-none absolute bottom-3 left-3 z-10 flex flex-col items-start gap-1.5"
+        className="pointer-events-none absolute bottom-3 start-3 z-10 flex flex-col items-start gap-1.5"
         data-testid="geo-tour-hud"
       >
         <div className={GLASS_CARD}>
@@ -125,7 +125,7 @@ export function GeoOverlayHud({
           <span className="font-mono tabular-nums text-white min-w-[70px]">
             {active && cursorLat !== null ? formatDegrees(cursorLat) : '—'}
           </span>
-          <span className="ml-1 text-slate-400 uppercase tracking-wider">
+          <span className="ms-1 text-slate-400 uppercase tracking-wider">
             {t('geo_hub.hud.lon', { defaultValue: 'LON' })}
           </span>
           <span className="font-mono tabular-nums text-white min-w-[70px]">

@@ -402,8 +402,8 @@ export function IssuesHubPage() {
                     )),
                 })}
               </span>
-              <Button variant="ghost" size="sm" onClick={() => refetch()} className="ml-auto">
-                <RefreshCw size={12} className="mr-1 shrink-0" />
+              <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
+                <RefreshCw size={12} className="me-1 shrink-0" />
                 {t('common.retry', { defaultValue: 'Retry' })}
               </Button>
             </div>
@@ -414,14 +414,14 @@ export function IssuesHubPage() {
             <div className="relative max-w-sm flex-1">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('issues.search', { defaultValue: 'Search title or owner...' })}
                 aria-label={t('issues.search', { defaultValue: 'Search title or owner...' })}
-                className={controlCls + ' w-full pl-9'}
+                className={controlCls + ' w-full ps-9'}
               />
             </div>
 
@@ -562,7 +562,7 @@ export function IssuesHubPage() {
                   <span className="hidden w-32 shrink-0 md:block">
                     {t('issues.col_assignee', { defaultValue: 'Owner' })}
                   </span>
-                  <span className="w-28 shrink-0 text-right">
+                  <span className="w-28 shrink-0 text-end">
                     {t('issues.col_due', { defaultValue: 'Due' })}
                   </span>
                   <span className="w-6 shrink-0" />
@@ -609,7 +609,7 @@ function IssueRow({ issue, onOpen }: { issue: UnifiedIssue; onOpen: () => void }
       {/* Source */}
       <span className="w-24 shrink-0">
         <Badge variant={meta.variant} size="sm">
-          <SourceIcon size={11} className="mr-1 shrink-0" />
+          <SourceIcon size={11} className="me-1 shrink-0" />
           {t(meta.labelKey, { defaultValue: meta.labelDefault })}
         </Badge>
       </span>
@@ -655,7 +655,7 @@ function IssueRow({ issue, onOpen }: { issue: UnifiedIssue; onOpen: () => void }
       {/* Due */}
       <span
         className={clsx(
-          'w-28 shrink-0 text-right tabular-nums',
+          'w-28 shrink-0 text-end tabular-nums',
           overdue ? 'font-medium text-semantic-error' : 'text-content-tertiary',
         )}
       >

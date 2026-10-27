@@ -647,7 +647,7 @@ export function DailyDiaryPage() {
         onClick={() => openCreate()}
         disabled={!projectId}
         aria-label={t('daily_diary.new_diary', { defaultValue: 'New Diary' })}
-        className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
+        className="fixed bottom-5 end-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
       >
         <Plus size={22} />
       </button>
@@ -796,7 +796,7 @@ function DiariesCalendar({
           className="rounded-md p-1.5 hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
           aria-label={t('daily_diary.prev_month', { defaultValue: 'Previous month' })}
         >
-          <ChevronLeft size={16} />
+          <ChevronLeft className="rtl:rotate-180"  size={16} />
         </button>
         <h3 className="text-base font-semibold" aria-live="polite">
           {fmtMonth(year, month, locale)}
@@ -819,7 +819,7 @@ function DiariesCalendar({
             className="rounded-md p-1.5 hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
             aria-label={t('daily_diary.next_month', { defaultValue: 'Next month' })}
           >
-            <ChevronRight size={16} />
+            <ChevronRight className="rtl:rotate-180"  size={16} />
           </button>
         </div>
       </div>
@@ -898,7 +898,7 @@ function DiariesCalendar({
                       : undefined
                   }
                   className={clsx(
-                    'group relative h-20 rounded-md border p-1.5 text-left transition-colors flex flex-col focus:outline-none focus:ring-2 focus:ring-oe-blue/50',
+                    'group relative h-20 rounded-md border p-1.5 text-start transition-colors flex flex-col focus:outline-none focus:ring-2 focus:ring-oe-blue/50',
                     diary
                       ? 'border-border-light bg-surface-elevated hover:border-oe-blue hover:shadow-sm cursor-pointer'
                       : isFuture
@@ -933,7 +933,7 @@ function DiariesCalendar({
                           </span>
                         )}
                         {diary.status === 'signed' && (
-                          <Lock size={9} className="ml-auto text-semantic-success" />
+                          <Lock size={9} className="ms-auto text-semantic-success" />
                         )}
                       </div>
                     </>
@@ -1763,7 +1763,7 @@ function WeatherCard({
           {t('daily_diary.weather', { defaultValue: 'Weather' })}
         </h3>
         {!sealed && (
-          <div className="ml-auto flex items-center gap-1">
+          <div className="ms-auto flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
@@ -2251,7 +2251,7 @@ function PhotoGrid({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
           {t('daily_diary.photos', { defaultValue: 'Photos' })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{photos.length}</span>
+        <span className="ms-auto text-xs text-content-tertiary">{photos.length}</span>
         {!sealed && (
           <Button
             variant="ghost"
@@ -2277,7 +2277,7 @@ function PhotoGrid({
             const is360 = is360Photo(p);
             const badge = is360 && (
               <span
-                className="pointer-events-none absolute left-1 top-1 inline-flex items-center gap-0.5 rounded-md bg-black/70 px-1.5 py-0.5 text-2xs font-semibold text-white"
+                className="pointer-events-none absolute start-1 top-1 inline-flex items-center gap-0.5 rounded-md bg-black/70 px-1.5 py-0.5 text-2xs font-semibold text-white"
                 data-testid="daily-diary-photo-360-badge"
               >
                 <Orbit size={10} />
@@ -2361,7 +2361,7 @@ function DroneSection({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
           {t('daily_diary.drone', { defaultValue: 'Drone surveys' })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{surveys.length}</span>
+        <span className="ms-auto text-xs text-content-tertiary">{surveys.length}</span>
         {!sealed && (
           <Button
             variant="ghost"
@@ -2442,7 +2442,7 @@ function RealitySection({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-content-secondary">
           {t('daily_diary.reality_capture', { defaultValue: 'Reality captures' })}
         </h3>
-        <span className="ml-auto text-xs text-content-tertiary">{captures.length}</span>
+        <span className="ms-auto text-xs text-content-tertiary">{captures.length}</span>
         {!sealed && (
           <Button
             variant="ghost"
@@ -2525,10 +2525,10 @@ function ArchiveTab({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.date', { defaultValue: 'Date' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('common.status')}</th>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.signed_at', { defaultValue: 'Signed' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('daily_diary.signature_ref', { defaultValue: 'Fingerprint' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('daily_diary.date', { defaultValue: 'Date' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('common.status')}</th>
+              <th className="px-4 py-2.5 text-start">{t('daily_diary.signed_at', { defaultValue: 'Signed' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('daily_diary.signature_ref', { defaultValue: 'Fingerprint' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -3210,7 +3210,7 @@ function ExistingFilePicker({
       <div className="relative">
         <Search
           size={14}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-quaternary"
+          className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-quaternary"
         />
         <input
           type="text"
@@ -3219,7 +3219,7 @@ function ExistingFilePicker({
           placeholder={t('daily_diary.photo_search_files', {
             defaultValue: 'Search uploaded files...',
           })}
-          className={clsx(inputCls, 'pl-9')}
+          className={clsx(inputCls, 'ps-9')}
         />
       </div>
 
@@ -3261,7 +3261,7 @@ function ExistingFilePicker({
                   }
                 />
                 {isSel && (
-                  <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white">
+                  <span className="absolute end-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white">
                     <Check size={12} />
                   </span>
                 )}
@@ -3492,7 +3492,7 @@ function DroneSurveyModal({
             type="text"
             value={droneModel}
             onChange={(e) => setDroneModel(e.target.value)}
-            placeholder="e.g. DJI Mavic 3 Enterprise"
+            placeholder={t('daily_diary.drone_model_placeholder', { defaultValue: 'e.g. DJI Mavic 3 Enterprise' })}
             className={inputCls}
           />
         </WideModalField>

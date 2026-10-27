@@ -199,7 +199,7 @@ function FolderCard({
         type="button"
         onClick={onUpload}
         className={clsx(
-          'group relative flex flex-col items-start text-left rounded-xl p-3.5 min-h-[124px]',
+          'group relative flex flex-col items-start text-start rounded-xl p-3.5 min-h-[124px]',
           'border border-dashed border-border-light bg-surface-primary/40',
           'hover:border-oe-blue/40 hover:bg-surface-primary transition-colors',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
@@ -249,7 +249,7 @@ function FolderCard({
       )}
     >
       {/* Owner-only secondary actions overlay (gear + lock badge). */}
-      <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1">
+      <div className="absolute top-2.5 end-2.5 z-10 flex items-center gap-1">
         {isRestricted && (
           <span
             data-testid={`folder-lock-${kind}`}
@@ -281,12 +281,12 @@ function FolderCard({
         type="button"
         onClick={onOpen}
         className={clsx(
-          'flex flex-col text-left p-3.5 w-full h-full min-h-[124px]',
+          'flex flex-col text-start p-3.5 w-full h-full min-h-[124px]',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-xl',
         )}
       >
         {/* Header: icon chip + title inline (compact, app design-system style) */}
-        <div className="flex items-center gap-2 w-full pr-12">
+        <div className="flex items-center gap-2 w-full pe-12">
           <span
             className={clsx(
               'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
@@ -351,7 +351,7 @@ function FolderCard({
           </span>
           <span className="hidden group-hover:inline-flex items-center gap-0.5 text-2xs font-medium text-oe-blue shrink-0">
             {t('files.folder.open', { defaultValue: 'Open' })}
-            <ArrowRight size={11} />
+            <ArrowRight className="rtl:rotate-180"  size={11} />
           </span>
         </div>
       </button>

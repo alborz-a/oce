@@ -182,7 +182,7 @@ function AvatarButton({ user, isOpen, onClick }: AvatarButtonProps) {
       {/* Status dot */}
       <span
         className={clsx(
-          'absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full',
+          'absolute -bottom-0.5 -end-0.5 h-2.5 w-2.5 rounded-full',
           'border-2 border-surface-primary',
           isIdle ? 'bg-content-quaternary' : 'bg-emerald-500',
         )}

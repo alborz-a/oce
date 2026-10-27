@@ -808,7 +808,7 @@ export function ProjectGeoPage() {
               'Drag to rotate · scroll to zoom · click a pin to inspect',
           })}
         </p>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           {data?.anchor && (
             <button
               type="button"
@@ -868,7 +868,7 @@ export function ProjectGeoPage() {
                 see — same width + position as the real overlay. */}
             <div
               aria-hidden
-              className="absolute top-3 left-3 hidden w-72 flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/40 p-3 backdrop-blur-md md:flex"
+              className="absolute top-3 start-3 hidden w-72 flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/40 p-3 backdrop-blur-md md:flex"
             >
               <div className="h-3 w-1/2 rounded bg-slate-700/60 animate-pulse" />
               <div className="h-2 w-2/3 rounded bg-slate-700/50 animate-pulse" />

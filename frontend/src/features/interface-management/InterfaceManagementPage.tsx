@@ -961,7 +961,7 @@ const InterfaceRow = React.memo(function InterfaceRow({
       >
         <ChevronRight
           size={14}
-          className={clsx('shrink-0 text-content-tertiary transition-transform', expanded && 'rotate-90')}
+          className={clsx('shrink-0 text-content-tertiary transition-transform', expanded ? 'rotate-90' : 'rtl:rotate-180')}
         />
         <span className="w-20 shrink-0 truncate font-mono text-sm font-semibold text-content-secondary" title={iface.reference}>
           {iface.reference}
@@ -973,7 +973,7 @@ const InterfaceRow = React.memo(function InterfaceRow({
         {/* Owner -> accepter */}
         <span className="hidden min-w-0 shrink items-center gap-1 text-xs text-content-tertiary lg:flex">
           <span className="truncate max-w-[9rem]">{iface.owner_party || notSet}</span>
-          <ArrowRight size={11} className="shrink-0" />
+          <ArrowRight size={11} className="shrink-0 rtl:rotate-180" />
           <span className="truncate max-w-[9rem]">{iface.accepter_party || notSet}</span>
         </span>
 
@@ -990,7 +990,7 @@ const InterfaceRow = React.memo(function InterfaceRow({
         )}
 
         {/* Need-by */}
-        <span className="hidden w-24 shrink-0 text-right text-xs text-content-tertiary md:block">
+        <span className="hidden w-24 shrink-0 text-end text-xs text-content-tertiary md:block">
           {iface.need_by_date ? <DateDisplay value={iface.need_by_date} /> : notSet}
         </span>
 
@@ -1010,7 +1010,7 @@ const InterfaceRow = React.memo(function InterfaceRow({
       </div>
 
       {expanded && (
-        <div className="space-y-3 px-4 pb-4 pl-12 animate-fade-in">
+        <div className="space-y-3 px-4 pb-4 ps-12 animate-fade-in">
           {iface.description && (
             <div className="rounded-lg bg-surface-secondary p-3">
               <p className="whitespace-pre-wrap text-sm text-content-primary">{iface.description}</p>
@@ -1430,13 +1430,13 @@ export function InterfaceManagementPage() {
         {/* Toolbar */}
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative max-w-sm flex-1">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+            <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('interface_management.search_placeholder', { defaultValue: 'Search interfaces...' })}
               aria-label={t('interface_management.search_placeholder', { defaultValue: 'Search interfaces...' })}
-              className={clsx(inputCls, 'pl-9')}
+              className={clsx(inputCls, 'ps-9')}
             />
           </div>
           <select
@@ -1518,7 +1518,7 @@ export function InterfaceManagementPage() {
                   <span className="w-20">{t('interface_management.col_reference', { defaultValue: 'Ref' })}</span>
                   <span className="flex-1">{t('interface_management.col_title', { defaultValue: 'Title' })}</span>
                   <span className="hidden lg:block">{t('interface_management.col_parties', { defaultValue: 'Owner / Accepter' })}</span>
-                  <span className="hidden w-24 text-right md:block">{t('interface_management.col_need_by', { defaultValue: 'Need by' })}</span>
+                  <span className="hidden w-24 text-end md:block">{t('interface_management.col_need_by', { defaultValue: 'Need by' })}</span>
                   <span className="w-20 text-center">{t('interface_management.col_status', { defaultValue: 'Status' })}</span>
                 </div>
                 {filtered.map((iface) => (

@@ -211,7 +211,7 @@ export function DevelopmentGeoPage() {
             )}
           </div>
         </div>
-        <div className="ml-auto">
+        <div className="ms-auto">
           <GeoModePicker
             current="development"
             projectId={projectId}
@@ -257,7 +257,7 @@ export function DevelopmentGeoPage() {
                 they're about to interact with, not just a blank globe. */}
             <div
               aria-hidden
-              className="absolute top-3 left-3 hidden w-72 flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/40 p-3 backdrop-blur-md md:flex"
+              className="absolute top-3 start-3 hidden w-72 flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/40 p-3 backdrop-blur-md md:flex"
             >
               <div className="h-3 w-1/2 rounded bg-slate-700/60 animate-pulse" />
               <div className="h-2 w-2/3 rounded bg-slate-700/50 animate-pulse" />

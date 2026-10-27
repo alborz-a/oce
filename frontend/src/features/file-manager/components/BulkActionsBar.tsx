@@ -610,7 +610,7 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
                     setCdeMenuOpen(false);
                     cdeMutation.mutate(state);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-content-secondary hover:bg-surface-secondary transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs text-content-secondary hover:bg-surface-secondary transition-colors"
                 >
                   <span
                     className={clsx(

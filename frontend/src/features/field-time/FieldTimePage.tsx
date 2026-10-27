@@ -154,7 +154,7 @@ function HowFieldTimeWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight className="rtl:rotate-180"  size={16} />
               </li>
             )}
           </Fragment>
@@ -444,7 +444,7 @@ function TimesheetRow({
     <button
       type="button"
       onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-colors hover:bg-surface-secondary"
+      className="flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-start transition-colors hover:bg-surface-secondary"
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
@@ -481,7 +481,7 @@ function TimesheetRow({
           })}
         </span>
       </div>
-      <ChevronRight size={16} className="shrink-0 text-content-tertiary" />
+      <ChevronRight size={16} className="shrink-0 text-content-tertiary rtl:rotate-180" />
     </button>
   );
 }

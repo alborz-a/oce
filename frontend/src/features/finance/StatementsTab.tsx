@@ -135,7 +135,7 @@ function isZeroAmount(s: string | null | undefined): boolean {
 
 /* ── Small presentational pieces ────────────────────────────────────────── */
 
-/** One statement line: code + name on the left, right-aligned money. */
+/** One statement line: code + name on the left, end-aligned money. */
 function LineRow({
   line,
   currency,
@@ -147,11 +147,11 @@ function LineRow({
     <div className="flex items-center justify-between gap-4 py-1.5">
       <span className="min-w-0 text-sm text-content-secondary">
         {line.code ? (
-          <span className="mr-2 font-mono text-2xs text-content-tertiary">{line.code}</span>
+          <span className="me-2 font-mono text-2xs text-content-tertiary">{line.code}</span>
         ) : null}
         {line.name}
       </span>
-      <span className="shrink-0 text-right text-sm tabular-nums text-content-primary">
+      <span className="shrink-0 text-end text-sm tabular-nums text-content-primary">
         <MoneyDisplay amount={line.amount} currency={currency} />
       </span>
     </div>
@@ -191,7 +191,7 @@ function StatementSection({
       </div>
       <div className="mt-1 flex items-center justify-between gap-4 border-t border-border pt-2">
         <span className="text-sm font-medium text-content-secondary">{totalLabel}</span>
-        <span className="shrink-0 text-right text-sm font-semibold tabular-nums text-content-primary">
+        <span className="shrink-0 text-end text-sm font-semibold tabular-nums text-content-primary">
           <MoneyDisplay amount={total} currency={currency} />
         </span>
       </div>
@@ -235,7 +235,7 @@ function AmountRow({
       </span>
       <span
         className={clsx(
-          'shrink-0 text-right tabular-nums',
+          'shrink-0 text-end tabular-nums',
           total ? 'text-base font-bold text-content-primary' : 'text-sm text-content-primary',
         )}
       >
@@ -534,20 +534,20 @@ function TrialBalanceView({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-content-secondary">
+              <tr className="border-b border-border text-start text-xs uppercase tracking-wide text-content-secondary">
                 <th className="px-4 py-3 font-medium">
                   {t('finance.stmt_col_account', { defaultValue: 'Account' })}
                 </th>
                 <th className="px-4 py-3 font-medium">
                   {t('finance.stmt_col_type', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-4 py-3 text-right font-medium">
+                <th className="px-4 py-3 text-end font-medium">
                   {t('finance.stmt_col_debit', { defaultValue: 'Debit' })}
                 </th>
-                <th className="px-4 py-3 text-right font-medium">
+                <th className="px-4 py-3 text-end font-medium">
                   {t('finance.stmt_col_credit', { defaultValue: 'Credit' })}
                 </th>
-                <th className="px-4 py-3 text-right font-medium">
+                <th className="px-4 py-3 text-end font-medium">
                   {t('finance.stmt_col_balance', { defaultValue: 'Balance' })}
                 </th>
               </tr>
@@ -559,7 +559,7 @@ function TrialBalanceView({
                   className="border-b border-border/60 last:border-0 hover:bg-surface-secondary/50"
                 >
                   <td className="px-4 py-2.5">
-                    <span className="mr-2 font-mono text-2xs text-content-tertiary">
+                    <span className="me-2 font-mono text-2xs text-content-tertiary">
                       {r.account_code}
                     </span>
                     <span className="text-content-primary">{r.name}</span>
@@ -567,13 +567,13 @@ function TrialBalanceView({
                   <td className="px-4 py-2.5 capitalize text-content-secondary">
                     {r.account_type}
                   </td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                  <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                     <MoneyDisplay amount={r.debit_total} currency={cur} />
                   </td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                  <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                     <MoneyDisplay amount={r.credit_total} currency={cur} />
                   </td>
-                  <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                  <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                     <MoneyDisplay amount={r.balance} currency={cur} />
                   </td>
                 </tr>
@@ -584,10 +584,10 @@ function TrialBalanceView({
                 <td className="px-4 py-3" colSpan={2}>
                   {t('finance.stmt_totals', { defaultValue: 'Totals' })}
                 </td>
-                <td className="px-4 py-3 text-right tabular-nums">
+                <td className="px-4 py-3 text-end tabular-nums">
                   <MoneyDisplay amount={data.total_debits} currency={cur} />
                 </td>
-                <td className="px-4 py-3 text-right tabular-nums">
+                <td className="px-4 py-3 text-end tabular-nums">
                   <MoneyDisplay amount={data.total_credits} currency={cur} />
                 </td>
                 <td className="px-4 py-3" />

@@ -336,21 +336,21 @@ export function SheetDetailDrawer({ sheet, onClose, onSheetChange }: SheetDetail
                 <FileText size={15} className="text-oe-blue" />
                 {t('sheets.open_plan_room', { defaultValue: 'Plan room' })}
               </span>
-              <ArrowRight size={14} className="text-content-tertiary" />
+              <ArrowRight size={14} className="text-content-tertiary rtl:rotate-180" />
             </Link>
             <Link to={takeoffTo} className={actionCls}>
               <span className="flex items-center gap-2">
                 <Ruler size={15} className="text-oe-blue" />
                 {t('sheets.open_takeoff', { defaultValue: 'PDF takeoff, to measure it' })}
               </span>
-              <ArrowRight size={14} className="text-content-tertiary" />
+              <ArrowRight size={14} className="text-content-tertiary rtl:rotate-180" />
             </Link>
             <Link to={filesTo} className={actionCls}>
               <span className="flex items-center gap-2">
                 <FileText size={15} className="text-oe-blue" />
                 {t('sheets.open_source_document', { defaultValue: 'The drawing set it came from' })}
               </span>
-              <ArrowRight size={14} className="text-content-tertiary" />
+              <ArrowRight size={14} className="text-content-tertiary rtl:rotate-180" />
             </Link>
           </div>
         </section>

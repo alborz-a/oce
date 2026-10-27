@@ -55,13 +55,13 @@ export function LayerPanel({ layers, visibleLayers, onToggleLayer, onShowAll, on
       </div>
 
       <div className="relative">
-        <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search size={14} className="absolute start-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t('dwg_takeoff.search_layers', 'Filter layers...')}
-          className="w-full rounded-md border border-border bg-surface-secondary py-1 pl-7 pr-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
+          className="w-full rounded-md border border-border bg-surface-secondary py-1 ps-7 pe-2 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
         />
       </div>
 
@@ -84,7 +84,7 @@ export function LayerPanel({ layers, visibleLayers, onToggleLayer, onShowAll, on
                 className="h-2.5 w-2.5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: resolveColor(layer.color) }}
               />
-              <span className="truncate flex-1 text-left">{layer.name}</span>
+              <span className="truncate flex-1 text-start">{layer.name}</span>
               <span className="text-muted-foreground tabular-nums">{layer.entity_count}</span>
             </button>
           );

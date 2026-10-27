@@ -853,12 +853,12 @@ export function FileManagerPage() {
             )}
             disabled={showFolderGrid}
           >
-            {!showFolderGrid && <ArrowLeft size={13} />}
+            {!showFolderGrid && <ArrowLeft className="rtl:rotate-180"  size={13} />}
             {t('files.title_all', { defaultValue: 'All files' })}
           </button>
           {!showFolderGrid && (
             <>
-              <ChevronRight size={12} className="text-content-quaternary shrink-0" />
+              <ChevronRight size={12} className="text-content-quaternary shrink-0 rtl:rotate-180" />
               <span className="px-2 py-1 text-content-primary font-semibold truncate" title={activeKindLabel}>
                 {activeKindLabel}
               </span>

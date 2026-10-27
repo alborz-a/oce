@@ -197,7 +197,7 @@ function Lightbox({
       {/* Close button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+        className="absolute top-4 end-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
         aria-label={t('common.close', { defaultValue: 'Close' })}
       >
         <X size={20} />
@@ -207,19 +207,19 @@ function Lightbox({
       {hasPrev && (
         <button
           onClick={(e) => { e.stopPropagation(); onNavigate(currentIndex - 1); }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+          className="absolute start-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
           aria-label={t('photos.previous', { defaultValue: 'Previous photo' })}
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft className="rtl:rotate-180"  size={24} />
         </button>
       )}
       {hasNext && (
         <button
           onClick={(e) => { e.stopPropagation(); onNavigate(currentIndex + 1); }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+          className="absolute end-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
           aria-label={t('photos.next', { defaultValue: 'Next photo' })}
         >
-          <ChevronRight size={24} />
+          <ChevronRight className="rtl:rotate-180"  size={24} />
         </button>
       )}
 
@@ -265,7 +265,7 @@ function Lightbox({
                     <MapPin size={12} />
                     {fmtFixed(photo.gps_lat, 5)}, {fmtFixed(photo.gps_lon, 5)}
                     {isGpsFromExif(photo) && (
-                      <span className="ml-1 text-white/40">
+                      <span className="ms-1 text-white/40">
                         {t('photos.gps_auto_paren', { defaultValue: '(auto, EXIF)' })}
                       </span>
                     )}
@@ -631,7 +631,7 @@ function PhotoCard({
 
       {/* Selection checkbox */}
       {(selectMode || selected) && (
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute top-2 end-2 z-10">
           <div
             className={`h-5 w-5 rounded-md border-2 flex items-center justify-center transition-colors ${
               selected
@@ -650,7 +650,7 @@ function PhotoCard({
       )}
 
       {/* Category badge + EXIF GPS cue */}
-      <div className="absolute top-2 left-2 flex items-center gap-1">
+      <div className="absolute top-2 start-2 flex items-center gap-1">
         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-2xs font-medium backdrop-blur-sm ${CATEGORY_COLORS[photo.category]}`}>
           {t(`photos.cat_${photo.category}`, { defaultValue: photo.category })}
         </span>
@@ -685,7 +685,7 @@ function PhotoCard({
           Stacks the category-apply button with an advisory severity chip
           (defect only) and the first auto-tags the model saw. */}
       {showSuggestion && suggestion && (
-        <div className="absolute top-2 right-2 z-10 flex flex-col items-end gap-1">
+        <div className="absolute top-2 end-2 z-10 flex flex-col items-end gap-1">
           <button
             type="button"
             onClick={(e) => {
@@ -1054,7 +1054,7 @@ function CategoryFilter({
       </button>
       {open && (
         <div
-          className="absolute left-0 top-full mt-1 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-10 overflow-hidden"
+          className="absolute start-0 top-full mt-1 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-10 overflow-hidden"
           role="listbox"
         >
           {['all', ...PHOTO_CATEGORIES].map((cat) => (
@@ -1063,7 +1063,7 @@ function CategoryFilter({
               role="option"
               aria-selected={value === cat}
               onClick={() => { onChange(cat); setOpen(false); }}
-              className={`w-full text-left px-3 py-2 text-xs transition-colors ${
+              className={`w-full text-start px-3 py-2 text-xs transition-colors ${
                 value === cat
                   ? 'bg-oe-blue-subtle/30 text-oe-blue-text font-medium'
                   : 'text-content-secondary hover:bg-surface-secondary'
@@ -1430,7 +1430,7 @@ export function PhotoGalleryPage() {
                 onClick={() => setSelectMode(true)}
                 className="shrink-0 whitespace-nowrap"
               >
-                <CheckSquare size={14} className="mr-1.5 shrink-0" />
+                <CheckSquare size={14} className="me-1.5 shrink-0" />
                 <span className="whitespace-nowrap">{t('photos.select', { defaultValue: 'Select' })}</span>
               </Button>
             )}
@@ -1440,7 +1440,7 @@ export function PhotoGalleryPage() {
               disabled={!projectId}
               className="shrink-0 whitespace-nowrap"
             >
-              <Upload size={14} className="mr-1.5 shrink-0" />
+              <Upload size={14} className="me-1.5 shrink-0" />
               <span className="whitespace-nowrap">{t('photos.upload_photos', { defaultValue: 'Upload Photos' })}</span>
             </Button>
           </>
@@ -1482,7 +1482,7 @@ export function PhotoGalleryPage() {
               ? t('photos.selected_count', { defaultValue: '{{count}} selected', count: selectedIds.size })
               : t('photos.select_photos', { defaultValue: 'Click photos to select' })}
           </span>
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex items-center gap-1.5 ms-auto">
             <Button variant="ghost" size="sm" onClick={selectedIds.size === photoList.length ? deselectAll : selectAll}>
               {selectedIds.size === photoList.length
                 ? t('photos.deselect_all', { defaultValue: 'Deselect All' })
@@ -1490,12 +1490,12 @@ export function PhotoGalleryPage() {
             </Button>
             {selectedIds.size > 0 && (
               <Button variant="danger" size="sm" onClick={handleBatchDelete} loading={batchDeleting} className="shrink-0 whitespace-nowrap">
-                <Trash2 size={14} className="mr-1 shrink-0" />
+                <Trash2 size={14} className="me-1 shrink-0" />
                 <span className="whitespace-nowrap">{t('photos.delete_selected', { defaultValue: 'Delete ({{count}})', count: selectedIds.size })}</span>
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={exitSelectMode} className="shrink-0 whitespace-nowrap">
-              <X size={14} className="mr-1 shrink-0" />
+              <X size={14} className="me-1 shrink-0" />
               <span className="whitespace-nowrap">{t('common.cancel', { defaultValue: 'Cancel' })}</span>
             </Button>
           </div>
@@ -1621,7 +1621,7 @@ export function PhotoGalleryPage() {
               ? undefined
               : (
                 <Button onClick={() => setShowUpload(true)} size="sm" variant="secondary">
-                  <Upload size={16} className="mr-2 shrink-0" />
+                  <Upload size={16} className="me-2 shrink-0" />
                   <span>{t('photos.upload_first', { defaultValue: 'Upload your first photo' })}</span>
                 </Button>
               )
@@ -1658,7 +1658,7 @@ export function PhotoGalleryPage() {
                   {group.photos.length}
                 </Badge>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 ml-11">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 ms-11">
                 {group.photos.map((photo) => {
                   // Index into the flattened timeline list (the lightbox
                   // source while timeline view is active).
@@ -1687,7 +1687,7 @@ export function PhotoGalleryPage() {
               })}
               action={
                 <Button onClick={() => setShowUpload(true)} size="sm" variant="secondary">
-                  <Upload size={16} className="mr-2 shrink-0" />
+                  <Upload size={16} className="me-2 shrink-0" />
                   <span>{t('photos.upload_first', { defaultValue: 'Upload your first photo' })}</span>
                 </Button>
               }
@@ -1736,7 +1736,7 @@ export function PhotoGalleryPage() {
         onClick={() => setShowUpload(true)}
         disabled={!projectId}
         aria-label={t('photos.upload', { defaultValue: 'Upload Photos' })}
-        className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
+        className="fixed bottom-5 end-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
       >
         <Upload size={22} />
       </button>

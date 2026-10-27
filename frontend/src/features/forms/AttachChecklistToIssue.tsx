@@ -221,9 +221,9 @@ export function AttachChecklistToIssue({
 
       {/* Template picker */}
       <div className="relative">
-        <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+        <Search size={15} className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
         <input
-          className={clsx(inputCls, 'pl-9')}
+          className={clsx(inputCls, 'ps-9')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t('forms.search_templates', { defaultValue: 'Search templates' })}
@@ -267,7 +267,7 @@ function TemplateRow({ tpl, first, onPick }: { tpl: TemplateSummary; first: bool
       type="button"
       onClick={onPick}
       className={clsx(
-        'flex w-full items-center gap-3 bg-surface-primary px-3 py-2.5 text-left hover:bg-surface-secondary',
+        'flex w-full items-center gap-3 bg-surface-primary px-3 py-2.5 text-start hover:bg-surface-secondary',
         !first && 'border-t border-border-light',
       )}
     >
@@ -283,7 +283,7 @@ function TemplateRow({ tpl, first, onPick }: { tpl: TemplateSummary; first: bool
       <Badge variant={CATEGORY_BADGE[tpl.category]} size="sm">
         {CATEGORY_LABELS[tpl.category]}
       </Badge>
-      <ChevronRight size={16} className="shrink-0 text-content-tertiary" />
+      <ChevronRight size={16} className="shrink-0 text-content-tertiary rtl:rotate-180" />
     </button>
   );
 }
@@ -302,7 +302,7 @@ function AttachedRow({
       type="button"
       onClick={onOpen}
       className={clsx(
-        'flex w-full items-center gap-3 bg-surface-primary px-3 py-2 text-left hover:bg-surface-secondary',
+        'flex w-full items-center gap-3 bg-surface-primary px-3 py-2 text-start hover:bg-surface-secondary',
         !first && 'border-t border-border-light',
       )}
     >

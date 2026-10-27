@@ -46,7 +46,7 @@ export function ShowAllProjectsCard({ totalCount, hiddenCount, style }: ShowAllP
         </div>
         <div className="mt-1 inline-flex items-center gap-1 text-2xs font-medium text-oe-blue opacity-80 transition-opacity group-hover:opacity-100">
           {t('common.open', { defaultValue: 'Open' })}
-          <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
         </div>
       </div>
     </Card>

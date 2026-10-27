@@ -44,7 +44,7 @@ interface TilesetSidebarProps {
   onToggleVisibility: (tilesetId: string) => void;
   onFocus: (tileset: Tileset) => void;
   /**
-   * ``overlay`` (default) anchors the panel ``absolute top-3 left-3``
+   * ``overlay`` (default) anchors the panel ``absolute top-3 start-3``
    * over the Cesium canvas with translucent chrome + a 60vh cap so the
    * map stays mostly visible. ``rail`` keeps the legacy full-height
    * left rail for callers that want the old chrome (none currently).
@@ -113,7 +113,7 @@ function TilesetCard({
       <button
         type="button"
         onClick={() => onFocus(tileset)}
-        className="flex w-full items-start gap-2 text-left"
+        className="flex w-full items-start gap-2 text-start"
         aria-label={t('geo_hub.sidebar.fly_to', {
           defaultValue: 'Fly to {{name}}',
           name: tileset.name,
@@ -134,7 +134,7 @@ function TilesetCard({
             </span>
             <ChevronRight
               size={12}
-              className="ml-auto shrink-0 text-content-tertiary opacity-0 transition-opacity group-hover:opacity-100"
+              className="ms-auto shrink-0 text-content-tertiary opacity-0 transition-opacity group-hover:opacity-100 rtl:rotate-180"
             />
           </div>
           <div className="mt-1 flex items-center gap-1.5">
@@ -175,7 +175,7 @@ function TilesetCard({
           onToggleVisibility(tileset.id);
         }}
         className={[
-          'absolute right-1.5 top-1.5 inline-flex h-6 w-6 items-center justify-center',
+          'absolute end-1.5 top-1.5 inline-flex h-6 w-6 items-center justify-center',
           'rounded-sm text-content-tertiary opacity-0 transition',
           'hover:bg-surface-secondary hover:text-content-primary group-hover:opacity-100',
           // Keyboard parity: reveal the button when it receives focus so
@@ -255,7 +255,7 @@ function TilesetCard({
               })}
               aria-valuetext={`${Math.round((opacity ?? 1) * 100)}%`}
             />
-            <span className="w-9 text-right tabular-nums text-content-secondary">
+            <span className="w-9 text-end tabular-nums text-content-secondary">
               {Math.round((opacity ?? 1) * 100)}%
             </span>
           </label>
@@ -309,7 +309,7 @@ export function TilesetSidebar({
         type="button"
         onClick={onToggleCollapsed}
         className={[
-          'absolute top-3 left-3 z-20 inline-flex items-center gap-2',
+          'absolute top-3 start-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -321,7 +321,7 @@ export function TilesetSidebar({
       >
         <Layers size={13} strokeWidth={2} className="text-emerald-300" />
         <span className="tabular-nums">{isLoading ? '…' : totalCount}</span>
-        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70" />
+        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70 rtl:rotate-180" />
       </button>
     );
   }
@@ -333,7 +333,7 @@ export function TilesetSidebar({
   // callers but preserved for non-Cesium future surfaces).
   const containerClasses = isOverlay
     ? [
-        'absolute top-3 left-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
+        'absolute top-3 start-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
         'rounded-xl border border-white/15 bg-white/95 dark:bg-slate-900/90',
         'shadow-lg shadow-black/20 ring-1 ring-black/5 backdrop-blur-md',
         // Hide on phone-width — the collapsed pill takes its place when
@@ -341,7 +341,7 @@ export function TilesetSidebar({
         'hidden md:flex',
       ].join(' ')
     : [
-        'flex w-72 shrink-0 flex-col border-r border-border bg-surface-secondary',
+        'flex w-72 shrink-0 flex-col border-e border-border bg-surface-secondary',
       ].join(' ');
 
   return (
@@ -362,7 +362,7 @@ export function TilesetSidebar({
             {t('geo_hub.sidebar.title', { defaultValue: 'Tilesets' })}
           </h2>
           {tilesets && (
-            <span className="ml-auto text-2xs font-medium text-content-tertiary">
+            <span className="ms-auto text-2xs font-medium text-content-tertiary">
               {tilesets.length}
             </span>
           )}
@@ -383,7 +383,7 @@ export function TilesetSidebar({
                 defaultValue: 'Hide tilesets',
               })}
             >
-              <ChevronLeft size={13} strokeWidth={2} />
+              <ChevronLeft className="rtl:rotate-180"  size={13} strokeWidth={2} />
             </button>
           )}
         </div>

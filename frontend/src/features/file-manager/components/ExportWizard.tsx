@@ -224,7 +224,7 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
                               <td className="px-3 py-1.5 font-mono text-[11px] text-content-secondary truncate">
                                 {tbl}
                               </td>
-                              <td className="px-3 py-1.5 text-right tabular-nums text-content-tertiary">
+                              <td className="px-3 py-1.5 text-end tabular-nums text-content-tertiary">
                                 {count}
                               </td>
                             </tr>
@@ -264,7 +264,7 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
               onClick={() => setStep('scope')}
               className="inline-flex items-center gap-1 h-9 px-3 text-xs font-medium rounded-lg text-content-secondary hover:bg-surface-secondary"
             >
-              <ChevronLeft size={12} />
+              <ChevronLeft className="rtl:rotate-180"  size={12} />
               {t('common.back', { defaultValue: 'Back' })}
             </button>
           )}

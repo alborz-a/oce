@@ -125,7 +125,7 @@ export function SnapshotPickerInline({
                 aria-selected={isActive}
                 onClick={() => handlePick(item.id)}
                 data-testid={`snapshot-picker-inline-option-${item.id}`}
-                className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-surface-secondary ${
+                className={`flex w-full items-center gap-2 px-3 py-1.5 text-start text-xs hover:bg-surface-secondary ${
                   isActive ? 'bg-emerald-500/5 text-emerald-200' : 'text-content-primary'
                 }`}
               >

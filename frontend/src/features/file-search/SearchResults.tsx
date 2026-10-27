@@ -78,7 +78,7 @@ export function SearchResults({ hits, query, isLoading, onOpen, className }: Sea
             <button
               type="button"
               onClick={() => onOpen?.(hit)}
-              className="w-full text-left flex gap-3 p-3 hover:bg-surface-secondary focus:outline-none focus-visible:bg-surface-secondary"
+              className="w-full text-start flex gap-3 p-3 hover:bg-surface-secondary focus:outline-none focus-visible:bg-surface-secondary"
             >
               <div className="shrink-0 mt-0.5 text-content-tertiary">
                 <Icon size={16} strokeWidth={1.5} />

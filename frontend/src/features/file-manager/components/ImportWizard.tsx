@@ -358,7 +358,7 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
               </div>
               <div className="rounded-lg border border-border-light overflow-hidden">
                 <div className="grid grid-cols-2">
-                  <div className="px-3 py-2 border-r border-border-light">
+                  <div className="px-3 py-2 border-e border-border-light">
                     <div className="text-2xs uppercase tracking-wide text-content-tertiary">
                       {t('files.import.imported', { defaultValue: 'Imported' })}
                     </div>
@@ -405,7 +405,7 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
               }}
               className="inline-flex items-center gap-1 h-9 px-3 text-xs font-medium rounded-lg text-content-secondary hover:bg-surface-secondary"
             >
-              <ChevronLeft size={12} />
+              <ChevronLeft className="rtl:rotate-180"  size={12} />
               {t('common.back', { defaultValue: 'Back' })}
             </button>
           )}

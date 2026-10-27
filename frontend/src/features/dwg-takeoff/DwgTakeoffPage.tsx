@@ -596,7 +596,7 @@ function OfflineReadyBadge({
 
       {showHint && (
         <div
-          className="absolute top-full right-0 mt-1.5 z-30 w-72 rounded-lg border border-border-light bg-surface-elevated shadow-xl p-3 text-[11px]"
+          className="absolute top-full end-0 mt-1.5 z-30 w-72 rounded-lg border border-border-light bg-surface-elevated shadow-xl p-3 text-[11px]"
           data-testid="dwg-offline-hint"
         >
           <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -3275,9 +3275,9 @@ export function DwgTakeoffPage() {
                 }}
               />
               {/* Crosshair at center (CAD UCS marker) */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-20 z-0">
-                <div className="w-px h-8 bg-blue-400 absolute left-1/2 -translate-x-1/2 -top-4" />
-                <div className="h-px w-8 bg-blue-400 absolute top-1/2 -translate-y-1/2 -left-4" />
+              <div className="absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-20 z-0">
+                <div className="w-px h-8 bg-blue-400 absolute start-1/2 -translate-x-1/2 -top-4" />
+                <div className="h-px w-8 bg-blue-400 absolute top-1/2 -translate-y-1/2 -start-4" />
               </div>
 
               <div className="relative z-10 max-w-7xl mx-auto pt-20 pb-4 w-full">
@@ -3637,7 +3637,7 @@ export function DwgTakeoffPage() {
                       {snapMenuOpen && (
                         <div
                           data-testid="dwg-snap-menu"
-                          className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-slate-200 bg-white p-2 shadow-xl"
+                          className="absolute start-0 top-full mt-1 w-48 rounded-lg border border-slate-200 bg-white p-2 shadow-xl"
                           onMouseLeave={() => setSnapMenuOpen(false)}
                         >
                           <label className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">
@@ -3813,7 +3813,7 @@ export function DwgTakeoffPage() {
                   zooms to the active one; the result list jumps on click. */}
               {findOpen && (
                 <div
-                  className="absolute top-3 left-1/2 z-20 flex -translate-x-1/2 flex-col items-stretch gap-1"
+                  className="absolute top-3 start-1/2 z-20 flex -translate-x-1/2 flex-col items-stretch gap-1"
                   data-testid="dwg-find-bar"
                 >
                   <div className="flex items-center gap-1 rounded-lg border border-white/60 bg-white/90 px-2 py-1.5 shadow-xl shadow-black/30 ring-1 ring-black/5 backdrop-blur-md dark:bg-slate-800/95">
@@ -3883,7 +3883,7 @@ export function DwgTakeoffPage() {
                           type="button"
                           onClick={() => gotoMatch(i)}
                           className={clsx(
-                            'block w-full truncate px-2.5 py-1 text-left text-[11px]',
+                            'block w-full truncate px-2.5 py-1 text-start text-[11px]',
                             i === safeMatchIdx
                               ? 'bg-oe-blue/15 font-semibold text-oe-blue'
                               : 'text-slate-700 hover:bg-black/5 dark:text-slate-200 dark:hover:bg-white/10',
@@ -4010,7 +4010,7 @@ export function DwgTakeoffPage() {
                     && a.linked_boq_position_id,
                 );
                 return (
-                  <div className="absolute top-3 right-3 z-20 flex flex-col w-80 max-h-[calc(100%-1.5rem)] rounded-lg border border-[#3a3a3a] bg-[#2f2f2f] text-slate-100 shadow-2xl">
+                  <div className="absolute top-3 end-3 z-20 flex flex-col w-80 max-h-[calc(100%-1.5rem)] rounded-lg border border-[#3a3a3a] bg-[#2f2f2f] text-slate-100 shadow-2xl">
                     {/* Header */}
                     <div className="flex items-center justify-between px-3 py-2 border-b border-[#3a3a3a]">
                       <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-100">
@@ -4048,7 +4048,7 @@ export function DwgTakeoffPage() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-400">{t('dwg_takeoff.prop_layer', 'Layer')}</span>
-                          <span className="font-mono text-slate-100 truncate ml-2">{selectedEntity.layer}</span>
+                          <span className="font-mono text-slate-100 truncate ms-2">{selectedEntity.layer}</span>
                         </div>
                         {measurement && (
                           <div className="flex justify-between">
@@ -4181,7 +4181,7 @@ export function DwgTakeoffPage() {
                                       }
                                     }}
                                     disabled={linkingInProgress}
-                                    className="w-full text-left px-2 py-1 rounded-sm text-[11px] hover:bg-blue-900/40 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                                    className="w-full text-start px-2 py-1 rounded-sm text-[11px] hover:bg-blue-900/40 transition-colors flex items-center gap-1.5 disabled:opacity-50"
                                   >
                                     <span className="font-mono text-blue-300 shrink-0">
                                       {pos.ordinal}
@@ -4267,7 +4267,7 @@ export function DwgTakeoffPage() {
 
         {/* ── Right Panel: Layers / Annotations / Properties ───── */}
         {selectedDrawingId && (
-          <div className="flex w-72 flex-shrink-0 flex-col border-l border-border-light bg-surface-primary text-content-primary shadow-xl shadow-black/30">
+          <div className="flex w-72 flex-shrink-0 flex-col border-s border-border-light bg-surface-primary text-content-primary shadow-xl shadow-black/30">
             {/* Group aggregation panel (RFC 11 §4.5) - visible when 2+ entities selected */}
             {selectedEntityIds.size > 1 && (
               <div
@@ -4524,7 +4524,7 @@ export function DwgTakeoffPage() {
                   <h3 className="text-sm font-semibold text-foreground">
                     {t('dwg_takeoff.annotations', 'Annotations')}
                     {annotations.length > 0 && (
-                      <Badge variant="neutral" className="ml-2">
+                      <Badge variant="neutral" className="ms-2">
                         {annotations.length}
                       </Badge>
                     )}
@@ -4539,7 +4539,7 @@ export function DwgTakeoffPage() {
                         key={ann.id}
                         onClick={() => setSelectedAnnotationId(ann.id)}
                         className={clsx(
-                          'flex items-center gap-2 rounded px-2 py-1.5 text-xs text-left transition-colors',
+                          'flex items-center gap-2 rounded px-2 py-1.5 text-xs text-start transition-colors',
                           selectedAnnotationId === ann.id
                             ? 'bg-oe-blue/10 text-oe-blue'
                             : 'text-foreground hover:bg-surface-secondary',
@@ -4551,7 +4551,7 @@ export function DwgTakeoffPage() {
                         />
                         <div className="flex-1 truncate">
                           <span className="font-medium capitalize">{ann.type.replace('_', ' ')}</span>
-                          {ann.text && <span className="ml-1 text-muted-foreground">- {ann.text}</span>}
+                          {ann.text && <span className="ms-1 text-muted-foreground">- {ann.text}</span>}
                           {ann.measurement_value != null && (() => {
                             // Restate the stored metric-canonical value + unit
                             // in the user's measurement system (metric is a
@@ -4559,7 +4559,7 @@ export function DwgTakeoffPage() {
                             // is untouched - this is display only.
                             const dq = q.convert(ann.measurement_value, ann.measurement_unit ?? 'm');
                             return (
-                              <span className="ml-1 text-muted-foreground">
+                              <span className="ms-1 text-muted-foreground">
                                 ({fmtFixed(dq.value, 2)} {dq.unit})
                               </span>
                             );
@@ -4634,7 +4634,7 @@ export function DwgTakeoffPage() {
                           <button
                             type="button"
                             onClick={() => handleOpenLinkToBoq(selectedEntity.id)}
-                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
+                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-start text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-boq"
                           >
                             <Link2 size={12} className="text-oe-blue shrink-0" />
@@ -4651,7 +4651,7 @@ export function DwgTakeoffPage() {
                                 entityLabel: `${selectedEntity.type} · ${selectedEntity.layer}`,
                               })
                             }
-                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
+                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-start text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-task"
                           >
                             <ListChecks size={12} className="text-amber-500 shrink-0" />
@@ -4668,7 +4668,7 @@ export function DwgTakeoffPage() {
                                 entityLabel: `${selectedEntity.type} · ${selectedEntity.layer}`,
                               })
                             }
-                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
+                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-start text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-document"
                           >
                             <FileText size={12} className="text-violet-500 shrink-0" />
@@ -4685,7 +4685,7 @@ export function DwgTakeoffPage() {
                                 entityLabel: `${selectedEntity.type} · ${selectedEntity.layer}`,
                               })
                             }
-                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
+                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-start text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-activity"
                           >
                             <CalendarDays size={12} className="text-emerald-500 shrink-0" />
@@ -4702,7 +4702,7 @@ export function DwgTakeoffPage() {
                                 entityLabel: `${selectedEntity.type} · ${selectedEntity.layer}`,
                               })
                             }
-                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-left text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
+                            className="w-full flex items-center gap-2 rounded-md border border-border bg-surface-secondary px-2 py-1.5 text-start text-[11px] text-content-primary hover:bg-surface-tertiary transition-colors"
                             data-testid="dwg-attach-requirement"
                           >
                             <ClipboardCheck size={12} className="text-violet-500 shrink-0" />
@@ -4772,7 +4772,7 @@ export function DwgTakeoffPage() {
                         const verts = selectedEntity.vertices!;
                         const closed = !!selectedEntity.closed;
                         const segLengths = getSegmentLengths(verts, closed);
-                        // Apply current drawing scale on display so the right-panel
+                        // Apply current drawing scale on display so the end-panel
                         // numbers stay in sync with the canvas labels when the user
                         // picks a different ratio via the Scale tab.
                         const perimeter = calculatePerimeter(verts, closed) * effectiveScale;
@@ -5344,11 +5344,11 @@ function DrawingFilmstrip({
     >
       {/* Header -- always visible, no longer acts as a collapse toggle. */}
       <div className="flex items-center w-full px-3 py-1">
-        <Layers size={12} className="text-slate-300 mr-1.5 shrink-0" />
+        <Layers size={12} className="text-slate-300 me-1.5 shrink-0" />
         <span className="text-[11px] font-semibold text-slate-100">
           {t('dwg_takeoff.drawings', 'Drawings')}
         </span>
-        <span className="text-[10px] text-slate-400 ml-1">({drawings.length})</span>
+        <span className="text-[10px] text-slate-400 ms-1">({drawings.length})</span>
       </div>
 
       {/* Drawing cards - always visible, horizontally scrolling if needed. */}
@@ -5449,7 +5449,7 @@ function DrawingFilmstrip({
                   }}
                   aria-label={t('dwg_takeoff.delete_drawing', { defaultValue: 'Delete drawing' })}
                   title={t('dwg_takeoff.delete_drawing', { defaultValue: 'Delete drawing' })}
-                  className="absolute top-0.5 right-0.5 h-4 w-4 rounded flex items-center justify-center
+                  className="absolute top-0.5 end-0.5 h-4 w-4 rounded flex items-center justify-center
                              text-transparent group-hover:text-slate-400 hover:!text-red-400 hover:bg-red-500/20
                              transition-all"
                 >
@@ -5519,7 +5519,7 @@ function SummaryKpiCard({ label, value, unit, accent }: SummaryKpiCardProps) {
       <div className="text-lg font-bold tabular-nums leading-tight truncate">
         {value}
         {unit && (
-          <span className="text-[10px] font-medium ml-1 opacity-70">{unit}</span>
+          <span className="text-[10px] font-medium ms-1 opacity-70">{unit}</span>
         )}
       </div>
     </div>
@@ -5638,7 +5638,7 @@ function ScaleTab({
         type="button"
         onClick={() => onModeChange(id)}
         className={clsx(
-          'flex-1 flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-1.5 text-left text-[11px] transition-colors',
+          'flex-1 flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-1.5 text-start text-[11px] transition-colors',
           active
             ? 'border-oe-blue bg-oe-blue/10 text-oe-blue'
             : 'border-border bg-surface-secondary text-content-primary hover:bg-surface-tertiary',
@@ -5774,7 +5774,7 @@ function ScaleTab({
                   step={1}
                   value={customInput}
                   onChange={(e) => handleCustomChange(e.target.value)}
-                  className="w-20 ml-auto px-1.5 py-0.5 text-xs font-mono rounded border border-border bg-surface-primary text-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
+                  className="w-20 ms-auto px-1.5 py-0.5 text-xs font-mono rounded border border-border bg-surface-primary text-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
                   data-testid="dwg-scale-custom-input"
                   aria-label={t('dwg_takeoff.scale_input_aria', {
                     defaultValue: 'Drawing scale denominator',
@@ -5895,7 +5895,7 @@ function ScaleTab({
               step={1}
               value={customInput || String(drawingScale)}
               onChange={(e) => handleCustomChange(e.target.value)}
-              className="w-24 ml-auto px-1.5 py-0.5 text-xs font-mono rounded border border-border bg-surface-primary text-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
+              className="w-24 ms-auto px-1.5 py-0.5 text-xs font-mono rounded border border-border bg-surface-primary text-foreground focus:outline-none focus:ring-1 focus:ring-oe-blue"
               data-testid="dwg-scale-per-annotation-input"
             />
           </label>
@@ -6154,7 +6154,7 @@ function SummaryTab({
         </div>
 
         {/* Per-layer rows */}
-        <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
+        <div className="space-y-1 max-h-72 overflow-y-auto pe-1">
           {layerQuantities.slice(0, 30).map((row) => {
             const measure = layerMeasure[row.layer] ?? row.primary;
             const quantity = quantityFor(row, measure);
@@ -6191,7 +6191,7 @@ function SummaryTab({
                 </div>
                 <div className="relative h-1 rounded-full bg-surface-tertiary overflow-hidden mb-1">
                   <div
-                    className={clsx('absolute inset-y-0 left-0 bg-gradient-to-r', barColor)}
+                    className={clsx('absolute inset-y-0 start-0 bg-gradient-to-r', barColor)}
                     style={{ width: `${Math.max(share, 3)}%` }}
                   />
                 </div>
@@ -6406,7 +6406,7 @@ function MenuItem({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-2 w-full px-3 py-1.5 text-left text-[11px] text-white/85 hover:bg-white/10 transition-colors"
+      className="flex items-center gap-2 w-full px-3 py-1.5 text-start text-[11px] text-white/85 hover:bg-white/10 transition-colors"
     >
       {icon}
       <span>{label}</span>
@@ -6657,7 +6657,7 @@ function ConversionProgressCard({
                     {isCurrent && (
                       <Loader2
                         size={11}
-                        className="inline-block ml-1.5 text-oe-blue animate-spin align-[-1px]"
+                        className="inline-block ms-1.5 text-oe-blue animate-spin align-[-1px]"
                       />
                     )}
                   </p>

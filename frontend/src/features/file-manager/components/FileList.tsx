@@ -186,7 +186,7 @@ export function FileList({
       <th
         className={clsx(
           'px-3 py-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary',
-          align === 'right' && 'text-right',
+          align === 'right' && 'text-end',
           'cursor-pointer select-none hover:text-content-primary',
           className,
         )}
@@ -369,12 +369,12 @@ export function FileList({
                       directory listing, so it has no size and no modified date.
                       The placeholder zero would read as an empty file, hence
                       the dash. */}
-                  <td className="px-3 py-2 text-right text-content-secondary tabular-nums text-xs">
+                  <td className="px-3 py-2 text-end text-content-secondary tabular-nums text-xs">
                     {typeof row.extra?.snippet === 'string' && row.extra.snippet
                       ? '—'
                       : fmtBytes(row.size_bytes)}
                   </td>
-                  <td className="px-3 py-2 text-right text-content-secondary text-xs">
+                  <td className="px-3 py-2 text-end text-content-secondary text-xs">
                     {row.modified_at ? <DateDisplay value={row.modified_at} format="relative" /> : '—'}
                   </td>
                   <td className="px-3 py-2 text-content-tertiary text-xs truncate">

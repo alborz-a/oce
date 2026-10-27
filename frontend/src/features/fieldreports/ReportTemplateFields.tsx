@@ -426,7 +426,7 @@ export function ReportAttachments({
                   <button
                     type="button"
                     onClick={() => handleOpen(d.id, d.name)}
-                    className="flex min-w-0 flex-1 items-center gap-2 text-left text-sm text-content-primary hover:text-oe-blue"
+                    className="flex min-w-0 flex-1 items-center gap-2 text-start text-sm text-content-primary hover:text-oe-blue"
                   >
                     {d.mime_type.startsWith('image/') ? (
                       <ImageIcon size={14} className="shrink-0" />

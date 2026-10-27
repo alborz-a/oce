@@ -202,7 +202,7 @@ export function BasisHeadline({
                   value={accuracyLowPct}
                   onChange={(e) => onBandChange('low', e.target.value)}
                   inputMode="decimal"
-                  className="w-16 rounded border border-border-light bg-surface-primary px-1.5 py-1 text-right tabular-nums text-content-primary"
+                  className="w-16 rounded border border-border-light bg-surface-primary px-1.5 py-1 text-end tabular-nums text-content-primary"
                 />
                 <span aria-hidden>%</span>
                 <span aria-hidden>/</span>
@@ -211,7 +211,7 @@ export function BasisHeadline({
                   value={accuracyHighPct}
                   onChange={(e) => onBandChange('high', e.target.value)}
                   inputMode="decimal"
-                  className="w-16 rounded border border-border-light bg-surface-primary px-1.5 py-1 text-right tabular-nums text-content-primary"
+                  className="w-16 rounded border border-border-light bg-surface-primary px-1.5 py-1 text-end tabular-nums text-content-primary"
                 />
                 <span aria-hidden>%</span>
               </div>

@@ -277,12 +277,12 @@ export function TimesheetEditor({
           icon={<Trash2 size={14} />}
           disabled={lifecycleBusy}
           onClick={() => deleteMut.mutate()}
-          className="mr-auto text-semantic-error hover:bg-semantic-error-bg"
+          className="me-auto text-semantic-error hover:bg-semantic-error-bg"
         >
           {t('field_time.delete_timesheet', { defaultValue: 'Delete draft' })}
         </Button>
       )}
-      <Button variant="secondary" size="sm" onClick={onClose} className={isDraft ? '' : 'ml-auto'}>
+      <Button variant="secondary" size="sm" onClick={onClose} className={isDraft ? '' : 'ms-auto'}>
         {t('common.close', { defaultValue: 'Close' })}
       </Button>
       {isDraft && (

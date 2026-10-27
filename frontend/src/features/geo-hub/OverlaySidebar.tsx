@@ -185,7 +185,7 @@ function SectionHeader({
       <h3 className="text-2xs font-semibold uppercase tracking-[0.14em] text-content-secondary">
         {label}
       </h3>
-      <span className="ml-auto text-2xs font-medium tabular-nums text-content-tertiary">
+      <span className="ms-auto text-2xs font-medium tabular-nums text-content-tertiary">
         {count}
       </span>
     </div>
@@ -223,7 +223,7 @@ function Row({
       data-row-id={id}
       data-focused={focused ? 'true' : 'false'}
       className={[
-        'group flex w-full items-start gap-2 rounded-md border px-2 py-2 text-left',
+        'group flex w-full items-start gap-2 rounded-md border px-2 py-2 text-start',
         'transition-colors',
         focused
           ? 'border-emerald-400/60 bg-emerald-50 dark:bg-emerald-950/30'
@@ -342,7 +342,7 @@ export function OverlaySidebar({
         onClick={() => setCollapsed(false)}
         data-testid="geo-overlay-sidebar-toggle"
         className={[
-          'absolute bottom-3 left-3 z-20 inline-flex items-center gap-2',
+          'absolute bottom-3 start-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -358,7 +358,7 @@ export function OverlaySidebar({
       >
         <Layers size={13} strokeWidth={2} className="text-emerald-300" />
         <span className="tabular-nums">{isLoading ? '…' : totalCount}</span>
-        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70" />
+        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70 rtl:rotate-180" />
       </button>
     );
   }
@@ -373,7 +373,7 @@ export function OverlaySidebar({
         // pill (~32 px tall) on small screens; on larger screens both panels
         // can be open simultaneously since the canvas is tall enough for a
         // 60vh top panel + a 50vh bottom panel.
-        'absolute bottom-3 left-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
+        'absolute bottom-3 start-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
         'rounded-xl border border-white/15 bg-white/95 dark:bg-slate-900/90',
         'shadow-lg shadow-black/20 ring-1 ring-black/5 backdrop-blur-md',
         // Hide on phone-width so it doesn't cover the whole map; users
@@ -418,7 +418,7 @@ export function OverlaySidebar({
             defaultValue: 'Hide overlays + tilesets',
           })}
         >
-          <ChevronLeft size={14} strokeWidth={2} />
+          <ChevronLeft className="rtl:rotate-180"  size={14} strokeWidth={2} />
         </button>
       </div>
 

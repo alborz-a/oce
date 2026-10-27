@@ -378,7 +378,7 @@ function MetricCard({
             {t('esg.no_readings_yet', { defaultValue: 'No readings yet' })}
           </p>
           <Button variant="ghost" size="sm" onClick={() => onAdd(summary.metric_key)}>
-            <Plus size={14} className="mr-1" />
+            <Plus size={14} className="me-1" />
             {t('esg.add_reading', { defaultValue: 'Add reading' })}
           </Button>
         </div>
@@ -706,7 +706,7 @@ function ReadingModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={saveMut.isPending || !canSubmit}>
             {saveMut.isPending && (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             )}
             {isEdit
               ? t('common.save', { defaultValue: 'Save' })
@@ -772,9 +772,9 @@ function RecentReadings({
         <div className="sticky top-0 z-10 flex items-center gap-3 px-4 py-2.5 border-b border-border-light bg-surface-elevated text-2xs font-medium text-content-tertiary uppercase tracking-wider">
           <span className="flex-1">{t('esg.col_metric', { defaultValue: 'Metric' })}</span>
           <span className="w-24">{t('esg.col_period', { defaultValue: 'Period' })}</span>
-          <span className="w-24 text-right">{t('esg.col_value', { defaultValue: 'Value' })}</span>
-          <span className="w-24 text-right">{t('esg.col_target', { defaultValue: 'Target' })}</span>
-          <span className="w-16 text-right">{t('esg.col_actions', { defaultValue: 'Actions' })}</span>
+          <span className="w-24 text-end">{t('esg.col_value', { defaultValue: 'Value' })}</span>
+          <span className="w-24 text-end">{t('esg.col_target', { defaultValue: 'Target' })}</span>
+          <span className="w-16 text-end">{t('esg.col_actions', { defaultValue: 'Actions' })}</span>
         </div>
         {visible.map((entry) => {
           const def = byKey.get(entry.metric_key);
@@ -796,11 +796,11 @@ function RecentReadings({
               <span className="w-24 text-xs text-content-secondary tabular-nums">
                 {formatPeriod(entry.period)}
               </span>
-              <span className="w-24 text-right text-sm text-content-primary tabular-nums">
+              <span className="w-24 text-end text-sm text-content-primary tabular-nums">
                 {fmtNum(toNum(entry.value))}
-                <span className="text-2xs text-content-tertiary ml-1">{unit}</span>
+                <span className="text-2xs text-content-tertiary ms-1">{unit}</span>
               </span>
-              <span className="w-24 text-right text-xs text-content-tertiary tabular-nums">
+              <span className="w-24 text-end text-xs text-content-tertiary tabular-nums">
                 {entry.target !== null ? fmtNum(toNum(entry.target)) : '-'}
               </span>
               <span className="w-16 flex items-center justify-end gap-1">
@@ -1156,7 +1156,7 @@ export function EsgPage() {
               })}
               className="shrink-0 whitespace-nowrap"
             >
-              <Download size={14} className="mr-1 shrink-0" />
+              <Download size={14} className="me-1 shrink-0" />
               <span>{t('esg.export_csv', { defaultValue: 'Export CSV' })}</span>
             </Button>
             <Button
@@ -1169,7 +1169,7 @@ export function EsgPage() {
               })}
               className="shrink-0 whitespace-nowrap"
             >
-              <Printer size={14} className="mr-1 shrink-0" />
+              <Printer size={14} className="me-1 shrink-0" />
               <span>{t('esg.print_report', { defaultValue: 'Print report' })}</span>
             </Button>
             <Button
@@ -1190,7 +1190,7 @@ export function EsgPage() {
               }}
               className="shrink-0 whitespace-nowrap"
             >
-              <Plus size={14} className="mr-1 shrink-0" />
+              <Plus size={14} className="me-1 shrink-0" />
               <span>{t('esg.add_reading', { defaultValue: 'Add reading' })}</span>
             </Button>
           </>

@@ -255,7 +255,7 @@ export function DistributionListModal({
                   type="button"
                   onClick={() => setActiveId(list.id)}
                   data-testid={`distribution-open-${list.id}`}
-                  className="flex flex-1 flex-col text-left"
+                  className="flex flex-1 flex-col text-start"
                 >
                   <span className="font-medium text-content-primary">{list.name}</span>
                   <span className="text-xs text-content-tertiary">

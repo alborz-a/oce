@@ -360,7 +360,7 @@ export function AddressAutocomplete({
         <Search
           size={14}
           strokeWidth={2}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+          className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           aria-hidden
         />
         <input
@@ -393,7 +393,7 @@ export function AddressAutocomplete({
           }}
           className={[
             'h-10 w-full rounded-lg border border-border bg-surface-primary',
-            'px-3 pl-9 pr-9 text-sm text-content-primary',
+            'px-3 ps-9 pe-9 text-sm text-content-primary',
             'placeholder:text-content-tertiary',
             'focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent',
             disabled ? 'opacity-60 cursor-not-allowed' : '',
@@ -411,7 +411,7 @@ export function AddressAutocomplete({
           // because the animation is infinite. Offset on the wrapper, spin on
           // the icon, and each keeps its own axis.
           <span
-            className="absolute right-3 top-1/2 flex -translate-y-1/2 text-content-tertiary"
+            className="absolute end-3 top-1/2 flex -translate-y-1/2 text-content-tertiary"
             aria-hidden
           >
             <Loader2 size={14} className="animate-spin" />

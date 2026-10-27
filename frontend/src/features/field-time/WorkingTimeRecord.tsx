@@ -256,31 +256,31 @@ export function WorkingTimeRecordPanel({
           )}
 
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[52rem] text-left text-xs">
+            <table className="w-full min-w-[52rem] text-start text-xs">
               <thead className="border-b border-border-light text-2xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.date', { defaultValue: 'Date' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.worker', { defaultValue: 'Worker / crew' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.employer', { defaultValue: 'Employer' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.start', { defaultValue: 'Start' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.end', { defaultValue: 'End' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.break', { defaultValue: 'Break' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.duration', { defaultValue: 'Duration' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('field_time.working_time.recorded', { defaultValue: 'Recorded' })}
                   </th>
                   <th className="py-2 font-medium">
@@ -318,20 +318,20 @@ function WorkerDayRow({ day }: { day: WorkingTimeWorkerDay }) {
 
   return (
     <tr className="border-b border-border-light/60 last:border-0">
-      <td className="py-2 pr-3 whitespace-nowrap">
+      <td className="py-2 pe-3 whitespace-nowrap">
         <DateDisplay value={day.date} format="numeric" />
       </td>
-      <td className="py-2 pr-3">{day.worker}</td>
-      <td className="py-2 pr-3">
+      <td className="py-2 pe-3">{day.worker}</td>
+      <td className="py-2 pe-3">
         <span className={day.employer_kind ? '' : 'text-content-tertiary'}>{employer}</span>
       </td>
-      <td className="py-2 pr-3 tabular-nums">
+      <td className="py-2 pe-3 tabular-nums">
         {day.started_at ? <DateDisplay value={day.started_at} format="time" /> : <Missing />}
       </td>
-      <td className="py-2 pr-3 tabular-nums">
+      <td className="py-2 pe-3 tabular-nums">
         {day.ended_at ? <DateDisplay value={day.ended_at} format="time" /> : <Missing />}
       </td>
-      <td className="py-2 pr-3 tabular-nums">
+      <td className="py-2 pe-3 tabular-nums">
         {day.break_minutes > 0
           ? t('field_time.working_time.minutes', {
               defaultValue: '{{count}} min',
@@ -339,10 +339,10 @@ function WorkerDayRow({ day }: { day: WorkingTimeWorkerDay }) {
             })
           : ''}
       </td>
-      <td className="py-2 pr-3 tabular-nums">
+      <td className="py-2 pe-3 tabular-nums">
         {t('field_time.hours_value', { defaultValue: '{{hours}} h', hours: formatHours(day.duration_hours) })}
         {day.segments_without_times > 0 && (
-          <span className="ml-1.5 text-2xs text-semantic-warning">
+          <span className="ms-1.5 text-2xs text-semantic-warning">
             {t('field_time.working_time.partly_untimed', {
               defaultValue: '{{count}} bookings without times',
               count: day.segments_without_times,
@@ -350,13 +350,13 @@ function WorkerDayRow({ day }: { day: WorkingTimeWorkerDay }) {
           </span>
         )}
       </td>
-      <td className="py-2 pr-3 whitespace-nowrap">
+      <td className="py-2 pe-3 whitespace-nowrap">
         {day.recorded_at ? <DateDisplay value={day.recorded_at} format="numeric" /> : <Missing />}
         {/* The badge reports the days the record took, not the days it ran over
             by: the window belongs to the regime, and doing that subtraction here
             would hard code one regime's number into a screen serving any. */}
         {day.late && (
-          <Badge variant="warning" size="sm" className="ml-1.5">
+          <Badge variant="warning" size="sm" className="ms-1.5">
             {t('field_time.working_time.late', {
               defaultValue: 'written up after {{count}} days',
               count: day.days_taken ?? 0,

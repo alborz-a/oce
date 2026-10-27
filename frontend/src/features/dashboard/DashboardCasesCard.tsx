@@ -303,7 +303,7 @@ export function DashboardCasesCard() {
             defaultValue: 'Browse all {{count}} cases',
             count: PLAYBOOKS.length,
           })}
-          <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180" aria-hidden="true" />
         </button>
         {/* The way out. Narrowing steps through the same four widths Customize
             offers; hiding puts the card in the same hidden set. The hide
@@ -386,7 +386,7 @@ export function DashboardCasesCard() {
                 type="button"
                 onClick={() => navigate(`/cases/${pb.id}`)}
                 title={title}
-                className="group relative isolate flex flex-col overflow-hidden rounded-lg border border-border-light bg-surface-primary text-left shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                className="group relative isolate flex flex-col overflow-hidden rounded-lg border border-border-light bg-surface-primary text-start shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
               >
                 {/* Faint discipline wash behind the whole tile. */}
                 <span
@@ -438,7 +438,7 @@ export function DashboardCasesCard() {
                   )}
                   {inProgress && (
                     <span
-                      className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-oe-blue shadow-sm ring-2 ring-white"
+                      className="absolute end-2 top-2 h-2.5 w-2.5 rounded-full bg-oe-blue shadow-sm ring-2 ring-white"
                       title={t('cases.card.in_progress', { defaultValue: 'In progress' })}
                       aria-hidden="true"
                     />
@@ -483,7 +483,7 @@ export function DashboardCasesCard() {
             className="group relative isolate flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-oe-blue/40 bg-oe-blue/[0.05] px-2 py-3 text-center transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/60 hover:bg-oe-blue/10 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
           >
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-oe-blue/10 text-oe-blue ring-1 ring-inset ring-oe-blue/20 transition-transform group-hover:scale-105">
-              <ArrowRight size={18} strokeWidth={2} aria-hidden="true" />
+              <ArrowRight className="rtl:rotate-180"  size={18} strokeWidth={2} aria-hidden="true" />
             </span>
             <span className="text-xs font-semibold leading-snug text-oe-blue-text">
               {t('cases.dashboard_card.more_tile', {

@@ -153,7 +153,7 @@ export function BlockNode({ id, data, selected }: BlockNodeProps) {
           {block.expanded ? (
             <ChevronDown size={14} aria-hidden="true" />
           ) : (
-            <ChevronRight size={14} aria-hidden="true" />
+            <ChevronRight className="rtl:rotate-180"  size={14} aria-hidden="true" />
           )}
         </button>
       </div>

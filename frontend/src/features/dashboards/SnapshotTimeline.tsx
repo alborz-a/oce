@@ -123,7 +123,7 @@ export function SnapshotTimeline({
           onClick={handleCompareClick}
           data-testid="snapshot-timeline-compare-button"
         >
-          <GitCompareArrows className="mr-1 h-3 w-3" />
+          <GitCompareArrows className="me-1 h-3 w-3" />
           {t('dashboards.timeline_compare', { defaultValue: 'Compare' })}
           {comparing.length > 0 && ` (${comparing.length}/2)`}
         </Button>
@@ -166,7 +166,7 @@ export function SnapshotTimeline({
 
         {items.length > 0 && (
           <ol
-            className="relative ml-2 space-y-2 border-l border-border-light/60 pl-4"
+            className="relative ms-2 space-y-2 border-s border-border-light/60 ps-4"
             data-testid="snapshot-timeline-list"
           >
             {items.map((item) => (
@@ -222,7 +222,7 @@ function TimelineCard({
     : 'bg-border-light';
   const cardClass = useMemo(() => {
     const base =
-      'relative flex w-full cursor-pointer items-start gap-3 rounded border px-3 py-2 text-left transition hover:bg-surface-secondary';
+      'relative flex w-full cursor-pointer items-start gap-3 rounded border px-3 py-2 text-start transition hover:bg-surface-secondary';
     if (isActive) return `${base} border-emerald-500/40 bg-emerald-500/5`;
     if (isComparing) return `${base} border-sky-500/40 bg-sky-500/5`;
     return `${base} border-border-light/60`;
@@ -232,7 +232,7 @@ function TimelineCard({
     <li className="relative" data-testid={`snapshot-timeline-row-${item.id}`}>
       {/* Timeline dot. */}
       <span
-        className={`absolute -left-[21px] top-3 h-2.5 w-2.5 rounded-full ${dotClass}`}
+        className={`absolute -start-[21px] top-3 h-2.5 w-2.5 rounded-full ${dotClass}`}
         aria-hidden="true"
       />
       <button

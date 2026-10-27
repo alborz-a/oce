@@ -83,13 +83,13 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
         onClick={() => setOpen((v) => !v)}
         data-testid="preset-picker-trigger"
       >
-        <Bookmark className="mr-1 h-3 w-3" />
+        <Bookmark className="me-1 h-3 w-3" />
         {t('dashboards.presets_button', { defaultValue: 'Presets' })}
       </Button>
 
       {open && (
         <div
-          className="absolute right-0 z-30 mt-1 w-72 rounded border border-border-light bg-surface-primary shadow-lg"
+          className="absolute end-0 z-30 mt-1 w-72 rounded border border-border-light bg-surface-primary shadow-lg"
           data-testid="preset-picker-dropdown"
           role="menu"
         >
@@ -134,7 +134,7 @@ export function PresetPicker({ projectId, snapshot, onSelect }: PresetPickerProp
                 setShowSaveModal(true);
                 setOpen(false);
               }}
-              className="flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs text-oe-blue hover:bg-surface-secondary"
+              className="flex w-full items-center gap-2 rounded px-2 py-1 text-start text-xs text-oe-blue hover:bg-surface-secondary"
               data-testid="preset-picker-save-current"
             >
               <Plus className="h-3 w-3" />
@@ -193,7 +193,7 @@ function PresetGroup({
                 role="menuitem"
                 onClick={() => onSelect(p)}
                 data-testid={`${testIdPrefix}-${p.id}`}
-                className="flex flex-1 items-start gap-2 rounded px-2 py-1 text-left hover:bg-surface-secondary"
+                className="flex flex-1 items-start gap-2 rounded px-2 py-1 text-start hover:bg-surface-secondary"
               >
                 <Check className="mt-0.5 h-3 w-3 opacity-0 group-hover:opacity-100" />
                 <span className="flex-1">

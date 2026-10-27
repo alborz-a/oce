@@ -380,7 +380,7 @@ export function TemplateBuilder({ open, onClose, initial, projectId, onSaved }: 
               className={inputCls}
               value={tagsText}
               onChange={(e) => setTagsText(e.target.value)}
-              placeholder="safety, induction"
+              placeholder={t('forms.tags_placeholder', { defaultValue: 'safety, induction' })}
             />
           </label>
           {!isEdit && projectId && (
@@ -505,7 +505,7 @@ function PaletteButton({ meta, onClick }: { meta: FieldTypeMeta; onClick: () => 
     <button
       type="button"
       onClick={onClick}
-      className="flex items-start gap-2 rounded-lg border border-transparent p-2 text-left hover:border-border hover:bg-surface-secondary"
+      className="flex items-start gap-2 rounded-lg border border-transparent p-2 text-start hover:border-border hover:bg-surface-secondary"
     >
       <Icon size={16} className="mt-0.5 shrink-0 text-oe-blue" />
       <span className="min-w-0">
@@ -562,7 +562,7 @@ function FieldCard({ field, index, total, allFields, onPatch, onRemove, onDuplic
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="neutral" size="sm">
-              <Icon size={12} className="mr-1" />
+              <Icon size={12} className="me-1" />
               {meta.label}
             </Badge>
             {!isLayout && !isFormula && (
@@ -579,7 +579,7 @@ function FieldCard({ field, index, total, allFields, onPatch, onRemove, onDuplic
             )}
             {hasLogic && (
               <Badge variant="blue" size="sm">
-                <GitBranch size={11} className="mr-1" />
+                <GitBranch size={11} className="me-1" />
                 {t('forms.has_logic', { defaultValue: 'Logic' })}
               </Badge>
             )}
@@ -785,8 +785,8 @@ function DefaultValueInput({ field, onPatch }: FieldConfigProps) {
         value={field.default === true ? 'true' : 'false'}
         onChange={(e) => onPatch({ default: e.target.value === 'true' })}
       >
-        <option value="false">Unticked</option>
-        <option value="true">Ticked</option>
+        <option value="false">{t('forms.unticked', { defaultValue: 'Unticked' })}</option>
+        <option value="true">{t('forms.ticked', { defaultValue: 'Ticked' })}</option>
       </select>
     );
   }
@@ -814,9 +814,9 @@ function DefaultValueInput({ field, onPatch }: FieldConfigProps) {
         onChange={(e) => onPatch({ default: e.target.value || null })}
       >
         <option value="">-</option>
-        <option value="pass">Pass</option>
-        <option value="fail">Fail</option>
-        <option value="na">N/A</option>
+        <option value="pass">{t('forms.pass', { defaultValue: 'Pass' })}</option>
+        <option value="fail">{t('forms.fail', { defaultValue: 'Fail' })}</option>
+        <option value="na">{t('forms.na', { defaultValue: 'N/A' })}</option>
       </select>
     );
   }
@@ -1062,7 +1062,7 @@ function ExpanderToggle({
     >
       {icon}
       {label}
-      {dot && <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue" />}
+      {dot && <span className="ms-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue" />}
     </button>
   );
 }

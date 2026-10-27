@@ -321,7 +321,7 @@ function readPanelCollapsed(): boolean {
  * to localStorage. Click ``Focus`` to fly the viewer's camera;
  * ``Open`` deep links into the project-scoped map.
  *
- * Anchored to ``top-3 left-3`` over the Cesium canvas; the page
+ * Anchored to ``top-3 start-3`` over the Cesium canvas; the page
  * promotes the canvas to full width when this panel is overlay-mounted.
  *
  * Status rendering covers loading, error and empty cases so the user
@@ -356,7 +356,7 @@ function AnchoredProjectsOverlay({
         type="button"
         onClick={onToggleCollapsed}
         className={[
-          'absolute top-3 left-3 z-20 inline-flex items-center gap-2',
+          'absolute top-3 start-3 z-20 inline-flex items-center gap-2',
           'rounded-full border border-white/15 bg-slate-900/85 px-3 py-1.5',
           'text-xs font-medium text-white shadow-lg shadow-black/20 backdrop-blur-md',
           'ring-1 ring-white/5 transition hover:bg-slate-800/90',
@@ -374,7 +374,7 @@ function AnchoredProjectsOverlay({
         <span className="tabular-nums">
           {isLoading ? '…' : isError ? '!' : projects.length}
         </span>
-        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70" />
+        <ChevronRight size={13} strokeWidth={2.25} className="text-white/70 rtl:rotate-180" />
       </button>
     );
   }
@@ -383,7 +383,7 @@ function AnchoredProjectsOverlay({
     <aside
       className={[
         // Floating overlay — never claims the full map height.
-        'absolute top-3 left-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
+        'absolute top-3 start-3 z-20 flex w-72 max-w-[calc(100vw-1.5rem)] flex-col',
         'rounded-xl border border-white/15 bg-white/95 dark:bg-slate-900/90',
         'shadow-lg shadow-black/20 ring-1 ring-black/5 backdrop-blur-md',
         // Hide on phone-width so it doesn't cover the whole map; users
@@ -446,7 +446,7 @@ function AnchoredProjectsOverlay({
               defaultValue: 'Hide anchored projects',
             })}
           >
-            <ChevronLeft size={14} strokeWidth={2} />
+            <ChevronLeft className="rtl:rotate-180"  size={14} strokeWidth={2} />
           </button>
         </div>
       </div>
@@ -519,7 +519,7 @@ function AnchoredProjectsOverlay({
                         type="button"
                         onClick={() => onFocus(p)}
                         className={[
-                          'min-w-0 flex-1 truncate text-left text-xs font-medium',
+                          'min-w-0 flex-1 truncate text-start text-xs font-medium',
                           'text-content-primary hover:text-oe-blue',
                           'focus:outline-none focus-visible:underline',
                         ].join(' ')}
@@ -548,7 +548,7 @@ function AnchoredProjectsOverlay({
                         <ArrowUpRight size={11} strokeWidth={2.25} />
                       </Link>
                     </div>
-                    <div className="ml-4 mt-1 flex items-center gap-2 font-mono text-2xs text-content-tertiary">
+                    <div className="ms-4 mt-1 flex items-center gap-2 font-mono text-2xs text-content-tertiary">
                       <span className="tabular-nums">
                         {Number(p.lat).toFixed(4)},{' '}
                         {Number(p.lon).toFixed(4)}
@@ -618,9 +618,9 @@ function GeoSearchOverlay({
         // and the viewport minus our left offset and a 1 rem right gutter,
         // so the overlay never overflows the canvas at md/lg breakpoints.
         'pointer-events-none absolute top-3 z-20',
-        'left-3 w-[calc(100vw-1.5rem)] max-w-[520px]',
-        'md:left-[19.5rem] md:w-[calc(100vw-20.5rem)]',
-        'xl:left-1/2 xl:w-[calc(100vw-1.5rem)] xl:-translate-x-1/2',
+        'start-3 w-[calc(100vw-1.5rem)] max-w-[520px]',
+        'md:start-[19.5rem] md:w-[calc(100vw-20.5rem)]',
+        'xl:start-1/2 xl:w-[calc(100vw-1.5rem)] xl:-translate-x-1/2',
       ].join(' ')}
       data-testid="geo-search-overlay"
     >
@@ -985,7 +985,7 @@ export function GeoHubPage() {
         </p>
         {/* max-w-full + flex-wrap so the four pickers stack onto extra rows on
             a narrow screen instead of running off the side of the page. */}
-        <div className="ml-auto flex max-w-full flex-wrap items-center gap-2">
+        <div className="ms-auto flex max-w-full flex-wrap items-center gap-2">
           <EngineModePicker current={engine} onChange={setEngine} />
           {/* The 3D globe carries Cesium's projection picker; the 2D map
               carries the basemap picker (streets / minimal / paper). */}

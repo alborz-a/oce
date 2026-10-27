@@ -41,7 +41,7 @@ export function GeoHubAdminPage() {
             <Button
               variant="ghost"
               size="sm"
-              icon={<ArrowLeft size={14} strokeWidth={2} />}
+              icon={<ArrowLeft className="rtl:rotate-180"  size={14} strokeWidth={2} />}
               onClick={() => navigate('/geo')}
             >
               {t('common.back', { defaultValue: 'Back' })}

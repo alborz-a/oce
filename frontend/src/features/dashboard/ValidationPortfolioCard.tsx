@@ -189,7 +189,7 @@ function EstimateRow({ projectId, estimate }: { projectId: string; estimate: Por
         <ArrowRight
           size={12}
           aria-hidden="true"
-          className="shrink-0 text-content-quaternary group-hover:text-oe-blue"
+          className="shrink-0 text-content-quaternary group-hover:text-oe-blue rtl:rotate-180"
         />
       </Link>
     </li>
@@ -250,7 +250,7 @@ function ProjectBlock({ project, isActive }: { project: PortfolioProject; isActi
           className="mt-1.5 inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
         >
           {t('dashboard.validation_portfolio.open_estimates', { defaultValue: 'Open estimates' })}
-          <ArrowRight size={12} aria-hidden="true" />
+          <ArrowRight className="rtl:rotate-180"  size={12} aria-hidden="true" />
         </Link>
       ) : (
         <ul className="mt-1.5 space-y-0.5">
@@ -372,7 +372,7 @@ export function ValidationPortfolioCard() {
             ]}
           />
         )}
-        <ul className="max-h-[28rem] space-y-2 overflow-y-auto pr-1" data-testid="validation-portfolio-list">
+        <ul className="max-h-[28rem] space-y-2 overflow-y-auto pe-1" data-testid="validation-portfolio-list">
           {projects.map((project) => (
             <ProjectBlock
               key={project.project_id}

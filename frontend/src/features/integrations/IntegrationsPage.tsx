@@ -612,7 +612,7 @@ function InfoPopover({
         <Info size={15} />
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-30 mt-1 w-72 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg animate-fade-in">
+        <div className="absolute end-0 top-full z-30 mt-1 w-72 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg animate-fade-in">
           <p className="text-xs text-content-secondary leading-relaxed">{text}</p>
           {externalUrl && (
             <a
@@ -669,7 +669,7 @@ function CalendarFeedSection() {
           {feedUrl}
         </code>
         <Button variant="secondary" size="sm" onClick={handleCopy} className="shrink-0">
-          {copied ? <Check size={13} className="mr-1" /> : <Copy size={13} className="mr-1" />}
+          {copied ? <Check size={13} className="me-1" /> : <Copy size={13} className="me-1" />}
           {copied ? t('common.copied', 'Copied') : t('common.copy', 'Copy')}
         </Button>
       </div>
@@ -886,7 +886,7 @@ function ConnectModal({
             <label className="mb-1 block text-sm font-medium text-primary">
               {field.label}
               {field.key === 'signing_secret' && (
-                <span className="ml-1 text-2xs text-content-tertiary font-normal">
+                <span className="ms-1 text-2xs text-content-tertiary font-normal">
                   ({t('common.optional', 'optional')})
                 </span>
               )}
@@ -981,14 +981,14 @@ function ConnectModal({
           </Button>
           <Button variant="secondary" onClick={handleTest} disabled={testing}>
             {testing ? (
-              <Loader2 size={14} className="mr-1 animate-spin" />
+              <Loader2 size={14} className="me-1 animate-spin" />
             ) : (
-              <TestTube2 size={14} className="mr-1" />
+              <TestTube2 size={14} className="me-1" />
             )}
             {t('integrations.test_connection', 'Test Connection')}
           </Button>
           <Button onClick={handleSave} disabled={saving}>
-            {saving && <Loader2 size={16} className="mr-1 animate-spin" />}
+            {saving && <Loader2 size={16} className="me-1 animate-spin" />}
             {t('common.save', 'Save')}
           </Button>
         </div>
@@ -1241,7 +1241,7 @@ export function IntegrationsPage() {
                         size="sm"
                         onClick={() => setConnectingType(connector)}
                       >
-                        <Plus size={14} className="mr-1" />
+                        <Plus size={14} className="me-1" />
                         {isConnected
                           ? t('integrations.add_another', 'Add Another')
                           : t('integrations.connect', 'Connect')}

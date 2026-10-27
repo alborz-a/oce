@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
- * MarkupCommentsDrawer — right-side drawer showing the threaded comments
+ * MarkupCommentsDrawer — end-side drawer showing the threaded comments
  * for a single markup. Opens when a markup is selected and the user clicks
  * the "Comments" button in the takeoff toolbar.
  *
@@ -128,7 +128,7 @@ export function MarkupCommentsDrawer({ markupId, onClose }: Props): JSX.Element 
 
   return (
     <aside
-      className="fixed inset-y-0 right-0 z-40 flex h-full w-96 max-w-full flex-col border-l border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900"
+      className="fixed inset-y-0 end-0 z-40 flex h-full w-96 max-w-full flex-col border-s border-zinc-200 bg-white shadow-2xl dark:border-zinc-700 dark:bg-zinc-900"
       role="dialog"
       aria-label={t('takeoff.markup.comments_drawer', {
         defaultValue: 'Markup comments',
@@ -246,7 +246,7 @@ export function MarkupCommentsDrawer({ markupId, onClose }: Props): JSX.Element 
             ) : (
               <Send className="h-3 w-3" />
             )}
-            <span className="ml-1">
+            <span className="ms-1">
               {t('takeoff.markup.comment_send', { defaultValue: 'Send' })}
             </span>
           </Button>
