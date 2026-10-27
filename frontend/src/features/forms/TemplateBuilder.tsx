@@ -777,6 +777,7 @@ function ConfigRow({ label, children }: { label: string; children: React.ReactNo
 
 /** A default-value control shaped to the field type (bool / choice / text). */
 function DefaultValueInput({ field, onPatch }: FieldConfigProps) {
+  const { t } = useTranslation();
   const cls = clsx(inputCls, 'h-8 text-xs');
   if (field.type === 'checkbox') {
     return (
