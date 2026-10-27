@@ -55,7 +55,7 @@ export function RoleArt({ role, className, title, withKindBadge = false }: RoleA
             // A round badge (people are round) on an elevated plate so the
             // person mark stays legible over any tile colour, in the role's
             // own accent so it still belongs to this role.
-            'absolute -bottom-0.5 -right-0.5 inline-flex h-[40%] w-[40%] items-center justify-center rounded-full bg-surface-elevated ring-1 ring-inset ring-border-light',
+            'absolute -bottom-0.5 -end-0.5 inline-flex h-[40%] w-[40%] items-center justify-center rounded-full bg-surface-elevated ring-1 ring-inset ring-border-light',
             meta.tint.text,
           )}
         >

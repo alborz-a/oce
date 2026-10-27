@@ -157,7 +157,7 @@ export function GroupBoard({
             gap: tally.gap,
           })}
           {tally.gap > 0 && (
-            <span className="ml-1 text-[#b45309]">
+            <span className="ms-1 text-[#b45309]">
               {t('aiest.board.gap_hint', {
                 defaultValue:
                   'Gaps mean the catalogue for your currency is thin on that trade; switch catalogue or add a manual rate later.',

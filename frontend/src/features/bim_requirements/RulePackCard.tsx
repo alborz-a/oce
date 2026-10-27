@@ -116,7 +116,7 @@ export function RulePackCard({ pack, onSelect, testId }: RulePackCardProps) {
 
       <div className="flex flex-wrap items-center gap-1.5">
         <Badge variant="neutral" size="sm">
-          <Layers3 size={10} className="mr-1 inline" />
+          <Layers3 size={10} className="me-1 inline" />
           {t('rulePacks.rules_count', {
             defaultValue: '{{count}} rules',
             count: pack.rule_count,

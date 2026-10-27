@@ -101,9 +101,9 @@ export function WarrantyAlertsButton({ projectId, leadDays = 90 }: WarrantyAlert
         })}
       >
         {mutation.isPending ? (
-          <Loader2 size={14} className="mr-1 animate-spin" />
+          <Loader2 size={14} className="me-1 animate-spin" />
         ) : (
-          <BellRing size={14} className="mr-1" />
+          <BellRing size={14} className="me-1" />
         )}
         {confirming
           ? t('assets.alerts.notify', { defaultValue: 'Notify team' })

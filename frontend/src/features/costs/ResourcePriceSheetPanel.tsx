@@ -575,7 +575,7 @@ export function ResourcePriceSheetPanel({
           <div className="overflow-x-auto border-t border-border-light">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
-                <tr className="border-b border-border-light bg-surface-secondary/40 text-left">
+                <tr className="border-b border-border-light bg-surface-secondary/40 text-start">
                   <th className="px-5 py-2 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
                     {t('costs.resource_prices.col_resource', { defaultValue: 'Resource' })}
                   </th>
@@ -585,7 +585,7 @@ export function ResourcePriceSheetPanel({
                   <th className="px-3 py-2 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
                     {t('costs.resource_prices.col_unit', { defaultValue: 'Unit' })}
                   </th>
-                  <th className="px-3 py-2 text-right text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
+                  <th className="px-3 py-2 text-end text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
                     {t('costs.resource_prices.col_price', { defaultValue: 'Unit price' })}
                   </th>
                   <th className="px-5 py-2 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
@@ -653,7 +653,7 @@ export function ResourcePriceSheetPanel({
                                 name: row.resource_name,
                               })}
                               className={clsx(
-                                'w-28 rounded-md border bg-surface-primary px-2 py-1 text-right text-sm tabular-nums',
+                                'w-28 rounded-md border bg-surface-primary px-2 py-1 text-end text-sm tabular-nums',
                                 'focus:outline-none focus:ring-2 focus:ring-oe-blue/30',
                                 invalid
                                   ? 'border-semantic-error'
@@ -703,7 +703,7 @@ export function ResourcePriceSheetPanel({
                 <Button
                   variant="secondary"
                   size="sm"
-                  icon={<ChevronLeft size={14} />}
+                  icon={<ChevronLeft size={14} className="rtl:rotate-180" />}
                   disabled={page === 0}
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                 >
@@ -712,7 +712,7 @@ export function ResourcePriceSheetPanel({
                 <Button
                   variant="secondary"
                   size="sm"
-                  icon={<ChevronRight size={14} />}
+                  icon={<ChevronRight size={14} className="rtl:rotate-180" />}
                   iconPosition="right"
                   disabled={(page + 1) * PAGE_SIZE >= total}
                   onClick={() => setPage((p) => p + 1)}

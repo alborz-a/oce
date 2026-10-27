@@ -90,11 +90,11 @@ export function ChangeReviewButton({ boqId, onClick }: ChangeReviewButtonProps) 
       })}
       data-testid="boq-changes-btn"
     >
-      <FileDiff size={14} className="mr-1" />
+      <FileDiff size={14} className="me-1" />
       {t('boq.changes_btn', { defaultValue: 'Changes' })}
       {open > 0 && (
         <span
-          className="ml-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-amber-500 px-1 text-2xs font-semibold leading-[18px] text-white"
+          className="ms-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-amber-500 px-1 text-2xs font-semibold leading-[18px] text-white"
           aria-label={t('boq.changes_open_count', {
             defaultValue: 'Open flags: {{count}}',
             count: open,
@@ -316,13 +316,13 @@ export function ChangeReviewPanel({
   const selectedAppliable = proposals.filter((r) => r.appliable && selected.has(r.position_id));
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 flex">
+    <div className="fixed inset-y-0 end-0 z-50 flex">
       <div className="fixed inset-0 bg-black/20" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
         aria-label={t('boq.changes_title', { defaultValue: 'What changed since measuring' })}
-        className="relative ml-auto flex h-full w-full max-w-[480px] flex-col border-l border-border bg-surface-elevated shadow-2xl animate-slide-in-right"
+        className="relative ms-auto flex h-full w-full max-w-[480px] flex-col border-s border-border bg-surface-elevated shadow-2xl animate-slide-in-right"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -382,9 +382,9 @@ export function ChangeReviewPanel({
                 disabled={scanMutation.isPending}
               >
                 {scanMutation.isPending ? (
-                  <Loader2 size={14} className="mr-1 animate-spin" />
+                  <Loader2 size={14} className="me-1 animate-spin" />
                 ) : (
-                  <RefreshCw size={14} className="mr-1" />
+                  <RefreshCw size={14} className="me-1" />
                 )}
                 {t('boq.changes_scan', { defaultValue: 'Check for changes' })}
               </Button>
@@ -460,7 +460,7 @@ export function ChangeReviewPanel({
                   disabled={reviewMutation.isPending}
                   onClick={() => reviewMutation.mutate({ all_open: true })}
                 >
-                  <Check size={14} className="mr-1" />
+                  <Check size={14} className="me-1" />
                   {t('boq.changes_mark_all_reviewed', { defaultValue: 'Mark all reviewed' })}
                 </Button>
               </div>
@@ -570,9 +570,9 @@ export function ChangeReviewPanel({
                   onClick={() => applyMutation.mutate(selectedAppliable.map((r) => r.position_id))}
                 >
                   {applyMutation.isPending ? (
-                    <Loader2 size={14} className="mr-1 animate-spin" />
+                    <Loader2 size={14} className="me-1 animate-spin" />
                   ) : (
-                    <CheckCircle2 size={14} className="mr-1" />
+                    <CheckCircle2 size={14} className="me-1" />
                   )}
                   {t('boq.changes_qty_accept', {
                     defaultValue: 'Accept selected: {{count}}',
@@ -764,13 +764,13 @@ function ProposalRow({
           {row.appliable ? (
             <div className="mt-1 flex items-center gap-2 font-mono text-2xs">
               <span className="text-content-tertiary">{fmtQty(row.current_quantity)}</span>
-              <ArrowRight size={11} className="text-content-quaternary" />
+              <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
               <span className="font-semibold text-content-primary">{fmtQty(row.new_model_quantity)}</span>
               <span className="text-content-tertiary">{row.unit}</span>
               {Number.isFinite(deltaNum) && deltaNum !== 0 && (
                 <span
                   className={clsx(
-                    'ml-1 font-medium',
+                    'ms-1 font-medium',
                     deltaNum > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400',
                   )}
                 >

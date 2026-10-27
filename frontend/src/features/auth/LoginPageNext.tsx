@@ -456,7 +456,7 @@ export function LoginPageNext() {
       `}</style>
 
       {/* Preview badge — top-left so users know this is /login-next. */}
-      <div className="absolute top-4 left-4 z-30">
+      <div className="absolute top-4 start-4 z-30">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-white/40 bg-white/60 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-content-secondary backdrop-blur-md dark:border-white/10 dark:bg-white/10 dark:text-white/70">
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
@@ -469,7 +469,7 @@ export function LoginPageNext() {
       {/* Language switcher */}
       {/* [RSC-IRAN] hidden: language dropdown (Farsi only) — do not delete */}
       {false && (
-      <div className="absolute top-4 right-4 z-30" ref={langRef}>
+      <div className="absolute top-4 end-4 z-30" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
           className="flex items-center gap-2 rounded-xl border border-border-light bg-surface-primary px-3.5 py-2.5 text-sm font-medium text-content-secondary hover:bg-surface-secondary hover:border-oe-blue/30 transition-all shadow-sm"
@@ -480,7 +480,7 @@ export function LoginPageNext() {
           <ChevronDown size={14} className={`text-content-tertiary transition-transform ${langOpen ? 'rotate-180' : ''}`} />
         </button>
         {langOpen && (
-          <div className="absolute right-0 mt-2 w-56 max-h-80 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-1 animate-stagger-in">
+          <div className="absolute end-0 mt-2 w-56 max-h-80 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-1 animate-stagger-in">
             {sortLanguagesByName(SUPPORTED_LANGUAGES).map((lang) => {
               const isActive = i18n.language === lang.code;
               return (
@@ -571,7 +571,7 @@ export function LoginPageNext() {
             <span>{t('login.workspace_status_first', 'Empty workspace - sign in to set up your first project')}</span>
           </div>
 
-          {/* Copyright — left-bottom, sits below the hero content. */}
+          {/* Copyright — start-bottom, sits below the hero content. */}
           <div className="relative mt-auto pt-10 text-[11px] text-content-tertiary/80 dark:text-white/40">
             © 2026{' '}
             <a
@@ -657,7 +657,7 @@ export function LoginPageNext() {
                     </Link>
                   </div>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary">
+                    <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
                       <Lock size={15} />
                     </div>
                     <input
@@ -670,13 +670,13 @@ export function LoginPageNext() {
                       autoComplete="current-password"
                       required aria-required="true"
                       minLength={8}
-                      className="h-9 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary"
+                      className="h-9 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? t('auth.hide_password', 'Hide password') : t('auth.show_password', 'Show password')}
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-content-tertiary hover:text-content-secondary transition-colors"
+                      className="absolute inset-y-0 end-0 flex items-center pe-3 text-content-tertiary hover:text-content-secondary transition-colors"
                       tabIndex={-1}
                     >
                       {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -740,7 +740,7 @@ export function LoginPageNext() {
                         type="button"
                         onClick={() => handleDemoLogin(acct.email)}
                         disabled={demoLoading !== null}
-                        className="oe-glass-lite group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left transition-all hover:translate-y-[-1px] hover:border-oe-blue/30 disabled:opacity-50"
+                        className="oe-glass-lite group flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-start transition-all hover:translate-y-[-1px] hover:border-oe-blue/30 disabled:opacity-50"
                       >
                         <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${acct.color} text-white text-sm font-bold shadow-sm`}>
                           {demoLoading === acct.email ? (

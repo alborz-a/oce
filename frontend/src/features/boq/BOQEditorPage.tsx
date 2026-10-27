@@ -4987,12 +4987,12 @@ export function BOQEditorPage() {
             {boq.status === 'draft' ? t('boq.draft', { defaultValue: 'draft' }) : boq.status === 'final' ? t('boq.final', { defaultValue: 'final' }) : boq.status}
           </Badge>
           {boq.is_locked && (
-            <Badge variant="warning" size="sm" className="ml-2">
-              <Lock size={12} className="mr-1" /> {t('boq.locked', { defaultValue: 'LOCKED' })}
+            <Badge variant="warning" size="sm" className="ms-2">
+              <Lock size={12} className="me-1" /> {t('boq.locked', { defaultValue: 'LOCKED' })}
             </Badge>
           )}
           {boq.estimate_type && (
-            <Badge variant="neutral" size="sm" className="ml-2">
+            <Badge variant="neutral" size="sm" className="ms-2">
               {t(`boq.estimate_type_${boq.estimate_type}`, { defaultValue: boq.estimate_type })}
             </Badge>
           )}
@@ -5017,7 +5017,7 @@ export function BOQEditorPage() {
                 }}
                 title={t('boq.submit_review_tooltip', { defaultValue: 'Submit this estimate for review and approval' })}
               >
-                <CheckCircle size={14} className="mr-1" />
+                <CheckCircle size={14} className="me-1" />
                 {t('boq.submit_for_review', { defaultValue: 'Submit for Review' })}
               </Button>
             )}
@@ -5038,25 +5038,25 @@ export function BOQEditorPage() {
                   }
                 }}
               >
-                <ArrowLeft size={14} className="mr-1" />
+                <ArrowLeft size={14} className="me-1 rtl:rotate-180" />
                 {t('boq.request_changes', { defaultValue: 'Request Changes' })}
               </Button>
             )}
             {!boq.is_locked && isManager && (
               <Button variant="secondary" size="sm" onClick={handleLock} disabled={lockMutation.isPending} title={t('boq.lock_tooltip', { defaultValue: 'Lock prevents edits. Create a revision to make changes to a locked estimate.' })}>
-                <Lock size={14} className="mr-1" />
+                <Lock size={14} className="me-1" />
                 {t('boq.lock', { defaultValue: 'Lock Estimate' })}
               </Button>
             )}
             {boq.is_locked && isManager && (
               <Button variant="ghost" size="sm" onClick={handleUnlock} disabled={unlockMutation.isPending}>
-                <Lock size={14} className="mr-1" />
+                <Lock size={14} className="me-1" />
                 {t('boq.unlock', { defaultValue: 'Unlock' })}
               </Button>
             )}
             {boq.is_locked && (
               <Button variant="secondary" size="sm" onClick={handleCreateBudget} disabled={createBudgetMutation.isPending}>
-                <Wallet size={14} className="mr-1" />
+                <Wallet size={14} className="me-1" />
                 {t('boq.create_budget', { defaultValue: 'Create Budget' })}
               </Button>
             )}
@@ -5068,7 +5068,7 @@ export function BOQEditorPage() {
                 defaultValue: 'Re-pull quantities from linked BIM models',
               })}
             >
-              <RefreshCw size={14} className="mr-1" />
+              <RefreshCw size={14} className="me-1" />
               {t('boq.model_review_btn', { defaultValue: 'Model sync' })}
             </Button>
             {/* Quantity rules scoped to this bill: the rules page opens with
@@ -5100,7 +5100,7 @@ export function BOQEditorPage() {
                   )
                 }
               >
-                <SlidersHorizontal size={14} className="mr-1" />
+                <SlidersHorizontal size={14} className="me-1" />
                 {t('boq.qty_from_model_btn', { defaultValue: 'Quantities from the model' })}
               </Button>
             </span>
@@ -5120,7 +5120,7 @@ export function BOQEditorPage() {
                 defaultValue: 'Open the Validation dashboard for this BOQ',
               })}
             >
-              <ShieldCheck size={14} className="mr-1" />
+              <ShieldCheck size={14} className="me-1" />
               {t('boq.validate_dashboard_btn', { defaultValue: 'Validate' })}
             </Button>
             {/* A Russian local estimate opens its resource-index breakdown:
@@ -5138,7 +5138,7 @@ export function BOQEditorPage() {
                   defaultValue: 'Price this estimate by the resource-index method, with every multiplication shown',
                 })}
               >
-                <Percent size={14} className="mr-1" />
+                <Percent size={14} className="me-1" />
                 {t('boq.resource_index_btn', { defaultValue: 'Resource-index' })}
               </Button>
             )}
@@ -5150,11 +5150,11 @@ export function BOQEditorPage() {
                 defaultValue: 'Compare this estimate against another BOQ',
               })}
             >
-              <GitCompare size={14} className="mr-1" />
+              <GitCompare size={14} className="me-1" />
               {t('boq.compare_btn', { defaultValue: 'Compare' })}
             </Button>
             <Button variant="secondary" size="sm" onClick={handleCreateRevision} disabled={createRevisionMutation.isPending}>
-              <Copy size={14} className="mr-1" />
+              <Copy size={14} className="me-1" />
               {t('boq.create_revision', { defaultValue: 'Create Revision' })}
             </Button>
             <Button
@@ -5165,7 +5165,7 @@ export function BOQEditorPage() {
                 defaultValue: 'Clone this estimate into a what-if scenario and adjust it freely',
               })}
             >
-              <FlaskConical size={14} className="mr-1" />
+              <FlaskConical size={14} className="me-1" />
               {t('boq.scenario_btn', { defaultValue: 'What-if' })}
             </Button>
             {showCostPlan && (
@@ -5177,7 +5177,7 @@ export function BOQEditorPage() {
                   defaultValue: 'Roll this bill up into an NRM 1 elemental cost plan with cost per m2 GIFA',
                 })}
               >
-                <LayoutList size={14} className="mr-1" />
+                <LayoutList size={14} className="me-1" />
                 {t('cost_plan.open_button', { defaultValue: 'Cost plan' })}
               </Button>
             )}
@@ -5189,7 +5189,7 @@ export function BOQEditorPage() {
                 defaultValue: 'Overhead, profit, tax and contingency (OH&P)',
               })}
             >
-              <Percent size={14} className="mr-1" />
+              <Percent size={14} className="me-1" />
               {t('boq.markups_btn', { defaultValue: 'Markups' })}
             </Button>
             <Button
@@ -5200,7 +5200,7 @@ export function BOQEditorPage() {
                 defaultValue: 'Create a tender package from this estimate',
               })}
             >
-              <Send size={14} className="mr-1" />
+              <Send size={14} className="me-1" />
               {t('boq.tender_btn', { defaultValue: 'To tender' })}
             </Button>
             <BOQOutline positions={boq.positions} onJump={handleOutlineJump} />
@@ -5243,7 +5243,7 @@ export function BOQEditorPage() {
               onClick={handleCreateRevision}
               disabled={createRevisionMutation.isPending}
             >
-              <Copy size={14} className="mr-1" />
+              <Copy size={14} className="me-1" />
               {t('boq.create_revision', { defaultValue: 'Create Revision' })}
             </Button>
           </div>
@@ -5984,10 +5984,10 @@ export function BOQEditorPage() {
             />
             {/* Issue #136 — explicit parent picker so a sub-section at any
                 level (up to the {{max}} cap) can be created right here,
-                without hunting for the row right-click menu. */}
+                without hunting for the row end-click menu. */}
             <label className="block text-[11px] font-medium text-content-secondary mt-3 mb-1">
               {t('boq.section_parent', { defaultValue: 'Parent section' })}
-              <span className="text-content-tertiary font-normal ml-1">
+              <span className="text-content-tertiary font-normal ms-1">
                 ({t('common.optional', { defaultValue: 'optional' })})
               </span>
             </label>
@@ -6219,7 +6219,7 @@ export function BOQEditorPage() {
           <div className="relative w-full max-w-md rounded-2xl border border-border-light bg-surface-elevated shadow-2xl animate-form-scale-in">
             <button
               onClick={() => setShowVectorSetup(false)}
-              className="absolute top-3 right-3 p-1.5 rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
+              className="absolute top-3 end-3 p-1.5 rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
               aria-label={t('common.close', { defaultValue: 'Close' })}
             >
               <X size={16} />
@@ -6253,7 +6253,7 @@ export function BOQEditorPage() {
                 <button
                   onClick={handleIndexNow}
                   disabled={vectorIndexing}
-                  className="flex w-full items-center gap-3 rounded-xl border border-border-light px-4 py-3 text-left hover:bg-surface-secondary transition-colors group disabled:opacity-60"
+                  className="flex w-full items-center gap-3 rounded-xl border border-border-light px-4 py-3 text-start hover:bg-surface-secondary transition-colors group disabled:opacity-60"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
                     <Database size={16} className="text-emerald-500" />
@@ -6277,7 +6277,7 @@ export function BOQEditorPage() {
                 {/* Option 2: Go to import page */}
                 <button
                   onClick={() => { setShowVectorSetup(false); navigate('/costs/import'); }}
-                  className="flex w-full items-center gap-3 rounded-xl border border-border-light px-4 py-3 text-left hover:bg-surface-secondary transition-colors group"
+                  className="flex w-full items-center gap-3 rounded-xl border border-border-light px-4 py-3 text-start hover:bg-surface-secondary transition-colors group"
                 >
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
                     <Download size={16} className="text-blue-500" />

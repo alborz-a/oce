@@ -233,7 +233,7 @@ function AddLineForm({
       <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.col_forecast_cost', { defaultValue: 'FC cost' })} value={form.forecast_cost} onChange={(e) => set('forecast_cost', e.target.value)} />
       <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.col_forecast_value', { defaultValue: 'FC value' })} value={form.forecast_value} onChange={(e) => set('forecast_value', e.target.value)} />
       <Button variant="secondary" size="sm" disabled={mutation.isPending} onClick={() => mutation.mutate()}>
-        <Plus size={14} className="mr-1 shrink-0" />
+        <Plus size={14} className="me-1 shrink-0" />
         {t('cvr.add', { defaultValue: 'Add' })}
       </Button>
     </div>
@@ -274,15 +274,15 @@ function LinesTable({
     <div className="overflow-x-auto">
       <table className="w-full min-w-[720px] text-sm">
         <thead>
-          <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-            <th className="py-2 pr-3 font-medium">{t('cvr.col_code', { defaultValue: 'Code' })}</th>
-            <th className="py-2 pr-3 font-medium">{t('cvr.col_description', { defaultValue: 'Description' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_cost_to_date', { defaultValue: 'Cost to date' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_value_to_date', { defaultValue: 'Value to date' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_forecast_cost', { defaultValue: 'Forecast cost' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_forecast_value', { defaultValue: 'Forecast value' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_margin', { defaultValue: 'Margin' })}</th>
-            {canEdit && <th className="py-2 pl-1" />}
+          <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+            <th className="py-2 pe-3 font-medium">{t('cvr.col_code', { defaultValue: 'Code' })}</th>
+            <th className="py-2 pe-3 font-medium">{t('cvr.col_description', { defaultValue: 'Description' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_cost_to_date', { defaultValue: 'Cost to date' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_value_to_date', { defaultValue: 'Value to date' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_forecast_cost', { defaultValue: 'Forecast cost' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_forecast_value', { defaultValue: 'Forecast value' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_margin', { defaultValue: 'Margin' })}</th>
+            {canEdit && <th className="py-2 ps-1" />}
           </tr>
         </thead>
         <tbody>
@@ -290,8 +290,8 @@ function LinesTable({
             const marginPositive = toNum(line.margin_to_date) >= 0;
             return (
               <tr key={line.id} className="border-b border-border-light/60 hover:bg-surface-secondary/40">
-                <td className="py-2 pr-3 font-medium text-content-primary">{line.cost_code || '-'}</td>
-                <td className="py-2 pr-3 text-content-secondary">
+                <td className="py-2 pe-3 font-medium text-content-primary">{line.cost_code || '-'}</td>
+                <td className="py-2 pe-3 text-content-secondary">
                   <span className="inline-flex items-center gap-1.5">
                     {line.description || '-'}
                     {line.flags.length > 0 && (
@@ -301,15 +301,15 @@ function LinesTable({
                     )}
                   </span>
                 </td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{formatCurrency(line.cost_to_date, currency)}</td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{formatCurrency(line.value_to_date, currency)}</td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-tertiary">{formatCurrency(line.forecast_cost, currency)}</td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-tertiary">{formatCurrency(line.forecast_value, currency)}</td>
-                <td className={'py-2 pr-3 text-right font-semibold tabular-nums ' + (marginPositive ? 'text-semantic-success' : 'text-semantic-error')}>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{formatCurrency(line.cost_to_date, currency)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{formatCurrency(line.value_to_date, currency)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-tertiary">{formatCurrency(line.forecast_cost, currency)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-tertiary">{formatCurrency(line.forecast_value, currency)}</td>
+                <td className={'py-2 pe-3 text-end font-semibold tabular-nums ' + (marginPositive ? 'text-semantic-success' : 'text-semantic-error')}>
                   {formatCurrency(line.margin_to_date, currency)}
                 </td>
                 {canEdit && (
-                  <td className="py-2 pl-1 text-right">
+                  <td className="py-2 ps-1 text-end">
                     <div className="flex items-center justify-end gap-1">
                       <button
                         type="button"
@@ -337,12 +337,12 @@ function LinesTable({
         {summary && (
           <tfoot>
             <tr className="border-t-2 border-border-light font-semibold text-content-primary">
-              <td className="py-2 pr-3" colSpan={2}>{t('cvr.totals', { defaultValue: 'Totals' })}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(summary.total_cost_to_date, currency)}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(summary.total_value_to_date, currency)}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(summary.total_forecast_cost, currency)}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(summary.total_forecast_value, currency)}</td>
-              <td className={'py-2 pr-3 text-right tabular-nums ' + (toNum(summary.margin_to_date) >= 0 ? 'text-semantic-success' : 'text-semantic-error')}>
+              <td className="py-2 pe-3" colSpan={2}>{t('cvr.totals', { defaultValue: 'Totals' })}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(summary.total_cost_to_date, currency)}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(summary.total_value_to_date, currency)}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(summary.total_forecast_cost, currency)}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(summary.total_forecast_value, currency)}</td>
+              <td className={'py-2 pe-3 text-end tabular-nums ' + (toNum(summary.margin_to_date) >= 0 ? 'text-semantic-success' : 'text-semantic-error')}>
                 {formatCurrency(summary.margin_to_date, currency)}
               </td>
               {canEdit && <td />}
@@ -671,7 +671,7 @@ export function CvrPage() {
                 panel. Leads the cluster so charts are one obvious click away. */}
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <Button variant="primary" size="sm" onClick={() => setShowNewReport((v) => !v)}>
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
               {t('cvr.new_report', { defaultValue: 'New CVR month' })}
             </Button>
           </>
@@ -760,7 +760,7 @@ export function CvrPage() {
               <div className="flex items-center gap-2">
                 {canEdit && (
                   <Button variant="secondary" size="sm" disabled={finalizeMut.isPending} onClick={() => finalizeMut.mutate()}>
-                    <Lock size={14} className="mr-1 shrink-0" />
+                    <Lock size={14} className="me-1 shrink-0" />
                     {t('cvr.finalize', { defaultValue: 'Finalize' })}
                   </Button>
                 )}
@@ -809,7 +809,7 @@ export function CvrPage() {
                 onClick={handleExportCsv}
                 disabled={lines.length === 0}
               >
-                <Download size={14} className="mr-1 shrink-0" />
+                <Download size={14} className="me-1 shrink-0" />
                 {t('cvr.export_csv', { defaultValue: 'Export CSV' })}
               </Button>
             </div>
@@ -1022,7 +1022,7 @@ function CashflowPointForm({
       <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.cash_in', { defaultValue: 'Cash in' })} value={cashIn} onChange={(e) => setCashIn(e.target.value)} />
       <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.cash_out', { defaultValue: 'Cash out' })} value={cashOut} onChange={(e) => setCashOut(e.target.value)} />
       <Button variant="secondary" size="sm" disabled={mutation.isPending || !/^\d{4}-\d{2}$/.test(period)} onClick={() => mutation.mutate()}>
-        <Plus size={14} className="mr-1 shrink-0" />
+        <Plus size={14} className="me-1 shrink-0" />
         {t('cvr.add_point', { defaultValue: 'Add point' })}
       </Button>
     </div>
@@ -1085,12 +1085,12 @@ function CashflowPointsTable({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[520px] text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-              <th className="py-2 pr-3 font-medium">{t('cvr.col_period', { defaultValue: 'Period' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('cvr.cash_in', { defaultValue: 'Cash in' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('cvr.cash_out', { defaultValue: 'Cash out' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('cvr.point_net', { defaultValue: 'Net' })}</th>
-              <th className="py-2 pl-1" />
+            <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+              <th className="py-2 pe-3 font-medium">{t('cvr.col_period', { defaultValue: 'Period' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('cvr.cash_in', { defaultValue: 'Cash in' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('cvr.cash_out', { defaultValue: 'Cash out' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('cvr.point_net', { defaultValue: 'Net' })}</th>
+              <th className="py-2 ps-1" />
             </tr>
           </thead>
           <tbody>
@@ -1101,21 +1101,21 @@ function CashflowPointsTable({
                 : toNum(p.net);
               return (
                 <tr key={p.id} className="border-b border-border-light/60">
-                  <td className="py-2 pr-3 text-content-secondary">{p.period}</td>
+                  <td className="py-2 pe-3 text-content-secondary">{p.period}</td>
                   {editing ? (
                     <>
-                      <td className="py-1 pr-3">
+                      <td className="py-1 pe-3">
                         <input
-                          className={INPUT_CLS + ' text-right'}
+                          className={INPUT_CLS + ' text-end'}
                           inputMode="decimal"
                           value={draft.cash_in}
                           onChange={(e) => setDraft((d) => ({ ...d, cash_in: e.target.value }))}
                           aria-label={t('cvr.cash_in', { defaultValue: 'Cash in' })}
                         />
                       </td>
-                      <td className="py-1 pr-3">
+                      <td className="py-1 pe-3">
                         <input
-                          className={INPUT_CLS + ' text-right'}
+                          className={INPUT_CLS + ' text-end'}
                           inputMode="decimal"
                           value={draft.cash_out}
                           onChange={(e) => setDraft((d) => ({ ...d, cash_out: e.target.value }))}
@@ -1125,14 +1125,14 @@ function CashflowPointsTable({
                     </>
                   ) : (
                     <>
-                      <td className="py-2 pr-3 text-right tabular-nums text-semantic-success">{formatCurrency(p.cash_in, p.currency)}</td>
-                      <td className="py-2 pr-3 text-right tabular-nums text-semantic-error">{formatCurrency(p.cash_out, p.currency)}</td>
+                      <td className="py-2 pe-3 text-end tabular-nums text-semantic-success">{formatCurrency(p.cash_in, p.currency)}</td>
+                      <td className="py-2 pe-3 text-end tabular-nums text-semantic-error">{formatCurrency(p.cash_out, p.currency)}</td>
                     </>
                   )}
-                  <td className={'py-2 pr-3 text-right font-semibold tabular-nums ' + (netPreview >= 0 ? 'text-content-primary' : 'text-semantic-error')}>
+                  <td className={'py-2 pe-3 text-end font-semibold tabular-nums ' + (netPreview >= 0 ? 'text-content-primary' : 'text-semantic-error')}>
                     {formatCurrency(netPreview, p.currency)}
                   </td>
-                  <td className="py-2 pl-1 text-right">
+                  <td className="py-2 ps-1 text-end">
                     {editing ? (
                       <div className="flex items-center justify-end gap-1">
                         <Button
@@ -1299,20 +1299,20 @@ function PaymentApplicationsSection({
         <div className="overflow-x-auto">
           <table className="w-full min-w-[620px] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-2 pr-3 font-medium">{t('cvr.col_application', { defaultValue: 'Application' })}</th>
-                <th className="py-2 pr-3 font-medium">{t('cvr.col_period', { defaultValue: 'Period' })}</th>
-                <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_gross', { defaultValue: 'Gross' })}</th>
-                <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_retention', { defaultValue: 'Retention' })}</th>
-                <th className="py-2 pr-3 text-right font-medium">{t('cvr.col_net', { defaultValue: 'Net due' })}</th>
-                <th className="py-2 pr-3 font-medium">{t('cvr.col_status', { defaultValue: 'Status' })}</th>
-                <th className="py-2 pl-1" />
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-2 pe-3 font-medium">{t('cvr.col_application', { defaultValue: 'Application' })}</th>
+                <th className="py-2 pe-3 font-medium">{t('cvr.col_period', { defaultValue: 'Period' })}</th>
+                <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_gross', { defaultValue: 'Gross' })}</th>
+                <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_retention', { defaultValue: 'Retention' })}</th>
+                <th className="py-2 pe-3 text-end font-medium">{t('cvr.col_net', { defaultValue: 'Net due' })}</th>
+                <th className="py-2 pe-3 font-medium">{t('cvr.col_status', { defaultValue: 'Status' })}</th>
+                <th className="py-2 ps-1" />
               </tr>
             </thead>
             <tbody>
               {applications.map((app) => (
                 <tr key={app.id} className="border-b border-border-light/60">
-                  <td className="py-2 pr-3 font-medium text-content-primary">
+                  <td className="py-2 pe-3 font-medium text-content-primary">
                     {app.application_number || '-'}
                     {app.progress_claim_id && claimLabelById.has(app.progress_claim_id) && (
                       <div className="text-2xs font-normal text-content-tertiary">
@@ -1323,11 +1323,11 @@ function PaymentApplicationsSection({
                       </div>
                     )}
                   </td>
-                  <td className="py-2 pr-3 text-content-secondary">{app.period}</td>
-                  <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{formatCurrency(app.gross_value, app.currency)}</td>
-                  <td className="py-2 pr-3 text-right tabular-nums text-content-tertiary">{formatCurrency(app.retention, app.currency)}</td>
-                  <td className="py-2 pr-3 text-right font-semibold tabular-nums text-content-primary">{formatCurrency(app.net_value, app.currency)}</td>
-                  <td className="py-2 pr-3">
+                  <td className="py-2 pe-3 text-content-secondary">{app.period}</td>
+                  <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{formatCurrency(app.gross_value, app.currency)}</td>
+                  <td className="py-2 pe-3 text-end tabular-nums text-content-tertiary">{formatCurrency(app.retention, app.currency)}</td>
+                  <td className="py-2 pe-3 text-end font-semibold tabular-nums text-content-primary">{formatCurrency(app.net_value, app.currency)}</td>
+                  <td className="py-2 pe-3">
                     <select
                       value={app.status}
                       disabled={statusMut.isPending}
@@ -1346,7 +1346,7 @@ function PaymentApplicationsSection({
                       ))}
                     </select>
                   </td>
-                  <td className="py-2 pl-1 text-right">
+                  <td className="py-2 ps-1 text-end">
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(app)}
@@ -1382,7 +1382,7 @@ function PaymentApplicationsSection({
         <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.col_gross', { defaultValue: 'Gross' })} value={gross} onChange={(e) => setGross(e.target.value)} />
         <input className={INPUT_CLS} inputMode="decimal" placeholder={t('cvr.col_retention', { defaultValue: 'Retention' })} value={retention} onChange={(e) => setRetention(e.target.value)} />
         <Button variant="secondary" size="sm" disabled={mutation.isPending || !/^\d{4}-\d{2}$/.test(period)} onClick={() => mutation.mutate()}>
-          <Plus size={14} className="mr-1 shrink-0" />
+          <Plus size={14} className="me-1 shrink-0" />
           {t('cvr.add', { defaultValue: 'Add' })}
         </Button>
       </div>

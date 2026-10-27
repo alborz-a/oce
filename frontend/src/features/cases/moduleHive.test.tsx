@@ -142,7 +142,7 @@ describe('the hexagon has one definition', () => {
     // `left: 0` and `left:0` alike. Case-sensitive, so `marginLeft` is safe.
     expect(source).not.toMatch(/\bleft\s*:/);
     // And the Tailwind half of the same mistake: `start-`/`end-`, not
-    // `left-`/`right-`.
+    // `start-`/`end-`.
     expect(source).not.toMatch(/["'\s](left|right)-/);
   });
 });

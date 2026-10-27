@@ -69,7 +69,7 @@ function RecentRunButton({
       onClick={onSelect}
       aria-current={active ? 'true' : undefined}
       className={clsx(
-        'block w-full rounded-lg border p-3 text-left transition-all duration-normal ease-oe',
+        'block w-full rounded-lg border p-3 text-start transition-all duration-normal ease-oe',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
         active
           ? 'border-oe-blue/60 bg-oe-blue-subtle/60 ring-1 ring-oe-blue/20'
@@ -91,7 +91,7 @@ function RecentRunButton({
           {t(`agents.status.${run.status}`, { defaultValue: run.status })}
         </span>
       </div>
-      {when && <div className="mt-1 pl-6 text-2xs text-content-tertiary">{when}</div>}
+      {when && <div className="mt-1 ps-6 text-2xs text-content-tertiary">{when}</div>}
     </button>
   );
 }

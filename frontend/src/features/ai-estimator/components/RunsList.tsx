@@ -90,7 +90,7 @@ export function RunsList({ runs, loading, error, onRetry, locale, onNew, onOpen 
                 <button
                   type="button"
                   onClick={() => onOpen(r.id)}
-                  className="flex w-full items-center gap-3 text-left"
+                  className="flex w-full items-center gap-3 text-start"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
                     <Wand2 className="h-4 w-4" />
@@ -121,7 +121,7 @@ export function RunsList({ runs, loading, error, onRetry, locale, onNew, onOpen 
                   >
                     {t(`aiest.status.run_${r.status}`, { defaultValue: r.status })}
                   </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-content-tertiary" />
+                  <ArrowRight className="h-4 w-4 shrink-0 text-content-tertiary rtl:rotate-180" />
                 </button>
               </Card>
             );

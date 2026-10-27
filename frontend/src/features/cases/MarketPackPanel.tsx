@@ -174,13 +174,13 @@ export function MarketPackPanel({ region, className = '' }: MarketPackPanelProps
             </p>
             {isApplied ? (
               <Badge variant="success" size="sm">
-                <Check size={10} className="mr-0.5" />
+                <Check size={10} className="me-0.5" />
                 {t('modules.active', { defaultValue: 'Active' })}
               </Badge>
             ) : (
               !isAdmin && (
                 <Badge variant="neutral" size="sm">
-                  <ShieldCheck size={10} className="mr-0.5" />
+                  <ShieldCheck size={10} className="me-0.5" />
                   {t('modules.admin_only', { defaultValue: 'Admin only' })}
                 </Badge>
               )

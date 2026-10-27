@@ -70,7 +70,7 @@ export function DegradedBanner({ reason }: { reason: DegradedReason | null | und
           className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-500/40 bg-surface-primary px-2.5 py-1 font-semibold text-amber-800 transition-colors hover:bg-amber-500 hover:text-white dark:text-amber-100"
         >
           {cta.label}
-          <ArrowRight className="h-3 w-3" />
+          <ArrowRight className="h-3 w-3 rtl:rotate-180" />
         </Link>
       )}
     </div>

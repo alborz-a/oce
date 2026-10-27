@@ -271,7 +271,7 @@ export function AISmartPanel({
   // Bug 13: offset by app header height (52px = --oe-header-height) so the panel
   // does not cover the top app header / toolbar.
   //
-  // RTL fix: under `dir="rtl"`, our index.css flips `right-0` to `left: 0`, but
+  // RTL fix: under `dir="rtl"`, our index.css flips `end-0` to `left: 0`, but
   // `translate-x-full` still translates by +100% (rightward in screen space),
   // which would slide the closed panel into view instead of off-screen. Flip
   // the slide-off direction to `-translate-x-full` in RTL so the panel slides
@@ -279,7 +279,7 @@ export function AISmartPanel({
   const offTranslate = isRTL ? '-translate-x-full' : 'translate-x-full';
   return (
     <div
-      className={`fixed right-0 top-[52px] z-50 h-[calc(100%-52px)] w-[400px] bg-surface-elevated border-l border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
+      className={`fixed end-0 top-[52px] z-50 h-[calc(100%-52px)] w-[400px] bg-surface-elevated border-s border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : offTranslate
       }`}
     >
@@ -499,7 +499,7 @@ export function AISmartPanel({
                     {fmtWithCurrency(escalateResult.escalated_rate, locale, currencyCode)}
                   </p>
                 </div>
-                <span className="ml-auto text-xs font-bold text-green-600 dark:text-green-400">
+                <span className="ms-auto text-xs font-bold text-green-600 dark:text-green-400">
                   +{escalateResult.escalation_percent}%
                 </span>
               </div>
@@ -681,7 +681,7 @@ function ActionCard({ icon, title, subtitle, loading, disabled, onClick, expande
               : t('common.expand', { defaultValue: 'Expand' })}
             className="shrink-0 p-1 rounded hover:bg-surface-secondary transition-colors"
           >
-            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} className="rtl:rotate-180" />}
           </button>
         )}
       </div>

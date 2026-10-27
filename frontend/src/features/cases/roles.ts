@@ -88,7 +88,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-amber-500/10 text-amber-600 ring-amber-500/20 dark:text-amber-400',
       chip: 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300',
-      accent: 'border-l-amber-400/60',
+      accent: 'border-s-amber-400/60',
       text: 'text-amber-600 dark:text-amber-400',
     },
     categories: ['estimating', 'tendering'],
@@ -104,7 +104,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-teal-500/10 text-teal-600 ring-teal-500/20 dark:text-teal-400',
       chip: 'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:text-teal-300',
-      accent: 'border-l-teal-400/60',
+      accent: 'border-s-teal-400/60',
       text: 'text-teal-600 dark:text-teal-400',
     },
     categories: ['estimating', 'commercial', 'tendering'],
@@ -120,7 +120,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-orange-500/10 text-orange-600 ring-orange-500/20 dark:text-orange-400',
       chip: 'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300',
-      accent: 'border-l-orange-400/60',
+      accent: 'border-s-orange-400/60',
       text: 'text-orange-600 dark:text-orange-400',
     },
     categories: ['site', 'quality', 'planning'],
@@ -136,7 +136,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-blue-500/10 text-blue-600 ring-blue-500/20 dark:text-blue-400',
       chip: 'border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300',
-      accent: 'border-l-blue-400/60',
+      accent: 'border-s-blue-400/60',
       text: 'text-blue-600 dark:text-blue-400',
     },
     categories: ['planning', 'site', 'commercial', 'handover'],
@@ -152,7 +152,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-violet-500/10 text-violet-600 ring-violet-500/20 dark:text-violet-400',
       chip: 'border-violet-500/40 bg-violet-500/10 text-violet-700 dark:text-violet-300',
-      accent: 'border-l-violet-400/60',
+      accent: 'border-s-violet-400/60',
       text: 'text-violet-600 dark:text-violet-400',
     },
     categories: ['bim'],
@@ -168,7 +168,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-emerald-500/10 text-emerald-600 ring-emerald-500/20 dark:text-emerald-400',
       chip: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
-      accent: 'border-l-emerald-400/60',
+      accent: 'border-s-emerald-400/60',
       text: 'text-emerald-600 dark:text-emerald-400',
     },
     categories: ['tendering', 'commercial'],
@@ -184,7 +184,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-sky-500/10 text-sky-600 ring-sky-500/20 dark:text-sky-400',
       chip: 'border-sky-500/40 bg-sky-500/10 text-sky-700 dark:text-sky-300',
-      accent: 'border-l-sky-400/60',
+      accent: 'border-s-sky-400/60',
       text: 'text-sky-600 dark:text-sky-400',
     },
     categories: ['planning'],
@@ -200,7 +200,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-red-500/10 text-red-600 ring-red-500/20 dark:text-red-400',
       chip: 'border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300',
-      accent: 'border-l-red-400/60',
+      accent: 'border-s-red-400/60',
       text: 'text-red-600 dark:text-red-400',
     },
     categories: ['site', 'quality'],
@@ -216,7 +216,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-purple-500/10 text-purple-600 ring-purple-500/20 dark:text-purple-400',
       chip: 'border-purple-500/40 bg-purple-500/10 text-purple-700 dark:text-purple-300',
-      accent: 'border-l-purple-400/60',
+      accent: 'border-s-purple-400/60',
       text: 'text-purple-600 dark:text-purple-400',
     },
     categories: ['bim', 'estimating'],
@@ -233,7 +233,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-slate-500/10 text-slate-600 ring-slate-500/20 dark:text-slate-300',
       chip: 'border-slate-500/40 bg-slate-500/10 text-slate-700 dark:text-slate-300',
-      accent: 'border-l-slate-400/60',
+      accent: 'border-s-slate-400/60',
       text: 'text-slate-600 dark:text-slate-300',
     },
     categories: ['handover', 'quality'],
@@ -249,7 +249,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-green-500/10 text-green-600 ring-green-500/20 dark:text-green-400',
       chip: 'border-green-500/40 bg-green-500/10 text-green-700 dark:text-green-300',
-      accent: 'border-l-green-400/60',
+      accent: 'border-s-green-400/60',
       text: 'text-green-600 dark:text-green-400',
     },
     categories: ['commercial', 'tendering'],
@@ -265,7 +265,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-indigo-500/10 text-indigo-600 ring-indigo-500/20 dark:text-indigo-400',
       chip: 'border-indigo-500/40 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300',
-      accent: 'border-l-indigo-400/60',
+      accent: 'border-s-indigo-400/60',
       text: 'text-indigo-600 dark:text-indigo-400',
     },
     categories: ['commercial'],
@@ -281,7 +281,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-cyan-500/10 text-cyan-600 ring-cyan-500/20 dark:text-cyan-400',
       chip: 'border-cyan-500/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300',
-      accent: 'border-l-cyan-400/60',
+      accent: 'border-s-cyan-400/60',
       text: 'text-cyan-600 dark:text-cyan-400',
     },
     categories: ['commercial', 'tendering'],
@@ -297,7 +297,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-fuchsia-500/10 text-fuchsia-600 ring-fuchsia-500/20 dark:text-fuchsia-400',
       chip: 'border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-700 dark:text-fuchsia-300',
-      accent: 'border-l-fuchsia-400/60',
+      accent: 'border-s-fuchsia-400/60',
       text: 'text-fuchsia-600 dark:text-fuchsia-400',
     },
     categories: ['commercial'],
@@ -313,7 +313,7 @@ export const ROLE_META: RoleMeta[] = [
     tint: {
       tile: 'bg-rose-500/10 text-rose-600 ring-rose-500/20 dark:text-rose-400',
       chip: 'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300',
-      accent: 'border-l-rose-400/60',
+      accent: 'border-s-rose-400/60',
       text: 'text-rose-600 dark:text-rose-400',
     },
     categories: ['site'],

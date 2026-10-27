@@ -728,7 +728,7 @@ export function AiEstimatorPage() {
             <Button
               variant="ghost"
               size="sm"
-              icon={<ArrowLeft className="h-4 w-4" />}
+              icon={<ArrowLeft className="h-4 w-4 rtl:rotate-180" />}
               onClick={backToList}
             >
               {t('aiest.wizard.back_to_runs', { defaultValue: 'All estimates' })}
@@ -889,7 +889,7 @@ export function AiEstimatorPage() {
               <div className="flex items-center justify-between border-t border-border-light pt-4">
                 <Button
                   variant="ghost"
-                  icon={<ArrowLeft className="h-4 w-4" />}
+                  icon={<ArrowLeft className="h-4 w-4 rtl:rotate-180" />}
                   disabled={STAGE_INDEX[stage] === 1}
                   onClick={goBack}
                 >
@@ -907,7 +907,7 @@ export function AiEstimatorPage() {
                 {stage !== 'assembly' ? (
                   <Button
                     variant="primary"
-                    icon={<ArrowRight className="h-4 w-4" />}
+                    icon={<ArrowRight className="h-4 w-4 rtl:rotate-180" />}
                     iconPosition="right"
                     disabled={!canAdvance}
                     loading={confirmStageM.isPending}

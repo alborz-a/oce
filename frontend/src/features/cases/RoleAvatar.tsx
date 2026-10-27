@@ -94,7 +94,7 @@ export function RoleAvatar({ role, className, title }: RoleAvatarProps) {
         </g>
       </svg>
       {/* role badge: a small glyph that names the role at a glance */}
-      <span className="absolute -bottom-0.5 -right-0.5 flex h-[44%] w-[44%] items-center justify-center rounded-full bg-surface-primary shadow-sm ring-1 ring-border-light">
+      <span className="absolute -bottom-0.5 -end-0.5 flex h-[44%] w-[44%] items-center justify-center rounded-full bg-surface-primary shadow-sm ring-1 ring-border-light">
         <Badge className={clsx('h-[62%] w-[62%]', meta.avatarText)} strokeWidth={2.2} />
       </span>
     </span>

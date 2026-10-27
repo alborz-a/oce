@@ -628,7 +628,7 @@ function RoomsTab({ data }: { data: AccommodationDetail }) {
           onClick={() => setBulkOpen(true)}
           data-testid="accommodation-rooms-bulk-add"
         >
-          <Plus size={14} className="mr-1.5" aria-hidden="true" />
+          <Plus size={14} className="me-1.5" aria-hidden="true" />
           {t('accommodation.rooms.bulk_add', { defaultValue: 'Add rooms' })}
         </Button>
       </div>
@@ -669,7 +669,7 @@ function RoomsTab({ data }: { data: AccommodationDetail }) {
                 }),
               })}
               className={clsx(
-                'flex min-h-[68px] flex-col items-start rounded-lg border p-2.5 text-left text-xs transition hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
+                'flex min-h-[68px] flex-col items-start rounded-lg border p-2.5 text-start text-xs transition hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
                 ROOM_STATUS_STYLES[r.status],
               )}
             >
@@ -827,7 +827,7 @@ function AssignOccupantModal({
     >
       {disabled && (
         <div className="mb-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
-          <AlertTriangle className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
+          <AlertTriangle className="me-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
           {t('accommodation.assign.disabled', {
             defaultValue:
               'Room is {{status}} - change its status before booking.',
@@ -1056,7 +1056,7 @@ function BookingsTab({ data }: { data: AccommodationDetail }) {
           disabled={data.rooms.length === 0}
           data-testid="bookings-new-button"
         >
-          <Plus size={14} className="mr-1.5" aria-hidden="true" />
+          <Plus size={14} className="me-1.5" aria-hidden="true" />
           {t('accommodation.booking.actions.new', {
             defaultValue: 'New booking',
           })}
@@ -1220,7 +1220,7 @@ function BookingsList({
         className="hidden sm:block overflow-x-auto rounded-xl border border-border-light"
       >
         <table className="min-w-full text-sm">
-          <thead className="bg-surface-secondary/60 text-left text-xs uppercase tracking-wide text-content-tertiary">
+          <thead className="bg-surface-secondary/60 text-start text-xs uppercase tracking-wide text-content-tertiary">
             <tr>
               <th scope="col" className="px-3 py-2 font-medium">
                 {t('accommodation.bookings.col.room', { defaultValue: 'Room' })}
@@ -1250,7 +1250,7 @@ function BookingsList({
                   defaultValue: 'Source',
                 })}
               </th>
-              <th scope="col" className="px-3 py-2 font-medium text-right">
+              <th scope="col" className="px-3 py-2 font-medium text-end">
                 <span className="sr-only">
                   {t('common.actions')}
                 </span>
@@ -1295,7 +1295,7 @@ function BookingsList({
                     defaultValue: b.source,
                   })}
                 </td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-end">
                   <BookingActionMenu booking={b} onAction={handleAction} />
                 </td>
               </tr>
@@ -1451,7 +1451,7 @@ function BookingActionMenu({
       {open && actions.length > 0 && (
         <div
           role="menu"
-          className="absolute right-0 z-20 mt-1 min-w-[10rem] rounded-lg border border-border bg-surface-elevated shadow-lg"
+          className="absolute end-0 z-20 mt-1 min-w-[10rem] rounded-lg border border-border bg-surface-elevated shadow-lg"
           data-testid={`booking-actions-menu-${booking.id}`}
         >
           {actions.map((target) => (
@@ -1465,7 +1465,7 @@ function BookingActionMenu({
               }}
               data-testid={`booking-action-${target}-${booking.id}`}
               className={clsx(
-                'block w-full px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none',
+                'block w-full px-3 py-2 text-start text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none',
                 target === 'cancelled' && 'text-semantic-error',
               )}
             >
@@ -1491,7 +1491,7 @@ function BookingActionMenu({
 
 /**
  * Operator-friendly charges view:
- *   1. List active bookings as a left-rail picker (instead of asking the
+ *   1. List active bookings as a start-rail picker (instead of asking the
  *      user to paste a booking UUID — that was unusable).
  *   2. When a booking is selected, fetch its detail and render the
  *      charge list inline with an "Add charge" CTA.
@@ -1612,7 +1612,7 @@ function ChargesTab({ data }: { data: AccommodationDetail }) {
                   onClick={() => setSelectedBookingId(b.id)}
                   data-testid={`charges-pick-booking-${b.id}`}
                   className={clsx(
-                    'w-full px-3 py-2.5 text-left text-xs transition border-l-2 min-h-[56px]',
+                    'w-full px-3 py-2.5 text-start text-xs transition border-s-2 min-h-[56px]',
                     active
                       ? 'border-oe-blue bg-oe-blue/5'
                       : 'border-transparent hover:bg-surface-secondary/40',
@@ -1808,7 +1808,7 @@ function BookingChargesPanel({
           onClick={() => setEditorOpen(true)}
           data-testid="charges-add-button"
         >
-          <Plus size={12} className="mr-1" aria-hidden="true" />
+          <Plus size={12} className="me-1" aria-hidden="true" />
           {t('accommodation.charges.add', { defaultValue: 'Add charge' })}
         </Button>
       </div>
@@ -1835,7 +1835,7 @@ function BookingChargesPanel({
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm" data-testid="charges-table">
-            <thead className="bg-surface-secondary/60 text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <thead className="bg-surface-secondary/60 text-start text-xs uppercase tracking-wide text-content-tertiary">
               <tr>
                 <th className="px-3 py-2 font-medium">
                   {t('accommodation.charges.kind', { defaultValue: 'Kind' })}
@@ -1845,7 +1845,7 @@ function BookingChargesPanel({
                     defaultValue: 'Description',
                   })}
                 </th>
-                <th className="px-3 py-2 font-medium text-right">
+                <th className="px-3 py-2 font-medium text-end">
                   {t('accommodation.charges.amount', {
                     defaultValue: 'Amount',
                   })}
@@ -1855,7 +1855,7 @@ function BookingChargesPanel({
                     defaultValue: 'Status',
                   })}
                 </th>
-                <th className="px-3 py-2 font-medium text-right">
+                <th className="px-3 py-2 font-medium text-end">
                   <span className="sr-only">{t('common.actions')}</span>
                 </th>
               </tr>
@@ -1875,7 +1875,7 @@ function BookingChargesPanel({
                   <td className="px-3 py-2 text-xs text-content-secondary">
                     {c.description || '—'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums font-mono text-xs">
+                  <td className="px-3 py-2 text-end tabular-nums font-mono text-xs">
                     {c.amount}{' '}
                     <span className="text-content-tertiary">{c.currency}</span>
                   </td>
@@ -1891,7 +1891,7 @@ function BookingChargesPanel({
                       })}
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <ChargeRowActions
                       charge={c}
                       busy={
@@ -2100,7 +2100,7 @@ function ChargeRowActions({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-20 mt-1 min-w-[11rem] rounded-lg border border-border bg-surface-elevated shadow-lg"
+          className="absolute end-0 top-full z-20 mt-1 min-w-[11rem] rounded-lg border border-border bg-surface-elevated shadow-lg"
           data-testid={`charge-actions-menu-${charge.id}`}
         >
           {transitions.map((target) => (
@@ -2113,7 +2113,7 @@ function ChargeRowActions({
                 onTransition(target);
               }}
               data-testid={`charge-action-${target}-${charge.id}`}
-              className="block w-full px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
+              className="block w-full px-3 py-2 text-start text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
             >
               {t(`accommodation.charges.mark.${target}`, {
                 defaultValue:
@@ -2136,7 +2136,7 @@ function ChargeRowActions({
               onEdit();
             }}
             data-testid={`charge-edit-${charge.id}`}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
+            className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
           >
             <Pencil size={12} aria-hidden="true" />
             {t('accommodation.charges.edit', { defaultValue: 'Edit charge' })}
@@ -2149,7 +2149,7 @@ function ChargeRowActions({
               onDelete();
             }}
             data-testid={`charge-delete-${charge.id}`}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-semantic-error hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
+            className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs text-semantic-error hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
           >
             <Trash2 size={12} aria-hidden="true" />
             {t('accommodation.charges.delete', { defaultValue: 'Delete charge' })}
@@ -2873,7 +2873,7 @@ function SettingsTab({
             <p className="mt-0.5 text-xs text-content-tertiary">
               {t('accommodation.settings.general_hint', {
                 defaultValue:
-                  'Core metadata - name, address and links to the BIM model / Geo Hub coordinates that power the right-rail shortcuts.',
+                  'Core metadata - name, address and links to the BIM model / Geo Hub coordinates that power the end-rail shortcuts.',
               })}
             </p>
           </div>
@@ -3022,7 +3022,7 @@ function SettingsTab({
               onClick={() => setConfirmDeleteOpen(true)}
               data-testid="accommodation-delete-button"
             >
-              <Trash2 size={13} className="mr-1.5" aria-hidden="true" />
+              <Trash2 size={13} className="me-1.5" aria-hidden="true" />
               {t('accommodation.delete.cta', {
                 defaultValue: 'Delete accommodation',
               })}

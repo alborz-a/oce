@@ -226,7 +226,7 @@ export function CatalogPickerModal({ open, onClose, onSelect }: CatalogPickerMod
         {/* Search input */}
         <div className="px-6 py-3 border-b border-border-light shrink-0">
           <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
               <Search size={16} />
             </div>
             <input
@@ -243,7 +243,7 @@ export function CatalogPickerModal({ open, onClose, onSelect }: CatalogPickerMod
               className="h-10 w-full rounded-lg border border-border bg-surface-primary ps-10 pe-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400"
             />
             {loading && (
-              <div className="absolute inset-y-0 end-0 flex items-center pr-3">
+              <div className="absolute inset-y-0 end-0 flex items-center pe-3">
                 <Loader2 size={14} className="animate-spin text-content-quaternary" />
               </div>
             )}
@@ -254,7 +254,7 @@ export function CatalogPickerModal({ open, onClose, onSelect }: CatalogPickerMod
         <div className="flex-1 overflow-y-auto">
           {initialLoad && loading ? (
             <div className="flex items-center justify-center py-12 text-xs text-content-tertiary">
-              <Loader2 size={16} className="animate-spin mr-2" />
+              <Loader2 size={16} className="animate-spin me-2" />
               {t('common.loading', { defaultValue: 'Loading...' })}
             </div>
           ) : results.length === 0 ? (
@@ -281,7 +281,7 @@ export function CatalogPickerModal({ open, onClose, onSelect }: CatalogPickerMod
                   <button
                     key={res.id}
                     type="button"
-                    className="w-full text-left px-6 py-3 hover:bg-surface-secondary/50 transition-colors cursor-pointer focus:outline-none focus:bg-surface-secondary/50"
+                    className="w-full text-start px-6 py-3 hover:bg-surface-secondary/50 transition-colors cursor-pointer focus:outline-none focus:bg-surface-secondary/50"
                     onClick={() => onSelect(res)}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -308,7 +308,7 @@ export function CatalogPickerModal({ open, onClose, onSelect }: CatalogPickerMod
                           )}
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
+                      <div className="text-end shrink-0">
                         <div className="text-sm font-semibold text-content-primary tabular-nums">
                           {fmt(res.base_price)} {res.currency || ''}
                         </div>

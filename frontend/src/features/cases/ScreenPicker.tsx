@@ -119,7 +119,7 @@ export function ScreenPicker({ value, onPick, onClose }: ScreenPickerProps) {
         type="button"
         onClick={() => onPick(item.to, label(item))}
         className={clsx(
-          'group flex items-start gap-2.5 rounded-lg border p-2.5 text-left transition',
+          'group flex items-start gap-2.5 rounded-lg border p-2.5 text-start transition',
           chosen
             ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue/40'
             : 'border-border-light hover:border-oe-blue hover:bg-surface-secondary',
@@ -190,10 +190,10 @@ export function ScreenPicker({ value, onPick, onClose }: ScreenPickerProps) {
 
         <div className="border-b border-border-light p-4 pb-3">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
+            <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
             <Input
               ref={searchRef}
-              className="pl-9"
+              className="ps-9"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('cases.editor.pick_search', {
@@ -273,7 +273,7 @@ export function ScreenPicker({ value, onPick, onClose }: ScreenPickerProps) {
             onClick={() => onPick(custom.trim(), '')}
           >
             {t('cases.editor.pick_use', { defaultValue: 'Use it' })}
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </Button>
         </div>
       </div>

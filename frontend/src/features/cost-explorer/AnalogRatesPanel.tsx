@@ -178,11 +178,11 @@ export function AnalogRatesPanel({ nav }: { nav: CrossNav }) {
           <div className="overflow-x-auto rounded-lg border border-border-light bg-surface-primary">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-light bg-surface-secondary text-left text-xs text-content-tertiary">
+                <tr className="border-b border-border-light bg-surface-secondary text-start text-xs text-content-tertiary">
                   <th className="px-3 py-2 font-medium">{t('costExplorer.analogs.colRate', { defaultValue: 'Rate' })}</th>
                   <th className="px-3 py-2 font-medium">{t('costExplorer.analogs.colRegion', { defaultValue: 'Region' })}</th>
                   <th className="px-3 py-2 font-medium">{t('costExplorer.analogs.colUnit', { defaultValue: 'Unit' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('costExplorer.analogs.colPrice', { defaultValue: 'Price' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('costExplorer.analogs.colPrice', { defaultValue: 'Price' })}</th>
                   <th className="min-w-[11rem] px-3 py-2 font-medium">
                     <span className="inline-flex items-center gap-1">
                       <Layers className="h-3.5 w-3.5" aria-hidden />
@@ -215,7 +215,7 @@ export function AnalogRatesPanel({ nav }: { nav: CrossNav }) {
                       </td>
                       <td className="px-3 py-2.5">{item.region ? <Badge>{item.region}</Badge> : <span className="text-content-tertiary">-</span>}</td>
                       <td className="px-3 py-2.5 text-content-secondary">{item.unit || '-'}</td>
-                      <td className="px-3 py-2.5 text-right">
+                      <td className="px-3 py-2.5 text-end">
                         <div className="font-semibold tabular-nums text-content-primary">{fmtMoney(item.rate, item.currency)}</div>
                         {isLowest && (
                           <span className="mt-1 inline-block rounded bg-semantic-success/15 px-1.5 py-0.5 text-xs font-medium text-semantic-success">
@@ -251,7 +251,7 @@ export function AnalogRatesPanel({ nav }: { nav: CrossNav }) {
                         {steps.shown.length === 0 ? (
                           <span className="text-content-tertiary">-</span>
                         ) : (
-                          <ul className="list-disc space-y-0.5 pl-4">
+                          <ul className="list-disc space-y-0.5 ps-4">
                             {steps.shown.map((s, si) => (
                               <li key={`${si}-${s}`} className="text-xs text-content-secondary">
                                 {s}
@@ -278,7 +278,7 @@ export function AnalogRatesPanel({ nav }: { nav: CrossNav }) {
                               code: item.code,
                             })}
                           >
-                            <Copy className="mr-1 h-3.5 w-3.5" aria-hidden />
+                            <Copy className="me-1 h-3.5 w-3.5" aria-hidden />
                             {t('costExplorer.analogs.insert', { defaultValue: 'Insert' })}
                           </Button>
                           <button

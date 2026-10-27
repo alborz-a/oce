@@ -199,14 +199,14 @@ function ShimmerRow() {
       <td className="px-4 py-3">
         <div className="h-4 w-8 rounded bg-slate-200/70 dark:bg-slate-700/40" />
       </td>
-      <td className="px-4 py-3 text-right">
-        <div className="ml-auto h-4 w-14 rounded bg-slate-200/70 dark:bg-slate-700/40" />
+      <td className="px-4 py-3 text-end">
+        <div className="ms-auto h-4 w-14 rounded bg-slate-200/70 dark:bg-slate-700/40" />
       </td>
-      <td className="px-4 py-3 text-right">
-        <div className="ml-auto h-4 w-16 rounded bg-slate-200/70 dark:bg-slate-700/40" />
+      <td className="px-4 py-3 text-end">
+        <div className="ms-auto h-4 w-16 rounded bg-slate-200/70 dark:bg-slate-700/40" />
       </td>
-      <td className="px-4 py-3 text-right">
-        <div className="ml-auto h-4 w-20 rounded bg-slate-200/70 dark:bg-slate-700/40" />
+      <td className="px-4 py-3 text-end">
+        <div className="ms-auto h-4 w-20 rounded bg-slate-200/70 dark:bg-slate-700/40" />
       </td>
     </tr>
   );
@@ -252,7 +252,7 @@ function LoadingState({ isCad, fileName, fileSizeMB }: { isCad?: boolean; fileNa
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-gradient-radial from-sky-500/20 to-transparent blur-3xl"
+          className="pointer-events-none absolute -top-20 -end-20 h-48 w-48 rounded-full bg-gradient-radial from-sky-500/20 to-transparent blur-3xl"
         />
         <div className="relative px-6 pt-6 pb-2">
           <div className="flex items-center gap-3 mb-4">
@@ -265,10 +265,10 @@ function LoadingState({ isCad, fileName, fileSizeMB }: { isCad?: boolean; fileNa
             </div>
             <div className="text-xs text-content-quaternary tabular-nums shrink-0">
               {isCad && estimatedTotal > 0 && (
-                <span className="font-semibold text-oe-blue mr-2">{Math.round(progressPct)}%</span>
+                <span className="font-semibold text-oe-blue me-2">{Math.round(progressPct)}%</span>
               )}
               {elapsed > 0 && `${elapsed}s`}
-              {fileName && <span className="ml-2 text-content-tertiary truncate max-w-[120px] inline-block align-bottom">{fileName}</span>}
+              {fileName && <span className="ms-2 text-content-tertiary truncate max-w-[120px] inline-block align-bottom">{fileName}</span>}
             </div>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200/60 dark:bg-slate-700/40">
@@ -285,7 +285,7 @@ function LoadingState({ isCad, fileName, fileSizeMB }: { isCad?: boolean; fileNa
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left">
+              <tr className="border-b border-border-light text-start">
                 <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide">
                   {t('boq.pos', { defaultValue: 'Pos' })}
                 </th>
@@ -295,13 +295,13 @@ function LoadingState({ isCad, fileName, fileSizeMB }: { isCad?: boolean; fileNa
                 <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide">
                   {t('boq.unit', { defaultValue: 'Unit' })}
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right">
+                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end">
                   {t('common.quantity')}
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right">
+                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end">
                   {t('common.rate')}
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right">
+                <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end">
                   {t('boq.total', { defaultValue: 'Total' })}
                 </th>
               </tr>
@@ -422,7 +422,7 @@ function RecentEstimatesPanel({
                     onClick={() => !failed && !busy && onReopen(job.id)}
                     disabled={failed || busy}
                     className={clsx(
-                      'flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors',
+                      'flex w-full items-center gap-3 px-4 py-2.5 text-start transition-colors',
                       failed || busy
                         ? 'cursor-default opacity-70'
                         : 'hover:bg-surface-secondary/40 cursor-pointer',
@@ -478,7 +478,7 @@ function RecentEstimatesPanel({
                         <span className="font-mono text-sm font-medium text-content-primary">
                           {fmtMoney(job.grand_total, job.currency)}
                         </span>
-                        <ArrowRight size={14} className="text-content-tertiary" aria-hidden="true" />
+                        <ArrowRight size={14} className="text-content-tertiary rtl:rotate-180" aria-hidden="true" />
                       </div>
                     )}
                   </button>
@@ -753,7 +753,7 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border-light text-left">
+          <tr className="border-b border-border-light text-start">
             <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide w-20">
               {t('ai.col_pos', { defaultValue: 'Pos' })}
             </th>
@@ -763,13 +763,13 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
             <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide w-16">
               {t('ai.col_unit', { defaultValue: 'Unit' })}
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-24">
+            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-24">
               {t('common.quantity')}
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-28">
+            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-28">
               {t('ai.col_rate', { defaultValue: 'Unit Rate' })}
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-32">
+            <th className="px-4 py-3 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-32">
               {t('ai.col_total', { defaultValue: 'Total' })}
             </th>
           </tr>
@@ -815,10 +815,10 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
                   <td className="px-4 py-3 text-content-secondary">
                     {item.unit ? displayQty.unitFor(item.unit) : item.unit}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-content-primary">
+                  <td className="px-4 py-3 text-end font-mono text-content-primary">
                     {formatNumber(displayQty.convert(item.quantity, item.unit || '').value)}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-content-secondary">
+                  <td className="px-4 py-3 text-end font-mono text-content-secondary">
                     {bestMatch ? (
                       <div className="flex flex-col items-end gap-0.5">
                         <span className="line-through text-content-quaternary text-xs">
@@ -861,7 +861,7 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
                       formatNumber(displayQty.convertRate(item.unit_rate, item.unit || ''), currencyArg)
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono font-medium text-content-primary">
+                  <td className="px-4 py-3 text-end font-mono font-medium text-content-primary">
                     {bestMatch && matchAppliesToTotal(bestMatch) ? (
                       <div className="flex flex-col items-end gap-0.5">
                         <span className="line-through text-content-quaternary text-xs">
@@ -884,11 +884,11 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
           <tr className="border-t-2 border-border">
             <td
               colSpan={5}
-              className="px-4 py-4 text-right text-base font-semibold text-content-primary"
+              className="px-4 py-4 text-end text-base font-semibold text-content-primary"
             >
               {t('ai.grand_total', { defaultValue: 'Grand Total' })}
             </td>
-            <td className="px-4 py-4 text-right font-mono text-lg font-bold text-oe-blue">
+            <td className="px-4 py-4 text-end font-mono text-lg font-bold text-oe-blue">
               {enrichMap.size > 0 ? (
                 <div className="flex flex-col items-end gap-0.5">
                   <span className="line-through text-content-quaternary text-sm font-normal">
@@ -972,12 +972,12 @@ function QuantityTablesResult({ data }: { data: CadExtractResponse }) {
             <button
               type="button"
               onClick={() => toggleGroup(group.category)}
-              className="w-full flex items-center gap-3 px-4 py-3 bg-surface-secondary/50 hover:bg-surface-secondary transition-colors text-left"
+              className="w-full flex items-center gap-3 px-4 py-3 bg-surface-secondary/50 hover:bg-surface-secondary transition-colors text-start"
             >
               {isExpanded ? (
                 <ChevronDown size={16} className="text-content-tertiary shrink-0" />
               ) : (
-                <ChevronRight size={16} className="text-content-tertiary shrink-0" />
+                <ChevronRight size={16} className="text-content-tertiary shrink-0 rtl:rotate-180" />
               )}
               <span className="text-sm font-semibold text-content-primary flex-1">
                 {group.category}
@@ -989,7 +989,7 @@ function QuantityTablesResult({ data }: { data: CadExtractResponse }) {
                   defaultValue_other: '{{count}} types',
                 })}
               </span>
-              <div className="flex items-center gap-3 text-xs text-content-tertiary ml-3">
+              <div className="flex items-center gap-3 text-xs text-content-tertiary ms-3">
                 {group.totals.count > 0 && (
                   <span>{fmtNum(group.totals.count)} pcs</span>
                 )}
@@ -1010,23 +1010,23 @@ function QuantityTablesResult({ data }: { data: CadExtractResponse }) {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border-light/50 text-left">
+                    <tr className="border-b border-border-light/50 text-start">
                       <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide">
                         {t('common.type')}
                       </th>
                       <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide">
                         {t('ai.cad_col_material', { defaultValue: 'Material' })}
                       </th>
-                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-20">
+                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-20">
                         {t('ai.cad_col_count', { defaultValue: 'Count' })}
                       </th>
-                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-28">
+                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-28">
                         {swapUnit(t('ai.cad_col_volume', { defaultValue: 'Volume (m\u00b3)' }), 'm\u00b3')}
                       </th>
-                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-28">
+                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-28">
                         {swapUnit(t('ai.cad_col_area', { defaultValue: 'Area (m\u00b2)' }), 'm\u00b2')}
                       </th>
-                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-24">
+                      <th className="px-4 py-2 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-24">
                         {swapUnit(t('ai.cad_col_length', { defaultValue: 'Length (m)' }), 'm')}
                       </th>
                     </tr>
@@ -1039,10 +1039,10 @@ function QuantityTablesResult({ data }: { data: CadExtractResponse }) {
                       >
                         <td className="px-4 py-2 text-content-primary">{item.type}</td>
                         <td className="px-4 py-2 text-content-secondary text-xs">{item.material || '-'}</td>
-                        <td className="px-4 py-2 text-right font-mono text-content-primary">{fmtNum(item.count)}</td>
-                        <td className="px-4 py-2 text-right font-mono text-content-primary">{fmtNum(dVol(item.volume_m3))}</td>
-                        <td className="px-4 py-2 text-right font-mono text-content-primary">{fmtNum(dArea(item.area_m2))}</td>
-                        <td className="px-4 py-2 text-right font-mono text-content-primary">{fmtNum(dLen(item.length_m))}</td>
+                        <td className="px-4 py-2 text-end font-mono text-content-primary">{fmtNum(item.count)}</td>
+                        <td className="px-4 py-2 text-end font-mono text-content-primary">{fmtNum(dVol(item.volume_m3))}</td>
+                        <td className="px-4 py-2 text-end font-mono text-content-primary">{fmtNum(dArea(item.area_m2))}</td>
+                        <td className="px-4 py-2 text-end font-mono text-content-primary">{fmtNum(dLen(item.length_m))}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1051,10 +1051,10 @@ function QuantityTablesResult({ data }: { data: CadExtractResponse }) {
                       <td colSpan={2} className="px-4 py-2 text-xs font-semibold text-content-secondary uppercase">
                         {t('ai.cad_subtotal', { defaultValue: 'Subtotal' })}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono font-semibold text-content-primary">{fmtNum(group.totals.count)}</td>
-                      <td className="px-4 py-2 text-right font-mono font-semibold text-content-primary">{fmtNum(dVol(group.totals.volume_m3))}</td>
-                      <td className="px-4 py-2 text-right font-mono font-semibold text-content-primary">{fmtNum(dArea(group.totals.area_m2))}</td>
-                      <td className="px-4 py-2 text-right font-mono font-semibold text-content-primary">{fmtNum(dLen(group.totals.length_m))}</td>
+                      <td className="px-4 py-2 text-end font-mono font-semibold text-content-primary">{fmtNum(group.totals.count)}</td>
+                      <td className="px-4 py-2 text-end font-mono font-semibold text-content-primary">{fmtNum(dVol(group.totals.volume_m3))}</td>
+                      <td className="px-4 py-2 text-end font-mono font-semibold text-content-primary">{fmtNum(dArea(group.totals.area_m2))}</td>
+                      <td className="px-4 py-2 text-end font-mono font-semibold text-content-primary">{fmtNum(dLen(group.totals.length_m))}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1208,7 +1208,7 @@ function FilePreview({
           {ext && (
             <>
               {' '}
-              <Badge variant="neutral" size="sm" className="ml-1">
+              <Badge variant="neutral" size="sm" className="ms-1">
                 .{ext}
               </Badge>
             </>
@@ -1397,7 +1397,7 @@ function CadConverterSection({
               {s.num}
             </span>
             <span>{s.label}</span>
-            {i < 2 && <ArrowRight size={12} className="text-content-quaternary ml-1" />}
+            {i < 2 && <ArrowRight size={12} className="text-content-quaternary ms-1 rtl:rotate-180" />}
           </div>
         ))}
       </div>
@@ -1418,8 +1418,8 @@ function CadConverterSection({
               ) : (
                 <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-oe-blue-subtle">
                   <HardDrive size={18} className="text-oe-blue" />
-                  <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-oe-blue animate-ping" />
-                  <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-oe-blue" />
+                  <div className="absolute -top-0.5 -end-0.5 h-2.5 w-2.5 rounded-full bg-oe-blue animate-ping" />
+                  <div className="absolute -top-0.5 -end-0.5 h-2.5 w-2.5 rounded-full bg-oe-blue" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
@@ -1473,7 +1473,7 @@ function CadConverterSection({
             >
               {/* Recommended badge */}
               {!c.installed && !isInstalling && (
-                <div className="absolute -top-2 left-3 z-10">
+                <div className="absolute -top-2 start-3 z-10">
                   <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2 py-0.5 text-2xs font-bold text-white shadow-sm">
                     <Star size={9} />
                     {t('quantities.recommended', { defaultValue: 'Recommended' })}
@@ -1482,7 +1482,7 @@ function CadConverterSection({
               )}
 
               {/* Status badge */}
-              <div className="absolute top-2.5 right-2.5">
+              <div className="absolute top-2.5 end-2.5">
                 {isInstalling ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-2xs font-semibold text-blue-700 dark:text-blue-400">
                     <Loader2 size={10} className="animate-spin" />
@@ -2600,11 +2600,11 @@ export function QuickEstimatePage() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -left-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -top-40 -start-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-40 -right-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -bottom-40 -end-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
       />
 
       <div className="space-y-5 px-4 py-5 lg:px-6 lg:py-6">
@@ -2732,7 +2732,7 @@ export function QuickEstimatePage() {
                 variant="primary"
                 size="lg"
                 onClick={() => navigate('/settings')}
-                icon={<ArrowRight size={16} />}
+                icon={<ArrowRight size={16} className="rtl:rotate-180" />}
                 iconPosition="right"
                 className="btn-shimmer"
               >
@@ -2829,7 +2829,7 @@ export function QuickEstimatePage() {
                       {step}
                     </span>
                     {i < arr.length - 1 && (
-                      <ArrowRight size={10} className="text-content-quaternary" />
+                      <ArrowRight size={10} className="text-content-quaternary rtl:rotate-180" />
                     )}
                   </span>
                 ))}
@@ -2913,7 +2913,7 @@ export function QuickEstimatePage() {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-gradient-radial from-sky-500/15 to-transparent blur-3xl"
+          className="pointer-events-none absolute -top-24 -end-24 h-56 w-56 rounded-full bg-gradient-radial from-sky-500/15 to-transparent blur-3xl"
         />
         {/* Coloured section accent bar */}
         <div className="relative flex items-center gap-3 border-b border-white/40 px-5 py-3 dark:border-white/5">
@@ -3019,7 +3019,7 @@ export function QuickEstimatePage() {
                     className="w-full rounded-xl border border-white/50 bg-white/70 px-5 py-4 text-base text-content-primary placeholder:text-content-tertiary shadow-inner shadow-slate-900/[0.03] backdrop-blur-sm transition-all duration-normal ease-oe hover:border-violet-300/60 focus:border-violet-400 focus:bg-white/90 focus:outline-none focus:ring-2 focus:ring-violet-400/40 focus:shadow-[0_0_0_6px_rgba(139,92,246,0.08)] resize-none leading-relaxed dark:border-white/10 dark:bg-slate-900/50 dark:focus:bg-slate-900/70"
                     disabled={isPending}
                   />
-                  <div className="absolute bottom-3 right-3 text-xs text-content-tertiary tabular-nums">
+                  <div className="absolute bottom-3 end-3 text-xs text-content-tertiary tabular-nums">
                     {description.length > 0 && `${description.length} chars`}
                   </div>
                 </div>
@@ -3393,7 +3393,7 @@ export function QuickEstimatePage() {
                             <XCircle size={13} className="shrink-0 text-content-quaternary" />
                           )}
                           <span className="font-medium truncate">{c.name}</span>
-                          <span className="ml-auto text-[10px] opacity-60">{fmtList(c.extensions)}</span>
+                          <span className="ms-auto text-[10px] opacity-60">{fmtList(c.extensions)}</span>
                         </div>
                       ))}
                     </div>
@@ -3439,7 +3439,7 @@ export function QuickEstimatePage() {
                     className="w-full rounded-xl border border-border bg-surface-primary px-4 py-3 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)] transition-all duration-normal ease-oe hover:border-content-tertiary resize-none leading-relaxed font-mono"
                     disabled={isPending}
                   />
-                  <div className="absolute bottom-3 right-3 text-xs text-content-tertiary">
+                  <div className="absolute bottom-3 end-3 text-xs text-content-tertiary">
                     {pasteText.length > 0 && `${pasteText.length} chars`}
                   </div>
                 </div>
@@ -3630,7 +3630,7 @@ export function QuickEstimatePage() {
                 onClick={() => navigate(`/data-explorer?session=${cadColumnsData.session_id}`)}
                 className="shrink-0 whitespace-nowrap"
               >
-                <Database size={13} className="mr-1" />
+                <Database size={13} className="me-1" />
                 <span>{t('nav.cad_bim_explorer', { defaultValue: 'CAD-BIM BI Explorer' })}</span>
               </Button>
             </div>
@@ -3769,7 +3769,7 @@ export function QuickEstimatePage() {
                           return (
                             <th
                               key={key}
-                              className="px-3 py-1.5 text-left font-semibold text-content-tertiary uppercase tracking-wide whitespace-nowrap text-oe-blue"
+                              className="px-3 py-1.5 text-start font-semibold text-content-tertiary uppercase tracking-wide whitespace-nowrap text-oe-blue"
                             >
                               {key}{displayUnit ? ` (${displayUnit})` : ''}
                             </th>
@@ -3800,7 +3800,7 @@ export function QuickEstimatePage() {
                                 key={key}
                                 className={clsx(
                                   'px-3 py-1 whitespace-nowrap',
-                                  typeof val === 'number' ? 'text-right font-mono text-content-primary' : 'text-content-secondary',
+                                  typeof val === 'number' ? 'text-end font-mono text-content-primary' : 'text-content-secondary',
                                 )}
                               >
                                 {val === null || val === undefined || val === 'None' || val === ''
@@ -3924,7 +3924,7 @@ export function QuickEstimatePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-secondary/50 text-left">
+                  <tr className="border-b border-border-light bg-surface-secondary/50 text-start">
                     <th className="px-2 py-2.5 w-8" />
                     {(cadGroupResult.group_by || []).map((col) => (
                       <th key={col} className="px-4 py-2.5 text-xs font-semibold text-content-tertiary uppercase tracking-wide">
@@ -3936,12 +3936,12 @@ export function QuickEstimatePage() {
                       // Display boundary (#270): relabel to the user's system.
                       const displayUnit = unit ? displayQty.unitFor(unit) : unit;
                       return (
-                        <th key={col} className="px-4 py-2.5 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right">
+                        <th key={col} className="px-4 py-2.5 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end">
                           {col}{displayUnit ? ` (${displayUnit})` : ''}
                         </th>
                       );
                     })}
-                    <th className="px-4 py-2.5 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-right w-20">
+                    <th className="px-4 py-2.5 text-xs font-semibold text-content-tertiary uppercase tracking-wide text-end w-20">
                       {t('ai.cad_col_count', { defaultValue: 'Count' })}
                     </th>
                   </tr>
@@ -3978,7 +3978,7 @@ export function QuickEstimatePage() {
                               <td className="px-2 py-2">
                                 {isExpanded
                                   ? <ChevronDown size={14} className="text-content-tertiary" />
-                                  : <ChevronRight size={14} className="text-content-tertiary" />
+                                  : <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
                                 }
                               </td>
                               <td className="px-4 py-2 text-sm text-content-primary font-semibold">
@@ -3990,13 +3990,13 @@ export function QuickEstimatePage() {
                                 </td>
                               ))}
                               {sumCols.map((col) => (
-                                <td key={col} className="px-4 py-2 text-right font-mono text-sm font-semibold text-content-primary">
+                                <td key={col} className="px-4 py-2 text-end font-mono text-sm font-semibold text-content-primary">
                                   {(node.sums[col] || 0) > 0
                                     ? sumDisplay(col, node.sums[col] || 0).toLocaleString(getNumberLocale(), { minimumFractionDigits: 0, maximumFractionDigits: 2 })
                                     : '-'}
                                 </td>
                               ))}
-                              <td className="px-4 py-2 text-right font-mono text-sm font-semibold text-content-primary">
+                              <td className="px-4 py-2 text-end font-mono text-sm font-semibold text-content-primary">
                                 {node.count}
                               </td>
                             </tr>
@@ -4022,7 +4022,7 @@ export function QuickEstimatePage() {
                                     </button>
                                   </td>
                                   <td className="px-4 py-1.5 text-sm text-content-secondary ps-10">
-                                    <span className="text-border mr-1.5">|--</span>
+                                    <span className="text-border me-1.5">|--</span>
                                     {cleanValue(groupByCols[0]!, g.key_parts[groupByCols[0]!] || '')}
                                   </td>
                                   {groupByCols.slice(1).map((col) => (
@@ -4032,7 +4032,7 @@ export function QuickEstimatePage() {
                                   ))}
                                   {sumCols.map((col) => (
                                     <td key={col} className={clsx(
-                                      'px-4 py-1.5 text-right font-mono text-sm',
+                                      'px-4 py-1.5 text-end font-mono text-sm',
                                       (g.sums[col] ?? 0) > 0 ? 'text-content-primary font-medium' : 'text-content-quaternary',
                                     )}>
                                       {g.sums[col] != null && g.sums[col] > 0
@@ -4040,7 +4040,7 @@ export function QuickEstimatePage() {
                                         : '-'}
                                     </td>
                                   ))}
-                                  <td className="px-4 py-1.5 text-right font-mono text-sm font-medium text-content-primary">{g.count}</td>
+                                  <td className="px-4 py-1.5 text-end font-mono text-sm font-medium text-content-primary">{g.count}</td>
                                 </tr>
                               );
                             })}
@@ -4079,7 +4079,7 @@ export function QuickEstimatePage() {
                             ))}
                             {sumCols.map((col) => (
                               <td key={col} className={clsx(
-                                'px-4 py-1.5 text-right font-mono text-sm',
+                                'px-4 py-1.5 text-end font-mono text-sm',
                                 (g.sums[col] ?? 0) > 0 ? 'text-content-primary font-medium' : 'text-content-quaternary',
                               )}>
                                 {g.sums[col] != null && g.sums[col] > 0
@@ -4087,7 +4087,7 @@ export function QuickEstimatePage() {
                                   : '-'}
                               </td>
                             ))}
-                            <td className="px-4 py-1.5 text-right font-mono text-sm font-medium text-content-primary">{g.count}</td>
+                            <td className="px-4 py-1.5 text-end font-mono text-sm font-medium text-content-primary">{g.count}</td>
                           </tr>
                         );
                       });
@@ -4103,7 +4103,7 @@ export function QuickEstimatePage() {
                       {t('ai.cad_grand_total', { defaultValue: 'Grand Total' })}
                     </td>
                     {(cadGroupResult.sum_columns || []).map((col) => (
-                      <td key={col} className="px-4 py-2.5 text-right font-mono font-bold text-oe-blue">
+                      <td key={col} className="px-4 py-2.5 text-end font-mono font-bold text-oe-blue">
                         {computedTotals.sums[col] != null
                           ? displayQty
                               .convert(computedTotals.sums[col] ?? 0, cadColumnsData?.unit_labels?.[col] ?? '')
@@ -4112,7 +4112,7 @@ export function QuickEstimatePage() {
                           : '-'}
                       </td>
                     ))}
-                    <td className="px-4 py-2.5 text-right font-mono font-bold text-oe-blue">
+                    <td className="px-4 py-2.5 text-end font-mono font-bold text-oe-blue">
                       {computedTotals.count}
                     </td>
                   </tr>
@@ -4172,7 +4172,7 @@ export function QuickEstimatePage() {
         <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setElementDetailGroup(null)}>
           <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
           <div
-            className="relative w-full max-w-3xl bg-surface-primary shadow-2xl border-l border-border-light overflow-hidden flex flex-col animate-slide-in-right"
+            className="relative w-full max-w-3xl bg-surface-primary shadow-2xl border-s border-border-light overflow-hidden flex flex-col animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -4209,7 +4209,7 @@ export function QuickEstimatePage() {
               {elementDetailLoading && (
                 <div className="flex items-center justify-center py-16">
                   <Loader2 size={24} className="animate-spin text-oe-blue" />
-                  <span className="ml-2 text-sm text-content-secondary">
+                  <span className="ms-2 text-sm text-content-secondary">
                     {t('ai.cad_loading_elements', { defaultValue: 'Loading elements...' })}
                   </span>
                 </div>
@@ -4218,7 +4218,7 @@ export function QuickEstimatePage() {
                 <table className="w-full text-xs">
                   <thead className="sticky top-0 z-10">
                     <tr className="border-b border-border-light bg-surface-secondary/80 backdrop-blur">
-                      <th className="px-3 py-2 text-left font-semibold text-content-tertiary uppercase tracking-wide w-10">#</th>
+                      <th className="px-3 py-2 text-start font-semibold text-content-tertiary uppercase tracking-wide w-10">#</th>
                       {elementDetailData.columns.map((col) => {
                         // Display boundary (#270): append the user's unit so the
                         // converted numbers below are self-describing. Only
@@ -4230,7 +4230,7 @@ export function QuickEstimatePage() {
                             key={col}
                             className={clsx(
                               'px-3 py-2 font-semibold text-content-tertiary uppercase tracking-wide whitespace-nowrap',
-                              col in (elementDetailData.totals || {}) ? 'text-right' : 'text-left',
+                              col in (elementDetailData.totals || {}) ? 'text-end' : 'text-start',
                             )}
                           >
                             {col}{displayUnit ? ` (${displayUnit})` : ''}
@@ -4257,7 +4257,7 @@ export function QuickEstimatePage() {
                               key={col}
                               className={clsx(
                                 'px-3 py-1.5 whitespace-nowrap max-w-[200px] truncate',
-                                isNumeric ? 'text-right font-mono text-content-primary' : 'text-content-secondary',
+                                isNumeric ? 'text-end font-mono text-content-primary' : 'text-content-secondary',
                               )}
                               title={val != null ? String(val) : ''}
                             >
@@ -4289,7 +4289,7 @@ export function QuickEstimatePage() {
                             key={col}
                             className={clsx(
                               'px-3 py-2',
-                              total != null ? 'text-right font-mono font-bold text-oe-blue' : '',
+                              total != null ? 'text-end font-mono font-bold text-oe-blue' : '',
                             )}
                           >
                             {displayTotal != null

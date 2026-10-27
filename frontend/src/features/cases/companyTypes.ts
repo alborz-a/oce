@@ -51,7 +51,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-blue-500/10 text-blue-600 ring-blue-500/20 dark:text-blue-400',
       chip: 'border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-blue-300',
-      accent: 'border-l-blue-400/60',
+      accent: 'border-s-blue-400/60',
       text: 'text-blue-600 dark:text-blue-400',
     },
   },
@@ -64,7 +64,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-orange-500/10 text-orange-600 ring-orange-500/20 dark:text-orange-400',
       chip: 'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300',
-      accent: 'border-l-orange-400/60',
+      accent: 'border-s-orange-400/60',
       text: 'text-orange-600 dark:text-orange-400',
     },
   },
@@ -77,7 +77,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-green-500/10 text-green-600 ring-green-500/20 dark:text-green-400',
       chip: 'border-green-500/40 bg-green-500/10 text-green-700 dark:text-green-300',
-      accent: 'border-l-green-400/60',
+      accent: 'border-s-green-400/60',
       text: 'text-green-600 dark:text-green-400',
     },
   },
@@ -90,7 +90,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-purple-500/10 text-purple-600 ring-purple-500/20 dark:text-purple-400',
       chip: 'border-purple-500/40 bg-purple-500/10 text-purple-700 dark:text-purple-300',
-      accent: 'border-l-purple-400/60',
+      accent: 'border-s-purple-400/60',
       text: 'text-purple-600 dark:text-purple-400',
     },
   },
@@ -103,7 +103,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-pink-500/10 text-pink-600 ring-pink-500/20 dark:text-pink-400',
       chip: 'border-pink-500/40 bg-pink-500/10 text-pink-700 dark:text-pink-300',
-      accent: 'border-l-pink-400/60',
+      accent: 'border-s-pink-400/60',
       text: 'text-pink-600 dark:text-pink-400',
     },
   },
@@ -116,7 +116,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-yellow-500/10 text-yellow-600 ring-yellow-500/20 dark:text-yellow-400',
       chip: 'border-yellow-500/40 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300',
-      accent: 'border-l-yellow-400/60',
+      accent: 'border-s-yellow-400/60',
       text: 'text-yellow-600 dark:text-yellow-400',
     },
   },
@@ -129,7 +129,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-indigo-500/10 text-indigo-600 ring-indigo-500/20 dark:text-indigo-400',
       chip: 'border-indigo-500/40 bg-indigo-500/10 text-indigo-700 dark:text-indigo-300',
-      accent: 'border-l-indigo-400/60',
+      accent: 'border-s-indigo-400/60',
       text: 'text-indigo-600 dark:text-indigo-400',
     },
   },
@@ -142,7 +142,7 @@ export const COMPANY_TYPE_META: CompanyTypeMeta[] = [
     tint: {
       tile: 'bg-cyan-500/10 text-cyan-600 ring-cyan-500/20 dark:text-cyan-400',
       chip: 'border-cyan-500/40 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300',
-      accent: 'border-l-cyan-400/60',
+      accent: 'border-s-cyan-400/60',
       text: 'text-cyan-600 dark:text-cyan-400',
     },
   },

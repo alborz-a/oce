@@ -140,7 +140,7 @@ const CHANGELOG: ChangelogEntry[] = [
     date: '2026-09-21',
     tag: 'NEW',
     summary:
-      'An approved change order counts once in the project budget again, and one with no cost impact can be approved. An RFI prints as a PDF form in every left-to-right language, the desktop app has a text size setting, and the bill editor no longer freezes on price entry or drops the first digit typed. Large bills open faster, a unit rate built from resources is protected from paste and fill down, and funding obligations read in the user\'s language.',
+      'An approved change order counts once in the project budget again, and one with no cost impact can be approved. An RFI prints as a PDF form in every start-to-right language, the desktop app has a text size setting, and the bill editor no longer freezes on price entry or drops the first digit typed. Large bills open faster, a unit rate built from resources is protected from paste and fill down, and funding obligations read in the user\'s language.',
   },
   {
     version: '17.7.1',
@@ -672,7 +672,7 @@ const CHANGELOG: ChangelogEntry[] = [
     date: '2026-07-16',
     tag: 'NEW',
     summary:
-      'The files area becomes a real document workspace with a right-click menu, content search, paged folders, drag-and-drop upload, keyboard navigation and bulk status changes. Takeoff measurements can now link to issues and RFIs, the How it works guide highlights the actual control it describes, setup adapts to your company size, and the worked-case library gains twelve new cases with a connected step flow and an at-a-glance panel.',
+      'The files area becomes a real document workspace with a end-click menu, content search, paged folders, drag-and-drop upload, keyboard navigation and bulk status changes. Takeoff measurements can now link to issues and RFIs, the How it works guide highlights the actual control it describes, setup adapts to your company size, and the worked-case library gains twelve new cases with a connected step flow and an at-a-glance panel.',
   },
   {
     version: '11.8.0',
@@ -902,7 +902,7 @@ const CHANGELOG: ChangelogEntry[] = [
   { version: '1.9.6', date: '2026-04-19', tag: 'SECURITY', summary: 'Safer GAEB import, file-type validation, and exact decimal money math throughout.' },
   { version: '1.9.5', date: '2026-04-18',             summary: 'Aligned several module APIs and modernised translations.' },
   { version: '1.9.4', date: '2026-04-18',             summary: 'Transmittals edit and delete, DWG scale, line, polyline and circle tools, and safer links.' },
-  { version: '1.9.3', date: '2026-04-18',             summary: 'Background DWG uploads, right-click to create a task or link, and PDF export from the summary tab.' },
+  { version: '1.9.3', date: '2026-04-18',             summary: 'Background DWG uploads, end-click to create a task or link, and PDF export from the summary tab.' },
   { version: '1.9.2', date: '2026-04-18',             summary: 'Removed a duplicate BIM link button and disabled the unfinished 4D schedule with a tooltip.' },
   { version: '1.9.1', date: '2026-04-18',             summary: 'Better DWG click targeting, dashboard slicers and charts, saved views, and longer meeting minutes.' },
   { version: '1.9.0', date: '2026-04-17',             summary: 'Instant BOQ add, offline-first data loading, and a reliable quantity-rules list.' },

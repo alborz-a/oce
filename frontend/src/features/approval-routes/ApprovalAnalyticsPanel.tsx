@@ -363,7 +363,7 @@ function Th({ children, right }: { children: ReactNode; right?: boolean }) {
   return (
     <th
       className={`px-3 py-2 text-2xs font-semibold uppercase tracking-wider text-content-tertiary ${
-        right ? 'text-right' : 'text-left'
+        right ? 'text-end' : 'text-start'
       }`}
     >
       {children}
@@ -382,7 +382,7 @@ function Td({
 }) {
   return (
     <td
-      className={`px-3 py-2.5 text-xs tabular-nums ${right ? 'text-right' : 'text-left'} ${
+      className={`px-3 py-2.5 text-xs tabular-nums ${right ? 'text-end' : 'text-start'} ${
         muted ? 'text-content-tertiary' : 'text-content-secondary'
       }`}
     >

@@ -95,7 +95,7 @@ export function StageRail({
               disabled={!reachable}
               onClick={() => reachable && onJump(s.id)}
               className={clsx(
-                'group flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
+                'group flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-start transition-colors',
                 isCurrent
                   ? 'bg-oe-blue/10 ring-1 ring-oe-blue/30'
                   : reachable

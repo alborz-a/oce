@@ -207,7 +207,7 @@ export function RegisterPage() {
                   </div>
                   <span className="text-2xs font-semibold text-content-primary leading-tight">{item.title}</span>
                 </div>
-                <p className="text-2xs text-content-tertiary leading-snug pl-[26px]">{item.desc}</p>
+                <p className="text-2xs text-content-tertiary leading-snug ps-[26px]">{item.desc}</p>
               </div>
             );
           })}
@@ -363,7 +363,7 @@ export function RegisterPage() {
                     autoComplete="new-password"
                     required aria-required="true"
                     minLength={8}
-                    className="h-9 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary"
+                    className="h-9 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary"
                   />
                   <button
                     type="button"
@@ -380,7 +380,7 @@ export function RegisterPage() {
                     <div className={`h-1 flex-1 rounded-full transition-colors duration-normal ${password.length >= 8 ? 'bg-semantic-success' : 'bg-border'}`} />
                     <div className={`h-1 flex-1 rounded-full transition-colors duration-normal ${password.length >= 12 ? 'bg-semantic-success' : 'bg-border'}`} />
                     <div className={`h-1 flex-1 rounded-full transition-colors duration-normal ${/[A-Z]/.test(password) && /[0-9]/.test(password) ? 'bg-semantic-success' : 'bg-border'}`} />
-                    <span className="text-2xs text-content-tertiary ml-1">
+                    <span className="text-2xs text-content-tertiary ms-1">
                       {password.length < 8 ? t('auth.password_strength_weak', 'Weak') : password.length < 12 ? t('auth.password_strength_medium', 'Medium') : t('auth.password_strength_strong', 'Strong')}
                     </span>
                   </div>

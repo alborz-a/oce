@@ -400,7 +400,7 @@ export function MultiVariantPicker({
                   aria-controls={`mvp-slot-body-${slot.slotId}`}
                 >
                   <div className="mt-0.5 text-content-tertiary shrink-0">
-                    {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                    {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} className="rtl:rotate-180" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-0.5">

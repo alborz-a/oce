@@ -161,7 +161,7 @@ export function DiscoverAssetsModal({ projectId, onClose, onPromoted }: Discover
               'We ranked BIM elements that look like managed assets (equipment with manufacturers, serials, warranties). Pick the real ones to add them to the register.',
           })}
           {query.data && (
-            <span className="ml-1 text-content-tertiary">
+            <span className="ms-1 text-content-tertiary">
               {t('assets.discover.scan_stats', {
                 defaultValue:
                   'Scanned {{scanned}} elements across {{models}} models, {{tracked}} already tracked.',
@@ -196,7 +196,7 @@ export function DiscoverAssetsModal({ projectId, onClose, onPromoted }: Discover
             <table className="w-full text-sm" data-testid="discover-table">
               <thead className="sticky top-0 z-10 bg-surface-primary text-xs uppercase tracking-wider text-content-tertiary">
                 <tr>
-                  <th className="w-10 px-3 py-2 text-left">
+                  <th className="w-10 px-3 py-2 text-start">
                     <input
                       type="checkbox"
                       checked={allSelected}
@@ -205,9 +205,9 @@ export function DiscoverAssetsModal({ projectId, onClose, onPromoted }: Discover
                       data-testid="discover-select-all"
                     />
                   </th>
-                  <th className="px-3 py-2 text-left">{t('assets.col.element', { defaultValue: 'Element' })}</th>
-                  <th className="px-3 py-2 text-left">{t('assets.discover.col_why', { defaultValue: 'Why' })}</th>
-                  <th className="px-3 py-2 text-right">{t('assets.discover.col_score', { defaultValue: 'Score' })}</th>
+                  <th className="px-3 py-2 text-start">{t('assets.col.element', { defaultValue: 'Element' })}</th>
+                  <th className="px-3 py-2 text-start">{t('assets.discover.col_why', { defaultValue: 'Why' })}</th>
+                  <th className="px-3 py-2 text-end">{t('assets.discover.col_score', { defaultValue: 'Score' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -252,7 +252,7 @@ export function DiscoverAssetsModal({ projectId, onClose, onPromoted }: Discover
                         ))}
                       </div>
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <span className={`inline-block rounded-md border px-2 py-0.5 text-xs ${scoreTone(c.score)}`}>
                         {c.score}
                       </span>
@@ -285,9 +285,9 @@ export function DiscoverAssetsModal({ projectId, onClose, onPromoted }: Discover
               data-testid="discover-promote"
             >
               {promote.isPending ? (
-                <Loader2 size={14} className="mr-1 animate-spin" />
+                <Loader2 size={14} className="me-1 animate-spin" />
               ) : (
-                <CheckCircle2 size={14} className="mr-1" />
+                <CheckCircle2 size={14} className="me-1" />
               )}
               {t('assets.discover.promote', {
                 defaultValue: 'Add {{count}} to register',

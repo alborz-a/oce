@@ -442,7 +442,7 @@ export function TemplatesPage() {
             >
               {/* Selection indicator */}
               {isSelected && (
-                <div className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white animate-scale-in">
+                <div className="absolute top-3 end-3 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white animate-scale-in">
                   <Check size={12} strokeWidth={3} />
                 </div>
               )}
@@ -587,7 +587,7 @@ export function TemplatesPage() {
                   createMutation.isPending ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
-                    <ArrowRight size={16} />
+                    <ArrowRight size={16} className="rtl:rotate-180" />
                   )
                 }
                 onClick={handleCreate}

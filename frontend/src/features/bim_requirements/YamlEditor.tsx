@@ -125,7 +125,7 @@ export function YamlEditor({
             ref={gutterRef}
             aria-hidden="true"
             data-testid={`${testId}-gutter`}
-            className="select-none overflow-hidden bg-surface-secondary px-2 py-2 text-right font-mono text-[11px] leading-5 text-content-tertiary"
+            className="select-none overflow-hidden bg-surface-secondary px-2 py-2 text-end font-mono text-[11px] leading-5 text-content-tertiary"
             style={{ minWidth: '2.5rem' }}
           >
             {lineNumberLines.map((n) => (
@@ -157,7 +157,7 @@ export function YamlEditor({
         {parsed && !error && (
           <span
             data-testid={`${testId}-parsed-badge`}
-            className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700"
+            className="absolute end-2 top-2 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700"
           >
             <CheckCircle2 size={10} />
             parsed

@@ -120,12 +120,12 @@ export default function BindDocumentModal({
             {t('closeout.bind.from_documents', { defaultValue: 'From project documents' })}
           </div>
           <div className="relative mb-2">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-content-tertiary" />
+            <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-content-tertiary" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('closeout.bind.search', { defaultValue: 'Search documents' })}
-              className="pl-8"
+              className="ps-8"
             />
           </div>
           <div className="max-h-64 overflow-y-auto rounded-lg border border-border divide-y divide-border">
@@ -154,7 +154,7 @@ export default function BindDocumentModal({
                     setSelectedDocId(d.id);
                     setExternalUrl('');
                   }}
-                  className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary ${
+                  className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm hover:bg-surface-secondary ${
                     selectedDocId === d.id ? 'bg-surface-secondary' : ''
                   }`}
                 >

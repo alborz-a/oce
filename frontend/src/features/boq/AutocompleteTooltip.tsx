@@ -202,7 +202,7 @@ export function AutocompleteTooltip({
           </span>
           <span className="text-sm font-semibold tabular-nums">
             {formatNumber(item.rate)} {currencySymbol}
-            <span className="ml-1 text-[10px] text-content-tertiary uppercase">
+            <span className="ms-1 text-[10px] text-content-tertiary uppercase">
               {t('boq.autocomplete_tooltip_unit', { defaultValue: '/' })}
               {item.unit}
             </span>
@@ -249,7 +249,7 @@ export function AutocompleteTooltip({
             >
               <Layers size={11} className="mt-0.5 shrink-0 text-content-tertiary" />
               <span className="leading-snug">
-                <span className="text-[9px] uppercase tracking-wider text-content-tertiary mr-1">
+                <span className="text-[9px] uppercase tracking-wider text-content-tertiary me-1">
                   {t('boq.autocomplete_tooltip_classification', {
                     defaultValue: 'Classification',
                   })}

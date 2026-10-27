@@ -475,7 +475,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-label={t('boq.markups_title', { defaultValue: 'Markups & Overheads' })}
-        className="flex w-full items-center justify-between px-5 py-3 text-left hover:bg-surface-secondary/50 transition-colors"
+        className="flex w-full items-center justify-between px-5 py-3 text-start hover:bg-surface-secondary/50 transition-colors"
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-content-primary">
@@ -514,7 +514,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                 <ChevronDown size={12} className="shrink-0" />
               </button>
               {showRegionMenu && (
-                <div className="absolute top-full left-0 mt-1 z-20 min-w-[280px] max-h-[400px] overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg py-1">
+                <div className="absolute top-full start-0 mt-1 z-20 min-w-[280px] max-h-[400px] overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg py-1">
                   {REGIONS.map((region) => (
                     <button
                       key={region.code}
@@ -526,7 +526,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                         applyDefaultsMutation.mutate(region.code);
                       }}
                       disabled={applyDefaultsMutation.isPending}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-surface-secondary transition-colors flex items-center gap-2.5"
+                      className="w-full text-start px-3 py-2 text-sm hover:bg-surface-secondary transition-colors flex items-center gap-2.5"
                     >
                       <span className="text-base leading-none">{region.flag}</span>
                       <div className="min-w-0">
@@ -607,10 +607,10 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary/20 text-content-tertiary text-xs">
                     <th className="w-6 px-2 py-2" />
-                    <th className="text-left px-3 py-2 font-medium">{t('boq.markup_name', { defaultValue: 'Name' })}</th>
-                    <th className="text-left px-3 py-2 font-medium">{t('boq.markup_category', { defaultValue: 'Category' })}</th>
-                    <th className="text-right px-3 py-2 font-medium w-20">{t('boq.markup_percentage', { defaultValue: '%' })}</th>
-                    <th className="text-right px-3 py-2 font-medium w-32">{t('boq.markup_amount', { defaultValue: 'Amount' })}</th>
+                    <th className="text-start px-3 py-2 font-medium">{t('boq.markup_name', { defaultValue: 'Name' })}</th>
+                    <th className="text-start px-3 py-2 font-medium">{t('boq.markup_category', { defaultValue: 'Category' })}</th>
+                    <th className="text-end px-3 py-2 font-medium w-20">{t('boq.markup_percentage', { defaultValue: '%' })}</th>
+                    <th className="text-end px-3 py-2 font-medium w-32">{t('boq.markup_amount', { defaultValue: 'Amount' })}</th>
                     <th className="text-center px-3 py-2 font-medium w-16">{t('boq.markup_active', { defaultValue: 'Active' })}</th>
                     <th className="w-10 px-2 py-2" />
                   </tr>
@@ -726,7 +726,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                             decided. Offering an editable percentage on those
                             would take a number the estimator typed and price
                             nothing with it. */}
-                        <td className="px-3 py-2 text-right">
+                        <td className="px-3 py-2 text-end">
                           {isEditing && editState.field === 'percentage' ? (
                             <input
                               autoFocus
@@ -736,7 +736,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                               onChange={(e) => setEditState({ ...editState, value: e.target.value })}
                               onBlur={handleCommitEdit}
                               onKeyDown={handleKeyDown}
-                              className="w-16 rounded border border-oe-blue px-1.5 py-0.5 text-sm text-right bg-surface-primary outline-none"
+                              className="w-16 rounded border border-oe-blue px-1.5 py-0.5 text-sm text-end bg-surface-primary outline-none"
                             />
                           ) : markup.markup_type === 'percentage' ? (
                             <span
@@ -751,7 +751,7 @@ export function MarkupPanel({ boqId, markups, directCost, currencySymbol, curren
                         </td>
 
                         {/* Amount */}
-                        <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                        <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                           {fmtWithCurrency(amount, locale, currencyCode)}
                         </td>
 

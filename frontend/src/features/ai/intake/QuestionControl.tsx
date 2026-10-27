@@ -116,13 +116,13 @@ export function QuestionControl({ question, value, onChange, disabled }: Questio
           className={clsx(
             'h-9 w-40 rounded-lg border border-border bg-surface-primary px-3 text-sm text-content-primary',
             'focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30',
-            question.unit && 'pr-12',
+            question.unit && 'pe-12',
             disabled && 'opacity-50',
           )}
           placeholder={question.unit ?? ''}
         />
         {question.unit && (
-          <span className="pointer-events-none absolute right-3 text-xs font-medium text-content-tertiary">
+          <span className="pointer-events-none absolute end-3 text-xs font-medium text-content-tertiary">
             {question.unit}
           </span>
         )}
@@ -135,7 +135,7 @@ export function QuestionControl({ question, value, onChange, disabled }: Questio
       <div className="flex items-start gap-1.5">
         <label id={inputId} htmlFor={question.kind === 'number' || question.kind === 'length' ? inputId : undefined} className="text-sm font-medium text-content-primary">
           {label}
-          {question.required && <span className="ml-0.5 text-semantic-error" aria-hidden>*</span>}
+          {question.required && <span className="ms-0.5 text-semantic-error" aria-hidden>*</span>}
         </label>
         {why && (
           <span className="group relative inline-flex" tabIndex={0} aria-label={why}>
@@ -143,7 +143,7 @@ export function QuestionControl({ question, value, onChange, disabled }: Questio
             <span
               id={whyId}
               role="tooltip"
-              className="pointer-events-none absolute left-5 top-0 z-20 hidden w-56 rounded-lg border border-border bg-surface-primary px-2.5 py-1.5 text-xs text-content-secondary shadow-lg group-hover:block group-focus-within:block"
+              className="pointer-events-none absolute start-5 top-0 z-20 hidden w-56 rounded-lg border border-border bg-surface-primary px-2.5 py-1.5 text-xs text-content-secondary shadow-lg group-hover:block group-focus-within:block"
             >
               {why}
             </span>

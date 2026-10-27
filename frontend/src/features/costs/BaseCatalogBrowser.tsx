@@ -594,7 +594,7 @@ export function BaseCatalogBrowser({
                 type="button"
                 aria-expanded={open}
                 onClick={() => toggleFamily(family.key)}
-                className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left shadow-xs transition-all duration-normal ease-oe hover:shadow-sm ${
+                className={`flex w-full items-center gap-3 rounded-xl border p-3 text-start shadow-xs transition-all duration-normal ease-oe hover:shadow-sm ${
                   open
                     ? 'border-border bg-surface-elevated'
                     : 'border-border-light bg-surface-elevated hover:border-border hover:bg-surface-secondary'
@@ -659,7 +659,7 @@ export function BaseCatalogBrowser({
                     </div>
                   )}
                 </div>
-                <div className="hidden shrink-0 text-right sm:block">
+                <div className="hidden shrink-0 text-end sm:block">
                   <div className="text-sm font-bold tabular-nums text-content-primary">
                     {positionsLabel(family.positions)}
                   </div>

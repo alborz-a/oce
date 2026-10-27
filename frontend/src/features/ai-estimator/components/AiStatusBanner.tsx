@@ -76,7 +76,7 @@ export function AiStatusBanner({ readiness }: { readiness: AiReadiness }) {
           className="inline-flex items-center gap-1 rounded-full border border-oe-blue/30 bg-surface-primary px-3 py-1.5 text-xs font-semibold text-oe-blue transition-colors hover:bg-oe-blue hover:text-content-inverse"
         >
           {t('aiest.status.connect_ai', { defaultValue: 'Connect an AI provider' })}
-          <ArrowRight className="h-3 w-3" />
+          <ArrowRight className="h-3 w-3 rtl:rotate-180" />
         </Link>
       )}
     </div>

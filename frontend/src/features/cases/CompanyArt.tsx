@@ -75,7 +75,7 @@ export function CompanyArt({
   const badge = withKindBadge ? (
     <span
       className={clsx(
-        'absolute -bottom-0.5 -right-0.5 inline-flex h-[40%] w-[40%] items-center justify-center rounded-md bg-surface-elevated ring-1 ring-inset ring-border-light',
+        'absolute -bottom-0.5 -end-0.5 inline-flex h-[40%] w-[40%] items-center justify-center rounded-md bg-surface-elevated ring-1 ring-inset ring-border-light',
         fallbackClass,
       )}
     >

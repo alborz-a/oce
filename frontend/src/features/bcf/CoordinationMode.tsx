@@ -185,7 +185,7 @@ export function CoordinationMode({
     : COMMON_STATUSES;
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-40 w-[min(680px,92vw)] -translate-x-1/2">
+    <div className="fixed bottom-4 start-1/2 z-40 w-[min(680px,92vw)] -translate-x-1/2">
       <div className="rounded-2xl border border-border-medium bg-surface-elevated p-3 shadow-2xl shadow-black/20">
         {/* Title row */}
         <div className="mb-2 flex items-center gap-2">
@@ -246,7 +246,7 @@ export function CoordinationMode({
                   size="sm"
                   onClick={() => go(-1)}
                   disabled={clampedIndex === 0}
-                  icon={<ChevronLeft size={16} />}
+                  icon={<ChevronLeft size={16} className="rtl:rotate-180" />}
                   aria-label={t('bcf.coordination_prev', { defaultValue: 'Previous issue' })}
                 />
                 <Button
@@ -254,7 +254,7 @@ export function CoordinationMode({
                   size="sm"
                   onClick={() => go(1)}
                   disabled={clampedIndex >= agenda.length - 1}
-                  icon={<ChevronRight size={16} />}
+                  icon={<ChevronRight size={16} className="rtl:rotate-180" />}
                   aria-label={t('bcf.coordination_next', { defaultValue: 'Next issue' })}
                 />
               </div>

@@ -330,7 +330,7 @@ function HowCrmWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -602,14 +602,14 @@ export function CRMPage() {
           <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
             />
             <input
               type="text"
               placeholder={t('common.search', { defaultValue: 'Search…' })}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className={clsx(inputCls, 'pl-8')}
+              className={clsx(inputCls, 'ps-8')}
             />
           </div>
         )}
@@ -926,7 +926,7 @@ function StageColumn({
             {count} · <MultiCurrencyTotal variant="inline" items={totalItems} compact />
           </p>
         </div>
-        <span className="ml-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-surface-primary px-1.5 text-[11px] font-medium text-content-secondary">
+        <span className="ms-2 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-surface-primary px-1.5 text-[11px] font-medium text-content-secondary">
           {count}
         </span>
       </div>
@@ -980,7 +980,7 @@ function DealCard({
         <button
           type="button"
           onClick={onClick}
-          className="min-w-0 flex-1 text-left"
+          className="min-w-0 flex-1 text-start"
         >
           <p className="truncate text-sm font-medium text-content-primary">
             {opp.title}
@@ -1044,22 +1044,22 @@ function DealsTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.title_col', { defaultValue: 'Deal' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.account', { defaultValue: 'Account' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.stage', { defaultValue: 'Stage' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('crm.value', { defaultValue: 'Value' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('crm.weighted', { defaultValue: 'Weighted' })}
             </th>
           </tr>
@@ -1101,13 +1101,13 @@ function DealsTable({
                     {oppStatusLabel(r.status, t)}
                   </Badge>
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <MoneyDisplay
                     amount={toNum(r.estimated_value)}
                     currency={r.currency || undefined}
                   />
                 </td>
-                <td className="px-4 py-2 text-right text-content-secondary">
+                <td className="px-4 py-2 text-end text-content-secondary">
                   <MoneyDisplay
                     amount={toNum(r.weighted_value)}
                     currency={r.currency || undefined}
@@ -1157,19 +1157,19 @@ function LeadsTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.contact', { defaultValue: 'Contact' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.account', { defaultValue: 'Account' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.source', { defaultValue: 'Source' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.created', { defaultValue: 'Created' })}
             </th>
           </tr>
@@ -1240,16 +1240,16 @@ function ActivitiesTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.kind', { defaultValue: 'Kind' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.subject', { defaultValue: 'Subject' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.due', { defaultValue: 'Due' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('crm.outcome', { defaultValue: 'Outcome' })}
             </th>
           </tr>
@@ -1554,7 +1554,7 @@ function DealDrawer({
                     {idx < stages.length - 1 && (
                       <ArrowRight
                         size={12}
-                        className="shrink-0 text-content-tertiary"
+                        className="shrink-0 text-content-tertiary rtl:rotate-180"
                       />
                     )}
                   </div>
@@ -1605,7 +1605,7 @@ function DealDrawer({
                           {t('crm.open_in_contacts', {
                             defaultValue: 'Open in Contacts',
                           })}
-                          <ArrowRight size={11} />
+                          <ArrowRight size={11} className="rtl:rotate-180" />
                         </Link>
                       </>
                     ) : (
@@ -1648,7 +1648,7 @@ function DealDrawer({
                         className="inline-flex items-center gap-1 text-sm font-medium text-oe-blue hover:underline"
                       >
                         {projectQ.data.name}
-                        <ArrowRight size={11} />
+                        <ArrowRight size={11} className="rtl:rotate-180" />
                       </Link>
                     ) : (
                       <p className="text-sm text-content-tertiary">
@@ -1768,12 +1768,12 @@ function DealDrawer({
               </p>
               <div className="flex flex-wrap gap-2">
                 <Link to="/bid-management">
-                  <Button variant="secondary" icon={<ArrowRight size={14} />}>
+                  <Button variant="secondary" icon={<ArrowRight size={14} className="rtl:rotate-180" />}>
                     {t('crm.go_bid', { defaultValue: 'Bid Management' })}
                   </Button>
                 </Link>
                 <Link to="/contracts">
-                  <Button variant="ghost" icon={<ArrowRight size={14} />}>
+                  <Button variant="ghost" icon={<ArrowRight size={14} className="rtl:rotate-180" />}>
                     {t('crm.go_contracts', { defaultValue: 'Contracts' })}
                   </Button>
                 </Link>
@@ -1796,7 +1796,7 @@ function DealDrawer({
           <Card padding="sm">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
               {t('crm.activities', { defaultValue: 'Activity' })}
-              <span className="ml-2 normal-case text-content-tertiary">
+              <span className="ms-2 normal-case text-content-tertiary">
                 ({(activitiesQ.data ?? []).length})
               </span>
             </p>
@@ -1898,7 +1898,7 @@ function DealDrawer({
                     >
                       <ArrowRight
                         size={13}
-                        className="mt-0.5 shrink-0 text-content-tertiary"
+                        className="mt-0.5 shrink-0 text-content-tertiary rtl:rotate-180"
                       />
                       <div className="flex-1">
                         <p className="text-sm">
@@ -1907,7 +1907,7 @@ function DealDrawer({
                               {from}{' '}
                               <ArrowRight
                                 size={11}
-                                className="inline align-middle text-content-tertiary"
+                                className="inline align-middle text-content-tertiary rtl:rotate-180"
                               />{' '}
                             </span>
                           ) : (
@@ -2301,7 +2301,7 @@ function LeadDrawer({
           {lead.status === 'qualified' && (
             <Card padding="sm">
               <div className="mb-1 flex items-center gap-2">
-                <ArrowRight size={14} className="text-oe-blue" />
+                <ArrowRight size={14} className="text-oe-blue rtl:rotate-180" />
                 <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary">
                   {t('crm.convert_to_deal', { defaultValue: 'Convert to deal' })}
                 </p>
@@ -2315,7 +2315,7 @@ function LeadDrawer({
               {!showConvert ? (
                 <Button
                   variant="primary"
-                  icon={<ArrowRight size={14} />}
+                  icon={<ArrowRight size={14} className="rtl:rotate-180" />}
                   onClick={() => setShowConvert(true)}
                 >
                   {t('crm.convert_to_deal', { defaultValue: 'Convert to deal' })}
@@ -2437,7 +2437,7 @@ function LeadDrawer({
                   <div className="flex gap-2 pt-1">
                     <Button
                       variant="primary"
-                      icon={<ArrowRight size={14} />}
+                      icon={<ArrowRight size={14} className="rtl:rotate-180" />}
                       onClick={() => convertMut.mutate()}
                       loading={convertMut.isPending}
                       disabled={convertDisabled}

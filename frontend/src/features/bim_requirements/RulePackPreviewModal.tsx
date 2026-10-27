@@ -446,7 +446,7 @@ export function RulePackPreviewModal({
                   : t('rulePacks.readonly_toggle', { defaultValue: 'View only' })}
               </button>
             )}
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ms-auto flex items-center gap-2">
               <label
                 htmlFor={`${testId}-model`}
                 className="text-[11px] font-medium text-content-secondary"
@@ -642,7 +642,7 @@ export function RulePackPreviewModal({
                         }
                         aria-expanded={isExpanded}
                         data-testid={`${testId}-test-mode-rule-${rule.id}-toggle`}
-                        className="flex w-full items-center justify-between gap-3 bg-surface-primary px-3 py-2 text-left hover:bg-surface-secondary"
+                        className="flex w-full items-center justify-between gap-3 bg-surface-primary px-3 py-2 text-start hover:bg-surface-secondary"
                       >
                         <span className="flex min-w-0 flex-1 items-center gap-2">
                           <span
@@ -675,7 +675,7 @@ export function RulePackPreviewModal({
                             className={clsx(
                               'text-content-tertiary transition-transform',
                               isExpanded && 'rotate-90',
-                            )}
+                            'rtl:rotate-180')}
                           />
                         </span>
                       </button>

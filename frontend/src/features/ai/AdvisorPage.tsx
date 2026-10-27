@@ -292,7 +292,7 @@ function ChatBubble({
                     defaultValue: 'Open {{code}} in the Cost Database',
                     code: s.code,
                   })}
-                  className="block w-full text-left text-[11px] leading-tight text-content-quaternary
+                  className="block w-full text-start text-[11px] leading-tight text-content-quaternary
                     rounded px-1 -mx-1 hover:bg-oe-blue/[0.06] hover:text-oe-blue transition-colors"
                 >
                   {body}
@@ -366,7 +366,7 @@ function ChatBubble({
       {/* Timestamp */}
       <p
         className={`mt-[3px] text-[11px] ${
-          isUser ? 'text-content-quaternary/50 mr-1' : 'text-content-quaternary/50 ml-1'
+          isUser ? 'text-content-quaternary/50 me-1' : 'text-content-quaternary/50 ms-1'
         }`}
       >
         {formatTime(msg.timestamp)}
@@ -825,7 +825,7 @@ export function AdvisorPage() {
               </div>
 
               {/* Cross-module: where to go next */}
-              <div className="w-full max-w-lg rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3 text-left">
+              <div className="w-full max-w-lg rounded-xl border border-border-light bg-surface-secondary/40 px-4 py-3 text-start">
                 <p className="flex items-center gap-1.5 text-2xs font-semibold text-content-tertiary uppercase tracking-wide mb-2">
                   <Info size={11} />
                   {t('ai.advisor_next_steps', { defaultValue: 'Turn answers into an estimate' })}
@@ -858,7 +858,7 @@ export function AdvisorPage() {
 
               {/* AI tools cross-link strip (CONN-82) - reach the sibling AI
                   surfaces (Agents, Chat, Quick Estimate) in one click. */}
-              <div className="w-full max-w-lg mt-4 text-left">
+              <div className="w-full max-w-lg mt-4 text-start">
                 <AiToolsStrip />
               </div>
             </div>

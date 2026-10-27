@@ -248,7 +248,7 @@ interface SectionRow {
   _subtotal: number;
   /**
    * Issue #136 — nesting level of this row in the section tree.
-   * 0 = top-level. Drives left-indentation so sections-within-sections
+   * 0 = top-level. Drives start-indentation so sections-within-sections
    * and their child positions read as a real hierarchy in the grid.
    * Present on section rows AND on the position rows beneath them.
    */
@@ -1484,7 +1484,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
       // Richer per-row marker: hovering a flagged line surfaces exactly which
       // estimate-audit issues it carries, read from the persisted
       // `metadata.audit` summary the audit writes back onto each position
-      // (the coloured left-border accent from getRowClass shows severity; this
+      // (the coloured start-border accent from getRowClass shows severity; this
       // adds the specifics on hover).
       ordinalCol.tooltipValueGetter = (params) =>
         auditRowTooltip(params.data as { metadata?: unknown } | undefined, tRef.current);
@@ -2085,7 +2085,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         classes.push('oe-unpriced-row');
       }
 
-      // Validation status left-border accent for quick scanning
+      // Validation status start-border accent for quick scanning
       const validationStatus = params.data?.validation_status as string | undefined;
       if (validationStatus === 'errors') {
         classes.push('boq-row-error');
@@ -2093,7 +2093,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
         classes.push('boq-row-warning');
       }
 
-      // CWICR abstract-resource left-edge accent. We give the row a 4px
+      // CWICR abstract-resource start-edge accent. We give the row a 4px
       // colour bar on the leading edge so the user can scan a long BOQ
       // and tell which positions came from a multi-variant cost item:
       //   • Picked variant   → blue (oe-blue, matches the picker chip)
@@ -3156,7 +3156,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
           enterNavigatesVertically
           // Issue #91: after committing an edit (Unit / Quantity / etc.),
           // Enter should advance to the next column on the SAME row so the
-          // user can keep filling in the row left-to-right. The previous
+          // user can keep filling in the row start-to-right. The previous
           // ``...AfterEdit`` setting jumped down — on the last data row
           // that landed on the footer ("Resumen"), forcing the user to
           // navigate back. Cells that DO want vertical-after-edit (rare)
@@ -3215,7 +3215,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
               return <>
                 {/* Resources section */}
                 {hasResources && (
-                  <CtxItem icon={isExpanded ? <ChevronDown size={14}/> : <ChevronRight size={14}/>}
+                  <CtxItem icon={isExpanded ? <ChevronDown size={14}/> : <ChevronRight size={14}className="rtl:rotate-180" />}
                     label={isExpanded ? t('boq.collapse_resources', { defaultValue: 'Collapse Resources' }) : t('boq.expand_resources', { defaultValue: 'Expand Resources' })}
                     onClick={() => { toggleResources(d.id as string); closeContextMenu(); }}
                   />
@@ -3509,7 +3509,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                   />
                 )}
                 </>}
-                <CtxItem icon={isCollapsed ? <ChevronDown size={14}/> : <ChevronRight size={14}/>}
+                <CtxItem icon={isCollapsed ? <ChevronDown size={14}/> : <ChevronRight size={14}className="rtl:rotate-180" />}
                   label={isCollapsed ? t('boq.expand_section', { defaultValue: 'Expand Section' }) : t('boq.collapse_section', { defaultValue: 'Collapse Section' })}
                   onClick={() => { onToggleSection(d.id as string); closeContextMenu(); }}
                 />
@@ -3626,7 +3626,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                 already used in the project triggers the reuse prompt. */}
             <label className="block text-[11px] font-medium text-content-secondary mb-1">
               {t('boq.resource_code', { defaultValue: 'Code' })}
-              <span className="text-content-tertiary font-normal ml-1">
+              <span className="text-content-tertiary font-normal ms-1">
                 ({t('common.optional', { defaultValue: 'optional' })})
               </span>
             </label>
@@ -3697,7 +3697,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                   type="text"
                   value={manualResourceDialog.quantity}
                   onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, quantity: e.target.value })}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-end outline-none focus:border-oe-blue"
                 />
               </div>
               <div className="flex-1">
@@ -3709,7 +3709,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                   value={manualResourceDialog.unitRate}
                   onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, unitRate: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleManualResourceSubmit(); }}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-end outline-none focus:border-oe-blue"
                 />
               </div>
               <div className="w-24">
@@ -3944,7 +3944,7 @@ function CtxItem({ icon, label, onClick, danger, disabled, title }: {
       disabled={disabled}
       title={title}
       aria-disabled={disabled || undefined}
-      className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-xs text-left transition-colors ${
+      className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-xs text-start transition-colors ${
         disabled
           ? 'text-content-tertiary opacity-50 cursor-not-allowed'
           : danger

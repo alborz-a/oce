@@ -572,7 +572,7 @@ export function CatalogsSection({
   return (
     <div className="mb-4" data-testid="costs-catalogs-section">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-content-secondary mr-1">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-content-secondary me-1">
           <BookOpen size={14} className="text-oe-blue" />
           {t('costs_catalogs.title', { defaultValue: 'My catalogs' })}
         </span>
@@ -591,7 +591,7 @@ export function CatalogsSection({
           return (
             <div
               key={catalog.id}
-              className={`group inline-flex items-center gap-1 rounded-lg border pl-2.5 pr-1 py-1 transition-colors ${
+              className={`group inline-flex items-center gap-1 rounded-lg border ps-2.5 pe-1 py-1 transition-colors ${
                 isActive
                   ? 'border-oe-blue/50 bg-oe-blue-subtle/20'
                   : 'border-border-light bg-surface-elevated hover:bg-surface-secondary'

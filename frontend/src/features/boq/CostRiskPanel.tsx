@@ -220,7 +220,7 @@ function ContingencyCard({
             </span>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-end">
           <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wide">
             {t('boq.cost_risk_recommended_budget', { defaultValue: 'Recommended Budget' })}
           </div>
@@ -337,7 +337,7 @@ function DistributionChart({
 
         {/* P50 / P80 marker lines */}
         <div
-          className="absolute bottom-0 top-0 w-px border-l-2 border-dashed border-emerald-600 dark:border-emerald-400 pointer-events-none"
+          className="absolute bottom-0 top-0 w-px border-s-2 border-dashed border-emerald-600 dark:border-emerald-400 pointer-events-none"
           style={{ left: `${Math.min(Math.max(p50Pct, 0), 100)}%` }}
         >
           <span className="absolute -top-5 -translate-x-1/2 text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 whitespace-nowrap bg-surface-primary/80 px-1 rounded">
@@ -345,7 +345,7 @@ function DistributionChart({
           </span>
         </div>
         <div
-          className="absolute bottom-0 top-0 w-px border-l-2 border-dashed border-amber-600 dark:border-amber-400 pointer-events-none"
+          className="absolute bottom-0 top-0 w-px border-s-2 border-dashed border-amber-600 dark:border-amber-400 pointer-events-none"
           style={{ left: `${Math.min(Math.max(p80Pct, 0), 100)}%` }}
         >
           <span className="absolute -top-5 -translate-x-1/2 text-[10px] font-semibold text-amber-700 dark:text-amber-400 whitespace-nowrap bg-surface-primary/80 px-1 rounded">
@@ -408,12 +408,12 @@ function RiskDriversTable({
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-surface-tertiary/50">
-              <th className="px-3 py-2 text-left font-medium text-content-secondary">{t('boq.ordinal')}</th>
-              <th className="px-3 py-2 text-left font-medium text-content-secondary">{t('boq.description')}</th>
-              <th className="px-3 py-2 text-right font-medium text-content-secondary">
+              <th className="px-3 py-2 text-start font-medium text-content-secondary">{t('boq.ordinal')}</th>
+              <th className="px-3 py-2 text-start font-medium text-content-secondary">{t('boq.description')}</th>
+              <th className="px-3 py-2 text-end font-medium text-content-secondary">
                 {t('boq.cost_risk_swing', { defaultValue: 'P10 - P90 swing' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium text-content-secondary">
+              <th className="px-3 py-2 text-end font-medium text-content-secondary">
                 {t('boq.cost_risk_variance_share', { defaultValue: 'Variance Share' })}
               </th>
             </tr>
@@ -428,7 +428,7 @@ function RiskDriversTable({
                 <td className="px-3 py-2 text-content-primary max-w-[220px] truncate" title={driver.description}>
                   {driver.description || '-'}
                 </td>
-                <td className="px-3 py-2 text-right tabular-nums text-content-secondary whitespace-nowrap">
+                <td className="px-3 py-2 text-end tabular-nums text-content-secondary whitespace-nowrap">
                   {driver.swing_low != null && driver.swing_high != null ? (
                     <>
                       <span className="text-emerald-600">{fmtCurrency(driver.swing_low, fmt)}</span>
@@ -439,7 +439,7 @@ function RiskDriversTable({
                     '-'
                   )}
                 </td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-end">
                   <div className="flex items-center justify-end gap-2">
                     <div className="w-20 h-2 bg-surface-tertiary rounded-full overflow-hidden">
                       <div
@@ -447,7 +447,7 @@ function RiskDriversTable({
                         style={{ width: `${(driver.contribution_pct / maxContribution) * 100}%` }}
                       />
                     </div>
-                    <span className="tabular-nums font-medium text-content-secondary w-12 text-right">
+                    <span className="tabular-nums font-medium text-content-secondary w-12 text-end">
                       {fmtPercent(driver.contribution_pct)}
                     </span>
                   </div>
@@ -513,7 +513,7 @@ export function CostRiskPanel({ boqId, locale = 'de-DE' }: { boqId: string; loca
         </div>
         <div className="flex items-center gap-1 text-content-tertiary">
           {isFetching && <Loader2 size={12} className="animate-spin" />}
-          {collapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+          {collapsed ? <ChevronRight size={14} className="rtl:rotate-180" /> : <ChevronDown size={14} />}
         </div>
       </button>
 

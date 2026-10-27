@@ -34,7 +34,7 @@ export function CDEHistoryDrawer({
       aria-label={t('cde.history_title', { defaultValue: 'State transition history' })}
     >
       <div
-        className="w-full max-w-md bg-surface-primary border-l border-border shadow-xl flex flex-col animate-slide-in-right"
+        className="w-full max-w-md bg-surface-primary border-s border-border shadow-xl flex flex-col animate-slide-in-right"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -100,12 +100,12 @@ function HistoryRow({ row }: { row: StateTransitionEntry }) {
         <Badge variant="neutral" size="sm" className="font-mono">
           {t(`cde.state_${row.from_state}`, { defaultValue: row.from_state })}
         </Badge>
-        <ArrowRight size={12} className="text-content-tertiary" />
+        <ArrowRight size={12} className="text-content-tertiary rtl:rotate-180" />
         <Badge variant="blue" size="sm" className="font-mono">
           {t(`cde.state_${row.to_state}`, { defaultValue: row.to_state })}
         </Badge>
         {row.gate_code && (
-          <Badge variant="neutral" size="sm" className="ml-auto font-mono">
+          <Badge variant="neutral" size="sm" className="ms-auto font-mono">
             {t('cde.gate_label', { defaultValue: 'Gate {{code}}', code: row.gate_code })}
           </Badge>
         )}

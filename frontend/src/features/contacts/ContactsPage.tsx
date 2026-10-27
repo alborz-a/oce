@@ -429,9 +429,9 @@ function AddContactModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -705,7 +705,7 @@ function AddContactModal({
                 placeholder={t('contacts.payment_terms_custom_ph', { defaultValue: 'Custom' })}
                 className="h-9 w-16 bg-transparent text-sm text-content-primary focus:outline-none"
               />
-              <span className="text-xs text-content-tertiary pr-0.5">
+              <span className="text-xs text-content-tertiary pe-0.5">
                 {t('contacts.days', { defaultValue: 'days' })}
               </span>
             </div>
@@ -924,9 +924,9 @@ function ImportContactsModal({
               disabled={!file || isPending}
             >
               {isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : (
-                <Upload size={16} className="mr-1.5" />
+                <Upload size={16} className="me-1.5" />
               )}
               <span>{t('contacts.import_btn', { defaultValue: 'Import' })}</span>
             </Button>
@@ -1009,7 +1009,7 @@ const ContactCard = React.memo(function ContactCard({
               defaultValue: contact.contact_type.charAt(0).toUpperCase() + contact.contact_type.slice(1),
             })}
           </Badge>
-          <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ml-1">
+          <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ms-1">
             <Button
               variant="ghost"
               size="sm"
@@ -1321,7 +1321,7 @@ function ContactDetailDrawer({
                             `/property-dev?tab=leads&leadId=${encodeURIComponent(lead.id)}`,
                           )
                         }
-                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-left hover:border-oe-blue/50 hover:bg-surface-secondary/50 transition-colors"
+                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-start hover:border-oe-blue/50 hover:bg-surface-secondary/50 transition-colors"
                         title={lead.id}
                       >
                         <div className="min-w-0">
@@ -1359,7 +1359,7 @@ function ContactDetailDrawer({
                             `/property-dev?tab=buyers&buyerId=${encodeURIComponent(buyer.id)}`,
                           )
                         }
-                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-left hover:border-oe-blue/50 hover:bg-surface-secondary/50 transition-colors"
+                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2 text-start hover:border-oe-blue/50 hover:bg-surface-secondary/50 transition-colors"
                         title={buyer.id}
                       >
                         <div className="min-w-0">
@@ -1467,7 +1467,7 @@ function HowContactsWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </React.Fragment>
@@ -1963,7 +1963,7 @@ export function ContactsPage() {
             </div>
             {groupedFacets.map((group) => (
               <div key={group.label} className="flex flex-wrap items-center gap-1.5">
-                <span className="mr-1 w-16 shrink-0 text-[11px] font-medium uppercase tracking-wide text-content-tertiary">
+                <span className="me-1 w-16 shrink-0 text-[11px] font-medium uppercase tracking-wide text-content-tertiary">
                   {group.label}
                 </span>
                 {group.items.map((item) => {
@@ -1984,7 +1984,7 @@ export function ContactsPage() {
                       {item.label}
                       <span
                         className={clsx(
-                          'ml-1.5 text-[10px]',
+                          'ms-1.5 text-[10px]',
                           active ? 'text-white/80' : 'text-content-tertiary',
                         )}
                       >
@@ -2004,7 +2004,7 @@ export function ContactsPage() {
         <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
           {/* Search */}
           <div className="relative flex-1">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
               <Search size={16} />
             </div>
             <input

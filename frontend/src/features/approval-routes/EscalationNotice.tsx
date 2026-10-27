@@ -97,7 +97,7 @@ export function EscalationNotice({ instanceId, className }: EscalationNoticeProp
       </Badge>
       <span className="text-2xs text-content-secondary">{line}</span>
       {overdue > 0 && (
-        <span className="ml-auto text-2xs font-medium tabular-nums text-content-tertiary">
+        <span className="ms-auto text-2xs font-medium tabular-nums text-content-tertiary">
           {t('approvalRoutes.escalation_overdue_short', {
             defaultValue: '{{hours}}h overdue',
             hours: overdue,

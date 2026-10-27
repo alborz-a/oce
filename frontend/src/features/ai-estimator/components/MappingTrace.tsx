@@ -125,7 +125,7 @@ function PassRow({ pass }: { pass: MappingPass }) {
               high: bench.band_high,
             })}
             {hasOutliers && (
-              <span className="ml-1.5 inline-flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
+              <span className="ms-1.5 inline-flex items-center gap-1 font-medium text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="h-3 w-3" />
                 {t('aiest.map.band_outliers', {
                   defaultValue: '{{n}} flagged',
@@ -165,18 +165,18 @@ export function MappingTrace({ trace, defaultOpen = false }: MappingTraceProps) 
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-left"
+        className="flex w-full items-center gap-1.5 px-2.5 py-1.5 text-start"
       >
         {open ? (
           <ChevronDown className="h-3.5 w-3.5 shrink-0 text-content-tertiary" />
         ) : (
-          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-content-tertiary" />
+          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-content-tertiary rtl:rotate-180" />
         )}
         <HelpCircle className="h-3.5 w-3.5 shrink-0 text-content-tertiary" />
         <span className="text-xs font-medium text-content-secondary">
           {t('aiest.map.why_this_rate', { defaultValue: 'Why this rate' })}
         </span>
-        <span className="ml-auto text-[11px] text-content-tertiary">
+        <span className="ms-auto text-[11px] text-content-tertiary">
           {t('aiest.map.n_passes', { defaultValue: '{{n}} passes', n: passes.length })}
         </span>
       </button>

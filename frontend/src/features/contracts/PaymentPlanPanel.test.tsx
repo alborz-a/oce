@@ -45,7 +45,7 @@ import { ApiError } from '@/shared/lib/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 const CONTRACT_ID = 'ct-1';
-const PROJECT_ID = 'pr-1';
+const PROJECT_ID = 'pe-1';
 
 function line(id: string, extra: Partial<PaymentPlanLine> = {}): PaymentPlanLine {
   return {

@@ -165,9 +165,9 @@ export function GaebInvoicePanel({ claimId, claimNumber }: { claimId: string; cl
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 text-left"
+        className="flex w-full items-center gap-2 text-start"
       >
-        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} className="rtl:rotate-180" />}
         <FileCode2 size={16} className="text-oe-blue" />
         <h2 className="text-sm font-semibold text-content-primary">
           {t('contracts.gaeb_invoice.title', { defaultValue: 'GAEB X89 invoice' })}
@@ -292,7 +292,7 @@ export function GaebInvoicePanel({ claimId, claimNumber }: { claimId: string; cl
                       defaultValue: 'The invoice cannot be written until these are filled in:',
                     })}
                   </div>
-                  <ul className="list-disc pl-5 text-content-secondary">
+                  <ul className="list-disc ps-5 text-content-secondary">
                     {missing.map((field) => (
                       <li key={field}>{missingLabel(t, field)}</li>
                     ))}
@@ -321,7 +321,7 @@ export function GaebInvoicePanel({ claimId, claimNumber }: { claimId: string; cl
                       defaultValue: 'These lines cannot keep their own OZ and are written under another one:',
                     })}
                   </div>
-                  <ul className="list-disc pl-5 text-content-secondary">
+                  <ul className="list-disc ps-5 text-content-secondary">
                     {remapped.map((r) => (
                       <li key={`${r.ordinal}-${r.written_as}`}>
                         {t('contracts.gaeb_invoice.remapped_line', {

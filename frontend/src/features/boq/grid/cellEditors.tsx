@@ -36,7 +36,7 @@ import { getNumberLocale } from '@/stores/usePreferencesStore';
 /**
  * Evaluate an Excel-like math formula string. Supports (Issue #90):
  *   • Optional leading `=` (Excel convention)
- *   • Operators: + - * / ^  (^ is right-associative exponentiation)
+ *   • Operators: + - * / ^  (^ is end-associative exponentiation)
  *   • `x` / `×` as aliases for `*` (so "2 x 3" works)
  *   • `,` as decimal alias (so "2,5" parses as 2.5 in es/de locales)
  *   • Constants: PI, E
@@ -702,7 +702,7 @@ export const FormulaCellEditor = forwardRef(
           {/* fx badge — purple when in formula mode, faint otherwise */}
           <span
             aria-hidden="true"
-            className={`shrink-0 pl-1.5 pr-1 text-[11px] font-bold tracking-wide ${
+            className={`shrink-0 ps-1.5 pe-1 text-[11px] font-bold tracking-wide ${
               isFormulaMode ? 'text-violet-600 dark:text-violet-300' : 'text-content-quaternary'
             }`}
             title={t('boq.formula_hint', { defaultValue: 'Type = to enter a formula. Click ? for help.' })}
@@ -711,7 +711,7 @@ export const FormulaCellEditor = forwardRef(
           </span>
           <input
             ref={inputRef}
-            className="flex-1 min-w-0 h-full bg-transparent outline-none text-sm text-content-primary tabular-nums text-right pr-1"
+            className="flex-1 min-w-0 h-full bg-transparent outline-none text-sm text-content-primary tabular-nums text-end pe-1"
             // ``defaultValue`` (NOT ``value``) — the input is driven by the
             // native ``input`` listener attached in useEffect above. React
             // synthetic ``onChange`` doesn't fire inside AG Grid's popup
@@ -734,7 +734,7 @@ export const FormulaCellEditor = forwardRef(
 
         {/* Live preview row — anchors below the cell, doesn't shift layout */}
         {preview.kind !== 'idle' && (
-          <div className="absolute right-0 top-full mt-0.5 text-[10px] leading-tight tabular-nums pointer-events-none whitespace-nowrap z-10 px-1.5 py-0.5 rounded shadow-sm bg-surface-elevated border border-border-light">
+          <div className="absolute end-0 top-full mt-0.5 text-[10px] leading-tight tabular-nums pointer-events-none whitespace-nowrap z-10 px-1.5 py-0.5 rounded shadow-sm bg-surface-elevated border border-border-light">
             {preview.kind === 'ok' && (
               <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
                 = {preview.v.toLocaleString(getNumberLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
@@ -754,7 +754,7 @@ export const FormulaCellEditor = forwardRef(
         {/* Help popover — Excel-style cheat sheet */}
         {showHelp && (
           <div
-            className="absolute right-0 top-full mt-7 z-20 w-[320px] rounded-lg border border-border-light bg-surface-elevated shadow-lg p-3 text-[11px] text-content-secondary pointer-events-auto"
+            className="absolute end-0 top-full mt-7 z-20 w-[320px] rounded-lg border border-border-light bg-surface-elevated shadow-lg p-3 text-[11px] text-content-secondary pointer-events-auto"
             onMouseDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-2">
@@ -953,7 +953,7 @@ export const RateCellEditor = forwardRef((props: ICellEditorParams, ref) => {
       inputMode="decimal"
       autoComplete="off"
       spellCheck={false}
-      className="w-full h-full bg-surface-elevated border border-oe-blue/40 rounded ring-2 ring-oe-blue/20 outline-none text-sm text-content-primary tabular-nums text-right px-1"
+      className="w-full h-full bg-surface-elevated border border-oe-blue/40 rounded ring-2 ring-oe-blue/20 outline-none text-sm text-content-primary tabular-nums text-end px-1"
       defaultValue={seedStr}
     />
   );

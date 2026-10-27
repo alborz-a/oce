@@ -137,7 +137,7 @@ export function BaseSelect({ value, onChange, allLabel, id }: BaseSelectProps) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t('costExplorer.base.change', { defaultValue: 'Choose the price base to search' })}
-        className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-surface-primary px-3 text-left text-sm text-content-primary hover:border-content-tertiary focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+        className="flex h-9 w-full items-center gap-2 rounded-lg border border-border bg-surface-primary px-3 text-start text-sm text-content-primary hover:border-content-tertiary focus:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
       >
         {selected ? (
           <CountryFlag code={selected.flag} size={16} />
@@ -162,7 +162,7 @@ export function BaseSelect({ value, onChange, allLabel, id }: BaseSelectProps) {
         <div
           role="listbox"
           aria-label={t('costExplorer.base.change', { defaultValue: 'Choose the price base to search' })}
-          className="absolute right-0 z-30 mt-1 max-h-96 w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-border bg-surface-primary p-1 shadow-lg"
+          className="absolute end-0 z-30 mt-1 max-h-96 w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-border bg-surface-primary p-1 shadow-lg"
         >
           <BaseRow
             selected={value === ''}
@@ -252,7 +252,7 @@ function BaseRow({
       role="option"
       aria-selected={selected}
       onClick={onPick}
-      className={`flex w-full items-start gap-2.5 rounded-md px-2.5 py-2 text-left hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none ${
+      className={`flex w-full items-start gap-2.5 rounded-md px-2.5 py-2 text-start hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none ${
         selected ? 'bg-surface-secondary' : ''
       }`}
     >

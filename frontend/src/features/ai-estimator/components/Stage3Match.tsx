@@ -202,12 +202,12 @@ function MatchCard({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-start gap-3 px-3 py-2.5 text-left"
+        className="flex w-full items-start gap-3 px-3 py-2.5 text-start"
       >
         {open ? (
           <ChevronDown className="mt-1 h-4 w-4 shrink-0 text-content-tertiary" />
         ) : (
-          <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-content-tertiary" />
+          <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-content-tertiary rtl:rotate-180" />
         )}
         <span
           className={clsx(
@@ -543,7 +543,7 @@ export function Stage3Match(props: Stage3MatchProps) {
                 })
               : t('aiest.match.progress', { defaultValue: 'Matching groups…' })}
             {matchProgress.total > 0 && (
-              <span className="ml-auto tabular-nums text-xs text-content-secondary">
+              <span className="ms-auto tabular-nums text-xs text-content-secondary">
                 {matchProgress.pct}%
               </span>
             )}
@@ -608,7 +608,7 @@ export function Stage3Match(props: Stage3MatchProps) {
         )}
 
         {/* Bulk-confirm with threshold control */}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <label htmlFor="aiest-bulk-threshold" className="text-xs text-content-secondary">
             {t('aiest.match.threshold', { defaultValue: 'Threshold' })}
           </label>
@@ -622,7 +622,7 @@ export function Stage3Match(props: Stage3MatchProps) {
             onChange={(e) => setThreshold(Number(e.target.value))}
             className="w-28 accent-oe-blue"
           />
-          <span className="w-9 text-right text-xs font-medium tabular-nums text-content-primary">
+          <span className="w-9 text-end text-xs font-medium tabular-nums text-content-primary">
             {threshold}%
           </span>
           <Button
@@ -687,10 +687,10 @@ export function Stage3Match(props: Stage3MatchProps) {
                       }))
                     }
                     aria-expanded={!collapsed}
-                    className="flex w-full items-center gap-2 bg-surface-secondary px-3 py-2 text-left"
+                    className="flex w-full items-center gap-2 bg-surface-secondary px-3 py-2 text-start"
                   >
                     {collapsed ? (
-                      <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary rtl:rotate-180" />
                     ) : (
                       <ChevronDown className="h-4 w-4 shrink-0 text-content-tertiary" />
                     )}
@@ -702,7 +702,7 @@ export function Stage3Match(props: Stage3MatchProps) {
                       {section.groups.length}
                     </span>
                     {section.attention > 0 && (
-                      <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
+                      <span className="ms-auto inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200">
                         <AlertTriangle className="h-3 w-3" />
                         {t('aiest.match.attention_n', {
                           defaultValue: '{{n}} to review',

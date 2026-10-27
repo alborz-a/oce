@@ -223,7 +223,7 @@ function AddAllowanceForm({
             disabled={mutation.isPending || !label.trim()}
             onClick={() => mutation.mutate()}
           >
-            <Plus size={14} className="mr-1 shrink-0" />
+            <Plus size={14} className="me-1 shrink-0" />
             {t('allowances.create', { defaultValue: 'Add allowance' })}
           </Button>
           <Button variant="ghost" size="sm" onClick={onCancel}>
@@ -322,12 +322,12 @@ function RegisterTable({
     <div className="overflow-x-auto">
       <table className="w-full min-w-[720px] text-sm">
         <thead>
-          <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-            <th className="py-2 pr-3 font-medium">{t('allowances.col_label', { defaultValue: 'Description' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('allowances.col_held', { defaultValue: 'Held' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('allowances.col_drawn', { defaultValue: 'Drawn' })}</th>
-            <th className="py-2 pr-3 text-right font-medium">{t('allowances.col_remaining', { defaultValue: 'Remaining' })}</th>
-            <th className="py-2 pl-1" />
+          <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+            <th className="py-2 pe-3 font-medium">{t('allowances.col_label', { defaultValue: 'Description' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('allowances.col_held', { defaultValue: 'Held' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('allowances.col_drawn', { defaultValue: 'Drawn' })}</th>
+            <th className="py-2 pe-3 text-end font-medium">{t('allowances.col_remaining', { defaultValue: 'Remaining' })}</th>
+            <th className="py-2 ps-1" />
           </tr>
         </thead>
         <tbody>
@@ -336,7 +336,7 @@ function RegisterTable({
               <tr className="bg-surface-secondary/40">
                 <td
                   colSpan={5}
-                  className="py-1.5 pl-1 text-2xs font-semibold uppercase tracking-wide text-content-secondary"
+                  className="py-1.5 ps-1 text-2xs font-semibold uppercase tracking-wide text-content-secondary"
                 >
                   {typeLabel(group.type)}
                 </td>
@@ -346,7 +346,7 @@ function RegisterTable({
                 return (
                   <Fragment key={a.id}>
                     <tr className="border-b border-border-light/60 hover:bg-surface-secondary/40">
-                      <td className="py-2 pr-3 text-content-primary">
+                      <td className="py-2 pe-3 text-content-primary">
                         <span className="inline-flex items-center gap-1.5">
                           {a.label || '-'}
                           {a.overdrawn && (
@@ -356,21 +356,21 @@ function RegisterTable({
                           )}
                         </span>
                       </td>
-                      <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+                      <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
                         {formatCurrency(a.held_amount, a.currency)}
                       </td>
-                      <td className="py-2 pr-3 text-right tabular-nums text-content-tertiary">
+                      <td className="py-2 pe-3 text-end tabular-nums text-content-tertiary">
                         {formatCurrency(a.drawn, a.currency)}
                       </td>
                       <td
                         className={
-                          'py-2 pr-3 text-right font-semibold tabular-nums ' +
+                          'py-2 pe-3 text-end font-semibold tabular-nums ' +
                           (remainingNegative ? 'text-semantic-error' : 'text-content-primary')
                         }
                       >
                         {formatCurrency(a.remaining, a.currency)}
                       </td>
-                      <td className="py-2 pl-1">
+                      <td className="py-2 ps-1">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             type="button"
@@ -498,7 +498,7 @@ export function AllowancesPage() {
                 panel. Leads the cluster so charts are one obvious click away. */}
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <Button variant="primary" size="sm" onClick={() => setShowAdd((v) => !v)}>
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
               {t('allowances.new', { defaultValue: 'New allowance' })}
             </Button>
           </>

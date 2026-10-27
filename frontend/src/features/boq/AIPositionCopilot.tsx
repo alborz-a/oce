@@ -425,7 +425,7 @@ export function AIPositionCopilot({
       data-testid="boq-ai-copilot"
       className={
         variant === 'inline'
-          ? 'h-full flex flex-col overflow-hidden border-l-2 border-oe-blue/60 bg-surface-elevated'
+          ? 'h-full flex flex-col overflow-hidden border-s-2 border-oe-blue/60 bg-surface-elevated'
           : 'mt-2 rounded-xl border border-border-light bg-surface-elevated shadow-xs flex flex-col overflow-hidden'
       }
     >
@@ -835,7 +835,7 @@ function ActionCard({
             {before}
           </span>
         )}
-        <ArrowRight size={12} className="text-content-tertiary" />
+        <ArrowRight size={12} className="text-content-tertiary rtl:rotate-180" />
         <span className="rounded bg-oe-blue-subtle/30 px-1.5 py-0.5 font-medium text-content-primary">
           {after}
         </span>

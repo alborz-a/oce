@@ -263,7 +263,7 @@ export function AccommodationListPage() {
               onClick={() => setHrAutobookOpen(true)}
               data-testid="accommodation-hr-autobook-button"
             >
-              <Sparkles size={14} className="mr-1.5" aria-hidden="true" />
+              <Sparkles size={14} className="me-1.5" aria-hidden="true" />
               {t('accommodation.hr_autobook.suggest_button', {
                 defaultValue: 'Suggest room for employee',
               })}
@@ -274,7 +274,7 @@ export function AccommodationListPage() {
               onClick={() => navigate('/accommodation/calendar')}
               data-testid="accommodation-calendar-link"
             >
-              <CalendarCheck2 size={14} className="mr-1.5" aria-hidden="true" />
+              <CalendarCheck2 size={14} className="me-1.5" aria-hidden="true" />
               {t('accommodation.calendar.title', { defaultValue: 'Calendar' })}
             </Button>
             <Button
@@ -284,7 +284,7 @@ export function AccommodationListPage() {
               data-testid="accommodation-new-button"
               className="hidden sm:inline-flex"
             >
-              <Plus size={14} className="mr-1.5" aria-hidden="true" />
+              <Plus size={14} className="me-1.5" aria-hidden="true" />
               {t('accommodation.new', { defaultValue: 'New accommodation' })}
             </Button>
           </>
@@ -576,7 +576,7 @@ export function AccommodationListPage() {
         aria-label={t('accommodation.new', {
           defaultValue: 'New accommodation',
         })}
-        className="sm:hidden fixed bottom-4 right-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-oe-blue text-white shadow-lg hover:bg-oe-blue/90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2"
+        className="sm:hidden fixed bottom-4 end-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-oe-blue text-white shadow-lg hover:bg-oe-blue/90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-2"
       >
         <Plus size={22} aria-hidden="true" />
       </button>
@@ -662,7 +662,7 @@ function AccommodationCard({
       data-testid={`accommodation-card-${a.id}`}
     >
       {/* Overlay buttons */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+      <div className="absolute top-3 end-3 z-10 flex items-center gap-1.5">
         {hasGeo && (
           <Link
             to={`/geo?lat=${a.geo_lat}&lon=${a.geo_lon}`}
@@ -690,7 +690,7 @@ function AccommodationCard({
           className="inline-flex min-h-[28px] items-center gap-1 rounded-full border border-border bg-surface-elevated px-2 py-1 text-2xs font-medium text-content-primary shadow-sm hover:bg-surface-secondary"
         >
           {t('common.open', { defaultValue: 'Open' })}
-          <ArrowRight size={11} aria-hidden="true" />
+          <ArrowRight size={11} aria-hidden="true" className="rtl:rotate-180" />
         </button>
       </div>
 
@@ -699,7 +699,7 @@ function AccommodationCard({
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
             <Icon size={18} aria-hidden="true" />
           </div>
-          <div className="min-w-0 flex-1 pr-20">
+          <div className="min-w-0 flex-1 pe-20">
             <h3 className="truncate text-base font-semibold text-content-primary">
               {a.name || t('common.unnamed', { defaultValue: '(unnamed)' })}
             </h3>

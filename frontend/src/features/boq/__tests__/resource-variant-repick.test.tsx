@@ -37,7 +37,7 @@ const VARIANTS: CostVariant[] = [
 ];
 
 /* v2.9.29 — EditableResourceRow now drives its layout from a live AG Grid
- *  column list (slots) plus a ``leftPad`` left-indent. Tests build a static
+ *  column list (slots) plus a ``leftPad`` start-indent. Tests build a static
  *  slot list with widths matching the previous COL_WIDTHS map so the
  *  rendered output is identical to the pre-refactor structure. */
 const SLOTS = [

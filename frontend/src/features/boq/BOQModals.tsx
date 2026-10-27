@@ -286,7 +286,7 @@ export function AssemblyPickerModal({
         <div className="flex-1 overflow-y-auto px-6 py-3">
           {isLoading ? (
             <div className="flex items-center justify-center py-12 text-xs text-content-tertiary">
-              <Loader2 size={16} className="animate-spin mr-2" /> {t('assemblies.loading', { defaultValue: 'Loading assemblies...' })}
+              <Loader2 size={16} className="animate-spin me-2" /> {t('assemblies.loading', { defaultValue: 'Loading assemblies...' })}
             </div>
           ) : !assemblies || assemblies.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -344,7 +344,7 @@ export function AssemblyPickerModal({
                             value={quantity[asm.id] ?? ''}
                             placeholder="1"
                             onChange={(e) => setQuantity((prev) => ({ ...prev, [asm.id]: e.target.value }))}
-                            className="w-16 h-7 rounded border border-border-light bg-surface-elevated px-1.5 text-xs text-content-primary text-right tabular-nums focus:outline-none focus:ring-1 focus:ring-purple-400"
+                            className="w-16 h-7 rounded border border-border-light bg-surface-elevated px-1.5 text-xs text-content-primary text-end tabular-nums focus:outline-none focus:ring-1 focus:ring-purple-400"
                           />
                         </div>
                         <Button
@@ -1692,7 +1692,7 @@ export function CostDatabaseSearchModal({
               onClose();
               navigate('/costs/import');
             }}
-            className="mr-1 inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border-light bg-surface-secondary px-2.5 py-1.5 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:text-oe-blue-text focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+            className="me-1 inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-border-light bg-surface-secondary px-2.5 py-1.5 text-xs font-medium text-content-secondary transition-colors hover:border-oe-blue/40 hover:text-oe-blue-text focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
             title={t('boq.import_database_cta', { defaultValue: 'Import a database' })}
           >
             <Plus size={14} aria-hidden="true" />
@@ -1758,7 +1758,7 @@ export function CostDatabaseSearchModal({
               inside the right pane via mobileTreeOpen.  Desktop sidebar is
               fixed-width (w-72) with its own scroll. */}
           <aside
-            className="hidden md:flex w-72 shrink-0 flex-col border-r border-border-light bg-surface-secondary/30"
+            className="hidden md:flex w-72 shrink-0 flex-col border-e border-border-light bg-surface-secondary/30"
             data-testid="cost-modal-sidebar"
           >
             <div className="px-3 pt-3 pb-1 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
@@ -1766,7 +1766,7 @@ export function CostDatabaseSearchModal({
             </div>
             {treeLoading ? (
               <div className="flex flex-1 items-center justify-center text-xs text-content-tertiary">
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
                 {t('boq.tree_loading', { defaultValue: 'Loading...' })}
               </div>
             ) : treeError ? (
@@ -1810,7 +1810,7 @@ export function CostDatabaseSearchModal({
                 <ChevronDown size={12} />
               </button>
               <div className="relative flex-1">
-                <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+                <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
                   <Search size={16} />
                 </div>
                 <input

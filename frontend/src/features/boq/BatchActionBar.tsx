@@ -201,7 +201,7 @@ export function BatchActionBar({
     <>
       {/* Floating batch action bar */}
       <div
-        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40"
+        className="fixed bottom-6 start-1/2 -translate-x-1/2 z-40"
         role="toolbar"
         aria-label={t('boq.batch_actions', { defaultValue: 'Batch actions' })}
       >
@@ -252,7 +252,7 @@ export function BatchActionBar({
             </button>
 
             {unitDropdownOpen && (
-              <div role="listbox" aria-label={t('boq.unit_options', { defaultValue: 'Unit options' })} className="absolute bottom-full mb-2 left-0 w-36 rounded-xl border border-border-light bg-surface-elevated shadow-lg overflow-hidden animate-fade-in">
+              <div role="listbox" aria-label={t('boq.unit_options', { defaultValue: 'Unit options' })} className="absolute bottom-full mb-2 start-0 w-36 rounded-xl border border-border-light bg-surface-elevated shadow-lg overflow-hidden animate-fade-in">
                 <div className="py-1 max-h-52 overflow-y-auto">
                   {UNITS.map((unit) => (
                     <button

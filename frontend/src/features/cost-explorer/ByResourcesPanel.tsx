@@ -226,7 +226,7 @@ function ResultRow({
             <Meter value={row.score} tone="amber" label={`${t('costExplorer.byResources.match', { defaultValue: 'Match' })} ${pct(row.score)}`} />
           </div>
         </div>
-        <div className="shrink-0 text-right">
+        <div className="shrink-0 text-end">
           <div className="font-semibold tabular-nums text-content-primary">{fmtMoney(row.rate, row.currency)}</div>
           <div className="mt-2 flex flex-col items-end gap-1">
             <button type="button" onClick={() => nav.openCompare(row.code)} className="inline-flex items-center gap-1 text-xs text-oe-blue hover:underline">
@@ -271,7 +271,7 @@ function ResultRow({
         className="flex w-full items-center gap-1 border-t border-border-light px-3 py-1.5 text-xs text-content-tertiary hover:bg-surface-secondary"
         aria-expanded={expanded}
       >
-        {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+        {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />}
         {t('costExplorer.byResources.matched', {
           defaultValue: '{{n}} matched, {{m}} missing',
           n: matched.length,

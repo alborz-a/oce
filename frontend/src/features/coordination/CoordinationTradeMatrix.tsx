@@ -386,7 +386,7 @@ function RowFragment({
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <>
-      <div className="text-right text-xs font-medium uppercase tracking-wide text-content-secondary">
+      <div className="text-end text-xs font-medium uppercase tracking-wide text-content-secondary">
         {disciplineLabel(t, row)}
       </div>
       {trades.map((col) => {
@@ -491,7 +491,7 @@ function RowFragment({
               <div
                 role="tooltip"
                 data-testid={`matrix-cell-tooltip-${row}-${col}`}
-                className="pointer-events-none absolute left-1/2 top-full z-20 mt-1 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-lg"
+                className="pointer-events-none absolute start-1/2 top-full z-20 mt-1 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-lg"
               >
                 <div className="font-semibold">
                   {disciplineLabel(t, row)} × {disciplineLabel(t, col)}

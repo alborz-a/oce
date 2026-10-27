@@ -386,9 +386,9 @@ function AddToBoqDialog({ row, onClose }: { row: EstimateRow; onClose: () => voi
           </Button>
           <Button variant="primary" size="sm" disabled={!canAdd} onClick={() => addMut.mutate()}>
             {addMut.isPending ? (
-              <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+              <Loader2 className="me-1.5 h-3.5 w-3.5 animate-spin" />
             ) : (
-              <ListPlus className="mr-1.5 h-3.5 w-3.5" />
+              <ListPlus className="me-1.5 h-3.5 w-3.5" />
             )}
             {addMut.isPending
               ? t('costExplorer.addToBoq.adding', { defaultValue: 'Adding...' })

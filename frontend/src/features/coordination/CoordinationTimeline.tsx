@@ -124,8 +124,8 @@ function TimelineRow({ event }: { event: CoordinationTimelineEvent }) {
           onClick={handleClick}
           className={
             clickable
-              ? 'text-left text-sm font-medium text-content-primary hover:text-blue-600 focus:outline-none focus-visible:underline'
-              : 'cursor-default text-left text-sm font-medium text-content-primary'
+              ? 'text-start text-sm font-medium text-content-primary hover:text-blue-600 focus:outline-none focus-visible:underline'
+              : 'cursor-default text-start text-sm font-medium text-content-primary'
           }
         >
           {label}

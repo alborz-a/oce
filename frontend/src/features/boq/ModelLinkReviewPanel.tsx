@@ -134,7 +134,7 @@ export function ModelLinkReviewPanel({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 flex">
+    <div className="fixed inset-y-0 end-0 z-50 flex">
       <div className="fixed inset-0 bg-black/20" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
@@ -142,7 +142,7 @@ export function ModelLinkReviewPanel({
         aria-label={t('boq.model_review_title', {
           defaultValue: 'Model quantity review',
         })}
-        className="relative ml-auto flex h-full w-[420px] flex-col bg-surface-elevated border-l border-border shadow-2xl animate-slide-in-right"
+        className="relative ms-auto flex h-full w-[420px] flex-col bg-surface-elevated border-s border-border shadow-2xl animate-slide-in-right"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -171,9 +171,9 @@ export function ModelLinkReviewPanel({
             disabled={refreshMutation.isPending}
           >
             {refreshMutation.isPending ? (
-              <Loader2 size={14} className="mr-1 animate-spin" />
+              <Loader2 size={14} className="me-1 animate-spin" />
             ) : (
-              <RefreshCw size={14} className="mr-1" />
+              <RefreshCw size={14} className="me-1" />
             )}
             {t('boq.model_review_refresh', { defaultValue: 'Refresh from model' })}
           </Button>
@@ -239,7 +239,7 @@ export function ModelLinkReviewPanel({
                           <span className="text-content-tertiary">
                             {fmt(r.old_quantity)}
                           </span>
-                          <ArrowRight size={11} className="text-content-quaternary" />
+                          <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
                           <span className="text-content-primary font-semibold">
                             {fmt(r.new_quantity)}
                           </span>
@@ -247,7 +247,7 @@ export function ModelLinkReviewPanel({
                           {Number.isFinite(deltaNum) && deltaNum !== 0 && (
                             <span
                               className={clsx(
-                                'ml-1 font-medium',
+                                'ms-1 font-medium',
                                 deltaNum > 0
                                   ? 'text-emerald-600 dark:text-emerald-400'
                                   : 'text-red-600 dark:text-red-400',
@@ -296,9 +296,9 @@ export function ModelLinkReviewPanel({
               onClick={() => applyMutation.mutate(Array.from(selected))}
             >
               {applyMutation.isPending ? (
-                <Loader2 size={14} className="mr-1 animate-spin" />
+                <Loader2 size={14} className="me-1 animate-spin" />
               ) : (
-                <CheckCircle2 size={14} className="mr-1" />
+                <CheckCircle2 size={14} className="me-1" />
               )}
               {t('boq.model_review_apply', {
                 defaultValue: 'Apply {{count}} selected',

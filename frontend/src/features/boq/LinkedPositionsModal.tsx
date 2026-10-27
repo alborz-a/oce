@@ -189,7 +189,7 @@ export function LinkedPositionsModal({
                         })}
                       </span>
                     )}
-                    <span className="w-28 shrink-0 text-right tabular-nums text-content-secondary">
+                    <span className="w-28 shrink-0 text-end tabular-nums text-content-secondary">
                       {fmtWithCurrency(m.total, locale, currencyCode)}
                     </span>
                   </li>

@@ -626,22 +626,22 @@ function InventoryTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_name', { defaultValue: 'Inventory' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_scope', { defaultValue: 'Scope' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_as_of', { defaultValue: 'As of' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_total', { defaultValue: 'Total' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -685,10 +685,10 @@ function InventoryTable({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.as_of_date ? <DateDisplay value={r.as_of_date} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums font-medium">
+                <td className="px-4 py-2 text-end tabular-nums font-medium">
                   {total > 0 ? formatKg(total) : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <RowActions
                     onEdit={() => onEdit(r)}
                     onDelete={() => onDelete(r)}
@@ -832,25 +832,25 @@ function EPDTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_product', { defaultValue: 'Product' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_class', { defaultValue: 'Class' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_region', { defaultValue: 'Region' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_source', { defaultValue: 'Source' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_gwp', { defaultValue: 'GWP A1–A3' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_unit', { defaultValue: 'Unit' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -868,11 +868,11 @@ function EPDTable({
                   {r.source}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right tabular-nums font-medium">
+              <td className="px-4 py-2 text-end tabular-nums font-medium">
                 {fmtFixed(toNum(r.gwp_a1a3), 3)}
               </td>
               <td className="px-4 py-2 text-xs text-content-tertiary">kg/{r.declared_unit}</td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <RowActions
                   onEdit={() => onEdit(r)}
                   onDelete={() => onDelete(r)}
@@ -1156,19 +1156,19 @@ function ReportTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_period', { defaultValue: 'Period' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_framework', { defaultValue: 'Framework' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_generated', { defaultValue: 'Generated' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_total', { defaultValue: 'Total kg CO2e' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1195,10 +1195,10 @@ function ReportTable({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.generated_at ? <DateDisplay value={r.generated_at} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums font-medium">
+                <td className="px-4 py-2 text-end tabular-nums font-medium">
                   {total > 0 ? formatKg(total) : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <button
                     type="button"
                     onClick={() => onDelete(r)}
@@ -1743,7 +1743,7 @@ function TopEmitterRow({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-surface-secondary transition-colors"
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start hover:bg-surface-secondary transition-colors"
       >
         <span className="flex min-w-0 items-center gap-1.5">
           <ChevronRight
@@ -1751,7 +1751,7 @@ function TopEmitterRow({
             className={clsx(
               'shrink-0 text-content-tertiary transition-transform',
               open && 'rotate-90',
-            )}
+            'rtl:rotate-180')}
           />
           <span className="truncate text-content-primary">
             {entry.description || entry.element_ref || '—'}
@@ -2219,7 +2219,7 @@ function CreateTargetModal({
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             className={inputCls}
-            placeholder="e.g. Net-zero by 2030"
+            placeholder={t('carbon.target_name_placeholder', { defaultValue: 'e.g. Net-zero by 2030' })}
           />
         </div>
         <div>
@@ -2240,9 +2240,9 @@ function CreateTargetModal({
             className={inputCls}
             disabled={isEdit}
           >
-            <option value="absolute">absolute (kg CO2e)</option>
-            <option value="intensity_per_m2">intensity per m²</option>
-            <option value="intensity_per_unit">intensity per unit</option>
+            <option value="absolute">{t('carbon.target_type_absolute', { defaultValue: 'absolute (kg CO2e)' })}</option>
+            <option value="intensity_per_m2">{t('carbon.target_type_intensity_m2', { defaultValue: 'intensity per m²' })}</option>
+            <option value="intensity_per_unit">{t('carbon.target_type_intensity_unit', { defaultValue: 'intensity per unit' })}</option>
           </select>
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -2921,7 +2921,7 @@ function AssignBoqModal({
               <div className="relative mb-2">
                 <Search
                   size={13}
-                  className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+                  className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
                 />
                 <input
                   value={search}
@@ -2929,7 +2929,7 @@ function AssignBoqModal({
                   placeholder={t('carbon.boq_search_placeholder', {
                     defaultValue: 'Filter by description or ordinal…',
                   })}
-                  className={clsx(inputCls, 'pl-8')}
+                  className={clsx(inputCls, 'ps-8')}
                   autoComplete="off"
                 />
               </div>
@@ -2957,7 +2957,7 @@ function AssignBoqModal({
                           <td className="px-3 py-2 text-content-primary">
                             {p.description}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-content-secondary whitespace-nowrap align-top">
+                          <td className="px-3 py-2 text-end tabular-nums text-content-secondary whitespace-nowrap align-top">
                             {(() => {
                               const d = displayQty.convert(toNum(p.quantity), p.unit || '');
                               return `${d.value.toLocaleString(getNumberLocale())} ${d.unit}`;
@@ -3582,9 +3582,9 @@ function ScopeEntryModal({
                   }
                   className={inputCls}
                 >
-                  <option value="grid_electricity">grid_electricity</option>
-                  <option value="district_heating">district_heating</option>
-                  <option value="cooling">cooling</option>
+                  <option value="grid_electricity">{t('carbon.energy_grid_electricity', { defaultValue: 'Grid electricity' })}</option>
+                  <option value="district_heating">{t('carbon.energy_district_heating', { defaultValue: 'District heating' })}</option>
+                  <option value="cooling">{t('carbon.energy_cooling', { defaultValue: 'Cooling' })}</option>
                 </select>
               </div>
               <div>
@@ -3600,8 +3600,8 @@ function ScopeEntryModal({
                   }
                   className={inputCls}
                 >
-                  <option value="location">location</option>
-                  <option value="market">market</option>
+                  <option value="location">{t('carbon.market_location_location', { defaultValue: 'Location' })}</option>
+                  <option value="market">{t('carbon.market_location_market', { defaultValue: 'Market' })}</option>
                 </select>
               </div>
             </div>
@@ -3663,13 +3663,13 @@ function ScopeEntryModal({
                 }
                 className={inputCls}
               >
-                <option value="transport_upstream">transport_upstream</option>
+                <option value="transport_upstream">{t('carbon.scope3_transport_upstream', { defaultValue: 'Upstream transport' })}</option>
                 <option value="transport_downstream">
                   transport_downstream
                 </option>
-                <option value="waste">waste</option>
-                <option value="business_travel">business_travel</option>
-                <option value="other">other</option>
+                <option value="waste">{t('carbon.scope3_waste', { defaultValue: 'Waste' })}</option>
+                <option value="business_travel">{t('carbon.scope3_business_travel', { defaultValue: 'Business travel' })}</option>
+                <option value="other">{t('carbon.scope3_other', { defaultValue: 'Other' })}</option>
               </select>
             </div>
             <div>
@@ -3908,7 +3908,7 @@ function EPDModal({
               }
               className={inputCls}
             >
-              <option value="custom">custom</option>
+              <option value="custom">{t('carbon.epd_source_custom', { defaultValue: 'Custom' })}</option>
               <option value="oekobaudat">oekobaudat</option>
               <option value="ice">ice</option>
               <option value="ec3">ec3</option>

@@ -163,7 +163,7 @@ function TreeNodeRow({
         aria-expanded={hasChildren ? isExpanded : undefined}
         onClick={handleSelect}
         onKeyDown={handleKeyDown}
-        className={`group flex items-center gap-1 rounded-md py-1 pr-2 text-xs transition-colors cursor-pointer ${
+        className={`group flex items-center gap-1 rounded-md py-1 pe-2 text-xs transition-colors cursor-pointer ${
           isSelected
             ? 'bg-oe-blue text-white'
             : 'text-content-secondary hover:bg-surface-secondary'
@@ -191,7 +191,7 @@ function TreeNodeRow({
             isExpanded ? (
               <ChevronDown size={12} />
             ) : (
-              <ChevronRight size={12} />
+              <ChevronRight size={12} className="rtl:rotate-180" />
             )
           ) : null}
         </button>
@@ -252,7 +252,7 @@ export function CostCategoryTree({
         <div className="relative">
           <Search
             size={12}
-            className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary"
+            className="pointer-events-none absolute start-2 top-1/2 -translate-y-1/2 text-content-quaternary"
           />
           <input
             id={searchInputId}
@@ -265,7 +265,7 @@ export function CostCategoryTree({
             aria-label={t('boq.cost_tree_search_placeholder', {
               defaultValue: 'Filter categories...',
             })}
-            className="h-7 w-full rounded-md border border-border-light bg-surface-primary pl-7 pr-2 text-xs text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue"
+            className="h-7 w-full rounded-md border border-border-light bg-surface-primary ps-7 pe-2 text-xs text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue"
           />
         </div>
       </div>

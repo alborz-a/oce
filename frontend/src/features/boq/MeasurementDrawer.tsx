@@ -288,7 +288,7 @@ export function MeasurementDrawer({
     Number.isFinite(measured);
 
   const numberCell =
-    'w-full rounded border border-border-light bg-surface-primary px-2 py-1 text-right text-xs ' +
+    'w-full rounded border border-border-light bg-surface-primary px-2 py-1 text-end text-xs ' +
     'tabular-nums focus:border-border-focus focus:outline-none disabled:opacity-60 ' +
     'aria-[invalid=true]:border-semantic-error aria-[invalid=true]:text-semantic-error';
 
@@ -308,25 +308,25 @@ export function MeasurementDrawer({
           <table className="w-full min-w-[46rem] text-xs">
             <thead>
               <tr className="text-content-secondary">
-                <th className="px-2 py-1 text-left font-medium">
+                <th className="px-2 py-1 text-start font-medium">
                   {t('boq.measurement.description')}
                 </th>
-                <th className="w-16 px-2 py-1 text-right font-medium">
+                <th className="w-16 px-2 py-1 text-end font-medium">
                   {t('boq.measurement.units')}
                 </th>
-                <th className="w-20 px-2 py-1 text-right font-medium">
+                <th className="w-20 px-2 py-1 text-end font-medium">
                   {t('boq.measurement.length')}
                 </th>
-                <th className="w-20 px-2 py-1 text-right font-medium">
+                <th className="w-20 px-2 py-1 text-end font-medium">
                   {t('boq.measurement.width')}
                 </th>
-                <th className="w-20 px-2 py-1 text-right font-medium">
+                <th className="w-20 px-2 py-1 text-end font-medium">
                   {t('boq.measurement.height')}
                 </th>
                 <th className="w-10 px-2 py-1 text-center font-medium">
                   {t('boq.measurement.sign')}
                 </th>
-                <th className="w-28 px-2 py-1 text-right font-medium">
+                <th className="w-28 px-2 py-1 text-end font-medium">
                   {t('boq.measurement.subtotal')}
                 </th>
                 <th className="w-8" />
@@ -426,10 +426,10 @@ export function MeasurementDrawer({
                         {row.sign === '-' ? <Minus size={12} /> : <Plus size={12} />}
                       </button>
                     </td>
-                    <td className="px-2 py-1 text-right tabular-nums">
+                    <td className="px-2 py-1 text-end tabular-nums">
                       {line && !line.error ? fmtQuantity(line.quantity) : ''}
                     </td>
-                    <td className="px-2 py-1 text-right">
+                    <td className="px-2 py-1 text-end">
                       <button
                         type="button"
                         disabled={readOnly || rows.length === 1}

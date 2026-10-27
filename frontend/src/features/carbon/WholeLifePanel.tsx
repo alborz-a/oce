@@ -1387,7 +1387,7 @@ let manualLineSeq = 0;
 function newManualLine(): ManualLine {
   manualLineSeq += 1;
   return {
-    uid: `ml-${manualLineSeq}`,
+    uid: `ms-${manualLineSeq}`,
     description: '',
     category: '',
     capex: '',

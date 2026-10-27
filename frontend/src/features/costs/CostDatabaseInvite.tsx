@@ -125,7 +125,7 @@ export function CostDatabaseInvite({
           <Button
             variant="primary"
             size="lg"
-            icon={<ArrowRight size={16} />}
+            icon={<ArrowRight size={16} className="rtl:rotate-180" />}
             iconPosition="right"
             onClick={onImport}
             className="mt-5 w-full sm:w-auto"

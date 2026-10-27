@@ -432,7 +432,7 @@ export function VariantPicker({
         role="radio"
         aria-checked={isSel}
         onClick={() => setSelectedIdx(originalIdx)}
-        className={`w-full flex items-start gap-3 px-4 py-3 text-left border-b border-border-light/50 last:border-b-0 transition-colors ${
+        className={`w-full flex items-start gap-3 px-4 py-3 text-start border-b border-border-light/50 last:border-b-0 transition-colors ${
           isSel
             ? 'bg-oe-blue-subtle/20 ring-1 ring-inset ring-oe-blue/30'
             : 'hover:bg-surface-secondary/60'
@@ -680,14 +680,14 @@ export function VariantPicker({
                   aria-expanded={isOpen}
                   aria-controls={`variant-group-body-${g.key || '__empty__'}`}
                   data-testid={`variant-group-header-${g.key || '__empty__'}`}
-                  className={`w-full flex items-center gap-2 px-4 py-2.5 text-left
+                  className={`w-full flex items-center gap-2 px-4 py-2.5 text-start
                               bg-surface-secondary/40 hover:bg-surface-secondary/70
                               transition-colors ${
                                 isOpen ? '' : 'border-b border-transparent'
                               }`}
                 >
                   <span className="shrink-0 text-content-tertiary">
-                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} className="rtl:rotate-180" />}
                   </span>
                   <span className="text-sm font-semibold text-content-primary truncate">
                     {groupLabel}
@@ -695,7 +695,7 @@ export function VariantPicker({
                   <span className="text-2xs text-content-tertiary tabular-nums shrink-0">
                     · {countLabel}
                   </span>
-                  <span className="ml-auto text-2xs text-content-tertiary tabular-nums shrink-0">
+                  <span className="ms-auto text-2xs text-content-tertiary tabular-nums shrink-0">
                     {t('costs.variant_group_median_chip', {
                       defaultValue: 'median {{price}}',
                       price: formatPrice(g.medianPrice, currency),

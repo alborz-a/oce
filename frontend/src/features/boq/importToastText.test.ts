@@ -28,7 +28,7 @@ const croatianSample = {
 };
 
 describe('importToastText', () => {
-  it('reads in the reader language and counts the left-out total lines', () => {
+  it('reads in the reader language and counts the start-out total lines', () => {
     const toast = importToastText(croatianSample, false, tFrom(hr.translation));
     expect(toast.title).toBe('Uvezene stavke: 42 od 49 (izravno)');
     expect(toast.message).toBe('Izostavljeni retci ukupnog iznosa, poreza ili rekapitulacije: 3');

@@ -197,20 +197,20 @@ export function AIAApplicationPanel({ claimId, currency }: AIAApplicationPanelPr
           <div>
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
               {t('contracts.aia.g703', { defaultValue: 'G703 - Continuation sheet' })}
-              <span className="ml-2 normal-case text-content-tertiary">
+              <span className="ms-2 normal-case text-content-tertiary">
                 ({appQ.data.lines.length})
               </span>
             </p>
 
             {/* Desktop / tablet: full table */}
             <div className="hidden overflow-x-auto rounded-lg border border-border-light sm:block">
-              <table className="w-full text-right text-xs">
+              <table className="w-full text-end text-xs">
                 <thead className="bg-surface-secondary text-[10px] uppercase tracking-wide text-content-tertiary">
                   <tr>
-                    <th className="px-2 py-2 text-left">
+                    <th className="px-2 py-2 text-start">
                       {t('contracts.aia.col_item', { defaultValue: 'Item' })}
                     </th>
-                    <th className="px-2 py-2 text-left">
+                    <th className="px-2 py-2 text-start">
                       {t('contracts.aia.col_description', { defaultValue: 'Description' })}
                     </th>
                     <th className="px-2 py-2">
@@ -240,10 +240,10 @@ export function AIAApplicationPanel({ claimId, currency }: AIAApplicationPanelPr
                 <tbody className="divide-y divide-border-light">
                   {appQ.data.lines.map((ln) => (
                     <tr key={`${ln.line_number}-${ln.item_number}`}>
-                      <td className="px-2 py-1.5 text-left font-medium text-content-primary">
+                      <td className="px-2 py-1.5 text-start font-medium text-content-primary">
                         {ln.item_number}
                       </td>
-                      <td className="max-w-[16rem] truncate px-2 py-1.5 text-left text-content-secondary">
+                      <td className="max-w-[16rem] truncate px-2 py-1.5 text-start text-content-secondary">
                         {ln.description}
                       </td>
                       <td className="px-2 py-1.5">{moneyOrBlank(ln.scheduled_value)}</td>

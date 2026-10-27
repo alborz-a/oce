@@ -158,7 +158,7 @@ function SimulationBody({ sim }: { sim: RouteSimulation }) {
               defaultValue: 'Design warnings',
             })}
           </h4>
-          <ul className="mt-1.5 space-y-1 list-disc pl-4">
+          <ul className="mt-1.5 space-y-1 list-disc ps-4">
             {sim.warnings.map((w, i) => (
               <li key={i} className="text-xs text-content-secondary">
                 {w}

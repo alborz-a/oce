@@ -123,7 +123,7 @@ export function BOQOutline({ positions, onJump }: BOQOutlineProps) {
         <div
           role="menu"
           aria-label={t('boq.outline_title', { defaultValue: 'Sections' })}
-          className="absolute right-0 z-30 mt-1 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-fade-in"
+          className="absolute end-0 z-30 mt-1 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg animate-fade-in"
         >
           {/* Filter */}
           <div className="border-b border-border-light p-2">
@@ -170,7 +170,7 @@ export function BOQOutline({ positions, onJump }: BOQOutlineProps) {
                   role="menuitem"
                   onClick={() => handleJump(it.id)}
                   title={`${it.ordinal} ${it.description}`.trim()}
-                  className="flex w-full items-baseline gap-2 px-3 py-1.5 text-left text-xs text-content-primary hover:bg-surface-secondary transition-colors"
+                  className="flex w-full items-baseline gap-2 px-3 py-1.5 text-start text-xs text-content-primary hover:bg-surface-secondary transition-colors"
                   style={{ paddingLeft: `${12 + it.depth * 14}px` }}
                 >
                   {it.ordinal && (

@@ -191,9 +191,9 @@ export function ModelLinkPanel({
             onClick={handleSubmit}
           >
             {createMutation.isPending ? (
-              <Loader2 size={14} className="mr-1 animate-spin" />
+              <Loader2 size={14} className="me-1 animate-spin" />
             ) : (
-              <Link2 size={14} className="mr-1" />
+              <Link2 size={14} className="me-1" />
             )}
             {t('boq.model_link_create', { defaultValue: 'Create link' })}
           </Button>
@@ -345,7 +345,7 @@ export function ModelLinkPanel({
                       <span className="text-xs text-content-primary truncate">
                         {el.name || el.element_type || sid}
                       </span>
-                      <span className="text-2xs text-content-tertiary ml-auto shrink-0">
+                      <span className="text-2xs text-content-tertiary ms-auto shrink-0">
                         {el.element_type}
                       </span>
                     </label>

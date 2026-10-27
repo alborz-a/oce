@@ -141,7 +141,7 @@ export function ServiceLogPanel({ assetId, initialLog = [], initialHealth }: Ser
           disabled={!note.trim() || mutation.isPending}
           data-testid="service-add"
         >
-          {mutation.isPending ? <Loader2 size={14} className="mr-1 animate-spin" /> : <Plus size={14} className="mr-1" />}
+          {mutation.isPending ? <Loader2 size={14} className="me-1 animate-spin" /> : <Plus size={14} className="me-1" />}
           {t('assets.service.add', { defaultValue: 'Log' })}
         </Button>
       </div>
@@ -163,11 +163,11 @@ export function ServiceLogPanel({ assetId, initialLog = [], initialHealth }: Ser
                 <div className="min-w-0">
                   <span className="font-medium text-content-primary">{String(entry.note ?? '')}</span>
                   {entry.performed_by ? (
-                    <span className="ml-1 text-content-tertiary">— {String(entry.performed_by)}</span>
+                    <span className="ms-1 text-content-tertiary">— {String(entry.performed_by)}</span>
                   ) : null}
                 </div>
-                <div className="shrink-0 text-right text-content-tertiary">
-                  <span className="mr-1 rounded bg-surface-tertiary px-1 py-0.5 text-[10px] uppercase">
+                <div className="shrink-0 text-end text-content-tertiary">
+                  <span className="me-1 rounded bg-surface-tertiary px-1 py-0.5 text-[10px] uppercase">
                     {String(entry.kind ?? 'service')}
                   </span>
                   {String(entry.date ?? '')}

@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 //
-// CostLineRollupDrawer - right-side detail panel for a single cost line.
+// CostLineRollupDrawer - end-side detail panel for a single cost line.
 //
 // Shows the line's estimate vs budget / committed / contracted / actual
 // figures and, below, the downstream records it links to (BOQ positions,
@@ -109,7 +109,7 @@ function LinkGroup({
         </span>
       </div>
       {ids.length > 0 ? (
-        <ul className="space-y-1 pl-6">
+        <ul className="space-y-1 ps-6">
           {ids.map((id) =>
             hrefFor && onNavigate ? (
               <li key={id}>

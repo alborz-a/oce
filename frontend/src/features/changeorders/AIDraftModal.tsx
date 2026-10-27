@@ -140,7 +140,7 @@ export function AIDraftModal({
               disabled={!sourceText.trim() || draftMut.isPending}
               onClick={() => draftMut.mutate()}
             >
-              <Wand2 size={15} className="mr-1.5" />
+              <Wand2 size={15} className="me-1.5" />
               {draftMut.isPending
                 ? t('changeorders.ai_generating', { defaultValue: 'Generating…' })
                 : t('changeorders.ai_generate', { defaultValue: 'Generate draft' })}
@@ -193,7 +193,7 @@ export function AIDraftModal({
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant={draft.ai_used ? 'blue' : 'neutral'} size="sm">
-              <Sparkles size={12} className="mr-1" />
+              <Sparkles size={12} className="me-1" />
               {draft.ai_used
                 ? t('changeorders.ai_by', { defaultValue: 'Drafted by AI ({{p}})', p: draft.provider })
                 : t('changeorders.ai_heuristic', { defaultValue: 'Offline heuristic draft' })}
@@ -244,8 +244,8 @@ export function AIDraftModal({
                     {draft.lines.map((l, i) => (
                       <tr key={i} className="border-b border-border-light last:border-0">
                         <td className="px-3 py-2 text-content-secondary">{l.description}</td>
-                        <td className="px-3 py-2 text-right tabular-nums text-content-primary">{l.cost_delta}</td>
-                        <td className="px-3 py-2 text-right">
+                        <td className="px-3 py-2 text-end tabular-nums text-content-primary">{l.cost_delta}</td>
+                        <td className="px-3 py-2 text-end">
                           <ConfidenceMeter value={l.confidence} />
                         </td>
                       </tr>

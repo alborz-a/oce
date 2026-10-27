@@ -120,7 +120,7 @@ export function AiToolsStrip({ current }: { current: string }): JSX.Element | nu
                 </span>
                 <span className="block truncate text-xs text-content-tertiary">{tool.desc}</span>
               </span>
-              <ArrowRight className="h-4 w-4 shrink-0 text-content-tertiary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue-text" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-content-tertiary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue-text rtl:rotate-180" />
             </Link>
           );
         })}

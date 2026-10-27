@@ -407,7 +407,7 @@ export function RouteEditor({
         <div className="sm:col-span-2">
           <label className="block text-xs font-medium text-content-secondary mb-1">
             {t('approvalRoutes.name', { defaultValue: 'Name' })}
-            <span className="text-semantic-error ml-0.5">*</span>
+            <span className="text-semantic-error ms-0.5">*</span>
           </label>
           <input
             value={name}
@@ -423,7 +423,7 @@ export function RouteEditor({
         <div>
           <label className="block text-xs font-medium text-content-secondary mb-1">
             {t('approvalRoutes.target_kind', { defaultValue: 'Target kind' })}
-            <span className="text-semantic-error ml-0.5">*</span>
+            <span className="text-semantic-error ms-0.5">*</span>
           </label>
           <select
             value={targetKind}
@@ -572,7 +572,7 @@ function StepEditorRow({
             n: index + 1,
           })}
         </span>
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ms-auto flex items-center gap-1">
           <button
             onClick={onMoveUp}
             disabled={index === 0}

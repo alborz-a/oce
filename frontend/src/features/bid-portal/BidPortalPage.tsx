@@ -307,7 +307,7 @@ export function BidPortalPage() {
 
       <div className="mt-4 overflow-x-auto rounded-lg border border-border-light bg-surface-primary">
         <table className="w-full min-w-[720px] text-sm" data-testid="bid-portal-table">
-          <thead className="bg-surface-secondary text-left text-xs font-medium text-content-tertiary">
+          <thead className="bg-surface-secondary text-start text-xs font-medium text-content-tertiary">
             <tr>
               <th scope="col" className="px-3 py-2 w-24">
                 {t('bid_portal.col.ordinal', { defaultValue: 'Item no.' })}
@@ -318,13 +318,13 @@ export function BidPortalPage() {
               <th scope="col" className="px-3 py-2 w-16">
                 {t('bid_portal.col.unit', { defaultValue: 'Unit' })}
               </th>
-              <th scope="col" className="px-3 py-2 w-24 text-right">
+              <th scope="col" className="px-3 py-2 w-24 text-end">
                 {t('bid_portal.col.quantity', { defaultValue: 'Quantity' })}
               </th>
-              <th scope="col" className="px-3 py-2 w-36 text-right">
+              <th scope="col" className="px-3 py-2 w-36 text-end">
                 {t('bid_portal.col.unit_price', { defaultValue: 'Unit price' })}
               </th>
-              <th scope="col" className="px-3 py-2 w-32 text-right">
+              <th scope="col" className="px-3 py-2 w-32 text-end">
                 {t('bid_portal.col.line_sum', { defaultValue: 'Line sum' })}
               </th>
             </tr>
@@ -361,7 +361,7 @@ export function BidPortalPage() {
                           className="mt-1 inline-flex items-center gap-1 text-xs text-oe-blue hover:underline"
                           aria-expanded={isOpen}
                         >
-                          {isOpen ? <ChevronDown size={12} aria-hidden /> : <ChevronRight size={12} aria-hidden />}
+                          {isOpen ? <ChevronDown size={12} aria-hidden /> : <ChevronRight size={12} aria-hidden className="rtl:rotate-180" />}
                           {isOpen
                             ? t('bid_portal.hide_long_text', { defaultValue: 'Hide full text' })
                             : t('bid_portal.show_long_text', { defaultValue: 'Show full text' })}
@@ -373,10 +373,10 @@ export function BidPortalPage() {
                     )}
                   </td>
                   <td className="px-3 py-2 text-content-secondary">{localizedUnitCode(line.unit, i18n.language)}</td>
-                  <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                  <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                     {qtyFormat.format(quantityOf(line))}
                   </td>
-                  <td className="px-3 py-1.5 text-right">
+                  <td className="px-3 py-1.5 text-end">
                     <input
                       id={inputId}
                       type="text"
@@ -396,7 +396,7 @@ export function BidPortalPage() {
                       aria-invalid={p?.invalid || !!serverReason}
                       data-testid={`bid-price-input-${line.ordinal}`}
                       className={
-                        'min-h-11 w-full rounded border px-2 text-right tabular-nums bg-surface-primary ' +
+                        'min-h-11 w-full rounded border px-2 text-end tabular-nums bg-surface-primary ' +
                         'focus:outline-none focus:ring-2 focus:ring-oe-blue disabled:bg-surface-secondary ' +
                         (p?.invalid || serverReason ? 'border-semantic-error' : 'border-border-light')
                       }
@@ -407,7 +407,7 @@ export function BidPortalPage() {
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums text-content-primary">
+                  <td className="px-3 py-2 text-end tabular-nums text-content-primary">
                     {lineSum === null ? (
                       <span className="text-content-quaternary">{t('bid_portal.not_priced', { defaultValue: 'not priced' })}</span>
                     ) : (
@@ -441,7 +441,7 @@ export function BidPortalPage() {
 
       <div className="sticky bottom-0 mt-6 -mx-4 border-t border-border-light bg-surface-primary/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-center gap-3">
-          <div className="mr-auto">
+          <div className="me-auto">
             <p className="text-xs text-content-tertiary" data-testid="bid-portal-progress">
               {t('bid_portal.progress', {
                 defaultValue: '{{priced}} of {{total}} lines priced',

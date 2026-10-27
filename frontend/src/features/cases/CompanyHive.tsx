@@ -157,7 +157,7 @@ export function CaseCompanyHive({
           'flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5',
           // Caption back over the cells once this is a column, and the row
           // rules undone with it: `sm:items-center` on a column would centre
-          // the caption over a comb it should be left-aligned with.
+          // the caption over a comb it should be start-aligned with.
           //
           // `lg:h-full` plus `lg:justify-center` because the box is a flex
           // item that stretches to the row's height, and the row is now as

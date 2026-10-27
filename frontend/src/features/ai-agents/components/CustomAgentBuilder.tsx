@@ -307,7 +307,7 @@ export function CustomAgentBuilder({
             <div>
               <label htmlFor="ca-name" className="mb-1 block text-xs font-medium text-content-secondary">
                 {t('agents.builder.name_label', { defaultValue: 'Agent name' })}
-                <span className="ml-0.5 text-semantic-error">*</span>
+                <span className="ms-0.5 text-semantic-error">*</span>
               </label>
               <input
                 id="ca-name"
@@ -430,7 +430,7 @@ export function CustomAgentBuilder({
                     <div>
                       <label htmlFor="ca-goal" className="mb-1 block text-xs text-content-tertiary">
                         {t('agents.builder.goal_label', { defaultValue: 'What should it help with?' })}
-                        <span className="ml-0.5 text-semantic-error">*</span>
+                        <span className="ms-0.5 text-semantic-error">*</span>
                       </label>
                       <textarea
                         id="ca-goal"
@@ -535,7 +535,7 @@ export function CustomAgentBuilder({
                 <Clock className="h-3.5 w-3.5 text-oe-blue" aria-hidden="true" />
                 {t('agents.builder.schedule_section', { defaultValue: 'Schedule (run automatically)' })}
                 {schedule.cron && (
-                  <span className="ml-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
+                  <span className="ms-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
                     {t('agents.builder.scheduled_badge', { defaultValue: 'On' })}
                   </span>
                 )}
@@ -574,7 +574,7 @@ export function CustomAgentBuilder({
                 <Wrench className="h-3.5 w-3.5 text-oe-blue" aria-hidden="true" />
                 {t('agents.builder.tools_section', { defaultValue: 'Tools (let it read your data)' })}
                 {selectedTools.length > 0 && (
-                  <span className="ml-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
+                  <span className="ms-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
                     {selectedTools.length}
                   </span>
                 )}
@@ -606,7 +606,7 @@ export function CustomAgentBuilder({
                 <Zap className="h-3.5 w-3.5 text-oe-blue" aria-hidden="true" />
                 {t('agents.builder.triggers_section', { defaultValue: 'Triggers (run on an event)' })}
                 {selectedTriggers.length > 0 && (
-                  <span className="ml-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
+                  <span className="ms-auto rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
                     {selectedTriggers.length}
                   </span>
                 )}

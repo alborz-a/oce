@@ -117,10 +117,10 @@ export function ComparePanel({ code, onCodeChange }: { code: string; onCodeChang
           <div className="overflow-x-auto rounded-lg border border-border-light bg-surface-primary">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-light bg-surface-secondary text-left text-xs text-content-tertiary">
+                <tr className="border-b border-border-light bg-surface-secondary text-start text-xs text-content-tertiary">
                   <th className="px-3 py-2 font-medium">{t('costExplorer.compare.region', { defaultValue: 'Region' })}</th>
                   <th className="px-3 py-2 font-medium">{t('costExplorer.compare.unit', { defaultValue: 'Unit' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('costExplorer.compare.rate', { defaultValue: 'Rate' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('costExplorer.compare.rate', { defaultValue: 'Rate' })}</th>
                   <th className="px-3 py-2 font-medium">{t('costExplorer.compare.source', { defaultValue: 'Source' })}</th>
                 </tr>
               </thead>
@@ -129,7 +129,7 @@ export function ComparePanel({ code, onCodeChange }: { code: string; onCodeChang
                   <tr key={r.cost_item_id} className="border-b border-border-light last:border-0">
                     <td className="px-3 py-2 font-medium text-content-primary">{r.region ?? '-'}</td>
                     <td className="px-3 py-2 text-content-secondary">{r.unit || '-'}</td>
-                    <td className="px-3 py-2 text-right tabular-nums text-content-primary">{fmtMoney(r.rate, r.currency)}</td>
+                    <td className="px-3 py-2 text-end tabular-nums text-content-primary">{fmtMoney(r.rate, r.currency)}</td>
                     <td className="px-3 py-2 text-content-tertiary">{r.source || '-'}</td>
                   </tr>
                 ))}

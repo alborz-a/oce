@@ -204,7 +204,7 @@ export function HrAutobookModal({ onClose }: HrAutobookModalProps) {
             disabled={!contactId}
             data-testid="hr-autobook-suggest"
           >
-            <BedDouble size={14} className="mr-1.5" />
+            <BedDouble size={14} className="me-1.5" />
             {t('accommodation.hr_autobook.suggest_button', {
               defaultValue: 'Suggest room',
             })}
@@ -257,7 +257,7 @@ export function HrAutobookModal({ onClose }: HrAutobookModalProps) {
 
       {confirmed && (
         <div className="mt-4 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-sm text-emerald-800">
-          <CheckCircle2 className="mr-2 inline h-4 w-4" />
+          <CheckCircle2 className="me-2 inline h-4 w-4" />
           {t('accommodation.hr_autobook.success_message', {
             defaultValue:
               'Booking created. Find it on the accommodation page under the Bookings tab.',
@@ -267,7 +267,7 @@ export function HrAutobookModal({ onClose }: HrAutobookModalProps) {
 
       {suggestMutation.isError && !suggestion && (
         <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-          <AlertTriangle className="mr-2 inline h-4 w-4" />
+          <AlertTriangle className="me-2 inline h-4 w-4" />
           {t('accommodation.hr_autobook.no_rooms', {
             defaultValue: 'No available room across your worker camps.',
           })}

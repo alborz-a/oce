@@ -340,7 +340,7 @@ export function ResourceSummary({
 
           {/* Inline type badges */}
           {!collapsed && summary.total_resources > 0 && (
-            <div className="hidden sm:flex items-center gap-1.5 ml-1">
+            <div className="hidden sm:flex items-center gap-1.5 ms-1">
               {Object.entries(summary.by_type).map(([type, info]) => (
                 <span
                   key={type}
@@ -353,7 +353,7 @@ export function ResourceSummary({
           )}
         </div>
         {collapsed ? (
-          <ChevronRight size={14} className="text-content-tertiary" />
+          <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
         ) : (
           <ChevronDown size={14} className="text-content-tertiary" />
         )}
@@ -389,7 +389,7 @@ export function ResourceSummary({
                 <span className="text-xs">
                   {typeFilterLabel(type as ResourceTypeFilter)}
                 </span>
-                <span className="text-xs font-medium tabular-nums ml-1">
+                <span className="text-xs font-medium tabular-nums ms-1">
                   {fmtMoney.format(toNum(info.total_cost))}
                 </span>
               </div>
@@ -414,22 +414,22 @@ export function ResourceSummary({
                   >
                     {typeFilterLabel(filter)}
                     {typeCount(filter) > 0 && (
-                      <span className="ml-1 tabular-nums">({typeCount(filter)})</span>
+                      <span className="ms-1 tabular-nums">({typeCount(filter)})</span>
                     )}
                   </button>
                 ))}
             </div>
 
             {/* Search */}
-            <div className="ml-auto relative">
-              <Search size={13} className="absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary" />
+            <div className="ms-auto relative">
+              <Search size={13} className="absolute start-2 top-1/2 -translate-y-1/2 text-content-quaternary" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('boq.rs_search', { defaultValue: 'Search resources...' })}
                 aria-label={t('boq.rs_search', { defaultValue: 'Search resources...' })}
-                className="w-44 pl-7 pr-2 py-1 text-2xs rounded-md border border-border-light bg-surface-primary text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
+                className="w-44 ps-7 pe-2 py-1 text-2xs rounded-md border border-border-light bg-surface-primary text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
               />
             </div>
           </div>
@@ -471,7 +471,7 @@ export function ResourceSummary({
                           {/* Sortable name header - clicking toggles between
                               'name' and 'cost'. Issue #106 spec: "ordenarse
                               por nombre / por precio / por porcentaje ABC". */}
-                          <th className="px-4 py-2 text-left font-medium">
+                          <th className="px-4 py-2 text-start font-medium">
                             <button
                               type="button"
                               onClick={() => setSortBy(sortBy === 'name' ? 'cost' : 'name')}
@@ -482,21 +482,21 @@ export function ResourceSummary({
                               {sortBy === 'name' && <span aria-hidden="true">↑</span>}
                             </button>
                           </th>
-                          <th className="px-3 py-2 text-left font-medium w-24">
+                          <th className="px-3 py-2 text-start font-medium w-24">
                             {t('boq.rs_col_type', { defaultValue: 'Type' })}
                           </th>
                           <th className="px-3 py-2 text-center font-medium w-16">
                             {t('boq.rs_col_unit', { defaultValue: 'Unit' })}
                           </th>
-                          <th className="px-3 py-2 text-right font-medium w-24">
+                          <th className="px-3 py-2 text-end font-medium w-24">
                             {t('boq.rs_col_total_qty', { defaultValue: 'Total Qty' })}
                           </th>
-                          <th className="px-3 py-2 text-right font-medium w-24">
+                          <th className="px-3 py-2 text-end font-medium w-24">
                             {t('boq.rs_col_avg_rate', { defaultValue: 'Avg Rate' })}
                           </th>
                           {/* Sortable cost header - toggles back to 'cost'
                               from any other mode. Default sort. */}
-                          <th className="px-3 py-2 text-right font-medium w-28">
+                          <th className="px-3 py-2 text-end font-medium w-28">
                             <button
                               type="button"
                               onClick={() => setSortBy('cost')}
@@ -512,7 +512,7 @@ export function ResourceSummary({
                               also drawing visible separator rules between
                               the A/B/C buckets so the Pareto split is
                               instantly readable. */}
-                          <th className="px-3 py-2 text-right font-medium w-20">
+                          <th className="px-3 py-2 text-end font-medium w-20">
                             <button
                               type="button"
                               onClick={() => setSortBy(sortBy === 'abc' ? 'cost' : 'abc')}
@@ -568,7 +568,7 @@ export function ResourceSummary({
                           <tr className="border-t border-border bg-surface-secondary/30">
                             <td className="px-4 py-2 text-xs font-semibold text-content-primary">
                               {t('boq.rs_total', { defaultValue: 'Total' })}
-                              <span className="ml-1 text-content-tertiary font-normal">
+                              <span className="ms-1 text-content-tertiary font-normal">
                                 ({t('boq.rs_resources_count', {
                                   count: filteredResources.length,
                                   defaultValue_one: '{{count}} resource',
@@ -580,12 +580,12 @@ export function ResourceSummary({
                             <td />
                             <td />
                             <td />
-                            <td className="px-3 py-2 text-right text-xs font-bold text-content-primary tabular-nums">
+                            <td className="px-3 py-2 text-end text-xs font-bold text-content-primary tabular-nums">
                               {fmtMoney.format(
                                 filteredResources.reduce((sum, r) => sum + toNum(r.total_cost), 0),
                               )}
                             </td>
-                            <td className="px-3 py-2 text-right text-xs font-bold text-content-primary tabular-nums">
+                            <td className="px-3 py-2 text-end text-xs font-bold text-content-primary tabular-nums">
                               {/* Σ ABC% should be 100 when nothing is filtered;
                                   when typeFilter or search excludes rows the
                                   remaining sum is shown so the user can see how
@@ -777,10 +777,10 @@ function ResourceRow({
       <td className="px-3 py-2 text-center text-content-secondary font-mono uppercase">
         {resource.unit}
       </td>
-      <td className="px-3 py-2 text-right text-content-primary tabular-nums">
+      <td className="px-3 py-2 text-end text-content-primary tabular-nums">
         {fmt.format(toNum(resource.total_quantity))}
       </td>
-      <td className="px-3 py-2 text-right text-content-secondary tabular-nums">
+      <td className="px-3 py-2 text-end text-content-secondary tabular-nums">
         <div className="inline-flex items-center justify-end gap-1.5">
           <span>{fmtMoney.format(toNum(resource.avg_unit_rate))}</span>
           {canRepick && (
@@ -830,10 +830,10 @@ function ResourceRow({
           )}
         </div>
       </td>
-      <td className="px-3 py-2 text-right text-content-primary font-semibold tabular-nums">
+      <td className="px-3 py-2 text-end text-content-primary font-semibold tabular-nums">
         {fmtMoney.format(toNum(resource.total_cost))}
       </td>
-      <td className="px-3 py-2 text-right tabular-nums">
+      <td className="px-3 py-2 text-end tabular-nums">
         <span
           className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold ${abcBadgeClass}`}
           title={

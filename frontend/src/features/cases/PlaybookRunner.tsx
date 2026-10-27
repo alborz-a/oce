@@ -160,7 +160,7 @@ function ConnectorChip({ down = false }: { down?: boolean }): ReactElement {
   return (
     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-oe-blue/10 ring-1 ring-inset ring-oe-blue/25">
       {/* rtl:rotate-180 keeps a horizontal arrow pointing from In to Out when the
-          flow mirrors under a right-to-left language. */}
+          flow mirrors under a end-to-left language. */}
       <Glyph
         size={14}
         strokeWidth={2.2}
@@ -286,7 +286,7 @@ function StepBlock({
         {done ? <Check size={16} strokeWidth={2.5} /> : index + 1}
       </span>
 
-      {/* Step counter + module tag: a left-aligned row, padded to clear the
+      {/* Step counter + module tag: a start-aligned row, padded to clear the
           corner badge. */}
       <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 pe-9">
         <span className="text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
@@ -304,7 +304,7 @@ function StepBlock({
 
       {/* Title + detail on the left, the data flow on the right. `items-start`
           keeps the In / Out cards' top aligned with the step title, and every
-          left-column line shares one left edge. */}
+          start-column line shares one left edge. */}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start lg:gap-6">
         <div className="min-w-0 space-y-3">
           <h3 className="text-base font-semibold leading-snug text-content-primary sm:text-lg">
@@ -408,7 +408,7 @@ function CaseLinkCard({
       type="button"
       onClick={onOpen}
       className={clsx(
-        "group flex h-full w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all",
+        "group flex h-full w-full items-start gap-3 rounded-2xl border p-4 text-start transition-all",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
         primary
           ? "border-oe-blue/50 bg-oe-blue-subtle hover:border-oe-blue"
@@ -619,7 +619,7 @@ function MoreCaseTile({
       onClick={onOpen}
       title={title}
       className={clsx(
-        "group w-40 shrink-0 overflow-hidden rounded-xl border border-border-light bg-surface-primary text-left",
+        "group w-40 shrink-0 overflow-hidden rounded-xl border border-border-light bg-surface-primary text-start",
         "shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md",
         "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
@@ -636,7 +636,7 @@ function MoreCaseTile({
         )}
         {playbook.region && (
           <span
-            className="absolute left-1.5 top-1.5 inline-flex h-5 items-center gap-1 rounded bg-white/90 px-1 text-[9px] font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-900/10"
+            className="absolute start-1.5 top-1.5 inline-flex h-5 items-center gap-1 rounded bg-white/90 px-1 text-[9px] font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-900/10"
             title={regionDisplayName(playbook.region, language)}
             aria-label={regionDisplayName(playbook.region, language)}
           >
@@ -1277,7 +1277,7 @@ export function PlaybookRunner({ playbook, onBack }: PlaybookRunnerProps) {
                     aria-current={isCurrent ? "step" : undefined}
                     title={stepTitle}
                     className={clsx(
-                      "group flex h-full w-full flex-col gap-1 rounded-lg border p-1 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
+                      "group flex h-full w-full flex-col gap-1 rounded-lg border p-1 text-start transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
                       isCurrent
                         ? "border-oe-blue bg-oe-blue-subtle ring-1 ring-inset ring-oe-blue/30"
                         : done

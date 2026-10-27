@@ -48,7 +48,7 @@ function Tile({
       onClick={onClick}
       disabled={!clickable}
       data-testid={testId}
-      className={`flex min-w-[120px] flex-1 items-center gap-2 rounded-lg border px-3 py-2 text-left transition-colors ${tone} ${
+      className={`flex min-w-[120px] flex-1 items-center gap-2 rounded-lg border px-3 py-2 text-start transition-colors ${tone} ${
         clickable ? 'cursor-pointer hover:brightness-110' : 'cursor-default'
       }`}
     >

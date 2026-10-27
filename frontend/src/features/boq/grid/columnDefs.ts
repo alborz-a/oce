@@ -632,7 +632,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
           'Double-click a position number (or press F2) to type your own. Escape cancels. Use Renumber to apply a scheme to all.',
       }),
       cellClass: (params) => {
-        const base = 'font-mono text-xs text-right !pr-2';
+        const base = 'font-mono text-xs text-end !pr-2';
         const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
         const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
         return isExpanded ? `${base} font-bold` : base;
@@ -833,7 +833,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
         return undefined;
       },
       cellClass: (params) => {
-        const base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
+        const base = 'text-end tabular-nums text-xs !pr-2 !pl-2';
         const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
         const isExpanded = !!params.data?.id && (ctx?.expandedPositions?.has(params.data.id) ?? false);
         const flag = needsQuantity(params.data as Record<string, unknown> | undefined)
@@ -891,7 +891,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       // time).  Falls through to a plain numeric span when no variants.
       cellRenderer: 'unitRateCellRenderer',
       cellClass: (params) => {
-        let base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
+        let base = 'text-end tabular-nums text-xs !pr-2 !pl-2';
         // Grey the rate only when it is genuinely derived from resources
         // (a contributing, non-zero-quantity resource) — a manually typed
         // rate on a line with only blank resource rows reads as normal.
@@ -935,7 +935,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       editable: (params) => !params.data?._isSection && !params.data?._isFooter,
       valueParser: tierRateValueParser,
       hide: true,
-      cellClass: 'text-right',
+      cellClass: 'text-end',
       headerClass: 'ag-right-aligned-header',
     },
     {
@@ -945,7 +945,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       editable: (params) => !params.data?._isSection && !params.data?._isFooter,
       valueParser: tierRateValueParser,
       hide: true,
-      cellClass: 'text-right',
+      cellClass: 'text-end',
       headerClass: 'ag-right-aligned-header',
     },
     {
@@ -955,7 +955,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       editable: (params) => !params.data?._isSection && !params.data?._isFooter,
       valueParser: tierRateValueParser,
       hide: true,
-      cellClass: 'text-right',
+      cellClass: 'text-end',
       headerClass: 'ag-right-aligned-header',
     },
     {
@@ -1011,7 +1011,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
       valueFormatter: totalFormatter,
       tooltipValueGetter: totalTooltip,
       cellClass: (params) => {
-        const base = 'text-right tabular-nums text-xs !pr-2 !pl-2';
+        const base = 'text-end tabular-nums text-xs !pr-2 !pl-2';
         if (params.data?._isSection) return `${base} font-bold`;
         if (params.data?._isFooter) return `${base} font-bold`;
         const ctx = params.context as { expandedPositions?: Set<string> } | undefined;
@@ -1063,7 +1063,7 @@ export function getColumnDefs(context: BOQColumnContext): ColDef[] {
         if (params.data?._isFooter) return totalFormatter(params);
         return `${params.value}%`;
       },
-      cellClass: 'text-right tabular-nums text-xs !pr-2 !pl-2 text-content-secondary',
+      cellClass: 'text-end tabular-nums text-xs !pr-2 !pl-2 text-content-secondary',
       headerClass: 'ag-right-aligned-header',
       type: 'numericColumn',
     })),
@@ -1114,7 +1114,7 @@ export interface CustomColumnDef {
    *     no divisor at all, so the cell renders empty.
    *
    * `column_type` stays `number` so existing AG-Grid number behaviour
-   * (right-align, tabular nums, formatting) applies. The flag is
+   * (end-align, tabular nums, formatting) applies. The flag is
    * forwarded through the backend untouched.
    */
   derived?: 'resource_sum' | 'percentage_of_unit_rate';
@@ -1415,7 +1415,7 @@ export function getCustomColumnDefs(
             const share =
               col.derived === 'percentage_of_unit_rate' ? shareOfUnitRate(params.data) : null;
             const impossible = share !== null && share > 100 ? ` ${IMPOSSIBLE_SHARE_CLASS}` : '';
-            return `text-right tabular-nums text-xs ${tone} ${italic}${impossible}`.trim();
+            return `text-end tabular-nums text-xs ${tone} ${italic}${impossible}`.trim();
           }
           return computedOnResource ? 'text-xs italic text-content-tertiary' : 'text-xs';
         },

@@ -160,7 +160,7 @@ export function ApprovalTimeline({
 
   return (
     <div className="space-y-4">
-      <ol className="relative space-y-4 border-l-2 border-border pl-6">
+      <ol className="relative space-y-4 border-s-2 border-border ps-6">
         {rows.map((row) => {
           const isActive = currentApprovalStep === row.step_order;
           const { style } = styleFor(row, isActive);
@@ -168,12 +168,12 @@ export function ApprovalTimeline({
           return (
             <li
               key={row.id}
-              className={`relative pl-2 ${isActive ? 'font-medium' : ''}`}
+              className={`relative ps-2 ${isActive ? 'font-medium' : ''}`}
               aria-current={isActive ? 'step' : undefined}
             >
               {/* Node bullet */}
               <span
-                className={`absolute -left-[34px] top-0 flex h-7 w-7 items-center justify-center rounded-full border-2 ${style.ring}`}
+                className={`absolute -start-[34px] top-0 flex h-7 w-7 items-center justify-center rounded-full border-2 ${style.ring}`}
                 aria-hidden="true"
               >
                 <Icon size={14} strokeWidth={2} />
@@ -218,7 +218,7 @@ export function ApprovalTimeline({
                       {row.approver_user_id &&
                         currentUserId &&
                         row.approver_user_id === currentUserId && (
-                          <span className="ml-1 text-content-tertiary">
+                          <span className="ms-1 text-content-tertiary">
                             ({t('changeorders.approval_you', { defaultValue: 'you' })})
                           </span>
                         )}
@@ -270,7 +270,7 @@ export function ApprovalTimeline({
               disabled={busy}
               onClick={() => onDecide?.('rejected', comment)}
             >
-              <XCircle size={14} className="mr-1.5" />
+              <XCircle size={14} className="me-1.5" />
               {t('changeorders.approval_reject', { defaultValue: 'Reject' })}
             </Button>
             <Button
@@ -279,7 +279,7 @@ export function ApprovalTimeline({
               disabled={busy}
               onClick={() => onDecide?.('approved', comment)}
             >
-              <CheckCircle2 size={14} className="mr-1.5" />
+              <CheckCircle2 size={14} className="me-1.5" />
               {t('changeorders.approval_approve', { defaultValue: 'Approve' })}
             </Button>
           </div>

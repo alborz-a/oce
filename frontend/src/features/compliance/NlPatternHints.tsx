@@ -42,13 +42,13 @@ export function NlPatternHints({ patterns, onPick }: NlPatternHintsProps) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         data-testid="nl-pattern-hints-toggle"
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
+        className="flex w-full items-center justify-between px-4 py-3 text-start"
       >
         <span className="flex items-center gap-2 text-sm font-semibold text-content-primary">
           <Lightbulb size={14} className="text-oe-blue" />
           {t('compliance.nl.patterns_title', { defaultValue: 'Supported patterns' })}
         </span>
-        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} className="rtl:rotate-180" />}
       </button>
       {open && (
         <ul className="space-y-1 border-t border-border-light px-3 py-3">
@@ -68,7 +68,7 @@ export function NlPatternHints({ patterns, onPick }: NlPatternHintsProps) {
                   <button
                     type="button"
                     onClick={() => onPick?.(example)}
-                    className="mt-0.5 block w-full text-left font-mono text-[11px] text-content-tertiary hover:text-oe-blue"
+                    className="mt-0.5 block w-full text-start font-mono text-[11px] text-content-tertiary hover:text-oe-blue"
                   >
                     {example}
                   </button>

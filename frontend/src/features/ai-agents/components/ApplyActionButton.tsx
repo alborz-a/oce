@@ -275,7 +275,7 @@ export function ApplyActionButton({ runId }: ApplyActionButtonProps): JSX.Elemen
             })}
           </p>
           {result.skipped_reasons.length > 0 && (
-            <ul className="mt-1 list-disc space-y-0.5 pl-4 text-content-tertiary">
+            <ul className="mt-1 list-disc space-y-0.5 ps-4 text-content-tertiary">
               {result.skipped_reasons.slice(0, 4).map((r, i) => (
                 <li key={i}>{r}</li>
               ))}
@@ -336,7 +336,7 @@ export function ApplyActionButton({ runId }: ApplyActionButtonProps): JSX.Elemen
               )}
             >
               {t('agents.apply.create_boq_first', { defaultValue: 'Create a BOQ first' })}
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden="true" />
             </Link>
           )
         ) : (
@@ -353,7 +353,7 @@ export function ApplyActionButton({ runId }: ApplyActionButtonProps): JSX.Elemen
             className="inline-flex items-center gap-1.5 rounded-lg border border-border-light px-3 py-1.5 text-xs font-medium text-content-secondary transition-colors hover:bg-surface-secondary hover:text-content-primary"
           >
             {t('agents.apply.review_in_boq', { defaultValue: 'Review in BOQ editor' })}
-            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" aria-hidden="true" />
           </Link>
         )}
 

@@ -309,7 +309,7 @@ export const UNITS = BASE_UNITS;
 /** Maximum number of undo entries stored. */
 export const UNDO_STACK_LIMIT = 30;
 
-/** Editable field names in left-to-right column order for keyboard navigation. */
+/** Editable field names in start-to-right column order for keyboard navigation. */
 export const EDITABLE_FIELDS = ['ordinal', 'description', 'unit', 'quantity', 'unit_rate'] as const;
 export type EditableField = (typeof EDITABLE_FIELDS)[number];
 

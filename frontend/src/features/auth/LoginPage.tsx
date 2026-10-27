@@ -482,17 +482,17 @@ export function LoginPage() {
           column so the headline / stats sit on a near-white field.
           Dark mode keeps the original richer blob set for depth. */}
       <div className="absolute inset-y-0 start-0 end-1/2 z-0 pointer-events-none overflow-hidden hidden lg:block">
-        <div className="absolute top-[-12%] left-[-6%] w-[520px] h-[520px] rounded-full bg-sky-300/10 dark:bg-oe-blue/35 blur-[120px] animate-blob-slow-1 mix-blend-screen" />
-        <div className="absolute bottom-[-18%] right-[2%] w-[400px] h-[400px] rounded-full bg-cyan-200/10 dark:bg-violet-500/35 blur-[110px] animate-blob-slow-4 mix-blend-screen hidden dark:block" />
+        <div className="absolute top-[-12%] start-[-6%] w-[520px] h-[520px] rounded-full bg-sky-300/10 dark:bg-oe-blue/35 blur-[120px] animate-blob-slow-1 mix-blend-screen" />
+        <div className="absolute bottom-[-18%] end-[2%] w-[400px] h-[400px] rounded-full bg-cyan-200/10 dark:bg-violet-500/35 blur-[110px] animate-blob-slow-4 mix-blend-screen hidden dark:block" />
       </div>
 
       {/* Mobile-only ambient blobs (single column layout) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden lg:hidden">
-        <div className="absolute top-[-12%] left-[-6%] w-[520px] h-[520px] rounded-full bg-sky-300/10 dark:bg-oe-blue/35 blur-[110px] animate-blob-slow-1 mix-blend-screen" />
+        <div className="absolute top-[-12%] start-[-6%] w-[520px] h-[520px] rounded-full bg-sky-300/10 dark:bg-oe-blue/35 blur-[110px] animate-blob-slow-1 mix-blend-screen" />
       </div>
 
       {/* Theme + Language - top right (enlarged for /login so discoverable). */}
-      <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
+      <div className="absolute top-4 end-4 z-30 flex items-center gap-2">
         <ThemeSwitch />
         {/* [RSC-IRAN] hidden: Region Lock - Farsi only, language selector hidden */}
         <div className="relative hidden" ref={langRef}>
@@ -506,7 +506,7 @@ export function LoginPage() {
           <ChevronDown size={14} className={`text-content-tertiary transition-transform ${langOpen ? 'rotate-180' : ''}`} />
         </button>
         {langOpen && (
-          <div className="absolute right-0 mt-2 w-64 max-h-80 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-1 animate-stagger-in">
+          <div className="absolute end-0 mt-2 w-64 max-h-80 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-1 animate-stagger-in">
             {sortLanguagesByName(SUPPORTED_LANGUAGES).map((lang) => {
               const isActive = i18n.language === lang.code;
               const english = 'english' in lang ? (lang as { english?: string }).english : undefined;
@@ -520,7 +520,7 @@ export function LoginPage() {
                   <span className="truncate">
                     {lang.name}
                     {english && (
-                      <span className="ml-1 text-2xs text-content-tertiary">({english})</span>
+                      <span className="ms-1 text-2xs text-content-tertiary">({english})</span>
                     )}
                   </span>
                 </button>
@@ -536,7 +536,7 @@ export function LoginPage() {
           first thing the eye lands on - primary action priority. */}
       {/* [RSC-IRAN] hidden: marketing panel (Open Source badge, headline, stats, hex grid, AGPL/GitHub) — do not delete */}
       {false && (
-      <div className="hidden lg:flex relative z-10 lg:order-2 flex-col justify-center pl-14 xl:pl-20 pr-12 xl:pr-16 py-6 overflow-hidden">
+      <div className="hidden lg:flex relative z-10 lg:order-2 flex-col justify-center ps-14 xl:ps-20 pe-12 xl:pe-16 py-6 overflow-hidden">
         {/* Marketing column showcase - color lives here. Sky/cyan mesh +
             slow-drifting orbs + faint noise grain. The form column on the
             left stays a clean white field; this column carries the visual
@@ -559,9 +559,9 @@ export function LoginPage() {
                 'radial-gradient(ellipse 70% 60% at 30% 90%, rgba(139,92,246,0.18), transparent 60%)',
             }}
           />
-          <div className="absolute top-[8%] right-[8%] w-[420px] h-[420px] rounded-full bg-sky-300/45 dark:bg-sky-500/35 blur-[100px] login-orb-a" />
-          <div className="absolute bottom-[6%] left-[10%] w-[360px] h-[360px] rounded-full bg-cyan-200/40 dark:bg-violet-500/30 blur-[100px] login-orb-b" />
-          <div className="absolute top-[42%] right-[34%] w-[280px] h-[280px] rounded-full bg-white/55 dark:bg-white/0 blur-[80px] login-orb-c" />
+          <div className="absolute top-[8%] end-[8%] w-[420px] h-[420px] rounded-full bg-sky-300/45 dark:bg-sky-500/35 blur-[100px] login-orb-a" />
+          <div className="absolute bottom-[6%] start-[10%] w-[360px] h-[360px] rounded-full bg-cyan-200/40 dark:bg-violet-500/30 blur-[100px] login-orb-b" />
+          <div className="absolute top-[42%] end-[34%] w-[280px] h-[280px] rounded-full bg-white/55 dark:bg-white/0 blur-[80px] login-orb-c" />
           <div
             className="absolute inset-0 opacity-[0.04] dark:opacity-[0.07] mix-blend-overlay"
             style={{
@@ -631,7 +631,7 @@ export function LoginPage() {
               column step = 88px (one hex width on the same row)
               alternating rows are offset by 44px (half a hex) - that's
               what makes the slanted edges meet exactly. */}
-        <div className="relative mt-1 mr-auto h-[280px] w-[560px] max-w-full overflow-hidden animate-stagger-in" style={{ animationDelay: '260ms' }}>
+        <div className="relative mt-1 me-auto h-[280px] w-[560px] max-w-full overflow-hidden animate-stagger-in" style={{ animationDelay: '260ms' }}>
           {([
             // Top row (y = -75) - 6 cells, offset by 44.
             { x: -220, y: -76, icon: ShieldCheck,     label: t('login.mod.local',     { defaultValue: 'Local' }) },
@@ -663,7 +663,7 @@ export function LoginPage() {
               // cell so they don't fight with our positioning maths.
               <div
                 key={idx}
-                className="absolute top-1/2 left-1/2"
+                className="absolute top-1/2 start-1/2"
                 style={{
                   transform: `translate(calc(-50% + ${cell.x}px), calc(-50% + ${cell.y}px))`,
                 }}
@@ -716,8 +716,8 @@ export function LoginPage() {
           ].map((feat) => {
             const Icon = feat.icon;
             return (
-              <div key={feat.title} className="relative pl-4 max-w-[210px]">
-                <span aria-hidden className="absolute left-0 top-1 h-[14px] w-[2px] rounded-full bg-gradient-to-b from-oe-blue to-sky-500/60" />
+              <div key={feat.title} className="relative ps-4 max-w-[210px]">
+                <span aria-hidden className="absolute start-0 top-1 h-[14px] w-[2px] rounded-full bg-gradient-to-b from-oe-blue to-sky-500/60" />
                 <div className="flex items-center gap-1.5">
                   <Icon size={13} strokeWidth={1.8} className="text-oe-blue/85" />
                   <span className="text-[12.5px] font-semibold tracking-[-0.01em] text-content-primary leading-tight">
@@ -758,7 +758,7 @@ export function LoginPage() {
           <div className="absolute inset-0 bg-gradient-to-l from-white/0 via-white/60 to-white dark:from-[#070912]/0 dark:via-[#070912]/60 dark:to-[#070912]" />
           {/* Tiny far-corner sky tint just to soften the edge - the glass
               still has something to lift off, but the field reads white. */}
-          <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-sky-100/55 dark:bg-sky-500/10 blur-[110px]" />
+          <div className="absolute -top-24 -start-24 w-[420px] h-[420px] rounded-full bg-sky-100/55 dark:bg-sky-500/10 blur-[110px]" />
         </div>
         <div className="w-full max-w-[380px] relative z-10">
           {/* Logo - tenant white-label (logo / company name) when set via
@@ -878,7 +878,7 @@ export function LoginPage() {
             {/* Inner soft glow gradient on the top-left corner */}
             <div
               aria-hidden
-              className="pointer-events-none absolute top-0 left-0 w-32 h-32 rounded-tl-2xl opacity-60"
+              className="pointer-events-none absolute top-0 start-0 w-32 h-32 rounded-tl-2xl opacity-60"
               style={{
                 background:
                   'radial-gradient(circle at 0% 0%, rgba(255,255,255,0.5), transparent 70%)',
@@ -902,9 +902,9 @@ export function LoginPage() {
                   <Link to="/forgot-password" className="text-2xs font-medium text-oe-blue hover:text-oe-blue-hover transition-colors">{t('auth.forgot_password', 'Forgot password?')}</Link>
                 </div>
                 <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-content-tertiary"><Lock size={15} /></div>
-                  <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t('auth.password_placeholder', 'Enter your password')} autoComplete="current-password" required aria-required="true" minLength={8} className="h-9 w-full rounded-lg border border-border bg-surface-primary pl-9 pr-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? t('auth.hide_password', 'Hide password') : t('auth.show_password', 'Show password')} className="absolute inset-y-0 right-0 flex items-center pr-3 text-content-tertiary hover:text-content-secondary transition-colors" tabIndex={-1}>
+                  <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary"><Lock size={15} /></div>
+                  <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t('auth.password_placeholder', 'Enter your password')} autoComplete="current-password" required aria-required="true" minLength={8} className="h-9 w-full rounded-lg border border-border bg-surface-primary ps-9 pe-9 text-sm text-content-primary placeholder:text-content-tertiary transition-all duration-fast ease-oe focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent hover:border-content-tertiary" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? t('auth.hide_password', 'Hide password') : t('auth.show_password', 'Show password')} className="absolute inset-y-0 end-0 flex items-center pe-3 text-content-tertiary hover:text-content-secondary transition-colors" tabIndex={-1}>
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -1006,7 +1006,7 @@ export function LoginPage() {
                       type="button"
                       onClick={() => handleDemoLogin(acct.email)}
                       disabled={demoLoading !== null}
-                      className="flex w-full items-center gap-3 rounded-xl border border-border-light/50 dark:border-white/10 bg-surface-secondary/50 dark:bg-white/[0.06] px-3.5 py-2.5 text-left transition-all hover:border-oe-blue/40 hover:bg-oe-blue/[0.05] dark:hover:bg-oe-blue/[0.14] hover:shadow-sm disabled:opacity-50 group"
+                      className="flex w-full items-center gap-3 rounded-xl border border-border-light/50 dark:border-white/10 bg-surface-secondary/50 dark:bg-white/[0.06] px-3.5 py-2.5 text-start transition-all hover:border-oe-blue/40 hover:bg-oe-blue/[0.05] dark:hover:bg-oe-blue/[0.14] hover:shadow-sm disabled:opacity-50 group"
                     >
                       <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${acct.color} text-white text-sm font-bold shadow-sm`}>
                         {demoLoading === acct.email ? (
@@ -1031,7 +1031,7 @@ export function LoginPage() {
                 (touch / keyboard). Anchored to this relative wrapper at a fixed
                 top offset so it stays on the header row whether the demo list is
                 open or closed. */}
-            <div className="group absolute right-2 top-2 z-40">
+            <div className="group absolute end-2 top-2 z-40">
               <button
                 type="button"
                 aria-label={t('auth.demo_hint_aria', { defaultValue: 'About the demo sign-in block' })}
@@ -1042,7 +1042,7 @@ export function LoginPage() {
               </button>
               <div
                 role="tooltip"
-                className={`pointer-events-none absolute right-0 top-full mt-2 w-64 rounded-xl border border-border bg-surface-elevated backdrop-blur-md px-3.5 py-2.5 text-left text-xs leading-relaxed text-content-primary shadow-2xl transition-opacity duration-150 ${demoHint ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                className={`pointer-events-none absolute end-0 top-full mt-2 w-64 rounded-xl border border-border bg-surface-elevated backdrop-blur-md px-3.5 py-2.5 text-start text-xs leading-relaxed text-content-primary shadow-2xl transition-opacity duration-150 ${demoHint ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
               >
                 {t('auth.demo_hint', {
                   defaultValue:
@@ -1178,7 +1178,7 @@ export function LoginPage() {
                         </div>
                         <span className="text-xs font-semibold text-content-primary">{cap.title}</span>
                       </div>
-                      <p className="text-2xs text-content-tertiary leading-relaxed pl-8">{cap.desc}</p>
+                      <p className="text-2xs text-content-tertiary leading-relaxed ps-8">{cap.desc}</p>
                     </div>
                   );
                 })}

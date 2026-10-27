@@ -179,7 +179,7 @@ export function ThirdPartyLicenses({ className }: { className?: string }) {
                     type="button"
                     onClick={() => void openText(item.name)}
                     aria-expanded={openName === item.name}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-surface-secondary"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-start hover:bg-surface-secondary"
                   >
                     <ChevronDown
                       size={14}

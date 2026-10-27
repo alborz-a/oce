@@ -89,7 +89,7 @@ export function CostPerAreaBenchmark({
             </p>
             <p className="text-lg font-semibold text-content-primary tabular-nums">
               {fmtWithCurrency(costPerM2, locale || 'de-DE', currencyCode)}
-              <span className="ml-1 text-xs font-normal text-content-tertiary">
+              <span className="ms-1 text-xs font-normal text-content-tertiary">
                 {t('boq.cost_per_area_over', {
                   defaultValue: 'over {{area}} m2',
                   area: areaFmt.format(grossFloorArea as number),
@@ -111,7 +111,7 @@ export function CostPerAreaBenchmark({
               })}
               {percentile !== null && (
                 <span
-                  className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
+                  className={`ms-2 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold tabular-nums ${
                     percentile <= 50
                       ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
                       : percentile <= 75
@@ -130,7 +130,7 @@ export function CostPerAreaBenchmark({
           </div>
         )}
 
-        <div className="ml-auto">
+        <div className="ms-auto">
           <InfoHint text={helpText} />
         </div>
       </div>

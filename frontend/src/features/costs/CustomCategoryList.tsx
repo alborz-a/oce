@@ -71,7 +71,7 @@ export function CustomCategoryList({
                 size={12}
                 className={`shrink-0 ${isSelected ? 'text-white/80' : 'text-oe-blue'}`}
               />
-              <span className="flex-1 truncate text-left">{label}</span>
+              <span className="flex-1 truncate text-start">{label}</span>
             </button>
           );
         })}

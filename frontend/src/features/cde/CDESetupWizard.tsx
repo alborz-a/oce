@@ -294,7 +294,7 @@ export function CDESetupWizard({ open, onClose, projectId }: CDESetupWizardProps
               size="sm"
               disabled={step === 0 || saveMut.isPending}
               onClick={() => setStep((s) => Math.max(s - 1, 0))}
-              icon={<ArrowLeft size={14} />}
+              icon={<ArrowLeft size={14} className="rtl:rotate-180" />}
             >
               {t('common.back', { defaultValue: 'Back' })}
             </Button>
@@ -304,7 +304,7 @@ export function CDESetupWizard({ open, onClose, projectId }: CDESetupWizardProps
                 size="sm"
                 disabled={loading || saveMut.isPending}
                 onClick={() => void goNext()}
-                icon={<ArrowRight size={14} />}
+                icon={<ArrowRight size={14} className="rtl:rotate-180" />}
               >
                 {t('common.next', { defaultValue: 'Next' })}
               </Button>

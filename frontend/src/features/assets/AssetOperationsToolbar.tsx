@@ -32,7 +32,7 @@ export function AssetOperationsToolbar({ projectId, onChanged }: AssetOperations
         onClick={() => setDiscovering(true)}
         data-testid="discover-assets-open"
       >
-        <Sparkles size={14} className="mr-1" />
+        <Sparkles size={14} className="me-1" />
         {t('assets.discover.open', { defaultValue: 'Discover assets' })}
       </Button>
       <WarrantyAlertsButton projectId={projectId} />

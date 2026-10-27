@@ -200,7 +200,7 @@ export function ImpactSimulator({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-surface-secondary"
+        className="flex w-full items-center justify-between px-4 py-3 text-start hover:bg-surface-secondary"
         aria-expanded={open}
       >
         <span className="flex items-center gap-2">
@@ -490,7 +490,7 @@ export function ImpactSimulator({
                       />
                     </label>
                     <Button variant="secondary" size="sm" onClick={runOverrides} disabled={isFetching}>
-                      <RefreshCw size={14} className={`mr-1 ${isFetching ? 'animate-spin' : ''}`} />
+                      <RefreshCw size={14} className={`me-1 ${isFetching ? 'animate-spin' : ''}`} />
                       {t('changeorders.impact_rerun', { defaultValue: 'Re-run' })}
                     </Button>
                     {(applied.cost !== undefined || applied.days !== undefined) && (
@@ -513,7 +513,7 @@ export function ImpactSimulator({
                       onClick={() => publishMut.mutate()}
                       disabled={publishMut.isPending}
                     >
-                      <Save size={14} className="mr-1" />
+                      <Save size={14} className="me-1" />
                       {t('changeorders.impact_publish', { defaultValue: 'Save scenario' })}
                     </Button>
                   )}

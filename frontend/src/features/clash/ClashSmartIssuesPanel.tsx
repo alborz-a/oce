@@ -280,27 +280,27 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-content-tertiary text-xs uppercase tracking-wide">
-                  <th className="py-2 pr-3 font-medium">
+                <tr className="text-start text-content-tertiary text-xs uppercase tracking-wide">
+                  <th className="py-2 pe-3 font-medium">
                     {t('clash.issues.col_issue', { defaultValue: 'Issue' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('clash.issues.col_status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('clash.issues.col_priority', {
                       defaultValue: 'Priority',
                     })}
                   </th>
-                  <th className="py-2 pr-3 font-medium text-right">
+                  <th className="py-2 pe-3 font-medium text-end">
                     {t('clash.issues.col_members', { defaultValue: 'Clashes' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('clash.issues.col_last_seen', {
                       defaultValue: 'Last seen',
                     })}
                   </th>
-                  <th className="py-2 font-medium text-right">
+                  <th className="py-2 font-medium text-end">
                     {t('clash.issues.col_actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -315,7 +315,7 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                       className="border-t border-border align-top"
                       data-testid={`clash-issue-row-${issue.id}`}
                     >
-                      <td className="py-2.5 pr-3">
+                      <td className="py-2.5 pe-3">
                         <div className="font-medium text-content-primary">
                           {issue.server_assigned_id ||
                             t('clash.issues.unlabelled', {
@@ -398,12 +398,12 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                           </div>
                         )}
                       </td>
-                      <td className="py-2.5 pr-3">
+                      <td className="py-2.5 pe-3">
                         <Badge variant={STATUS_VARIANT[issue.status]} size="sm">
                           {statusLabel(issue.status)}
                         </Badge>
                       </td>
-                      <td className="py-2.5 pr-3">
+                      <td className="py-2.5 pe-3">
                         <Badge
                           variant={PRIORITY_VARIANT[issue.priority]}
                           size="sm"
@@ -411,13 +411,13 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                           <span className="capitalize">{issue.priority}</span>
                         </Badge>
                       </td>
-                      <td className="py-2.5 pr-3 text-right tabular-nums">
+                      <td className="py-2.5 pe-3 text-end tabular-nums">
                         {issue.member_count}
                       </td>
-                      <td className="py-2.5 pr-3 text-content-secondary">
+                      <td className="py-2.5 pe-3 text-content-secondary">
                         <DateDisplay value={issue.updated_at} format="relative" />
                       </td>
-                      <td className="py-2.5 text-right">
+                      <td className="py-2.5 text-end">
                         {suppressed ? (
                           <Button
                             variant="secondary"
@@ -477,7 +477,7 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   data-testid="clash-issues-prev"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
                   {t('common.previous', { defaultValue: 'Previous' })}
                 </Button>
                 <Button
@@ -490,7 +490,7 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                   data-testid="clash-issues-next"
                 >
                   {t('common.next', { defaultValue: 'Next' })}
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 rtl:rotate-180" />
                 </Button>
               </div>
             </div>

@@ -226,7 +226,7 @@ export function AIChatPanel({
   const offTranslate = isRTL ? '-translate-x-full' : 'translate-x-full';
   return (
     <div
-      className={`fixed right-0 top-12 z-40 h-[calc(100%-3rem)] w-[320px] bg-surface-elevated border-l border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
+      className={`fixed end-0 top-12 z-40 h-[calc(100%-3rem)] w-[320px] bg-surface-elevated border-s border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : offTranslate
       }`}
     >
@@ -336,13 +336,13 @@ export function AIChatPanel({
                       <thead>
                         <tr className="border-b border-border-light bg-surface-secondary">
                           <th className="w-7 px-1.5 py-1.5" />
-                          <th className="px-2 py-1.5 text-left font-medium text-content-tertiary">
+                          <th className="px-2 py-1.5 text-start font-medium text-content-tertiary">
                             {t('boq.description', { defaultValue: 'Description' })}
                           </th>
                           <th className="w-10 px-1 py-1.5 text-center font-medium text-content-tertiary">
                             {t('boq.unit', { defaultValue: 'Unit' })}
                           </th>
-                          <th className="w-16 px-1.5 py-1.5 text-right font-medium text-content-tertiary">
+                          <th className="w-16 px-1.5 py-1.5 text-end font-medium text-content-tertiary">
                             {t('boq.total', { defaultValue: 'Total' })}
                           </th>
                         </tr>
@@ -378,7 +378,7 @@ export function AIChatPanel({
                               <td className="px-1 py-1.5 text-center text-content-secondary font-mono uppercase">
                                 {item.unit}
                               </td>
-                              <td className="px-1.5 py-1.5 text-right tabular-nums text-content-primary">
+                              <td className="px-1.5 py-1.5 text-end tabular-nums text-content-primary">
                                 {fmtNum(item.total)}
                               </td>
                             </tr>

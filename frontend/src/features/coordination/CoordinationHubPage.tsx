@@ -114,7 +114,7 @@ function GlassPanel({
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-gradient-radial from-sky-500/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -top-20 -end-20 h-48 w-48 rounded-full bg-gradient-radial from-sky-500/15 to-transparent blur-3xl"
       />
       <div className="relative flex items-start justify-between gap-3 border-b border-white/40 px-5 py-4 dark:border-white/5">
         <div className="flex items-start gap-3">
@@ -204,7 +204,7 @@ function QuickActionTile({
     <button
       type="button"
       onClick={() => navigate(to)}
-      className="group relative flex items-start gap-3 overflow-hidden rounded-xl border border-white/40 bg-white/40 px-3.5 py-3 text-left backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-oe-blue/40 hover:bg-white/70 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-white/5 dark:bg-slate-900/40 dark:hover:bg-slate-800/60"
+      className="group relative flex items-start gap-3 overflow-hidden rounded-xl border border-white/40 bg-white/40 px-3.5 py-3 text-start backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-oe-blue/40 hover:bg-white/70 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:border-white/5 dark:bg-slate-900/40 dark:hover:bg-slate-800/60"
     >
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue transition-colors group-hover:bg-oe-blue group-hover:text-white">
         {icon}
@@ -407,11 +407,11 @@ export function CoordinationHubPage() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 -left-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -top-40 -start-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 -right-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -bottom-40 -end-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
       />
 
       <div className="space-y-5 py-5 lg:py-6">

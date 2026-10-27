@@ -405,7 +405,7 @@ function TreeNode({
           onSelect(node.code, node.label);
         }}
         className={clsx(
-          'flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-left text-xs transition-colors',
+          'flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-start text-xs transition-colors',
           isSelected
             ? 'bg-oe-blue/10 text-oe-blue font-medium'
             : 'text-content-primary hover:bg-surface-secondary',
@@ -414,7 +414,7 @@ function TreeNode({
       >
         {hasChildren ? (
           <span className="shrink-0 w-4 h-4 flex items-center justify-center text-content-tertiary">
-            {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+            {isExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} className="rtl:rotate-180" />}
           </span>
         ) : (
           <span className="shrink-0 w-4" />
@@ -531,7 +531,7 @@ export function ClassificationPicker({
       {value ? (
         <span className="truncate max-w-[180px]">
           <span className="font-mono">{value}</span>
-          {selectedLabel && <span className="ml-1 text-content-tertiary">– {(selectedLabel.split('/')[0] ?? '').trim()}</span>}
+          {selectedLabel && <span className="ms-1 text-content-tertiary">– {(selectedLabel.split('/')[0] ?? '').trim()}</span>}
         </span>
       ) : (
         <span>{t('boq.select_classification', { defaultValue: 'Classification...' })}</span>
@@ -543,7 +543,7 @@ export function ClassificationPicker({
     <div
       className={clsx(
         'flex flex-col bg-surface-elevated border border-border-light shadow-lg rounded-lg overflow-hidden',
-        mode === 'dropdown' ? 'absolute left-0 top-full mt-1 z-50 w-72 max-h-80' : 'w-full h-full',
+        mode === 'dropdown' ? 'absolute start-0 top-full mt-1 z-50 w-72 max-h-80' : 'w-full h-full',
       )}
     >
       {/* Header */}
@@ -577,7 +577,7 @@ export function ClassificationPicker({
                 key={item.code}
                 onClick={() => handleSelect(item.code, item.label)}
                 className={clsx(
-                  'flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-xs transition-colors',
+                  'flex w-full items-center gap-2 rounded-md px-2 py-1 text-start text-xs transition-colors',
                   value === item.code
                     ? 'bg-oe-blue/10 text-oe-blue font-medium'
                     : 'text-content-primary hover:bg-surface-secondary',

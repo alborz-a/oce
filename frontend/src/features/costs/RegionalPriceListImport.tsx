@@ -469,7 +469,7 @@ export function RegionalPriceListImport() {
 
               {preview.sample_rows.length > 0 && (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
+                  <table className="w-full text-start text-xs">
                     <thead className="text-content-secondary">
                       <tr>
                         <th className="py-1 pe-2 font-medium">{t('costs_pricelist.col_code', { defaultValue: 'Code' })}</th>

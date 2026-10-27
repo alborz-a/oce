@@ -42,7 +42,7 @@ export function CostMatchPage() {
               'Somebody sends you a bill written in their own words, and you need it priced in yours. This scores every line against a cost base you already trust, then hands you the ones it is not sure about. It never prices anything by itself.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('cost_match.flow_step1', {
               defaultValue:

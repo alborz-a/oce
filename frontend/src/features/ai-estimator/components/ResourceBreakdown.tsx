@@ -69,19 +69,19 @@ export function ResourceBreakdown({
       <table className="w-full text-xs">
         <thead className="bg-surface-secondary text-content-tertiary">
           <tr>
-            <th className="px-2.5 py-1.5 text-left font-medium">
+            <th className="px-2.5 py-1.5 text-start font-medium">
               {t('aiest.resources.resource', { defaultValue: 'Resource' })}
             </th>
-            <th className="px-2.5 py-1.5 text-left font-medium">
+            <th className="px-2.5 py-1.5 text-start font-medium">
               {t('aiest.resources.type', { defaultValue: 'Type' })}
             </th>
-            <th className="px-2.5 py-1.5 text-right font-medium">
+            <th className="px-2.5 py-1.5 text-end font-medium">
               {t('aiest.resources.qty', { defaultValue: 'Qty' })}
             </th>
-            <th className="px-2.5 py-1.5 text-right font-medium">
+            <th className="px-2.5 py-1.5 text-end font-medium">
               {t('aiest.resources.rate', { defaultValue: 'Rate' })}
             </th>
-            <th className="px-2.5 py-1.5 text-right font-medium">
+            <th className="px-2.5 py-1.5 text-end font-medium">
               {t('aiest.resources.cost', { defaultValue: 'Cost' })}
             </th>
           </tr>
@@ -92,7 +92,7 @@ export function ResourceBreakdown({
               <td className="px-2.5 py-1.5">
                 <span className="font-medium text-content-primary">{r.name}</span>
                 {r.code && (
-                  <span className="ml-1.5 font-mono text-[10px] text-content-tertiary">
+                  <span className="ms-1.5 font-mono text-[10px] text-content-tertiary">
                     {r.code}
                   </span>
                 )}
@@ -107,13 +107,13 @@ export function ResourceBreakdown({
                   {r.type}
                 </span>
               </td>
-              <td className="px-2.5 py-1.5 text-right tabular-nums text-content-secondary">
+              <td className="px-2.5 py-1.5 text-end tabular-nums text-content-secondary">
                 {r.quantity} {r.unit}
               </td>
-              <td className="px-2.5 py-1.5 text-right tabular-nums text-content-secondary">
+              <td className="px-2.5 py-1.5 text-end tabular-nums text-content-secondary">
                 {fmtMoneyStr(r.unit_rate, currency, locale)}
               </td>
-              <td className="px-2.5 py-1.5 text-right tabular-nums font-medium text-content-primary">
+              <td className="px-2.5 py-1.5 text-end tabular-nums font-medium text-content-primary">
                 {fmtMoneyStr(r.cost, currency, locale)}
               </td>
             </tr>

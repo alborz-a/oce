@@ -316,7 +316,7 @@ export function CustomColumnsDialog({
           key={preset.id}
           onClick={() => applyPreset(preset)}
           disabled={allApplied || addMut.isPending}
-          className="flex items-start gap-3 rounded-lg border border-border-light bg-surface-primary p-3 text-left transition-all hover:border-oe-blue/40 hover:bg-oe-blue-subtle/30 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-start gap-3 rounded-lg border border-border-light bg-surface-primary p-3 text-start transition-all hover:border-oe-blue/40 hover:bg-oe-blue-subtle/30 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <div
             className={`flex h-9 w-9 items-center justify-center rounded-lg shrink-0 ${preset.iconClass}`}
@@ -750,7 +750,7 @@ export function CustomColumnsDialog({
                         id="column-options"
                         value={newOptions}
                         onChange={(e) => setNewOptions(e.target.value)}
-                        placeholder="Approved, Pending, Rejected"
+                        placeholder={t('boq.column_options_placeholder', { defaultValue: 'Approved, Pending, Rejected' })}
                         rows={2}
                         className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-all resize-none"
                       />
@@ -830,7 +830,7 @@ export function CustomColumnsDialog({
                           onClick={handleTestFormula}
                           disabled={!newFormula.trim() || !!formulaError}
                         >
-                          <PlayCircle size={14} className="mr-1.5" />
+                          <PlayCircle size={14} className="me-1.5" />
                           {t('boq.column_test_formula', { defaultValue: 'Test' })}
                         </Button>
                         {testResult !== null && (
@@ -867,7 +867,7 @@ export function CustomColumnsDialog({
                       size="sm"
                       disabled={!newName.trim() || addMut.isPending}
                     >
-                      <Plus size={14} className="mr-1.5" />
+                      <Plus size={14} className="me-1.5" />
                       {t('boq.add_column_btn', { defaultValue: 'Add column' })}
                     </Button>
                   </div>

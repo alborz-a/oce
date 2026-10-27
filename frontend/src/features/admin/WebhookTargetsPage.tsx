@@ -169,7 +169,7 @@ export function WebhookTargetsPage() {
       <section className="rounded-xl border border-border-light bg-surface-elevated overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center text-sm text-content-secondary">
-            <Loader2 size={16} className="inline-block animate-spin mr-2" />
+            <Loader2 size={16} className="inline-block animate-spin me-2" />
             {t('common.loading', { defaultValue: 'Loading…' })}
           </div>
         ) : isError ? (
@@ -196,11 +196,11 @@ export function WebhookTargetsPage() {
           <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-surface-secondary/40 text-xs uppercase tracking-wide text-content-tertiary">
               <tr>
-                <th className="text-left px-4 py-2">{t('common.name', { defaultValue: 'Name' })}</th>
-                <th className="text-left px-4 py-2">{t('webhook_targets.url', { defaultValue: 'URL' })}</th>
-                <th className="text-left px-4 py-2">{t('webhook_targets.filter', { defaultValue: 'Event filter' })}</th>
-                <th className="text-left px-4 py-2">{t('webhook_targets.status', { defaultValue: 'Status' })}</th>
-                <th className="text-right px-4 py-2">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                <th className="text-start px-4 py-2">{t('common.name', { defaultValue: 'Name' })}</th>
+                <th className="text-start px-4 py-2">{t('webhook_targets.url', { defaultValue: 'URL' })}</th>
+                <th className="text-start px-4 py-2">{t('webhook_targets.filter', { defaultValue: 'Event filter' })}</th>
+                <th className="text-start px-4 py-2">{t('webhook_targets.status', { defaultValue: 'Status' })}</th>
+                <th className="text-end px-4 py-2">{t('common.actions', { defaultValue: 'Actions' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -221,7 +221,7 @@ export function WebhookTargetsPage() {
                   <td className="px-4 py-3 text-xs">
                     <StatusBadge target={target} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <div className="inline-flex items-center gap-1">
                       <button
                         type="button"

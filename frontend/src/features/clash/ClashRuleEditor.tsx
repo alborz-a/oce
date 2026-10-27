@@ -133,7 +133,7 @@ export function ClashRuleEditor({
             data-testid="clash-rule-editor-table"
           >
             <thead>
-              <tr className="text-left text-content-tertiary text-xs uppercase">
+              <tr className="text-start text-content-tertiary text-xs uppercase">
                 <th className="px-2 py-2">{t('clash.rules.disc_a', { defaultValue: 'Discipline A' })}</th>
                 <th className="px-2 py-2">{t('clash.rules.disc_b', { defaultValue: 'Discipline B' })}</th>
                 <th className="px-2 py-2 w-32">
@@ -211,7 +211,7 @@ export function ClashRuleEditor({
                         aria-label={t('clash.rules.tolerance', {
                           defaultValue: 'Tolerance (m)',
                         })}
-                        className="w-full rounded border border-border px-2 py-1 bg-surface-primary text-right"
+                        className="w-full rounded border border-border px-2 py-1 bg-surface-primary text-end"
                         value={r.tolerance_m}
                         onChange={(e) =>
                           setDraft((d) =>
@@ -261,10 +261,10 @@ export function ClashRuleEditor({
                         >
                           —
                         </option>
-                        <option value="critical">critical</option>
-                        <option value="high">high</option>
-                        <option value="medium">medium</option>
-                        <option value="low">low</option>
+                        <option value="critical">{t('clash.severity.critical', { defaultValue: 'Critical' })}</option>
+                        <option value="high">{t('clash.severity.high', { defaultValue: 'High' })}</option>
+                        <option value="medium">{t('clash.severity.medium', { defaultValue: 'Medium' })}</option>
+                        <option value="low">{t('clash.severity.low', { defaultValue: 'Low' })}</option>
                       </select>
                     </td>
                     <td className="px-2 py-2 text-center">

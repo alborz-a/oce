@@ -488,7 +488,7 @@ export function AssemblyEditorPage() {
                 onClick={() => handleAddComponent('material')}
                 disabled={!canEditAssembly}
                 title={editHint}
-                className="rounded-r-none"
+                className="rounded-e-none"
               >
                 {t('assemblies.add_material', { defaultValue: 'Add material' })}
               </Button>
@@ -501,7 +501,7 @@ export function AssemblyEditorPage() {
                   defaultValue: 'Choose a different resource type',
                 })}
                 aria-expanded={addMenuOpen}
-                className="px-2 rounded-r-lg border-l border-white/20 bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-2 rounded-e-lg border-s border-white/20 bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ChevronDown size={14} />
               </button>
@@ -515,7 +515,7 @@ export function AssemblyEditorPage() {
                 />
                 <div
                   role="menu"
-                  className="absolute right-0 mt-1.5 w-56 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-40 py-1 animate-fade-in"
+                  className="absolute end-0 mt-1.5 w-56 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-40 py-1 animate-fade-in"
                 >
                   {(
                     [
@@ -532,7 +532,7 @@ export function AssemblyEditorPage() {
                       type="button"
                       role="menuitem"
                       onClick={() => handleAddComponent(rt)}
-                      className="w-full px-3 py-1.5 text-left text-xs hover:bg-surface-secondary flex items-center gap-2"
+                      className="w-full px-3 py-1.5 text-start text-xs hover:bg-surface-secondary flex items-center gap-2"
                     >
                       <Icon size={14} className={color} />
                       {t(`assemblies.add_${rt}`, {
@@ -545,7 +545,7 @@ export function AssemblyEditorPage() {
                     type="button"
                     role="menuitem"
                     onClick={() => openCatalogPicker(null)}
-                    className="w-full px-3 py-1.5 text-left text-xs hover:bg-surface-secondary flex items-center gap-2 text-emerald-700"
+                    className="w-full px-3 py-1.5 text-start text-xs hover:bg-surface-secondary flex items-center gap-2 text-emerald-700"
                   >
                     <Boxes size={14} />
                     {t('assemblies.from_catalog', { defaultValue: 'From Catalog…' })}
@@ -567,12 +567,12 @@ export function AssemblyEditorPage() {
                 key={tag}
                 variant="neutral"
                 size="md"
-                className="bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-400 border-violet-200/50 pr-1"
+                className="bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-400 border-violet-200/50 pe-1"
               >
                 {tag}
                 <button aria-label={t('common.remove_tag', { tag, defaultValue: 'Remove tag {{tag}}' })}
                   onClick={() => handleRemoveTag(tag)}
-                  className="ml-1 flex h-4 w-4 items-center justify-center rounded-full hover:bg-violet-200 dark:hover:bg-violet-800/40 transition-colors"
+                  className="ms-1 flex h-4 w-4 items-center justify-center rounded-full hover:bg-violet-200 dark:hover:bg-violet-800/40 transition-colors"
                 >
                   <X size={10} />
                 </button>
@@ -624,7 +624,7 @@ export function AssemblyEditorPage() {
           <fieldset disabled={!canEditAssembly} className="m-0 min-w-0 border-0 p-0">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border-light bg-surface-tertiary text-left">
+              <tr className="border-b border-border-light bg-surface-tertiary text-start">
                 <th className="w-8 px-1 py-3" />
                 <th className="px-4 py-3 font-medium text-content-secondary min-w-[240px]">
                   {t('boq.description')}
@@ -632,7 +632,7 @@ export function AssemblyEditorPage() {
                 <th className="px-4 py-3 font-medium text-content-secondary w-20 text-center">
                   {t('assemblies.type', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-4 py-3 font-medium text-content-secondary w-24 text-right">
+                <th className="px-4 py-3 font-medium text-content-secondary w-24 text-end">
                   <span className="inline-flex items-center justify-end gap-1">
                     {t('assemblies.factor', { defaultValue: 'Factor' })}
                     <Info
@@ -652,16 +652,16 @@ export function AssemblyEditorPage() {
                     </Info>
                   </span>
                 </th>
-                <th className="px-4 py-3 font-medium text-content-secondary w-24 text-right">
+                <th className="px-4 py-3 font-medium text-content-secondary w-24 text-end">
                   {t('boq.quantity', { defaultValue: 'Qty' })}
                 </th>
                 <th className="px-4 py-3 font-medium text-content-secondary w-20 text-center">
                   {t('boq.unit')}
                 </th>
-                <th className="px-4 py-3 font-medium text-content-secondary w-28 text-right">
+                <th className="px-4 py-3 font-medium text-content-secondary w-28 text-end">
                   {t('assemblies.unit_cost', { defaultValue: 'Unit Cost' })}
                 </th>
-                <th className="px-4 py-3 font-medium text-content-secondary w-32 text-right">
+                <th className="px-4 py-3 font-medium text-content-secondary w-32 text-end">
                   {t('boq.total', { defaultValue: 'Total' })}
                 </th>
                 <th className="px-4 py-3 w-10" />
@@ -711,10 +711,10 @@ export function AssemblyEditorPage() {
               <tfoot>
                 {assembly.bid_factor !== 1.0 && (
                   <tr className="border-t border-border-light bg-surface-tertiary/50">
-                    <td colSpan={7} className="px-4 py-2.5 text-right text-sm text-content-secondary">
+                    <td colSpan={7} className="px-4 py-2.5 text-end text-sm text-content-secondary">
                       {t('assemblies.subtotal', { defaultValue: 'Subtotal' })}
                     </td>
-                    <td className="px-4 py-2.5 text-right text-sm text-content-secondary tabular-nums">
+                    <td className="px-4 py-2.5 text-end text-sm text-content-secondary tabular-nums">
                       {fmt(computedTotal)}
                     </td>
                     <td />
@@ -722,17 +722,17 @@ export function AssemblyEditorPage() {
                 )}
                 {assembly.bid_factor !== 1.0 && (
                   <tr className="border-t border-border-light bg-surface-tertiary/50">
-                    <td colSpan={7} className="px-4 py-2.5 text-right text-sm text-content-secondary">
+                    <td colSpan={7} className="px-4 py-2.5 text-end text-sm text-content-secondary">
                       {t('assemblies.bid_factor', { defaultValue: 'Bid Factor' })} ({assembly.bid_factor})
                     </td>
-                    <td className="px-4 py-2.5 text-right text-sm text-content-secondary tabular-nums">
+                    <td className="px-4 py-2.5 text-end text-sm text-content-secondary tabular-nums">
                       x {assembly.bid_factor}
                     </td>
                     <td />
                   </tr>
                 )}
                 <tr className="border-t-2 border-border bg-surface-tertiary font-semibold">
-                  <td colSpan={7} className="px-4 py-3 text-right text-content-primary">
+                  <td colSpan={7} className="px-4 py-3 text-end text-content-primary">
                     {assembly.bid_factor !== 1.0
                       ? t('assemblies.total_rate_adjusted', {
                           defaultValue: 'Total Rate (\u00d7{{factor}} bid factor)',
@@ -740,9 +740,9 @@ export function AssemblyEditorPage() {
                         })
                       : t('assemblies.total_rate', { defaultValue: 'Total Rate' })}
                   </td>
-                  <td className="px-4 py-3 text-right text-content-primary text-base tabular-nums">
+                  <td className="px-4 py-3 text-end text-content-primary text-base tabular-nums">
                     {fmt(adjustedTotal)}
-                    <span className="ml-1 text-xs font-normal text-content-tertiary">
+                    <span className="ms-1 text-xs font-normal text-content-tertiary">
                       / {unitGlyph(assembly.unit)}
                     </span>
                   </td>
@@ -960,7 +960,7 @@ function CostDbSearchForAssembly({
         <div className="flex-1 overflow-y-auto px-6 py-3">
           {isLoading ? (
             <div className="flex items-center justify-center py-12 text-xs text-content-tertiary">
-              <Loader2 size={16} className="animate-spin mr-2" /> {t('common.searching', { defaultValue: 'Searching...' })}
+              <Loader2 size={16} className="animate-spin me-2" /> {t('common.searching', { defaultValue: 'Searching...' })}
             </div>
           ) : !items || items.length === 0 ? (
             <div className="flex items-center justify-center py-12 text-xs text-content-tertiary">
@@ -978,7 +978,7 @@ function CostDbSearchForAssembly({
                     {item.description && <p className="text-2xs text-content-tertiary font-mono">{item.code}</p>}
                   </div>
                   <span className="text-xs text-content-secondary font-mono uppercase shrink-0">{item.unit}</span>
-                  <span className="text-sm font-semibold text-content-primary tabular-nums shrink-0 w-20 text-right">
+                  <span className="text-sm font-semibold text-content-primary tabular-nums shrink-0 w-20 text-end">
                     {fmt(item.rate, item.currency)}
                   </span>
                   {added.has(item.id) ? (
@@ -1222,14 +1222,14 @@ export function ComponentRow({
       </td>
 
       {/* Factor */}
-      <td className={`${cellClass} text-right`}>
+      <td className={`${cellClass} text-end`}>
         <EditableCell
           value={String(component.factor)}
           field="factor"
           editing={editing}
           setEditing={setEditing}
           onBlur={handleBlur}
-          className={`${inputClass} text-right`}
+          className={`${inputClass} text-end`}
           type="number"
         />
       </td>
@@ -1237,7 +1237,7 @@ export function ComponentRow({
       {/* Quantity — an "fx" badge flags a line whose quantity is computed
           from a parameter formula (Issue #365). The static value below stays
           editable and is the fallback when no parameters are supplied. */}
-      <td className={`${cellClass} text-right`}>
+      <td className={`${cellClass} text-end`}>
         <div className="flex items-center justify-end gap-1">
           {component.quantity_formula ? (
             <span
@@ -1256,7 +1256,7 @@ export function ComponentRow({
             editing={editing}
             setEditing={setEditing}
             onBlur={handleBlur}
-            className={`${inputClass} text-right`}
+            className={`${inputClass} text-end`}
             type="number"
           />
         </div>
@@ -1282,20 +1282,20 @@ export function ComponentRow({
       </td>
 
       {/* Unit Cost */}
-      <td className={`${cellClass} text-right`}>
+      <td className={`${cellClass} text-end`}>
         <EditableCell
           value={String(component.unit_cost)}
           field="unit_cost"
           editing={editing}
           setEditing={setEditing}
           onBlur={handleBlur}
-          className={`${inputClass} text-right`}
+          className={`${inputClass} text-end`}
           type="number"
         />
       </td>
 
       {/* Total (computed) */}
-      <td className="px-4 py-2.5 text-right font-semibold text-content-primary tabular-nums">
+      <td className="px-4 py-2.5 text-end font-semibold text-content-primary tabular-nums">
         {fmt(component.total)}
       </td>
 
@@ -1803,7 +1803,7 @@ function ApplyToBOQModal({
                           setParamValues((prev) => ({ ...prev, [p.name]: e.target.value }))
                         }
                         placeholder={p.value ?? '0'}
-                        className="w-full h-9 px-2.5 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary text-right tabular-nums focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
+                        className="w-full h-9 px-2.5 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary text-end tabular-nums focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
                       />
                     </label>
                   ))}
@@ -1841,7 +1841,7 @@ function ApplyToBOQModal({
 /* -- M/L/E Breakdown Sidebar --------------------------------------------- */
 
 /**
- * Sticky right-rail summary that mirrors the cost-driver split a
+ * Sticky end-rail summary that mirrors the cost-driver split a
  * professional estimator expects (professional estimating tools show this
  * always-visible). Renders one bar per resource type used by the
  * assembly, plus a final "Total rate / unit" line that already includes
@@ -2106,7 +2106,7 @@ function CatalogResourcePickerModal({
         <div className="max-h-[60vh] overflow-y-auto -mx-4 px-4 border-t border-border-light">
           {search.isLoading && (
             <div className="py-10 text-center text-content-tertiary">
-              <Loader2 className="w-4 h-4 animate-spin inline mr-2" />
+              <Loader2 className="w-4 h-4 animate-spin inline me-2" />
               {t('common.loading', { defaultValue: 'Loading…' })}
             </div>
           )}
@@ -2120,7 +2120,7 @@ function CatalogResourcePickerModal({
           {items.length > 0 && (
             <table className="w-full text-sm mt-2">
               <thead>
-                <tr className="text-xs text-content-tertiary text-left">
+                <tr className="text-xs text-content-tertiary text-start">
                   <th className="py-2 font-medium">
                     {t('assemblies.catalog_col_name', { defaultValue: 'Name' })}
                   </th>
@@ -2130,7 +2130,7 @@ function CatalogResourcePickerModal({
                   <th className="py-2 font-medium w-16 text-center">
                     {t('boq.unit', { defaultValue: 'Unit' })}
                   </th>
-                  <th className="py-2 font-medium w-28 text-right">
+                  <th className="py-2 font-medium w-28 text-end">
                     {t('assemblies.unit_cost', { defaultValue: 'Unit Cost' })}
                   </th>
                   <th className="py-2 w-16" />
@@ -2139,7 +2139,7 @@ function CatalogResourcePickerModal({
               <tbody className="divide-y divide-border-light">
                 {items.map((it) => (
                   <tr key={it.id} className="hover:bg-surface-secondary/50">
-                    <td className="py-2 pr-2">
+                    <td className="py-2 pe-2">
                       <div className="font-medium text-content-primary truncate max-w-[260px]">
                         {it.name}
                       </div>
@@ -2157,14 +2157,14 @@ function CatalogResourcePickerModal({
                       </span>
                     </td>
                     <td className="py-2 text-center text-content-secondary">{it.unit}</td>
-                    <td className="py-2 text-right tabular-nums text-content-primary">
+                    <td className="py-2 text-end tabular-nums text-content-primary">
                       {new Intl.NumberFormat(getNumberLocale(), {
                         minimumFractionDigits: currencyFractionDigits(it.currency),
                         maximumFractionDigits: currencyFractionDigits(it.currency),
                       }).format(it.base_price || 0)}{' '}
                       <span className="text-[10px] text-content-tertiary">{it.currency}</span>
                     </td>
-                    <td className="py-2 text-right">
+                    <td className="py-2 text-end">
                       <Button
                         size="sm"
                         variant="primary"

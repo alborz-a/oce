@@ -562,7 +562,7 @@ export function AccommodationCalendar({
             data-testid="accommodation-calendar-prev"
             aria-label={t('common.previous', { defaultValue: 'Previous' })}
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={14} className="rtl:rotate-180" />
           </Button>
           <Button
             variant="secondary"
@@ -579,9 +579,9 @@ export function AccommodationCalendar({
             data-testid="accommodation-calendar-next"
             aria-label={t('common.next', { defaultValue: 'Next' })}
           >
-            <ChevronRight size={14} />
+            <ChevronRight size={14} className="rtl:rotate-180" />
           </Button>
-          <span className="ml-2 text-sm font-medium text-content-primary tabular-nums">
+          <span className="ms-2 text-sm font-medium text-content-primary tabular-nums">
             {headerLabel}
           </span>
         </div>
@@ -944,7 +944,7 @@ function CalendarGrid({
           style={{ height: 56 }}
         >
           <div
-            className="flex shrink-0 items-center px-3 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-r border-border-light"
+            className="flex shrink-0 items-center px-3 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-e border-border-light"
             style={{ width: ROOM_LABEL_WIDTH_PX }}
           >
             {t('accommodation.calendar.room_column', {
@@ -960,7 +960,7 @@ function CalendarGrid({
                   key={d.toISOString()}
                   data-testid={`accommodation-calendar-day-header-${format(d, 'yyyy-MM-dd')}`}
                   className={clsx(
-                    'flex shrink-0 flex-col items-center justify-center border-r border-border-light text-xs',
+                    'flex shrink-0 flex-col items-center justify-center border-e border-border-light text-xs',
                     today && 'bg-oe-blue/10',
                     dim && 'opacity-50',
                   )}
@@ -1119,7 +1119,7 @@ function RoomRow({
       style={{ height: rowHeight }}
     >
       <div
-        className="flex shrink-0 flex-col justify-center px-3 border-r border-border-light"
+        className="flex shrink-0 flex-col justify-center px-3 border-e border-border-light"
         style={{ width: ROOM_LABEL_WIDTH_PX }}
       >
         {showAccommodationLabel && (
@@ -1165,7 +1165,7 @@ function RoomRow({
                 data-testid={`accommodation-calendar-cell-${row.room.id}-${format(d, 'yyyy-MM-dd')}`}
                 data-focused={isFocused || undefined}
                 className={clsx(
-                  'group h-full shrink-0 border-r border-border-light transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oe-blue focus-visible:bg-oe-blue/20',
+                  'group h-full shrink-0 border-e border-border-light transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oe-blue focus-visible:bg-oe-blue/20',
                   today && 'bg-oe-blue/5',
                   dim && 'bg-surface-secondary/20',
                   'hover:bg-oe-blue/10',
@@ -1326,7 +1326,7 @@ function CreateBookingModal({
     >
       {disabled && (
         <div className="mb-3 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
-          <AlertTriangle className="mr-1.5 inline h-3.5 w-3.5" />
+          <AlertTriangle className="me-1.5 inline h-3.5 w-3.5" />
           {t('accommodation.assign.disabled', {
             defaultValue:
               'Room is {{status}} - change its status before booking.',
@@ -1496,7 +1496,7 @@ function BookingDetailDrawer({
           animation:
             'accomCalSlideIn 220ms cubic-bezier(0.4, 0, 0.2, 1) both',
         }}
-        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-surface-elevated shadow-2xl"
+        className="fixed end-0 top-0 z-50 flex h-full w-full max-w-md flex-col bg-surface-elevated shadow-2xl"
       >
         <div className="flex items-start justify-between border-b border-border-light p-4">
           <div>

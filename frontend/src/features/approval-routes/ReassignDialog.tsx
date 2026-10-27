@@ -159,7 +159,7 @@ export function ReassignDialog({ open, onClose, instance }: ReassignDialogProps)
             className="block text-xs font-medium text-content-secondary mb-1"
           >
             {t('approvalRoutes.reassign_user', { defaultValue: 'Assign to' })}
-            <span className="text-semantic-error ml-0.5">*</span>
+            <span className="text-semantic-error ms-0.5">*</span>
           </label>
           <select
             id="reassign-user"

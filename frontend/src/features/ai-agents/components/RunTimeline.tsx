@@ -178,7 +178,7 @@ function StepRow({ step, isLast }: { step: AgentStep; isLast: boolean }): JSX.El
       {!isLast && (
         <span
           aria-hidden="true"
-          className={clsx('absolute left-3 top-7 -ml-px h-[calc(100%-1.25rem)] w-0.5 rounded', meta.railClass)}
+          className={clsx('absolute start-3 top-7 -ms-px h-[calc(100%-1.25rem)] w-0.5 rounded', meta.railClass)}
         />
       )}
       <span
@@ -378,7 +378,7 @@ export function RunTimeline({ run }: { run: AgentRun }): JSX.Element {
           </span>
         </div>
         {failureLabel && (
-          <span className="text-right text-xs font-medium text-semantic-error">{failureLabel}</span>
+          <span className="text-end text-xs font-medium text-semantic-error">{failureLabel}</span>
         )}
       </header>
 

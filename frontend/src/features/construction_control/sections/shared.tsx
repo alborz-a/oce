@@ -72,7 +72,7 @@ export function ElementLinks({ elements }: { elements: ElementRef[] }) {
   );
 }
 
-/** A section header row with a title, optional count, and right-aligned actions. */
+/** A section header row with a title, optional count, and end-aligned actions. */
 export function SectionToolbar({
   title,
   count,

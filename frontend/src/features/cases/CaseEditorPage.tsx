@@ -276,7 +276,7 @@ export function CaseEditorPage() {
     <div className="w-full p-4 pb-28 2xl:px-8">
       <div className="mb-5 flex flex-wrap items-center gap-3">
         <Button variant="ghost" size="sm" onClick={() => navigate('/cases')}>
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
           {t('cases.back_to_list', { defaultValue: 'All cases' })}
         </Button>
         <h1 className="text-xl font-semibold text-content-primary">
@@ -289,7 +289,7 @@ export function CaseEditorPage() {
             {t('cases.editor.badge_shared', { defaultValue: 'Shared with the team' })}
           </Badge>
         )}
-        <p className="w-full text-sm text-content-secondary lg:ml-2 lg:w-auto lg:max-w-3xl lg:flex-1">
+        <p className="w-full text-sm text-content-secondary lg:ms-2 lg:w-auto lg:max-w-3xl lg:flex-1">
           {t('cases.editor.intro', {
             defaultValue:
               'A case is a short walkthrough: why you would do this, and the screens you pass through to do it. Write down how your team actually works, so a new starter can follow it.',
@@ -324,9 +324,9 @@ export function CaseEditorPage() {
             })}
           </p>
           <div className="relative mb-3">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
+            <Search className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
             <Input
-              className="pl-9"
+              className="ps-9"
               value={startSearch}
               onChange={(e) => setStartSearch(e.target.value)}
               placeholder={t('cases.editor.start_search', {
@@ -346,7 +346,7 @@ export function CaseEditorPage() {
                   key={entry.playbook.id}
                   type="button"
                   className={clsx(
-                    'flex gap-3 rounded-lg border border-border-light p-2.5 text-left transition',
+                    'flex gap-3 rounded-lg border border-border-light p-2.5 text-start transition',
                     'hover:border-oe-blue hover:bg-surface-secondary',
                   )}
                   onClick={() => {
@@ -498,7 +498,7 @@ export function CaseEditorPage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-content-primary">
             {t('cases.editor.section_steps', { defaultValue: 'Steps' })}
-            <span className="ml-2 font-normal text-content-tertiary">{draft.steps.length}</span>
+            <span className="ms-2 font-normal text-content-tertiary">{draft.steps.length}</span>
           </h2>
           <Button
             size="sm"
@@ -577,7 +577,7 @@ export function CaseEditorPage() {
                         type="button"
                         onClick={() => setPickerFor(index)}
                         className={clsx(
-                          'flex w-full items-center gap-2.5 rounded-md border p-2 text-left transition',
+                          'flex w-full items-center gap-2.5 rounded-md border p-2 text-start transition',
                           targetBad
                             ? 'border-semantic-error'
                             : 'border-border-light hover:border-oe-blue hover:bg-surface-secondary',
@@ -892,7 +892,7 @@ export function CaseEditorPage() {
               {t('cases.editor.delete', { defaultValue: 'Delete' })}
             </Button>
           )}
-          <div className="ml-auto text-xs text-content-tertiary">
+          <div className="ms-auto text-xs text-content-tertiary">
             {firstBlocker ? (
               <span className="flex items-center gap-1">
                 <AlertTriangle className="h-3 w-3" />

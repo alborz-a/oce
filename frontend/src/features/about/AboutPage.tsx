@@ -177,7 +177,7 @@ export function AboutPage() {
             alt={COMPANY_INFO.name}
             className="h-16 w-auto object-contain"
           />
-          <div className="text-center sm:text-right">
+          <div className="text-center sm:text-end">
             <h1 className="text-2xl font-bold text-content-primary">
               {COMPANY_INFO.name}
             </h1>
@@ -264,8 +264,8 @@ export function AboutPage() {
           spot a new release at a glance. */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6 items-center">
 
-        {/* ── Left column — project identity (left-aligned on wide) ── */}
-        <div className="text-center lg:text-left">
+        {/* ── Left column — project identity (start-aligned on wide) ── */}
+        <div className="text-center lg:text-start">
           <a
             href="https://openconstructionerp.com?utm_source=app&utm_medium=about"
             target="_blank"
@@ -360,7 +360,7 @@ export function AboutPage() {
             </h2>
           </div>
           {/* Stats — one row on wide screens (6 tiles × 1 row) so the card
-              stays compact and lines up vertically with the right-hand
+              stays compact and lines up vertically with the end-hand
               Community card. Smaller tile padding + value font keep the
               shorter tile readable at narrower widths. */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
@@ -612,13 +612,13 @@ export function AboutPage() {
                     }}
                   />
                 </p>
-                <blockquote className="my-4 rounded-r-lg border-l-4 border-oe-blue bg-oe-blue/[0.04] py-3 px-4 text-[15px] italic text-content-primary leading-relaxed">
+                <blockquote className="my-4 rounded-e-lg border-s-4 border-oe-blue bg-oe-blue/[0.04] py-3 px-4 text-[15px] italic text-content-primary leading-relaxed">
                   {t('about.founder_bio_p4', {
                     defaultValue:
                       "All of it was groundwork for something we'd wanted to build for a long time: an open, modular ERP for construction. The latest generation of tooling finally made it practical to pull the methodology, data models, and earlier implementations together into one platform. It's now public and open source.",
                   })}
                 </blockquote>
-                <p className="border-l-2 border-oe-blue/40 pl-3 italic text-content-primary">
+                <p className="border-s-2 border-oe-blue/40 ps-3 italic text-content-primary">
                   {t('about.founder_bio_p5', {
                     defaultValue:
                       'In our experience the best ideas tend to come out of conversation - and out of disagreement. If the questions around construction\'s move toward "Uberization," and toward more transparent cost and time estimation, are interesting to you, we\'d be glad to have you in that discussion.',
@@ -666,7 +666,7 @@ export function AboutPage() {
                 1. Flagship products (datadrivenconstruction.io)
                 2. Open source on GitHub
                 3. Find us across the network (social) */}
-          <aside className="lg:col-span-2 lg:border-l lg:border-border-light lg:pl-8 flex flex-col h-full">
+          <aside className="lg:col-span-2 lg:border-s lg:border-border-light lg:ps-8 flex flex-col h-full">
             <div className="mb-5 flex items-center gap-2">
               <Globe size={16} className="text-oe-blue" />
               <h3 className="text-sm font-semibold text-content-primary">
@@ -703,7 +703,7 @@ export function AboutPage() {
                         {item.desc}
                       </p>
                     </div>
-                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                   </a>
                 </li>
               ))}
@@ -735,7 +735,7 @@ export function AboutPage() {
                         {item.desc}
                       </p>
                     </div>
-                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                   </a>
                 </li>
               ))}
@@ -853,7 +853,7 @@ export function AboutPage() {
                 <ul className="mt-auto space-y-1.5">
                   {svc.bullets.map((b, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-content-secondary">
-                      <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
+                      <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -960,7 +960,7 @@ export function AboutPage() {
                       {t('about.support_star_desc', { defaultValue: 'Show your support - it takes 2 seconds and helps others discover the project' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -978,7 +978,7 @@ export function AboutPage() {
                       {t('about.support_sponsor_desc', { defaultValue: 'Fund new features, regional databases, and keep the project free for everyone' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-rose-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-rose-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -996,7 +996,7 @@ export function AboutPage() {
                       {t('about.support_paypal_desc', { defaultValue: 'A one-time donation of any size keeps the platform free and moving forward' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -1014,7 +1014,7 @@ export function AboutPage() {
                       {t('about.support_consulting_desc', { defaultValue: 'Need custom features, deployment, or training? We deliver professional solutions worldwide' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <button
@@ -1023,7 +1023,7 @@ export function AboutPage() {
                   className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary/80 backdrop-blur-sm px-3.5 py-3 hover:border-emerald-400/60 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-1"
                 >
                   <Sparkles size={22} className="shrink-0 text-emerald-500 group-hover:scale-110 transition-transform" />
-                  <div className="min-w-0 flex-1 text-left">
+                  <div className="min-w-0 flex-1 text-start">
                     <p className="text-sm font-bold text-content-primary leading-tight">
                       {t('about.support_inside_track', { defaultValue: 'Backers inside track' })}
                     </p>
@@ -1033,7 +1033,7 @@ export function AboutPage() {
                       })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </button>
               </div>
             </div>
@@ -1043,7 +1043,7 @@ export function AboutPage() {
                 Two stat tiles on top mirror the visual weight of the left
                 column's hero block, so the two halves match height on wide
                 screens without leaving a gap below the bullets. ── */}
-            <div className="lg:border-l lg:border-border-light/60 dark:lg:border-white/[0.08] lg:pl-6 flex flex-col">
+            <div className="lg:border-s lg:border-border-light/60 dark:lg:border-white/[0.08] lg:ps-6 flex flex-col">
               <p className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3 flex items-center gap-1.5">
                 <Rocket size={12} className="text-oe-blue" />
                 {t('about.support_impact_label', { defaultValue: 'Impact so far' })}
@@ -1063,7 +1063,7 @@ export function AboutPage() {
               </div>
 
               <p className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3 flex items-center gap-1.5">
-                <ArrowRight size={12} className="text-oe-blue" />
+                <ArrowRight size={12} className="text-oe-blue rtl:rotate-180" />
                 {t('about.support_enables', { defaultValue: 'Your support enables:' })}
               </p>
               <ul className="space-y-1.5">
@@ -1076,7 +1076,7 @@ export function AboutPage() {
                   t('about.support_e6', { defaultValue: 'Free workshops and documentation' }),
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-content-secondary">
-                    <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
+                    <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1100,7 +1100,7 @@ export function AboutPage() {
               <h2 className="text-lg font-semibold text-content-primary">
                 {t('about.book_title', { defaultValue: 'Data-Driven Construction' })}
               </h2>
-              <Badge variant="blue" size="sm">Free</Badge>
+              <Badge variant="blue" size="sm">{t('about.free_badge', { defaultValue: 'Free' })}</Badge>
             </div>
             <p className="text-xs text-content-tertiary mb-4">
               {t('about.book_subtitle', { defaultValue: 'By the DataDrivenConstruction team · 16 languages · 600+ pages · 10 parts, 173 chapters' })}
@@ -1199,7 +1199,7 @@ export function AboutPage() {
                 t('about.docs_b4', { defaultValue: 'Module SDK - write your own plugin' }),
               ].map((b, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
+                  <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
                   <span>{b}</span>
                 </li>
               ))}
@@ -1231,7 +1231,7 @@ export function AboutPage() {
                   <span className="text-2xs text-content-secondary group-hover:text-content-primary leading-snug">
                     {topic.label}
                   </span>
-                  <ArrowRight size={11} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={11} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
               ))}
             </div>

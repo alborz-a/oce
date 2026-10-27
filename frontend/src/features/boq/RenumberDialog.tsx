@@ -277,7 +277,7 @@ export function RenumberDialog({
                   type="button"
                   onClick={() => setScheme(s.id)}
                   disabled={isApplying}
-                  className={`relative text-left rounded-xl border-2 px-3 py-3 transition-all disabled:opacity-50 ${
+                  className={`relative text-start rounded-xl border-2 px-3 py-3 transition-all disabled:opacity-50 ${
                     isSelected
                       ? 'border-sky-500 bg-sky-50/60 dark:bg-sky-950/40 shadow-sm shadow-sky-500/20'
                       : 'border-border bg-surface-primary hover:border-sky-300 dark:hover:border-sky-700 hover:bg-surface-secondary/40'
@@ -325,7 +325,7 @@ export function RenumberDialog({
                       </div>
                     </div>
                     {isSelected && (
-                      <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500 text-white shadow-sm">
+                      <div className="absolute top-2 end-2 flex h-5 w-5 items-center justify-center rounded-full bg-sky-500 text-white shadow-sm">
                         <Check size={11} strokeWidth={3} />
                       </div>
                     )}

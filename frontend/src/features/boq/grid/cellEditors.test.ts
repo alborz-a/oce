@@ -28,7 +28,7 @@ describe('evaluateFormula - basic arithmetic', () => {
   it('respects operator precedence', () => {
     expect(evaluateFormula('2+3*4')).toBe(14);
     expect(evaluateFormula('(2+3)*4')).toBe(20);
-    expect(evaluateFormula('10-2-3')).toBe(5); // left-associative
+    expect(evaluateFormula('10-2-3')).toBe(5); // start-associative
   });
 
   it('handles decimals', () => {
@@ -50,9 +50,9 @@ describe('evaluateFormula - Excel-style "=" prefix', () => {
 });
 
 describe('evaluateFormula - exponent', () => {
-  it('supports ^ as right-associative exponent', () => {
+  it('supports ^ as end-associative exponent', () => {
     expect(evaluateFormula('2^3')).toBe(8);
-    expect(evaluateFormula('2^3^2')).toBe(512); // right-assoc: 2^(3^2)
+    expect(evaluateFormula('2^3^2')).toBe(512); // end-assoc: 2^(3^2)
     expect(evaluateFormula('=2*PI()^2*3')).toBeCloseTo(59.2176, 3);
   });
 

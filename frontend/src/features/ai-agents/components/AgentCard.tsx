@@ -54,7 +54,7 @@ export function AgentCard({
   return (
     <div
       className={clsx(
-        'group relative rounded-xl border bg-surface-elevated p-4 text-left transition-all duration-normal ease-oe',
+        'group relative rounded-xl border bg-surface-elevated p-4 text-start transition-all duration-normal ease-oe',
         'shadow-xs hover:shadow-md',
         selected
           ? 'border-oe-blue/60 ring-2 ring-oe-blue/20'
@@ -64,7 +64,7 @@ export function AgentCard({
       {/* Edit / delete actions — only for the caller's own custom agents.
           They reveal on hover/focus so a built-in-looking card stays clean. */}
       {showActions && (
-        <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+        <div className="absolute end-2 top-2 flex gap-1 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
           {onEdit && (
             <button
               type="button"
@@ -94,8 +94,8 @@ export function AgentCard({
         onClick={onSelect}
         aria-pressed={selected}
         className={clsx(
-          'flex w-full items-start gap-3 text-left focus-visible:outline-none',
-          showActions && 'pr-14',
+          'flex w-full items-start gap-3 text-start focus-visible:outline-none',
+          showActions && 'pe-14',
         )}
       >
         <span
@@ -156,7 +156,7 @@ export function AgentCard({
                 type="button"
                 onClick={() => onPromptPick(prompt)}
                 className={clsx(
-                  'rounded-lg border border-border-light bg-surface-secondary/60 px-2.5 py-1 text-left text-xs text-content-secondary',
+                  'rounded-lg border border-border-light bg-surface-secondary/60 px-2.5 py-1 text-start text-xs text-content-secondary',
                   'transition-colors hover:border-oe-blue/40 hover:bg-oe-blue-subtle hover:text-oe-blue-text',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
                 )}

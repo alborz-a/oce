@@ -191,7 +191,7 @@ function ReadinessLight({ system }: { system: CxSystem }) {
           />
         </div>
       </div>
-      <span className="text-2xs tabular-nums text-content-tertiary w-9 text-right shrink-0">
+      <span className="text-2xs tabular-nums text-content-tertiary w-9 text-end shrink-0">
         {pct === null
           ? t('commissioning.no_tests_short', { defaultValue: 'n/a' })
           : `${pct}%`}
@@ -296,7 +296,7 @@ function ItemRow({
           onClick={() => onDelete(item.id)}
           title={t('commissioning.remove_item', { defaultValue: 'Remove check' })}
           aria-label={t('commissioning.remove_item', { defaultValue: 'Remove check' })}
-          className="ml-1 inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary transition-colors hover:bg-semantic-error-bg hover:text-semantic-error disabled:opacity-50"
+          className="ms-1 inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary transition-colors hover:bg-semantic-error-bg hover:text-semantic-error disabled:opacity-50"
         >
           <Trash2 size={12} />
         </button>
@@ -527,7 +527,7 @@ function ChecklistsPanel({ systemId, onAfterChange }: { systemId: string; onAfte
           className={inputCls}
         />
         <Button type="submit" variant="secondary" size="sm" disabled={!newTitle.trim() || addMut.isPending}>
-          <Plus size={14} className="mr-1" />
+          <Plus size={14} className="me-1" />
           {t('commissioning.add', { defaultValue: 'Add' })}
         </Button>
       </form>
@@ -617,7 +617,7 @@ function IssuesPanel({ systemId, onAfterChange }: { systemId: string; onAfterCha
                   onClick={() => closeMut.mutate(issue.id)}
                   disabled={closeMut.isPending}
                 >
-                  <Check size={13} className="mr-1" />
+                  <Check size={13} className="me-1" />
                   {t('commissioning.close', { defaultValue: 'Close' })}
                 </Button>
               ) : (
@@ -666,7 +666,7 @@ function IssuesPanel({ systemId, onAfterChange }: { systemId: string; onAfterCha
           className={inputCls}
         />
         <Button type="submit" variant="secondary" size="sm" disabled={!desc.trim() || addMut.isPending}>
-          <Plus size={14} className="mr-1" />
+          <Plus size={14} className="me-1" />
           {t('commissioning.add', { defaultValue: 'Add' })}
         </Button>
       </form>
@@ -760,7 +760,7 @@ const SystemCard = React.memo(function SystemCard({
       >
         <ChevronRight
           size={14}
-          className={clsx('text-content-tertiary transition-transform shrink-0', expanded && 'rotate-90')}
+          className={clsx('text-content-tertiary transition-transform shrink-0', expanded && 'rotate-90', 'rtl:rotate-180')}
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
@@ -791,7 +791,7 @@ const SystemCard = React.memo(function SystemCard({
             className="hidden md:inline-flex"
           >
             <Badge variant="error" size="sm">
-              <AlertTriangle size={11} className="mr-0.5" />
+              <AlertTriangle size={11} className="me-0.5" />
               {readiness.open_critical_issues}
             </Badge>
           </span>
@@ -799,19 +799,19 @@ const SystemCard = React.memo(function SystemCard({
       </div>
 
       {expanded && (
-        <div className="px-4 pb-4 pl-11 space-y-4 animate-fade-in">
+        <div className="px-4 pb-4 ps-11 space-y-4 animate-fade-in">
           {/* Actions + blockers */}
           <div className="flex flex-wrap items-center gap-2">
             {system.status === 'commissioned' ? (
               <Badge variant="success" size="sm">
-                <ShieldCheck size={12} className="mr-1" />
+                <ShieldCheck size={12} className="me-1" />
                 {t('commissioning.commissioned_on', {
                   defaultValue: 'Commissioned',
                 })}
               </Badge>
             ) : commissionable ? (
               <Button variant="primary" size="sm" onClick={() => onCommission(system)}>
-                <ShieldCheck size={14} className="mr-1" />
+                <ShieldCheck size={14} className="me-1" />
                 {t('commissioning.commission', { defaultValue: 'Commission system' })}
               </Button>
             ) : (
@@ -835,7 +835,7 @@ const SystemCard = React.memo(function SystemCard({
                 defaultValue: 'Open a printable commissioning certificate',
               })}
             >
-              <FileText size={14} className="mr-1" />
+              <FileText size={14} className="me-1" />
               {t('commissioning.certificate', { defaultValue: 'Certificate' })}
             </Button>
             <Button
@@ -847,11 +847,11 @@ const SystemCard = React.memo(function SystemCard({
                 defaultValue: 'Download this system as a spreadsheet',
               })}
             >
-              <Download size={14} className="mr-1" />
+              <Download size={14} className="me-1" />
               {t('commissioning.export_csv', { defaultValue: 'Export CSV' })}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => onDelete(system)}>
-              <Trash2 size={13} className="mr-1" />
+              <Trash2 size={13} className="me-1" />
               {t('commissioning.delete', { defaultValue: 'Delete' })}
             </Button>
           </div>
@@ -861,7 +861,7 @@ const SystemCard = React.memo(function SystemCard({
               <p className="text-2xs font-semibold uppercase tracking-wide text-[#b45309] mb-1">
                 {t('commissioning.blockers', { defaultValue: 'Before commissioning' })}
               </p>
-              <ul className="list-disc pl-4 space-y-0.5">
+              <ul className="list-disc ps-4 space-y-0.5">
                 {readiness.blocking_reasons.map((r, i) => (
                   <li key={i} className="text-xs text-content-secondary">
                     {r}
@@ -1042,7 +1042,7 @@ function CreateSystemModal({
               })
             }
           >
-            <Plus size={16} className="mr-1.5" />
+            <Plus size={16} className="me-1.5" />
             {t('commissioning.create_system', { defaultValue: 'Create system' })}
           </Button>
         </div>
@@ -1139,7 +1139,7 @@ function HowCommissioningWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -1373,7 +1373,7 @@ export function CommissioningPage() {
                   defaultValue: 'Download every system in this project as a spreadsheet',
                 })}
               >
-                <Download size={14} className="mr-1" />
+                <Download size={14} className="me-1" />
                 {t('commissioning.export_register', { defaultValue: 'Export register' })}
               </Button>
             )}
@@ -1393,7 +1393,7 @@ export function CommissioningPage() {
                 setShowCreate(true);
               }}
             >
-              <Plus size={14} className="mr-1" />
+              <Plus size={14} className="me-1" />
               {t('commissioning.new_system', { defaultValue: 'New system' })}
             </Button>
           </div>

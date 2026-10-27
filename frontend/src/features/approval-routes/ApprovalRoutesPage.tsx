@@ -302,19 +302,19 @@ export function ApprovalRoutesPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border-light bg-surface-secondary/40">
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                           {t('approvalRoutes.col_name', { defaultValue: 'Name' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
                           {t('approvalRoutes.col_steps', { defaultValue: 'Steps' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[110px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[110px]">
                           {t('approvalRoutes.col_scope', { defaultValue: 'Scope' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[90px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[90px]">
                           {t('approvalRoutes.col_active', { defaultValue: 'Active' })}
                         </th>
-                        <th className="px-3 py-2 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
+                        <th className="px-3 py-2 text-end text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
                           {t('common.actions', { defaultValue: 'Actions' })}
                         </th>
                       </tr>
@@ -383,7 +383,7 @@ export function ApprovalRoutesPage() {
                                 </Badge>
                               )}
                             </td>
-                            <td className="px-3 py-2.5 text-right">
+                            <td className="px-3 py-2.5 text-end">
                               <div className="inline-flex items-center gap-0.5">
                                 <button
                                   onClick={() => setSimTarget(r)}

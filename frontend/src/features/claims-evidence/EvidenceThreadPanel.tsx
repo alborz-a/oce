@@ -118,7 +118,7 @@ export function EvidenceThreadPanel({ projectId, subjectType, subjectId, classNa
               void exportReconstructedPack(projectId, subjectType, subjectId).catch(() => {});
               downloadPack(pack, subjectType, subjectId);
             }}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-border-light px-2.5 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-secondary"
+            className="ms-auto inline-flex items-center gap-1.5 rounded-md border border-border-light px-2.5 py-1.5 text-xs font-medium text-content-secondary hover:bg-surface-secondary"
           >
             <Download className="h-3.5 w-3.5" />
             {t('reconstruct.export', { defaultValue: 'Export' })}

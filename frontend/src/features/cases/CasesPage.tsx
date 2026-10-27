@@ -742,7 +742,7 @@ function CasesList() {
       <div className="relative overflow-hidden rounded-2xl border border-border-light bg-gradient-to-br from-oe-blue/[0.08] via-oe-blue/[0.03] to-transparent p-5">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full bg-oe-blue/10 blur-3xl"
+          className="pointer-events-none absolute -end-8 -top-10 h-40 w-40 rounded-full bg-oe-blue/10 blur-3xl"
         />
         {/* Wraps below `sm`: the action column is `w-full` there, and inside
             a row that cannot wrap a full-width column leaves the title and the
@@ -934,7 +934,7 @@ function CasesList() {
                         onClick={() => setRegion(active ? "all" : r)}
                         aria-pressed={active}
                         className={clsx(
-                          "flex items-center gap-2.5 rounded-xl border p-2.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
+                          "flex items-center gap-2.5 rounded-xl border p-2.5 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
                           active
                             ? "border-oe-blue bg-oe-blue/10 text-oe-blue shadow-sm"
                             : isHome
@@ -1151,7 +1151,7 @@ function CasesList() {
                       disabled={disabled}
                       title={t(s.descKey, { defaultValue: s.descDefault })}
                       className={clsx(
-                        "group flex items-center gap-2 rounded-xl border p-1.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
+                        "group flex items-center gap-2 rounded-xl border p-1.5 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
                         active
                           ? clsx(s.tint.chip, "shadow-sm")
                           : "border-border-light bg-surface-primary text-content-primary hover:border-oe-blue/30",
@@ -1169,7 +1169,7 @@ function CasesList() {
                         <Icon size={15} strokeWidth={1.8} aria-hidden="true" />
                         <span
                           className={clsx(
-                            "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold tabular-nums shadow-sm",
+                            "absolute -end-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold tabular-nums shadow-sm",
                             active
                               ? "bg-white text-current dark:bg-black/40"
                               : "bg-surface-primary text-content-secondary ring-1 ring-inset ring-border-light",
@@ -1271,7 +1271,7 @@ function CasesList() {
                     aria-pressed={active}
                     disabled={disabled}
                     className={clsx(
-                      "flex items-center gap-2 rounded-xl border p-1.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
+                      "flex items-center gap-2 rounded-xl border p-1.5 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
                       active
                         ? clsx(c.tint.chip, "shadow-sm")
                         : "border-border-light bg-surface-primary text-content-primary hover:border-oe-blue/30",
@@ -1357,7 +1357,7 @@ function CasesList() {
                     aria-pressed={active}
                     disabled={disabled}
                     className={clsx(
-                      "flex items-center gap-2 rounded-xl border p-1.5 text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
+                      "flex items-center gap-2 rounded-xl border p-1.5 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 motion-reduce:transition-none",
                       active
                         ? clsx(r.tint.chip, "shadow-sm")
                         : "border-border-light bg-surface-primary text-content-primary hover:border-oe-blue/30",
@@ -1515,7 +1515,7 @@ function CasesList() {
               />
             </div>
             <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-              <span className="mr-0.5 inline-flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wide text-content-secondary">
+              <span className="me-0.5 inline-flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wide text-content-secondary">
                 <Layers
                   size={13}
                   className="text-content-tertiary"
@@ -1956,7 +1956,7 @@ function CaseCard({
         }
       }}
       className={clsx(
-        "group relative isolate flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border-light bg-surface-primary text-left",
+        "group relative isolate flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-border-light bg-surface-primary text-start",
         "shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md",
         "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
@@ -1977,7 +1977,7 @@ function CaseCard({
       <span
         aria-hidden="true"
         className={clsx(
-          "absolute inset-y-0 left-0 border-l-[3px]",
+          "absolute inset-y-0 start-0 border-s-[3px]",
           tint.accent,
         )}
       />
@@ -2059,7 +2059,7 @@ function CaseCard({
           </>
         )}
         {(num != null || authored || pb.region) && (
-          <div className="absolute left-3 top-3 flex items-center gap-1.5">
+          <div className="absolute start-3 top-3 flex items-center gap-1.5">
             {num != null && (
               <span
                 className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-md bg-slate-900/85 px-1.5 text-2xs font-bold tabular-nums text-white shadow-sm ring-1 ring-inset ring-white/15"
@@ -2100,7 +2100,7 @@ function CaseCard({
             )}
           </div>
         )}
-        <div className="absolute right-3 top-3 flex items-center gap-1.5">
+        <div className="absolute end-3 top-3 flex items-center gap-1.5">
           {complete ? (
             <Badge variant="success" size="sm">
               {t("cases.card.done_badge", { defaultValue: "Done" })}
@@ -2376,7 +2376,7 @@ function CaseCard({
                     ) : null,
                   )}
                   {roles.length > 3 && (
-                    <span className="ml-2 text-[10px] font-medium text-white/70">
+                    <span className="ms-2 text-[10px] font-medium text-white/70">
                       +{roles.length - 3}
                     </span>
                   )}
@@ -2415,7 +2415,7 @@ function CaseCard({
             {started
               ? t("cases.card.continue", { defaultValue: "Continue" })
               : t("cases.card.open", { defaultValue: "Open" })}
-            <ArrowRight size={12} aria-hidden="true" />
+            <ArrowRight size={12} aria-hidden="true" className="rtl:rotate-180" />
           </span>
         </div>
       </div>
@@ -2456,7 +2456,7 @@ function CategoryChip({
       {label}
       <span
         className={clsx(
-          "ml-0.5 tabular-nums",
+          "ms-0.5 tabular-nums",
           active ? "opacity-70" : "text-content-tertiary",
         )}
       >

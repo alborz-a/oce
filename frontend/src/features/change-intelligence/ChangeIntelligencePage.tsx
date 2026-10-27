@@ -332,11 +332,11 @@ function CoordinationTab({ projectId }: { projectId: string }) {
                 <span className="font-medium text-content-primary">
                   {s.title || t('change_intelligence.common.untitled', { defaultValue: '(untitled)' })}
                 </span>
-                <span className="ml-auto inline-flex items-center gap-1 text-sm font-medium text-oe-blue">
+                <span className="ms-auto inline-flex items-center gap-1 text-sm font-medium text-oe-blue">
                   {t(`change_intelligence.coordination.action.${s.recommended_action}`, {
                     defaultValue: humanize(s.recommended_action),
                   })}
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
                 </span>
               </div>
               <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-content-secondary">
@@ -415,21 +415,21 @@ function CycleTimeTab({ projectId }: { projectId: string }) {
       >
         <Card className="overflow-hidden p-0">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
               <tr>
                 <th className="px-3 py-2">
                   {t('change_intelligence.cycle.col.party', { defaultValue: 'Party (ball in court)' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.cycle.col.open', { defaultValue: 'Open' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.cycle.col.overdue', { defaultValue: 'Overdue' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.cycle.col.avg_age', { defaultValue: 'Avg age (d)' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.cycle.col.oldest', { defaultValue: 'Oldest (d)' })}
                 </th>
               </tr>
@@ -438,10 +438,10 @@ function CycleTimeTab({ projectId }: { projectId: string }) {
               {board?.parties.map((p) => (
                 <tr key={p.party} className="border-t border-border-light">
                   <td className="px-3 py-2 font-medium text-content-primary">{p.party}</td>
-                  <td className="px-3 py-2 text-right">{p.open_count}</td>
-                  <td className="px-3 py-2 text-right text-semantic-error">{p.overdue_count || ''}</td>
-                  <td className="px-3 py-2 text-right">{fmtFixed(p.avg_age_days, 1)}</td>
-                  <td className="px-3 py-2 text-right">{fmtFixed(p.oldest_age_days, 0)}</td>
+                  <td className="px-3 py-2 text-end">{p.open_count}</td>
+                  <td className="px-3 py-2 text-end text-semantic-error">{p.overdue_count || ''}</td>
+                  <td className="px-3 py-2 text-end">{fmtFixed(p.avg_age_days, 1)}</td>
+                  <td className="px-3 py-2 text-end">{fmtFixed(p.oldest_age_days, 0)}</td>
                 </tr>
               ))}
             </tbody>
@@ -506,7 +506,7 @@ function CommsTab({ projectId }: { projectId: string }) {
                 <span className="font-medium text-content-primary">
                   {th.subject || t('change_intelligence.comms.no_subject', { defaultValue: '(no subject)' })}
                 </span>
-                <span className="ml-auto text-xs text-content-tertiary">
+                <span className="ms-auto text-xs text-content-tertiary">
                   {t('change_intelligence.comms.msg_count', {
                     defaultValue: '{{count}} msg',
                     count: th.message_count,
@@ -581,18 +581,18 @@ function ImpactTab({ projectId }: { projectId: string }) {
       >
         <Card className="overflow-hidden p-0">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
               <tr>
                 <th className="px-3 py-2">
                   {t('change_intelligence.impact.col.by_kind', { defaultValue: 'By kind' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.impact.col.count', { defaultValue: 'Count' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.impact.col.cost', { defaultValue: 'Cost' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.impact.col.days', { defaultValue: 'Days' })}
                 </th>
               </tr>
@@ -601,11 +601,11 @@ function ImpactTab({ projectId }: { projectId: string }) {
               {imp?.by_kind.map((k) => (
                 <tr key={k.kind} className="border-t border-border-light">
                   <td className="px-3 py-2 font-medium text-content-primary">{humanize(k.kind)}</td>
-                  <td className="px-3 py-2 text-right">{k.count}</td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">{k.count}</td>
+                  <td className="px-3 py-2 text-end">
                     <MoneyDisplay amount={k.total_cost} currency={imp?.primary_currency} showCode colorize />
                   </td>
-                  <td className="px-3 py-2 text-right">{k.total_days}</td>
+                  <td className="px-3 py-2 text-end">{k.total_days}</td>
                 </tr>
               ))}
             </tbody>
@@ -1112,21 +1112,21 @@ function RecoveryPerformanceCard({ projectId }: { projectId: string }) {
             })}
           </div>
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
               <tr>
                 <th className="px-3 py-2">
                   {t('change_intelligence.recovery.perf.col.traceability', { defaultValue: 'Traceability' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.recovery.perf.col.rate', { defaultValue: 'Rate' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.recovery.perf.col.chargeable', { defaultValue: 'Chargeable' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.recovery.perf.col.recovered', { defaultValue: 'Recovered' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('change_intelligence.recovery.perf.col.absorbed', { defaultValue: 'Absorbed' })}
                 </th>
               </tr>
@@ -1137,14 +1137,14 @@ function RecoveryPerformanceCard({ projectId }: { projectId: string }) {
                   <td className="px-3 py-2">
                     <Badge variant={cohortVariant(c.cohort)}>{humanize(c.cohort)}</Badge>
                   </td>
-                  <td className="px-3 py-2 text-right font-medium">{ratePercent(c.rate)}</td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end font-medium">{ratePercent(c.rate)}</td>
+                  <td className="px-3 py-2 text-end">
                     <MoneyDisplay amount={c.chargeable_total} currency={c.currency} showCode />
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <MoneyDisplay amount={c.recovered_total} currency={c.currency} showCode />
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <MoneyDisplay amount={c.absorbed_total} currency={c.currency} showCode />
                   </td>
                 </tr>
@@ -1207,15 +1207,15 @@ function ApportionmentDetail({
   }
   return (
     <table className="w-full text-sm">
-      <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+      <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
         <tr>
           <th className="px-3 py-2">
             {t('change_intelligence.recovery.apportionment.col.party', { defaultValue: 'Party' })}
           </th>
-          <th className="px-3 py-2 text-right">
+          <th className="px-3 py-2 text-end">
             {t('change_intelligence.recovery.apportionment.col.share', { defaultValue: 'Share' })}
           </th>
-          <th className="px-3 py-2 text-right">
+          <th className="px-3 py-2 text-end">
             {t('change_intelligence.recovery.apportionment.col.amount', { defaultValue: 'Amount' })}
           </th>
         </tr>
@@ -1224,8 +1224,8 @@ function ApportionmentDetail({
         {data.shares.map((s) => (
           <tr key={s.id} className="border-t border-border-light">
             <td className="px-3 py-2 text-content-primary">{s.party}</td>
-            <td className="px-3 py-2 text-right">{ratePercent(s.share_pct)}</td>
-            <td className="px-3 py-2 text-right font-medium">
+            <td className="px-3 py-2 text-end">{ratePercent(s.share_pct)}</td>
+            <td className="px-3 py-2 text-end font-medium">
               <MoneyDisplay amount={s.share_amount} currency={s.currency} showCode />
             </td>
           </tr>
@@ -1433,7 +1433,7 @@ function ApportionmentFormModal({
                       className={FORM_INPUT_CLASS}
                     />
                   </WideModalField>
-                  <div className="w-28 pb-2 text-right text-xs text-content-tertiary">
+                  <div className="w-28 pb-2 text-end text-xs text-content-tertiary">
                     <MoneyDisplay amount={preview} currency={currency} />
                   </div>
                   <button
@@ -1583,23 +1583,23 @@ function RecoveryTab({ projectId }: { projectId: string }) {
           <RecoveryPerformanceCard projectId={projectId} />
           <Card className="overflow-hidden p-0">
             <table className="w-full text-sm">
-              <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+              <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                 <tr>
                   <th className="px-3 py-2">
                     {t('change_intelligence.recovery.col.responsible_party', {
                       defaultValue: 'Responsible party',
                     })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.recovery.col.open', { defaultValue: 'Open' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.recovery.col.chargeable', { defaultValue: 'Chargeable' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.recovery.col.recovered', { defaultValue: 'Recovered' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.recovery.col.outstanding', { defaultValue: 'Outstanding' })}
                   </th>
                 </tr>
@@ -1608,14 +1608,14 @@ function RecoveryTab({ projectId }: { projectId: string }) {
                 {ledger?.by_party.map((p) => (
                   <tr key={`${p.party}-${p.currency}`} className="border-t border-border-light">
                     <td className="px-3 py-2 font-medium text-content-primary">{p.party}</td>
-                    <td className="px-3 py-2 text-right">{p.open_count}</td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">{p.open_count}</td>
+                    <td className="px-3 py-2 text-end">
                       <MoneyDisplay amount={p.chargeable_total} currency={p.currency} showCode />
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <MoneyDisplay amount={p.recovered_total} currency={p.currency} showCode />
                     </td>
-                    <td className="px-3 py-2 text-right font-medium">
+                    <td className="px-3 py-2 text-end font-medium">
                       <MoneyDisplay amount={p.outstanding_total} currency={p.currency} showCode />
                     </td>
                   </tr>
@@ -1640,17 +1640,17 @@ function RecoveryTab({ projectId }: { projectId: string }) {
                           type="button"
                           onClick={() => setOpenCharge(expanded ? null : bc.id)}
                           aria-expanded={expanded}
-                          className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left"
+                          className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-start"
                         >
                           <ArrowRight
-                            className={`h-3.5 w-3.5 shrink-0 text-content-tertiary transition-transform ${expanded ? 'rotate-90' : ''}`}
+                            className={`h-3.5 w-3.5 shrink-0 text-content-tertiary transition-transform ${expanded ? 'rotate-90' : ''} rtl:rotate-180`}
                           />
                           <span className="font-medium text-content-primary">
                             {bc.responsible_party ||
                               t('change_intelligence.recovery.unassigned', { defaultValue: '(unassigned)' })}
                           </span>
                           <span className="text-content-tertiary">{bc.description || bc.basis || bc.source_ref}</span>
-                          <span className="ml-auto">
+                          <span className="ms-auto">
                             <MoneyDisplay amount={bc.chargeable_amount} currency={bc.currency} showCode />
                           </span>
                         </button>
@@ -1763,11 +1763,11 @@ function DisputeRiskTab({ projectId }: { projectId: string }) {
                   type="button"
                   onClick={() => setOpenId(expanded ? null : it.change_id)}
                   aria-expanded={expanded}
-                  className="w-full px-3 py-3 text-left hover:bg-surface-secondary"
+                  className="w-full px-3 py-3 text-start hover:bg-surface-secondary"
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <ArrowRight
-                      className={`h-3.5 w-3.5 shrink-0 text-content-tertiary transition-transform ${expanded ? 'rotate-90' : ''}`}
+                      className={`h-3.5 w-3.5 shrink-0 text-content-tertiary transition-transform ${expanded ? 'rotate-90' : ''} rtl:rotate-180`}
                     />
                     {/* The band shares its vocabulary (and translation) with the
                         summary tiles above; driver and cure are stable engine
@@ -1784,14 +1784,14 @@ function DisputeRiskTab({ projectId }: { projectId: string }) {
                       {it.change_ref ? `${it.change_ref}: ` : ''}
                       {it.title || t('change_intelligence.common.untitled', { defaultValue: '(untitled)' })}
                     </span>
-                    <span className="ml-auto inline-flex items-center gap-1 text-xs text-content-tertiary">
+                    <span className="ms-auto inline-flex items-center gap-1 text-xs text-content-tertiary">
                       <ShieldAlert className="h-3.5 w-3.5" />
                       {t(`change_intelligence.dispute.driver.${it.dominant_driver}`, {
                         defaultValue: humanize(it.dominant_driver),
                       })}
                     </span>
                   </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 pl-5 text-sm text-content-secondary">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 ps-5 text-sm text-content-secondary">
                     {it.currency ? (
                       <span>
                         {t('change_intelligence.dispute.at_risk', { defaultValue: 'At risk:' })}{' '}
@@ -1890,21 +1890,21 @@ function DecisionImpactTab({ projectId }: { projectId: string }) {
         >
           <Card className="overflow-hidden p-0">
             <table className="w-full text-sm">
-              <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+              <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                 <tr>
                   <th className="px-3 py-2">
                     {t('change_intelligence.decision.col.by_kind', { defaultValue: 'By kind' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.decision.col.committed', { defaultValue: 'Committed' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.decision.col.this_change', { defaultValue: 'This change' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.decision.col.resulting', { defaultValue: 'Resulting' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('change_intelligence.decision.col.days', { defaultValue: 'Days' })}
                   </th>
                 </tr>
@@ -1915,16 +1915,16 @@ function DecisionImpactTab({ projectId }: { projectId: string }) {
                     <td className="px-3 py-2 font-medium text-content-primary">
                       {humanize(r.kind)} <span className="text-content-tertiary">{r.currency}</span>
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <MoneyDisplay amount={r.current_committed_cost} currency={r.currency} showCode />
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <MoneyDisplay amount={r.candidate_cost_delta} currency={r.currency} showCode colorize />
                     </td>
-                    <td className="px-3 py-2 text-right font-medium">
+                    <td className="px-3 py-2 text-end font-medium">
                       <MoneyDisplay amount={r.resulting_cost} currency={r.currency} showCode />
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       {r.current_committed_days} &rarr; {r.resulting_days}
                     </td>
                   </tr>
@@ -2017,7 +2017,7 @@ function WatchTab({ projectId }: { projectId: string }) {
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant={WATCH_VARIANT[r.classification]}>{humanize(r.classification)}</Badge>
                 <span className="text-xs text-content-tertiary">{humanize(r.kind)}</span>
-                <span className="ml-auto flex flex-wrap items-center gap-x-3 text-sm text-content-secondary">
+                <span className="ms-auto flex flex-wrap items-center gap-x-3 text-sm text-content-secondary">
                   <span>
                     {t('change_intelligence.watch.idle_days', {
                       defaultValue: '{{days}}d idle',
@@ -2446,7 +2446,7 @@ function DelayRiskTab({ projectId }: { projectId: string }) {
                 <Badge variant={DELAY_VARIANT[it.band]}>{humanize(it.band)}</Badge>
                 <span className="font-medium text-content-primary">{it.change_ref || humanize(it.kind)}</span>
                 <span className="text-xs text-content-tertiary">{it.title}</span>
-                <span className="ml-auto flex flex-wrap items-center gap-x-3 text-sm text-content-secondary">
+                <span className="ms-auto flex flex-wrap items-center gap-x-3 text-sm text-content-secondary">
                   <span>
                     {t('change_intelligence.delay.risk_pct', {
                       defaultValue: '{{pct}}% risk',
@@ -2574,7 +2574,7 @@ function ScopeRiskTab({ projectId }: { projectId: string }) {
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant={SCOPE_VARIANT[ln.band]}>{humanize(ln.band)}</Badge>
                 <span className="font-mono text-xs text-content-tertiary">{ln.line_id.slice(0, 8)}</span>
-                <span className="ml-auto text-sm font-semibold text-content-secondary">{`${ln.score}/100`}</span>
+                <span className="ms-auto text-sm font-semibold text-content-secondary">{`${ln.score}/100`}</span>
               </div>
               {ln.labels.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -2787,7 +2787,7 @@ function NoticeRegisterTab({ projectId }: { projectId: string }) {
                     {t('change_intelligence.notice.at_risk', { defaultValue: 'Entitlement at risk' })}
                   </span>
                 )}
-                <span className={`ml-auto text-sm font-medium ${noticeCountdownTone(c)}`}>
+                <span className={`ms-auto text-sm font-medium ${noticeCountdownTone(c)}`}>
                   {noticeCountdown(c, t)}
                 </span>
               </div>
@@ -2921,15 +2921,15 @@ function CommitmentsTab({ projectId }: { projectId: string }) {
                 {t('change_intelligence.commitments.owner_load_heading', { defaultValue: 'Load by owner' })}
               </div>
               <table className="w-full text-sm">
-                <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+                <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                   <tr>
                     <th className="px-3 py-2">
                       {t('change_intelligence.commitments.col.owner', { defaultValue: 'Owner' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('change_intelligence.commitments.col.open', { defaultValue: 'Open' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('change_intelligence.commitments.col.overdue', { defaultValue: 'Overdue' })}
                     </th>
                   </tr>
@@ -2938,8 +2938,8 @@ function CommitmentsTab({ projectId }: { projectId: string }) {
                   {owners.map((o) => (
                     <tr key={o.owner || '(unassigned)'} className="border-t border-border-light">
                       <td className="px-3 py-2 font-medium text-content-primary">{o.owner || unassigned}</td>
-                      <td className="px-3 py-2 text-right">{o.open_count}</td>
-                      <td className="px-3 py-2 text-right text-semantic-error">{o.overdue_count || ''}</td>
+                      <td className="px-3 py-2 text-end">{o.open_count}</td>
+                      <td className="px-3 py-2 text-end text-semantic-error">{o.overdue_count || ''}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -2955,7 +2955,7 @@ function CommitmentsTab({ projectId }: { projectId: string }) {
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+                <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                   <tr>
                     <th className="px-3 py-2">
                       {t('change_intelligence.commitments.col.owner', { defaultValue: 'Owner' })}
@@ -2969,7 +2969,7 @@ function CommitmentsTab({ projectId }: { projectId: string }) {
                     <th className="px-3 py-2">
                       {t('change_intelligence.commitments.col.due', { defaultValue: 'Due' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('change_intelligence.commitments.col.status', { defaultValue: 'Status' })}
                     </th>
                   </tr>
@@ -2987,7 +2987,7 @@ function CommitmentsTab({ projectId }: { projectId: string }) {
                       </td>
                       <td className="px-3 py-2 text-content-secondary">{commitmentSourceLabel(c.source, t)}</td>
                       <td className="px-3 py-2 text-content-secondary">{dateOnly(c.due_date)}</td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">
                         {c.overdue ? (
                           <Badge variant="error">
                             {t('change_intelligence.commitments.days_overdue', {
@@ -3054,19 +3054,19 @@ function ParetoCard({
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+          <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
             <tr>
               <th className="px-3 py-2">{keyLabel}</th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('change_intelligence.drivers.col.count', { defaultValue: 'Count' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('change_intelligence.drivers.col.cost', { defaultValue: 'Cost' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('change_intelligence.drivers.col.share', { defaultValue: 'Share' })}
               </th>
-              <th className="px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">
                 {t('change_intelligence.drivers.col.cumulative', { defaultValue: 'Cumulative' })}
               </th>
             </tr>
@@ -3075,8 +3075,8 @@ function ParetoCard({
             {rows.map((r) => (
               <tr key={r.key} className="border-t border-border-light">
                 <td className="px-3 py-2 font-medium text-content-primary">{humanize(r.key)}</td>
-                <td className="px-3 py-2 text-right">{r.count}</td>
-                <td className="px-3 py-2 text-right">
+                <td className="px-3 py-2 text-end">{r.count}</td>
+                <td className="px-3 py-2 text-end">
                   <MoneyDisplay amount={r.cost} currency={currency} showCode colorize />
                 </td>
                 <td className="px-3 py-2">
@@ -3087,7 +3087,7 @@ function ParetoCard({
                     <span className="tabular-nums text-content-secondary">{pctNum(r.cost_pct)}</span>
                   </div>
                 </td>
-                <td className="px-3 py-2 text-right tabular-nums text-content-tertiary">
+                <td className="px-3 py-2 text-end tabular-nums text-content-tertiary">
                   {pctNum(r.cumulative_pct)}
                 </td>
               </tr>
@@ -3185,15 +3185,15 @@ function DriversTab({ projectId }: { projectId: string }) {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+                  <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                     <tr>
                       <th className="px-3 py-2">
                         {t('change_intelligence.drivers.col.month', { defaultValue: 'Month' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.drivers.col.count', { defaultValue: 'Count' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.drivers.col.cost', { defaultValue: 'Cost' })}
                       </th>
                     </tr>
@@ -3202,8 +3202,8 @@ function DriversTab({ projectId }: { projectId: string }) {
                     {trend.map((pt) => (
                       <tr key={pt.month} className="border-t border-border-light">
                         <td className="px-3 py-2 font-medium text-content-primary">{pt.month}</td>
-                        <td className="px-3 py-2 text-right">{pt.count}</td>
-                        <td className="px-3 py-2 text-right">
+                        <td className="px-3 py-2 text-end">{pt.count}</td>
+                        <td className="px-3 py-2 text-end">
                           <MoneyDisplay amount={pt.cost} currency={data?.primary_currency} showCode colorize />
                         </td>
                       </tr>
@@ -3391,21 +3391,21 @@ function RunRateTab({ projectId }: { projectId: string }) {
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-tertiary">
+                  <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-tertiary">
                     <tr>
                       <th className="px-3 py-2">
                         {t('change_intelligence.runrate.col.month', { defaultValue: 'Month' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.runrate.col.approved', { defaultValue: 'Approved' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.runrate.col.pending', { defaultValue: 'Pending' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.runrate.col.cumulative', { defaultValue: 'Cumulative' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('change_intelligence.runrate.col.pct', { defaultValue: 'vs contract' })}
                       </th>
                     </tr>
@@ -3414,16 +3414,16 @@ function RunRateTab({ projectId }: { projectId: string }) {
                     {points.map((p) => (
                       <tr key={p.month} className="border-t border-border-light">
                         <td className="px-3 py-2 font-medium text-content-primary">{p.month}</td>
-                        <td className="px-3 py-2 text-right">
+                        <td className="px-3 py-2 text-end">
                           <MoneyDisplay amount={p.approved_value} currency={data?.currency} showCode />
                         </td>
-                        <td className="px-3 py-2 text-right text-content-secondary">
+                        <td className="px-3 py-2 text-end text-content-secondary">
                           <MoneyDisplay amount={p.pending_value} currency={data?.currency} showCode />
                         </td>
-                        <td className="px-3 py-2 text-right font-medium">
+                        <td className="px-3 py-2 text-end font-medium">
                           <MoneyDisplay amount={p.cumulative_value} currency={data?.currency} showCode />
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums text-content-tertiary">
+                        <td className="px-3 py-2 text-end tabular-nums text-content-tertiary">
                           {pctString(p.change_pct)}
                         </td>
                       </tr>
@@ -3471,7 +3471,7 @@ export function ChangeIntelligencePage() {
             })}
           </p>
         </div>
-        <ModuleGuideButton content={changeIntelligenceGuide} className="ml-auto" />
+        <ModuleGuideButton content={changeIntelligenceGuide} className="ms-auto" />
       </header>
 
       <DismissibleInfo

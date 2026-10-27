@@ -321,7 +321,7 @@ export function BIMQuantityPicker({
                 <button
                   onClick={() => toggleElement(element.id)}
                   title={`${element.name || element.element_type} (${element.element_type})`}
-                  className="w-full flex items-center gap-1.5 px-3 py-1.5 text-left
+                  className="w-full flex items-center gap-1.5 px-3 py-1.5 text-start
                              hover:bg-surface-secondary/60 transition-colors"
                 >
                   <span className="text-[10px] text-content-quaternary shrink-0">
@@ -421,7 +421,7 @@ function QuantityRow({
         isSum ? 'font-medium' : ''
       }`}
     >
-      <span className="text-[11px] text-content-secondary flex-1 truncate pl-3">{label}</span>
+      <span className="text-[11px] text-content-secondary flex-1 truncate ps-3">{label}</span>
       <span className="text-[11px] tabular-nums text-content-primary font-medium shrink-0">
         {fmtNum(shownValue)}
       </span>
@@ -443,7 +443,7 @@ function QuantityRow({
                      hover:bg-emerald-200 dark:hover:bg-emerald-900/50
                      opacity-0 group-hover/row:opacity-100 transition-all"
         >
-          Use <ArrowRight size={8} />
+          Use <ArrowRight size={8} className="rtl:rotate-180" />
         </button>
       )}
     </div>

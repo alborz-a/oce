@@ -564,9 +564,9 @@ function CreateCorrespondenceModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -597,7 +597,7 @@ function CreateCorrespondenceModal({
                   aria-checked={selected}
                   onClick={() => setDirection(dir)}
                   className={clsx(
-                    'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left',
+                    'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-start',
                     selected
                       ? cfg.selectedColor
                       : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
@@ -1048,7 +1048,7 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
           className={clsx(
             'text-content-tertiary transition-transform shrink-0',
             expanded && 'rotate-90',
-          )}
+          'rtl:rotate-180')}
         />
 
         {/* Ref # */}
@@ -1068,9 +1068,9 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
           className="shrink-0"
         >
           {item.direction === 'incoming' ? (
-            <ArrowDownLeft size={11} className="mr-1" />
+            <ArrowDownLeft size={11} className="me-1" />
           ) : (
-            <ArrowUpRight size={11} className="mr-1" />
+            <ArrowUpRight size={11} className="me-1" />
           )}
           {t(`correspondence.dir_${item.direction}`, {
             defaultValue: item.direction === 'incoming' ? 'Incoming' : 'Outgoing',
@@ -1095,14 +1095,14 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
           (item.status === 'open' || item.status === 'awaiting_response') &&
           (item.is_overdue ? (
             <Badge variant="error" size="sm" className="shrink-0">
-              <AlertTriangle size={11} className="mr-1" />
+              <AlertTriangle size={11} className="me-1" />
               {t('correspondence.overdue', { defaultValue: 'Overdue' })}
             </Badge>
           ) : (
             typeof item.days_until_due === 'number' &&
             item.days_until_due <= 7 && (
               <Badge variant="warning" size="sm" className="shrink-0 hidden md:inline-flex">
-                <Clock size={11} className="mr-1" />
+                <Clock size={11} className="me-1" />
                 {item.days_until_due <= 0
                   ? t('correspondence.due_today', { defaultValue: 'Due today' })
                   : t('correspondence.due_in_days', {
@@ -1161,7 +1161,7 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           <div className="flex items-center gap-4 text-xs text-content-tertiary flex-wrap">
             <span className="inline-flex items-center gap-1">
               {t('correspondence.label_from', { defaultValue: 'From' })}:{' '}
@@ -1230,7 +1230,7 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
               </span>
               {(item.linked_document_ids ?? []).length > 0 && (
                 <Badge variant="neutral" size="sm">
-                  <FileText size={11} className="mr-1" />
+                  <FileText size={11} className="me-1" />
                   {t('correspondence.linked_docs', {
                     defaultValue: '{{count}} document(s)',
                     count: (item.linked_document_ids ?? []).length,
@@ -1514,7 +1514,7 @@ function HowCorrespondenceWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180" />
               </li>
             )}
           </React.Fragment>
@@ -1899,7 +1899,7 @@ export function CorrespondencePage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1908,7 +1908,7 @@ export function CorrespondencePage() {
               defaultValue: 'Search correspondence...',
             })}
             aria-label={t('correspondence.search_placeholder', { defaultValue: 'Search correspondence...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -2049,7 +2049,7 @@ export function CorrespondencePage() {
                 <span className="w-20 hidden sm:block">
                   {t('correspondence.col_date', { defaultValue: 'Date' })}
                 </span>
-                <span className="w-10 text-right">
+                <span className="w-10 text-end">
                   {t('correspondence.col_docs', { defaultValue: 'Docs' })}
                 </span>
               </div>

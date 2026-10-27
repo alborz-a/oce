@@ -4,7 +4,7 @@
 // AI Estimate Builder — conversational intake v2 (live parameter sheet).
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 //
-// The right-hand live sheet that fills in as answers arrive, and the
+// The end-hand live sheet that fills in as answers arrive, and the
 // checkpoint-A review where the user confirms the full parameter set before
 // any groups are composed (human-confirmed AI: explicit confirm step).
 
@@ -87,7 +87,7 @@ export function ParameterSheet({
                       aria-label={label}
                       value={value === null || value === undefined ? '' : String(value)}
                       onChange={(e) => onChangeParam?.(key, e.target.value)}
-                      className="h-7 w-24 rounded-md border border-border bg-surface-primary px-2 text-right text-sm focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue/30"
+                      className="h-7 w-24 rounded-md border border-border bg-surface-primary px-2 text-end text-sm focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue/30"
                     />
                   ) : (
                     displayValue(value, yesLabel, noLabel)

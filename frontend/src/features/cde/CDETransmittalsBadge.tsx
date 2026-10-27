@@ -78,7 +78,7 @@ function TransmittalsDrawer({
       })}
     >
       <div
-        className="w-full max-w-md bg-surface-primary border-l border-border shadow-xl flex flex-col animate-slide-in-right"
+        className="w-full max-w-md bg-surface-primary border-s border-border shadow-xl flex flex-col animate-slide-in-right"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">

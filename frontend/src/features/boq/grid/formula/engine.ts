@@ -382,7 +382,7 @@ function coerceNumber(v: Value, ctx: string): number {
  *   compare  = addsub (('==' | '!=' | '<' | '<=' | '>' | '>=') addsub)?
  *   addsub   = muldiv (('+' | '-') muldiv)*
  *   muldiv   = power (('*' | '/') power)*
- *   power    = unary ('^' power)?            -- right-associative
+ *   power    = unary ('^' power)?            -- end-associative
  *   unary    = ('+' | '-') unary | member
  *   member   = primary ('.' IDENT)*
  *   primary  = NUMBER | STRING | '$' VAR | '(' expr ')' | IDENT '(' args? ')' | IDENT

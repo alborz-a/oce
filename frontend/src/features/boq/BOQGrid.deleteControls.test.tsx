@@ -6,7 +6,7 @@
  * A tester could add a section to a bill and then found no way to remove it.
  * The cascade delete worked on the server; the only control for it was a 10px
  * trash icon at opacity 0 that appeared on hover, so on a touch screen it did
- * not exist, and the section right-click menu offered everything but Delete
+ * not exist, and the section end-click menu offered everything but Delete
  * while the position menu had one. The tip above the grid promised a "(...)"
  * menu on sections that only positions had.
  *

@@ -564,7 +564,7 @@ export function ImportPreviewDialog({ open, onClose, boqId, onImported }: Import
                     onClick={() => setMappingExpanded((v) => !v)}
                     className="flex items-center gap-2 w-full px-3 py-2 text-xs font-medium text-content-secondary hover:bg-surface-secondary/30"
                   >
-                    {mappingExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                    {mappingExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} className="rtl:rotate-180" />}
                     {t('boq.import_preview.column_mapping', {
                       defaultValue: 'Column mapping ({{mapped}} of {{total}} mapped)',
                       mapped: Object.values(columnMapping).filter(Boolean).length,
@@ -622,7 +622,7 @@ export function ImportPreviewDialog({ open, onClose, boqId, onImported }: Import
                     onClick={() => setWarningsExpanded((v) => !v)}
                     className="flex items-center gap-2 w-full px-3 py-2 text-xs text-amber-800 dark:text-amber-300 font-medium"
                   >
-                    {warningsExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                    {warningsExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} className="rtl:rotate-180" />}
                     <AlertTriangle size={12} />
                     {t('boq.import_preview.warnings_title', {
                       defaultValue: '{{count}} warning(s)',
@@ -649,7 +649,7 @@ export function ImportPreviewDialog({ open, onClose, boqId, onImported }: Import
                     onClick={() => setErrorsExpanded((v) => !v)}
                     className="flex items-center gap-2 w-full px-3 py-2 text-xs text-red-800 dark:text-red-300 font-medium"
                   >
-                    {errorsExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+                    {errorsExpanded ? <ChevronDown size={12} /> : <ChevronRight size={12} className="rtl:rotate-180" />}
                     <AlertTriangle size={12} />
                     {t('boq.import_preview.errors_title', {
                       defaultValue: '{{count}} error(s)',
@@ -684,22 +684,22 @@ export function ImportPreviewDialog({ open, onClose, boqId, onImported }: Import
                   <table className="w-full text-xs">
                     <thead className="sticky top-0 bg-surface-secondary border-b border-border-light">
                       <tr>
-                        <th className="px-3 py-2 text-left font-medium text-content-tertiary whitespace-nowrap">
+                        <th className="px-3 py-2 text-start font-medium text-content-tertiary whitespace-nowrap">
                           {t('boq.import_preview.col_ordinal', { defaultValue: 'Pos. / Code' })}
                         </th>
-                        <th className="px-3 py-2 text-left font-medium text-content-tertiary">
+                        <th className="px-3 py-2 text-start font-medium text-content-tertiary">
                           {t('boq.import_preview.col_description', { defaultValue: 'Description' })}
                         </th>
-                        <th className="px-3 py-2 text-left font-medium text-content-tertiary whitespace-nowrap">
+                        <th className="px-3 py-2 text-start font-medium text-content-tertiary whitespace-nowrap">
                           {t('boq.import_preview.col_unit', { defaultValue: 'Unit' })}
                         </th>
-                        <th className="px-3 py-2 text-right font-medium text-content-tertiary whitespace-nowrap">
+                        <th className="px-3 py-2 text-end font-medium text-content-tertiary whitespace-nowrap">
                           {t('boq.import_preview.col_quantity', { defaultValue: 'Qty' })}
                         </th>
-                        <th className="px-3 py-2 text-right font-medium text-content-tertiary whitespace-nowrap">
+                        <th className="px-3 py-2 text-end font-medium text-content-tertiary whitespace-nowrap">
                           {t('boq.import_preview.col_unit_rate', { defaultValue: 'Unit Rate' })}
                         </th>
-                        <th className="px-3 py-2 text-right font-medium text-content-tertiary whitespace-nowrap">
+                        <th className="px-3 py-2 text-end font-medium text-content-tertiary whitespace-nowrap">
                           {t('boq.import_preview.col_total', { defaultValue: 'Total' })}
                         </th>
                       </tr>
@@ -723,13 +723,13 @@ export function ImportPreviewDialog({ open, onClose, boqId, onImported }: Import
                           <td className="px-3 py-1.5 text-content-secondary whitespace-nowrap">
                             {pos.is_section ? '' : pos.unit}
                           </td>
-                          <td className="px-3 py-1.5 text-right text-content-secondary tabular-nums whitespace-nowrap">
+                          <td className="px-3 py-1.5 text-end text-content-secondary tabular-nums whitespace-nowrap">
                             {pos.is_section ? '' : fmtNumber(pos.quantity)}
                           </td>
-                          <td className="px-3 py-1.5 text-right text-content-secondary tabular-nums whitespace-nowrap">
+                          <td className="px-3 py-1.5 text-end text-content-secondary tabular-nums whitespace-nowrap">
                             {pos.is_section ? '' : fmtNumber(pos.unit_rate)}
                           </td>
-                          <td className="px-3 py-1.5 text-right text-content-primary tabular-nums whitespace-nowrap font-medium">
+                          <td className="px-3 py-1.5 text-end text-content-primary tabular-nums whitespace-nowrap font-medium">
                             {pos.is_section ? '' : fmtNumber(pos.total)}
                           </td>
                         </tr>
