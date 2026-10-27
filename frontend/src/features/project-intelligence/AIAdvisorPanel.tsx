@@ -219,7 +219,7 @@ export function AIAdvisorPanel({ projectId, role }: AIAdvisorPanelProps) {
                 <span>{recError}</span>
                 <button
                   onClick={fetchRecommendations}
-                  className="ml-2 text-xs text-oe-blue hover:underline"
+                  className="ms-2 text-xs text-oe-blue hover:underline"
                 >
                   {t('common.retry', { defaultValue: 'Retry' })}
                 </button>
@@ -259,15 +259,15 @@ export function AIAdvisorPanel({ projectId, role }: AIAdvisorPanelProps) {
                 className={clsx(
                   'rounded-lg px-3 py-2 text-xs',
                   msg.role === 'user'
-                    ? 'bg-oe-blue/10 text-oe-blue ml-8'
-                    : 'bg-surface-tertiary text-content-secondary mr-8'
+                    ? 'bg-oe-blue/10 text-oe-blue ms-8'
+                    : 'bg-surface-tertiary text-content-secondary me-8'
                 )}
               >
                 <div className="whitespace-pre-wrap">{renderTaggedText(msg.text)}</div>
               </div>
             ))}
             {chatLoading && (
-              <div className="flex items-center gap-2 text-xs text-content-tertiary mr-8 bg-surface-tertiary rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 text-xs text-content-tertiary me-8 bg-surface-tertiary rounded-lg px-3 py-2">
                 <Loader2 size={12} className="animate-spin" />
                 {t('project_intelligence.thinking', { defaultValue: 'Thinking...' })}
               </div>

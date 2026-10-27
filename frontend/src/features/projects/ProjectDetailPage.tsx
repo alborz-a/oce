@@ -1193,7 +1193,7 @@ function ImportDialog({
                   </p>
                 </div>
                 {(result.method === 'ai' || result.method === 'cad_ai') && (
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
+                  <span className="ms-auto inline-flex items-center gap-1 rounded-full bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
                     <Sparkles size={10} />
                     {result.method === 'cad_ai'
                       ? `CAD + ${result.model_used ?? 'AI'}`
@@ -1201,7 +1201,7 @@ function ImportDialog({
                   </span>
                 )}
                 {(result.method === 'direct' || result.method === 'native') && (
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-tertiary">
+                  <span className="ms-auto inline-flex items-center gap-1 rounded-full bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-tertiary">
                     {t('import.method_direct', { defaultValue: 'Direct' })}
                   </span>
                 )}
@@ -1400,7 +1400,7 @@ function ProjectStatusSelect({
         aria-label={t('projects.status_select_label', {
           defaultValue: 'Change project status',
         })}
-        className="h-7 appearance-none rounded-lg border border-border bg-surface-primary pl-2.5 pr-7 text-xs font-medium text-content-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue disabled:opacity-60"
+        className="h-7 appearance-none rounded-lg border border-border bg-surface-primary ps-2.5 pe-7 text-xs font-medium text-content-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue disabled:opacity-60"
       >
         {isCustom && <option value={value}>{statusLabel(value)}</option>}
         {options.map((s) => (
@@ -1409,7 +1409,7 @@ function ProjectStatusSelect({
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-content-tertiary">
+      <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2 text-content-tertiary">
         <ChevronDown size={13} />
       </div>
     </div>
@@ -1941,7 +1941,7 @@ export function ProjectDetailPage() {
                     }}
                     disabled={!editForm.name.trim() || updateMutation.isPending}
                   >
-                    <Save size={14} className="mr-1" />
+                    <Save size={14} className="me-1" />
                     {t('common.save')}
                   </Button>
                   <Button
@@ -2025,7 +2025,7 @@ export function ProjectDetailPage() {
                     {/* [RSC-IRAN] */}
                     {REGION_LOCK && project.region === 'IR' ? 'ایران' : project.region}
                   </Badge>
-                  <span className="text-xs text-content-tertiary ml-2">
+                  <span className="text-xs text-content-tertiary ms-2">
                     {t('projects.created', { date: formatDate(project.created_at, i18n.language) })}
                   </span>
                 </div>
@@ -2399,7 +2399,7 @@ export function ProjectDetailPage() {
                         {dashboardData.schedule.completed}/{dashboardData.schedule.total_activities}{' '}
                         {t('projects.dash_activities', { defaultValue: 'activities' })}
                         {dashboardData.schedule.delayed > 0 && (
-                          <span className="text-semantic-error ml-1">
+                          <span className="text-semantic-error ms-1">
                             ({dashboardData.schedule.delayed} {t('projects.dash_delayed', { defaultValue: 'delayed' })})
                           </span>
                         )}
@@ -2521,17 +2521,17 @@ export function ProjectDetailPage() {
                       return (
                         <>
                           <div
-                            className="absolute inset-y-0 left-0 bg-oe-blue/20 rounded-lg"
+                            className="absolute inset-y-0 start-0 bg-oe-blue/20 rounded-lg"
                             style={{ width: `${Math.min((original / forecast) * 100, 100)}%` }}
                             title={`${t('projects.dash_original', { defaultValue: 'Original' })}: ${formatCurrency(original, currency)}`}
                           />
                           <div
-                            className="absolute inset-y-0 left-0 bg-oe-blue/40 rounded-l-lg"
+                            className="absolute inset-y-0 start-0 bg-oe-blue/40 rounded-s-lg"
                             style={{ width: `${Math.min((committed / forecast) * 100, 100)}%` }}
                             title={`${t('projects.dash_committed', { defaultValue: 'Committed' })}: ${formatCurrency(committed, currency)}`}
                           />
                           <div
-                            className="absolute inset-y-0 left-0 bg-oe-blue rounded-l-lg"
+                            className="absolute inset-y-0 start-0 bg-oe-blue rounded-s-lg"
                             style={{ width: `${Math.min((actual / forecast) * 100, 100)}%` }}
                             title={`${t('projects.dash_actual', { defaultValue: 'Actual' })}: ${formatCurrency(actual, currency)}`}
                           />
@@ -2683,7 +2683,7 @@ export function ProjectDetailPage() {
                         key={item.label}
                         type="button"
                         onClick={() => navigate(item.to)}
-                        className="rounded-lg border border-border-light p-3 text-left transition-all hover:border-oe-blue/40 hover:bg-surface-secondary hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                        className="rounded-lg border border-border-light p-3 text-start transition-all hover:border-oe-blue/40 hover:bg-surface-secondary hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
                         aria-label={`${item.label}: ${item.count}`}
                       >
                         <div className="flex items-center gap-2 mb-2">
@@ -2706,7 +2706,7 @@ export function ProjectDetailPage() {
                     <button
                       type="button"
                       onClick={() => navigate('/procurement')}
-                      className="block w-full text-left rounded-md transition-colors hover:bg-surface-secondary -mx-2 px-2 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                      className="block w-full text-start rounded-md transition-colors hover:bg-surface-secondary -mx-2 px-2 py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
                       aria-label={t('projects.dash_procurement', { defaultValue: 'Procurement' })}
                     >
                       <div className="flex items-center gap-2 mb-2">
@@ -2781,7 +2781,7 @@ export function ProjectDetailPage() {
                             key={`${item.type}-${item.title.slice(0, 30)}-${idx}`}
                             type="button"
                             onClick={() => navigate(to)}
-                            className="flex items-center gap-3 px-5 py-3 w-full text-left transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:bg-surface-secondary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oe-blue/40"
+                            className="flex items-center gap-3 px-5 py-3 w-full text-start transition-colors hover:bg-surface-secondary focus:outline-none focus-visible:bg-surface-secondary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-oe-blue/40"
                             aria-label={`${typeLabels[item.type] || item.type}: ${item.title}`}
                           >
                             <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-2xs font-bold ${typeColors[item.type] || 'bg-surface-secondary text-content-tertiary'}`}>
@@ -2928,7 +2928,7 @@ export function ProjectDetailPage() {
                     <button
                       type="button"
                       onClick={() => navigate('/files')}
-                      className="block w-full text-left rounded-lg border border-border-light bg-surface-secondary/40 transition-colors hover:bg-surface-secondary hover:border-border px-3 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                      className="block w-full text-start rounded-lg border border-border-light bg-surface-secondary/40 transition-colors hover:bg-surface-secondary hover:border-border px-3 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
                       aria-label={t('projects.dash_documents', { defaultValue: 'Documents' })}
                     >
                       <p className="text-2xs font-medium text-content-tertiary uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -3036,7 +3036,7 @@ export function ProjectDetailPage() {
                       {/* Info */}
                       <button
                         onClick={() => navigate(`/boq/${boq.id}`)}
-                        className="min-w-0 flex-1 text-left"
+                        className="min-w-0 flex-1 text-start"
                       >
                         <div className="text-sm font-medium text-content-primary truncate">
                           {boq.name}
@@ -3178,12 +3178,12 @@ export function ProjectDetailPage() {
                   <div className="rounded-lg border border-border-light overflow-hidden">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-border-light bg-surface-tertiary text-left">
+                        <tr className="border-b border-border-light bg-surface-tertiary text-start">
                           <th className="px-4 py-2.5 font-medium text-content-secondary">{t('common.item', { defaultValue: 'Item' })}</th>
-                          <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
+                          <th className="px-4 py-2.5 font-medium text-content-secondary text-end">
                             {t('projects.planned', { defaultValue: 'Planned' })}
                           </th>
-                          <th className="px-4 py-2.5 font-medium text-content-secondary text-right">
+                          <th className="px-4 py-2.5 font-medium text-content-secondary text-end">
                             {t('projects.actual', { defaultValue: 'Actual' })}
                           </th>
                         </tr>
@@ -3192,10 +3192,10 @@ export function ProjectDetailPage() {
                         {budgetDashboard.items!.map((item) => (
                           <tr key={item.name} className="hover:bg-surface-secondary transition-colors">
                             <td className="px-4 py-2.5 text-content-primary">{item.name}</td>
-                            <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                            <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
                               {formatCurrency(item.planned ?? 0, currency)}
                             </td>
-                            <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                            <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                               {formatCurrency(item.actual ?? 0, currency)}
                             </td>
                           </tr>

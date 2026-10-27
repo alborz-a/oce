@@ -1205,7 +1205,7 @@ function StepWelcome({
           localStorage.setItem('oe_lang_explicit', '1');
           onNext();
         }}
-        icon={<ArrowRight size={18} />}
+        icon={<ArrowRight size={18} className="rtl:rotate-180"/>}
         iconPosition="right"
         className="mt-5 shadow-lg shadow-oe-blue/20"
       >
@@ -1263,7 +1263,7 @@ function StepStartChoice({
         <button
           onClick={onQuickStart}
           className={clsx(
-            'group relative flex flex-col items-start rounded-3xl p-8 text-left min-h-[340px]',
+            'group relative flex flex-col items-start rounded-3xl p-8 text-start min-h-[340px]',
             'bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]',
             'hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1',
             'transition-all duration-300 ease-oe active:scale-[0.98]',
@@ -1294,7 +1294,7 @@ function StepStartChoice({
         <button
           onClick={onReadyPack}
           className={clsx(
-            'group relative flex flex-col items-start rounded-3xl p-8 text-left min-h-[340px]',
+            'group relative flex flex-col items-start rounded-3xl p-8 text-start min-h-[340px]',
             'bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]',
             'hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1',
             'transition-all duration-300 ease-oe active:scale-[0.98]',
@@ -1322,7 +1322,7 @@ function StepStartChoice({
         <button
           onClick={onChooseProfile}
           className={clsx(
-            'group relative flex flex-col items-start rounded-3xl p-8 text-left min-h-[340px]',
+            'group relative flex flex-col items-start rounded-3xl p-8 text-start min-h-[340px]',
             'bg-surface-elevated/70 backdrop-blur-md shadow-sm shadow-black/[0.04]',
             'hover:bg-oe-blue-subtle/30 hover:shadow-2xl hover:shadow-oe-blue/10 hover:-translate-y-1',
             'transition-all duration-300 ease-oe active:scale-[0.98]',
@@ -1344,7 +1344,7 @@ function StepStartChoice({
       </div>
 
       <div className="mt-5">
-        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
           {t('common.back', { defaultValue: 'Back' })}
         </Button>
       </div>
@@ -1622,7 +1622,7 @@ export function ReadyPackPicker({
           <Button
             onClick={() => handleInstallCountry(countryOffer.preset)}
             disabled={installing}
-            icon={<ArrowRight size={16} />}
+            icon={<ArrowRight size={16} className="rtl:rotate-180"/>}
             iconPosition="right"
           >
             {t('onboarding.ready_pack_set_up_here', { defaultValue: 'Set this up for me' })}
@@ -1659,7 +1659,7 @@ export function ReadyPackPicker({
                 )}
               >
                 {isSelected && (
-                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white shadow-sm">
+                  <span className="absolute end-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white shadow-sm">
                     <Check size={12} strokeWidth={3} />
                   </span>
                 )}
@@ -1741,7 +1741,7 @@ export function ReadyPackPicker({
                   )}
                 >
                   {busy && (
-                    <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white shadow-sm">
+                    <span className="absolute end-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-oe-blue text-white shadow-sm">
                       <Loader2 size={12} className="animate-spin" />
                     </span>
                   )}
@@ -1782,14 +1782,14 @@ export function ReadyPackPicker({
               would put two Back buttons on one screen. */}
           {packs.length === 0 && (
           <div className="mt-6 flex items-center justify-center gap-3">
-            <Button variant="ghost" onClick={onBack} disabled={installing} icon={<ArrowLeft size={16} />}>
+            <Button variant="ghost" onClick={onBack} disabled={installing} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
               {t('common.back', { defaultValue: 'Back' })}
             </Button>
             <Button
               variant="ghost"
               onClick={onFallback}
               disabled={installing}
-              icon={<ArrowRight size={16} />}
+              icon={<ArrowRight size={16} className="rtl:rotate-180"/>}
               iconPosition="right"
             >
               {t('onboarding.ready_pack_continue_steps', { defaultValue: 'Set up step by step' })}
@@ -1851,7 +1851,7 @@ export function ReadyPackPicker({
 
       {!installing && (
         <div className="mt-5">
-          <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+          <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
             {t('common.back', { defaultValue: 'Back' })}
           </Button>
         </div>
@@ -2405,14 +2405,14 @@ function StepCompanyProfile({
       </p>
 
       <div className="mt-6 flex items-center gap-3">
-        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
           {t('common.back', { defaultValue: 'Back' })}
         </Button>
         <Button
           variant="primary"
           onClick={onNext}
           disabled={!selectedType}
-          icon={<ArrowRight size={16} />}
+          icon={<ArrowRight size={16} className="rtl:rotate-180"/>}
           iconPosition="right"
         >
           {t('common.continue', { defaultValue: 'Continue' })}
@@ -2573,7 +2573,7 @@ function StepModuleConfig({
       </div>
 
       {/* Module list grouped by what the person does, one closed row per group */}
-      <div className="mt-3 w-full max-w-2xl max-h-[50vh] overflow-y-auto pr-1 space-y-2 scrollbar-thin">
+      <div className="mt-3 w-full max-w-2xl max-h-[50vh] overflow-y-auto pe-1 space-y-2 scrollbar-thin">
         {groups.map(({ group, label, all, visible }) => {
           const isOpen = expanded.has(group.id) || !!needle;
           const onCount = all.filter((m) => m.core || enabledModules.has(m.key)).length;
@@ -2590,12 +2590,12 @@ function StepModuleConfig({
                   type="button"
                   onClick={() => toggleGroup(group.id)}
                   aria-expanded={isOpen}
-                  className="flex min-w-0 flex-1 items-center gap-2 text-left"
+                  className="flex min-w-0 flex-1 items-center gap-2 text-start"
                 >
                   {isOpen ? (
                     <ChevronDown size={15} className="shrink-0 text-content-tertiary" aria-hidden />
                   ) : (
-                    <ChevronRight size={15} className="shrink-0 text-content-tertiary" aria-hidden />
+                    <ChevronRight size={15} className="shrink-0 text-content-tertiary rtl:rotate-180" aria-hidden />
                   )}
                   <span className="truncate text-sm font-semibold text-content-primary">
                     {label}
@@ -2665,13 +2665,13 @@ function StepModuleConfig({
       </div>
 
       <div className="mt-6 flex items-center gap-3">
-        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
           {t('common.back', { defaultValue: 'Back' })}
         </Button>
         <Button
           variant="primary"
           onClick={onNext}
-          icon={<ArrowRight size={16} />}
+          icon={<ArrowRight size={16} className="rtl:rotate-180"/>}
           iconPosition="right"
         >
           {t('common.continue', { defaultValue: 'Continue' })}
@@ -3058,7 +3058,7 @@ function PartnerPackInstaller({
                 disabled={installing}
                 aria-pressed={isSelected}
                 className={clsx(
-                  'flex items-start gap-3 rounded-xl p-3 text-left transition-all duration-200',
+                  'flex items-start gap-3 rounded-xl p-3 text-start transition-all duration-200',
                   isSelected
                     ? 'bg-oe-blue-subtle/50 ring-2 ring-oe-blue/40 shadow-sm'
                     : 'bg-surface-secondary/70 hover:bg-surface-secondary hover:shadow-sm',
@@ -3331,7 +3331,7 @@ function CountryPackCard({
       </div>
 
       {/* Country grid */}
-      <div className="mb-4 grid max-h-56 grid-cols-2 gap-2 overflow-y-auto pr-1 -mr-1 sm:grid-cols-3">
+      <div className="mb-4 grid max-h-56 grid-cols-2 gap-2 overflow-y-auto pe-1 -me-1 sm:grid-cols-3">
         {filteredPacks.length === 0 && (
           <div className="col-span-full py-6 text-center text-xs text-content-tertiary">
             {t('onboarding.country_pack_no_results', {
@@ -3350,7 +3350,7 @@ function CountryPackCard({
               disabled={installing}
               aria-pressed={isSelected}
               className={clsx(
-                'flex items-center gap-2 rounded-xl px-3 py-2 text-left transition-all duration-200',
+                'flex items-center gap-2 rounded-xl px-3 py-2 text-start transition-all duration-200',
                 isSelected
                   ? 'bg-oe-blue-subtle/50 ring-2 ring-oe-blue/40 shadow-sm'
                   : 'bg-surface-secondary/70 hover:bg-surface-secondary hover:shadow-sm',
@@ -4029,7 +4029,7 @@ export function StepDataSetup({
               the browser carries its own search across every base. */}
           {!loadedDb &&
             (baseCatalog ? (
-              <div className="max-h-96 overflow-y-auto pr-1 -mr-1 mb-3">
+              <div className="max-h-96 overflow-y-auto pe-1 -me-1 mb-3">
                 <BaseCatalogBrowser
                   catalog={baseCatalog}
                   mode="select"
@@ -4202,7 +4202,7 @@ export function StepDataSetup({
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-oe-blue-subtle text-oe-blue-text">
                 <Sparkles size={20} />
               </div>
-              <div className="text-left">
+              <div className="text-start">
                 <h3 className="text-base font-bold text-content-primary">
                   {t('onboarding.connect_ai', { defaultValue: 'Connect AI Provider' })}
                 </h3>
@@ -4314,7 +4314,7 @@ export function StepDataSetup({
       </p>
 
       <div className="mt-6 flex items-center gap-3">
-        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
           {t('common.back', { defaultValue: 'Back' })}
         </Button>
         <Button variant="secondary" onClick={onNext}>
@@ -4324,7 +4324,7 @@ export function StepDataSetup({
           variant="primary"
           onClick={handleContinue}
           loading={saveMutation.isPending || installingDemo || packInstalling}
-          icon={<ArrowRight size={16} />}
+          icon={<ArrowRight size={16} className="rtl:rotate-180"/>}
           iconPosition="right"
         >
           {t('common.continue', { defaultValue: 'Continue' })}
@@ -4351,7 +4351,7 @@ function WorkspaceBrandingCard() {
 
   return (
     <div className="mt-7 w-full max-w-md mx-auto">
-      <div className="flex items-center gap-3 rounded-2xl border border-border-light bg-surface-elevated/70 backdrop-blur-md p-4 text-left shadow-sm shadow-black/[0.04]">
+      <div className="flex items-center gap-3 rounded-2xl border border-border-light bg-surface-elevated/70 backdrop-blur-md p-4 text-start shadow-sm shadow-black/[0.04]">
         {/* Brand preview tile — user logo when set, else a neutral glyph. */}
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-oe-blue-subtle overflow-hidden">
           {mode === 'logo' && logoDataUrl ? (
@@ -4597,7 +4597,7 @@ export function StepFinish({
       <WorkspaceBrandingCard />
 
       <div className="mt-8 flex items-center gap-3">
-        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} />}>
+        <Button variant="ghost" onClick={onBack} icon={<ArrowLeft size={16} className="rtl:rotate-180"/>}>
           {t('common.back', { defaultValue: 'Back' })}
         </Button>
         <Button
@@ -4605,7 +4605,7 @@ export function StepFinish({
           size="lg"
           onClick={handleFinish}
           loading={saving}
-          icon={<ArrowRight size={18} />}
+          icon={<ArrowRight size={18} className="rtl:rotate-180"/>}
           iconPosition="right"
         >
           {t('onboarding.start_working', { defaultValue: 'Start Working' })}
@@ -4626,7 +4626,7 @@ export function StepFinish({
             defaultValue: 'Explore all {{count}} modules',
             count: TOTAL_MODULE_COUNT,
           })}
-          <ArrowRight size={12} />
+          <ArrowRight size={12} className="rtl:rotate-180"/>
         </Link>
       </div>
     </div>

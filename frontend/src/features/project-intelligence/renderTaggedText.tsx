@@ -28,7 +28,7 @@ const TAG_REGEX = /\[(CRITICAL|BLOCKER|HIGH|MEDIUM|WARNING|LOW|INFO)\]/gi;
 /** Render one line's inline markup: badges, **bold**, *italic*, `code`. */
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   const parts: React.ReactNode[] = [];
-  // Single alternation regex so we walk the string once in left-to-right order
+  // Single alternation regex so we walk the string once in start-to-right order
   // — badges first, then the markdown pairs. `code` is backtick-delimited,
   // bold **…**, italic *…* (non-greedy, no nesting).
   const pattern = new RegExp(
@@ -100,7 +100,7 @@ export function renderTaggedText(text: string): React.ReactNode {
     const items = listBuffer;
     listBuffer = [];
     blocks.push(
-      <ul key={`ul-${blockKey++}`} className="list-disc space-y-0.5 pl-5">
+      <ul key={`ul-${blockKey++}`} className="list-disc space-y-0.5 ps-5">
         {items.map((item, i) => (
           <li key={i}>{renderInline(item, `li-${blockKey}-${i}`)}</li>
         ))}

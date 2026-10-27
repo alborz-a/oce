@@ -139,15 +139,15 @@ function BulkResultPanel({
 
       <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
         <div className="rounded-md bg-green-50 px-2 py-1.5 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-          <CheckCircle2 size={12} className="mr-1 inline" />
+          <CheckCircle2 size={12} className="me-1 inline" />
           {t('property_dev.bulk.ok_count', { defaultValue: '{{count}} ok', count: succeeded })}
         </div>
         <div className="rounded-md bg-yellow-50 px-2 py-1.5 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-          <ShieldAlert size={12} className="mr-1 inline" />
+          <ShieldAlert size={12} className="me-1 inline" />
           {t('property_dev.bulk.skipped_count', { defaultValue: '{{count}} skipped', count: skipped.length })}
         </div>
         <div className="rounded-md bg-red-50 px-2 py-1.5 text-red-800 dark:bg-red-900/30 dark:text-red-300">
-          <XCircle size={12} className="mr-1 inline" />
+          <XCircle size={12} className="me-1 inline" />
           {t('property_dev.bulk.failed_count', { defaultValue: '{{count}} failed', count: failed.length })}
         </div>
       </div>
@@ -167,7 +167,7 @@ function BulkResultPanel({
                   {f.entity_id}
                 </div>
                 <div className="text-content-primary">
-                  <Badge variant="error" className="mr-2">
+                  <Badge variant="error" className="me-2">
                     {f.error_code}
                   </Badge>
                   {f.error_message}
@@ -198,7 +198,7 @@ function BulkResultPanel({
                   {s.entity_id}
                 </div>
                 <div className="text-content-primary">
-                  <Badge variant="warning" className="mr-2">
+                  <Badge variant="warning" className="me-2">
                     {s.code}
                   </Badge>
                   {s.reason}
@@ -839,7 +839,7 @@ function PlotIdsInput({
       />
       {plotIdsCount > BULK_MAX_ITEMS && (
         <div className="mt-1 text-xs text-red-600">
-          <AlertTriangle size={12} className="mr-1 inline" />
+          <AlertTriangle size={12} className="me-1 inline" />
           {t('property_dev.bulk.over_cap', { defaultValue: 'Over the {{max}}-item cap - server will return 422.', max: BULK_MAX_ITEMS })}
         </div>
       )}
@@ -898,7 +898,7 @@ function ActionBar({
       </div>
       {confirm.needsTypedConfirm && phase === 'dry-run-done' && (
         <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-xs text-red-900 dark:border-red-700 dark:bg-red-900/30 dark:text-red-200">
-          <AlertTriangle size={12} className="mr-1 inline" />
+          <AlertTriangle size={12} className="me-1 inline" />
           {t('property_dev.bulk.typed_confirm', { defaultValue: '{{count}} items selected - type', count: plotIdsCount })}{' '}
           <code className="rounded bg-white px-1 font-bold dark:bg-surface-primary">
             EXECUTE

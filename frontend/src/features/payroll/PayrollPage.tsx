@@ -200,7 +200,7 @@ function HowPayrollWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180"/>
               </li>
             )}
           </Fragment>
@@ -762,7 +762,7 @@ export default function PayrollPage() {
               <p className="text-lg font-semibold text-content-primary">
                 {labourCost ? money(labourCost.labour_cost, labourCost.currency || undefined) : '-'}
                 {labourCost && (
-                  <span className="ml-2 text-sm font-normal text-content-tertiary">
+                  <span className="ms-2 text-sm font-normal text-content-tertiary">
                     {t('payroll.over_hours', {
                       defaultValue: 'over {{hours}} h',
                       hours: hours(labourCost.total_hours),
@@ -822,7 +822,7 @@ export default function PayrollPage() {
                     type="button"
                     onClick={() => handleSelect(b.id)}
                     className={clsx(
-                      'flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-surface-secondary',
+                      'flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-surface-secondary',
                       selectedBatchId === b.id && 'bg-surface-secondary',
                     )}
                     aria-pressed={selectedBatchId === b.id}
@@ -850,13 +850,13 @@ export default function PayrollPage() {
                         {t('payroll.entry_count', { defaultValue: '{{count}} entries', count: b.entry_count })}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-end">
                       <p className="font-semibold text-content-primary">
                         {money(b.total_amount, b.currency || undefined)}
                       </p>
                       <p className="text-xs text-content-tertiary">{hours(b.total_hours)} h</p>
                     </div>
-                    <ChevronRight size={16} className="text-content-tertiary" />
+                    <ChevronRight size={16} className="text-content-tertiary rtl:rotate-180" />
                   </button>
                 </li>
               ))}
@@ -998,12 +998,12 @@ export default function PayrollPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="text-left text-content-tertiary">
+                    <tr className="text-start text-content-tertiary">
                       <th className="px-2 py-1">{t('payroll.reconcile_col.worker', { defaultValue: 'Worker' })}</th>
                       <th className="px-2 py-1">{t('payroll.reconcile_col.date', { defaultValue: 'Date' })}</th>
-                      <th className="px-2 py-1 text-right">{t('payroll.reconcile_col.batch', { defaultValue: 'Batch h' })}</th>
-                      <th className="px-2 py-1 text-right">{t('payroll.reconcile_col.source', { defaultValue: 'Field h' })}</th>
-                      <th className="px-2 py-1 text-right">{t('payroll.reconcile_col.delta', { defaultValue: 'Delta' })}</th>
+                      <th className="px-2 py-1 text-end">{t('payroll.reconcile_col.batch', { defaultValue: 'Batch h' })}</th>
+                      <th className="px-2 py-1 text-end">{t('payroll.reconcile_col.source', { defaultValue: 'Field h' })}</th>
+                      <th className="px-2 py-1 text-end">{t('payroll.reconcile_col.delta', { defaultValue: 'Delta' })}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1011,9 +1011,9 @@ export default function PayrollPage() {
                       <tr key={`${r.worker_key}-${r.work_date}-${i}`} className={r.matched ? '' : 'text-amber-600'}>
                         <td className="px-2 py-1">{r.worker_key}</td>
                         <td className="px-2 py-1">{r.work_date ?? '-'}</td>
-                        <td className="px-2 py-1 text-right tabular-nums">{r.batch_hours}</td>
-                        <td className="px-2 py-1 text-right tabular-nums">{r.source_hours}</td>
-                        <td className="px-2 py-1 text-right tabular-nums">{r.delta_hours}</td>
+                        <td className="px-2 py-1 text-end tabular-nums">{r.batch_hours}</td>
+                        <td className="px-2 py-1 text-end tabular-nums">{r.source_hours}</td>
+                        <td className="px-2 py-1 text-end tabular-nums">{r.delta_hours}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -1035,14 +1035,14 @@ export default function PayrollPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+                  <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
                     <th className="px-4 py-2">{t('payroll.col.worker', { defaultValue: 'Worker' })}</th>
                     <th className="px-4 py-2">{t('payroll.col.date', { defaultValue: 'Date' })}</th>
-                    <th className="px-4 py-2 text-right">{t('payroll.col.hours', { defaultValue: 'Hours' })}</th>
-                    <th className="px-4 py-2 text-right">{t('payroll.col.rate', { defaultValue: 'Rate' })}</th>
-                    <th className="px-4 py-2 text-right">{t('payroll.col.amount', { defaultValue: 'Gross' })}</th>
-                    <th className="px-4 py-2 text-right">{t('payroll.col.deductions', { defaultValue: 'Deductions' })}</th>
-                    <th className="px-4 py-2 text-right">{t('payroll.col.net', { defaultValue: 'Net' })}</th>
+                    <th className="px-4 py-2 text-end">{t('payroll.col.hours', { defaultValue: 'Hours' })}</th>
+                    <th className="px-4 py-2 text-end">{t('payroll.col.rate', { defaultValue: 'Rate' })}</th>
+                    <th className="px-4 py-2 text-end">{t('payroll.col.amount', { defaultValue: 'Gross' })}</th>
+                    <th className="px-4 py-2 text-end">{t('payroll.col.deductions', { defaultValue: 'Deductions' })}</th>
+                    <th className="px-4 py-2 text-end">{t('payroll.col.net', { defaultValue: 'Net' })}</th>
                     <th className="px-4 py-2 w-10" aria-hidden="true" />
                   </tr>
                 </thead>
@@ -1077,16 +1077,16 @@ export default function PayrollPage() {
                           <td className="px-4 py-2 text-content-secondary">
                             {e.work_date ? <DateDisplay value={e.work_date} format="date" /> : '-'}
                           </td>
-                          <td className="px-4 py-2 text-right tabular-nums">{hours(e.hours)}</td>
-                          <td className="px-4 py-2 text-right tabular-nums">{money(e.rate, ccy)}</td>
-                          <td className="px-4 py-2 text-right tabular-nums">{money(e.amount, ccy)}</td>
-                          <td className="px-4 py-2 text-right tabular-nums text-content-secondary">
+                          <td className="px-4 py-2 text-end tabular-nums">{hours(e.hours)}</td>
+                          <td className="px-4 py-2 text-end tabular-nums">{money(e.rate, ccy)}</td>
+                          <td className="px-4 py-2 text-end tabular-nums">{money(e.amount, ccy)}</td>
+                          <td className="px-4 py-2 text-end tabular-nums text-content-secondary">
                             {dedTotal > 0 ? `-${money(dedTotal, ccy)}` : '-'}
                           </td>
-                          <td className="px-4 py-2 text-right font-medium tabular-nums text-content-primary">
+                          <td className="px-4 py-2 text-end font-medium tabular-nums text-content-primary">
                             {money(e.net_amount, ccy)}
                           </td>
-                          <td className="px-2 py-2 text-right">
+                          <td className="px-2 py-2 text-end">
                             <button
                               type="button"
                               onClick={() => toggleEntry(e.id)}

@@ -637,16 +637,16 @@ export function GroupingPanel({ sessionId, groupsQ, updateSessionM }: GroupingPa
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-surface-secondary text-content-secondary">
                   <tr>
-                    <th className="px-3 py-2 text-left font-medium">
+                    <th className="px-3 py-2 text-start font-medium">
                       {t('match.wizard.group', { defaultValue: 'Group' })}
                     </th>
-                    <th className="px-3 py-2 text-right font-medium">
+                    <th className="px-3 py-2 text-end font-medium">
                       {t('match.wizard.count', { defaultValue: 'Count' })}
                     </th>
-                    <th className="px-3 py-2 text-left font-medium">
+                    <th className="px-3 py-2 text-start font-medium">
                       {t('match.wizard.grouping.unit', { defaultValue: 'Unit' })}
                     </th>
-                    <th className="px-3 py-2 text-left font-medium">
+                    <th className="px-3 py-2 text-start font-medium">
                       {t('match.wizard.grouping.samples', { defaultValue: 'Samples' })}
                     </th>
                   </tr>
@@ -658,7 +658,7 @@ export function GroupingPanel({ sessionId, groupsQ, updateSessionM }: GroupingPa
                         <div className="font-medium">{g.display_label}</div>
                         <div className="text-xs text-content-tertiary">{g.trade}</div>
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-content-primary">
+                      <td className="px-3 py-2 text-end tabular-nums text-content-primary">
                         {g.element_count}
                       </td>
                       <td className="px-3 py-2 text-content-secondary">

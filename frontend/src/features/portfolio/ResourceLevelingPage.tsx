@@ -454,7 +454,7 @@ export function ResourceLevelingPage() {
                         <button
                           type="button"
                           onClick={() => setDrawer({ row })}
-                          className="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left hover:bg-surface-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
+                          className="flex min-w-0 items-center gap-2 rounded-md py-1 pe-2 text-start hover:bg-surface-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
                           title={t('leveling.open_drawer', {
                             defaultValue: 'View bookings and leveling suggestions',
                           })}
@@ -743,7 +743,7 @@ function BookingRow({
           type="button"
           onClick={onOpenProject}
           title={t('leveling.open_project', { defaultValue: 'Open project' })}
-          className="group inline-flex min-w-0 items-center gap-1 truncate text-left text-oe-blue-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded"
+          className="group inline-flex min-w-0 items-center gap-1 truncate text-start text-oe-blue-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded"
         >
           <span className="truncate">{booking.project_name}</span>
           <ArrowUpRight size={11} className="shrink-0 opacity-60 group-hover:opacity-100" />
@@ -809,7 +809,7 @@ function SuggestionItem({
             ? t('leveling.action_shift', { defaultValue: 'Shift' })
             : t('leveling.action_spread', { defaultValue: 'Spread' })}
         </span>
-        <Badge variant="neutral" size="sm" className="ml-auto">
+        <Badge variant="neutral" size="sm" className="ms-auto">
           {bucketLabel}
         </Badge>
       </div>

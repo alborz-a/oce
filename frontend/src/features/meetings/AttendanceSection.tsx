@@ -134,7 +134,7 @@ export function AttendanceSection({ meetingId }: AttendanceSectionProps) {
             }}
             data-testid="meeting-attendance-add-external"
           >
-            <UserPlus size={14} className="mr-1.5" />
+            <UserPlus size={14} className="me-1.5" />
             {t('meetings.add_external', { defaultValue: 'Add external' })}
           </Button>
           {currentUserId && !userAlreadyCheckedIn && (
@@ -149,9 +149,9 @@ export function AttendanceSection({ meetingId }: AttendanceSectionProps) {
               data-testid="meeting-attendance-check-in"
             >
               {checkInMut.isPending ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <CheckCircle2 size={14} className="mr-1.5" />
+                <CheckCircle2 size={14} className="me-1.5" />
               )}
               {t('meetings.check_me_in', { defaultValue: 'Check me in' })}
             </Button>
@@ -161,7 +161,7 @@ export function AttendanceSection({ meetingId }: AttendanceSectionProps) {
 
       {attendanceQ.isLoading ? (
         <p className="text-xs text-content-tertiary">
-          <Loader2 size={12} className="inline animate-spin mr-1" />
+          <Loader2 size={12} className="inline animate-spin me-1" />
           {t('common.loading', { defaultValue: 'Loading…' })}
         </p>
       ) : rows.length === 0 ? (
@@ -203,7 +203,7 @@ export function AttendanceSection({ meetingId }: AttendanceSectionProps) {
                   </span>
                 )}
                 {checked && row.checked_in_at && (
-                  <span className="text-xs text-content-tertiary ml-auto">
+                  <span className="text-xs text-content-tertiary ms-auto">
                     {new Date(row.checked_in_at).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',
@@ -283,7 +283,7 @@ export function AttendanceSection({ meetingId }: AttendanceSectionProps) {
                 disabled={!externalName.trim() || externalMut.isPending}
               >
                 {externalMut.isPending ? (
-                  <Loader2 size={14} className="mr-1.5 animate-spin" />
+                  <Loader2 size={14} className="me-1.5 animate-spin" />
                 ) : null}
                 {t('meetings.add_external_action', { defaultValue: 'Add' })}
               </Button>

@@ -617,7 +617,7 @@ export function RetrievalPage() {
                 disabled={page <= 1}
                 className="inline-flex items-center gap-1 rounded-md border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:bg-surface-secondary disabled:pointer-events-none disabled:opacity-40"
               >
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="h-3.5 w-3.5 rtl:rotate-180" />
                 {t('retrieval.prev', { defaultValue: 'Previous' })}
               </button>
               <span className="text-xs tabular-nums text-content-tertiary">
@@ -634,7 +634,7 @@ export function RetrievalPage() {
                 className="inline-flex items-center gap-1 rounded-md border border-border-light bg-surface-primary px-2.5 py-1 text-xs font-medium text-content-secondary transition-colors hover:bg-surface-secondary disabled:pointer-events-none disabled:opacity-40"
               >
                 {t('retrieval.next', { defaultValue: 'Next' })}
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
               </button>
             </div>
           )}

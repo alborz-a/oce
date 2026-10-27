@@ -87,7 +87,7 @@ function DevelopmentCard({
       <button
         type="button"
         onClick={() => onSelect(dev.id)}
-        className="text-left w-full focus:outline-none"
+        className="text-start w-full focus:outline-none"
         aria-label={t('propdev.open_development_aria', {
           defaultValue: 'Open development {{name}}',
           name: dev.name || dev.code,

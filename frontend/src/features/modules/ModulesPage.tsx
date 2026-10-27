@@ -82,7 +82,7 @@ import { type MeOnboarding } from '@/app/layout/useCompanyWorkspace';
 import { useMeOnboardingQueryKey } from '@/app/layout/meOnboardingQuery';
 import { getModulesByCategory } from '@/modules/_registry';
 import { translateManifestText } from '@/modules/_i18n';
-import { fmtList, fmtFixed } from '@/shared/lib/formatters';
+import { fmtList, fmtFixed, formatFileSize } from '@/shared/lib/formatters';
 import { groupPacksByMarket, packNameSlug, packSummary, type PackMarketBand } from '@/shared/lib/regionalPack';
 import { PackEmblem } from '@/shared/ui/PackEmblem';
 import { invalidateProjectLists } from '@/features/projects/invalidateProjectLists';
@@ -249,11 +249,6 @@ function getModuleIcon(iconName: string): LucideIcon {
   return ICON_MAP[iconName] ?? Package;
 }
 
-function formatSize(sizeMb: number): string {
-  if (sizeMb < 1) return `${Math.round(sizeMb * 1024)} KB`;
-  if (sizeMb >= 1024) return `${fmtFixed(sizeMb / 1024, 1)} GB`;
-  return `${fmtFixed(sizeMb, 1)} MB`;
-}
 
 /* ── Module category display config ────────────────────────────────────── */
 
@@ -749,7 +744,7 @@ function CompanyProfilesTab() {
                 aria-label={`${t(`onboarding.company_${preset.key}`, { defaultValue: preset.label })} - ${preset.module_count} ${t('modules.modules_label', { defaultValue: 'modules' })}`}
                 aria-pressed={isActive}
                 className={clsx(
-                  'text-left rounded-xl border p-4 transition-all',
+                  'text-start rounded-xl border p-4 transition-all',
                   isActive
                     ? 'border-oe-blue bg-oe-blue-subtle ring-1 ring-oe-blue/30'
                     : isFull
@@ -771,7 +766,7 @@ function CompanyProfilesTab() {
                       <span className="text-sm font-semibold text-content-primary">{t(`onboarding.company_${preset.key}`, { defaultValue: preset.label })}</span>
                       {isActive && (
                         <Badge variant="success" size="sm">
-                          <Check size={10} className="mr-0.5" />
+                          <Check size={10} className="me-0.5" />
                           {t('modules.active', { defaultValue: 'Active' })}
                         </Badge>
                       )}
@@ -1428,11 +1423,11 @@ function PartnerPackCard({
       {/* Brand accent — left border strip distinguishes each company */}
       <span
         aria-hidden
-        className="absolute inset-y-0 left-0 w-1 rounded-l-xl"
+        className="absolute inset-y-0 start-0 w-1 rounded-s-xl"
         style={{ backgroundColor: pack.branding.primary_color }}
       />
 
-      <div className="pl-2">
+      <div className="ps-2">
         {/* Identity: the flag, the name, and the one line that says who the
             pack is for. The name used to sit over a slug and a coloured
             version chip, which read as three titles of similar weight before
@@ -1455,7 +1450,7 @@ function PartnerPackCard({
               </h3>
               {isActive && (
                 <Badge variant="success" size="sm" className="mt-0.5 shrink-0">
-                  <Check size={10} className="mr-0.5" />
+                  <Check size={10} className="me-0.5" />
                   {t('modules.active', { defaultValue: 'Active' })}
                 </Badge>
               )}
@@ -2151,7 +2146,7 @@ function DataPackagesTab() {
                     <span className="text-2xs text-content-tertiary">{statusBadge.subtitle}</span>
                   </div>
                   {statusBadge.type === 'badge' ? (
-                    <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{statusBadge.label}</Badge>
+                    <Badge variant="success" size="sm"><Check size={10} className="me-0.5" />{statusBadge.label}</Badge>
                   ) : statusBadge.type === 'manage' ? (
                     <Button variant="secondary" size="sm" onClick={() => navigate('/costs/import')}>
                       {t('marketplace.manage', 'Manage')}
@@ -2203,7 +2198,7 @@ function DataPackagesTab() {
               {count > 0 && (
                 <span
                   className={clsx(
-                    'ml-0.5 text-2xs font-semibold rounded-full px-1.5',
+                    'ms-0.5 text-2xs font-semibold rounded-full px-1.5',
                     isActive ? 'bg-white/20 text-content-inverse' : 'bg-surface-primary text-content-tertiary',
                   )}
                 >
@@ -2556,7 +2551,7 @@ function SystemModulesTab({ query, onClearQuery }: SystemModulesTabProps) {
           {enabledCount}/{systemModules.length}{' '}
           {t('marketplace.modules_enabled', { defaultValue: 'modules enabled' })}
           {isFiltered && (
-            <span className="ml-2 text-content-tertiary">
+            <span className="ms-2 text-content-tertiary">
               {t('modules.system_match_count', {
                 defaultValue: '- {{shown}} of {{total}} shown',
                 shown: visibleModules.length,
@@ -2607,7 +2602,7 @@ function SystemModulesTab({ query, onClearQuery }: SystemModulesTabProps) {
                 </span>
                 <span
                   className={clsx(
-                    'ml-0.5 text-2xs font-semibold rounded-full px-1.5',
+                    'ms-0.5 text-2xs font-semibold rounded-full px-1.5',
                     isActive ? 'bg-white/20 text-content-inverse' : 'bg-surface-primary text-content-tertiary',
                   )}
                 >
@@ -2907,7 +2902,7 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
             <span className="text-border">|</span>
             <span className="font-mono">v{mod.version}</span>
             <span className="text-border">|</span>
-            <span>{formatSize(mod.size_mb)}</span>
+            <span>{formatFileSize(mod.size_mb * 1024 * 1024)}</span>
           </div>
           <p className="mt-2 text-xs text-content-secondary line-clamp-2 leading-relaxed">{mod.description}</p>
 
@@ -2937,9 +2932,9 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
           {/* Action button */}
           <div className="mt-3">
             {isLanguage ? (
-              <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.included', { defaultValue: 'Included' })}</Badge>
+              <Badge variant="success" size="sm"><Check size={10} className="me-0.5" />{t('marketplace.included', { defaultValue: 'Included' })}</Badge>
             ) : isBuiltIn ? (
-              <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.builtin', { defaultValue: 'Built-in' })}</Badge>
+              <Badge variant="success" size="sm"><Check size={10} className="me-0.5" />{t('marketplace.builtin', { defaultValue: 'Built-in' })}</Badge>
             ) : isIntegration ? (
               <Button variant="secondary" size="sm" icon={<Settings size={14} />} onClick={onInstall}>
                 {t('marketplace.requires_setup', { defaultValue: 'Configure' })}
@@ -2958,7 +2953,7 @@ function MarketplaceCard({ module: mod, index, isInstalling, onInstall, isDemoIn
               </Button>
             ) : (mod.installed || isDemoInstalled) && mod.category === 'demo_project' ? (
               <div className="flex items-center gap-2 flex-wrap">
-                <Badge variant="success" size="sm"><Check size={10} className="mr-0.5" />{t('marketplace.installed', { defaultValue: 'Installed' })}</Badge>
+                <Badge variant="success" size="sm"><Check size={10} className="me-0.5" />{t('marketplace.installed', { defaultValue: 'Installed' })}</Badge>
                 {onReinstallDemo && (
                   <Button
                     variant="ghost"

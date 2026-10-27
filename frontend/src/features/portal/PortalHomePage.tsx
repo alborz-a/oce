@@ -1,3 +1,4 @@
+import { formatFileSize } from '@/shared/lib/formatters';
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
@@ -203,7 +204,7 @@ export function PortalHomePage() {
           to={escapeTo}
           className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-oe-blue transition-colors hover:underline"
         >
-          <ArrowLeft size={14} />
+          <ArrowLeft size={14} className="rtl:rotate-180"/>
           {t('homeportal.back_to_app', { defaultValue: 'Back to OpenConstructionERP' })}
         </Link>
       </CenteredShell>
@@ -391,7 +392,7 @@ function PortalHomeContent() {
                 {typeof it.count === 'number' && it.count > 0 ? (
                   <span
                     className={clsx(
-                      'ml-0.5 rounded-full px-1.5 text-2xs font-semibold',
+                      'ms-0.5 rounded-full px-1.5 text-2xs font-semibold',
                       tab === it.id
                         ? 'bg-oe-blue-subtle text-oe-blue-text'
                         : 'bg-surface-secondary text-content-tertiary',
@@ -794,19 +795,6 @@ function shortMimeLabel(mimeType: string): string | null {
   return null;
 }
 
-/** Human-readable byte size (e.g. "2.4 MB"); a plain dash when unknown. */
-function formatFileSize(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes <= 0) return '-';
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = unit === 0 ? Math.round(value) : Math.round(value * 10) / 10;
-  return `${rounded} ${units[unit] ?? 'B'}`;
-}
 
 function DocumentsTab() {
   const { t } = useTranslation();

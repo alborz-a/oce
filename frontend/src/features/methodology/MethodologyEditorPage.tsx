@@ -317,7 +317,7 @@ export function MethodologyEditorPage() {
           })}
           onRetry={() => methodologyQ.refetch()}
         />
-        <Button variant="ghost" size="sm" icon={<ArrowLeft size={14} />} onClick={() => navigate('/methodologies')}>
+        <Button variant="ghost" size="sm" icon={<ArrowLeft size={14} className="rtl:rotate-180"/>} onClick={() => navigate('/methodologies')}>
           {t('methodology.editor.back', { defaultValue: 'Back to methodologies' })}
         </Button>
       </div>

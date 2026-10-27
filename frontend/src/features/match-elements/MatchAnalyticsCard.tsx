@@ -134,14 +134,14 @@ function BreakdownTable({
               </div>
               <div className="flex-1 relative h-4 rounded bg-surface-tertiary overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 bg-sky-400/70 dark:bg-sky-500/60"
+                  className="absolute inset-y-0 start-0 bg-sky-400/70 dark:bg-sky-500/60"
                   style={{ width: `${pct}%` }}
                 />
-                <div className="absolute inset-0 flex items-center justify-end pr-1.5 text-[10.5px] font-medium text-content-primary">
+                <div className="absolute inset-0 flex items-center justify-end pe-1.5 text-[10.5px] font-medium text-content-primary">
                   {r.searches}
                 </div>
               </div>
-              <div className="w-16 text-right text-content-tertiary tabular-nums">
+              <div className="w-16 text-end text-content-tertiary tabular-nums">
                 {fmtNum(r.mean_score, 2)}
               </div>
             </div>
@@ -239,7 +239,7 @@ export function MatchAnalyticsCard({ projectId }: MatchAnalyticsCardProps) {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex-1 flex items-center gap-2.5 text-left min-w-0"
+          className="flex-1 flex items-center gap-2.5 text-start min-w-0"
           aria-expanded={open}
         >
           <span className="shrink-0 w-6 h-6 rounded-md bg-sky-500 text-white inline-flex items-center justify-center">
@@ -249,7 +249,7 @@ export function MatchAnalyticsCard({ projectId }: MatchAnalyticsCardProps) {
             <div className="text-sm font-semibold text-content-primary leading-tight">
               {t('match_elements.analytics_title', 'Match analytics')}
               {data.alerts.length > 0 && (
-                <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-100">
+                <span className="ms-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-200 text-amber-900 dark:bg-amber-800 dark:text-amber-100">
                   <AlertTriangle className="w-2.5 h-2.5" />
                   {t('match_elements.analytics_alerts_count', '{{n}} alert', {
                     n: data.alerts.length,

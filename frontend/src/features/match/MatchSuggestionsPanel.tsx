@@ -764,7 +764,7 @@ function CatalogBindingBar({
 
       {picking && (
         <div
-          className="absolute top-full right-3 mt-1 z-30 w-64 max-w-xs rounded border border-border-light bg-surface shadow-lg p-1"
+          className="absolute top-full end-3 mt-1 z-30 w-64 max-w-xs rounded border border-border-light bg-surface shadow-lg p-1"
           data-testid="match-catalog-picker"
           role="listbox"
           aria-label={t('match.catalog_picker_aria', {
@@ -778,7 +778,7 @@ function CatalogBindingBar({
               })}
               <a
                 href="/setup/databases"
-                className="ml-1 text-oe-blue hover:underline"
+                className="ms-1 text-oe-blue hover:underline"
               >
                 {t('match.load_catalog_link', { defaultValue: 'Load one →' })}
               </a>
@@ -792,7 +792,7 @@ function CatalogBindingBar({
                     onClick={() => handlePick(db.id)}
                     disabled={saving}
                     className={clsx(
-                      'w-full flex items-center gap-2 px-2 py-1 rounded text-left hover:bg-surface-tertiary',
+                      'w-full flex items-center gap-2 px-2 py-1 rounded text-start hover:bg-surface-tertiary',
                       catalogId === db.id && 'bg-surface-secondary',
                     )}
                     data-testid={`match-catalog-option-${db.id}`}
@@ -804,11 +804,11 @@ function CatalogBindingBar({
                       {db.count.toLocaleString(getNumberLocale())}
                     </span>
                     {db.vectorized_count > 0 ? (
-                      <span className="ml-auto inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-300">
+                      <span className="ms-auto inline-flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-300">
                         <Check size={10} strokeWidth={2.5} /> {db.vectorized_count.toLocaleString(getNumberLocale())} vec
                       </span>
                     ) : (
-                      <span className="ml-auto text-[10px] text-amber-700 dark:text-amber-300">
+                      <span className="ms-auto text-[10px] text-amber-700 dark:text-amber-300">
                         not vectorised
                       </span>
                     )}
@@ -963,7 +963,7 @@ const CandidateCard = memo(function CandidateCard({
         className={clsx(
           'flex items-center gap-1.5 px-2 py-1 cursor-pointer',
           isFocused && 'bg-surface-tertiary',
-          isAutoLinked && 'border-l-2 border-l-green-500',
+          isAutoLinked && 'border-s-2 border-s-green-500',
         )}
         data-testid={`match-candidate-${candidate.code}`}
       >
@@ -1015,7 +1015,7 @@ const CandidateCard = memo(function CandidateCard({
       className={clsx(
         'flex flex-col gap-1.5 px-3 py-2.5 cursor-pointer',
         isFocused && 'bg-surface-tertiary',
-        isAutoLinked && 'border-l-2 border-l-green-500',
+        isAutoLinked && 'border-s-2 border-s-green-500',
       )}
       data-testid={`match-candidate-${candidate.code}`}
     >
@@ -1153,7 +1153,7 @@ function ScoreBadge({
           id={tooltipId}
           role="tooltip"
           data-testid={`match-boosts-tooltip-${candidate.code}`}
-          className="absolute right-0 top-full mt-1 z-10 min-w-[180px] rounded-md border border-border-light bg-surface-primary shadow-lg p-2 text-[10px]"
+          className="absolute end-0 top-full mt-1 z-10 min-w-[180px] rounded-md border border-border-light bg-surface-primary shadow-lg p-2 text-[10px]"
         >
           <div className="flex items-center justify-between mb-1 font-semibold text-content-primary">
             <span>
@@ -1186,7 +1186,7 @@ function ScoreBadge({
                   </span>
                   <span
                     className={clsx(
-                      'font-mono ml-2',
+                      'font-mono ms-2',
                       delta >= 0 ? 'text-green-700' : 'text-red-700',
                     )}
                   >

@@ -293,7 +293,7 @@ export function PunchPinBoard({
               aria-label={t('punch.prev_page', { defaultValue: 'Previous page' })}
               className="rounded-md p-1.5 text-content-secondary hover:bg-surface-secondary disabled:opacity-40"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={16} className="rtl:rotate-180"/>
             </button>
             <span className="min-w-[52px] text-center text-xs tabular-nums text-content-secondary">
               {totalPages > 0 ? `${currentPage} / ${totalPages}` : '-'}
@@ -305,7 +305,7 @@ export function PunchPinBoard({
               aria-label={t('punch.next_page', { defaultValue: 'Next page' })}
               className="rounded-md p-1.5 text-content-secondary hover:bg-surface-secondary disabled:opacity-40"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={16} className="rtl:rotate-180"/>
             </button>
           </div>
 
@@ -334,14 +334,14 @@ export function PunchPinBoard({
           </div>
 
           {placing && (
-            <span className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-oe-blue/10 px-2 py-1 text-xs font-medium text-oe-blue">
+            <span className="ms-auto inline-flex items-center gap-1.5 rounded-md bg-oe-blue/10 px-2 py-1 text-xs font-medium text-oe-blue">
               <Crosshair size={13} />
               {t('punch.click_to_place', { defaultValue: 'Click the drawing to drop the pin' })}
               <button
                 type="button"
                 onClick={() => setPlacing(false)}
                 aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
-                className="ml-1 rounded hover:bg-oe-blue/20"
+                className="ms-1 rounded hover:bg-oe-blue/20"
               >
                 <X size={13} />
               </button>
@@ -451,7 +451,7 @@ export function PunchPinBoard({
         <div className="rounded-xl border border-border-light bg-surface-primary p-3">
           <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-content-tertiary">
             {t('punch.pins_on_sheet', { defaultValue: 'Pins on this sheet' })}
-            <span className="ml-1.5 text-content-quaternary">({pins.length})</span>
+            <span className="ms-1.5 text-content-quaternary">({pins.length})</span>
           </h4>
           {pins.length === 0 ? (
             <p className="text-xs text-content-tertiary">
@@ -464,7 +464,7 @@ export function PunchPinBoard({
                   <button
                     type="button"
                     onClick={() => onOpenItem(pin)}
-                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
                   >
                     <span
                       style={{ backgroundColor: PIN_COLOR[pin.priority] }}

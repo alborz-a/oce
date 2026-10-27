@@ -166,7 +166,7 @@ function MemberListModal({
                 <div className="text-xs text-content-tertiary truncate">
                   {m.email} · {m.role}
                   {m.is_owner ? (
-                    <span className="ml-1 text-oe-blue">
+                    <span className="ms-1 text-oe-blue">
                       ·{' '}
                       {t('projects.team.owner', { defaultValue: 'Owner' })}
                     </span>
@@ -430,7 +430,7 @@ export function TeamStrip({
           <button
             type="button"
             onClick={() => setListOpen(true)}
-            className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-surface-secondary text-xs font-semibold text-content-secondary border-2 border-white hover:bg-surface-tertiary transition-colors -ml-2"
+            className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-surface-secondary text-xs font-semibold text-content-secondary border-2 border-white hover:bg-surface-tertiary transition-colors -ms-2"
             data-testid="team-strip-more"
             aria-label={t('projects.team.more_count', {
               count: overflowCount,
@@ -448,7 +448,7 @@ export function TeamStrip({
             <button
               type="button"
               onClick={() => setAddOpen(true)}
-              className="ml-1 inline-flex items-center justify-center h-8 w-8 rounded-full border border-dashed border-border text-content-tertiary hover:text-oe-blue hover:border-oe-blue transition-colors"
+              className="ms-1 inline-flex items-center justify-center h-8 w-8 rounded-full border border-dashed border-border text-content-tertiary hover:text-oe-blue hover:border-oe-blue transition-colors"
               data-testid="team-strip-add-button"
               aria-label={t('projects.team.add_member', {
                 defaultValue: 'Add member',

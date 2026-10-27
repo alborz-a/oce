@@ -331,7 +331,7 @@ export function RomEstimatePage() {
                 {createBoq.isPending
                   ? t('romEstimate.creating_boq', { defaultValue: 'Creating BOQ…' })
                   : t('romEstimate.create_boq', { defaultValue: 'Create BOQ from this estimate' })}
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180"/>
               </button>
             </div>
 
@@ -558,17 +558,17 @@ function RomResultView({
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-2xs uppercase tracking-wider text-content-tertiary">
-                  <th className="py-2 pr-4 font-medium">
+                <tr className="border-b border-border text-start text-2xs uppercase tracking-wider text-content-tertiary">
+                  <th className="py-2 pe-4 font-medium">
                     {t('romEstimate.col_element', { defaultValue: 'Element' })}
                   </th>
-                  <th className="py-2 pr-4 text-right font-medium">
+                  <th className="py-2 pe-4 text-end font-medium">
                     {t('romEstimate.col_share', { defaultValue: 'Share' })}
                   </th>
-                  <th className="py-2 pr-4 text-right font-medium">
+                  <th className="py-2 pe-4 text-end font-medium">
                     {t('romEstimate.col_rate', { defaultValue: 'Cost / m²' })}
                   </th>
-                  <th className="py-2 text-right font-medium">
+                  <th className="py-2 text-end font-medium">
                     {t('romEstimate.col_amount', { defaultValue: 'Amount' })}
                   </th>
                 </tr>
@@ -576,16 +576,16 @@ function RomResultView({
               <tbody>
                 {result.elements.map((line) => (
                   <tr key={line.key} className="border-b border-border-light last:border-0">
-                    <td className="py-2 pr-4 text-content-primary">
+                    <td className="py-2 pe-4 text-content-primary">
                       {t(`romEstimate.element_${line.key}`, { defaultValue: line.label })}
                     </td>
-                    <td className="py-2 pr-4 text-right tabular-nums text-content-secondary">
+                    <td className="py-2 pe-4 text-end tabular-nums text-content-secondary">
                       {fmtPercent(toNum(line.cost_share_pct), 0)}
                     </td>
-                    <td className="py-2 pr-4 text-right tabular-nums text-content-secondary">
+                    <td className="py-2 pe-4 text-end tabular-nums text-content-secondary">
                       {formatCurrency(line.rate_per_m2, currency)}
                     </td>
-                    <td className="py-2 text-right font-medium tabular-nums text-content-primary">
+                    <td className="py-2 text-end font-medium tabular-nums text-content-primary">
                       {formatCurrency(line.amount, currency, undefined, { maximumFractionDigits: 0 })}
                     </td>
                   </tr>
@@ -593,10 +593,10 @@ function RomResultView({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border font-semibold">
-                  <td className="py-2 pr-4 text-content-primary" colSpan={3}>
+                  <td className="py-2 pe-4 text-content-primary" colSpan={3}>
                     {t('romEstimate.total', { defaultValue: 'Estimated total' })}
                   </td>
-                  <td className="py-2 text-right tabular-nums text-content-primary">
+                  <td className="py-2 text-end tabular-nums text-content-primary">
                     {formatCurrency(result.total, currency, undefined, { maximumFractionDigits: 0 })}
                   </td>
                 </tr>
@@ -872,20 +872,20 @@ function RomSavedEstimates({ projectId }: { projectId: string }) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-2xs uppercase tracking-wider text-content-tertiary">
-                  <th className="py-2 pr-4 font-medium">
+                <tr className="border-b border-border text-start text-2xs uppercase tracking-wider text-content-tertiary">
+                  <th className="py-2 pe-4 font-medium">
                     {t('romEstimate.saved_col_name', { defaultValue: 'Name / type' })}
                   </th>
-                  <th className="py-2 pr-4 text-right font-medium">
+                  <th className="py-2 pe-4 text-end font-medium">
                     {t('romEstimate.saved_col_rate', { defaultValue: 'Cost / m²' })}
                   </th>
-                  <th className="py-2 pr-4 text-right font-medium">
+                  <th className="py-2 pe-4 text-end font-medium">
                     {t('romEstimate.saved_col_total', { defaultValue: 'Total' })}
                   </th>
-                  <th className="py-2 pr-4 font-medium">
+                  <th className="py-2 pe-4 font-medium">
                     {t('romEstimate.saved_col_date', { defaultValue: 'Saved' })}
                   </th>
-                  <th className="py-2 text-right font-medium">
+                  <th className="py-2 text-end font-medium">
                     <span className="sr-only">
                       {t('romEstimate.saved_col_actions', { defaultValue: 'Actions' })}
                     </span>
@@ -897,7 +897,7 @@ function RomSavedEstimates({ projectId }: { projectId: string }) {
                   const isDeleting = del.isPending && del.variables === row.id;
                   return (
                     <tr key={row.id} className="border-b border-border-light last:border-0">
-                      <td className="py-2 pr-4 text-content-primary">
+                      <td className="py-2 pe-4 text-content-primary">
                         <div className="font-medium">
                           {row.name ||
                             t(`romEstimate.type_${row.building_type}`, {
@@ -910,18 +910,18 @@ function RomSavedEstimates({ projectId }: { projectId: string }) {
                           })}
                         </div>
                       </td>
-                      <td className="py-2 pr-4 text-right tabular-nums text-content-secondary">
+                      <td className="py-2 pe-4 text-end tabular-nums text-content-secondary">
                         {formatCurrency(row.cost_per_m2, row.currency)}
                       </td>
-                      <td className="py-2 pr-4 text-right font-medium tabular-nums text-content-primary">
+                      <td className="py-2 pe-4 text-end font-medium tabular-nums text-content-primary">
                         {formatCurrency(row.total, row.currency, undefined, {
                           maximumFractionDigits: 0,
                         })}
                       </td>
-                      <td className="py-2 pr-4 text-2xs text-content-tertiary">
+                      <td className="py-2 pe-4 text-2xs text-content-tertiary">
                         {shortDate(row.created_at)}
                       </td>
-                      <td className="py-2 text-right">
+                      <td className="py-2 text-end">
                         <button
                           type="button"
                           onClick={() => del.mutate(row.id)}

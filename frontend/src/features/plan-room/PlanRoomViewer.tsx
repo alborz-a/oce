@@ -287,7 +287,7 @@ export function PlanRoomViewer({
             aria-label={t('plan_room.prev_page', { defaultValue: 'Previous page' })}
             className="rounded-md p-1.5 text-content-secondary hover:bg-surface-secondary disabled:opacity-40"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={16} className="rtl:rotate-180"/>
           </button>
           <span className="min-w-[52px] text-center text-xs tabular-nums text-content-secondary">
             {numPages > 0 ? `${page} / ${numPages}` : '-'}
@@ -299,7 +299,7 @@ export function PlanRoomViewer({
             aria-label={t('plan_room.next_page', { defaultValue: 'Next page' })}
             className="rounded-md p-1.5 text-content-secondary hover:bg-surface-secondary disabled:opacity-40"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={16} className="rtl:rotate-180"/>
           </button>
         </div>
 
@@ -330,7 +330,7 @@ export function PlanRoomViewer({
 
         {/* Drop-pin control (write users only) */}
         {canWrite && (
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ms-auto flex items-center gap-2">
             {placing ? (
               <span className="inline-flex items-center gap-1.5 rounded-md bg-oe-blue/10 px-2 py-1 text-xs font-medium text-oe-blue">
                 <Crosshair size={13} />
@@ -339,7 +339,7 @@ export function PlanRoomViewer({
                   type="button"
                   onClick={cancelDraft}
                   aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
-                  className="ml-1 rounded hover:bg-oe-blue/20"
+                  className="ms-1 rounded hover:bg-oe-blue/20"
                 >
                   <X size={13} />
                 </button>
@@ -678,7 +678,7 @@ function PinPopover({
           type="button"
           onClick={onClose}
           aria-label={t('common.close', { defaultValue: 'Close' })}
-          className="-mr-1 -mt-1 shrink-0 rounded p-0.5 text-content-tertiary hover:bg-surface-secondary"
+          className="-me-1 -mt-1 shrink-0 rounded p-0.5 text-content-tertiary hover:bg-surface-secondary"
         >
           <X size={14} />
         </button>

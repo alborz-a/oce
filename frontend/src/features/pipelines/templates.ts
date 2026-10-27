@@ -35,7 +35,7 @@ export interface PipelineTemplate {
 export type TemplateTag = 'quality' | 'cost' | 'reporting' | 'catalog';
 
 // ── Builders ────────────────────────────────────────────────────────────────
-// A template graph is almost always a left-to-right chain, so we describe each
+// A template graph is almost always a start-to-right chain, so we describe each
 // step as [type, params] and let `chain()` lay them out and wire them. The port
 // handles match the backend node-type ports (bare names: "trigger", "rows",
 // "file"); a step that starts from a trigger uses the "trigger" handle for its

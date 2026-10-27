@@ -147,7 +147,7 @@ export function MethodologyActiveCard({ projectId }: Props) {
             {t('methodology.active.install_hint', {
               defaultValue: 'Install a country or industry methodology to customise it',
             })}
-            <ArrowRight size={12} />
+            <ArrowRight size={12} className="rtl:rotate-180"/>
           </button>
         )}
       </div>

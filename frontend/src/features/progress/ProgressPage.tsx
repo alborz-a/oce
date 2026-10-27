@@ -358,8 +358,8 @@ function VarianceRow({ item }: { item: PositionQuantityVarianceItem }) {
         <span className="line-clamp-2">{item.description || '-'}</span>
       </td>
       <td className="px-3 py-2 text-content-tertiary whitespace-nowrap">{item.unit || '-'}</td>
-      <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap">{fmtQty(item.design_quantity)}</td>
-      <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap">{fmtQty(item.earned_quantity)}</td>
+      <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap">{fmtQty(item.design_quantity)}</td>
+      <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap">{fmtQty(item.earned_quantity)}</td>
       <td className="px-3 py-2">
         <div className="flex items-center justify-end gap-2">
           <div className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-secondary">
@@ -368,10 +368,10 @@ function VarianceRow({ item }: { item: PositionQuantityVarianceItem }) {
           <span className="tabular-nums text-xs text-content-secondary">{fmtPctStr(item.percent_complete)}</span>
         </div>
       </td>
-      <td className={`px-3 py-2 text-right tabular-nums whitespace-nowrap ${varianceTone}`}>
+      <td className={`px-3 py-2 text-end tabular-nums whitespace-nowrap ${varianceTone}`}>
         {fmtQty(item.variance)}
       </td>
-      <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap text-content-tertiary">
+      <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap text-content-tertiary">
         {fmtPctStr(item.variance_percent)}
       </td>
       <td className="px-3 py-2 whitespace-nowrap">
@@ -444,7 +444,7 @@ export function ProgressPage() {
         actions={
           projectId ? (
             <Button size="sm" onClick={() => setRecordOpen(true)}>
-              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              <Plus className="me-1.5 h-3.5 w-3.5" />
               {t('progress.record_open', { defaultValue: 'Record progress' })}
             </Button>
           ) : undefined
@@ -634,17 +634,17 @@ export function ProgressPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-left text-2xs uppercase tracking-wide text-content-tertiary">
+                      <tr className="text-start text-2xs uppercase tracking-wide text-content-tertiary">
                         <th className="px-2 py-1.5 font-medium">
                           {t('progress.col_period', { defaultValue: 'Period' })}
                         </th>
-                        <th className="px-2 py-1.5 text-right font-medium">
+                        <th className="px-2 py-1.5 text-end font-medium">
                           {t('progress.col_delta', { defaultValue: 'Delta' })}
                         </th>
-                        <th className="px-2 py-1.5 text-right font-medium">
+                        <th className="px-2 py-1.5 text-end font-medium">
                           {t('progress.col_cumulative', { defaultValue: 'Cumulative' })}
                         </th>
-                        <th className="px-2 py-1.5 text-right font-medium">
+                        <th className="px-2 py-1.5 text-end font-medium">
                           {t('progress.col_entries', { defaultValue: 'Entries' })}
                         </th>
                       </tr>
@@ -655,13 +655,13 @@ export function ProgressPage() {
                           <td className="px-2 py-1.5 font-medium text-content-primary whitespace-nowrap">
                             {p.period_label}
                           </td>
-                          <td className="px-2 py-1.5 text-right tabular-nums text-content-secondary">
+                          <td className="px-2 py-1.5 text-end tabular-nums text-content-secondary">
                             {fmtPct(p.delta_pct)}
                           </td>
-                          <td className="px-2 py-1.5 text-right tabular-nums font-medium text-content-primary">
+                          <td className="px-2 py-1.5 text-end tabular-nums font-medium text-content-primary">
                             {fmtPct(p.cumulative_pct)}
                           </td>
-                          <td className="px-2 py-1.5 text-right tabular-nums text-content-tertiary">
+                          <td className="px-2 py-1.5 text-end tabular-nums text-content-tertiary">
                             {p.entry_count}
                           </td>
                         </tr>
@@ -703,7 +703,7 @@ export function ProgressPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-2xs uppercase tracking-wide text-content-tertiary">
+                    <tr className="text-start text-2xs uppercase tracking-wide text-content-tertiary">
                       <th className="px-3 py-2 font-medium">
                         {t('progress.col_ordinal', { defaultValue: 'Ordinal' })}
                       </th>
@@ -713,19 +713,19 @@ export function ProgressPage() {
                       <th className="px-3 py-2 font-medium">
                         {t('progress.col_unit', { defaultValue: 'Unit' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium">
+                      <th className="px-3 py-2 text-end font-medium">
                         {t('progress.col_design_qty', { defaultValue: 'Design qty' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium">
+                      <th className="px-3 py-2 text-end font-medium">
                         {t('progress.col_earned_qty', { defaultValue: 'Earned qty' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium">
+                      <th className="px-3 py-2 text-end font-medium">
                         {t('progress.col_percent', { defaultValue: 'Percent complete' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium">
+                      <th className="px-3 py-2 text-end font-medium">
                         {t('progress.col_variance', { defaultValue: 'Variance' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium">
+                      <th className="px-3 py-2 text-end font-medium">
                         {t('progress.col_variance_pct', { defaultValue: 'Variance %' })}
                       </th>
                       <th className="px-3 py-2 font-medium">
@@ -747,17 +747,17 @@ export function ProgressPage() {
                             count: rollup.position_count,
                           })}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap">
+                        <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap">
                           {fmtQty(rollup.design_quantity_total)}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap">
+                        <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap">
                           {fmtQty(rollup.earned_quantity_total)}
                         </td>
                         <td className="px-3 py-2" />
-                        <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap">
+                        <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap">
                           {fmtQty(rollup.variance_total)}
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums whitespace-nowrap text-content-tertiary">
+                        <td className="px-3 py-2 text-end tabular-nums whitespace-nowrap text-content-tertiary">
                           {fmtPctStr(rollup.variance_percent)}
                         </td>
                         <td className="px-3 py-2" />

@@ -69,7 +69,7 @@ export function TemplatesPanel({ onClose, activeSignatures }: Props) {
     <>
       <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} aria-hidden />
       <aside
-        className="fixed top-0 right-0 bottom-0 w-full sm:w-[560px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-700"
+        className="fixed top-0 end-0 bottom-0 w-full sm:w-[560px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col border-s border-slate-200 dark:border-slate-700"
         role="dialog"
         aria-modal="true"
         aria-labelledby="templates-panel-heading"
@@ -106,7 +106,7 @@ export function TemplatesPanel({ onClose, activeSignatures }: Props) {
         <div className="flex-1 overflow-auto p-4">
           {listQ.isLoading && (
             <div className="text-center text-slate-500 py-8">
-              <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
+              <Loader2 className="w-5 h-5 animate-spin inline me-2" />
               {t('match_elements.templates.loading', 'Loading library…')}
             </div>
           )}

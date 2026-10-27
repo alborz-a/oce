@@ -125,7 +125,7 @@ export function PaymentApplicationForm({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" icon={<ArrowLeft size={14} />} onClick={onCancel}>
+        <Button variant="ghost" size="sm" icon={<ArrowLeft size={14} className="rtl:rotate-180"/>} onClick={onCancel}>
           {t('payportal.back_to_list', { defaultValue: 'Back to applications' })}
         </Button>
       </div>

@@ -323,7 +323,7 @@ function FieldInput({ field, value, errors, onChange, projectId }: FieldInputPro
       <div>
         <label htmlFor={id} className="mb-1 block text-sm font-medium text-content-secondary">
           {field.label}
-          {field.required && <span className="ml-0.5 text-semantic-error">*</span>}
+          {field.required && <span className="ms-0.5 text-semantic-error">*</span>}
         </label>
         <LinkPicker
           id={id}
@@ -364,7 +364,7 @@ function FieldInput({ field, value, errors, onChange, projectId }: FieldInputPro
       <div>
         <label htmlFor={id} className="mb-1 block text-sm font-medium text-content-secondary">
           {field.label}
-          {field.required && <span className="ml-0.5 text-semantic-error">*</span>}
+          {field.required && <span className="ms-0.5 text-semantic-error">*</span>}
         </label>
         <select
           id={id}
@@ -393,7 +393,7 @@ function FieldInput({ field, value, errors, onChange, projectId }: FieldInputPro
       <div>
         <label htmlFor={id} className="mb-1 block text-sm font-medium text-content-secondary">
           {field.label}
-          {field.required && <span className="ml-0.5 text-semantic-error">*</span>}
+          {field.required && <span className="ms-0.5 text-semantic-error">*</span>}
         </label>
         <textarea
           id={id}

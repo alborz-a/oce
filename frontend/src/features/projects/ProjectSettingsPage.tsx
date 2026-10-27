@@ -472,7 +472,7 @@ function ComplianceRulePacksCard({ project }: { project: Project }) {
                   onClick={() => toggle(pack.id)}
                   aria-pressed={on}
                   className={
-                    'flex items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors ' +
+                    'flex items-start gap-3 rounded-lg border px-3 py-2.5 text-start transition-colors ' +
                     (on
                       ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-inset ring-oe-blue/30'
                       : 'border-border-light hover:bg-surface-secondary')
@@ -787,7 +787,7 @@ export function ProjectSettingsPage() {
           <Button
             variant="ghost"
             size="sm"
-            icon={<ArrowLeft size={14} />}
+            icon={<ArrowLeft size={14} className="rtl:rotate-180"/>}
             onClick={() => navigate(`/projects/${project.id}`)}
           >
             {t('common.back_to_project', { defaultValue: 'Back to project' })}
@@ -956,14 +956,14 @@ export function ProjectSettingsPage() {
         <div className="mt-4 overflow-hidden rounded-lg border border-border-light">
           <table className="min-w-full text-sm">
             <thead className="bg-surface-secondary/40">
-              <tr className="text-left text-xs uppercase tracking-wide text-content-tertiary">
+              <tr className="text-start text-xs uppercase tracking-wide text-content-tertiary">
                 <th className="px-4 py-2 font-medium">
                   {t('project.settings.fx.col_code', { defaultValue: 'Code' })}
                 </th>
                 <th className="px-4 py-2 font-medium">
                   {t('project.settings.fx.col_label', { defaultValue: 'Label' })}
                 </th>
-                <th className="px-4 py-2 font-medium text-right">
+                <th className="px-4 py-2 font-medium text-end">
                   {t('project.settings.fx.col_rate', {
                     defaultValue: 'Rate to {{base}}',
                     base: baseCurrency || '-',
@@ -990,7 +990,7 @@ export function ProjectSettingsPage() {
                     {t('project.settings.base_currency.label', { defaultValue: 'Base' })}
                   </Badge>
                 </td>
-                <td className="px-4 py-2.5 text-right tabular-nums text-content-tertiary">
+                <td className="px-4 py-2.5 text-end tabular-nums text-content-tertiary">
                   1.0000
                 </td>
                 <td className="px-4 py-2.5" />
@@ -1016,7 +1016,7 @@ export function ProjectSettingsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-content-primary">
+                    <td className="px-4 py-2.5 text-end tabular-nums text-content-primary">
                       {row.rate}
                     </td>
                     <td className="px-4 py-2.5">
@@ -1075,11 +1075,11 @@ export function ProjectSettingsPage() {
                 value={vatInput}
                 onChange={(e) => setVatInput(e.target.value)}
                 placeholder={String(regionalVatPct)}
-                className="h-9 w-32 rounded-lg border border-border bg-surface-primary px-3 pr-7 text-sm text-content-primary tabular-nums focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+                className="h-9 w-32 rounded-lg border border-border bg-surface-primary px-3 pe-7 text-sm text-content-primary tabular-nums focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
               />
               <Percent
                 size={13}
-                className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="pointer-events-none absolute end-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
             </div>
           </div>

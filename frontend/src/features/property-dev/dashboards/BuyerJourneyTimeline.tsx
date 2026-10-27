@@ -95,18 +95,18 @@ export function BuyerJourneyTimeline({
           })}
         </p>
       </div>
-      <ol className="relative space-y-3 border-l-2 border-divider pl-5">
+      <ol className="relative space-y-3 border-s-2 border-divider ps-5">
         {data.events.map((ev, idx) => (
           <li key={`${ev.code}-${idx}`} className="relative">
             <span
-              className="absolute -left-[27px] top-1.5 inline-block h-3 w-3 rounded-full border-2 border-surface-primary"
+              className="absolute -start-[27px] top-1.5 inline-block h-3 w-3 rounded-full border-2 border-surface-primary"
               style={{ backgroundColor: STATE_COLOR[ev.state] }}
               aria-hidden="true"
             />
             <button
               type="button"
               onClick={() => onNodeClick?.(ev)}
-              className="flex w-full flex-col items-start gap-0.5 rounded-md px-2 py-1.5 text-left hover:bg-surface-secondary/60 focus:outline-none focus:ring-2 focus:ring-offset-1"
+              className="flex w-full flex-col items-start gap-0.5 rounded-md px-2 py-1.5 text-start hover:bg-surface-secondary/60 focus:outline-none focus:ring-2 focus:ring-offset-1"
               aria-label={t('propdev.dashboards.journey.event_label', {
                 defaultValue: '{{label}} ({{state}}) - {{ts}}',
                 label: ev.label,
@@ -124,12 +124,12 @@ export function BuyerJourneyTimeline({
                   defaultValue: 'No date',
                 })}
                 {ev.entity && (
-                  <span className="ml-2 rounded bg-surface-secondary px-1 py-0.5 text-2xs">
+                  <span className="ms-2 rounded bg-surface-secondary px-1 py-0.5 text-2xs">
                     {ev.entity}
                   </span>
                 )}
                 <span
-                  className="ml-2 rounded px-1 py-0.5 text-2xs"
+                  className="ms-2 rounded px-1 py-0.5 text-2xs"
                   style={{
                     backgroundColor: `${STATE_COLOR[ev.state]}22`,
                     color: STATE_COLOR[ev.state],

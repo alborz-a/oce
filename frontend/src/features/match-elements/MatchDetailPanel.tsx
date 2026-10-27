@@ -251,7 +251,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
         role="dialog"
         aria-modal="true"
         aria-labelledby="match-detail-title"
-        className="fixed top-0 right-0 bottom-0 w-full sm:w-[680px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-700"
+        className="fixed top-0 end-0 bottom-0 w-full sm:w-[680px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col border-s border-slate-200 dark:border-slate-700"
       >
         <header className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
           <div className="min-w-0 flex-1">
@@ -270,7 +270,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
                 ([k, v]) => `${k}=${fmtFixed(v as number, 1)}`,
               ).join(' · ')}
               {group.opening_warning && (
-                <span className="ml-2 inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                <span className="ms-2 inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
                   <AlertCircle className="w-3 h-3" />
                   {t(
                     'match_elements.detail.opening_warning',
@@ -344,7 +344,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
         <div className="flex-1 overflow-auto p-4">
           {detailQ.isLoading && (
             <div className="text-center text-slate-500 py-8">
-              <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
+              <Loader2 className="w-5 h-5 animate-spin inline me-2" />
               {t('match_elements.loading_detail', 'Loading detail…')}
             </div>
           )}
@@ -391,11 +391,11 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
                   <table className="w-full text-sm border border-slate-200 dark:border-slate-700 rounded">
                     <thead className="bg-slate-50 dark:bg-slate-800">
                       <tr>
-                        <th className="text-left px-2 py-1.5 font-medium">{t('match_elements.detail.col.code', 'Code')}</th>
-                        <th className="text-left px-2 py-1.5 font-medium">{t('match_elements.detail.col.description', 'Description')}</th>
-                        <th className="text-right px-2 py-1.5 font-medium">{t('match_elements.detail.col.unit_rate', 'Unit · Rate')}</th>
-                        <th className="text-right px-2 py-1.5 font-medium">{t('match_elements.detail.col.conf', 'Conf.')}</th>
-                        <th className="text-right px-2 py-1.5"></th>
+                        <th className="text-start px-2 py-1.5 font-medium">{t('match_elements.detail.col.code', 'Code')}</th>
+                        <th className="text-start px-2 py-1.5 font-medium">{t('match_elements.detail.col.description', 'Description')}</th>
+                        <th className="text-end px-2 py-1.5 font-medium">{t('match_elements.detail.col.unit_rate', 'Unit · Rate')}</th>
+                        <th className="text-end px-2 py-1.5 font-medium">{t('match_elements.detail.col.conf', 'Conf.')}</th>
+                        <th className="text-end px-2 py-1.5"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -437,13 +437,13 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
                               </div>
                             )}
                           </td>
-                          <td className="px-2 py-1.5 text-right text-xs tabular-nums align-top">
+                          <td className="px-2 py-1.5 text-end text-xs tabular-nums align-top">
                             {fmtFixed(Number(cand.unit_rate), 2)} {cand.currency}/{cand.unit}
                           </td>
-                          <td className="px-2 py-1.5 text-right align-top">
+                          <td className="px-2 py-1.5 text-end align-top">
                             <ConfidencePill band={cand.confidence_band} score={cand.score} />
                           </td>
-                          <td className="px-2 py-1.5 text-right align-top">
+                          <td className="px-2 py-1.5 text-end align-top">
                             <button
                               onClick={() => confirmMut.mutate(cand)}
                               disabled={confirmMut.isPending || !cand.id}
@@ -518,7 +518,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
             <div role="tabpanel" id="detail-tabpanel-apply" aria-labelledby="detail-tab-apply">
               {applyQ.isLoading && (
                 <div className="text-center text-slate-500 py-8">
-                  <Loader2 className="w-5 h-5 animate-spin inline mr-2" />
+                  <Loader2 className="w-5 h-5 animate-spin inline me-2" />
                   {t('match_elements.detail.building_preview', 'Building preview…')}
                 </div>
               )}
@@ -547,7 +547,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
                     <strong className="tabular-nums">{fmtFixed(Number(p.line_total), 2)} {p.currency}</strong>
                   </div>
                   {p.resources.length > 0 && (
-                    <div className="mt-2 pl-3 border-l-2 border-slate-200 dark:border-slate-700">
+                    <div className="mt-2 ps-3 border-s-2 border-slate-200 dark:border-slate-700">
                       <div className="text-xs text-slate-500 mb-1">{t('match_elements.detail.auto_loaded_resources', 'Auto-loaded resources:')}</div>
                       {p.resources.map((r, i) => {
                         const dr = q.convert(Number(r.quantity), r.unit || '');
@@ -581,7 +581,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
           </button>
           <div className="flex items-center gap-1.5 text-xs text-slate-500">
             {t('match_elements.col.status', 'Status')}: <strong>{t(`match_elements.status.${group.status}`, { defaultValue: group.status })}</strong>
-            <ChevronRight className="w-3 h-3" />
+            <ChevronRight className="w-3 h-3 rtl:rotate-180" />
             <CheckCircle2 className={`w-4 h-4 ${group.status === 'confirmed' ? 'text-emerald-500' : 'text-slate-300'}`} />
           </div>
         </footer>

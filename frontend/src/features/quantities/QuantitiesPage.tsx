@@ -263,7 +263,7 @@ function ConverterCard({
     >
       {/* Recommended badge for uninstalled converters */}
       {!installed && !installing && (
-        <div className="absolute -top-2.5 left-4 z-10">
+        <div className="absolute -top-2.5 start-4 z-10">
           <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2.5 py-0.5 text-2xs font-bold text-white shadow-sm">
             <Star size={10} />
             {t('quantities.recommended', { defaultValue: 'Recommended' })}
@@ -272,7 +272,7 @@ function ConverterCard({
       )}
 
       {/* Status badge */}
-      <div className="absolute top-3 right-3">
+      <div className="absolute top-3 end-3">
         {installing ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-2xs font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
             <Loader2 size={10} className="animate-spin" />
@@ -499,8 +499,8 @@ function InstallProgressPanel({
           ) : (
             <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-oe-blue-subtle">
               <HardDrive size={20} className="text-oe-blue" />
-              <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-oe-blue animate-ping" />
-              <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-oe-blue" />
+              <div className="absolute -top-0.5 -end-0.5 h-3 w-3 rounded-full bg-oe-blue animate-ping" />
+              <div className="absolute -top-0.5 -end-0.5 h-3 w-3 rounded-full bg-oe-blue" />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -651,7 +651,7 @@ function InstallProgressPanel({
           <span className="flex items-center gap-1">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-400" /> {t('quantities.free_label', { defaultValue: 'Free' })}
           </span>
-          <span className="ml-auto font-medium text-content-secondary">
+          <span className="ms-auto font-medium text-content-secondary">
             {result
               ? t('quantities.info_ready', { defaultValue: 'Ready to use' })
               : t('quantities.info_onetime', { defaultValue: 'One-time install' })}
@@ -696,17 +696,17 @@ function InstalledConvertersTable({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-xs text-content-tertiary">
-              <th className="pb-2 pr-4 font-medium">
+            <tr className="border-b border-border-light text-start text-xs text-content-tertiary">
+              <th className="pb-2 pe-4 font-medium">
                 {t('quantities.table_converter', { defaultValue: 'Converter' })}
               </th>
-              <th className="pb-2 pr-4 font-medium">
+              <th className="pb-2 pe-4 font-medium">
                 {t('quantities.table_formats', { defaultValue: 'Formats' })}
               </th>
-              <th className="pb-2 pr-4 font-medium">
+              <th className="pb-2 pe-4 font-medium">
                 {t('quantities.table_status', { defaultValue: 'Status' })}
               </th>
-              <th className="pb-2 pr-4 font-medium">
+              <th className="pb-2 pe-4 font-medium">
                 {t('quantities.table_version', { defaultValue: 'Version' })}
               </th>
               <th className="pb-2 font-medium w-20"></th>
@@ -715,8 +715,8 @@ function InstalledConvertersTable({
           <tbody>
             {installed.map((c) => (
               <tr key={c.id} className="border-b border-border-light last:border-0">
-                <td className="py-2.5 pr-4 font-medium text-content-primary">{c.name}</td>
-                <td className="py-2.5 pr-4">
+                <td className="py-2.5 pe-4 font-medium text-content-primary">{c.name}</td>
+                <td className="py-2.5 pe-4">
                   <div className="flex flex-wrap gap-1">
                     {c.extensions.map((ext) => (
                       <span
@@ -728,7 +728,7 @@ function InstalledConvertersTable({
                     ))}
                   </div>
                 </td>
-                <td className="py-2.5 pr-4">
+                <td className="py-2.5 pe-4">
                   <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 size={12} />
                     <span className="text-xs">
@@ -736,7 +736,7 @@ function InstalledConvertersTable({
                     </span>
                   </span>
                 </td>
-                <td className="py-2.5 pr-4 text-xs text-content-quaternary font-mono">
+                <td className="py-2.5 pe-4 text-xs text-content-quaternary font-mono">
                   v{c.version}
                 </td>
                 <td className="py-2.5">
@@ -1010,7 +1010,7 @@ export function QuantitiesPage() {
               onClick={() => method.available && navigate(method.route)}
               disabled={!method.available}
               className={clsx(
-                'group relative flex flex-col rounded-xl border border-border-light p-6 text-left transition-all duration-200',
+                'group relative flex flex-col rounded-xl border border-border-light p-6 text-start transition-all duration-200',
                 method.available
                   ? `bg-gradient-to-br ${method.gradient} cursor-pointer hover:shadow-md hover:border-oe-blue/30`
                   : 'opacity-60 cursor-not-allowed bg-surface-secondary',
@@ -1019,7 +1019,7 @@ export function QuantitiesPage() {
               {method.badgeKey && (
                 <span
                   className={clsx(
-                    'absolute top-3 right-3 inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-semibold',
+                    'absolute top-3 end-3 inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-semibold',
                     method.badgeColor,
                   )}
                 >
@@ -1046,7 +1046,7 @@ export function QuantitiesPage() {
               {method.available && (
                 <div className="mt-4 flex items-center gap-1 text-sm font-medium text-oe-blue opacity-0 transition-opacity group-hover:opacity-100">
                   {t('quantities.open', { defaultValue: 'Open' })}
-                  <ArrowRight size={14} />
+                  <ArrowRight size={14} className="rtl:rotate-180"/>
                 </div>
               )}
             </button>
@@ -1127,7 +1127,7 @@ export function QuantitiesPage() {
           >
             <Box size={14} />
             {t('quantities.go_to_cad_takeoff', { defaultValue: 'Go to CAD/BIM Takeoff' })}
-            <ArrowRight size={12} />
+            <ArrowRight size={12} className="rtl:rotate-180"/>
           </button>
         </div>
 
@@ -1282,7 +1282,7 @@ export function QuantitiesPage() {
                 >
                   <button
                     onClick={openInTakeoff}
-                    className="flex items-center gap-3 min-w-0 text-left"
+                    className="flex items-center gap-3 min-w-0 text-start"
                     title={t('quantities.open_in_takeoff', { defaultValue: 'Open in takeoff' })}
                   >
                     <FileText size={16} className="shrink-0 text-content-quaternary" />

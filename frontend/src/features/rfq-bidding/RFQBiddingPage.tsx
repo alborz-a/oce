@@ -601,7 +601,7 @@ function RFQListPanel({
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
+          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-content-tertiary" />
           <input
             type="text"
             placeholder={t('rfq_bidding.search', { defaultValue: 'Search RFQs...' })}
@@ -614,7 +614,7 @@ function RFQListPanel({
           {search && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2"
+              className="absolute end-3 top-1/2 -translate-y-1/2"
               aria-label={t('common.clear_search', { defaultValue: 'Clear search' })}
             >
               <X className="h-4 w-4 text-content-tertiary hover:text-content-secondary" aria-hidden />
@@ -637,7 +637,7 @@ function RFQListPanel({
       {/* Loading */}
       {isLoading && (
         <div className="flex items-center justify-center py-16 text-content-tertiary">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          <Loader2 className="me-2 h-5 w-5 animate-spin" />
           {t('common.loading', { defaultValue: 'Loading...' })}
         </div>
       )}
@@ -817,7 +817,7 @@ function ComparisonPanel({
       {/* Loading */}
       {selectedRfqId && isLoading && (
         <div className="flex items-center justify-center py-16 text-content-tertiary">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          <Loader2 className="me-2 h-5 w-5 animate-spin" />
           {t('common.loading', { defaultValue: 'Loading...' })}
         </div>
       )}
@@ -876,21 +876,21 @@ function ComparisonTable({
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-surface-secondary text-content-secondary">
-                <th className="px-4 py-3 text-left font-medium">
+                <th className="px-4 py-3 text-start font-medium">
                   {t('rfq_bidding.col_rank', { defaultValue: 'Rank' })}
                 </th>
-                <th className="px-4 py-3 text-left font-medium">
+                <th className="px-4 py-3 text-start font-medium">
                   {t('rfq_bidding.col_bidder', { defaultValue: 'Bidder' })}
                 </th>
-                <th className="px-4 py-3 text-right font-medium">
+                <th className="px-4 py-3 text-end font-medium">
                   {t('rfq_bidding.col_coverage', { defaultValue: 'Scope covered' })}
                 </th>
                 {showScore && (
-                  <th className="px-4 py-3 text-right font-medium">
+                  <th className="px-4 py-3 text-end font-medium">
                     {t('rfq_bidding.col_score', { defaultValue: 'Score' })}
                   </th>
                 )}
-                <th className="px-4 py-3 text-right font-medium">
+                <th className="px-4 py-3 text-end font-medium">
                   {t('rfq_bidding.total', { defaultValue: 'Total' })} ({comparison.basis_currency})
                 </th>
                 <th className="px-4 py-3" />
@@ -1006,15 +1006,15 @@ function RankedQuoteRow({
           )}
         </div>
       </td>
-      <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+      <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
         {quote.lines_covered}/{quote.lines_required}
       </td>
       {showScore && (
-        <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">{quote.total_score ?? '-'}</td>
+        <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">{quote.total_score ?? '-'}</td>
       )}
       <td
         className={clsx(
-          'px-4 py-2.5 text-right font-semibold tabular-nums',
+          'px-4 py-2.5 text-end font-semibold tabular-nums',
           recommended ? 'text-semantic-success' : 'text-content-primary',
         )}
       >
@@ -1024,7 +1024,7 @@ function RankedQuoteRow({
           <span className="text-content-tertiary">-</span>
         )}
       </td>
-      <td className="px-4 py-2.5 text-right">
+      <td className="px-4 py-2.5 text-end">
         <button
           onClick={() => onAward(quote.bid_id)}
           disabled={awarding}
@@ -1095,7 +1095,7 @@ function AwardsPanel({
                 </div>
               </div>
               {winningBid && (
-                <div className="shrink-0 text-right">
+                <div className="shrink-0 text-end">
                   <p className="text-xs font-medium text-content-secondary">
                     {bidderName(winningBid.bidder_contact_id)}
                   </p>
@@ -1364,7 +1364,7 @@ function CreateRFQDialog({
               {t('common.cancel', { defaultValue: 'Cancel' })}
             </Button>
             <Button variant="primary" type="submit" disabled={!title.trim() || loading}>
-              {loading && <Loader2 className="mr-1.5 h-4 w-4 animate-spin" aria-hidden />}
+              {loading && <Loader2 className="me-1.5 h-4 w-4 animate-spin" aria-hidden />}
               {t('rfq_bidding.create_submit', { defaultValue: 'Create RFQ' })}
             </Button>
           </div>

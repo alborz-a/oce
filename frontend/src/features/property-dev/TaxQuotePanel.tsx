@@ -415,10 +415,10 @@ export function TaxQuotePanel({
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary/50">
               <tr>
-                <th className="text-left px-3 py-1.5 font-medium text-content-secondary">
+                <th className="text-start px-3 py-1.5 font-medium text-content-secondary">
                   {t('propdev.tax.line', 'Line item')}
                 </th>
-                <th className="text-right px-3 py-1.5 font-medium text-content-secondary">
+                <th className="text-end px-3 py-1.5 font-medium text-content-secondary">
                   {t('propdev.tax.amount', 'Amount')}
                 </th>
               </tr>
@@ -427,7 +427,7 @@ export function TaxQuotePanel({
               {quote.breakdown.map((row, idx) => (
                 <tr key={idx} className="border-t border-border-light">
                   <td className="px-3 py-1.5 text-content-primary">{row.line}</td>
-                  <td className="px-3 py-1.5 text-right tabular-nums">
+                  <td className="px-3 py-1.5 text-end tabular-nums">
                     {formatMoney(row.amount, displayCurrency)}
                   </td>
                 </tr>
@@ -436,7 +436,7 @@ export function TaxQuotePanel({
                 <td className="px-3 py-1.5 font-medium text-content-primary">
                   {t('propdev.tax.subtotal', 'Subtotal taxes')}
                 </td>
-                <td className="px-3 py-1.5 text-right font-medium tabular-nums">
+                <td className="px-3 py-1.5 text-end font-medium tabular-nums">
                   {formatMoney(quote.subtotal_taxes, displayCurrency)}
                 </td>
               </tr>
@@ -444,7 +444,7 @@ export function TaxQuotePanel({
                 <td className="px-3 py-1.5 font-semibold text-content-primary">
                   {t('propdev.tax.grand_total', 'Grand total')}
                 </td>
-                <td className="px-3 py-1.5 text-right font-semibold tabular-nums">
+                <td className="px-3 py-1.5 text-end font-semibold tabular-nums">
                   {formatMoney(quote.grand_total, displayCurrency)}
                 </td>
               </tr>

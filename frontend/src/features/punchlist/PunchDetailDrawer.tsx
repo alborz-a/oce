@@ -3,7 +3,7 @@
 /**
  * Punch item detail drawer.
  *
- * A right-side slide-over that surfaces one snag end to end: the full status
+ * A end-side slide-over that surfaces one snag end to end: the full status
  * lifecycle (closure stepper), the photo capture + gallery, the sheet-pin
  * location, and the core fields. Opened from the list rows, the kanban cards,
  * and the pin board.

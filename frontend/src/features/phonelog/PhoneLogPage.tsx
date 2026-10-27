@@ -533,7 +533,7 @@ export function PhoneLogPage() {
                       onClick={() => setPage(safePage - 1)}
                       className="inline-flex items-center gap-1 rounded-md border border-border-light px-2.5 py-1.5 text-sm text-content-secondary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <ChevronLeft className="h-4 w-4" />
+                      <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
                       {t('phonelog.prev', { defaultValue: 'Previous' })}
                     </button>
                     <span className="text-xs text-content-tertiary">
@@ -550,7 +550,7 @@ export function PhoneLogPage() {
                       className="inline-flex items-center gap-1 rounded-md border border-border-light px-2.5 py-1.5 text-sm text-content-secondary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {t('phonelog.next', { defaultValue: 'Next' })}
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4 rtl:rotate-180" />
                     </button>
                   </div>
                 )}

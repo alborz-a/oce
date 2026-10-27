@@ -167,7 +167,7 @@ function HowNormsWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180"/>
               </li>
             )}
           </Fragment>
@@ -324,7 +324,7 @@ function ResourceTile({
       </div>
       <div className="mt-1 text-lg font-bold tabular-nums text-content-primary">
         {fmtNumber(value, 2)}
-        <span className="ml-1 text-xs font-normal text-content-tertiary">{unit}</span>
+        <span className="ms-1 text-xs font-normal text-content-tertiary">{unit}</span>
       </div>
     </div>
   );
@@ -367,14 +367,14 @@ function ExpansionResultView({
         <div className="overflow-x-auto">
           <table className="w-full min-w-[360px] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-2 pr-3 font-medium">
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-2 pe-3 font-medium">
                   {t('normExpansion.col_material', { defaultValue: 'Material' })}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_quantity', { defaultValue: 'Quantity' })}
                 </th>
-                <th className="py-2 pr-3 font-medium">
+                <th className="py-2 pe-3 font-medium">
                   {t('normExpansion.col_unit', { defaultValue: 'Unit' })}
                 </th>
               </tr>
@@ -385,11 +385,11 @@ function ExpansionResultView({
                   key={`${m.name}-${idx}`}
                   className="border-b border-border-light/60 hover:bg-surface-secondary/40"
                 >
-                  <td className="py-2 pr-3 text-content-primary">{m.name}</td>
-                  <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+                  <td className="py-2 pe-3 text-content-primary">{m.name}</td>
+                  <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
                     {fmtNumber(m.qty, 3)}
                   </td>
-                  <td className="py-2 pr-3 text-content-tertiary">{m.unit}</td>
+                  <td className="py-2 pe-3 text-content-tertiary">{m.unit}</td>
                 </tr>
               ))}
             </tbody>
@@ -506,7 +506,7 @@ function AddToBoqPanel({ norm }: { norm: ProductionNorm }) {
           onClick={() => setOpen(true)}
           data-testid="norm-add-to-boq"
         >
-          <ListPlus size={14} className="mr-1 shrink-0" />
+          <ListPlus size={14} className="me-1 shrink-0" />
           {t('normExpansion.add_to_boq', { defaultValue: 'Add to BOQ position...' })}
         </Button>
       ) : (
@@ -632,7 +632,7 @@ function AddToBoqPanel({ norm }: { norm: ProductionNorm }) {
               onClick={() => addMut.mutate()}
               data-testid="norm-boq-add"
             >
-              <ListPlus size={14} className="mr-1 shrink-0" />
+              <ListPlus size={14} className="me-1 shrink-0" />
               {t('normExpansion.boq_add_action', { defaultValue: 'Add to position' })}
             </Button>
             <Button variant="ghost" size="sm" onClick={close}>
@@ -848,7 +848,7 @@ function BuildAssemblyPanel({ norms }: { norms: ProductionNorm[] }) {
             onClick={run}
             data-testid="norm-build-run"
           >
-            <Coins size={14} className="mr-1 shrink-0" />
+            <Coins size={14} className="me-1 shrink-0" />
             {t('normExpansion.build_action', { defaultValue: 'Build priced assembly' })}
           </Button>
         </div>
@@ -903,7 +903,7 @@ function BuildAssemblyResultView({ result }: { result: BuildAssemblyResult }) {
             data-testid="norm-build-assembly-link"
           >
             {result.code}
-            <ArrowRight size={13} className="shrink-0" />
+            <ArrowRight size={13} className="shrink-0 rtl:rotate-180" />
           </Link>
           <div className="text-2xs text-content-tertiary">
             {t('normExpansion.build_apply_hint', {
@@ -911,7 +911,7 @@ function BuildAssemblyResultView({ result }: { result: BuildAssemblyResult }) {
             })}
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-end">
           <div className="text-2xs uppercase tracking-wide text-content-tertiary">
             {t('normExpansion.build_unit_rate', { defaultValue: 'Unit rate' })}
           </div>
@@ -920,7 +920,7 @@ function BuildAssemblyResultView({ result }: { result: BuildAssemblyResult }) {
             data-testid="norm-build-total-rate"
           >
             {withCurrency(result.total_rate, result.currency)}
-            <span className="ml-1 text-xs font-normal text-content-tertiary">/ {result.unit}</span>
+            <span className="ms-1 text-xs font-normal text-content-tertiary">/ {result.unit}</span>
           </div>
         </div>
       </div>
@@ -963,27 +963,27 @@ function BuildAssemblyResultView({ result }: { result: BuildAssemblyResult }) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-2 pr-3 font-medium">
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-2 pe-3 font-medium">
                   {t('normExpansion.col_type', { defaultValue: 'Type' })}
                 </th>
-                <th className="py-2 pr-3 font-medium">
+                <th className="py-2 pe-3 font-medium">
                   {t('normExpansion.col_description', { defaultValue: 'Description' })}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_net_qty', { defaultValue: 'Net qty' })}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_waste', { defaultValue: 'Waste %' })}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_gross_qty', { defaultValue: 'Gross qty' })}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_unit_cost', { defaultValue: 'Unit cost' })}
                   {curSuffix}
                 </th>
-                <th className="py-2 pr-3 text-right font-medium">
+                <th className="py-2 pe-3 text-end font-medium">
                   {t('normExpansion.col_line_total', { defaultValue: 'Line total' })}
                   {curSuffix}
                 </th>
@@ -1028,14 +1028,14 @@ function BuildRow({
         c.priced ? '' : 'bg-semantic-error-bg/40'
       }`}
     >
-      <td className="py-2 pr-3">
+      <td className="py-2 pe-3">
         <span title={kindLabel(badge.kind)}>
           <Badge variant={badge.variant} size="sm">
             {badge.letter}
           </Badge>
         </span>
       </td>
-      <td className="py-2 pr-3 text-content-primary">
+      <td className="py-2 pe-3 text-content-primary">
         <div className="flex flex-wrap items-center gap-1.5">
           <span>{c.description}</span>
           {!c.priced && (
@@ -1053,25 +1053,25 @@ function BuildRow({
           <div className="text-2xs text-content-tertiary">{c.unpriced_reason}</div>
         )}
       </td>
-      <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+      <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
         {netCell}
-        <span className="ml-1 text-2xs text-content-tertiary">{c.unit}</span>
+        <span className="ms-1 text-2xs text-content-tertiary">{c.unit}</span>
       </td>
-      <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+      <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
         {c.waste_pct !== null ? `${c.waste_pct}%` : '-'}
       </td>
-      <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+      <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
         {c.gross_qty !== null ? (
           <>
             {c.gross_qty}
-            <span className="ml-1 text-2xs text-content-tertiary">{c.unit}</span>
+            <span className="ms-1 text-2xs text-content-tertiary">{c.unit}</span>
           </>
         ) : (
           '-'
         )}
       </td>
-      <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{c.unit_cost}</td>
-      <td className="py-2 pr-3 text-right tabular-nums font-medium text-content-primary">
+      <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{c.unit_cost}</td>
+      <td className="py-2 pe-3 text-end tabular-nums font-medium text-content-primary">
         {c.total}
       </td>
     </tr>
@@ -1165,7 +1165,7 @@ function CreateNormForm({ onCreated }: { onCreated: () => void }) {
         disabled={!canCreate || mutation.isPending}
         onClick={() => mutation.mutate()}
       >
-        <Plus size={14} className="mr-1 shrink-0" />
+        <Plus size={14} className="me-1 shrink-0" />
         {t('normExpansion.add', { defaultValue: 'Add' })}
       </Button>
     </div>
@@ -1271,7 +1271,7 @@ function MaterialEditor({ norm, onChanged }: { norm: ProductionNorm; onChanged: 
           disabled={!canAdd || addMut.isPending}
           onClick={() => addMut.mutate()}
         >
-          <Plus size={14} className="mr-1 shrink-0" />
+          <Plus size={14} className="me-1 shrink-0" />
           {t('normExpansion.add_material', { defaultValue: 'Add material' })}
         </Button>
       </div>
@@ -1351,10 +1351,10 @@ function NormLibrary({
         <div className="relative flex-1">
           <Search
             size={14}
-            className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
-            className={`${INPUT_CLS} pl-8`}
+            className={`${INPUT_CLS} ps-8`}
             placeholder={t('normExpansion.search_ph', {
               defaultValue: 'Search work key, name or category',
             })}
@@ -1394,27 +1394,27 @@ function NormLibrary({
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-2 pr-3 font-medium" />
-            <th className="py-2 pr-3 font-medium">
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-2 pe-3 font-medium" />
+            <th className="py-2 pe-3 font-medium">
               {t('normExpansion.col_work_key', { defaultValue: 'Work key' })}
             </th>
-            <th className="py-2 pr-3 font-medium">
+            <th className="py-2 pe-3 font-medium">
               {t('normExpansion.col_name', { defaultValue: 'Name' })}
             </th>
-            <th className="py-2 pr-3 font-medium">
+            <th className="py-2 pe-3 font-medium">
               {t('normExpansion.col_unit', { defaultValue: 'Unit' })}
             </th>
-            <th className="py-2 pr-3 text-right font-medium">
+            <th className="py-2 pe-3 text-end font-medium">
               {t('normExpansion.col_labor', { defaultValue: 'Labor h/unit' })}
             </th>
-            <th className="py-2 pr-3 text-right font-medium">
+            <th className="py-2 pe-3 text-end font-medium">
               {t('normExpansion.col_machine', { defaultValue: 'Machine h/unit' })}
             </th>
-            <th className="py-2 pr-3 text-right font-medium">
+            <th className="py-2 pe-3 text-end font-medium">
               {t('normExpansion.col_materials', { defaultValue: 'Materials' })}
             </th>
-            <th className="py-2 pl-1" />
+            <th className="py-2 ps-1" />
           </tr>
         </thead>
         <tbody>
@@ -1423,7 +1423,7 @@ function NormLibrary({
             return (
               <Fragment key={n.id}>
                 <tr className="border-b border-border-light/60 hover:bg-surface-secondary/40">
-                  <td className="py-2 pr-1">
+                  <td className="py-2 pe-1">
                     <button
                       type="button"
                       onClick={() => setExpandedId(isOpen ? null : n.id)}
@@ -1436,19 +1436,19 @@ function NormLibrary({
                       {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                     </button>
                   </td>
-                  <td className="py-2 pr-3 font-medium text-content-primary">{n.work_key}</td>
-                  <td className="py-2 pr-3 text-content-secondary">{n.name || '-'}</td>
-                  <td className="py-2 pr-3 text-content-tertiary">{n.unit}</td>
-                  <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+                  <td className="py-2 pe-3 font-medium text-content-primary">{n.work_key}</td>
+                  <td className="py-2 pe-3 text-content-secondary">{n.name || '-'}</td>
+                  <td className="py-2 pe-3 text-content-tertiary">{n.unit}</td>
+                  <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
                     {fmtNumber(n.labor_hours_per_unit, 3)}
                   </td>
-                  <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+                  <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
                     {fmtNumber(n.machine_hours_per_unit, 3)}
                   </td>
-                  <td className="py-2 pr-3 text-right">
+                  <td className="py-2 pe-3 text-end">
                     <Badge variant="neutral">{n.materials.length}</Badge>
                   </td>
-                  <td className="py-2 pl-1 text-right">
+                  <td className="py-2 ps-1 text-end">
                     <button
                       type="button"
                       onClick={() => deleteMut.mutate(n.id)}
@@ -1507,7 +1507,7 @@ export function NormExpansionPage() {
         })}
         actions={
           <Button variant="primary" size="sm" onClick={() => setShowCreate((v) => !v)}>
-            <Plus size={16} className="mr-1.5 shrink-0" />
+            <Plus size={16} className="me-1.5 shrink-0" />
             {t('normExpansion.new_norm', { defaultValue: 'New norm' })}
           </Button>
         }

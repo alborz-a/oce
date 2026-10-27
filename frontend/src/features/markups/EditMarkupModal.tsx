@@ -381,7 +381,7 @@ export function EditMarkupModal({
         {/* Footer */}
         <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-border-light">
           {!trimmedLabel && !trimmedText && (
-            <span className="mr-auto text-2xs text-content-tertiary">
+            <span className="me-auto text-2xs text-content-tertiary">
               {t('markups.label_or_text_required', {
                 defaultValue: 'Enter a title or description to save.',
               })}

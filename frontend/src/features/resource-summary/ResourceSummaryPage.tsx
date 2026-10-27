@@ -274,16 +274,16 @@ function ResourceGroupCard({ group, currency }: ResourceGroupCardProps) {
       <div className="overflow-x-auto">
         <table className="w-full min-w-[32rem] text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-              <th className="py-1.5 pr-3 font-medium">{t('resourceSummary.col.resource', { defaultValue: 'Resource' })}</th>
-              <th className="py-1.5 pr-3 font-medium">{t('resourceSummary.col.unit', { defaultValue: 'Unit' })}</th>
-              <th className="py-1.5 pr-3 text-right font-medium">
+            <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+              <th className="py-1.5 pe-3 font-medium">{t('resourceSummary.col.resource', { defaultValue: 'Resource' })}</th>
+              <th className="py-1.5 pe-3 font-medium">{t('resourceSummary.col.unit', { defaultValue: 'Unit' })}</th>
+              <th className="py-1.5 pe-3 text-end font-medium">
                 {t('resourceSummary.col.quantity', { defaultValue: 'Quantity' })}
               </th>
-              <th className="py-1.5 pr-3 text-right font-medium">
+              <th className="py-1.5 pe-3 text-end font-medium">
                 {t('resourceSummary.col.cost', { defaultValue: 'Cost' })}
               </th>
-              <th className="py-1.5 text-right font-medium">
+              <th className="py-1.5 text-end font-medium">
                 {t('resourceSummary.col.positions', { defaultValue: 'Positions' })}
               </th>
             </tr>
@@ -291,15 +291,15 @@ function ResourceGroupCard({ group, currency }: ResourceGroupCardProps) {
           <tbody>
             {group.lines.map((line, idx) => (
               <tr key={`${line.name}-${line.unit}-${idx}`} className="border-b border-border-light/60 last:border-0">
-                <td className="py-1.5 pr-3 text-content-primary">{line.name}</td>
-                <td className="py-1.5 pr-3 text-content-tertiary">{line.unit || '-'}</td>
-                <td className="py-1.5 pr-3 text-right tabular-nums text-content-secondary">
+                <td className="py-1.5 pe-3 text-content-primary">{line.name}</td>
+                <td className="py-1.5 pe-3 text-content-tertiary">{line.unit || '-'}</td>
+                <td className="py-1.5 pe-3 text-end tabular-nums text-content-secondary">
                   <QuantityDisplay value={line.quantity} unit={line.unit} precision={2} />
                 </td>
-                <td className="py-1.5 pr-3 text-right tabular-nums text-content-primary">
+                <td className="py-1.5 pe-3 text-end tabular-nums text-content-primary">
                   <MoneyDisplay amount={line.cost} currency={currency} />
                 </td>
-                <td className="py-1.5 text-right tabular-nums text-content-tertiary">{line.position_count}</td>
+                <td className="py-1.5 text-end tabular-nums text-content-tertiary">{line.position_count}</td>
               </tr>
             ))}
           </tbody>
@@ -399,18 +399,18 @@ function BuyListView({ query }: BuyListViewProps) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[32rem] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-1.5 pr-3 font-medium">
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-1.5 pe-3 font-medium">
                   {t('resourceSummary.buyList.col.material', { defaultValue: 'Material' })}
                 </th>
-                <th className="py-1.5 pr-3 font-medium">{t('resourceSummary.col.unit', { defaultValue: 'Unit' })}</th>
-                <th className="py-1.5 pr-3 text-right font-medium">
+                <th className="py-1.5 pe-3 font-medium">{t('resourceSummary.col.unit', { defaultValue: 'Unit' })}</th>
+                <th className="py-1.5 pe-3 text-end font-medium">
                   {t('resourceSummary.buyList.col.quantity', { defaultValue: 'Total quantity' })}
                 </th>
-                <th className="py-1.5 pr-3 text-right font-medium">
+                <th className="py-1.5 pe-3 text-end font-medium">
                   {t('resourceSummary.buyList.col.cost', { defaultValue: 'Est. cost' })}
                 </th>
-                <th className="py-1.5 text-right font-medium">
+                <th className="py-1.5 text-end font-medium">
                   {t('resourceSummary.buyList.col.positions', { defaultValue: 'Used in' })}
                 </th>
               </tr>
@@ -418,15 +418,15 @@ function BuyListView({ query }: BuyListViewProps) {
             <tbody>
               {data.items.map((item, idx) => (
                 <tr key={`${item.name}-${item.unit}-${idx}`} className="border-b border-border-light/60 last:border-0">
-                  <td className="py-1.5 pr-3 text-content-primary">{item.name}</td>
-                  <td className="py-1.5 pr-3 text-content-tertiary">{item.unit || '-'}</td>
-                  <td className="py-1.5 pr-3 text-right tabular-nums text-content-secondary">
+                  <td className="py-1.5 pe-3 text-content-primary">{item.name}</td>
+                  <td className="py-1.5 pe-3 text-content-tertiary">{item.unit || '-'}</td>
+                  <td className="py-1.5 pe-3 text-end tabular-nums text-content-secondary">
                     <QuantityDisplay value={item.quantity} unit={item.unit} precision={2} />
                   </td>
-                  <td className="py-1.5 pr-3 text-right tabular-nums text-content-primary">
+                  <td className="py-1.5 pe-3 text-end tabular-nums text-content-primary">
                     <MoneyDisplay amount={item.cost} currency={currency} />
                   </td>
-                  <td className="py-1.5 text-right tabular-nums text-content-tertiary">{item.position_count}</td>
+                  <td className="py-1.5 text-end tabular-nums text-content-tertiary">{item.position_count}</td>
                 </tr>
               ))}
             </tbody>

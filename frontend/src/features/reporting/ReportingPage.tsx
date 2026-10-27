@@ -273,10 +273,10 @@ function KPICard({
         type="button"
         onClick={onClick}
         aria-label={drillLabel ?? label}
-        className="group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
+        className="group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-start shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
       >
         {inner}
-        <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary transition-colors group-hover:text-oe-blue-text" />
+        <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary transition-colors group-hover:text-oe-blue-text rtl:rotate-180" />
       </button>
     );
   }
@@ -603,7 +603,7 @@ export function ReportingPage() {
       />
 
       {/* Header row — module name + icon live in the top app bar (style guide
-          §2); the page shows only a one-line subtitle and the right-aligned
+          §2); the page shows only a one-line subtitle and the end-aligned
           action, routed through the shared PageHeader so it inherits the
           items-center midline and min-h-9 rules (audit S7). */}
       <PageHeader
@@ -986,7 +986,7 @@ function ExecutiveDashboard({
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
+                <tr className="border-b border-border-light bg-surface-secondary text-start text-xs font-medium text-content-secondary">
                   <th className="px-4 py-3">{t('reporting.col_project', { defaultValue: 'Project' })}</th>
                   <th className="px-4 py-3">{t('reporting.col_status', { defaultValue: 'Status' })}</th>
                   <th className="px-4 py-3">{t('reporting.col_cpi', { defaultValue: 'CPI' })}</th>
@@ -1045,10 +1045,10 @@ function ExecutiveDashboard({
                       <td className="px-4 py-3 text-content-secondary">
                         {kpi ? openItems : <span className="text-content-tertiary">{EMPTY}</span>}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-end">
                         <ChevronRight
                           size={16}
-                          className="text-content-quaternary transition-colors group-hover:text-oe-blue-text"
+                          className="text-content-quaternary transition-colors group-hover:text-oe-blue-text rtl:rotate-180"
                         />
                       </td>
                     </tr>
@@ -1081,7 +1081,7 @@ function PortfolioValueCard({ currencyEntries }: { currencyEntries: [string, num
           <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-lg font-semibold text-content-primary">
             {currencyEntries.map(([code, amount], i) => (
               <span key={code} className="inline-flex items-baseline">
-                {i > 0 && <span className="mr-2 text-content-quaternary">·</span>}
+                {i > 0 && <span className="me-2 text-content-quaternary">·</span>}
                 <MoneyDisplay amount={amount} currency={code} compact showCode />
               </span>
             ))}
@@ -1381,7 +1381,7 @@ function EstimatorDashboard({
             <div role="alert" className="flex items-center gap-2 px-4 py-4 text-sm text-red-700 dark:text-red-400">
               <AlertTriangle size={16} className="shrink-0" />
               <span>{t('reporting.boqs_load_failed', { defaultValue: 'Could not load BOQs for this project.' })}</span>
-              <button onClick={loadBoqs} className="ml-2 underline">
+              <button onClick={loadBoqs} className="ms-2 underline">
                 {t('common.retry', { defaultValue: 'Retry' })}
               </button>
             </div>
@@ -1401,11 +1401,11 @@ function EstimatorDashboard({
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
+                  <tr className="border-b border-border-light bg-surface-secondary text-start text-xs font-medium text-content-secondary">
                     <th className="px-4 py-3">{t('reporting.boq_name', { defaultValue: 'BOQ Name' })}</th>
                     <th className="px-4 py-3">{t('reporting.col_status', { defaultValue: 'Status' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.positions', { defaultValue: 'Positions' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.grand_total', { defaultValue: 'Grand Total' })}</th>
+                    <th className="px-4 py-3 text-end">{t('reporting.positions', { defaultValue: 'Positions' })}</th>
+                    <th className="px-4 py-3 text-end">{t('reporting.grand_total', { defaultValue: 'Grand Total' })}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1424,8 +1424,8 @@ function EstimatorDashboard({
                     >
                       <td className="px-4 py-3 font-medium text-content-primary group-hover:text-oe-blue-text">{b.name}</td>
                       <td className="px-4 py-3"><StatusBadge status={b.status} /></td>
-                      <td className="px-4 py-3 text-right text-content-secondary">{b.position_count ?? 0}</td>
-                      <td className="px-4 py-3 text-right font-medium text-content-primary">
+                      <td className="px-4 py-3 text-end text-content-secondary">{b.position_count ?? 0}</td>
+                      <td className="px-4 py-3 text-end font-medium text-content-primary">
                         <MoneyDisplay amount={b.grand_total} currency={b.currency} showCode />
                       </td>
                     </tr>
@@ -2025,7 +2025,7 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
             <div role="alert" className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
               <AlertTriangle size={16} className="shrink-0" />
               <span>{t('reporting.templates_load_failed', { defaultValue: 'Could not load report templates.' })}</span>
-              <button onClick={fetchTemplates} className="ml-2 underline">
+              <button onClick={fetchTemplates} className="ms-2 underline">
                 {t('common.retry', { defaultValue: 'Retry' })}
               </button>
             </div>
@@ -2039,12 +2039,12 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
+                  <tr className="border-b border-border-light bg-surface-secondary text-start text-xs font-medium text-content-secondary">
                     <th className="px-4 py-3">{t('reporting.template_name', { defaultValue: 'Name' })}</th>
                     <th className="px-4 py-3">{t('reporting.template_type', { defaultValue: 'Type' })}</th>
                     <th className="px-4 py-3">{t('reporting.template_scope', { defaultValue: 'Scope' })}</th>
                     <th className="px-4 py-3">{t('reporting.template_schedule', { defaultValue: 'Schedule' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.actions', { defaultValue: 'Actions' })}</th>
+                    <th className="px-4 py-3 text-end">{t('reporting.actions', { defaultValue: 'Actions' })}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2062,7 +2062,7 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
                           ? tpl.schedule_cron
                           : t('reporting.schedule_none', { defaultValue: '—' })}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-end">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -2103,7 +2103,7 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
             <div role="alert" className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-400">
               <AlertTriangle size={16} className="shrink-0" />
               <span>{t('reporting.reports_load_failed', { defaultValue: 'Could not load generated reports.' })}</span>
-              <button onClick={fetchReports} className="ml-2 underline">
+              <button onClick={fetchReports} className="ms-2 underline">
                 {t('common.retry', { defaultValue: 'Retry' })}
               </button>
             </div>
@@ -2117,12 +2117,12 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-secondary text-left text-xs font-medium text-content-secondary">
+                  <tr className="border-b border-border-light bg-surface-secondary text-start text-xs font-medium text-content-secondary">
                     <th className="px-4 py-3">{t('reporting.report_title', { defaultValue: 'Title' })}</th>
                     <th className="px-4 py-3">{t('reporting.report_type', { defaultValue: 'Type' })}</th>
                     <th className="px-4 py-3">{t('reporting.report_format', { defaultValue: 'Format' })}</th>
                     <th className="px-4 py-3">{t('reporting.report_generated_at', { defaultValue: 'Generated' })}</th>
-                    <th className="px-4 py-3 text-right">{t('reporting.actions', { defaultValue: 'Actions' })}</th>
+                    <th className="px-4 py-3 text-end">{t('reporting.actions', { defaultValue: 'Actions' })}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2146,7 +2146,7 @@ function ReportsTab({ project, projects }: { project?: Project; projects: Projec
                                 title: r.title,
                               })}
                             >
-                              <Eye size={14} className="mr-1" />
+                              <Eye size={14} className="me-1" />
                               {t('reporting.view', { defaultValue: 'View' })}
                             </Button>
                             {/* Real downloadable formats: PDF (executive summary),

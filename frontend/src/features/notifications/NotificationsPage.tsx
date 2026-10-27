@@ -501,7 +501,7 @@ export function NotificationsPage() {
                           <button
                             type="button"
                             onClick={() => handleRowClick(n)}
-                            className="flex items-start gap-3 flex-1 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
+                            className="flex items-start gap-3 flex-1 min-w-0 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
                           >
                             <span
                               className={clsx(
@@ -585,7 +585,7 @@ export function NotificationsPage() {
               className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-border-light text-content-secondary hover:bg-surface-secondary disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label={t('common.previous', { defaultValue: 'Previous' })}
             >
-              <ChevronLeft size={14} />
+              <ChevronLeft size={14} className="rtl:rotate-180"/>
             </button>
             <span className="px-2 tabular-nums">
               {page + 1} / {totalPages}
@@ -597,7 +597,7 @@ export function NotificationsPage() {
               className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-border-light text-content-secondary hover:bg-surface-secondary disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label={t('common.next', { defaultValue: 'Next' })}
             >
-              <ChevronRight size={14} />
+              <ChevronRight size={14} className="rtl:rotate-180"/>
             </button>
           </div>
         </div>

@@ -648,7 +648,7 @@ function SummaryRibbon({ summary, activeKey, onPick }: SummaryRibbonProps) {
             aria-pressed={isActive}
             data-testid={`kpi-${key}`}
             className={clsx(
-              'flex min-w-[110px] flex-col items-start rounded-xl border px-3 py-2 text-left transition-colors',
+              'flex min-w-[110px] flex-col items-start rounded-xl border px-3 py-2 text-start transition-colors',
               isActive
                 ? 'border-oe-blue bg-oe-blue/10'
                 : 'border-divider/60 bg-surface-primary hover:bg-surface-secondary/40',
@@ -882,7 +882,7 @@ function BlockCard({
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
-          className="flex items-center gap-2 text-left"
+          className="flex items-center gap-2 text-start"
           aria-expanded={!collapsed}
         >
           {collapsed ? (
@@ -918,7 +918,7 @@ function BlockCard({
               className="flex items-center gap-2"
             >
               <span
-                className="w-10 shrink-0 text-right text-2xs text-content-tertiary"
+                className="w-10 shrink-0 text-end text-2xs text-content-tertiary"
                 aria-label={t('propdev.inventory_map.floor_aria', {
                   defaultValue: 'Floor {{floor}}',
                   floor: floor.floor,

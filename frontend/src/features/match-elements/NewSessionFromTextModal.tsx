@@ -113,7 +113,7 @@ export function NewSessionFromTextModal({ projectId, onClose, onCreated }: Props
                 'match_elements.new_text.lines_label',
                 'Descriptions (one per line)',
               )}
-              <span className="ml-2 tabular-nums text-content-quaternary">
+              <span className="ms-2 tabular-nums text-content-quaternary">
                 {lines.length}
               </span>
             </label>

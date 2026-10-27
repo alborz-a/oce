@@ -79,20 +79,20 @@ export function statusClasses(status: ControlsStatus): {
     case 'red':
       return {
         dot: 'bg-rose-500',
-        border: 'border-l-rose-500',
+        border: 'border-s-rose-500',
         text: 'text-rose-600 dark:text-rose-400',
       };
     case 'amber':
       return {
         dot: 'bg-amber-500',
-        border: 'border-l-amber-500',
+        border: 'border-s-amber-500',
         text: 'text-amber-600 dark:text-amber-400',
       };
     case 'green':
     default:
       return {
         dot: 'bg-emerald-500',
-        border: 'border-l-emerald-500',
+        border: 'border-s-emerald-500',
         text: 'text-content-primary',
       };
   }

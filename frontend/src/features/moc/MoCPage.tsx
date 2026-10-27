@@ -229,7 +229,7 @@ function signed(n: number): string {
 }
 
 const selectCls =
-  'h-10 appearance-none rounded-lg border border-border bg-surface-primary pl-3 pr-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue';
+  'h-10 appearance-none rounded-lg border border-border bg-surface-primary ps-3 pe-9 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue';
 
 /* -- Cost / schedule exposure rollup + register sorting -------------------- */
 
@@ -686,9 +686,9 @@ function MoCFormModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {mode === 'create'
@@ -802,9 +802,9 @@ function TransitionModal({
           </Button>
           <Button variant={cfg.variant} onClick={() => onConfirm(notes)} disabled={isPending}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Icon size={15} className="mr-1.5 shrink-0" />
+              <Icon size={15} className="me-1.5 shrink-0" />
             )}
             <span>{t(`moc.action_${action}`, { defaultValue: MOC_ACTION_LABELS[action] ?? cap(action) })}</span>
           </Button>
@@ -980,9 +980,9 @@ function AddImpactModal({
             disabled={isPending}
           >
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <ListPlus size={15} className="mr-1.5 shrink-0" />
+              <ListPlus size={15} className="me-1.5 shrink-0" />
             )}
             <span>{t('moc.add_impact', { defaultValue: 'Add impact' })}</span>
           </Button>
@@ -1054,7 +1054,7 @@ const MoCRow = React.memo(function MoCRow({
         </Badge>
 
         {/* Cost impact */}
-        <span className="text-xs text-content-tertiary w-28 text-right shrink-0 hidden md:block tabular-nums">
+        <span className="text-xs text-content-tertiary w-28 text-end shrink-0 hidden md:block tabular-nums">
           {money ? (
             <span className="flex items-center justify-end gap-0.5 text-amber-500 font-medium">
               <DollarSign size={12} />
@@ -1073,7 +1073,7 @@ const MoCRow = React.memo(function MoCRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Description */}
           {entry.description && (
             <div className="rounded-lg bg-surface-secondary p-3">
@@ -1090,7 +1090,7 @@ const MoCRow = React.memo(function MoCRow({
               <span
                 className={clsx('inline-flex items-center rounded-md border px-1.5 py-0.5 font-medium', catCfg.color)}
               >
-                <CatIcon size={11} className="mr-1" />
+                <CatIcon size={11} className="me-1" />
                 {t(`moc.category_${catKey}`, { defaultValue: MOC_CATEGORY_LABELS[catKey] ?? cap(catKey) })}
               </span>
             </span>
@@ -1157,7 +1157,7 @@ const MoCRow = React.memo(function MoCRow({
                           </p>
                         )}
                       </div>
-                      <div className="text-right shrink-0 text-2xs tabular-nums text-content-tertiary">
+                      <div className="text-end shrink-0 text-2xs tabular-nums text-content-tertiary">
                         {impMoney && <div className="text-amber-600 dark:text-amber-400 font-medium">{impMoney}</div>}
                         {imp.schedule_delta_days !== 0 && (
                           <div>
@@ -1301,7 +1301,7 @@ const MoCRow = React.memo(function MoCRow({
                     onTransition(entry, action);
                   }}
                 >
-                  <Icon size={14} className="mr-1.5" />
+                  <Icon size={14} className="me-1.5" />
                   {t(`moc.action_${action}`, { defaultValue: MOC_ACTION_LABELS[action] ?? cap(action) })}
                 </Button>
               );
@@ -1317,9 +1317,9 @@ const MoCRow = React.memo(function MoCRow({
                 }}
               >
                 {isCreatingVR ? (
-                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent mr-1.5 shrink-0" />
+                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent me-1.5 shrink-0" />
                 ) : (
-                  <FileText size={14} className="mr-1.5" />
+                  <FileText size={14} className="me-1.5" />
                 )}
                 {t('moc.create_variation_request', { defaultValue: 'Create Variation Request' })}
               </Button>
@@ -1334,7 +1334,7 @@ const MoCRow = React.memo(function MoCRow({
                     onEdit(entry);
                   }}
                 >
-                  <Pencil size={14} className="mr-1.5" />
+                  <Pencil size={14} className="me-1.5" />
                   {t('common.edit', { defaultValue: 'Edit' })}
                 </Button>
                 <Button
@@ -1346,7 +1346,7 @@ const MoCRow = React.memo(function MoCRow({
                     onDelete(entry);
                   }}
                 >
-                  <Trash2 size={14} className="mr-1.5" />
+                  <Trash2 size={14} className="me-1.5" />
                   {t('common.delete', { defaultValue: 'Delete' })}
                 </Button>
               </>
@@ -1897,13 +1897,13 @@ export function MoCPage() {
               and a CSV export of the visible register. */}
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="relative min-w-[180px] flex-1 sm:max-w-xs">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+              <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('moc.search_placeholder', { defaultValue: 'Search changes...' })}
                 aria-label={t('moc.search_placeholder', { defaultValue: 'Search changes...' })}
-                className={inputCls + ' pl-9'}
+                className={inputCls + ' ps-9'}
               />
             </div>
             <div className="relative">
@@ -1920,7 +1920,7 @@ export function MoCPage() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -1938,7 +1938,7 @@ export function MoCPage() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -1956,7 +1956,7 @@ export function MoCPage() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -1974,7 +1974,7 @@ export function MoCPage() {
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ArrowUpDown size={14} />
               </div>
             </div>
@@ -2049,7 +2049,7 @@ export function MoCPage() {
                     <span className="w-5" />
                     <span className="flex-1">{t('moc.col_title', { defaultValue: 'Title' })}</span>
                     <span className="w-16 text-center">{t('moc.col_risk', { defaultValue: 'Risk' })}</span>
-                    <span className="w-28 text-right hidden md:block">{t('moc.col_cost', { defaultValue: 'Cost impact' })}</span>
+                    <span className="w-28 text-end hidden md:block">{t('moc.col_cost', { defaultValue: 'Cost impact' })}</span>
                     <span className="w-28 text-center">{t('moc.col_status', { defaultValue: 'Status' })}</span>
                   </div>
                   {sorted.map((entry) => (

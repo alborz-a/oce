@@ -296,25 +296,25 @@ export function PhasesTab({
           <table className="w-full text-sm">
             <thead className="text-xs text-content-tertiary border-b border-border-light">
               <tr>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.sequence', { defaultValue: '#' })}
                 </th>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.code', { defaultValue: 'Code' })}
                 </th>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.name', { defaultValue: 'Name' })}
                 </th>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.status', { defaultValue: 'Status' })}
                 </th>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.planned', { defaultValue: 'Planned' })}
                 </th>
-                <th className="text-left py-2 pr-3">
+                <th className="text-start py-2 pe-3">
                   {t('propdev.phase.blocks', { defaultValue: 'Blocks' })}
                 </th>
-                <th className="text-right py-2 pr-2">
+                <th className="text-end py-2 pe-2">
                   {t('common.actions', { defaultValue: 'Actions' })}
                 </th>
               </tr>
@@ -325,19 +325,19 @@ export function PhasesTab({
                   key={p.id}
                   className="border-b border-border-light/60 hover:bg-surface-secondary/50"
                 >
-                  <td className="py-2 pr-3 text-content-tertiary">
+                  <td className="py-2 pe-3 text-content-tertiary">
                     {p.sequence}
                   </td>
-                  <td className="py-2 pr-3 font-mono text-xs">{p.code}</td>
-                  <td className="py-2 pr-3">{p.name || '—'}</td>
-                  <td className="py-2 pr-3">
+                  <td className="py-2 pe-3 font-mono text-xs">{p.code}</td>
+                  <td className="py-2 pe-3">{p.name || '—'}</td>
+                  <td className="py-2 pe-3">
                     <Badge variant={PHASE_STATUS_VARIANT[p.status]} dot>
                       {t(`propdev.phase.status.${p.status}`, {
                         defaultValue: p.status.replace('_', ' '),
                       })}
                     </Badge>
                   </td>
-                  <td className="py-2 pr-3 text-xs">
+                  <td className="py-2 pe-3 text-xs">
                     {p.planned_start ? (
                       <DateDisplay value={p.planned_start} />
                     ) : (
@@ -350,7 +350,7 @@ export function PhasesTab({
                       </>
                     )}
                   </td>
-                  <td className="py-2 pr-3">
+                  <td className="py-2 pe-3">
                     <button
                       type="button"
                       onClick={onJumpToBlocks}
@@ -360,7 +360,7 @@ export function PhasesTab({
                       {blockCounts[p.id] ?? 0}
                     </button>
                   </td>
-                  <td className="py-2 pr-2 text-right">
+                  <td className="py-2 pe-2 text-end">
                     <div className="inline-flex gap-1">
                       <Button
                         size="sm"
@@ -784,27 +784,27 @@ export function BlocksTab({
             <table className="w-full text-sm">
               <thead className="text-xs text-content-tertiary border-b border-border-light">
                 <tr>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.code', { defaultValue: 'Code' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.layout', { defaultValue: 'Layout' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.orientation', {
                       defaultValue: 'Orient.',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.block.plots', { defaultValue: 'Plots' })}
                   </th>
-                  <th className="text-right py-2 pr-2">
+                  <th className="text-end py-2 pe-2">
                     {t('common.actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -815,20 +815,20 @@ export function BlocksTab({
                     key={b.id}
                     className="border-b border-border-light/60 hover:bg-surface-secondary/50"
                   >
-                    <td className="py-2 pr-3 font-mono text-xs">{b.code}</td>
-                    <td className="py-2 pr-3">{b.name || '—'}</td>
-                    <td className="py-2 pr-3 text-xs text-content-secondary">
+                    <td className="py-2 pe-3 font-mono text-xs">{b.code}</td>
+                    <td className="py-2 pe-3">{b.name || '—'}</td>
+                    <td className="py-2 pe-3 text-xs text-content-secondary">
                       {b.levels_count}L × {b.units_per_level}u
                     </td>
-                    <td className="py-2 pr-3 text-xs">{b.orientation || '—'}</td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3 text-xs">{b.orientation || '—'}</td>
+                    <td className="py-2 pe-3">
                       <Badge variant={BLOCK_STATUS_VARIANT[b.status]} dot>
                         {t(`propdev.block.status.${b.status}`, {
                           defaultValue: b.status.replace('_', ' '),
                         })}
                       </Badge>
                     </td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3">
                       <button
                         type="button"
                         onClick={onJumpToPlots}
@@ -838,7 +838,7 @@ export function BlocksTab({
                         {(plotsByBlock[b.id] ?? []).length}
                       </button>
                     </td>
-                    <td className="py-2 pr-2 text-right">
+                    <td className="py-2 pe-2 text-end">
                       <div className="inline-flex gap-1">
                         <Button
                           size="sm"
@@ -1283,7 +1283,7 @@ function AssignPlotsToBlockModal({
               >
                 <span className="font-mono">{p.plot_number}</span>
                 {p.area_m2 && (
-                  <span className="text-content-tertiary text-xs ml-2">
+                  <span className="text-content-tertiary text-xs ms-2">
                     {(() => {
                       const a = dq.convert(toNumber(p.area_m2), 'm²');
                       const v =
@@ -1406,34 +1406,34 @@ export function BrokersTab() {
             <table className="w-full text-sm">
               <thead className="text-xs text-content-tertiary border-b border-border-light">
                 <tr>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.license', {
                       defaultValue: 'Licence #',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.jurisdiction', {
                       defaultValue: 'Region',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.email', { defaultValue: 'Email' })}
                   </th>
-                  <th className="text-right py-2 pr-3">
+                  <th className="text-end py-2 pe-3">
                     {t('propdev.broker.commission', {
                       defaultValue: 'Commission %',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.kyc', { defaultValue: 'KYC' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.broker.active', { defaultValue: 'Active' })}
                   </th>
-                  <th className="text-right py-2 pr-2">
+                  <th className="text-end py-2 pe-2">
                     {t('common.actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -1444,20 +1444,20 @@ export function BrokersTab() {
                     key={b.id}
                     className="border-b border-border-light/60 hover:bg-surface-secondary/50"
                   >
-                    <td className="py-2 pr-3 font-medium">{b.name}</td>
-                    <td className="py-2 pr-3 font-mono text-xs">
+                    <td className="py-2 pe-3 font-medium">{b.name}</td>
+                    <td className="py-2 pe-3 font-mono text-xs">
                       {b.license_number}
                     </td>
-                    <td className="py-2 pr-3 text-xs">
+                    <td className="py-2 pe-3 text-xs">
                       {b.jurisdiction || '—'}
                     </td>
-                    <td className="py-2 pr-3 text-xs">
+                    <td className="py-2 pe-3 text-xs">
                       {b.contact_email || '—'}
                     </td>
-                    <td className="py-2 pr-3 text-right tabular-nums">
+                    <td className="py-2 pe-3 text-end tabular-nums">
                       {fmtPercent(toNumber(b.default_commission_pct), 2)}
                     </td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3">
                       <Badge
                         variant={
                           b.kyc_status === 'verified'
@@ -1472,7 +1472,7 @@ export function BrokersTab() {
                         {b.kyc_status}
                       </Badge>
                     </td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3">
                       <button
                         type="button"
                         onClick={() =>
@@ -1496,7 +1496,7 @@ export function BrokersTab() {
                           : t('common.no', { defaultValue: 'No' })}
                       </button>
                     </td>
-                    <td className="py-2 pr-2 text-right">
+                    <td className="py-2 pe-2 text-end">
                       <div className="inline-flex gap-1">
                         {b.kyc_status !== 'verified' && (
                           <Button
@@ -1924,31 +1924,31 @@ export function PriceMatrixTab({
             <table className="w-full text-sm">
               <thead className="text-xs text-content-tertiary border-b border-border-light">
                 <tr>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.matrix.name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="text-right py-2 pr-3">
+                  <th className="text-end py-2 pe-3">
                     {t('propdev.matrix.base_price', {
                       defaultValue: 'Base €/m²',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.matrix.currency', {
                       defaultValue: 'Currency',
                     })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.matrix.effective', {
                       defaultValue: 'Effective',
                     })}
                   </th>
-                  <th className="text-right py-2 pr-3">
+                  <th className="text-end py-2 pe-3">
                     {t('propdev.matrix.rules', { defaultValue: 'Rules' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.matrix.status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="text-right py-2 pr-2">
+                  <th className="text-end py-2 pe-2">
                     {t('common.actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -1959,12 +1959,12 @@ export function PriceMatrixTab({
                     key={m.id}
                     className="border-b border-border-light/60 hover:bg-surface-secondary/50"
                   >
-                    <td className="py-2 pr-3 font-medium">{m.name}</td>
-                    <td className="py-2 pr-3 text-right tabular-nums">
+                    <td className="py-2 pe-3 font-medium">{m.name}</td>
+                    <td className="py-2 pe-3 text-end tabular-nums">
                       {fmtFixed(toNumber(m.base_price_per_m2), 2)}
                     </td>
-                    <td className="py-2 pr-3 text-xs">{m.currency}</td>
-                    <td className="py-2 pr-3 text-xs">
+                    <td className="py-2 pe-3 text-xs">{m.currency}</td>
+                    <td className="py-2 pe-3 text-xs">
                       <DateDisplay value={m.effective_from} />
                       {m.effective_to && (
                         <>
@@ -1973,10 +1973,10 @@ export function PriceMatrixTab({
                         </>
                       )}
                     </td>
-                    <td className="py-2 pr-3 text-right tabular-nums">
+                    <td className="py-2 pe-3 text-end tabular-nums">
                       {m.rules.length}
                     </td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3">
                       <Badge
                         variant={PRICE_MATRIX_STATUS_VARIANT[m.status]}
                         dot
@@ -1984,7 +1984,7 @@ export function PriceMatrixTab({
                         {m.status}
                       </Badge>
                     </td>
-                    <td className="py-2 pr-2 text-right">
+                    <td className="py-2 pe-2 text-end">
                       <div className="inline-flex gap-1 flex-wrap justify-end">
                         <Button
                           size="sm"
@@ -2532,7 +2532,7 @@ function PriceMatrixPreviewModal({
               <div className="text-content-tertiary">
                 {t('propdev.matrix.preview.area', { defaultValue: 'Area' })}
               </div>
-              <div className="text-right tabular-nums">
+              <div className="text-end tabular-nums">
                 {(() => {
                   const a = dq.convert(toNumber(previewQ.data.area_m2), 'm²');
                   const v =
@@ -2545,7 +2545,7 @@ function PriceMatrixPreviewModal({
                   defaultValue: 'Base €/m²',
                 })}
               </div>
-              <div className="text-right tabular-nums">
+              <div className="text-end tabular-nums">
                 {fmtFixed(toNumber(previewQ.data.base_price_per_m2), 2)}{' '}
                 {previewQ.data.currency}
               </div>
@@ -2554,7 +2554,7 @@ function PriceMatrixPreviewModal({
                   defaultValue: 'Base price',
                 })}
               </div>
-              <div className="text-right tabular-nums">
+              <div className="text-end tabular-nums">
                 {fmtFixed(toNumber(previewQ.data.base_price), 2)}{' '}
                 {previewQ.data.currency}
               </div>
@@ -2563,7 +2563,7 @@ function PriceMatrixPreviewModal({
                   defaultValue: 'Combined multiplier',
                 })}
               </div>
-              <div className="text-right tabular-nums">
+              <div className="text-end tabular-nums">
                 ×{fmtFixed(toNumber(previewQ.data.combined_multiplier), 4)}
               </div>
               <div className="font-semibold">
@@ -2571,7 +2571,7 @@ function PriceMatrixPreviewModal({
                   defaultValue: 'Final price',
                 })}
               </div>
-              <div className="text-right font-semibold tabular-nums">
+              <div className="text-end font-semibold tabular-nums">
                 <MoneyDisplay
                   amount={toNumber(previewQ.data.final_price)}
                   currency={previewQ.data.currency}
@@ -2860,7 +2860,7 @@ function EscrowAccountCard({
             defaultValue: '{{count}} transactions',
           })}
           {balanceQ.data && balanceQ.data.unreconciled_count > 0 && (
-            <span className="text-amber-600 ml-2">
+            <span className="text-amber-600 ms-2">
               ·{' '}
               {t('propdev.escrow.unreconciled_count', {
                 count: balanceQ.data.unreconciled_count,
@@ -2873,7 +2873,7 @@ function EscrowAccountCard({
         <Button
           size="sm"
           variant="secondary"
-          icon={<ArrowRight size={12} />}
+          icon={<ArrowRight size={12} className="rtl:rotate-180"/>}
           onClick={onOpenTransactions}
         >
           {t('propdev.escrow.view_transactions', {
@@ -3194,33 +3194,33 @@ function EscrowTransactionsDrawer({
             <table className="w-full text-sm">
               <thead className="text-xs text-content-tertiary border-b border-border-light">
                 <tr>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.escrow.tx_date', { defaultValue: 'Date' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.escrow.tx_dir', { defaultValue: 'Dir' })}
                   </th>
-                  <th className="text-right py-2 pr-3">
+                  <th className="text-end py-2 pe-3">
                     {t('propdev.escrow.tx_amount', { defaultValue: 'Amount' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.escrow.tx_source', { defaultValue: 'Source' })}
                   </th>
-                  <th className="text-left py-2 pr-3">
+                  <th className="text-start py-2 pe-3">
                     {t('propdev.escrow.tx_state', {
                       defaultValue: 'Reconciled',
                     })}
                   </th>
-                  <th className="text-right py-2 pr-2"></th>
+                  <th className="text-end py-2 pe-2"></th>
                 </tr>
               </thead>
               <tbody>
                 {txs.map((tx) => (
                   <tr key={tx.id} className="border-b border-border-light/60">
-                    <td className="py-2 pr-3 text-xs">
+                    <td className="py-2 pe-3 text-xs">
                       <DateDisplay value={tx.transaction_date} />
                     </td>
-                    <td className="py-2 pr-3">
+                    <td className="py-2 pe-3">
                       <Badge
                         variant={
                           tx.direction === 'credit' ? 'success' : 'warning'
@@ -3230,11 +3230,11 @@ function EscrowTransactionsDrawer({
                         {tx.direction}
                       </Badge>
                     </td>
-                    <td className="py-2 pr-3 text-right tabular-nums">
+                    <td className="py-2 pe-3 text-end tabular-nums">
                       {fmtFixed(toNumber(tx.amount), 2)} {tx.currency}
                     </td>
-                    <td className="py-2 pr-3 text-xs">{tx.source_type}</td>
-                    <td className="py-2 pr-3 text-xs">
+                    <td className="py-2 pe-3 text-xs">{tx.source_type}</td>
+                    <td className="py-2 pe-3 text-xs">
                       <Badge
                         variant={
                           tx.reconciliation_state === 'matched'
@@ -3248,7 +3248,7 @@ function EscrowTransactionsDrawer({
                         {tx.reconciliation_state}
                       </Badge>
                     </td>
-                    <td className="py-2 pr-2 text-right">
+                    <td className="py-2 pe-2 text-end">
                       {tx.reconciliation_state === 'unreconciled' && (
                         <Button
                           size="sm"

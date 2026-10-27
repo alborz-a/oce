@@ -155,17 +155,17 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
           />
           <div
             aria-hidden
-            className="absolute -top-12 -right-10 w-72 h-72 rounded-full bg-purple-300/25 dark:bg-purple-500/15 blur-3xl"
+            className="absolute -top-12 -end-10 w-72 h-72 rounded-full bg-purple-300/25 dark:bg-purple-500/15 blur-3xl"
           />
           <div
             aria-hidden
-            className="absolute -bottom-16 -left-12 w-72 h-72 rounded-full bg-blue-300/25 dark:bg-blue-500/15 blur-3xl"
+            className="absolute -bottom-16 -start-12 w-72 h-72 rounded-full bg-blue-300/25 dark:bg-blue-500/15 blur-3xl"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label={t('common.close', { defaultValue: 'Close' })}
-            className="absolute top-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
+            className="absolute top-3 end-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
           </button>
@@ -269,11 +269,11 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
               {t('modules.request_card_community_cta', {
                 defaultValue: 'Propose on our roadmap',
               })}
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="rtl:rotate-180"/>
             </div>
             <ExternalLink
               size={14}
-              className="absolute top-4 right-4 text-content-quaternary group-hover:text-oe-blue transition-colors"
+              className="absolute top-4 end-4 text-content-quaternary group-hover:text-oe-blue transition-colors"
               aria-hidden
             />
           </a>
@@ -340,11 +340,11 @@ export function RequestCustomModuleDialog({ open, onClose }: Props) {
               {t('modules.request_card_private_cta', {
                 defaultValue: 'Request a scope & quote',
               })}
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="rtl:rotate-180"/>
             </div>
             <ExternalLink
               size={14}
-              className="absolute top-4 right-4 text-content-quaternary group-hover:text-purple-600 transition-colors"
+              className="absolute top-4 end-4 text-content-quaternary group-hover:text-purple-600 transition-colors"
               aria-hidden
             />
           </a>

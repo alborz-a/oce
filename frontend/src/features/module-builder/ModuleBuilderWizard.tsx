@@ -688,7 +688,7 @@ function WizardFooter({
         <Button variant="ghost" onClick={onClose}>
           {t('common.close', { defaultValue: 'Close' })}
         </Button>
-        <Button variant="primary" icon={<ArrowRight size={14} />} iconPosition="right" onClick={onOpen} data-testid="module-builder-open">
+        <Button variant="primary" icon={<ArrowRight size={14} className="rtl:rotate-180"/>} iconPosition="right" onClick={onOpen} data-testid="module-builder-open">
           {t('module_builder.open_module', { defaultValue: 'Open the module' })}
         </Button>
       </div>
@@ -699,7 +699,7 @@ function WizardFooter({
     <div className="flex items-center justify-between gap-2">
       <Button
         variant="ghost"
-        icon={<ArrowLeft size={14} />}
+        icon={<ArrowLeft size={14} className="rtl:rotate-180"/>}
         onClick={screen === 'describe' ? onClose : onBack}
         disabled={drafting || installing}
       >
@@ -722,7 +722,7 @@ function WizardFooter({
       {screen === 'proposal' && (
         <Button
           variant="primary"
-          icon={<ArrowRight size={14} />}
+          icon={<ArrowRight size={14} className="rtl:rotate-180"/>}
           iconPosition="right"
           disabled={blocked}
           onClick={onNext}

@@ -105,7 +105,7 @@ export function PlotsTab({
             {t('common.clear', { defaultValue: 'Clear' })}
           </button>
         )}
-        <div className="ml-auto inline-flex items-center gap-1">
+        <div className="ms-auto inline-flex items-center gap-1">
           <Button
             size="sm"
             variant="ghost"

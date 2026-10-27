@@ -289,7 +289,7 @@ function CreateNCRModal({
                     type="button"
                     onClick={() => set('severity', sev)}
                     className={clsx(
-                      'flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 transition-all text-left',
+                      'flex items-center gap-2 rounded-lg border-2 px-3 py-2.5 transition-all text-start',
                       selected
                         ? cfg.color + ' ring-2 ' + cfg.ringColor
                         : 'border-border bg-surface-primary text-content-tertiary hover:border-border-light hover:bg-surface-secondary',
@@ -425,9 +425,9 @@ function CreateNCRModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('ncr.create_ncr', { defaultValue: 'Create NCR' })}</span>
           </Button>
@@ -581,7 +581,7 @@ const NCRRow = React.memo(function NCRRow({
         </Badge>
 
         {/* Cost Impact */}
-        <span className="text-xs text-content-tertiary w-20 text-right shrink-0 hidden md:block tabular-nums">
+        <span className="text-xs text-content-tertiary w-20 text-end shrink-0 hidden md:block tabular-nums">
           {ncr.cost_impact != null && ncr.cost_impact > 0 ? (
             <MoneyDisplay
               amount={ncr.cost_impact}
@@ -604,7 +604,7 @@ const NCRRow = React.memo(function NCRRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Description */}
           <div className="rounded-lg bg-surface-secondary p-3">
             <p className="text-xs text-content-tertiary mb-1 font-medium uppercase tracking-wide">
@@ -702,7 +702,7 @@ const NCRRow = React.memo(function NCRRow({
               <Badge variant="blue" size="sm">
                 {ncr.change_order_id.slice(0, 8)}
               </Badge>
-              <ChevronRight size={14} className="ml-auto text-blue-400 dark:text-blue-500" />
+              <ChevronRight size={14} className="ms-auto text-blue-400 dark:text-blue-500 rtl:rotate-180" />
             </div>
           )}
 
@@ -747,7 +747,7 @@ const NCRRow = React.memo(function NCRRow({
                   return (
                     <React.Fragment key={stage}>
                       {i > 0 && (
-                        <ChevronRight size={12} className="text-content-quaternary shrink-0" />
+                        <ChevronRight size={12} className="text-content-quaternary shrink-0 rtl:rotate-180" />
                       )}
                       <span
                         className={clsx(
@@ -861,7 +861,7 @@ const NCRRow = React.memo(function NCRRow({
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="primary" size="sm" onClick={saveEdit} disabled={busy}>
-                  <Save size={14} className="mr-1.5" />
+                  <Save size={14} className="me-1.5" />
                   {t('ncr.save_details', { defaultValue: 'Save changes' })}
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => setEditing(false)} disabled={busy}>
@@ -879,7 +879,7 @@ const NCRRow = React.memo(function NCRRow({
             <div className="flex items-center flex-wrap gap-2 pt-1">
               {!editing && (
                 <Button variant="secondary" size="sm" onClick={beginEdit} disabled={busy}>
-                  <Pencil size={14} className="mr-1.5" />
+                  <Pencil size={14} className="me-1.5" />
                   {t('ncr.edit_details', { defaultValue: 'Edit details' })}
                 </Button>
               )}
@@ -903,7 +903,7 @@ const NCRRow = React.memo(function NCRRow({
                           })
                     }
                   >
-                    <CheckCircle2 size={14} className="mr-1.5" />
+                    <CheckCircle2 size={14} className="me-1.5" />
                     {t('ncr.action_close', { defaultValue: 'Close NCR' })}
                   </Button>
                 ) : (
@@ -917,7 +917,7 @@ const NCRRow = React.memo(function NCRRow({
                       onUpdate(ncr.id, { status: next });
                     }}
                   >
-                    <ArrowRight size={14} className="mr-1.5" />
+                    <ArrowRight size={14} className="me-1.5 rtl:rotate-180" />
                     {t('ncr.action_advance', { defaultValue: 'Advance' })}:{' '}
                     {t(`ncr.status_${next}`, { defaultValue: next.replace(/_/g, ' ') })}
                   </Button>
@@ -934,7 +934,7 @@ const NCRRow = React.memo(function NCRRow({
                     onUpdate(ncr.id, { status: prev });
                   }}
                 >
-                  <Undo2 size={14} className="mr-1.5" />
+                  <Undo2 size={14} className="me-1.5" />
                   {t('ncr.action_send_back', { defaultValue: 'Send back' })}:{' '}
                   {t(`ncr.status_${prev}`, { defaultValue: prev.replace(/_/g, ' ') })}
                 </Button>
@@ -950,7 +950,7 @@ const NCRRow = React.memo(function NCRRow({
                     onVoid(ncr.id);
                   }}
                 >
-                  <Ban size={14} className="mr-1.5" />
+                  <Ban size={14} className="me-1.5" />
                   {t('ncr.action_void', { defaultValue: 'Void' })}
                 </Button>
               )}
@@ -964,7 +964,7 @@ const NCRRow = React.memo(function NCRRow({
                     onCreateVariation(ncr.id);
                   }}
                 >
-                  <DollarSign size={14} className="mr-1" />
+                  <DollarSign size={14} className="me-1" />
                   {t('ncr.create_variation', { defaultValue: 'Create Change Order' })}
                 </Button>
               )}
@@ -1002,7 +1002,7 @@ const NCRRow = React.memo(function NCRRow({
                   navigate(inspectionDeepLink);
                 }}
               >
-                <ClipboardCheck size={11} className="mr-1" />
+                <ClipboardCheck size={11} className="me-1" />
                 {t('ncr.view_inspection', { defaultValue: 'View Inspection' })}
               </Button>
             )}
@@ -1015,7 +1015,7 @@ const NCRRow = React.memo(function NCRRow({
                 navigate('/changeorders');
               }}
             >
-              <DollarSign size={11} className="mr-1" />
+              <DollarSign size={11} className="me-1" />
               {t('ncr.view_change_orders', { defaultValue: 'View Change Orders' })}
             </Button>
             <Button
@@ -1027,7 +1027,7 @@ const NCRRow = React.memo(function NCRRow({
                 navigate('/punchlist');
               }}
             >
-              <ListChecks size={11} className="mr-1" />
+              <ListChecks size={11} className="me-1" />
               {t('ncr.view_punchlist', { defaultValue: 'View Punch List' })}
             </Button>
           </div>
@@ -1119,7 +1119,7 @@ function HowNcrWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180"/>
               </li>
             )}
           </React.Fragment>
@@ -1564,7 +1564,7 @@ export function NCRPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1573,7 +1573,7 @@ export function NCRPage() {
               defaultValue: 'Search NCRs...',
             })}
             aria-label={t('ncr.search_placeholder', { defaultValue: 'Search NCRs...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -1656,7 +1656,7 @@ export function NCRPage() {
                 <span className="w-20 text-center">
                   {t('ncr.col_severity', { defaultValue: 'Severity' })}
                 </span>
-                <span className="w-20 text-right hidden md:block">
+                <span className="w-20 text-end hidden md:block">
                   {t('ncr.col_cost_impact', { defaultValue: 'Cost Impact' })}
                 </span>
                 <span className="w-28 text-center">

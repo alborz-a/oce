@@ -97,14 +97,14 @@ function ActionRow({
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
           {action.brought_forward && (
             <Badge variant="warning" size="sm">
-              <ArrowUpRight size={11} className="mr-0.5" />
+              <ArrowUpRight size={11} className="me-0.5" />
               {t('meetings.brought_forward', { defaultValue: 'Brought forward' })}
               {action.origin_meeting_number ? ` · ${action.origin_meeting_number}` : ''}
             </Badge>
           )}
           {action.overdue && (
             <Badge variant="error" size="sm">
-              <AlertTriangle size={11} className="mr-0.5" />
+              <AlertTriangle size={11} className="me-0.5" />
               {t('meetings.overdue', { defaultValue: 'Overdue' })}
             </Badge>
           )}
@@ -266,7 +266,7 @@ export function ActionRegisterPanel({ meetingId, seriesId }: ActionRegisterPanel
 
       {actionsQ.isLoading ? (
         <p className="text-xs text-content-tertiary">
-          <Loader2 size={12} className="inline animate-spin mr-1" />
+          <Loader2 size={12} className="inline animate-spin me-1" />
           {t('common.loading', { defaultValue: 'Loading…' })}
         </p>
       ) : (
@@ -358,9 +358,9 @@ export function ActionRegisterPanel({ meetingId, seriesId }: ActionRegisterPanel
               data-testid="meeting-action-add"
             >
               {addMut.isPending ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <Plus size={14} className="mr-1.5" />
+                <Plus size={14} className="me-1.5" />
               )}
               {t('common.add', { defaultValue: 'Add' })}
             </Button>

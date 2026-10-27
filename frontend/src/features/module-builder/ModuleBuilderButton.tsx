@@ -49,7 +49,7 @@ export function ModuleBuilderButton({ className }: { className?: string }) {
         className={clsx(
           'relative flex h-8 items-center justify-center gap-1.5 rounded-lg',
           // Icon-only below xl, labelled from xl up. Not md, where the other
-          // labelled header pill sits: by lg the right-hand cluster is already
+          // labelled header pill sits: by lg the end-hand cluster is already
           // tight enough that the page title truncates and the search box is
           // held narrow until xl - both are written down in Header.tsx. A
           // second label at md would take that space from the title again,

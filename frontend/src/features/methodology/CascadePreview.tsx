@@ -200,7 +200,7 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
           {baseEntries.map(([k, v]) => (
             <Badge key={k} variant="neutral" size="sm">
               <span className="font-mono">{k}</span>
-              <span className="ml-1 tabular-nums">
+              <span className="ms-1 tabular-nums">
                 <MoneyDisplay amount={v} currency={cur} compact />
               </span>
             </Badge>
@@ -208,7 +208,7 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
           {compEntries.map(([k, v]) => (
             <Badge key={k} variant="blue" size="sm">
               <span className="font-mono">{k}</span>
-              <span className="ml-1 tabular-nums">
+              <span className="ms-1 tabular-nums">
                 <MoneyDisplay amount={v} currency={cur} compact />
               </span>
             </Badge>
@@ -221,16 +221,16 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
         <table className="min-w-full text-xs">
           <thead className="bg-surface-secondary/40 text-2xs uppercase tracking-wide text-content-tertiary">
             <tr>
-              <th className="px-2.5 py-1.5 text-left font-medium">
+              <th className="px-2.5 py-1.5 text-start font-medium">
                 {t('methodology.preview.col_step', { defaultValue: 'Step' })}
               </th>
-              <th className="px-2.5 py-1.5 text-right font-medium">
+              <th className="px-2.5 py-1.5 text-end font-medium">
                 {t('methodology.preview.col_rate', { defaultValue: 'Rate' })}
               </th>
-              <th className="px-2.5 py-1.5 text-right font-medium">
+              <th className="px-2.5 py-1.5 text-end font-medium">
                 {t('methodology.preview.col_amount', { defaultValue: 'Amount' })}
               </th>
-              <th className="px-2.5 py-1.5 text-right font-medium">
+              <th className="px-2.5 py-1.5 text-end font-medium">
                 {t('methodology.preview.col_running', { defaultValue: 'Running total' })}
               </th>
             </tr>
@@ -242,7 +242,7 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
               </td>
               <td className="px-2.5 py-1.5" />
               <td className="px-2.5 py-1.5" />
-              <td className="px-2.5 py-1.5 text-right font-medium tabular-nums text-content-primary">
+              <td className="px-2.5 py-1.5 text-end font-medium tabular-nums text-content-primary">
                 <MoneyDisplay amount={preview.directTotal} currency={cur} />
               </td>
             </tr>
@@ -251,20 +251,20 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
                 <td className="px-2.5 py-1.5 text-content-primary">
                   {s.label || s.key}
                   {s.category === 'tax' && (
-                    <span className="ml-1.5 align-middle">
+                    <span className="ms-1.5 align-middle">
                       <Badge variant="blue" size="sm">
                         {t('methodology.cascade.steps.vat_badge', { defaultValue: 'VAT' })}
                       </Badge>
                     </span>
                   )}
                 </td>
-                <td className="px-2.5 py-1.5 text-right tabular-nums text-content-secondary">
+                <td className="px-2.5 py-1.5 text-end tabular-nums text-content-secondary">
                   {s.kind === 'percentage' ? `${s.rate}%` : '-'}
                 </td>
-                <td className="px-2.5 py-1.5 text-right tabular-nums text-content-secondary">
+                <td className="px-2.5 py-1.5 text-end tabular-nums text-content-secondary">
                   <MoneyDisplay amount={s.amount} currency={cur} />
                 </td>
-                <td className="px-2.5 py-1.5 text-right tabular-nums text-content-primary">
+                <td className="px-2.5 py-1.5 text-end tabular-nums text-content-primary">
                   <MoneyDisplay amount={s.runningTotal} currency={cur} />
                 </td>
               </tr>
@@ -275,7 +275,7 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
               <td className="px-2.5 py-2 text-sm font-semibold text-content-primary" colSpan={2}>
                 {t('methodology.preview.grand', { defaultValue: 'Grand total' })}
               </td>
-              <td className="px-2.5 py-2 text-right text-2xs text-content-tertiary tabular-nums">
+              <td className="px-2.5 py-2 text-end text-2xs text-content-tertiary tabular-nums">
                 {/* The sign comes from the formatter and the cell may not be
                     broken, so the plus cannot end up on the line above its own
                     figure. Not compacted either: the column this sits under
@@ -287,7 +287,7 @@ function PreviewBreakdown({ preview, currency }: { preview: PreviewResult; curre
                   <MoneyDisplay amount={preview.markupTotal} currency={cur} signDisplay="always" />
                 </span>
               </td>
-              <td className="px-2.5 py-2 text-right text-sm font-bold tabular-nums text-content-primary">
+              <td className="px-2.5 py-2 text-end text-sm font-bold tabular-nums text-content-primary">
                 <MoneyDisplay amount={preview.grandTotal} currency={cur} />
               </td>
             </tr>

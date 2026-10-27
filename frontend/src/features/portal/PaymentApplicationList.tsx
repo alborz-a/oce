@@ -130,7 +130,7 @@ function PaymentApplicationCard({
         type="button"
         onClick={() => onOpen(item.id)}
         className={clsx(
-          'w-full rounded-xl border border-border bg-surface-primary p-4 text-left',
+          'w-full rounded-xl border border-border bg-surface-primary p-4 text-start',
           'transition-colors hover:border-oe-blue focus:outline-none focus:ring-2 focus:ring-oe-blue/30',
         )}
       >

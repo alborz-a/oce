@@ -208,22 +208,22 @@ export function BrokerPerformanceWidget({
                 <td className="px-2 py-1.5 font-medium text-content-primary">
                   {r.broker_name || '—'}
                 </td>
-                <td className="px-2 py-1.5 text-right text-content-secondary">
+                <td className="px-2 py-1.5 text-end text-content-secondary">
                   {r.leads_assigned}
                 </td>
-                <td className="px-2 py-1.5 text-right text-content-secondary">
+                <td className="px-2 py-1.5 text-end text-content-secondary">
                   {r.reservations_closed}
                 </td>
-                <td className="px-2 py-1.5 text-right text-content-secondary">
+                <td className="px-2 py-1.5 text-end text-content-secondary">
                   {r.sales_closed}
                 </td>
-                <td className="px-2 py-1.5 text-right text-content-secondary">
+                <td className="px-2 py-1.5 text-end text-content-secondary">
                   {fmtPercent(num(r.conversion_rate_pct))}
                 </td>
-                <td className="px-2 py-1.5 text-right">
+                <td className="px-2 py-1.5 text-end">
                   <CurrencyStack rows={r.gmv} />
                 </td>
-                <td className="px-2 py-1.5 text-right">
+                <td className="px-2 py-1.5 text-end">
                   <CurrencyStack rows={r.commission_earned} />
                 </td>
               </tr>
@@ -252,7 +252,7 @@ function SortHeader({
   return (
     <th
       scope="col"
-      className={`px-2 py-1.5 font-medium ${align === 'right' ? 'text-right' : 'text-left'}`}
+      className={`px-2 py-1.5 font-medium ${align === 'right' ? 'text-end' : 'text-start'}`}
     >
       <button
         type="button"

@@ -112,7 +112,7 @@ export function InventoryAgeing({ developmentId }: InventoryAgeingProps) {
                 onClick={() =>
                   setExpanded(isOpen ? null : bucket.label)
                 }
-                className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left hover:bg-surface-secondary/60"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2 text-start hover:bg-surface-secondary/60"
               >
                 <div className="flex items-center gap-2 text-xs">
                   <span
@@ -142,8 +142,8 @@ export function InventoryAgeing({ developmentId }: InventoryAgeingProps) {
                   <span
                     className={
                       isReservedBucket
-                        ? 'absolute inset-y-0 left-0 rounded-full bg-amber-500'
-                        : 'absolute inset-y-0 left-0 rounded-full bg-oe-blue'
+                        ? 'absolute inset-y-0 start-0 rounded-full bg-amber-500'
+                        : 'absolute inset-y-0 start-0 rounded-full bg-oe-blue'
                     }
                     style={{ width: `${pct}%` }}
                   />

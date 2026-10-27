@@ -245,9 +245,9 @@ function CreateCycleModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('review_authority.create_cycle', { defaultValue: 'Open Cycle' })}</span>
           </Button>
@@ -441,9 +441,9 @@ function EditCycleModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Pencil size={16} className="mr-1.5 shrink-0" />
+              <Pencil size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('common.save', { defaultValue: 'Save' })}</span>
           </Button>
@@ -637,9 +637,9 @@ function AddRemarkModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <MessageSquarePlus size={16} className="mr-1.5 shrink-0" />
+              <MessageSquarePlus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('review_authority.add_remark', { defaultValue: 'Add Remark' })}</span>
           </Button>
@@ -769,20 +769,20 @@ function RemarkRow({
               })}
             >
             <Badge variant="warning" size="sm">
-              <Gavel size={11} className="mr-1" />
+              <Gavel size={11} className="me-1" />
               {t('review_authority.no_norm_ref', { defaultValue: 'No norm cited' })}
             </Badge>
             </span>
           )}
           {remark.is_stale && (
             <Badge variant="error" size="sm">
-              <FileWarning size={11} className="mr-1" />
+              <FileWarning size={11} className="me-1" />
               {t('review_authority.stale', { defaultValue: 'Stale' })}
             </Badge>
           )}
           {remark.repeat_of_id && (
             <Badge variant="neutral" size="sm">
-              <Radar size={11} className="mr-1" />
+              <Radar size={11} className="me-1" />
               {t('review_authority.repeat', { defaultValue: 'Repeat' })}
             </Badge>
           )}
@@ -795,7 +795,7 @@ function RemarkRow({
       <p className="text-sm text-content-primary whitespace-pre-wrap">{remark.text}</p>
       {remark.norm_reference && (
         <p className="text-xs text-content-tertiary">
-          <ScrollText size={11} className="inline mr-1 -mt-0.5" />
+          <ScrollText size={11} className="inline me-1 -mt-0.5" />
           {remark.norm_reference}
         </p>
       )}
@@ -1111,7 +1111,7 @@ function CycleDetailPanel({ cycleId }: { cycleId: string }) {
               </Badge>
               {cycle.overdue && (
                 <Badge variant="error" size="sm">
-                  <AlertTriangle size={11} className="mr-1" />
+                  <AlertTriangle size={11} className="me-1" />
                   {t('review_authority.overdue', { defaultValue: 'Overdue' })}
                 </Badge>
               )}
@@ -1167,7 +1167,7 @@ function CycleDetailPanel({ cycleId }: { cycleId: string }) {
           </span>
           {cycle.days_remaining !== null && (
             <span className={cycle.overdue ? 'text-semantic-error font-medium' : ''}>
-              <Clock size={11} className="inline mr-1 -mt-0.5" />
+              <Clock size={11} className="inline me-1 -mt-0.5" />
               {cycle.days_remaining >= 0
                 ? t('review_authority.days_remaining', {
                     defaultValue: '{{count}} days remaining',
@@ -1223,7 +1223,7 @@ function CycleDetailPanel({ cycleId }: { cycleId: string }) {
                   ) : s === 'rejected' ? (
                     <XCircle size={13} />
                   ) : (
-                    <ChevronRight size={13} />
+                    <ChevronRight size={13} className="rtl:rotate-180"/>
                   )
                 }
               >
@@ -1436,7 +1436,7 @@ function CycleListRow({
       type="button"
       onClick={onSelect}
       className={clsx(
-        'w-full text-left rounded-lg border px-3 py-2.5 transition-colors',
+        'w-full text-start rounded-lg border px-3 py-2.5 transition-colors',
         selected
           ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue/20'
           : 'border-border-light bg-surface-primary hover:border-border-medium',

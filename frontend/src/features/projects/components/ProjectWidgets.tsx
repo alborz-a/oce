@@ -63,7 +63,7 @@ import type {
   ProjectRFIInboxPayload,
   ProjectVariationsPayload,
 } from '@/shared/api/dashboardRollup';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { fmtFixed, formatBytes } from '@/shared/lib/formatters';
 import { formatCurrency } from '@/shared/lib/money';
 
 /* ── Rollup provider ──────────────────────────────────────────────────── */
@@ -196,7 +196,7 @@ function WidgetShell({
             className="shrink-0 inline-flex items-center gap-1 rounded-md px-2 py-1 text-2xs font-medium text-oe-blue hover:bg-oe-blue/10 transition-colors"
           >
             {cta.label}
-            <ArrowRight size={12} />
+            <ArrowRight size={12} className="rtl:rotate-180"/>
           </button>
         )}
       </div>
@@ -309,7 +309,7 @@ export function RFIInboxWidget({ projectId }: { projectId: string }) {
               <button
                 type="button"
                 onClick={() => navigate(`/rfi/${rfi.id}`)}
-                className="w-full text-left px-2 py-2 rounded-md hover:bg-surface-secondary transition-colors flex items-center gap-2"
+                className="w-full text-start px-2 py-2 rounded-md hover:bg-surface-secondary transition-colors flex items-center gap-2"
               >
                 <span className="text-2xs font-mono text-content-tertiary shrink-0 w-12 truncate">
                   {rfi.number ?? rfi.id.slice(0, 6)}
@@ -828,12 +828,7 @@ interface FileItem {
   mime_type?: string;
 }
 
-function fmtBytes(bytes?: number): string {
-  if (!bytes) return '—';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-}
+const fmtBytes = (bytes?: number) => (bytes ? formatBytes(bytes) : '—');
 
 export function RecentFilesWidget({ projectId }: { projectId: string }) {
   const { t } = useTranslation();

@@ -223,7 +223,7 @@ export function PreferencesTab(): JSX.Element {
             {t('notifications.preferences.manage_integrations', {
               defaultValue: 'Manage integrations',
             })}
-            <ArrowRight size={12} />
+            <ArrowRight size={12} className="rtl:rotate-180"/>
           </Link>
         </div>
       </div>
@@ -232,7 +232,7 @@ export function PreferencesTab(): JSX.Element {
         <table className="min-w-full text-sm">
           <thead className="bg-surface-secondary">
             <tr>
-              <th className="text-left px-4 py-2 font-medium text-content-secondary">
+              <th className="text-start px-4 py-2 font-medium text-content-secondary">
                 {t('notifications.preferences.col_event', {
                   defaultValue: 'Event',
                 })}
@@ -240,7 +240,7 @@ export function PreferencesTab(): JSX.Element {
               {CHANNELS.map((ch) => (
                 <th
                   key={ch}
-                  className="text-left px-4 py-2 font-medium text-content-secondary"
+                  className="text-start px-4 py-2 font-medium text-content-secondary"
                 >
                   {t(`notifications.preferences.channel_${ch}`, {
                     defaultValue: PREFERENCES_CHANNEL_LABELS[ch] ?? ch,

@@ -215,7 +215,7 @@ const STAMP_BADGE_COLORS: Record<string, string> = {
 const inputCls =
   'h-8 rounded-lg border border-border bg-surface-primary px-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors';
 
-const selectCls = inputCls + ' pr-7 appearance-none cursor-pointer';
+const selectCls = inputCls + ' pe-7 appearance-none cursor-pointer';
 
 /* ── Assignee filter sentinels ────────────────────────────────────────── */
 // "" = no filter, "__unassigned__" = NULL assignee, otherwise user UUID.
@@ -926,7 +926,7 @@ function MarkupDetail({
                 : 'text-content-tertiary opacity-50 cursor-not-allowed',
             )}
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={14} className="rtl:rotate-180"/>
             {t('markups.previous', { defaultValue: 'Prev' })}
           </button>
           <span
@@ -954,7 +954,7 @@ function MarkupDetail({
             )}
           >
             {t('markups.next', { defaultValue: 'Next' })}
-            <ChevronRight size={14} />
+            <ChevronRight size={14} className="rtl:rotate-180"/>
           </button>
         </div>
       )}
@@ -1359,7 +1359,7 @@ function MarkupTableRow({
         {/* Date */}
         <td className="px-3 py-2.5 text-xs text-content-tertiary">{formattedDate}</td>
         {/* Actions */}
-        <td className="px-3 py-2.5 text-right">
+        <td className="px-3 py-2.5 text-end">
           <div
             className="flex items-center justify-end gap-0.5"
             onClick={(e) => e.stopPropagation()}
@@ -2030,7 +2030,7 @@ export function MarkupsPage() {
                 title={t('markups.compare_revisions', { defaultValue: 'Compare revisions' })}
               >
                 <GitCompare size={14} />
-                <span className="hidden lg:inline ml-1">
+                <span className="hidden lg:inline ms-1">
                   {t('markups.compare_revisions', { defaultValue: 'Compare' })}
                 </span>
               </Button>
@@ -2047,7 +2047,7 @@ export function MarkupsPage() {
                 title={t('markups.annotate_pdf', { defaultValue: 'Annotate on PDF' })}
               >
                 <PenTool size={14} />
-                <span className="hidden lg:inline ml-1">{t('markups.annotate_pdf', { defaultValue: 'Annotate' })}</span>
+                <span className="hidden lg:inline ms-1">{t('markups.annotate_pdf', { defaultValue: 'Annotate' })}</span>
               </Button>
             )}
 
@@ -2061,7 +2061,7 @@ export function MarkupsPage() {
               title={t('markups.add_markup', { defaultValue: 'Add Markup' })}
             >
               <Plus size={14} />
-              <span className="hidden lg:inline ml-1">{t('markups.add_markup', { defaultValue: 'Add' })}</span>
+              <span className="hidden lg:inline ms-1">{t('markups.add_markup', { defaultValue: 'Add' })}</span>
             </Button>
 
             {/* Export — icon only */}
@@ -2218,7 +2218,7 @@ export function MarkupsPage() {
             <div className="relative flex-1 min-w-[200px] max-w-xs">
               <Search
                 size={14}
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
               <input
                 value={searchQuery}
@@ -2226,7 +2226,7 @@ export function MarkupsPage() {
                 placeholder={t('markups.search', {
                   defaultValue: 'Search markups...',
                 })}
-                className={inputCls + ' w-full pl-8'}
+                className={inputCls + ' w-full ps-8'}
               />
             </div>
 
@@ -2242,7 +2242,7 @@ export function MarkupsPage() {
             </Button>
 
             {/* View toggle */}
-            <div className="flex items-center border border-border rounded-lg overflow-hidden ml-auto">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden ms-auto">
               <button
                 onClick={() => setViewMode('list')}
                 className={clsx(
@@ -2437,34 +2437,34 @@ export function MarkupsPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border-light bg-surface-secondary/50">
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
                           {t('markups.col_type', { defaultValue: 'Type' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                           {t('markups.col_label', { defaultValue: 'Label / Text' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[130px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[130px]">
                           {t('markups.col_document', { defaultValue: 'Document' })}
                         </th>
                         <th className="px-3 py-2 text-center text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[50px]">
                           {t('markups.col_page', { defaultValue: 'Pg' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[90px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[90px]">
                           {t('markups.col_status', { defaultValue: 'Status' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
                           {t('markups.col_priority', { defaultValue: 'Priority' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
                           {t('markups.col_assignee', { defaultValue: 'Assignee' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[100px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[100px]">
                           {t('markups.col_measurement', { defaultValue: 'Measure' })}
                         </th>
-                        <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[100px]">
+                        <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[100px]">
                           {t('markups.col_date', { defaultValue: 'Date' })}
                         </th>
-                        <th className="px-3 py-2 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
+                        <th className="px-3 py-2 text-end text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[80px]">
                           {t('common.actions', { defaultValue: 'Actions' })}
                         </th>
                       </tr>
@@ -2589,7 +2589,7 @@ export function MarkupsPage() {
                 );
               })}
               <button
-                className="text-xs text-oe-blue hover:underline ml-1"
+                className="text-xs text-oe-blue hover:underline ms-1"
                 onClick={() => setShowCustomStampForm(true)}
                 disabled={!projectId}
               >

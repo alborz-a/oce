@@ -622,14 +622,14 @@ export function GeneratedModulePage() {
           <div className="overflow-x-auto rounded-xl border border-border-light bg-surface-primary">
           <table className="w-full text-sm" data-testid="runtime-module-table">
             <thead>
-              <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+              <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
                 {columns.map((column) => {
                   const active = sort?.name === column.name;
                   // The author's label. Not translated: it is their data.
                   const head = (
                     <>
                       {column.label}
-                      {column.unit && <span className="ml-1 normal-case">({column.unit})</span>}
+                      {column.unit && <span className="ms-1 normal-case">({column.unit})</span>}
                     </>
                   );
                   return (
@@ -677,7 +677,7 @@ export function GeneratedModulePage() {
                     {t('runtime_module.status', { defaultValue: 'Status' })}
                   </th>
                 )}
-                <th scope="col" className="w-20 px-3 py-2 text-right font-medium">
+                <th scope="col" className="w-20 px-3 py-2 text-end font-medium">
                   {t('common.actions', { defaultValue: 'Actions' })}
                 </th>
               </tr>

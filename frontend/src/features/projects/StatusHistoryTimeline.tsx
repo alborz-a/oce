@@ -118,14 +118,14 @@ export function StatusHistoryTimeline({
                   )}
                   <ArrowRight
                     size={14}
-                    className="shrink-0 text-content-tertiary"
+                    className="shrink-0 text-content-tertiary rtl:rotate-180"
                     aria-label={t('projects.status_history.changed_to', {
                       defaultValue: 'changed to',
                     })}
                   />
                   <ProjectStatusBadge status={entry.to_status} dot={false} />
                 </div>
-                <div className="ml-auto flex flex-wrap items-center gap-x-2 text-xs text-content-tertiary">
+                <div className="ms-auto flex flex-wrap items-center gap-x-2 text-xs text-content-tertiary">
                   {actor && (
                     <span className="text-content-secondary">
                       {t('projects.status_history.by', {

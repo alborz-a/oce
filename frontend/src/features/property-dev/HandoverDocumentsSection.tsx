@@ -307,14 +307,14 @@ export function HandoverDocumentsSection({
                   </Badge>
                 ) : ready ? (
                   <Badge variant="success" dot>
-                    <CheckCircle2 size={11} className="mr-1 inline" />
+                    <CheckCircle2 size={11} className="me-1 inline" />
                     {t('propdev.handover_package.ready', {
                       defaultValue: 'Ready - all required documents delivered',
                     })}
                   </Badge>
                 ) : (
                   <Badge variant="warning" dot>
-                    <AlertTriangle size={11} className="mr-1 inline" />
+                    <AlertTriangle size={11} className="me-1 inline" />
                     {t('propdev.missing_docs', {
                       defaultValue: '{{count}} required document(s) missing',
                       count: missingCount,

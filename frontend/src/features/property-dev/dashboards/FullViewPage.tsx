@@ -159,7 +159,7 @@ export function FullViewPage() {
             to="/property-dev/dashboards"
             className="flex items-center gap-1 text-2xs text-content-tertiary hover:text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue/40 rounded"
           >
-            <ArrowLeft size={12} />
+            <ArrowLeft size={12} className="rtl:rotate-180"/>
             {t('propdev.dashboards.full.back_to_hub', {
               defaultValue: 'Back to hub',
             })}

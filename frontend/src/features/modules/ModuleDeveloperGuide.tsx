@@ -129,7 +129,7 @@ export function ModuleDeveloperGuide() {
             to="/modules"
             className="inline-flex items-center gap-1 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
           >
-            <ArrowLeft size={12} />
+            <ArrowLeft size={12} className="rtl:rotate-180"/>
             {t('modules.back_to_modules', { defaultValue: 'Back to Modules & Marketplace' })}
           </Link>
         }
@@ -150,12 +150,12 @@ export function ModuleDeveloperGuide() {
           <aside className="hidden shrink-0 xl:block xl:w-64">
             <nav
               aria-label={onThisPageLabel}
-              className="sticky top-20 max-h-[calc(100vh_-_7rem)] overflow-y-auto overscroll-contain pr-2"
+              className="sticky top-20 max-h-[calc(100vh_-_7rem)] overflow-y-auto overscroll-contain pe-2"
             >
               <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
                 {onThisPageLabel}
               </p>
-              <ul className="space-y-0.5 border-l border-border-light">
+              <ul className="space-y-0.5 border-s border-border-light">
                 {GUIDE_SECTIONS.map((section) => {
                   const active = activeId === section.id;
                   return (
@@ -165,7 +165,7 @@ export function ModuleDeveloperGuide() {
                         onClick={(event) => handleTocClick(event, section.id)}
                         aria-current={active ? 'location' : undefined}
                         className={clsx(
-                          '-ml-px block border-l-2 py-1 pl-3 text-sm leading-snug transition-colors',
+                          '-ms-px block border-s-2 py-1 ps-3 text-sm leading-snug transition-colors',
                           active
                             ? 'border-oe-blue font-medium text-oe-blue'
                             : 'border-transparent text-content-tertiary hover:border-border hover:text-content-primary',

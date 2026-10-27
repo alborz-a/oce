@@ -288,7 +288,7 @@ export function CascadeSection({
                     <button
                       type="button"
                       onClick={() => removeBaseToken(token)}
-                      className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
+                      className="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
                       aria-label={t('common.delete', { defaultValue: 'Delete' })}
                     >
                       <Trash2 size={13} />
@@ -371,7 +371,7 @@ export function CascadeSection({
                     <button
                       type="button"
                       onClick={() => removeComposite(name)}
-                      className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
+                      className="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-semantic-error/10 hover:text-semantic-error"
                       aria-label={t('common.delete', { defaultValue: 'Delete' })}
                     >
                       <Trash2 size={13} />

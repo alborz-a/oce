@@ -275,7 +275,7 @@ export function PlanRoomPage({ documentId: documentIdProp, initialPage }: PlanRo
               'A drawing sheet collects marks from several trades and several weeks, and each kind of mark is made somewhere else in the platform. Nobody wants to open four screens to find out what is on one sheet. This room puts all of them back on the sheet at once, as layers you can switch off one at a time.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('plan_room.flow_step1', {
               defaultValue:

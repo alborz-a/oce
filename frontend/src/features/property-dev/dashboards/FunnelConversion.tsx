@@ -180,7 +180,7 @@ export function FunnelConversion({ developmentId }: FunnelConversionProps) {
                 aria-valuemax={100}
               >
                 <span
-                  className="absolute inset-y-0 left-0 rounded-md"
+                  className="absolute inset-y-0 start-0 rounded-md"
                   style={{
                     width: `${pct}%`,
                     backgroundColor: color,
@@ -191,7 +191,7 @@ export function FunnelConversion({ developmentId }: FunnelConversionProps) {
                   {stage.count}
                 </span>
               </div>
-              <div className="w-16 shrink-0 text-right text-2xs text-content-tertiary">
+              <div className="w-16 shrink-0 text-end text-2xs text-content-tertiary">
                 {idx === 0
                   ? '—'
                   : t('propdev.dashboards.funnel.drop_pct', {

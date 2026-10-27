@@ -303,7 +303,7 @@ function HowReconciliationWork() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="rtl:rotate-180"/>
               </li>
             )}
           </Fragment>

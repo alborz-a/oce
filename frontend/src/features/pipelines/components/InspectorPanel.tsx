@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
- * `<InspectorPanel>` — right-side contextual editor (320 px, collapsible).
+ * `<InspectorPanel>` — end-side contextual editor (320 px, collapsible).
  *
  * Two context modes shown via a labelled status pill (03_ux_visual §2.4):
  *   1. **Node** (a single node selected) — a friendly form generated from the

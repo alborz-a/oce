@@ -1790,14 +1790,14 @@ function CustomReportBuilder({
           )}
           {t('reports.generate_report', { defaultValue: 'Generate Report' })}
           {sections.size > 0 && (
-            <span className="ml-1 text-xs opacity-70">({sections.size})</span>
+            <span className="ms-1 text-xs opacity-70">({sections.size})</span>
           )}
         </button>
       </div>
 
       {/* Presets */}
       <div className="flex flex-wrap gap-2 mb-4">
-        <span className="text-xs font-medium text-content-tertiary mr-1 self-center">
+        <span className="text-xs font-medium text-content-tertiary me-1 self-center">
           {t('reports.presets', { defaultValue: 'Quick presets:' })}
         </span>
         {REPORT_PRESETS.map((preset) => (
@@ -1834,7 +1834,7 @@ function CustomReportBuilder({
               role="checkbox"
               aria-checked={isActive}
               title={unavailable ? unavailableHint : undefined}
-              className={`flex items-start gap-3 rounded-lg border p-3 text-left transition-colors ${
+              className={`flex items-start gap-3 rounded-lg border p-3 text-start transition-colors ${
                 isActive
                   ? 'border-oe-blue/40 bg-oe-blue-subtle/20'
                   : 'border-border-light bg-surface-secondary/30 hover:bg-surface-secondary'

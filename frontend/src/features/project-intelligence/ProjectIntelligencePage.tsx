@@ -372,7 +372,7 @@ export function ProjectIntelligencePage() {
           </div>
 
           {enableError && (
-            <div className="rounded-lg border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-950/20 px-3 py-2 text-xs text-red-700 dark:text-red-300 text-left">
+            <div className="rounded-lg border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-950/20 px-3 py-2 text-xs text-red-700 dark:text-red-300 text-start">
               {enableError}
             </div>
           )}
@@ -685,7 +685,7 @@ export function ProjectIntelligencePage() {
                 {t('project_intelligence.critical_gaps', {
                   defaultValue: 'Critical Gaps',
                 })}
-                <span className="text-xs text-content-tertiary font-normal ml-auto">
+                <span className="text-xs text-content-tertiary font-normal ms-auto">
                   {score.critical_gaps.length}
                 </span>
               </h3>
@@ -763,7 +763,7 @@ export function ProjectIntelligencePage() {
                 {forecastAlertCount}
               </span>
             )}
-            <span className="ml-auto text-2xs text-content-tertiary">
+            <span className="ms-auto text-2xs text-content-tertiary">
               {t('project_intelligence.forecast.section_hint', {
                 defaultValue: 'EAC / ETC forecast with threshold alerts',
               })}
@@ -786,7 +786,7 @@ export function ProjectIntelligencePage() {
                 defaultValue: 'Predictive Risk Analytics',
               })}
             </h2>
-            <span className="ml-auto text-2xs text-content-tertiary">
+            <span className="ms-auto text-2xs text-content-tertiary">
               {t('project_intelligence.insights.section_hint', {
                 defaultValue: 'CPI/SPI/EAC, finish-variance and cost-overrun risk',
               })}

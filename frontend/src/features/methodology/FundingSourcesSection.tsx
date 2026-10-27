@@ -98,10 +98,10 @@ export function FundingSourcesSection({ projectId, readOnly }: Props) {
             <table className="min-w-full text-sm">
               <thead className="bg-surface-secondary/40 text-xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium">
+                  <th className="px-3 py-2 text-start font-medium">
                     {t('methodology.funding.col_code', { defaultValue: 'Code' })}
                   </th>
-                  <th className="px-3 py-2 text-left font-medium">
+                  <th className="px-3 py-2 text-start font-medium">
                     {t('methodology.funding.col_name', { defaultValue: 'Name' })}
                   </th>
                   {!readOnly && <th className="w-24 px-3 py-2" />}

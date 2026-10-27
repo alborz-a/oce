@@ -118,7 +118,7 @@ import {
   type Vec3,
   type VolumeEstimate,
 } from './pointcloudTools';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { fmtFixed, formatBytes } from '@/shared/lib/formatters';
 
 export type ColorMode = 'rgb' | 'height' | 'intensity' | 'single';
 
@@ -355,10 +355,6 @@ function formatPoints(n: number): string {
   return String(n);
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 0)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-}
 
 interface ToolbarButtonProps {
   active?: boolean;
@@ -406,12 +402,12 @@ function ToolbarButton({
       >
         <Icon size={17} />
         {badge != null && badge > 0 && (
-          <span className="absolute -right-1 -top-1 inline-flex min-w-[1rem] items-center justify-center rounded-full bg-oe-blue px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-surface-primary">
+          <span className="absolute -end-1 -top-1 inline-flex min-w-[1rem] items-center justify-center rounded-full bg-oe-blue px-1 text-[10px] font-semibold leading-none text-white ring-2 ring-surface-primary">
             {badge}
           </span>
         )}
       </button>
-      <span className="pointer-events-none absolute left-1/2 top-full z-40 mt-2 hidden -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-md bg-content-primary px-2 py-1 text-2xs font-medium text-surface-primary shadow-lg group-hover:flex">
+      <span className="pointer-events-none absolute start-1/2 top-full z-40 mt-2 hidden -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-md bg-content-primary px-2 py-1 text-2xs font-medium text-surface-primary shadow-lg group-hover:flex">
         {label}
         {shortcut && (
           <kbd className="rounded border border-surface-primary/30 px-1 font-sans text-[10px] font-semibold uppercase leading-tight">
@@ -2153,7 +2149,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
           </select>
         </div>
 
-        <div className="ml-auto flex flex-col items-end justify-end gap-0.5 self-end pb-1 text-xs tabular-nums text-content-tertiary">
+        <div className="ms-auto flex flex-col items-end justify-end gap-0.5 self-end pb-1 text-xs tabular-nums text-content-tertiary">
           {phase === 'ready' && cloud ? (
             <>
               <span>
@@ -2221,7 +2217,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               className="mb-1 block text-2xs font-semibold uppercase tracking-wider text-content-tertiary"
             >
               {t('pointcloud.slice_min_height', { defaultValue: 'Min height' })}
-              <span className="ml-1 font-normal normal-case text-content-quaternary">
+              <span className="ms-1 font-normal normal-case text-content-quaternary">
                 {formatMetersLabel(sliceMin)}
               </span>
             </label>
@@ -2243,7 +2239,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               className="mb-1 block text-2xs font-semibold uppercase tracking-wider text-content-tertiary"
             >
               {t('pointcloud.slice_max_height', { defaultValue: 'Max height' })}
-              <span className="ml-1 font-normal normal-case text-content-quaternary">
+              <span className="ms-1 font-normal normal-case text-content-quaternary">
                 {formatMetersLabel(sliceMax)}
               </span>
             </label>
@@ -2315,7 +2311,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
             </span>
           )}
           {pathMetrics && (
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ms-auto flex items-center gap-3">
               <button
                 type="button"
                 onClick={undoLastPathPoint}
@@ -2379,7 +2375,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
             <button
               type="button"
               onClick={clearAngle}
-              className="ml-auto inline-flex items-center gap-1 text-xs text-content-tertiary underline hover:text-danger"
+              className="ms-auto inline-flex items-center gap-1 text-xs text-content-tertiary underline hover:text-danger"
               data-testid="pointcloud-angle-clear"
             >
               <X size={12} />
@@ -2414,7 +2410,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               })}
             </span>
             {areaVertexCount > 0 && (
-              <div className="ml-auto flex items-center gap-3">
+              <div className="ms-auto flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -2532,7 +2528,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
                       cell: fmtFixed(volumeResult.cellSize, 2),
                     })}
                   </span>
-                  <div className="ml-auto flex items-center gap-3">
+                  <div className="ms-auto flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() =>
@@ -2596,7 +2592,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               <button
                 type="button"
                 onClick={clearInspect}
-                className="ml-auto inline-flex items-center gap-1 text-xs text-content-tertiary underline hover:text-danger"
+                className="ms-auto inline-flex items-center gap-1 text-xs text-content-tertiary underline hover:text-danger"
                 data-testid="pointcloud-inspect-clear"
               >
                 <X size={12} />
@@ -2625,7 +2621,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               })}
             </span>
             {annotations.length > 0 && (
-              <div className="ml-auto flex items-center gap-3">
+              <div className="ms-auto flex items-center gap-3">
                 <button
                   type="button"
                   onClick={exportAnnotations}
@@ -2694,7 +2690,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               defaultValue: 'Adjust the box to isolate one room or zone; points outside are hidden.',
             })}
           </span>
-          <div className="ml-auto flex items-center gap-1.5">
+          <div className="ms-auto flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => handleClipScale(1 / 1.15)}
@@ -2749,7 +2745,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               })}
             </span>
             {/* Reuse the clip-box sizing so groups need no second control. */}
-            <div className="ml-auto flex items-center gap-1.5">
+            <div className="ms-auto flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => handleClipScale(1 / 1.15)}
@@ -2845,7 +2841,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
                     <span className="hidden shrink-0 text-2xs tabular-nums text-content-quaternary md:inline">
                       {formatVolumeM3(m.volume)} · {formatAreaM2(m.planArea)}
                     </span>
-                    <div className="ml-auto flex shrink-0 items-center gap-1">
+                    <div className="ms-auto flex shrink-0 items-center gap-1">
                       <button
                         type="button"
                         onClick={() => toggleIsolateGroup(g.id)}
@@ -2934,7 +2930,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
               onClick={() => setPanelOpen(true)}
               aria-label={t('pointcloud.panel_show', { defaultValue: 'Show panel' })}
               title={t('pointcloud.panel_show', { defaultValue: 'Show panel' })}
-              className="absolute right-3 top-3 z-30 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border-light bg-surface-primary/85 text-content-secondary shadow-lg backdrop-blur-md transition-colors hover:bg-surface-tertiary hover:text-content-primary"
+              className="absolute end-3 top-3 z-30 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border-light bg-surface-primary/85 text-content-secondary shadow-lg backdrop-blur-md transition-colors hover:bg-surface-tertiary hover:text-content-primary"
               data-testid="pointcloud-panel-reopen"
             >
               <PanelRight size={17} />
@@ -2960,7 +2956,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
         {/* ── Floating grouped tool menu, overlaid on the viewport ──────── */}
         {!webglFailed && phase === 'ready' && cloud && cloud.pointCount > 0 && (
           <div
-            className="absolute left-1/2 top-3 z-20 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-0.5 rounded-xl border border-border-light bg-surface-primary/85 p-1 shadow-lg ring-1 ring-black/5 backdrop-blur-md"
+            className="absolute start-1/2 top-3 z-20 flex max-w-[calc(100%-1.5rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-0.5 rounded-xl border border-border-light bg-surface-primary/85 p-1 shadow-lg ring-1 ring-black/5 backdrop-blur-md"
             data-testid="pointcloud-toolbar"
           >
             {/* Navigate */}
@@ -3175,7 +3171,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
         {/* ── Scale bar: a live ruler whose width/label the animation loop
              keeps sized to a round distance at the current zoom. ─────────── */}
         {!webglFailed && phase === 'ready' && cloud && cloud.pointCount > 0 && (
-          <div className="pointer-events-none absolute bottom-3 right-3 z-10 flex flex-col items-center gap-0.5">
+          <div className="pointer-events-none absolute bottom-3 end-3 z-10 flex flex-col items-center gap-0.5">
             <div
               ref={scaleBarLabelRef}
               className="rounded bg-surface-primary/80 px-1.5 py-0.5 text-2xs font-medium tabular-nums text-content-secondary shadow-sm backdrop-blur-sm"
@@ -3192,7 +3188,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
         {/* ── Elevation legend: only meaningful in the height-ramp mode ──── */}
         {!webglFailed && phase === 'ready' && cloud && cloud.pointCount > 0 && colorMode === 'height' && legendRange && (
           <div
-            className="absolute bottom-3 left-3 z-10 flex items-start gap-2 rounded-lg border border-border-light bg-surface-primary/90 p-2 shadow-md backdrop-blur-sm"
+            className="absolute bottom-3 start-3 z-10 flex items-start gap-2 rounded-lg border border-border-light bg-surface-primary/90 p-2 shadow-md backdrop-blur-sm"
             data-testid="pointcloud-elevation-legend"
           >
             <div className="flex flex-col items-center gap-1">
@@ -3258,7 +3254,7 @@ export function PointCloudViewer({ scanId, scanLabel }: PointCloudViewerProps) {
         {pathMetrics && pathMetrics.segmentCount >= 1 && (
           <div
             ref={measureLabelRef}
-            className="pointer-events-none absolute left-0 top-0 z-10 -translate-x-1/2 -translate-y-[130%] whitespace-nowrap rounded-md bg-black/80 px-2 py-1 text-2xs font-medium text-white shadow-lg"
+            className="pointer-events-none absolute start-0 top-0 z-10 -translate-x-1/2 -translate-y-[130%] whitespace-nowrap rounded-md bg-black/80 px-2 py-1 text-2xs font-medium text-white shadow-lg"
             data-testid="pointcloud-measure-label"
           >
             <div>{formatLengthMm(pathMetrics.totalLength)}</div>

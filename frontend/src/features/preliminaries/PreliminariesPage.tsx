@@ -57,7 +57,7 @@ const INPUT_CLS =
   'text-content-primary placeholder:text-content-tertiary focus:border-oe-blue focus:outline-none ' +
   'focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-900/40';
 
-const NUM_CLS = INPUT_CLS + ' text-right tabular-nums';
+const NUM_CLS = INPUT_CLS + ' text-end tabular-nums';
 
 /** One editable row in a table (lifted so the totals recompute as you type). */
 interface EditableRow {
@@ -402,7 +402,7 @@ function SummaryStrip({
                 count: itemCount,
               })}
               {serverGrandTotal !== undefined && (
-                <span className="ml-1">
+                <span className="ms-1">
                   {t('preliminaries.server_confirmed', {
                     defaultValue: '(saved: {{value}})',
                     value: formatCurrency(serverGrandTotal),
@@ -435,29 +435,29 @@ function CategoryBreakdown({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[480px] text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-              <th className="py-2 pr-3 font-medium">{t('preliminaries.col_category', { defaultValue: 'Category' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.time_related_total', { defaultValue: 'Time-related' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.fixed_total', { defaultValue: 'Fixed' })}</th>
-              <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.col_total', { defaultValue: 'Total' })}</th>
+            <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+              <th className="py-2 pe-3 font-medium">{t('preliminaries.col_category', { defaultValue: 'Category' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.time_related_total', { defaultValue: 'Time-related' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.fixed_total', { defaultValue: 'Fixed' })}</th>
+              <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.col_total', { defaultValue: 'Total' })}</th>
             </tr>
           </thead>
           <tbody>
             {rollup.categories.map((cat) => (
               <tr key={cat.category} className="border-b border-border-light/60">
-                <td className="py-2 pr-3 font-medium text-content-primary">{categoryLabel(cat.category)}</td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{formatCurrency(cat.timeRelatedTotal)}</td>
-                <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">{formatCurrency(cat.fixedTotal)}</td>
-                <td className="py-2 pr-3 text-right font-semibold tabular-nums text-content-primary">{formatCurrency(cat.total)}</td>
+                <td className="py-2 pe-3 font-medium text-content-primary">{categoryLabel(cat.category)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{formatCurrency(cat.timeRelatedTotal)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">{formatCurrency(cat.fixedTotal)}</td>
+                <td className="py-2 pe-3 text-end font-semibold tabular-nums text-content-primary">{formatCurrency(cat.total)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-border-light font-semibold text-content-primary">
-              <td className="py-2 pr-3">{t('preliminaries.grand_total', { defaultValue: 'Preliminaries total' })}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(rollup.timeRelatedTotal)}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(rollup.fixedTotal)}</td>
-              <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(rollup.grandTotal)}</td>
+              <td className="py-2 pe-3">{t('preliminaries.grand_total', { defaultValue: 'Preliminaries total' })}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(rollup.timeRelatedTotal)}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(rollup.fixedTotal)}</td>
+              <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(rollup.grandTotal)}</td>
             </tr>
           </tfoot>
         </table>
@@ -567,25 +567,25 @@ function ItemsTable({
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                <th className="py-2 pr-3 font-medium">{t('preliminaries.col_item', { defaultValue: 'Item' })}</th>
-                <th className="py-2 pr-3 font-medium">{t('preliminaries.col_category', { defaultValue: 'Category' })}</th>
+              <tr className="border-b border-border-light text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                <th className="py-2 pe-3 font-medium">{t('preliminaries.col_item', { defaultValue: 'Item' })}</th>
+                <th className="py-2 pe-3 font-medium">{t('preliminaries.col_category', { defaultValue: 'Category' })}</th>
                 {isTime ? (
                   <>
-                    <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.col_rate', { defaultValue: 'Rate / period' })}</th>
-                    <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.col_periods', { defaultValue: 'Periods' })}</th>
+                    <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.col_rate', { defaultValue: 'Rate / period' })}</th>
+                    <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.col_periods', { defaultValue: 'Periods' })}</th>
                   </>
                 ) : (
-                  <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.col_amount', { defaultValue: 'Amount' })}</th>
+                  <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.col_amount', { defaultValue: 'Amount' })}</th>
                 )}
-                <th className="py-2 pr-3 text-right font-medium">{t('preliminaries.col_line_total', { defaultValue: 'Line total' })}</th>
-                <th className="py-2 pl-1" />
+                <th className="py-2 pe-3 text-end font-medium">{t('preliminaries.col_line_total', { defaultValue: 'Line total' })}</th>
+                <th className="py-2 ps-1" />
               </tr>
             </thead>
             <tbody>
               {rows.map((row) => (
                 <tr key={row.id} className="border-b border-border-light/60">
-                  <td className="py-1.5 pr-3">
+                  <td className="py-1.5 pe-3">
                     <input
                       className={INPUT_CLS}
                       value={row.label}
@@ -595,7 +595,7 @@ function ItemsTable({
                       onBlur={() => onSave(row.id)}
                     />
                   </td>
-                  <td className="py-1.5 pr-3">
+                  <td className="py-1.5 pe-3">
                     <select
                       className={INPUT_CLS}
                       value={row.category}
@@ -615,7 +615,7 @@ function ItemsTable({
                   </td>
                   {isTime ? (
                     <>
-                      <td className="py-1.5 pr-3">
+                      <td className="py-1.5 pe-3">
                         <input
                           className={NUM_CLS}
                           inputMode="decimal"
@@ -625,7 +625,7 @@ function ItemsTable({
                           onBlur={() => onSave(row.id)}
                         />
                       </td>
-                      <td className="py-1.5 pr-3">
+                      <td className="py-1.5 pe-3">
                         <input
                           className={NUM_CLS}
                           inputMode="decimal"
@@ -637,7 +637,7 @@ function ItemsTable({
                       </td>
                     </>
                   ) : (
-                    <td className="py-1.5 pr-3">
+                    <td className="py-1.5 pe-3">
                       <input
                         className={NUM_CLS}
                         inputMode="decimal"
@@ -648,10 +648,10 @@ function ItemsTable({
                       />
                     </td>
                   )}
-                  <td className="py-1.5 pr-3 text-right font-semibold tabular-nums text-content-primary">
+                  <td className="py-1.5 pe-3 text-end font-semibold tabular-nums text-content-primary">
                     {formatCurrency(previewLineTotal(row as PrelimLineLike))}
                   </td>
-                  <td className="py-1.5 pl-1 text-right">
+                  <td className="py-1.5 ps-1 text-end">
                     <button
                       type="button"
                       onClick={() => onDelete(row.id)}
@@ -666,10 +666,10 @@ function ItemsTable({
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-border-light font-semibold text-content-primary">
-                <td className="py-2 pr-3" colSpan={isTime ? 4 : 3}>
+                <td className="py-2 pe-3" colSpan={isTime ? 4 : 3}>
                   {t('preliminaries.subtotal', { defaultValue: 'Subtotal' })}
                 </td>
-                <td className="py-2 pr-3 text-right tabular-nums">{formatCurrency(subtotal)}</td>
+                <td className="py-2 pe-3 text-end tabular-nums">{formatCurrency(subtotal)}</td>
                 <td />
               </tr>
             </tfoot>
@@ -731,7 +731,7 @@ function AddItemForm({
         ))}
       </select>
       <Button variant="secondary" size="sm" disabled={disabled || !label.trim()} onClick={submit}>
-        <Plus size={14} className="mr-1 shrink-0" />
+        <Plus size={14} className="me-1 shrink-0" />
         {t('preliminaries.add', { defaultValue: 'Add' })}
       </Button>
     </div>

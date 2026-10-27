@@ -114,16 +114,16 @@ export function PaymentApplicationDetailModal({
                   <table className="w-full text-sm">
                     <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
                       <tr>
-                        <th className="px-3 py-2 text-left">
+                        <th className="px-3 py-2 text-start">
                           {t('payportal.work_package', { defaultValue: 'Work package' })}
                         </th>
-                        <th className="px-3 py-2 text-right">
+                        <th className="px-3 py-2 text-end">
                           {t('payportal.claimed', { defaultValue: 'Claimed' })}
                         </th>
-                        <th className="px-3 py-2 text-right">
+                        <th className="px-3 py-2 text-end">
                           {t('payportal.certified', { defaultValue: 'Certified' })}
                         </th>
-                        <th className="px-3 py-2 text-right">
+                        <th className="px-3 py-2 text-end">
                           {t('payportal.approved', { defaultValue: 'Approved' })}
                         </th>
                       </tr>
@@ -132,13 +132,13 @@ export function PaymentApplicationDetailModal({
                       {pa.lines.map((l) => (
                         <tr key={l.work_package_id} className="border-t border-border-light">
                           <td className="px-3 py-2 text-content-primary">{l.work_package_name}</td>
-                          <td className="px-3 py-2 text-right text-content-secondary">
+                          <td className="px-3 py-2 text-end text-content-secondary">
                             {l.claimed_amount}
                           </td>
-                          <td className="px-3 py-2 text-right text-content-secondary">
+                          <td className="px-3 py-2 text-end text-content-secondary">
                             {l.certified_amount}
                           </td>
-                          <td className="px-3 py-2 text-right text-content-secondary">
+                          <td className="px-3 py-2 text-end text-content-secondary">
                             {l.approved_amount}
                           </td>
                         </tr>

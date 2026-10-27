@@ -871,7 +871,7 @@ export function ProjectsPage() {
           <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
             {/* Search */}
             <div className="relative flex-1">
-              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
                 <Search size={16} />
               </div>
               <input
@@ -1392,7 +1392,7 @@ export function ProjectCard({
             <Link
               to={`/projects/${project.id}/geo`}
               onClick={(e) => e.stopPropagation()}
-              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 rounded-full border border-white/40 bg-white/85 px-2.5 py-1 text-2xs font-semibold text-oe-blue shadow-sm backdrop-blur-md transition-all hover:bg-white hover:shadow-md hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-sky-300 dark:hover:bg-slate-900/90"
+              className="absolute top-2 end-2 z-10 inline-flex items-center gap-1 rounded-full border border-white/40 bg-white/85 px-2.5 py-1 text-2xs font-semibold text-oe-blue shadow-sm backdrop-blur-md transition-all hover:bg-white hover:shadow-md hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-sky-300 dark:hover:bg-slate-900/90"
               title={t('projects.card.fly_to_on_map', {
                 defaultValue: 'Fly camera to {{name}} on the globe',
                 name: project.name,
@@ -1445,7 +1445,7 @@ export function ProjectCard({
         {menuOpen && (
           <div
             ref={menuRef}
-            className="absolute top-14 right-4 z-20 w-44 rounded-lg border border-border bg-surface-elevated shadow-lg overflow-hidden"
+            className="absolute top-14 end-4 z-20 w-44 rounded-lg border border-border bg-surface-elevated shadow-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {!isArchived && (
@@ -1612,7 +1612,7 @@ export function ProjectCard({
             </Link>
           )}
           {fileTypes && fileTypes.length > 0 && (
-            <div className="ml-auto">
+            <div className="ms-auto">
               <FileTypeChips fileTypes={fileTypes} size="md" />
             </div>
           )}
@@ -1681,7 +1681,7 @@ export function ProjectCard({
           </div>
           <ArrowRight
             size={14}
-            className="shrink-0 text-content-tertiary transition-transform duration-normal ease-oe group-hover:translate-x-0.5 group-hover:text-oe-blue"
+            className="shrink-0 text-content-tertiary transition-transform duration-normal ease-oe group-hover:translate-x-0.5 group-hover:text-oe-blue rtl:rotate-180"
           />
         </div>
       </div>
@@ -1711,7 +1711,7 @@ function WidgetToggles() {
     }`;
 
   return (
-    <div className="flex items-center gap-1 shrink-0 border-l border-border-light pl-2 ml-1">
+    <div className="flex items-center gap-1 shrink-0 border-s border-border-light ps-2 ms-1">
       <button
         type="button"
         onClick={toggleMap}

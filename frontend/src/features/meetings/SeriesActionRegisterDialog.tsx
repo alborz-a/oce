@@ -104,19 +104,19 @@ export function SeriesActionRegisterDialog({ seriesId, onClose }: SeriesActionRe
               <table className="w-full text-sm min-w-[560px]">
                 <thead>
                   <tr className="bg-surface-secondary/40 text-2xs uppercase tracking-wide text-content-tertiary">
-                    <th className="text-left font-medium px-3 py-2">
+                    <th className="text-start font-medium px-3 py-2">
                       {t('meetings.action_description', { defaultValue: 'Action item' })}
                     </th>
-                    <th className="text-left font-medium px-3 py-2 w-24">
+                    <th className="text-start font-medium px-3 py-2 w-24">
                       {t('meetings.col_raised', { defaultValue: 'Raised' })}
                     </th>
-                    <th className="text-left font-medium px-3 py-2 w-28">
+                    <th className="text-start font-medium px-3 py-2 w-28">
                       {t('meetings.action_owner', { defaultValue: 'Owner' })}
                     </th>
-                    <th className="text-left font-medium px-3 py-2 w-28">
+                    <th className="text-start font-medium px-3 py-2 w-28">
                       {t('meetings.action_due', { defaultValue: 'Due' })}
                     </th>
-                    <th className="text-left font-medium px-3 py-2 w-28">
+                    <th className="text-start font-medium px-3 py-2 w-28">
                       {t('meetings.action_status', { defaultValue: 'Status' })}
                     </th>
                   </tr>

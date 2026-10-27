@@ -32,7 +32,7 @@ export function DomainBar({ label, score, color, onClick, isSelected }: DomainBa
     <button
       onClick={onClick}
       className={clsx(
-        'w-full flex items-center gap-2 py-1 px-1 rounded-md transition-colors text-left',
+        'w-full flex items-center gap-2 py-1 px-1 rounded-md transition-colors text-start',
         isSelected
           ? 'bg-surface-tertiary'
           : 'hover:bg-surface-tertiary/50'
@@ -51,7 +51,7 @@ export function DomainBar({ label, score, color, onClick, isSelected }: DomainBa
           }}
         />
       </div>
-      <span className="text-xs tabular-nums text-content-tertiary w-8 text-right shrink-0">
+      <span className="text-xs tabular-nums text-content-tertiary w-8 text-end shrink-0">
         {Math.round(score)}%
       </span>
     </button>

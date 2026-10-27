@@ -44,7 +44,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(listPhoneLogs).mockResolvedValue([
     {
-      id: 'pl-1',
+      id: 'ps-1',
       project_id: 'p-1',
       direction: 'inbound',
       channel: 'phone',
@@ -63,7 +63,7 @@ beforeEach(() => {
       updated_at: '2026-06-25T09:05:00Z',
     },
   ]);
-  vi.mocked(createPhoneLog).mockResolvedValue({ id: 'pl-2' } as never);
+  vi.mocked(createPhoneLog).mockResolvedValue({ id: 'ps-2' } as never);
 });
 
 describe('PhoneLogPage', () => {

@@ -136,7 +136,7 @@ export function ValidationRulesSettingsPage() {
                 to="/validation"
                 className="inline-flex items-center gap-1 font-medium text-oe-blue hover:underline"
               >
-                <ArrowRight size={12} aria-hidden="true" />
+                <ArrowRight size={12} aria-hidden="true" className="rtl:rotate-180"/>
                 {t('validation_rules.cta_open_runs', {
                   defaultValue: 'Open validation runs',
                 })}
@@ -235,13 +235,13 @@ function RuleSetCard({
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={`ruleset-${ruleSet.name}-body`}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-start hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
       >
         <div className="flex items-center gap-3 min-w-0">
           {open ? (
             <ChevronDown size={14} className="text-content-tertiary flex-shrink-0" />
           ) : (
-            <ChevronRight size={14} className="text-content-tertiary flex-shrink-0" />
+            <ChevronRight size={14} className="text-content-tertiary flex-shrink-0 rtl:rotate-180" />
           )}
           <div className="min-w-0">
             <p className="font-semibold text-content-primary truncate">
@@ -288,22 +288,22 @@ function RuleSetCard({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-xs uppercase text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.rule_id', { defaultValue: 'Rule ID' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.name', { defaultValue: 'Name' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.standard', { defaultValue: 'Standard' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.severity', { defaultValue: 'Severity' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.category', { defaultValue: 'Category' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.validation_rules.state', { defaultValue: 'State' })}
                   </th>
                 </tr>

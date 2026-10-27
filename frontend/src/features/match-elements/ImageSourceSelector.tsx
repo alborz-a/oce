@@ -20,7 +20,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Image as ImageIcon, Sparkles, UploadCloud, X } from 'lucide-react';
 import clsx from 'clsx';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { formatBytes } from '@/shared/lib/formatters';
 
 /** Accepted image MIME types — kept in sync with the backend's
  *  ``_detect_image_mime`` magic-byte gate (PNG / JPG / WebP). */
@@ -30,11 +30,6 @@ const ACCEPTED_MIME = ['image/jpeg', 'image/png', 'image/webp'] as const;
  *  413. */
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-}
 
 interface Props {
   /** The currently-selected image file, or null when none is picked. */
@@ -158,7 +153,7 @@ export default function ImageSourceSelector({ file, onPick }: Props) {
               })}
               className="w-32 h-32 object-cover rounded-xl border border-border-light shadow-sm shrink-0"
             />
-            <div className="min-w-0 text-left flex-1">
+            <div className="min-w-0 text-start flex-1">
               <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 font-medium text-sm">
                 <Check className="w-4 h-4" strokeWidth={3} />
                 <span className="truncate">{file.name}</span>

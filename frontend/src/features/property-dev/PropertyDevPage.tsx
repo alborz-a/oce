@@ -807,7 +807,7 @@ export function PropertyDevPage() {
             <div className="relative flex-1 min-w-[200px] max-w-md">
               <Search
                 size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
               <input
                 type="text"
@@ -815,7 +815,7 @@ export function PropertyDevPage() {
                 aria-label={t('common.search', { defaultValue: 'Search' })}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className={clsx(inputCls, 'pl-8')}
+                className={clsx(inputCls, 'ps-8')}
               />
             </div>
           )}
@@ -1229,23 +1229,23 @@ function BuyersTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide sticky top-0">
               <tr>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.buyer', { defaultValue: 'Buyer' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.email', { defaultValue: 'Email' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.plot', { defaultValue: 'Plot' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.stage', { defaultValue: 'Stage' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">
                   {t('propdev.contract_value', { defaultValue: 'Contract' })}
                 </th>
                 <th
-                  className="px-4 py-2.5 text-left"
+                  className="px-4 py-2.5 text-start"
                   aria-sort="ascending"
                 >
                   {t('propdev.freeze_deadline', { defaultValue: 'Freeze' })}
@@ -1325,7 +1325,7 @@ function BuyersTab({
                           })}
                         </Badge>
                       </td>
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-2 text-end">
                         <MoneyDisplay
                           amount={toNumber(b.contract_value)}
                           currency={b.currency || undefined}
@@ -1536,7 +1536,7 @@ function LeadsTab({
             {t('common.clear', { defaultValue: 'Clear' })}
           </button>
         )}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <Filter size={12} className="text-content-tertiary" />
           <select
             value={sourceFilter ?? ''}
@@ -1566,22 +1566,22 @@ function LeadsTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide sticky top-0">
               <tr>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.lead_name', { defaultValue: 'Lead' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.email', { defaultValue: 'Email' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.lead_source', { defaultValue: 'Source' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.lead_score', { defaultValue: 'Score' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.status', { defaultValue: 'Status' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">
                   {t('propdev.actions', { defaultValue: 'Actions' })}
                 </th>
               </tr>
@@ -1656,7 +1656,7 @@ function LeadsTab({
                           {leadStatusLabel(l.status, t)}
                         </Badge>
                       </td>
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-2 text-end">
                         {convertible && (
                           <button
                             type="button"
@@ -2114,12 +2114,12 @@ function LinkedContactCard({
             </span>
             <Link
               to={`/contacts?contactId=${encodeURIComponent(contactId)}`}
-              className="ml-auto inline-flex items-center gap-1 text-xs text-oe-blue hover:underline"
+              className="ms-auto inline-flex items-center gap-1 text-xs text-oe-blue hover:underline"
             >
               {t('propdev.open_in_contacts', {
                 defaultValue: 'Open in Contacts',
               })}
-              <ArrowRight size={11} aria-hidden="true" />
+              <ArrowRight size={11} aria-hidden="true" className="rtl:rotate-180"/>
             </Link>
           </div>
           <p className="text-sm font-medium truncate">{displayName}</p>
@@ -2571,7 +2571,7 @@ function ReservationsTab({
         <span className="text-xs text-content-tertiary">
           {t('propdev.n_rows', { defaultValue: '{{n}} rows', n: rows.length })}
         </span>
-        <div className="ml-auto">
+        <div className="ms-auto">
           <Button
             variant="primary"
             icon={<Plus size={14} />}
@@ -2603,13 +2603,13 @@ function ReservationsTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-secondary">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.reservation_number', { defaultValue: 'No.' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.buyer', { defaultValue: 'Buyer' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('propdev.deposit', { defaultValue: 'Deposit' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.expires_at', { defaultValue: 'Expires' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.reservation_number', { defaultValue: 'No.' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.buyer', { defaultValue: 'Buyer' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('propdev.deposit', { defaultValue: 'Deposit' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.expires_at', { defaultValue: 'Expires' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -2622,7 +2622,7 @@ function ReservationsTab({
                       <td className="px-3 py-2 font-mono text-xs">{r.reservation_number}</td>
                       <td className="px-3 py-2">{plot?.plot_number ?? '—'}</td>
                       <td className="px-3 py-2">{buyer?.full_name ?? buyer?.email ?? '—'}</td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">
                         <MoneyDisplay amount={toNumber(r.deposit_amount)} currency={r.currency || undefined} />
                       </td>
                       <td className="px-3 py-2">{r.expires_at ? <DateDisplay value={r.expires_at} /> : '—'}</td>
@@ -3129,7 +3129,7 @@ function SpaTab({
         <span className="text-xs text-content-tertiary">
           {t('propdev.n_rows', { defaultValue: '{{n}} rows', n: rows.length })}
         </span>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           {convertibleReservations.length > 0 && (
             <Button
               variant="primary"
@@ -3210,12 +3210,12 @@ function SpaTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-secondary">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.contract_number', { defaultValue: 'No.' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.signed', { defaultValue: 'Signed' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('propdev.total_value', { defaultValue: 'Total' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.contract_number', { defaultValue: 'No.' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.signed', { defaultValue: 'Signed' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('propdev.total_value', { defaultValue: 'Total' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -3233,7 +3233,7 @@ function SpaTab({
                       <td className="px-3 py-2 font-mono text-xs">{s.contract_number}</td>
                       <td className="px-3 py-2">{plot?.plot_number ?? '—'}</td>
                       <td className="px-3 py-2">{s.signing_date ? <DateDisplay value={s.signing_date} /> : '—'}</td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">
                         <MoneyDisplay amount={toNumber(s.total_value)} currency={s.currency || undefined} />
                       </td>
                       <td className="px-3 py-2">
@@ -3470,7 +3470,7 @@ function SpaDetailDrawer({
                   <Button
                     size="sm"
                     variant="ghost"
-                    icon={<ArrowRight size={12} />}
+                    icon={<ArrowRight size={12} className="rtl:rotate-180"/>}
                     onClick={() => {
                       onClose();
                       onJumpToPaymentSchedules();
@@ -3489,7 +3489,7 @@ function SpaDetailDrawer({
             {schedule ? (
               <div className="mb-2 text-xs text-content-secondary">
                 <Badge variant={SCHEDULE_VARIANT[schedule.status]}>{t(`propdev.payment_schedule.status.${schedule.status}`, { defaultValue: SCHEDULE_STATUS_LABELS[schedule.status] ?? schedule.status })}</Badge>
-                <span className="ml-2">
+                <span className="ms-2">
                   <MoneyDisplay amount={toNumber(schedule.total_amount)} currency={schedule.currency || undefined} />
                   {' · '}
                   {t('propdev.late_fee_pct', { defaultValue: 'Late fee {{n}}%', n: String(schedule.late_fee_pct) })}
@@ -3569,13 +3569,13 @@ function InstalmentsTable({
         <table className="w-full text-xs">
           <thead className="bg-surface-secondary text-content-secondary">
             <tr>
-              <th className="px-2 py-1.5 text-left font-medium">#</th>
-              <th className="px-2 py-1.5 text-left font-medium">{t('propdev.milestone', { defaultValue: 'Milestone' })}</th>
-              <th className="px-2 py-1.5 text-left font-medium">{t('propdev.due', { defaultValue: 'Due' })}</th>
-              <th className="px-2 py-1.5 text-right font-medium">{t('propdev.amount', { defaultValue: 'Amount' })}</th>
-              <th className="px-2 py-1.5 text-right font-medium">{t('propdev.paid', { defaultValue: 'Paid' })}</th>
-              <th className="px-2 py-1.5 text-left font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
-              <th className="px-2 py-1.5 text-right font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
+              <th className="px-2 py-1.5 text-start font-medium">#</th>
+              <th className="px-2 py-1.5 text-start font-medium">{t('propdev.milestone', { defaultValue: 'Milestone' })}</th>
+              <th className="px-2 py-1.5 text-start font-medium">{t('propdev.due', { defaultValue: 'Due' })}</th>
+              <th className="px-2 py-1.5 text-end font-medium">{t('propdev.amount', { defaultValue: 'Amount' })}</th>
+              <th className="px-2 py-1.5 text-end font-medium">{t('propdev.paid', { defaultValue: 'Paid' })}</th>
+              <th className="px-2 py-1.5 text-start font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
+              <th className="px-2 py-1.5 text-end font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -3586,10 +3586,10 @@ function InstalmentsTable({
                   <td className="px-2 py-1.5 font-mono">{ins.sequence}</td>
                   <td className="px-2 py-1.5">{ins.milestone_label}</td>
                   <td className="px-2 py-1.5">{ins.due_date ? <DateDisplay value={ins.due_date} /> : '—'}</td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">
                     <MoneyDisplay amount={toNumber(ins.amount)} currency={currency || undefined} />
                   </td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">
                     <MoneyDisplay amount={toNumber(ins.amount_paid)} currency={currency || undefined} />
                   </td>
                   <td className="px-2 py-1.5">
@@ -4029,7 +4029,7 @@ function PaymentScheduleTab({
         <span className="text-xs text-content-tertiary">
           {t('propdev.n_rows', { defaultValue: '{{n}} rows', n: schedules.length })}
         </span>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           {spasWithoutSchedule.length > 0 && (
             <Button
               variant="primary"
@@ -4149,12 +4149,12 @@ function PaymentScheduleTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-secondary">
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.contract_number', { defaultValue: 'SPA' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('propdev.total', { defaultValue: 'Total' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('propdev.late_fee_pct_short', { defaultValue: 'Late %' })}</th>
-                  <th className="px-3 py-2 text-left font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-3 py-2 text-right font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.contract_number', { defaultValue: 'SPA' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('propdev.total', { defaultValue: 'Total' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('propdev.late_fee_pct_short', { defaultValue: 'Late %' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('common.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -4165,10 +4165,10 @@ function PaymentScheduleTab({
                     <tr key={sch.id} className="border-t border-border-light">
                       <td className="px-3 py-2 font-mono text-xs">{spa?.contract_number ?? sch.sales_contract_id.slice(0, 8)}</td>
                       <td className="px-3 py-2">{plot?.plot_number ?? '—'}</td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">
                         <MoneyDisplay amount={toNumber(sch.total_amount)} currency={sch.currency || undefined} />
                       </td>
-                      <td className="px-3 py-2 text-right text-xs">{String(sch.late_fee_pct)}%</td>
+                      <td className="px-3 py-2 text-end text-xs">{String(sch.late_fee_pct)}%</td>
                       <td className="px-3 py-2">
                         <Badge variant={SCHEDULE_VARIANT[sch.status]} dot>{t(`propdev.payment_schedule.status.${sch.status}`, { defaultValue: SCHEDULE_STATUS_LABELS[sch.status] ?? sch.status })}</Badge>
                       </td>
@@ -4182,7 +4182,7 @@ function PaymentScheduleTab({
                             title={t('propdev.view_instalments', { defaultValue: 'View instalments' })}
                             aria-label={t('propdev.view_instalments', { defaultValue: 'View instalments' })}
                           >
-                            <ArrowRight size={14} />
+                            <ArrowRight size={14} className="rtl:rotate-180"/>
                           </button>
                           {sch.status === 'active' && (
                             <button
@@ -4968,7 +4968,7 @@ function WarrantyTab({
           onClick={() => setCreateOpen(true)}
           disabled={buyers.length === 0 || plots.length === 0}
         >
-          <Plus size={14} className="mr-1" />
+          <Plus size={14} className="me-1" />
           {t('propdev.warranty.new_claim', { defaultValue: 'New claim' })}
         </Button>
       </div>
@@ -4996,14 +4996,14 @@ function WarrantyTab({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.warranty.buyer', { defaultValue: 'Buyer' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.category', { defaultValue: 'Category' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.warranty.severity', { defaultValue: 'Severity' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.description', { defaultValue: 'Description' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.status', { defaultValue: 'Status' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('propdev.warranty.in_warranty', { defaultValue: 'In warranty' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.plot', { defaultValue: 'Plot' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.warranty.buyer', { defaultValue: 'Buyer' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.category', { defaultValue: 'Category' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.warranty.severity', { defaultValue: 'Severity' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.description', { defaultValue: 'Description' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.status', { defaultValue: 'Status' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('propdev.warranty.in_warranty', { defaultValue: 'In warranty' })}</th>
+                  <th className="px-4 py-2.5 text-end">{t('common.actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -5054,7 +5054,7 @@ function WarrantyTab({
                           <span className="text-content-tertiary">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-2 text-end">
                         <div className="inline-flex gap-1 items-center">
                           <Button
                             variant="ghost"
@@ -5299,9 +5299,9 @@ function CreateWarrantyClaimModal({
             disabled={!canSubmit}
           >
             {mut.isPending ? (
-              <Loader2 size={14} className="animate-spin mr-1" />
+              <Loader2 size={14} className="animate-spin me-1" />
             ) : (
-              <Plus size={14} className="mr-1" />
+              <Plus size={14} className="me-1" />
             )}
             {t('propdev.warranty.file_claim', { defaultValue: 'File claim' })}
           </Button>
@@ -5470,7 +5470,7 @@ function PlotDetailDrawer({
                     <ChevronDown size={12} className="text-content-tertiary" />
                   </button>
                   {statusMenuOpen && (
-                    <div role="menu" className="absolute left-0 z-10 mt-1 min-w-[200px] rounded-md border border-border-light bg-surface-primary shadow-lg">
+                    <div role="menu" className="absolute start-0 z-10 mt-1 min-w-[200px] rounded-md border border-border-light bg-surface-primary shadow-lg">
                       <div className="border-b border-border-light px-3 py-1.5 text-[10px] uppercase tracking-wide text-content-tertiary">
                         {t('propdev.move_to', { defaultValue: 'Move to' })}
                       </div>
@@ -5483,7 +5483,7 @@ function PlotDetailDrawer({
                             setStatusMenuOpen(false);
                             statusMu.mutate(next);
                           }}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
+                          className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
                           disabled={statusMu.isPending}
                         >
                           <Badge variant={PLOT_STATUS_VARIANT[next]} dot>{next.replace(/_/g, ' ')}</Badge>
@@ -5544,7 +5544,7 @@ function PlotDetailDrawer({
                       <Globe2 size={12} className="text-content-tertiary group-hover:text-oe-blue" />
                       <span>{t('propdev.view_plot_on_map', { defaultValue: 'Plot {{n}} on map', n: plot.plot_number })}</span>
                     </span>
-                    <ArrowRight size={11} className="text-content-tertiary group-hover:text-oe-blue" />
+                    <ArrowRight size={11} className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180" />
                   </Link>
                 </li>
                 <li>
@@ -5556,7 +5556,7 @@ function PlotDetailDrawer({
                       <FileSignature size={12} className="text-content-tertiary group-hover:text-oe-blue" />
                       <span>{t('propdev.view_contracts', { defaultValue: 'Sales contracts' })}</span>
                     </span>
-                    <ArrowRight size={11} className="text-content-tertiary group-hover:text-oe-blue" />
+                    <ArrowRight size={11} className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180" />
                   </Link>
                 </li>
               </ul>
@@ -6136,7 +6136,7 @@ export function BuyerDetailDrawer({
                   <li key={s.id} className="flex items-center justify-between rounded border border-border-light px-3 py-2 text-sm">
                     <span>
                       <Badge variant={s.status === 'locked' ? 'success' : 'neutral'}>{t(`propdev.selection.status.${s.status}`, { defaultValue: SELECTION_STATUS_LABELS[s.status] ?? s.status })}</Badge>
-                      <span className="ml-2 text-content-secondary text-xs">
+                      <span className="ms-2 text-content-secondary text-xs">
                         <DateDisplay value={s.created_at} />
                       </span>
                     </span>
@@ -6180,7 +6180,7 @@ export function BuyerDetailDrawer({
                     </span>
                     <ArrowRight
                       size={11}
-                      className="text-content-tertiary group-hover:text-oe-blue"
+                      className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180"
                     />
                   </Link>
                 </li>
@@ -6209,7 +6209,7 @@ export function BuyerDetailDrawer({
                   </span>
                   <ArrowRight
                     size={11}
-                    className="text-content-tertiary group-hover:text-oe-blue"
+                    className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180"
                   />
                 </Link>
               </li>
@@ -6235,7 +6235,7 @@ export function BuyerDetailDrawer({
                   </span>
                   <ArrowRight
                     size={11}
-                    className="text-content-tertiary group-hover:text-oe-blue"
+                    className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180"
                   />
                 </Link>
               </li>
@@ -6269,7 +6269,7 @@ export function BuyerDetailDrawer({
                   </span>
                   <ArrowRight
                     size={11}
-                    className="text-content-tertiary group-hover:text-oe-blue"
+                    className="text-content-tertiary group-hover:text-oe-blue rtl:rotate-180"
                   />
                 </Link>
               </li>

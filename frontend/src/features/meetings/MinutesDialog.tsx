@@ -251,9 +251,9 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
             disabled={busy}
           >
             {exportMut.isPending ? (
-              <Loader2 size={14} className="mr-1.5 animate-spin" />
+              <Loader2 size={14} className="me-1.5 animate-spin" />
             ) : (
-              <FileDown size={14} className="mr-1.5" />
+              <FileDown size={14} className="me-1.5" />
             )}
             {t('meetings.export_pdf', { defaultValue: 'Export PDF' })}
           </Button>
@@ -268,7 +268,7 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
                 'Issue the minutes as a signed PDF transmittal that recipients acknowledge, with a no-login download link.',
             })}
           >
-            <Share2 size={14} className="mr-1.5" />
+            <Share2 size={14} className="me-1.5" />
             {t('record_publishing.publish_action', { defaultValue: 'Publish and distribute' })}
           </Button>
         )}
@@ -289,25 +289,25 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
               })}
             >
               {genMut.isPending ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <RefreshCw size={14} className="mr-1.5" />
+                <RefreshCw size={14} className="me-1.5" />
               )}
               {t('meetings.regenerate', { defaultValue: 'Regenerate' })}
             </Button>
             <Button variant="secondary" size="sm" onClick={() => saveMut.mutate()} disabled={busy}>
               {saveMut.isPending ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <Save size={14} className="mr-1.5" />
+                <Save size={14} className="me-1.5" />
               )}
               {t('common.save_draft', { defaultValue: 'Save draft' })}
             </Button>
             <Button variant="primary" size="sm" onClick={() => issueMut.mutate()} disabled={busy}>
               {issueMut.isPending ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <CheckCircle2 size={14} className="mr-1.5" />
+                <CheckCircle2 size={14} className="me-1.5" />
               )}
               {t('meetings.issue_minutes', { defaultValue: 'Issue minutes' })}
             </Button>
@@ -321,9 +321,9 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
             disabled={busy}
           >
             {distributeMut.isPending ? (
-              <Loader2 size={14} className="mr-1.5 animate-spin" />
+              <Loader2 size={14} className="me-1.5 animate-spin" />
             ) : (
-              <Send size={14} className="mr-1.5" />
+              <Send size={14} className="me-1.5" />
             )}
             {t('meetings.distribute', { defaultValue: 'Distribute to attendees' })}
           </Button>
@@ -364,9 +364,9 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
           </div>
           <Button variant="primary" onClick={() => genMut.mutate(false)} disabled={genMut.isPending}>
             {genMut.isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin" />
+              <Loader2 size={16} className="me-1.5 animate-spin" />
             ) : (
-              <Sparkles size={16} className="mr-1.5" />
+              <Sparkles size={16} className="me-1.5" />
             )}
             {t('meetings.generate_minutes', { defaultValue: 'Generate draft minutes' })}
           </Button>
@@ -452,7 +452,7 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="text-sm font-medium text-content-primary">
-                        <span className="font-mono text-content-tertiary mr-1.5">{item.number}.</span>
+                        <span className="font-mono text-content-tertiary me-1.5">{item.number}.</span>
                         {item.topic || t('meetings.untitled_item', { defaultValue: 'Untitled item' })}
                       </p>
                       <label className="flex items-center gap-1.5 text-xs text-content-tertiary cursor-pointer">
@@ -507,13 +507,13 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
                     <span className="flex-1 min-w-[160px] text-content-primary">{ai.description}</span>
                     {ai.brought_forward && (
                       <Badge variant="warning" size="sm">
-                        <ArrowUpRight size={11} className="mr-0.5" />
+                        <ArrowUpRight size={11} className="me-0.5" />
                         {t('meetings.brought_forward', { defaultValue: 'Brought forward' })}
                       </Badge>
                     )}
                     {ai.overdue && (
                       <Badge variant="error" size="sm">
-                        <AlertTriangle size={11} className="mr-0.5" />
+                        <AlertTriangle size={11} className="me-0.5" />
                         {t('meetings.overdue', { defaultValue: 'Overdue' })}
                       </Badge>
                     )}

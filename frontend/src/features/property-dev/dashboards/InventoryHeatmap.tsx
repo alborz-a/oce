@@ -252,7 +252,7 @@ function BlockRow({
         {byLevel.map(([level, units]) => (
           <div key={String(level)} className="flex items-center gap-1">
             <span
-              className="w-7 shrink-0 text-right text-2xs text-content-tertiary"
+              className="w-7 shrink-0 text-end text-2xs text-content-tertiary"
               aria-label={
                 level === null
                   ? t('propdev.dashboards.heatmap.no_level', {

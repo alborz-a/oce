@@ -504,7 +504,7 @@ export function MatchProgressCard({
                 })}
           </p>
         </div>
-        <div className="shrink-0 text-right tabular-nums">
+        <div className="shrink-0 text-end tabular-nums">
           <div className="text-[11px] uppercase tracking-[0.14em] text-content-tertiary font-semibold">
             {t('match_progress.elapsed', { defaultValue: 'Elapsed' })}
           </div>
@@ -642,7 +642,7 @@ export function MatchProgressCard({
               >
                 {s.label}
                 {isCurrent && s.id === 'ranking' && rankingCounter && (
-                  <span className="ml-2 text-content-tertiary tabular-nums">
+                  <span className="ms-2 text-content-tertiary tabular-nums">
                     {rankingCounter}
                   </span>
                 )}
@@ -702,7 +702,7 @@ export function MatchProgressCard({
               the run already settled. Without a named cause we keep the
               original pair, which is honest about not knowing. */}
           <ul
-            className="text-xs text-amber-800 dark:text-amber-200 list-disc pl-4 space-y-0.5"
+            className="text-xs text-amber-800 dark:text-amber-200 list-disc ps-4 space-y-0.5"
             data-reason={reason ?? undefined}
           >
             {reason === 'no_catalogue_rows' ? (

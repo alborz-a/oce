@@ -1,7 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
- * Background services panel: a right-hand drawer that lists every long-running
+ * Background services panel: a end-hand drawer that lists every long-running
  * service the platform keeps loaded, grouped by kind, with what it is for,
  * which modules use it, what it costs in memory and how it is doing. An
  * administrator turns each one on, off or restarts it without restarting the

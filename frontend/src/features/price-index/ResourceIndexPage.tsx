@@ -364,9 +364,9 @@ function ResourceIndexContent() {
               disabled={!boqId || !ready || busy}
             >
               {computeMut.isPending ? (
-                <Loader2 className="mr-1 h-4 w-4 animate-spin" aria-hidden />
+                <Loader2 className="me-1 h-4 w-4 animate-spin" aria-hidden />
               ) : (
-                <Calculator className="mr-1 h-4 w-4" aria-hidden />
+                <Calculator className="me-1 h-4 w-4" aria-hidden />
               )}
               {t('price_index.ri.calculate', { defaultValue: 'Calculate estimate' })}
             </Button>
@@ -376,7 +376,7 @@ function ResourceIndexContent() {
               onClick={() => saveMut.mutate()}
               disabled={!boqId || !dirty || saveMut.isPending}
             >
-              <Save className="mr-1 h-4 w-4" aria-hidden />
+              <Save className="me-1 h-4 w-4" aria-hidden />
               {t('price_index.ri.save_choices', { defaultValue: 'Save choices' })}
             </Button>
             <Button
@@ -388,7 +388,7 @@ function ResourceIndexContent() {
                 defaultValue: 'Price two example positions with the selected indices to see how the method works',
               })}
             >
-              <FlaskConical className="mr-1 h-4 w-4" aria-hidden />
+              <FlaskConical className="me-1 h-4 w-4" aria-hidden />
               {t('price_index.ri.example', { defaultValue: 'Worked example' })}
             </Button>
             {dirty && boqId && (
@@ -437,7 +437,7 @@ function ResourceIndexContent() {
             disabled={busy || (lastRun === 'boq' && !boqId)}
             onClick={() => (lastRun === 'example' ? exampleMut.mutate() : computeMut.mutate(settings))}
           >
-            <RefreshCw className="mr-1 h-4 w-4" aria-hidden />
+            <RefreshCw className="me-1 h-4 w-4" aria-hidden />
             {t('price_index.ri.recalculate', { defaultValue: 'Recalculate' })}
           </Button>
         </div>
@@ -562,7 +562,7 @@ function FormulaRow({ label, formula, value, strong }: { label: string; formula?
     <tr className="border-b border-border-light last:border-0">
       <td className={'px-3 py-1.5 ' + (strong ? 'font-semibold text-content-primary' : 'text-content-secondary')}>{label}</td>
       <td className="px-3 py-1.5 font-mono text-xs text-content-tertiary">{formula}</td>
-      <td className="px-3 py-1.5 text-right">
+      <td className="px-3 py-1.5 text-end">
         <Money value={value} strong={strong} />
       </td>
     </tr>
@@ -725,11 +725,11 @@ export function EstimateBreakdown({
           <div className="mt-3 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+                <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
                   <th className="px-2 py-1.5 font-medium">{t('price_index.ri.work_type', { defaultValue: 'Work type' })}</th>
-                  <th className="px-2 py-1.5 text-right font-medium">{t('price_index.ri.fot_short', { defaultValue: 'FOT' })}</th>
-                  <th className="px-2 py-1.5 text-right font-medium">{t('price_index.ri.nr_short', { defaultValue: 'NR' })}</th>
-                  <th className="px-2 py-1.5 text-right font-medium">{t('price_index.ri.sp_short', { defaultValue: 'SP' })}</th>
+                  <th className="px-2 py-1.5 text-end font-medium">{t('price_index.ri.fot_short', { defaultValue: 'FOT' })}</th>
+                  <th className="px-2 py-1.5 text-end font-medium">{t('price_index.ri.nr_short', { defaultValue: 'NR' })}</th>
+                  <th className="px-2 py-1.5 text-end font-medium">{t('price_index.ri.sp_short', { defaultValue: 'SP' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -738,19 +738,19 @@ export function EstimateBreakdown({
                     <td className="px-2 py-1.5 text-content-secondary">
                       {w.label || w.work_type}
                       {result.norms_used.some((n) => n.work_type_code === w.work_type && n.is_sample) && (
-                        <Badge variant="warning" size="sm" className="ml-1">
+                        <Badge variant="warning" size="sm" className="ms-1">
                           {t('price_index.ri.sample', { defaultValue: 'sample' })}
                         </Badge>
                       )}
                     </td>
-                    <td className="px-2 py-1.5 text-right">
+                    <td className="px-2 py-1.5 text-end">
                       <Money value={w.fot} />
                     </td>
-                    <td className="px-2 py-1.5 text-right">
+                    <td className="px-2 py-1.5 text-end">
                       <Money value={w.nr} />
                       <div className="text-xs text-content-tertiary">{formatFactorString(w.nr_pct)}%</div>
                     </td>
-                    <td className="px-2 py-1.5 text-right">
+                    <td className="px-2 py-1.5 text-end">
                       <Money value={w.sp} />
                       <div className="text-xs text-content-tertiary">{formatFactorString(w.sp_pct)}%</div>
                     </td>
@@ -840,7 +840,7 @@ function ExcludedList({
     }
   };
   return (
-    <ul className="mt-2 max-h-48 space-y-0.5 overflow-y-auto pl-6 text-xs text-content-secondary">
+    <ul className="mt-2 max-h-48 space-y-0.5 overflow-y-auto ps-6 text-xs text-content-secondary">
       {result.excluded.map((e) => (
         <li key={e.position_id} className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span>
@@ -878,17 +878,17 @@ function LineRows({ line }: { line: LineOut }) {
         <td className="px-2 py-1 text-content-secondary">
           {line.name}
           {line.kind === 'operator' && (
-            <span className="ml-1 text-xs text-content-tertiary">
+            <span className="ms-1 text-xs text-content-tertiary">
               ({t('price_index.ri.operator_line', { defaultValue: 'operator' })})
             </span>
           )}
         </td>
         <td className="px-2 py-1 text-xs text-content-tertiary">{label(line.index_group)}</td>
-        <td className="px-2 py-1 text-right font-mono text-xs text-content-tertiary">
+        <td className="px-2 py-1 text-end font-mono text-xs text-content-tertiary">
           {`${line.position_quantity} × ${line.quantity} × ${f(line.base_unit_price)} = `}
           <Money value={line.base_amount} />
         </td>
-        <td className="px-2 py-1 text-right font-mono text-xs text-content-tertiary">
+        <td className="px-2 py-1 text-end font-mono text-xs text-content-tertiary">
           {`× ${formatFactorString(line.index)} = `}
           <Money value={line.current_amount} strong />
         </td>
@@ -899,8 +899,8 @@ function LineRows({ line }: { line: LineOut }) {
           <td className="px-2 py-1 text-xs text-content-tertiary" colSpan={2}>
             {t('price_index.ri.of_which_otm', { defaultValue: "of which operators' wages (OTm)" })}
           </td>
-          <td className="px-2 py-1 text-right font-mono text-xs text-content-tertiary">{f(line.base_amount)}</td>
-          <td className="px-2 py-1 text-right font-mono text-xs text-content-tertiary">
+          <td className="px-2 py-1 text-end font-mono text-xs text-content-tertiary">{f(line.base_amount)}</td>
+          <td className="px-2 py-1 text-end font-mono text-xs text-content-tertiary">
             {`× ${formatFactorString(line.operator_wage_index)} = `}
             <Money value={line.operator_wage_current} />
           </td>
@@ -963,14 +963,14 @@ function PositionBlock({
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
               <th className="px-2 py-1 font-medium">{t('price_index.ri.col_code', { defaultValue: 'Code' })}</th>
               <th className="px-2 py-1 font-medium">{t('price_index.ri.col_resource', { defaultValue: 'Resource' })}</th>
               <th className="px-2 py-1 font-medium">{t('price_index.ri.col_group', { defaultValue: 'Index group' })}</th>
-              <th className="px-2 py-1 text-right font-medium">
+              <th className="px-2 py-1 text-end font-medium">
                 {t('price_index.ri.col_base', { defaultValue: 'Q × consumption × base price' })}
               </th>
-              <th className="px-2 py-1 text-right font-medium">{t('price_index.ri.col_current', { defaultValue: '× index = current' })}</th>
+              <th className="px-2 py-1 text-end font-medium">{t('price_index.ri.col_current', { defaultValue: '× index = current' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -1049,7 +1049,7 @@ function InlineDecimal({
   return (
     <input
       aria-label={ariaLabel}
-      className={selectClass + ' h-8 text-right font-mono ' + widthClass}
+      className={selectClass + ' h-8 text-end font-mono ' + widthClass}
       inputMode="decimal"
       value={draft}
       onChange={(e) => setDraft(e.target.value)}
@@ -1183,13 +1183,13 @@ function ReferenceData({
                   <td className="px-2 py-1.5 text-content-secondary">
                     {label(i.resource_group)}
                     {i.is_sample && (
-                      <Badge variant="warning" size="sm" className="ml-1">
+                      <Badge variant="warning" size="sm" className="ms-1">
                         {t('price_index.ri.sample', { defaultValue: 'sample' })}
                       </Badge>
                     )}
                     {i.source && <div className="text-xs text-content-tertiary">{i.source}</div>}
                   </td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">
                     {canManage ? (
                       <InlineDecimal
                         value={i.index_value}
@@ -1201,7 +1201,7 @@ function ReferenceData({
                       <span className="font-mono">{formatFactorString(i.index_value)}</span>
                     )}
                   </td>
-                  <td className="px-1 py-1.5 text-right">
+                  <td className="px-1 py-1.5 text-end">
                     {canManage && (
                       <button
                         type="button"
@@ -1257,7 +1257,7 @@ function ReferenceData({
               />
             </div>
             <Button className="mt-2" size="sm" variant="secondary" disabled={!canAddIndex || createIdx.isPending} onClick={() => createIdx.mutate()}>
-              <Plus className="mr-1 h-4 w-4" aria-hidden />
+              <Plus className="me-1 h-4 w-4" aria-hidden />
               {t('price_index.ri.add_index', { defaultValue: 'Add index' })}
             </Button>
           </>
@@ -1274,10 +1274,10 @@ function ReferenceData({
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+              <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
                 <th className="px-2 py-1 font-medium">{t('price_index.ri.work_type', { defaultValue: 'Work type' })}</th>
-                <th className="px-2 py-1 text-right font-medium">{t('price_index.ri.nr_pct', { defaultValue: 'NR %' })}</th>
-                <th className="px-2 py-1 text-right font-medium">{t('price_index.ri.sp_pct', { defaultValue: 'SP %' })}</th>
+                <th className="px-2 py-1 text-end font-medium">{t('price_index.ri.nr_pct', { defaultValue: 'NR %' })}</th>
+                <th className="px-2 py-1 text-end font-medium">{t('price_index.ri.sp_pct', { defaultValue: 'SP %' })}</th>
                 <th />
               </tr>
             </thead>
@@ -1286,14 +1286,14 @@ function ReferenceData({
                 <tr key={n.id} className="border-b border-border-light last:border-0">
                   <td className="px-2 py-1.5 text-content-secondary">
                     {n.label || n.work_type_code}
-                    <span className="ml-1 font-mono text-xs text-content-tertiary">{n.work_type_code}</span>
+                    <span className="ms-1 font-mono text-xs text-content-tertiary">{n.work_type_code}</span>
                     {n.is_sample && (
-                      <Badge variant="warning" size="sm" className="ml-1">
+                      <Badge variant="warning" size="sm" className="ms-1">
                         {t('price_index.ri.sample', { defaultValue: 'sample' })}
                       </Badge>
                     )}
                   </td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">
                     {canManage ? (
                       <InlineDecimal
                         value={n.nr_pct}
@@ -1305,7 +1305,7 @@ function ReferenceData({
                       <span className="font-mono">{formatFactorString(n.nr_pct)}</span>
                     )}
                   </td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">
                     {canManage ? (
                       <InlineDecimal
                         value={n.sp_pct}
@@ -1317,7 +1317,7 @@ function ReferenceData({
                       <span className="font-mono">{formatFactorString(n.sp_pct)}</span>
                     )}
                   </td>
-                  <td className="px-1 py-1.5 text-right">
+                  <td className="px-1 py-1.5 text-end">
                     {canManage && (
                       <button
                         type="button"
@@ -1368,7 +1368,7 @@ function ReferenceData({
               />
             </div>
             <Button className="mt-2" size="sm" variant="secondary" disabled={!canAddNorm || createNorm.isPending} onClick={() => createNorm.mutate()}>
-              <Plus className="mr-1 h-4 w-4" aria-hidden />
+              <Plus className="me-1 h-4 w-4" aria-hidden />
               {t('price_index.ri.add_norm', { defaultValue: 'Add work type' })}
             </Button>
           </>

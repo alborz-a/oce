@@ -69,7 +69,7 @@ function StatusPill({ status }: { status: StageStatus }) {
     },
     skipped: {
       cls: 'bg-slate-100 dark:bg-slate-800 text-slate-500',
-      icon: <ChevronRight className="w-3 h-3" />,
+      icon: <ChevronRight className="w-3 h-3 rtl:rotate-180" />,
       label: t('match_elements.pipeline.status_skipped', 'Skipped'),
     },
   };

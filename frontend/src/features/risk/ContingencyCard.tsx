@@ -337,7 +337,7 @@ export function ContingencyCard({ projectId }: { projectId: string }) {
           className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue-text hover:underline"
         >
           {t('risk.cont_open_finance', { defaultValue: 'Open finance budget' })}
-          <ArrowRight size={12} />
+          <ArrowRight size={12} className="rtl:rotate-180"/>
         </Link>
       </div>
 
@@ -381,7 +381,7 @@ export function ContingencyCard({ projectId }: { projectId: string }) {
               codes: fmtList(position.missing_fx_rates),
             })}
             {unconverted.length > 0 && (
-              <span className="ml-1 tabular-nums">
+              <span className="ms-1 tabular-nums">
                 ({fmtList(unconverted.map(([c, v]) => fmtCurrency(money(v), c)))})
               </span>
             )}
@@ -394,10 +394,10 @@ export function ContingencyCard({ projectId }: { projectId: string }) {
           <table className="w-full text-xs">
             <thead>
               <tr className="text-content-tertiary">
-                <th className="py-1 text-left font-medium">{t('risk.cont_line', { defaultValue: 'Contingency line' })}</th>
-                <th className="py-1 text-right font-medium">{t('risk.cont_allocated', { defaultValue: 'Allocated' })}</th>
-                <th className="py-1 text-right font-medium">{t('risk.cont_drawn', { defaultValue: 'Drawn' })}</th>
-                <th className="py-1 text-right font-medium">{t('risk.cont_remaining', { defaultValue: 'Remaining' })}</th>
+                <th className="py-1 text-start font-medium">{t('risk.cont_line', { defaultValue: 'Contingency line' })}</th>
+                <th className="py-1 text-end font-medium">{t('risk.cont_allocated', { defaultValue: 'Allocated' })}</th>
+                <th className="py-1 text-end font-medium">{t('risk.cont_drawn', { defaultValue: 'Drawn' })}</th>
+                <th className="py-1 text-end font-medium">{t('risk.cont_remaining', { defaultValue: 'Remaining' })}</th>
               </tr>
             </thead>
             <tbody>
@@ -406,9 +406,9 @@ export function ContingencyCard({ projectId }: { projectId: string }) {
                   <td className="py-1 text-content-secondary">
                     {l.wbs_id || t('risk.cont_line_unnamed', { defaultValue: 'Contingency' })}
                   </td>
-                  <td className="py-1 text-right tabular-nums">{fmt(l.allocated, l.currency)}</td>
-                  <td className="py-1 text-right tabular-nums">{fmt(l.drawn, l.currency)}</td>
-                  <td className="py-1 text-right tabular-nums">{fmt(l.remaining, l.currency)}</td>
+                  <td className="py-1 text-end tabular-nums">{fmt(l.allocated, l.currency)}</td>
+                  <td className="py-1 text-end tabular-nums">{fmt(l.drawn, l.currency)}</td>
+                  <td className="py-1 text-end tabular-nums">{fmt(l.remaining, l.currency)}</td>
                 </tr>
               ))}
             </tbody>
@@ -462,10 +462,10 @@ export function ContingencyCard({ projectId }: { projectId: string }) {
                 className="flex flex-wrap items-center justify-between gap-2 px-3 py-2"
               >
                 <span className="min-w-0 text-sm">
-                  <CheckCircle2 size={13} className="mr-1 inline text-semantic-success" />
+                  <CheckCircle2 size={13} className="me-1 inline text-semantic-success" />
                   <span className="font-mono text-xs text-content-tertiary">{d.risk_code}</span>{' '}
                   <span className="text-content-primary">{d.risk_title}</span>
-                  {d.note && <span className="ml-1 text-xs text-content-tertiary">· {d.note}</span>}
+                  {d.note && <span className="ms-1 text-xs text-content-tertiary">· {d.note}</span>}
                 </span>
                 <span className="flex items-center gap-3">
                   <span className="text-xs tabular-nums text-content-primary">{fmt(d.amount, d.currency)}</span>

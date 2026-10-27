@@ -113,7 +113,7 @@ export function AttachmentEvidenceGallery({
               {a.file_hash_sha256 ? (
                 <span title={a.file_hash_sha256}>
                   <Badge variant="success">
-                    <ShieldCheck size={11} className="mr-0.5 inline" />
+                    <ShieldCheck size={11} className="me-0.5 inline" />
                     {t('qms.hash_verified', { defaultValue: 'Hash verified' })}
                   </Badge>
                 </span>

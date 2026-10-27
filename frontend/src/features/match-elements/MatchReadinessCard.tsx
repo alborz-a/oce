@@ -335,13 +335,13 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
         </div>
         {/* Why at all: without this a blocked card names what is missing but
             not what it is for, and a first-time user reads it as a fault. */}
-        <p className="mt-1 pl-6 text-xs text-rose-900/90 dark:text-rose-100/90">
+        <p className="mt-1 ps-6 text-xs text-rose-900/90 dark:text-rose-100/90">
           {t('match_readiness.blocked_why', {
             defaultValue:
               'Matching compares every model element with a rate catalogue by meaning, so it needs two things on this server: the meaning search service and a rate catalogue for your country.',
           })}
         </p>
-        <ul className="mt-1.5 space-y-1 pl-6 text-xs text-rose-800 dark:text-rose-200">
+        <ul className="mt-1.5 space-y-1 ps-6 text-xs text-rose-800 dark:text-rose-200">
           {data.blockers.map((b) => (
             <li key={b.code} data-code={b.code}>
               {sentence(b, t, locale)}
@@ -350,8 +350,8 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
         </ul>
         {/* When the search service is simply switched off, this offers the
             one-click way to turn it on (or says whom to ask). */}
-        {unreachable && <ModuleProcessesNotice moduleId="match" className="mt-2 ml-6" />}
-        <div className="mt-2 ml-6 flex flex-wrap items-center gap-3">
+        {unreachable && <ModuleProcessesNotice moduleId="match" className="mt-2 ms-6" />}
+        <div className="mt-2 ms-6 flex flex-wrap items-center gap-3">
           {unreachable?.params.local_install === 'available' && (
             <button
               type="button"
@@ -386,7 +386,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-rose-900 underline-offset-2 hover:underline dark:text-rose-100"
             >
               {t('match_readiness.open_search_settings', { defaultValue: 'Set up search' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </Link>
           )}
           {onOpenSetup && data.blockers.some((b) => b.code === 'no_catalogue_installed') && (
@@ -396,7 +396,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-rose-900 underline-offset-2 hover:underline dark:text-rose-100"
             >
               {t('match_readiness.open_setup', { defaultValue: 'Open Setup & tools' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </button>
           )}
         </div>
@@ -420,7 +420,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
             defaultValue: 'Matching works, with limits',
           })}
         </div>
-        <ul className="mt-1.5 space-y-1 pl-6 text-xs text-amber-800 dark:text-amber-200">
+        <ul className="mt-1.5 space-y-1 ps-6 text-xs text-amber-800 dark:text-amber-200">
           {data.warnings.map((w) => (
             <li key={w.code} data-code={w.code}>
               {sentence(w, t, locale)}
@@ -428,13 +428,13 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
           ))}
         </ul>
         {switchItem && !data.can_change_catalogue && (
-          <p className="mt-1.5 pl-6 text-xs text-amber-800 dark:text-amber-200">
+          <p className="mt-1.5 ps-6 text-xs text-amber-800 dark:text-amber-200">
             {t('match_readiness.switch_ask_owner', {
               defaultValue: 'Ask the project owner or an administrator to switch the catalogue.',
             })}
           </p>
         )}
-        <div className="mt-2 ml-6 flex flex-wrap items-center gap-3">
+        <div className="mt-2 ms-6 flex flex-wrap items-center gap-3">
           {switchItem?.params.catalogue && data.can_change_catalogue && (
             <button
               type="button"
@@ -455,7 +455,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-amber-900 underline-offset-2 hover:underline dark:text-amber-100"
             >
               {t('match_readiness.open_setup', { defaultValue: 'Open Setup & tools' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </button>
           )}
         </div>

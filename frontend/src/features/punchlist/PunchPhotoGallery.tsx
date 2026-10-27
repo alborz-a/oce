@@ -188,7 +188,7 @@ function PhotoThumb({
           onClick={() => setConfirming(true)}
           aria-label={t('punch.photo_delete', { defaultValue: 'Delete photo' })}
           title={t('punch.photo_delete', { defaultValue: 'Delete photo' })}
-          className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-md bg-black/45 text-white opacity-0 transition-opacity hover:bg-black/70 focus:opacity-100 focus:outline-none group-hover:opacity-100"
+          className="absolute end-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-md bg-black/45 text-white opacity-0 transition-opacity hover:bg-black/70 focus:opacity-100 focus:outline-none group-hover:opacity-100"
         >
           <Trash2 size={12} />
         </button>
@@ -223,7 +223,7 @@ function Lightbox({ url, onClose }: { url: string; onClose: () => void }) {
         type="button"
         onClick={onClose}
         aria-label={t('common.close', { defaultValue: 'Close' })}
-        className="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+        className="absolute end-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
       >
         <X size={18} />
       </button>
@@ -371,7 +371,7 @@ export function PunchPhotoGallery({
         <h4 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
           {t('punch.photos_section', { defaultValue: 'Photos' })}
           {photos.length > 0 && (
-            <span className="ml-1.5 text-content-quaternary">({photos.length})</span>
+            <span className="ms-1.5 text-content-quaternary">({photos.length})</span>
           )}
         </h4>
         <div className="flex items-center gap-1.5">

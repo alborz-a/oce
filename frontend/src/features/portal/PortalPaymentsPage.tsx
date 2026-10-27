@@ -151,7 +151,7 @@ export function PortalPaymentsPage() {
           to={escapeTo}
           className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-oe-blue transition-colors hover:underline"
         >
-          <ArrowLeft size={14} />
+          <ArrowLeft size={14} className="rtl:rotate-180"/>
           {t('payportal.back_to_app', { defaultValue: 'Back to OpenConstructionERP' })}
         </Link>
       </CenteredShell>
