@@ -32,12 +32,17 @@ Endpoints:
     GET  /                      - List users (admin/manager)
     GET  /{id}                  - Get user by ID (admin/manager)
     PATCH /{id}                 - Update user (admin only)
+    PUT  /me/avatar             - Upload own profile picture (multipart)
+    DELETE /me/avatar           - Remove own profile picture
+    PUT  /{id}/avatar           - Set a user's profile picture (admin only)
+    GET  /{id}/avatar           - Serve a user's profile picture
 """
 
 import uuid
 from typing import Any, Literal
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, Request, UploadFile, status
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from app.core.demo_accounts import DEMO_ACCOUNT_EMAILS
@@ -46,6 +51,7 @@ from app.core.rate_limiter import client_identifier, login_limiter, registration
 from app.dependencies import (
     CurrentUserId,
     CurrentUserPayload,
+    get_current_user_id,
     RequirePermission,
     RequireRole,
     SessionDep,
@@ -739,6 +745,43 @@ async def update_me(
         fields["metadata_"] = merged
 
     user = await service.update_profile(uuid.UUID(user_id), **fields)
+    return UserResponse.model_validate(user)
+
+
+async def _save_avatar(service: UserService, target_id: uuid.UUID, upload: UploadFile) -> UserResponse:
+    from app.modules.users.avatar import MAX_AVATAR_BYTES, store_avatar
+
+    raw = await upload.read(MAX_AVATAR_BYTES + 1)
+    await service.get_user(target_id)  # 404 for an unknown user before touching disk
+    rel = store_avatar(target_id, raw)
+    user = await service.update_profile(target_id, avatar_path=rel)
+    return UserResponse.model_validate(user)
+
+
+@router.put("/me/avatar/", response_model=UserResponse)
+@router.put("/me/avatar", response_model=UserResponse, include_in_schema=False)
+async def upload_my_avatar(
+    user_id: CurrentUserId,
+    file: UploadFile = File(..., description="JPEG, PNG or WebP, at most 2 MB"),
+    service: UserService = Depends(_get_service),
+) -> UserResponse:
+    """Set or replace the current user's profile picture."""
+    return await _save_avatar(service, uuid.UUID(user_id), file)
+
+
+@router.delete("/me/avatar/", response_model=UserResponse)
+@router.delete("/me/avatar", response_model=UserResponse, include_in_schema=False)
+async def delete_my_avatar(
+    user_id: CurrentUserId,
+    service: UserService = Depends(_get_service),
+) -> UserResponse:
+    """Remove the current user's profile picture (the UI falls back to initials)."""
+    from app.modules.users.avatar import remove_avatar_file
+
+    uid = uuid.UUID(user_id)
+    current = await service.get_user(uid)
+    remove_avatar_file(current.avatar_path)
+    user = await service.update_profile(uid, avatar_path=None)
     return UserResponse.model_validate(user)
 
 
@@ -1671,6 +1714,53 @@ async def update_user(
     fields = data.model_dump(exclude_unset=True)
     user = await service.update_profile(user_id, **fields)
     return redact_model(UserResponse.model_validate(user), subject_id=user.id, viewer_id=viewer_id)
+
+
+@router.put(
+    "/{user_id}/avatar/",
+    response_model=UserResponse,
+    dependencies=[Depends(RequirePermission("users.update"))],
+)
+@router.put(
+    "/{user_id}/avatar",
+    response_model=UserResponse,
+    include_in_schema=False,
+    dependencies=[Depends(RequirePermission("users.update"))],
+)
+async def admin_set_user_avatar(
+    user_id: uuid.UUID,
+    file: UploadFile = File(..., description="JPEG, PNG or WebP, at most 2 MB"),
+    service: UserService = Depends(_get_service),
+) -> UserResponse:
+    """Admin-only: set or replace another user's profile picture."""
+    return await _save_avatar(service, user_id, file)
+
+
+@router.get(
+    "/{user_id}/avatar/",
+    response_class=FileResponse,
+    dependencies=[Depends(get_current_user_id)],
+)
+@router.get(
+    "/{user_id}/avatar",
+    response_class=FileResponse,
+    include_in_schema=False,
+    dependencies=[Depends(get_current_user_id)],
+)
+async def get_user_avatar(
+    user_id: uuid.UUID,
+    service: UserService = Depends(_get_service),
+) -> FileResponse:
+    """Serve a user's profile picture to any signed-in user (404 if none)."""
+    from app.modules.users.avatar import AVATAR_MEDIA_TYPE, avatar_file
+
+    user = await service.get_user(user_id)
+    if not user.avatar_path:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No avatar")
+    path = avatar_file(user.avatar_path)
+    if not path.is_file():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No avatar")
+    return FileResponse(path, media_type=AVATAR_MEDIA_TYPE, headers={"Cache-Control": "private, max-age=86400"})
 
 
 @router.delete(

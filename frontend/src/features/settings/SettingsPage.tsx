@@ -1,6 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getIntlLocale, formatBytes } from '@/shared/lib/formatters';
@@ -57,7 +57,8 @@ import { settingsGuide } from './settingsGuide';
 import { useTabKeyboardNav } from '@/shared/hooks/useTabKeyboardNav';
 import { DashboardLayoutManager } from '@/features/dashboard/DashboardLayoutManager';
 import { UpdateInlineNotice } from '@/shared/ui/UpdateChecker';
-import { apiGet, apiPatch, apiPost, apiPut, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPatch, apiPost, apiPut, apiDelete, fetchWithAuth, API_BASE } from '@/shared/lib/api';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { REGION_LOCK } from '@/app/regionLock';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
@@ -97,6 +98,7 @@ interface UserProfile {
   role: string;
   locale: string;
   is_active: boolean;
+  avatar_url?: string | null;
   created_at: string;
 }
 
@@ -1161,6 +1163,43 @@ interface ProfileCardProps {
 
 function ProfileCard({ profile, loading, editing, setEditing, formName, setFormName, onSave, saving, onRetry }: ProfileCardProps) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [avatarBusy, setAvatarBusy] = useState(false);
+
+  const toForm = (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return form;
+  };
+
+  const sendAvatar = async (call: () => Promise<Response>, okKey: string, okDefault: string) => {
+    setAvatarBusy(true);
+    try {
+      const res = await call();
+      if (!res.ok) {
+        let detail = '';
+        try {
+          const body = (await res.json()) as { detail?: unknown };
+          if (typeof body.detail === 'string') detail = body.detail;
+        } catch {
+          /* non-JSON error body */
+        }
+        throw new Error(detail);
+      }
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
+      addToast({ type: 'success', title: t(okKey, { defaultValue: okDefault }) });
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: t('settings.avatar_failed', { defaultValue: 'Could not update the profile picture' }),
+        message: err instanceof Error && err.message ? err.message : undefined,
+      });
+    } finally {
+      setAvatarBusy(false);
+    }
+  };
 
   return (
     <Card className="lg:col-span-2">
@@ -1172,11 +1211,50 @@ function ProfileCard({ profile, loading, editing, setEditing, formName, setFormN
         {profile ? (
           <div className="flex flex-col sm:flex-row sm:items-center gap-5">
             {/* Avatar */}
-            <div
-              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-oe-blue to-oe-blue-hover text-3xl font-bold text-white shadow-sm"
-              aria-hidden="true"
-            >
-              {profile.full_name?.charAt(0)?.toUpperCase() || 'U'}
+            <div className="flex shrink-0 flex-col items-center gap-2">
+              <div
+                className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-oe-blue to-oe-blue-hover text-3xl font-bold text-white"
+                role="img"
+                aria-label={t('settings.avatar_alt', { defaultValue: 'Your profile picture' })}
+              >
+                <UserAvatar
+                  url={profile.avatar_url}
+                  alt={t('settings.avatar_alt', { defaultValue: 'Your profile picture' })}
+                  fallback={<span aria-hidden="true">{profile.full_name?.charAt(0)?.toUpperCase() || 'U'}</span>}
+                />
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                data-testid="avatar-file-input"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  e.target.value = '';
+                  if (f) void sendAvatar(() => fetchWithAuth(`${API_BASE}/v1/users/me/avatar/`, { method: 'PUT', body: toForm(f) }), 'settings.avatar_saved', 'Profile picture updated');
+                }}
+              />
+              <div className="flex gap-2">
+                <Button variant="secondary" size="sm" disabled={avatarBusy} onClick={() => fileRef.current?.click()}>
+                  {profile.avatar_url
+                    ? t('settings.avatar_change', { defaultValue: 'Change photo' })
+                    : t('settings.avatar_upload', { defaultValue: 'Upload photo' })}
+                </Button>
+                {profile.avatar_url && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={avatarBusy}
+                    onClick={() => void sendAvatar(() => fetchWithAuth(`${API_BASE}/v1/users/me/avatar/`, { method: 'DELETE' }), 'settings.avatar_removed', 'Profile picture removed')}
+                  >
+                    {t('settings.avatar_remove', { defaultValue: 'Remove photo' })}
+                  </Button>
+                )}
+              </div>
+              <span className="text-2xs text-content-tertiary">
+                {t('settings.avatar_hint', { defaultValue: 'JPEG, PNG or WebP, up to 2 MB' })}
+              </span>
             </div>
 
             {/* Info */}

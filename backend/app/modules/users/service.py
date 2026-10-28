@@ -1462,6 +1462,7 @@ class UserService:
             password_changed_at=now,
             is_active=False,
             deleted_at=now,
+            avatar_path=None,
             # Drop all profile PII held in the JSON column (company, job title,
             # registration ip / user-agent / referrer, avatar, phone, etc.).
             metadata_={"erased": True},

@@ -9,6 +9,8 @@ import clsx from 'clsx';
 import { SUPPORTED_LANGUAGES, getLanguageByCode, changeLanguage } from '../i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
+import { apiGet } from '@/shared/lib/api';
 import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -1521,6 +1523,13 @@ function UserMenu() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : 'U';
+  // Same query key as the Settings profile card, so one request feeds both.
+  const { data: me } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => apiGet<{ avatar_url?: string | null }>('/v1/users/me/'),
+    retry: false,
+    staleTime: 5 * 60_000,
+  });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -1555,7 +1564,12 @@ function UserMenu() {
         title={userEmail ?? undefined}
         aria-label={t('auth.account', { defaultValue: 'Account menu' })}
       >
-        {userInitial}
+        <UserAvatar
+          url={me?.avatar_url}
+          alt={userEmail ?? ''}
+          fallback={userInitial}
+          className="h-full w-full rounded-full object-cover"
+        />
         {/* Online status dot — bottom-right of the avatar. Matches the
             UserBadge in the sidebar so the two surfaces feel coherent.
             `overflow-hidden` clips the `animate-ping` ring to this badge's

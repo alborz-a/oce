@@ -43,6 +43,10 @@ class User(Base):
     # OIDC login and used to match returning OIDC users to local accounts.
     oidc_sub: Mapped[str | None] = mapped_column(String(255), nullable=True, unique=True, index=True)
     oidc_issuer: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # Profile picture, stored as a path relative to the app data dir
+    # (``avatars/<user_id>.webp``). NULL means no picture: the UI falls back to
+    # the initials badge. The bytes live on disk, never in the DB or the image.
+    avatar_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
         JSON,
@@ -107,6 +111,14 @@ class User(Base):
         lazy="raise_on_sql",
         passive_deletes=True,
     )
+
+    @property
+    def avatar_url(self) -> str | None:
+        """API URL of the profile picture, or None. ``v`` busts browser caches."""
+        if not self.avatar_path:
+            return None
+        stamp = int(self.updated_at.timestamp()) if getattr(self, "updated_at", None) else 0
+        return f"/api/v1/users/{self.id}/avatar?v={stamp}"
 
     def __repr__(self) -> str:
         return f"<User {self.email} ({self.role})>"
