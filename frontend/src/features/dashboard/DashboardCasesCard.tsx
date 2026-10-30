@@ -386,7 +386,7 @@ export function DashboardCasesCard() {
                 type="button"
                 onClick={() => navigate(`/cases/${pb.id}`)}
                 title={title}
-                className="group relative isolate flex flex-col overflow-hidden rounded-lg border border-border-light bg-surface-primary text-left shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                className="group relative isolate flex flex-col overflow-hidden rounded-lg border border-border-light bg-surface-primary text-start shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
               >
                 {/* Faint discipline wash behind the whole tile. */}
                 <span
@@ -438,7 +438,7 @@ export function DashboardCasesCard() {
                   )}
                   {inProgress && (
                     <span
-                      className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-oe-blue shadow-sm ring-2 ring-white"
+                      className="absolute end-2 top-2 h-2.5 w-2.5 rounded-full bg-oe-blue shadow-sm ring-2 ring-white"
                       title={t('cases.card.in_progress', { defaultValue: 'In progress' })}
                       aria-hidden="true"
                     />

@@ -273,12 +273,12 @@ export function ClashCostImpactColumn({
   if (query.isLoading) {
     return (
       <td
-        className="px-3 py-2 text-right"
+        className="px-3 py-2 text-end"
         data-testid="clash-cost-cell"
         data-state="loading"
       >
         <span
-          className="ml-auto inline-block h-3 w-16 animate-pulse rounded bg-surface-tertiary"
+          className="ms-auto inline-block h-3 w-16 animate-pulse rounded bg-surface-tertiary"
           data-testid="clash-cost-skeleton"
         />
       </td>
@@ -290,7 +290,7 @@ export function ClashCostImpactColumn({
   if (query.isError || !query.data) {
     return (
       <td
-        className="px-3 py-2 text-right text-content-tertiary"
+        className="px-3 py-2 text-end text-content-tertiary"
         data-testid="clash-cost-cell"
         data-state={query.isError ? 'error' : 'empty'}
       >
@@ -340,7 +340,7 @@ export function ClashCostImpactColumn({
   return (
     <td
       ref={cellRef}
-      className="px-3 py-2 text-right"
+      className="px-3 py-2 text-end"
       title={tooltip}
       data-testid="clash-cost-cell"
       data-state="ready"
@@ -356,7 +356,7 @@ export function ClashCostImpactColumn({
             defaultValue: 'View {{count}} affected BOQ position(s)',
             count: positions.length,
           })}
-          className="ml-auto rounded px-1 py-0.5 transition-colors hover:bg-surface-secondary/60 focus:bg-surface-secondary/60 focus:outline-none"
+          className="ms-auto rounded px-1 py-0.5 transition-colors hover:bg-surface-secondary/60 focus:bg-surface-secondary/60 focus:outline-none"
         >
           {moneyBlock}
         </button>

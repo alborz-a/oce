@@ -454,7 +454,7 @@ export function ResourceLevelingPage() {
                         <button
                           type="button"
                           onClick={() => setDrawer({ row })}
-                          className="flex min-w-0 items-center gap-2 rounded-md py-1 pr-2 text-left hover:bg-surface-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
+                          className="flex min-w-0 items-center gap-2 rounded-md py-1 pe-2 text-start hover:bg-surface-secondary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
                           title={t('leveling.open_drawer', {
                             defaultValue: 'View bookings and leveling suggestions',
                           })}

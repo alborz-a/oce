@@ -87,7 +87,7 @@ export function ParameterSheet({
                       aria-label={label}
                       value={value === null || value === undefined ? '' : String(value)}
                       onChange={(e) => onChangeParam?.(key, e.target.value)}
-                      className="h-7 w-24 rounded-md border border-border bg-surface-primary px-2 text-right text-sm focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue/30"
+                      className="h-7 w-24 rounded-md border border-border bg-surface-primary px-2 text-end text-sm focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue/30"
                     />
                   ) : (
                     displayValue(value, yesLabel, noLabel)

@@ -851,7 +851,7 @@ export function InlinePdfAnnotator({
     return (
       <div className="flex items-center justify-center py-20">
         <Loader2 size={32} className="text-oe-blue animate-spin" />
-        <span className="ml-3 text-sm text-content-secondary">
+        <span className="ms-3 text-sm text-content-secondary">
           {t('markups.loading_pdf', { defaultValue: 'Loading document...' })}
         </span>
       </div>
@@ -874,7 +874,7 @@ export function InlinePdfAnnotator({
       {/* ── Toolbar ──────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border-light bg-surface-secondary/50 flex-wrap">
         {/* Document name + close */}
-        <div className="flex items-center gap-2 mr-2">
+        <div className="flex items-center gap-2 me-2">
           <span className="text-xs font-medium text-content-primary truncate max-w-[180px]">
             {documentName}
           </span>
@@ -1011,7 +1011,7 @@ export function InlinePdfAnnotator({
               onClick={() => setAnnotations([])}
               className="text-semantic-error"
             >
-              <Trash2 size={13} className="mr-1" />
+              <Trash2 size={13} className="me-1" />
               {t('markups.clear_all', { defaultValue: 'Clear' })}
             </Button>
             <Button
@@ -1020,7 +1020,7 @@ export function InlinePdfAnnotator({
               onClick={handleSaveAll}
               loading={saving}
             >
-              <Save size={13} className="mr-1" />
+              <Save size={13} className="me-1" />
               {t('markups.save_annotations', { defaultValue: 'Save All' })}
             </Button>
           </>

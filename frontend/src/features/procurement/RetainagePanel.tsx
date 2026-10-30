@@ -227,7 +227,7 @@ export function RetainagePanel({
                 disabled={amountInvalid || releaseMut.isPending}
               >
                 {releaseMut.isPending && (
-                  <Loader2 size={14} className="animate-spin mr-1.5" />
+                  <Loader2 size={14} className="animate-spin me-1.5" />
                 )}
                 {t('procurement.retainage_release_action', {
                   defaultValue: 'Release',
@@ -247,7 +247,7 @@ export function RetainagePanel({
 
           {isLoading && (
             <div className="flex items-center justify-center py-8 text-content-tertiary">
-              <Loader2 size={18} className="animate-spin mr-2" />
+              <Loader2 size={18} className="animate-spin me-2" />
               {t('common.loading', { defaultValue: 'Loading...' })}
             </div>
           )}
@@ -275,17 +275,17 @@ export function RetainagePanel({
               <table className="w-full text-sm">
                 <thead className="bg-surface-secondary text-content-tertiary">
                   <tr>
-                    <th className="px-3 py-2 text-left font-medium">
+                    <th className="px-3 py-2 text-start font-medium">
                       {t('procurement.retainage_col_date', {
                         defaultValue: 'Date',
                       })}
                     </th>
-                    <th className="px-3 py-2 text-right font-medium">
+                    <th className="px-3 py-2 text-end font-medium">
                       {t('procurement.retainage_col_amount', {
                         defaultValue: 'Amount',
                       })}
                     </th>
-                    <th className="px-3 py-2 text-left font-medium">
+                    <th className="px-3 py-2 text-start font-medium">
                       {t('procurement.retainage_col_reason', {
                         defaultValue: 'Reason',
                       })}
@@ -298,7 +298,7 @@ export function RetainagePanel({
                       <td className="px-3 py-2 text-content-secondary">
                         <DateDisplay value={r.release_date} />
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
+                      <td className="px-3 py-2 text-end tabular-nums">
                         {currency ? (
                           <MoneyDisplay
                             amount={r.release_amount}

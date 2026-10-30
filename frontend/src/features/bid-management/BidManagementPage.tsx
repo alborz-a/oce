@@ -332,7 +332,7 @@ function SubcontractorPickerModal({
         <div className="relative">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
@@ -341,7 +341,7 @@ function SubcontractorPickerModal({
             placeholder={t('bid_management.pick_sub_search', {
               defaultValue: 'Search subcontractors by name or trade…',
             })}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
             autoFocus
           />
         </div>
@@ -365,7 +365,7 @@ function SubcontractorPickerModal({
                 type="button"
                 onClick={() => pick(sub)}
                 disabled={resolvingId !== null}
-                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-surface-secondary disabled:opacity-60"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-start hover:bg-surface-secondary disabled:opacity-60"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium text-content-primary">
@@ -814,14 +814,14 @@ export function BidManagementPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('common.search', { defaultValue: 'Search…' })}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         {tab === 'packages' && (
@@ -919,19 +919,19 @@ function PackageTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('bid_management.code', { defaultValue: 'Code' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('bid_management.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('bid_management.deadline', { defaultValue: 'Deadline' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('bid_management.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('bid_management.budget', { defaultValue: 'Budget' })}
             </th>
           </tr>
@@ -953,7 +953,7 @@ function PackageTable({
                   {packageStatusLabel(t, r.status)}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <MoneyDisplay
                   amount={Number(r.total_budget_estimate) || 0}
                   currency={r.currency || currency}
@@ -1027,7 +1027,7 @@ function PackageInvitationsRow({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-secondary text-left"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-secondary text-start"
         aria-expanded={open}
       >
         <div className="min-w-0">
@@ -1057,16 +1057,16 @@ function PackageInvitationsRow({
             <table className="w-full text-xs border border-border-light rounded">
               <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('bid_management.invitee', { defaultValue: 'Invitee' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('bid_management.email', { defaultValue: 'Email' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('bid_management.sent_at', { defaultValue: 'Sent' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('bid_management.status', { defaultValue: 'Status' })}
                   </th>
                 </tr>
@@ -1127,7 +1127,7 @@ function SubmissionsLevelingView({
   return (
     <div className="p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <label className={clsx(labelCls, 'mb-0 mr-1')}>
+        <label className={clsx(labelCls, 'mb-0 me-1')}>
           {t('bid_management.package', { defaultValue: 'Package' })}
         </label>
         <select
@@ -1361,28 +1361,28 @@ function LevelingTable({
               <table className="w-full text-sm border-collapse">
                 <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                   <tr>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('bid_management.rank', { defaultValue: 'Rank' })}
                     </th>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('bid_management.bidder', { defaultValue: 'Bidder' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('bid_management.normalized_total', {
                         defaultValue: 'Adjusted total',
                       })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('bid_management.commercial_score', {
                         defaultValue: 'Commercial',
                       })}
                     </th>
                     {hasTechnicalScores && (
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('bid_management.technical_score', { defaultValue: 'Technical' })}
                       </th>
                     )}
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('bid_management.total_score', { defaultValue: 'Score' })}
                     </th>
                   </tr>
@@ -1407,25 +1407,25 @@ function LevelingTable({
                           <td className="px-3 py-1.5">
                             <span className="font-medium">{name}</span>
                             {isRecommended && (
-                              <Badge variant="success" className="ml-2">
+                              <Badge variant="success" className="ms-2">
                                 {t('bid_management.recommended', {
                                   defaultValue: 'Recommended',
                                 })}
                               </Badge>
                             )}
                           </td>
-                          <td className="px-3 py-1.5 text-right tabular-nums">
+                          <td className="px-3 py-1.5 text-end tabular-nums">
                             <MoneyDisplay amount={Number(row.normalized_total) || 0} currency={currency} />
                           </td>
-                          <td className="px-3 py-1.5 text-right tabular-nums">
+                          <td className="px-3 py-1.5 text-end tabular-nums">
                             {fmtFixed(Number(row.commercial_score), 1)}
                           </td>
                           {hasTechnicalScores && (
-                            <td className="px-3 py-1.5 text-right tabular-nums">
+                            <td className="px-3 py-1.5 text-end tabular-nums">
                               {fmtFixed(Number(row.technical_score), 1)}
                             </td>
                           )}
-                          <td className="px-3 py-1.5 text-right tabular-nums font-semibold">
+                          <td className="px-3 py-1.5 text-end tabular-nums font-semibold">
                             {fmtFixed(Number(row.total_score), 1)}
                           </td>
                         </tr>
@@ -1445,11 +1445,11 @@ function LevelingTable({
             <table className="w-full text-sm border-collapse">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 text-left sticky left-0 z-10 bg-surface-secondary">
+                  <th className="px-3 py-2 text-start sticky start-0 z-10 bg-surface-secondary">
                     {t('bid_management.scope_line', { defaultValue: 'Scope line' })}
                   </th>
                   {columns.map((col) => (
-                    <th key={col.id} className="px-3 py-2 text-right whitespace-nowrap">
+                    <th key={col.id} className="px-3 py-2 text-end whitespace-nowrap">
                       {col.name}
                     </th>
                   ))}
@@ -1462,7 +1462,7 @@ function LevelingTable({
                   );
                   return (
                     <tr key={row.line_item_id} className="border-t border-border-light">
-                      <td className="px-3 py-1.5 sticky left-0 z-10 bg-surface-primary">
+                      <td className="px-3 py-1.5 sticky start-0 z-10 bg-surface-primary">
                         <div className="font-mono text-xs text-content-tertiary">
                           {row.line_item_code || '—'}
                         </div>
@@ -1482,7 +1482,7 @@ function LevelingTable({
                         return (
                           <td
                             key={col.id}
-                            className={clsx('px-3 py-1.5 text-right tabular-nums', cls)}
+                            className={clsx('px-3 py-1.5 text-end tabular-nums', cls)}
                           >
                             {competitive && price > 0 ? (
                               <MoneyDisplay amount={price} currency={currency} />
@@ -1496,7 +1496,7 @@ function LevelingTable({
                   );
                 })}
                 <tr className="border-t-2 border-border bg-surface-secondary font-semibold">
-                  <td className="px-3 py-2 sticky left-0 bg-surface-secondary">
+                  <td className="px-3 py-2 sticky start-0 bg-surface-secondary">
                     {t('bid_management.total', { defaultValue: 'Total' })}
                   </td>
                   {columns.map((col) => {
@@ -1508,7 +1508,7 @@ function LevelingTable({
                           ? 'text-red-700'
                           : '';
                     return (
-                      <td key={col.id} className={clsx('px-3 py-2 text-right tabular-nums', cls)}>
+                      <td key={col.id} className={clsx('px-3 py-2 text-end tabular-nums', cls)}>
                         {v > 0 ? (
                           <MoneyDisplay amount={v} currency={currency} />
                         ) : (
@@ -1519,11 +1519,11 @@ function LevelingTable({
                   })}
                 </tr>
                 <tr className="border-t border-border-light">
-                  <td className="px-3 py-2 sticky left-0 bg-surface-primary text-xs text-content-secondary">
+                  <td className="px-3 py-2 sticky start-0 bg-surface-primary text-xs text-content-secondary">
                     {t('bid_management.action', { defaultValue: 'Action' })}
                   </td>
                   {columns.map((col) => (
-                    <td key={col.id} className="px-3 py-2 text-right">
+                    <td key={col.id} className="px-3 py-2 text-end">
                       <Button
                         size="sm"
                         variant="secondary"
@@ -1651,7 +1651,7 @@ function AwardConfirmModal({
             step="any"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className={clsx(inputCls, 'text-right')}
+            className={clsx(inputCls, 'text-end')}
           />
           <p className="mt-1 text-xs text-content-tertiary">
             {currency || ''} - {t('bid_management.awarded_amount_hint', {
@@ -1702,7 +1702,7 @@ function QAView({ packages }: { packages: BidPackage[] }) {
   return (
     <div className="p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <label className={clsx(labelCls, 'mb-0 mr-1')}>
+        <label className={clsx(labelCls, 'mb-0 me-1')}>
           {t('bid_management.package', { defaultValue: 'Package' })}
         </label>
         <select
@@ -2242,16 +2242,16 @@ function PackageDrawer({
                   <table className="w-full text-xs">
                     <thead className="text-content-tertiary uppercase">
                       <tr>
-                        <th className="text-left py-1">
+                        <th className="text-start py-1">
                           {t('bid_management.code', { defaultValue: 'Code' })}
                         </th>
-                        <th className="text-left py-1">
+                        <th className="text-start py-1">
                           {t('bid_management.description', { defaultValue: 'Description' })}
                         </th>
-                        <th className="text-right py-1">
+                        <th className="text-end py-1">
                           {t('bid_management.qty', { defaultValue: 'Qty' })}
                         </th>
-                        <th className="text-left py-1">
+                        <th className="text-start py-1">
                           {t('bid_management.unit', { defaultValue: 'Unit' })}
                         </th>
                       </tr>
@@ -2263,7 +2263,7 @@ function PackageDrawer({
                           <tr key={li.id} className="border-t border-border-light">
                             <td className="py-1 font-mono">{li.code || '—'}</td>
                             <td className="py-1 truncate max-w-[300px]">{li.description || '—'}</td>
-                            <td className="py-1 text-right tabular-nums">{d.value.toLocaleString(getNumberLocale())}</td>
+                            <td className="py-1 text-end tabular-nums">{d.value.toLocaleString(getNumberLocale())}</td>
                             <td className="py-1 text-content-secondary">{li.unit ? d.unit : '—'}</td>
                           </tr>
                         );
@@ -2335,7 +2335,7 @@ function PackageDrawer({
                         >
                           <span className="min-w-0 flex-1 truncate">
                             <span className="font-medium">{inv.invitee_company_name || '—'}</span>
-                            <span className="ml-2 text-content-tertiary">{inv.invitee_email}</span>
+                            <span className="ms-2 text-content-tertiary">{inv.invitee_email}</span>
                           </span>
                           <Badge variant={INVITATION_STATUS_VARIANT[inv.status]} dot>
                             {invitationStatusLabel(t, inv.status)}
@@ -2474,7 +2474,7 @@ function AddScopeLineForm({
           step="any"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className={clsx(inputCls, 'text-right')}
+          className={clsx(inputCls, 'text-end')}
         />
       </div>
       <div>
@@ -2641,16 +2641,16 @@ function RecordBidModal({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('bid_management.scope_line', { defaultValue: 'Scope line' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('bid_management.qty', { defaultValue: 'Qty' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('bid_management.unit_price', { defaultValue: 'Unit price' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('bid_management.line_total', { defaultValue: 'Line total' })}
                   </th>
                 </tr>
@@ -2676,13 +2676,13 @@ function RecordBidModal({
                           {li.description || '—'}
                         </div>
                       </td>
-                      <td className="px-3 py-1.5 text-right tabular-nums text-xs text-content-secondary">
+                      <td className="px-3 py-1.5 text-end tabular-nums text-xs text-content-secondary">
                         {(() => {
                           const d = q.convert(Number(li.quantity), li.unit || '');
                           return `${d.value.toLocaleString(getNumberLocale())} ${li.unit ? d.unit : ''}`.trim();
                         })()}
                       </td>
-                      <td className="px-3 py-1.5 text-right">
+                      <td className="px-3 py-1.5 text-end">
                         <input
                           type="number"
                           min="0"
@@ -2692,10 +2692,10 @@ function RecordBidModal({
                             setPrices((p) => ({ ...p, [li.id]: e.target.value }))
                           }
                           placeholder="0.00"
-                          className={clsx(inputCls, 'h-8 w-28 text-right')}
+                          className={clsx(inputCls, 'h-8 w-28 text-end')}
                         />
                       </td>
-                      <td className="px-3 py-1.5 text-right tabular-nums">
+                      <td className="px-3 py-1.5 text-end tabular-nums">
                         {lineTotal > 0 ? (
                           <MoneyDisplay amount={lineTotal} currency={currency} />
                         ) : (
@@ -2709,7 +2709,7 @@ function RecordBidModal({
                   <td className="px-3 py-2" colSpan={3}>
                     {t('bid_management.total', { defaultValue: 'Total' })}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     <MoneyDisplay amount={computedTotal} currency={currency} />
                   </td>
                 </tr>

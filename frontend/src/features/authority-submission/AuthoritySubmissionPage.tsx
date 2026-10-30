@@ -222,9 +222,9 @@ function CreateSubmissionModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -379,7 +379,7 @@ function ValidationReportCard({ report }: { report: Submission['validation_repor
         </p>
       )}
       {report.type_mismatches.length > 0 && (
-        <ul className="list-disc pl-4 text-content-secondary space-y-0.5">
+        <ul className="list-disc ps-4 text-content-secondary space-y-0.5">
           {report.type_mismatches.map((m, i) => (
             <li key={`${m.field}-${i}`}>
               {m.field}: {t('authority_submission.type_mismatch', {
@@ -469,7 +469,7 @@ const SubmissionRow = React.memo(function SubmissionRow({
       </div>
 
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           <ValidationReportCard report={item.validation_report} />
 
           {item.generated_xml && (
@@ -1000,13 +1000,13 @@ export function AuthoritySubmissionPage() {
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-sm">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+          <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('authority_submission.search_placeholder', { defaultValue: 'Search submissions...' })}
             aria-label={t('authority_submission.search_placeholder', { defaultValue: 'Search submissions...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 

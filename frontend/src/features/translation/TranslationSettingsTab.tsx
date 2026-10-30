@@ -330,17 +330,17 @@ const DictionariesTable = memo(function DictionariesTable({
           data-testid="translation-dict-table"
         >
           <thead className="bg-surface-secondary/40">
-            <tr className="text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <tr className="text-start text-xs uppercase tracking-wide text-content-tertiary">
               <th className="px-4 py-2 font-medium">
                 {t('translation.dict.col_kind', { defaultValue: 'Source' })}
               </th>
               <th className="px-4 py-2 font-medium">
                 {t('translation.dict.col_pair', { defaultValue: 'Pair' })}
               </th>
-              <th className="px-4 py-2 font-medium text-right">
+              <th className="px-4 py-2 font-medium text-end">
                 {t('translation.dict.col_size', { defaultValue: 'Size' })}
               </th>
-              <th className="px-4 py-2 font-medium text-right">
+              <th className="px-4 py-2 font-medium text-end">
                 {t('translation.dict.col_modified', {
                   defaultValue: 'Modified',
                 })}
@@ -365,10 +365,10 @@ const DictionariesTable = memo(function DictionariesTable({
                 <td className="px-4 py-2.5 font-mono text-xs text-content-primary">
                   {entry.pair}
                 </td>
-                <td className="px-4 py-2.5 text-right tabular-nums text-content-secondary">
+                <td className="px-4 py-2.5 text-end tabular-nums text-content-secondary">
                   {formatBytes(entry.size_bytes)}
                 </td>
-                <td className="px-4 py-2.5 text-right text-content-tertiary">
+                <td className="px-4 py-2.5 text-end text-content-tertiary">
                   {formatRelative(entry.modified_at, t)}
                 </td>
               </tr>
@@ -843,7 +843,7 @@ const InFlightTasksSection = memo(function InFlightTasksSection({
                     defaultValue: task.status,
                   })}
                 </span>
-                <span className="ml-auto tabular-nums text-content-tertiary text-xs">
+                <span className="ms-auto tabular-nums text-content-tertiary text-xs">
                   {pct}%
                 </span>
               </div>

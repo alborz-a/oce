@@ -154,7 +154,7 @@ export function ProvabilityGauge({ projectId, subjectKind, subjectId, className 
                       defaultValue: SIGNAL_LABEL[s.signal] ?? humanize(s.signal),
                     })}
                   </span>
-                  <span className="ml-auto tabular-nums text-xs text-content-tertiary">
+                  <span className="ms-auto tabular-nums text-xs text-content-tertiary">
                     {s.earned}/{s.weight}
                   </span>
                 </li>

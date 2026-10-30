@@ -259,7 +259,7 @@ export function IntakePanel({
             {state.detected_type && (
               <Badge variant="blue" size="sm">
                 {t(`aiest.ptype.${state.detected_type}`, { defaultValue: state.detected_type })}
-                <span className="ml-1 opacity-70">
+                <span className="ms-1 opacity-70">
                   {typeConf.i18nKey
                     ? t(typeConf.i18nKey, { defaultValue: typeConf.defaultValue })
                     : typeConf.defaultValue}
@@ -413,7 +413,7 @@ export function IntakePanel({
           </div>
 
           {/* Right: live parameter sheet / board context. */}
-          <aside className="min-w-0 lg:border-l lg:border-border lg:pl-5">
+          <aside className="min-w-0 lg:border-s lg:border-border lg:ps-5">
             {round.onGroupBoard ? (
               <ParameterSheet state={state} editable={false} />
             ) : (

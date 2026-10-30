@@ -315,7 +315,7 @@ function ModuleRows({
         <th
           scope="rowgroup"
           colSpan={roles.length + 1}
-          className="px-3 py-2 text-left text-sm font-semibold text-content-primary"
+          className="px-3 py-2 text-start text-sm font-semibold text-content-primary"
         >
           <div className="flex items-center gap-2">
             {/* Per-group tri-state "grant all / none" for the selected role */}
@@ -375,7 +375,7 @@ function ModuleRows({
               type="button"
               onClick={onToggle}
               id={headerId}
-              className="flex flex-1 items-center gap-2 hover:text-oe-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded text-left"
+              className="flex flex-1 items-center gap-2 hover:text-oe-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded text-start"
               data-testid={`module-toggle-${module.name}`}
               aria-expanded={!collapsed}
             >
@@ -388,7 +388,7 @@ function ModuleRows({
               <span className="font-mono text-[11px] font-normal text-content-tertiary">
                 {module.name}
               </span>
-              <span className="ml-auto text-xs text-content-tertiary font-normal tabular-nums">
+              <span className="ms-auto text-xs text-content-tertiary font-normal tabular-nums">
                 {selectedRole
                   ? t('admin.permissions.group_granted_count', {
                       defaultValue: '{{granted}} / {{total}} granted',
@@ -416,8 +416,8 @@ function ModuleRows({
             <th
               scope="row"
               className={clsx(
-                'sticky left-0 z-10 bg-surface-elevated px-3 py-2 pl-9 text-left text-sm text-content-secondary',
-                'border-r border-border-light',
+                'sticky start-0 z-10 bg-surface-elevated px-3 py-2 ps-9 text-start text-sm text-content-secondary',
+                'border-e border-border-light',
               )}
             >
               {/* Action is the primary, readable label; the full dotted
@@ -427,7 +427,7 @@ function ModuleRows({
               </span>
               <span className="block truncate max-w-[280px] font-mono text-[10px] text-content-tertiary" title={perm.key}>
                 {perm.key}
-                <span className="ml-1.5 uppercase tracking-wider">
+                <span className="ms-1.5 uppercase tracking-wider">
                   · {t('admin.permissions.min_role_label', { defaultValue: 'min' })}: {perm.min_role}
                 </span>
               </span>
@@ -504,7 +504,7 @@ function ModuleRows({
         <tr className="border-b border-border-light last:border-0">
           <td
             colSpan={roles.length + 1}
-            className="px-3 py-2 pl-9 text-left text-xs italic text-content-tertiary"
+            className="px-3 py-2 ps-9 text-start text-xs italic text-content-tertiary"
           >
             {selectedRole
               ? t('admin.permissions.group_all_granted', {
@@ -1178,11 +1178,11 @@ export function PermissionsMatrixPage() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 -left-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -top-40 -start-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-sky-400/15 to-transparent blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -bottom-40 -right-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
+        className="pointer-events-none absolute -bottom-40 -end-40 -z-10 h-96 w-96 rounded-full bg-gradient-radial from-emerald-400/15 to-transparent blur-3xl"
       />
 
       <div className="space-y-5 px-4 py-5 lg:px-6 lg:py-6">
@@ -1190,7 +1190,7 @@ export function PermissionsMatrixPage() {
         <header className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/60 px-5 py-4 backdrop-blur-xl shadow-lg shadow-slate-900/[0.04] dark:border-white/5 dark:bg-slate-900/40">
           <div
             aria-hidden
-            className="pointer-events-none absolute -top-16 right-1/4 h-40 w-40 rounded-full bg-gradient-radial from-sky-400/20 to-transparent blur-3xl"
+            className="pointer-events-none absolute -top-16 end-1/4 h-40 w-40 rounded-full bg-gradient-radial from-sky-400/20 to-transparent blur-3xl"
           />
           <div className="relative flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-start gap-3">
@@ -1293,7 +1293,7 @@ export function PermissionsMatrixPage() {
               </select>
             </label>
             {canEdit && data?.presets && data.presets.length > 0 && (
-              <div className="flex items-center gap-1.5 ml-auto">
+              <div className="flex items-center gap-1.5 ms-auto">
                 <span className="text-xs uppercase tracking-wider text-content-tertiary">
                   {t('admin.permissions.preset_label', { defaultValue: 'Reset to preset' })}
                 </span>
@@ -1312,7 +1312,7 @@ export function PermissionsMatrixPage() {
                 ))}
               </div>
             )}
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ms-auto flex items-center gap-3">
               {/* Global Expand all / Collapse all */}
               <button
                 type="button"
@@ -1369,7 +1369,7 @@ export function PermissionsMatrixPage() {
                 <tr className="bg-surface-secondary border-b border-border-light">
                   <th
                     scope="col"
-                    className="sticky left-0 z-20 bg-surface-secondary px-3 py-2 text-left text-xs uppercase tracking-wider text-content-tertiary border-r border-border-light min-w-[260px]"
+                    className="sticky start-0 z-20 bg-surface-secondary px-3 py-2 text-start text-xs uppercase tracking-wider text-content-tertiary border-e border-border-light min-w-[260px]"
                   >
                     {t('admin.permissions.col_permission', {
                       defaultValue: 'Permission',
@@ -1463,7 +1463,7 @@ export function PermissionsMatrixPage() {
             })}
           </span>
           {!isAdmin && (
-            <span className="ml-auto inline-flex items-center gap-1 text-amber-700">
+            <span className="ms-auto inline-flex items-center gap-1 text-amber-700">
               <Lock size={12} aria-hidden />
               {t('admin.permissions.read_only_notice', {
                 defaultValue: 'Read-only: admin role required to edit',

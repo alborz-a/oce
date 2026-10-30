@@ -111,12 +111,12 @@ function ImportPreview({
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-surface-secondary/50 sticky top-0">
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-24">{t('boq.ordinal', { defaultValue: 'Ordinal' })}</th>
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary w-24">{t('boq.ordinal', { defaultValue: 'Ordinal' })}</th>
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
               <th className="px-3 py-1.5 text-center font-medium text-content-secondary w-16">{t('boq.unit', { defaultValue: 'Unit' })}</th>
-              <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
-              <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-32">{t('boq.section', { defaultValue: 'Section' })}</th>
+              <th className="px-3 py-1.5 text-end font-medium text-content-secondary w-20">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
+              <th className="px-3 py-1.5 text-end font-medium text-content-secondary w-20">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary w-32">{t('boq.section', { defaultValue: 'Section' })}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border-light">
@@ -129,8 +129,8 @@ function ImportPreview({
                   {pos.description || '-'}
                 </td>
                 <td className="px-3 py-1.5 text-center text-content-secondary">{pos.unit || '-'}</td>
-                <td className="px-3 py-1.5 text-right tabular-nums">{pos.quantity > 0 ? fmtNumber(pos.quantity, 3) : '-'}</td>
-                <td className="px-3 py-1.5 text-right tabular-nums">{pos.unitRate > 0 ? fmtNumber(pos.unitRate, 2) : '-'}</td>
+                <td className="px-3 py-1.5 text-end tabular-nums">{pos.quantity > 0 ? fmtNumber(pos.quantity, 3) : '-'}</td>
+                <td className="px-3 py-1.5 text-end tabular-nums">{pos.unitRate > 0 ? fmtNumber(pos.unitRate, 2) : '-'}</td>
                 <td className="px-3 py-1.5 text-content-tertiary text-2xs truncate" title={pos.section}>{pos.section || '-'}</td>
               </tr>
             ))}
@@ -918,12 +918,12 @@ export default function GAEBExchangeModule() {
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-surface-tertiary/50 sticky top-0">
-                        <th className="px-3 py-1.5 text-left font-medium text-content-secondary">{t('boq.ordinal', { defaultValue: 'Ordinal' })}</th>
-                        <th className="px-3 py-1.5 text-left font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
+                        <th className="px-3 py-1.5 text-start font-medium text-content-secondary">{t('boq.ordinal', { defaultValue: 'Ordinal' })}</th>
+                        <th className="px-3 py-1.5 text-start font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
                         <th className="px-3 py-1.5 text-center font-medium text-content-secondary">{t('boq.unit', { defaultValue: 'Unit' })}</th>
-                        <th className="px-3 py-1.5 text-right font-medium text-content-secondary">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
+                        <th className="px-3 py-1.5 text-end font-medium text-content-secondary">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
                         {exportFormat !== 'X81' && (
-                          <th className="px-3 py-1.5 text-right font-medium text-content-secondary">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
+                          <th className="px-3 py-1.5 text-end font-medium text-content-secondary">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
                         )}
                       </tr>
                     </thead>
@@ -935,9 +935,9 @@ export default function GAEBExchangeModule() {
                           <td className="px-3 py-1.5 font-mono text-content-tertiary">{pos.ordinal}</td>
                           <td className="px-3 py-1.5 text-content-primary max-w-[280px] truncate">{pos.description}</td>
                           <td className="px-3 py-1.5 text-center text-content-secondary">{pos.unit}</td>
-                          <td className="px-3 py-1.5 text-right tabular-nums">{fmtNumber(pos.quantity, 3)}</td>
+                          <td className="px-3 py-1.5 text-end tabular-nums">{fmtNumber(pos.quantity, 3)}</td>
                           {exportFormat !== 'X81' && (
-                            <td className="px-3 py-1.5 text-right tabular-nums">{fmtNumber(pos.unitRate, 2)}</td>
+                            <td className="px-3 py-1.5 text-end tabular-nums">{fmtNumber(pos.unitRate, 2)}</td>
                           )}
                         </tr>
                       ))}

@@ -652,7 +652,7 @@ export default function CloseoutPage() {
                   <h4 className="text-sm font-semibold text-semantic-error">
                     {t('closeout.gaps_title', { defaultValue: 'Outstanding required items' })}
                   </h4>
-                  <ul className="mt-1 list-disc pl-5 text-sm text-content-secondary">
+                  <ul className="mt-1 list-disc ps-5 text-sm text-content-secondary">
                     {pkg.gaps.map((g) => (
                       <li key={g}>{g}</li>
                     ))}

@@ -161,14 +161,14 @@ export function AddFromBoqModal({
         <div className="relative">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('bid_management.boq_search', { defaultValue: 'Search positions' })}
-            className="w-full rounded border border-border-light py-1 pl-8 pr-2 text-sm"
+            className="w-full rounded border border-border-light py-1 ps-8 pe-2 text-sm"
           />
         </div>
         {boqsQ.isSuccess && (boqsQ.data?.length ?? 0) === 0 ? (

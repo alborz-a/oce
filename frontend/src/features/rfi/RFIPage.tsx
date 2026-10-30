@@ -516,7 +516,7 @@ function DocumentPickerModal({
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
             />
             <input
               value={query}
@@ -527,7 +527,7 @@ function DocumentPickerModal({
               aria-label={t('rfi.doc_search_placeholder', {
                 defaultValue: 'Search drawings & documents...',
               })}
-              className={`${inputCls} pl-9`}
+              className={`${inputCls} ps-9`}
               autoFocus
             />
           </div>
@@ -556,7 +556,7 @@ function DocumentPickerModal({
                       type="button"
                       onClick={() => togglePick(d.id)}
                       className={clsx(
-                        'flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-surface-secondary transition-colors',
+                        'flex w-full items-center gap-3 px-3 py-2.5 text-start hover:bg-surface-secondary transition-colors',
                         isPicked && 'bg-oe-blue/5',
                       )}
                       aria-pressed={isPicked}
@@ -815,11 +815,11 @@ export function CreateRFIModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : isEdit ? (
-              <Check size={16} className="mr-1.5 shrink-0" />
+              <Check size={16} className="me-1.5 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -939,7 +939,7 @@ export function CreateRFIModal({
               id="rfi-discipline"
               value={form.discipline}
               onChange={(e) => set('discipline', e.target.value)}
-              className={clsx(inputCls, 'pr-9 appearance-none')}
+              className={clsx(inputCls, 'pe-9 appearance-none')}
             >
               <option value="">
                 {t('rfi.discipline_none', { defaultValue: 'No discipline' })}
@@ -952,7 +952,7 @@ export function CreateRFIModal({
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
               <ChevronDown size={14} />
             </div>
           </div>
@@ -1030,7 +1030,7 @@ export function CreateRFIModal({
             type="button"
             onClick={() => set('cost_impact', !form.cost_impact)}
             className={clsx(
-              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full',
+              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-start w-full',
               form.cost_impact
                 ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-600'
                 : 'border-border bg-surface-primary hover:bg-surface-secondary',
@@ -1069,7 +1069,7 @@ export function CreateRFIModal({
             type="button"
             onClick={() => set('schedule_impact', !form.schedule_impact)}
             className={clsx(
-              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-left w-full',
+              'flex items-center gap-3 rounded-lg border-2 px-4 py-3 transition-all text-start w-full',
               form.schedule_impact
                 ? 'border-blue-400 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-600'
                 : 'border-border bg-surface-primary hover:bg-surface-secondary',
@@ -1173,7 +1173,7 @@ export function CreateRFIModal({
                       aria-label={t('rfi.remove_attachment', {
                         defaultValue: 'Remove attachment',
                       })}
-                      className="ml-0.5 rounded-full hover:bg-oe-blue/20 p-0.5"
+                      className="ms-0.5 rounded-full hover:bg-oe-blue/20 p-0.5"
                     >
                       <X size={11} />
                     </button>
@@ -1527,7 +1527,7 @@ const RFIRow = React.memo(function RFIRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Question */}
           <div className="rounded-lg bg-surface-secondary p-3">
             <p className="text-xs text-content-tertiary mb-1 font-medium uppercase tracking-wide">
@@ -1655,7 +1655,7 @@ const RFIRow = React.memo(function RFIRow({
                     onCreateVariation(rfi.id);
                   }}
                 >
-                  <DollarSign size={14} className="mr-1" />
+                  <DollarSign size={14} className="me-1" />
                   {t('rfi.create_variation', { defaultValue: 'Create Change Order' })}
                 </Button>
               )}
@@ -2397,7 +2397,7 @@ export function RFIPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -2406,7 +2406,7 @@ export function RFIPage() {
               defaultValue: 'Search RFIs...',
             })}
             aria-label={t('rfi.search_placeholder', { defaultValue: 'Search RFIs...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -2577,13 +2577,13 @@ export function RFIPage() {
                   <span className="w-28 text-center">
                     {t('rfi.col_bic', { defaultValue: 'Ball in Court' })}
                   </span>
-                  <span className="w-20 text-right">
+                  <span className="w-20 text-end">
                     {t('rfi.col_days', { defaultValue: 'Days' })}
                   </span>
                   <span className="w-20">
                     {t('rfi.col_due', { defaultValue: 'Due' })}
                   </span>
-                  <span className="w-14 text-right">
+                  <span className="w-14 text-end">
                     {t('rfi.col_impact', { defaultValue: 'Impact' })}
                   </span>
                 </div>

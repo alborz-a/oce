@@ -284,7 +284,7 @@ function CreateCDEModal({
                 <select
                   value={form.discipline}
                   onChange={(e) => set('discipline', e.target.value as CDEDiscipline)}
-                  className={inputCls + ' appearance-none pr-9'}
+                  className={inputCls + ' appearance-none pe-9'}
                 >
                   {(Object.keys(DISCIPLINE_LABELS) as CDEDiscipline[]).map((d) => (
                     <option key={d} value={d}>
@@ -292,7 +292,7 @@ function CreateCDEModal({
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                   <ChevronDown size={14} />
                 </div>
               </div>
@@ -337,7 +337,7 @@ function CreateCDEModal({
                 <select
                   value={form.cde_state}
                   onChange={(e) => set('cde_state', e.target.value as CDEState)}
-                  className={inputCls + ' appearance-none pr-9'}
+                  className={inputCls + ' appearance-none pe-9'}
                   aria-label={t('cde.field_state', { defaultValue: 'State' })}
                 >
                   {STATE_ORDER.map((s) => (
@@ -346,7 +346,7 @@ function CreateCDEModal({
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                   <ChevronDown size={14} />
                 </div>
               </div>
@@ -363,7 +363,7 @@ function CreateCDEModal({
                   id="cde-suitability-select"
                   value={form.suitability_code}
                   onChange={(e) => set('suitability_code', e.target.value)}
-                  className={inputCls + ' appearance-none pr-9'}
+                  className={inputCls + ' appearance-none pe-9'}
                   aria-label={t('cde.field_suitability', { defaultValue: 'Suitability Code' })}
                 >
                   <option value="">
@@ -375,7 +375,7 @@ function CreateCDEModal({
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                   <ChevronDown size={14} />
                 </div>
               </div>
@@ -405,9 +405,9 @@ function CreateCDEModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('cde.create_container', { defaultValue: 'Create Container' })}</span>
           </Button>
@@ -546,7 +546,7 @@ function ApprovalSignatureModal({
             disabled={isPending || !canSubmit}
           >
             {isPending && (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             )}
             {t('cde.approval_submit', { defaultValue: 'Sign and publish' })}
           </Button>
@@ -790,7 +790,7 @@ function LinkDocumentModal({
                   key={doc.id}
                   onClick={() => toggle(doc)}
                   className={clsx(
-                    'flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-left transition-all mb-0.5',
+                    'flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-start transition-all mb-0.5',
                     isSelected
                       ? 'bg-oe-blue/5 ring-1 ring-oe-blue/20'
                       : 'hover:bg-surface-secondary',
@@ -846,7 +846,7 @@ function LinkDocumentModal({
               onClick={handleLink}
               disabled={selected.length === 0 || linking}
             >
-              <Link2 size={14} className="mr-1" />
+              <Link2 size={14} className="me-1" />
               {linking
                 ? t('cde.linking', { defaultValue: 'Linking...' })
                 : `${t('cde.link_selected', { defaultValue: 'Link' })} ${selected.length} ${t('cde.documents', { defaultValue: 'Document(s)' })}`}
@@ -993,7 +993,7 @@ const ContainerRow = React.memo(function ContainerRow({
 
       {/* Expanded detail: revision history */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Actions row */}
           <div className="flex items-center gap-2 flex-wrap">
             {/* Promote action */}
@@ -1006,7 +1006,7 @@ const ContainerRow = React.memo(function ContainerRow({
                   onPromote(container);
                 }}
               >
-                <ArrowRight size={14} className="mr-1" />
+                <ArrowRight size={14} className="me-1" />
                 {t('cde.action_promote', {
                   defaultValue: 'Promote to {{state}}',
                   state: t(`cde.state_${nextState}`, {
@@ -1024,7 +1024,7 @@ const ContainerRow = React.memo(function ContainerRow({
                 onLinkDocument(container);
               }}
             >
-              <Link2 size={14} className="mr-1" />
+              <Link2 size={14} className="me-1" />
               {t('cde.link_document', { defaultValue: 'Link Document' })}
             </Button>
             {/* Send via Transmittal */}
@@ -1036,7 +1036,7 @@ const ContainerRow = React.memo(function ContainerRow({
                 navigate(`/transmittals?create=true&container_id=${container.id}`);
               }}
             >
-              <Send size={13} className="mr-1" />
+              <Send size={13} className="me-1" />
               {t('cde.send_transmittal', { defaultValue: 'Send via Transmittal' })}
             </Button>
             {/* Submit for approval — hands the container off into the
@@ -1053,7 +1053,7 @@ const ContainerRow = React.memo(function ContainerRow({
                 defaultValue: 'Raise a submittal for this container',
               })}
             >
-              <FileCheck size={13} className="mr-1" />
+              <FileCheck size={13} className="me-1" />
               {t('cde.submit_for_approval', { defaultValue: 'Submit for approval' })}
             </Button>
             {/* History drawer */}
@@ -1314,7 +1314,7 @@ function CdeFunctionalRoles() {
                 </span>
                 <span className="text-xs font-semibold text-content-primary">{name}</span>
                 {role.gate && (
-                  <Badge variant="blue" size="sm" className="ml-auto">
+                  <Badge variant="blue" size="sm" className="ms-auto">
                     {t('cde.roles_gate', { defaultValue: 'Gate {{gate}}', gate: role.gate })}
                   </Badge>
                 )}
@@ -1332,11 +1332,11 @@ function CdeFunctionalRoles() {
         <table className="w-full min-w-[34rem] border-collapse text-2xs">
           <thead>
             <tr className="text-content-tertiary">
-              <th className="px-2 py-1.5 text-left font-medium uppercase tracking-wide">
+              <th className="px-2 py-1.5 text-start font-medium uppercase tracking-wide">
                 {t('cde.roles_matrix_state', { defaultValue: 'State' })}
               </th>
               {roles.map((role) => (
-                <th key={role.key} className="px-2 py-1.5 text-left font-medium">
+                <th key={role.key} className="px-2 py-1.5 text-start font-medium">
                   {t(`cde.role_${role.key}_name`, { defaultValue: role.name })}
                 </th>
               ))}
@@ -1450,7 +1450,7 @@ function CdeReadiness({ projectId }: { projectId: string }) {
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-3">
-          <div className="text-right">
+          <div className="text-end">
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold tabular-nums leading-none text-content-primary">
                 {data.score}
@@ -1893,7 +1893,7 @@ export function CDEPage() {
             }
             className="shrink-0 whitespace-nowrap"
           >
-            <Gauge size={14} className="mr-1 shrink-0" />
+            <Gauge size={14} className="me-1 shrink-0" />
             <span>{t('cde.setup_cde', { defaultValue: 'Set up CDE' })}</span>
           </Button>
           <Button
@@ -1924,7 +1924,7 @@ export function CDEPage() {
             }
             className="shrink-0 whitespace-nowrap"
           >
-            <Plus size={14} className="mr-1 shrink-0" />
+            <Plus size={14} className="me-1 shrink-0" />
             <span>{t('cde.new_container', { defaultValue: 'New Container' })}</span>
           </Button>
           </>
@@ -2065,7 +2065,7 @@ export function CDEPage() {
       <div className="relative max-w-sm">
         <Search
           size={16}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+          className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
         />
         <input
           value={searchQuery}
@@ -2073,7 +2073,7 @@ export function CDEPage() {
           placeholder={t('cde.search_placeholder', {
             defaultValue: 'Search containers...',
           })}
-          className={inputCls + ' pl-9'}
+          className={inputCls + ' ps-9'}
         />
       </div>
 

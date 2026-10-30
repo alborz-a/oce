@@ -30,7 +30,7 @@ export function ControlsTile({
       onClick={() => onDrill(kpi)}
       aria-label={`${kpi.label}: ${kpi.value} ${kpi.unit}`}
       className={clsx(
-        'flex w-full flex-col rounded-lg border border-l-4 bg-surface-secondary p-3 text-left transition',
+        'flex w-full flex-col rounded-lg border border-s-4 bg-surface-secondary p-3 text-start transition',
         'border-border-subtle hover:border-border-strong hover:bg-surface-tertiary',
         colours.border,
         'focus:outline-none focus:ring-2 focus:ring-accent/40',

@@ -1639,10 +1639,10 @@ export function CostsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-tertiary text-left">
+                  <tr className="border-b border-border-light bg-surface-tertiary text-start">
                     <th className="px-2 py-3 w-16">
                       <div className="flex items-center gap-0.5">
-                        <Star size={14} className="text-content-quaternary ml-1" />
+                        <Star size={14} className="text-content-quaternary ms-1" />
                         <button
                           onClick={toggleSelectAll}
                           aria-label={t('costs.select_all', { defaultValue: 'Select all' })}
@@ -1671,7 +1671,7 @@ export function CostsPage() {
                     <th className="px-4 py-3 font-medium text-content-secondary w-20 text-center">
                       {t('boq.unit')}
                     </th>
-                    <th className="px-4 py-3 font-medium text-content-secondary w-32 text-right cursor-pointer select-none" onClick={() => toggleSort('rate')}>
+                    <th className="px-4 py-3 font-medium text-content-secondary w-32 text-end cursor-pointer select-none" onClick={() => toggleSort('rate')}>
                       <div className="flex items-center justify-end gap-1">
                         {t('costs.rate', 'Rate')}
                         {sortField === 'rate' && (sortDir === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />)}
@@ -2316,9 +2316,9 @@ function AddToBOQModal({
               <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-surface-tertiary text-content-secondary">
-                    <th className="px-3 py-1.5 text-left font-medium">{t('boq.description')}</th>
+                    <th className="px-3 py-1.5 text-start font-medium">{t('boq.description')}</th>
                     <th className="px-3 py-1.5 text-center font-medium w-14">{t('boq.unit')}</th>
-                    <th className="px-3 py-1.5 text-right font-medium w-20">{t('costs.rate', 'Rate')}</th>
+                    <th className="px-3 py-1.5 text-end font-medium w-20">{t('costs.rate', 'Rate')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border-light">
@@ -2326,7 +2326,7 @@ function AddToBOQModal({
                     <tr key={item.id}>
                       <td className="px-3 py-1.5 text-content-primary truncate max-w-[250px]">{item.description}</td>
                       <td className="px-3 py-1.5 text-center text-content-tertiary">{item.unit}</td>
-                      <td className="px-3 py-1.5 text-right tabular-nums font-medium text-content-primary">{fmtMoney(item.rate, itemCurrencyOf(item))}</td>
+                      <td className="px-3 py-1.5 text-end tabular-nums font-medium text-content-primary">{fmtMoney(item.rate, itemCurrencyOf(item))}</td>
                     </tr>
                   ))}
                   {items.length > 10 && (
@@ -2599,7 +2599,7 @@ function CreateAssemblyFromCostsModal({
             <div className="rounded-lg border border-border-light overflow-hidden max-h-40 overflow-y-auto">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center justify-between px-3 py-2 text-xs border-b border-border-light/50 last:border-0">
-                  <span className="text-content-primary truncate flex-1 mr-2">{item.description || item.code}</span>
+                  <span className="text-content-primary truncate flex-1 me-2">{item.description || item.code}</span>
                   {/* MONEY BUG FIX: render each rate with its OWN currency code
                       and coerce the (possibly Decimal-string) rate via Number()
                       so mixed-currency selections are obvious instead of being
@@ -2892,7 +2892,7 @@ function CreateCostItemModal({
           <div>
             <label className="text-xs font-medium text-content-secondary mb-1 block">
               {t('costs.code', 'Code')}
-              <span className="text-content-quaternary ml-1">({t('costs.optional', 'optional')})</span>
+              <span className="text-content-quaternary ms-1">({t('costs.optional', 'optional')})</span>
             </label>
             <input
               type="text"
@@ -2920,7 +2920,7 @@ function CreateCostItemModal({
           <div>
             <label className="text-xs font-medium text-content-secondary mb-1 block">
               {t('costs.category_field_label', { defaultValue: 'Category' })}
-              <span className="text-content-quaternary ml-1">({t('costs.optional', 'optional')})</span>
+              <span className="text-content-quaternary ms-1">({t('costs.optional', 'optional')})</span>
             </label>
             <input
               type="text"
@@ -2955,7 +2955,7 @@ function CreateCostItemModal({
                 value={form.rate}
                 onChange={(e) => setForm({ ...form, rate: e.target.value })}
                 placeholder="0.00"
-                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-right focus:outline-none focus:ring-2 focus:ring-oe-blue"
+                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-end focus:outline-none focus:ring-2 focus:ring-oe-blue"
               />
             </div>
             <div>
@@ -2996,7 +2996,7 @@ function CreateCostItemModal({
             <div>
               <label className="text-xs font-medium text-content-secondary mb-1 block">
                 {t('costs_catalogs.catalog_label', { defaultValue: 'Catalog' })}
-                <span className="text-content-quaternary ml-1">({t('costs.optional', 'optional')})</span>
+                <span className="text-content-quaternary ms-1">({t('costs.optional', 'optional')})</span>
               </label>
               <select
                 value={itemCatalogId}
@@ -3185,7 +3185,7 @@ function EditCostItemModal({
           <div>
             <label className="text-xs font-medium text-content-secondary mb-1 block">
               {t('costs.category_field_label', { defaultValue: 'Category' })}
-              <span className="text-content-quaternary ml-1">({t('costs.optional', 'optional')})</span>
+              <span className="text-content-quaternary ms-1">({t('costs.optional', 'optional')})</span>
             </label>
             <input
               type="text"
@@ -3217,7 +3217,7 @@ function EditCostItemModal({
                 value={form.rate}
                 onChange={(e) => setForm({ ...form, rate: e.target.value })}
                 placeholder="0.00"
-                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-right focus:outline-none focus:ring-2 focus:ring-oe-blue"
+                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-end focus:outline-none focus:ring-2 focus:ring-oe-blue"
               />
             </div>
             <div>
@@ -3346,7 +3346,7 @@ function CostVariantDetail({
         <Layers size={13} className="text-oe-blue shrink-0" />
         <span className="text-xs font-semibold text-content-primary">
           {t('costs.variant_count', { defaultValue: 'Variants' })}
-          <span className="ml-1.5 rounded bg-oe-blue-subtle/40 px-1.5 py-0.5 text-2xs font-normal text-oe-blue-text">
+          <span className="ms-1.5 rounded bg-oe-blue-subtle/40 px-1.5 py-0.5 text-2xs font-normal text-oe-blue-text">
             {stats.count}
           </span>
         </span>
@@ -3364,29 +3364,29 @@ function CostVariantDetail({
       <div className="mb-2 flex flex-wrap items-center gap-x-1 gap-y-1 text-2xs tabular-nums text-content-secondary">
         <span className="rounded bg-surface-primary/70 px-1.5 py-0.5">
           <span className="text-content-tertiary">{t('costs.variant_min', { defaultValue: 'Min' })}</span>
-          <span className="ml-1 font-semibold text-content-primary">{fmt(stats.min)}</span>
+          <span className="ms-1 font-semibold text-content-primary">{fmt(stats.min)}</span>
         </span>
         <span className="text-content-tertiary">·</span>
         <span className="rounded bg-surface-primary/70 px-1.5 py-0.5">
           <span className="text-content-tertiary">{t('costs.variant_median', { defaultValue: 'Median' })}</span>
-          <span className="ml-1 font-semibold text-content-primary">{fmt(stats.median)}</span>
+          <span className="ms-1 font-semibold text-content-primary">{fmt(stats.median)}</span>
         </span>
         <span className="text-content-tertiary">·</span>
         <span className="rounded bg-surface-primary/70 px-1.5 py-0.5">
           <span className="text-content-tertiary">{t('costs.variant_mean', { defaultValue: 'Mean' })}</span>
-          <span className="ml-1 font-semibold text-content-primary">{fmt(stats.mean)}</span>
+          <span className="ms-1 font-semibold text-content-primary">{fmt(stats.mean)}</span>
         </span>
         <span className="text-content-tertiary">·</span>
         <span className="rounded bg-surface-primary/70 px-1.5 py-0.5">
           <span className="text-content-tertiary">{t('costs.variant_max', { defaultValue: 'Max' })}</span>
-          <span className="ml-1 font-semibold text-content-primary">{fmt(stats.max)}</span>
+          <span className="ms-1 font-semibold text-content-primary">{fmt(stats.max)}</span>
         </span>
         {stats.position_count != null && stats.position_count > 0 && (
           <>
             <span className="text-content-tertiary">·</span>
             <span className="rounded bg-surface-primary/70 px-1.5 py-0.5">
               <span className="font-semibold text-content-primary">{stats.position_count.toLocaleString(getNumberLocale())}</span>
-              <span className="ml-1 text-content-tertiary">
+              <span className="ms-1 text-content-tertiary">
                 {t('costs.variant_position_count_label', { defaultValue: 'Estimates' })}
               </span>
             </span>
@@ -3398,15 +3398,15 @@ function CostVariantDetail({
       <div className="overflow-hidden rounded border border-border-light">
         <table className="w-full text-xs">
           <thead>
-            <tr className="bg-surface-tertiary text-left">
+            <tr className="bg-surface-tertiary text-start">
               <th className="px-2 py-1 w-10 text-center text-2xs font-medium text-content-secondary">#</th>
               <th className="px-2 py-1 text-2xs font-medium text-content-secondary">
                 {t('costs.variant_label', { defaultValue: 'Variant' })}
               </th>
-              <th className="px-2 py-1 text-right text-2xs font-medium text-content-secondary">
+              <th className="px-2 py-1 text-end text-2xs font-medium text-content-secondary">
                 {t('costs.rate', { defaultValue: 'Rate' })}
               </th>
-              <th className="px-2 py-1 text-right text-2xs font-medium text-content-secondary">
+              <th className="px-2 py-1 text-end text-2xs font-medium text-content-secondary">
                 {t('costs.variant_per_unit', { defaultValue: 'Per unit' })}
               </th>
             </tr>
@@ -3430,10 +3430,10 @@ function CostVariantDetail({
                       )}
                     </div>
                   </td>
-                  <td className="px-2 py-1 text-right tabular-nums font-semibold text-content-primary">
+                  <td className="px-2 py-1 text-end tabular-nums font-semibold text-content-primary">
                     {fmt(v.price)}
                   </td>
-                  <td className="px-2 py-1 text-right tabular-nums text-content-secondary">
+                  <td className="px-2 py-1 text-end tabular-nums text-content-secondary">
                     {v.price_per_unit != null ? fmt(v.price_per_unit) : '—'}
                   </td>
                 </tr>
@@ -3635,7 +3635,7 @@ function CostItemRow({
             )}
             <span className="truncate" title={item.description}>{item.description}</span>
             {item.source === 'custom' && (
-              <Badge variant="neutral" size="sm" className="ml-1.5 text-2xs">
+              <Badge variant="neutral" size="sm" className="ms-1.5 text-2xs">
                 {t('costs.custom_label', { defaultValue: 'Custom' })}
               </Badge>
             )}
@@ -3649,7 +3649,7 @@ function CostItemRow({
         <td className="px-4 py-3 text-center">
           <Badge variant="neutral" size="sm">{item.unit}</Badge>
         </td>
-        <td className="px-4 py-3 text-right font-semibold text-content-primary tabular-nums">
+        <td className="px-4 py-3 text-end font-semibold text-content-primary tabular-nums">
           <div className="inline-flex items-center gap-1.5">
             <UsageBadge count={usageCount} band={band} />
             <span title={rowCurrency || undefined}>{money(item.rate)}</span>
@@ -3891,22 +3891,22 @@ function CostItemRow({
                 <table className="w-full text-xs table-fixed">
                   <thead>
                     <tr className="bg-surface-tertiary">
-                      <th className="px-3 py-2 text-left font-medium text-content-secondary truncate">
+                      <th className="px-3 py-2 text-start font-medium text-content-secondary truncate">
                         {t('costs.resource', { defaultValue: 'Resource' })}
                       </th>
-                      <th className="px-3 py-2 text-left font-medium text-content-secondary w-16">
+                      <th className="px-3 py-2 text-start font-medium text-content-secondary w-16">
                         {t('costs.type', { defaultValue: 'Type' })}
                       </th>
-                      <th className="px-3 py-2 text-left font-medium text-content-secondary w-16">
+                      <th className="px-3 py-2 text-start font-medium text-content-secondary w-16">
                         {t('boq.unit', { defaultValue: 'Unit' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium text-content-secondary w-20">
+                      <th className="px-3 py-2 text-end font-medium text-content-secondary w-20">
                         {t('costs.qty', { defaultValue: 'Qty' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium text-content-secondary w-24">
+                      <th className="px-3 py-2 text-end font-medium text-content-secondary w-24">
                         {t('costs.unit_rate', { defaultValue: 'Unit Rate' })}
                       </th>
-                      <th className="px-3 py-2 text-right font-medium text-content-secondary w-24">
+                      <th className="px-3 py-2 text-end font-medium text-content-secondary w-24">
                         {t('costs.cost', { defaultValue: 'Cost' })}
                       </th>
                     </tr>
@@ -3940,13 +3940,13 @@ function CostItemRow({
                           <td className="px-3 py-2 text-content-tertiary">
                             {comp.unit_localized || comp.unit || '—'}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                          <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                             {qty > 0 ? fmtFixed(qty, 2) : '—'}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                          <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                             {unitRate > 0 ? money(unitRate) : '—'}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums font-medium text-content-primary">
+                          <td className="px-3 py-2 text-end tabular-nums font-medium text-content-primary">
                             {lineCost > 0 ? money(lineCost) : '—'}
                           </td>
                         </tr>
@@ -3979,7 +3979,7 @@ function CostItemRow({
                   {Object.entries(cls).map(([k, v]) => (
                     <div key={k} className="flex justify-between">
                       <span className="text-content-quaternary capitalize">{k}</span>
-                      <span className="text-content-secondary truncate ml-2 max-w-[200px]" title={String(v)}>{String(v)}</span>
+                      <span className="text-content-secondary truncate ms-2 max-w-[200px]" title={String(v)}>{String(v)}</span>
                     </div>
                   ))}
 
@@ -4089,11 +4089,11 @@ function ComparePanel({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border-light">
-                <th className="py-2 pr-4 text-left text-xs font-medium text-content-tertiary w-36">
+                <th className="py-2 pe-4 text-start text-xs font-medium text-content-tertiary w-36">
                   {t('costs.property', { defaultValue: 'Property' })}
                 </th>
                 {items.map((item) => (
-                  <th key={item.id} className="py-2 px-3 text-left text-xs font-medium text-content-secondary">
+                  <th key={item.id} className="py-2 px-3 text-start text-xs font-medium text-content-secondary">
                     <div className="truncate max-w-[200px]" title={item.code}>{item.code}</div>
                   </th>
                 ))}
@@ -4102,7 +4102,7 @@ function ComparePanel({
             <tbody className="divide-y divide-border-light">
               {/* Description */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('boq.description')}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('boq.description')}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3 text-xs text-content-primary">
                     <span className="line-clamp-3">{item.description}</span>
@@ -4111,7 +4111,7 @@ function ComparePanel({
               </tr>
               {/* Unit */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('boq.unit')}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('boq.unit')}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3">
                     <Badge variant="neutral" size="sm">{item.unit}</Badge>
@@ -4120,7 +4120,7 @@ function ComparePanel({
               </tr>
               {/* Rate */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.rate', 'Rate')}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.rate', 'Rate')}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3">
                     <div className="flex items-center gap-2">
@@ -4138,7 +4138,7 @@ function ComparePanel({
               </tr>
               {/* Rate bar */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.rate_comparison', { defaultValue: 'Rate spread' })}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.rate_comparison', { defaultValue: 'Rate spread' })}</td>
                 {items.map((item) => {
                   const range = maxRate - minRate;
                   const pct = range > 0 ? ((item.rate - minRate) / range) * 100 : 50;
@@ -4156,7 +4156,7 @@ function ComparePanel({
               </tr>
               {/* Currency */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.currency', { defaultValue: 'Currency' })}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.currency', { defaultValue: 'Currency' })}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3 text-xs text-content-secondary">
                     {(item.currency || regionCurrency || '—').toUpperCase()}
@@ -4165,7 +4165,7 @@ function ComparePanel({
               </tr>
               {/* Region */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.region', { defaultValue: 'Region' })}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.region', { defaultValue: 'Region' })}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3 text-xs text-content-secondary">
                     {item.region || '—'}
@@ -4174,7 +4174,7 @@ function ComparePanel({
               </tr>
               {/* Classification */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.classification', 'Class.')}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.classification', 'Class.')}</td>
                 {items.map((item) => {
                   const cls = item.classification ?? {};
                   return (
@@ -4188,7 +4188,7 @@ function ComparePanel({
               {allLoaded && (
                 <>
                   <tr>
-                    <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">
+                    <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">
                       <div className="flex items-center gap-1">
                         <HardHat size={12} className="text-amber-500" />
                         {t('costs.labor', { defaultValue: 'Labor' })}
@@ -4201,7 +4201,7 @@ function ComparePanel({
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">
+                    <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">
                       <div className="flex items-center gap-1">
                         <Package size={12} className="text-emerald-500" />
                         {t('costs.material', { defaultValue: 'Material' })}
@@ -4214,7 +4214,7 @@ function ComparePanel({
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">
+                    <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">
                       <div className="flex items-center gap-1">
                         <Hammer size={12} className="text-blue-500" />
                         {t('costs.equipment', { defaultValue: 'Equipment' })}
@@ -4227,7 +4227,7 @@ function ComparePanel({
                     ))}
                   </tr>
                   <tr>
-                    <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.components_label', { defaultValue: 'Components' })}</td>
+                    <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.components_label', { defaultValue: 'Components' })}</td>
                     {items.map((item, i) => (
                       <td key={item.id} className="py-3 px-3 text-xs text-content-secondary">
                         {breakdowns[i] && breakdowns[i].components > 0 ? t('costs.n_resources', { defaultValue: '{{count}} resources', count: breakdowns[i].components }) : '—'}
@@ -4238,7 +4238,7 @@ function ComparePanel({
               )}
               {/* Source */}
               <tr>
-                <td className="py-3 pr-4 text-xs text-content-tertiary font-medium">{t('costs.source', { defaultValue: 'Source' })}</td>
+                <td className="py-3 pe-4 text-xs text-content-tertiary font-medium">{t('costs.source', { defaultValue: 'Source' })}</td>
                 {items.map((item) => (
                   <td key={item.id} className="py-3 px-3 text-xs text-content-secondary">
                     <Badge variant={item.source === 'cwicr' ? 'blue' : 'neutral'} size="sm">

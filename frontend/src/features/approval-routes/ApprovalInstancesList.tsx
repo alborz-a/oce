@@ -182,10 +182,10 @@ export function ApprovalInstancesList({
             </option>
           ))}
         </select>
-        <div className="relative flex-1 min-w-[180px] max-w-xs ml-auto">
+        <div className="relative flex-1 min-w-[180px] max-w-xs ms-auto">
           <Search
             size={13}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={search}
@@ -196,7 +196,7 @@ export function ApprovalInstancesList({
             aria-label={t('approvalRoutes.search_instances_placeholder', {
               defaultValue: 'Search by route or kind…',
             })}
-            className="h-8 w-full pl-7 rounded-md border border-border bg-surface-primary text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+            className="h-8 w-full ps-7 rounded-md border border-border bg-surface-primary text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
           />
         </div>
         <button
@@ -236,19 +236,19 @@ export function ApprovalInstancesList({
         <table className="w-full text-sm min-w-[720px]">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/30">
-              <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+              <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                 {t('approvalRoutes.col_route', { defaultValue: 'Route' })}
               </th>
-              <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+              <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                 {t('approvalRoutes.col_target', { defaultValue: 'Target' })}
               </th>
-              <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+              <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                 {t('approvalRoutes.col_status', { defaultValue: 'Status' })}
               </th>
-              <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+              <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                 {t('approvalRoutes.col_step', { defaultValue: 'Step' })}
               </th>
-              <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+              <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                 {t('approvalRoutes.col_started', { defaultValue: 'Started' })}
               </th>
               <th className="px-3 py-2 w-8" aria-hidden="true" />
@@ -349,7 +349,7 @@ function InstanceRow({
       <td className="px-3 py-2.5 text-xs text-content-tertiary">
         {new Date(instance.started_at).toLocaleDateString(getIntlLocale())}
       </td>
-      <td className="px-3 py-2.5 text-right">
+      <td className="px-3 py-2.5 text-end">
         <ChevronRight size={14} className="text-content-tertiary inline" />
       </td>
     </tr>

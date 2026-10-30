@@ -327,7 +327,7 @@ function CascadeFilterCard({
       )}
 
       <div className="relative">
-        <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-tertiary" />
+        <Search className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-tertiary" />
         <input
           id={inputId}
           type="text"
@@ -374,7 +374,7 @@ function CascadeFilterCard({
               type="button"
               onClick={() => onAddChip(c.value)}
               disabled={disabled}
-              className="flex flex-1 items-center justify-between gap-2 text-left text-content-secondary disabled:opacity-40"
+              className="flex flex-1 items-center justify-between gap-2 text-start text-content-secondary disabled:opacity-40"
               data-testid={`cascade-option-${column}-${c.value}`}
             >
               <span className="truncate">{c.value}</span>

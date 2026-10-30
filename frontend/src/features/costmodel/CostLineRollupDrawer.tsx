@@ -109,7 +109,7 @@ function LinkGroup({
         </span>
       </div>
       {ids.length > 0 ? (
-        <ul className="space-y-1 pl-6">
+        <ul className="space-y-1 ps-6">
           {ids.map((id) =>
             hrefFor && onNavigate ? (
               <li key={id}>

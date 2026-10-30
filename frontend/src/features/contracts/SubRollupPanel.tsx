@@ -180,7 +180,7 @@ export function SubRollupPanel({ claimId, contractId, currency, editable }: SubR
     return (
       <Card padding="sm">
         <p className="py-3 text-center text-sm text-content-tertiary">
-          <Loader2 size={14} className="mr-2 inline animate-spin" />
+          <Loader2 size={14} className="me-2 inline animate-spin" />
           {t('common.loading', { defaultValue: 'Loading…' })}
         </p>
       </Card>
@@ -218,17 +218,17 @@ export function SubRollupPanel({ claimId, contractId, currency, editable }: SubR
           <table className="w-full text-xs" data-testid="sub-rollup-lines">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-2 py-1.5 text-left">{t('contracts.line', { defaultValue: 'Line' })}</th>
-                <th className="px-2 py-1.5 text-right">
+                <th className="px-2 py-1.5 text-start">{t('contracts.line', { defaultValue: 'Line' })}</th>
+                <th className="px-2 py-1.5 text-end">
                   {t('subcontractors.rollup_col_scheduled', { defaultValue: 'Scheduled' })}
                 </th>
-                <th className="px-2 py-1.5 text-right">
+                <th className="px-2 py-1.5 text-end">
                   {t('subcontractors.rollup_col_gc_period', { defaultValue: 'GC this period' })}
                 </th>
-                <th className="px-2 py-1.5 text-right">
+                <th className="px-2 py-1.5 text-end">
                   {t('subcontractors.rollup_col_sub_period', { defaultValue: 'Subs this period' })}
                 </th>
-                <th className="px-2 py-1.5 text-right">
+                <th className="px-2 py-1.5 text-end">
                   {t('subcontractors.rollup_col_sub_to_date', { defaultValue: 'Subs to date' })}
                 </th>
               </tr>
@@ -245,10 +245,10 @@ export function SubRollupPanel({ claimId, contractId, currency, editable }: SubR
                       ))}
                     </div>
                   </td>
-                  <td className="px-2 py-1.5 text-right">{money(line.scheduled_value)}</td>
-                  <td className="px-2 py-1.5 text-right">{money(line.gc_period_value)}</td>
-                  <td className="px-2 py-1.5 text-right font-medium">{money(line.sub_period_approved)}</td>
-                  <td className="px-2 py-1.5 text-right">
+                  <td className="px-2 py-1.5 text-end">{money(line.scheduled_value)}</td>
+                  <td className="px-2 py-1.5 text-end">{money(line.gc_period_value)}</td>
+                  <td className="px-2 py-1.5 text-end font-medium">{money(line.sub_period_approved)}</td>
+                  <td className="px-2 py-1.5 text-end">
                     {money(line.sub_approved_to_date)}
                     {line.exceeds_scheduled_value && (
                       <div className="mt-0.5">
@@ -652,7 +652,7 @@ function PayAppLines({
   if (linesQ.isLoading) {
     return (
       <p className="w-full py-1 text-content-tertiary">
-        <Loader2 size={12} className="mr-1 inline animate-spin" />
+        <Loader2 size={12} className="me-1 inline animate-spin" />
         {t('common.loading', { defaultValue: 'Loading…' })}
       </p>
     );
@@ -671,7 +671,7 @@ function PayAppLines({
               value={line.contract_line_id ?? ''}
               onChange={(e) => remap.mutate({ lineId: line.id, target: e.target.value || null })}
               disabled={remap.isPending || sovQ.isLoading}
-              className="ml-auto h-7 max-w-[260px] truncate rounded-md border border-border-light bg-surface-primary px-1.5 text-xs"
+              className="ms-auto h-7 max-w-[260px] truncate rounded-md border border-border-light bg-surface-primary px-1.5 text-xs"
               aria-label={t('subcontractors.rollup_line_override_label', {
                 name: pkg?.name || '—',
                 defaultValue: 'SOV line for the {{name}} line',
@@ -776,7 +776,7 @@ function PayAppRow({
           {lapsed}
         </span>
       )}
-      <span className="ml-auto">{action}</span>
+      <span className="ms-auto">{action}</span>
       {footer}
     </li>
   );
@@ -842,7 +842,7 @@ function UnmappedLines({
                 value=""
                 onChange={(e) => e.target.value && remap.mutate({ lineId: ln.line_id, target: e.target.value })}
                 disabled={remap.isPending || sovQ.isLoading}
-                className="ml-auto h-7 max-w-[240px] truncate rounded-md border border-border-light bg-surface-primary px-1.5 text-xs"
+                className="ms-auto h-7 max-w-[240px] truncate rounded-md border border-border-light bg-surface-primary px-1.5 text-xs"
                 aria-label={t('subcontractors.rollup_remap_label', {
                   number: ln.application_number,
                   defaultValue: 'Bill this line of {{number}} on',

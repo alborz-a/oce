@@ -233,9 +233,9 @@ function SessionFormModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -455,9 +455,9 @@ function AttestModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <CheckCircle2 size={16} className="mr-1.5 shrink-0" />
+              <CheckCircle2 size={16} className="me-1.5 shrink-0" />
             )}
             {t('signing.attest_action', { defaultValue: 'Record signature' })}
           </Button>
@@ -568,9 +568,9 @@ function DeclineModal({
             disabled={isPending || !canSubmit}
           >
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <XCircle size={16} className="mr-1.5 shrink-0" />
+              <XCircle size={16} className="me-1.5 shrink-0" />
             )}
             {t('signing.decline_action', { defaultValue: 'Record decline' })}
           </Button>

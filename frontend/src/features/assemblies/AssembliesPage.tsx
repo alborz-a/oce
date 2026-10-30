@@ -422,7 +422,7 @@ export function AssembliesPage() {
               {t('common.export')}
             </Button>
             {showExportMenu && (
-              <div className="absolute right-0 top-full mt-1 z-50 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in">
+              <div className="absolute end-0 top-full mt-1 z-50 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-md animate-fade-in">
                 <button
                   onClick={async () => {
                     setShowExportMenu(false);
@@ -845,7 +845,7 @@ export function AssembliesPage() {
           >
             {t('common.clear', { defaultValue: 'Clear' })}
           </button>
-          <span className="ml-auto flex flex-wrap items-center gap-1.5">
+          <span className="ms-auto flex flex-wrap items-center gap-1.5">
             <Button variant="secondary" size="sm" icon={<Download size={13} />} onClick={handleBulkExport}>
               {t('assemblies.bulk_export', { defaultValue: 'Export selected' })}
             </Button>
@@ -1087,7 +1087,7 @@ function StatTile({
   title?: string;
 }) {
   const base =
-    'flex flex-col gap-1 rounded-lg border px-3 py-2.5 text-left transition-colors';
+    'flex flex-col gap-1 rounded-lg border px-3 py-2.5 text-start transition-colors';
   const tone =
     active
       ? 'border-oe-blue bg-oe-blue-subtle'
@@ -1160,7 +1160,7 @@ function AssemblyTable({
   // the table compact while still guarding against an accidental click.
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const headerCellBase =
-    'px-3 py-2 text-left text-xs font-medium text-content-secondary select-none';
+    'px-3 py-2 text-start text-xs font-medium text-content-secondary select-none';
   const sortBtn = (key: SortKey, label: string, align: 'left' | 'right' | 'center' = 'left') => (
     <button
       type="button"
@@ -1188,12 +1188,12 @@ function AssemblyTable({
               <th className={headerCellBase}>{sortBtn('code', t('common.code'))}</th>
               <th className={headerCellBase}>{t('assemblies.col_category', { defaultValue: 'Category' })}</th>
               <th className={headerCellBase}>{t('assemblies.col_unit', { defaultValue: 'Unit' })}</th>
-              <th className={`${headerCellBase} text-right`}>{sortBtn('total_rate', t('assemblies.col_rate', { defaultValue: 'Rate' }), 'right')}</th>
+              <th className={`${headerCellBase} text-end`}>{sortBtn('total_rate', t('assemblies.col_rate', { defaultValue: 'Rate' }), 'right')}</th>
               <th className={headerCellBase}>{t('assemblies.col_currency', { defaultValue: 'Currency' })}</th>
-              <th className={`${headerCellBase} text-right`}>{sortBtn('component_count', t('assemblies.col_components', { defaultValue: 'Components' }), 'right')}</th>
-              <th className={`${headerCellBase} text-right`}>{sortBtn('usage_count', t('assemblies.col_usage', { defaultValue: 'Used in BOQ' }), 'right')}</th>
+              <th className={`${headerCellBase} text-end`}>{sortBtn('component_count', t('assemblies.col_components', { defaultValue: 'Components' }), 'right')}</th>
+              <th className={`${headerCellBase} text-end`}>{sortBtn('usage_count', t('assemblies.col_usage', { defaultValue: 'Used in BOQ' }), 'right')}</th>
               <th className={headerCellBase}>{sortBtn('updated_at', t('assemblies.col_updated', { defaultValue: 'Updated' }))}</th>
-              <th className={`${headerCellBase} w-24 text-right`}>
+              <th className={`${headerCellBase} w-24 text-end`}>
                 <span className="sr-only">{t('common.actions', { defaultValue: 'Actions' })}</span>
               </th>
             </tr>
@@ -1231,7 +1231,7 @@ function AssemblyTable({
                     )}
                   </td>
                   <td className="px-3 py-2 align-middle text-content-secondary uppercase text-xs">{a.unit}</td>
-                  <td className="px-3 py-2 align-middle text-right tabular-nums font-semibold text-content-primary">
+                  <td className="px-3 py-2 align-middle text-end tabular-nums font-semibold text-content-primary">
                     {a.total_rate > 0 ? fmt(a.total_rate) : <span className="text-content-quaternary font-normal">—</span>}
                   </td>
                   <td className="px-3 py-2 align-middle text-xs text-content-tertiary">
@@ -1239,8 +1239,8 @@ function AssemblyTable({
                       <span title={t('projects.currency_not_set', { defaultValue: 'Currency not set' })}>—</span>
                     )}
                   </td>
-                  <td className="px-3 py-2 align-middle text-right tabular-nums text-content-secondary">{a.component_count ?? 0}</td>
-                  <td className="px-3 py-2 align-middle text-right tabular-nums">
+                  <td className="px-3 py-2 align-middle text-end tabular-nums text-content-secondary">{a.component_count ?? 0}</td>
+                  <td className="px-3 py-2 align-middle text-end tabular-nums">
                     {(a.usage_count ?? 0) > 0 ? (
                       <span className="text-oe-blue font-medium">{a.usage_count}</span>
                     ) : (
@@ -1250,7 +1250,7 @@ function AssemblyTable({
                   <td className="px-3 py-2 align-middle text-xs text-content-tertiary whitespace-nowrap">
                     {new Date(a.updated_at).toLocaleDateString(getIntlLocale())}
                   </td>
-                  <td className="px-3 py-2 align-middle text-right" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-3 py-2 align-middle text-end" onClick={(e) => e.stopPropagation()}>
                     {confirmId === a.id ? (
                       <span className="inline-flex items-center gap-1">
                         <button
@@ -1663,10 +1663,10 @@ function AIGenerateModal({
                     : <span className={`font-semibold ${coverageColor}`}>{coverageLabel}</span>
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-end">
                   <p className="text-lg font-bold text-content-primary tabular-nums">
                     {fmt(result.total_rate)}
-                    <span className="text-xs font-normal text-content-tertiary ml-1">/ {result.unit}</span>
+                    <span className="text-xs font-normal text-content-tertiary ms-1">/ {result.unit}</span>
                   </p>
                 </div>
               </div>
@@ -1677,12 +1677,12 @@ function AIGenerateModal({
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b border-border-light bg-surface-tertiary">
-                        <th className="px-3 py-2 text-left font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
+                        <th className="px-3 py-2 text-start font-medium text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
                         <th className="px-3 py-2 text-center font-medium text-content-secondary w-16">{t('assemblies.type', { defaultValue: 'Type' })}</th>
                         <th className="px-3 py-2 text-center font-medium text-content-secondary w-14">{t('boq.unit', { defaultValue: 'Unit' })}</th>
-                        <th className="px-3 py-2 text-right font-medium text-content-secondary w-14">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
-                        <th className="px-3 py-2 text-right font-medium text-content-secondary w-20">{t('assemblies.rate', { defaultValue: 'Rate' })}</th>
-                        <th className="px-3 py-2 text-right font-medium text-content-secondary w-20">{t('boq.total', { defaultValue: 'Total' })}</th>
+                        <th className="px-3 py-2 text-end font-medium text-content-secondary w-14">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
+                        <th className="px-3 py-2 text-end font-medium text-content-secondary w-20">{t('assemblies.rate', { defaultValue: 'Rate' })}</th>
+                        <th className="px-3 py-2 text-end font-medium text-content-secondary w-20">{t('boq.total', { defaultValue: 'Total' })}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-light">
@@ -1701,9 +1701,9 @@ function AIGenerateModal({
                               </span>
                             </td>
                             <td className="px-3 py-2 text-center text-content-secondary font-mono uppercase">{comp.unit}</td>
-                            <td className="px-3 py-2 text-right text-content-primary tabular-nums">{comp.quantity}</td>
-                            <td className="px-3 py-2 text-right text-content-primary tabular-nums">{fmt(comp.unit_rate)}</td>
-                            <td className="px-3 py-2 text-right font-semibold text-content-primary tabular-nums">{fmt(comp.total)}</td>
+                            <td className="px-3 py-2 text-end text-content-primary tabular-nums">{comp.quantity}</td>
+                            <td className="px-3 py-2 text-end text-content-primary tabular-nums">{fmt(comp.unit_rate)}</td>
+                            <td className="px-3 py-2 text-end font-semibold text-content-primary tabular-nums">{fmt(comp.total)}</td>
                           </tr>
                         );
                       })}
@@ -1889,7 +1889,7 @@ function AssemblyCard({
         {/* Context menu */}
         {menuOpen && (
           <div
-            className="absolute top-10 right-4 z-20 w-44 rounded-lg border border-border bg-surface-elevated shadow-lg overflow-hidden"
+            className="absolute top-10 end-4 z-20 w-44 rounded-lg border border-border bg-surface-elevated shadow-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -1953,11 +1953,11 @@ function AssemblyCard({
         {/* Rate */}
         <p className="mt-1.5 text-base font-bold tabular-nums" style={{ color: assembly.total_rate > 0 ? undefined : 'var(--color-content-tertiary)' }}>
           {assembly.total_rate > 0 ? fmt(assembly.total_rate) : '0,00'}
-          <span className="ml-1 text-xs font-normal text-content-tertiary">
+          <span className="ms-1 text-xs font-normal text-content-tertiary">
             / {assembly.unit}
           </span>
           {assembly.total_rate === 0 && (
-            <span className="ml-2 text-2xs font-medium text-amber-500">
+            <span className="ms-2 text-2xs font-medium text-amber-500">
               ({t('assemblies.draft', { defaultValue: 'draft' })})
             </span>
           )}
@@ -2033,7 +2033,7 @@ function QuickPreview({
       onClick={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-semibold text-content-primary truncate flex-1 mr-2">
+        <p className="text-xs font-semibold text-content-primary truncate flex-1 me-2">
           {assemblyName}
         </p>
         <button
@@ -2104,7 +2104,7 @@ function HoverComponentsPopover({
   const top = (data?.components ?? []).slice(0, 3);
   const remaining = Math.max(0, (data?.components?.length ?? 0) - top.length);
   return (
-    <div className="absolute left-2 right-2 top-12 z-20 rounded-lg border border-border bg-surface-elevated shadow-xl px-3 py-2 animate-fade-in pointer-events-none">
+    <div className="absolute start-2 end-2 top-12 z-20 rounded-lg border border-border bg-surface-elevated shadow-xl px-3 py-2 animate-fade-in pointer-events-none">
       <p className="text-2xs uppercase tracking-wide text-content-tertiary mb-1.5">
         {t('assemblies.preview_components', { defaultValue: 'Top components' })}
       </p>
@@ -2227,7 +2227,7 @@ function ImportAssemblyModal({
               type="file"
               accept=".json"
               onChange={handleFileSelect}
-              className="w-full text-sm text-content-secondary file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-light file:bg-surface-secondary file:text-sm file:font-medium file:text-content-primary file:cursor-pointer hover:file:bg-surface-tertiary"
+              className="w-full text-sm text-content-secondary file:me-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-border-light file:bg-surface-secondary file:text-sm file:font-medium file:text-content-primary file:cursor-pointer hover:file:bg-surface-tertiary"
             />
           </div>
           <div>

@@ -600,7 +600,7 @@ function PriceBar({
       </span>
       <div className="relative flex-1 h-2 bg-surface-tertiary rounded-full overflow-hidden">
         <div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-green-400 to-amber-400 rounded-full"
+          className="absolute inset-y-0 start-0 bg-gradient-to-r from-green-400 to-amber-400 rounded-full"
           style={{ width: '100%' }}
         />
         <div
@@ -775,7 +775,7 @@ function ResourceRow({
         <td className="px-4 py-3 text-center text-xs text-content-secondary">{resource.unit}</td>
 
         {/* Price (avg) */}
-        <td className="px-3 py-3 text-right text-xs font-semibold text-content-primary tabular-nums whitespace-nowrap">
+        <td className="px-3 py-3 text-end text-xs font-semibold text-content-primary tabular-nums whitespace-nowrap">
           {fmt(Number(resource.base_price), resource.currency)}
         </td>
 
@@ -1043,7 +1043,7 @@ function ResourceDetailPanel({
                 .map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-2 py-0.5">
                     <span className="text-content-quaternary capitalize">{k.replace(/_/g, ' ').replace('parent ', '')}</span>
-                    <span className="text-content-secondary truncate max-w-[150px] text-right" title={String(v)}>
+                    <span className="text-content-secondary truncate max-w-[150px] text-end" title={String(v)}>
                       {!isNaN(Number(v)) ? Number(Number(v).toFixed(2)).toLocaleString(getNumberLocale()) : String(v)}
                     </span>
                   </div>
@@ -1295,13 +1295,13 @@ function BuildAssemblyModal({
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-surface-tertiary text-content-secondary">
-                  <th className="px-3 py-2 text-left font-medium">
+                  <th className="px-3 py-2 text-start font-medium">
                     {t('catalog.resource_name', { defaultValue: 'Resource' })}
                   </th>
                   <th className="px-3 py-2 text-center font-medium w-14">
                     {t('boq.unit', { defaultValue: 'Unit' })}
                   </th>
-                  <th className="px-3 py-2 text-right font-medium w-24">
+                  <th className="px-3 py-2 text-end font-medium w-24">
                     {t('catalog.unit_rate', { defaultValue: 'Unit Rate' })}
                   </th>
                   <th className="px-3 py-2 text-center font-medium w-16">
@@ -1310,7 +1310,7 @@ function BuildAssemblyModal({
                   <th className="px-3 py-2 text-center font-medium w-20">
                     {t('catalog.quantity', { defaultValue: 'Qty' })}
                   </th>
-                  <th className="px-3 py-2 text-right font-medium w-24">
+                  <th className="px-3 py-2 text-end font-medium w-24">
                     {t('catalog.subtotal', { defaultValue: 'Subtotal' })}
                   </th>
                   <th className="px-1 py-2 w-8" />
@@ -1325,7 +1325,7 @@ function BuildAssemblyModal({
                     <td className="px-3 py-2 text-center text-content-tertiary">
                       {entry.resource.unit}
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums font-medium text-content-primary">
+                    <td className="px-3 py-2 text-end tabular-nums font-medium text-content-primary">
                       {fmt(Number(entry.resource.base_price), entry.resource.currency || 'EUR')}
                     </td>
                     <td
@@ -1348,7 +1348,7 @@ function BuildAssemblyModal({
                         onClick={(e) => e.stopPropagation()}
                       />
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums font-medium text-content-primary">
+                    <td className="px-3 py-2 text-end tabular-nums font-medium text-content-primary">
                       {fmt(Number(entry.resource.base_price) * entry.quantity, entry.resource.currency || 'EUR')}
                     </td>
                     <td className="px-1 py-2 text-center">
@@ -1367,10 +1367,10 @@ function BuildAssemblyModal({
                 {isMultiCurrency ? (
                   distinctCurrencies.map((code) => (
                     <tr key={code} className="bg-surface-tertiary font-medium">
-                      <td colSpan={5} className="px-3 py-2 text-right text-sm text-content-primary">
+                      <td colSpan={5} className="px-3 py-2 text-end text-sm text-content-primary">
                         {t('catalog.total', { defaultValue: 'Total' })} ({code}):
                       </td>
-                      <td className="px-3 py-2 text-right text-sm tabular-nums text-content-primary">
+                      <td className="px-3 py-2 text-end text-sm tabular-nums text-content-primary">
                         {fmt(totalsByCurrency[code] ?? 0, code)} {code}
                       </td>
                       <td />
@@ -1378,10 +1378,10 @@ function BuildAssemblyModal({
                   ))
                 ) : (
                   <tr className="bg-surface-tertiary font-medium">
-                    <td colSpan={5} className="px-3 py-2 text-right text-sm text-content-primary">
+                    <td colSpan={5} className="px-3 py-2 text-end text-sm text-content-primary">
                       {t('catalog.total', { defaultValue: 'Total' })}:
                     </td>
-                    <td className="px-3 py-2 text-right text-sm tabular-nums text-content-primary">
+                    <td className="px-3 py-2 text-end text-sm tabular-nums text-content-primary">
                       {fmt(total, currency)} {currency}
                     </td>
                     <td />
@@ -1717,7 +1717,7 @@ export function CatalogPage() {
                   );
                 })}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pr-2 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -1967,7 +1967,7 @@ export function CatalogPage() {
             <button
               type="button"
               onClick={() => handleCategoryChange('')}
-              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs text-left transition-colors ${
+              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs text-start transition-colors ${
                 category === ''
                   ? 'bg-oe-blue-subtle text-content-primary font-semibold'
                   : 'text-content-secondary hover:bg-surface-secondary'
@@ -1976,7 +1976,7 @@ export function CatalogPage() {
               <span className="truncate">
                 {t('catalog.all_categories', { defaultValue: 'All categories' })}
               </span>
-              <span className="text-2xs text-content-tertiary tabular-nums shrink-0 ml-2">
+              <span className="text-2xs text-content-tertiary tabular-nums shrink-0 ms-2">
                 {totalCount.toLocaleString(getNumberLocale())}
               </span>
             </button>
@@ -1987,7 +1987,7 @@ export function CatalogPage() {
                   key={c.category}
                   type="button"
                   onClick={() => handleCategoryChange(c.category)}
-                  className={`w-full flex items-center justify-between px-3 py-1.5 text-xs text-left transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-1.5 text-xs text-start transition-colors ${
                     isActive
                       ? 'bg-oe-blue-subtle text-content-primary font-semibold'
                       : 'text-content-secondary hover:bg-surface-secondary'
@@ -1997,7 +1997,7 @@ export function CatalogPage() {
                   <span className="truncate">
                     {t(`catalog.category_${c.category.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`, { defaultValue: c.category })}
                   </span>
-                  <span className={`text-2xs tabular-nums shrink-0 ml-2 ${isActive ? 'text-content-secondary' : 'text-content-tertiary'}`}>
+                  <span className={`text-2xs tabular-nums shrink-0 ms-2 ${isActive ? 'text-content-secondary' : 'text-content-tertiary'}`}>
                     {c.count.toLocaleString(getNumberLocale())}
                   </span>
                 </button>
@@ -2102,7 +2102,7 @@ export function CatalogPage() {
             <div className="overflow-x-auto" data-guide="catalog-table">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light bg-surface-tertiary text-left">
+                  <tr className="border-b border-border-light bg-surface-tertiary text-start">
                     <th className="px-3 py-3 w-10">
                       <button
                         onClick={toggleSelectAll}
@@ -2128,7 +2128,7 @@ export function CatalogPage() {
                     <th className="px-4 py-3 font-medium text-content-secondary w-16 text-center">
                       {t('boq.unit', { defaultValue: 'Unit' })}
                     </th>
-                    <th className="px-4 py-3 font-medium text-content-secondary w-32 text-right">
+                    <th className="px-4 py-3 font-medium text-content-secondary w-32 text-end">
                       {t('catalog.price_avg', { defaultValue: 'Price (avg)' })}
                     </th>
                     <th className="px-4 py-3 font-medium text-content-secondary w-48">
@@ -2918,7 +2918,7 @@ function CreateResourceModal({
               <input type="number" step="0.01" value={form.base_price}
                 onChange={(e) => setForm({ ...form, base_price: e.target.value })}
                 placeholder="0.00"
-                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-right focus:outline-none focus:ring-2 focus:ring-oe-blue"
+                className="h-9 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm text-end focus:outline-none focus:ring-2 focus:ring-oe-blue"
               />
             </div>
             <div>

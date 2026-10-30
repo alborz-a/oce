@@ -348,7 +348,7 @@ export function DelegationManager({ open, onClose }: DelegationManagerProps) {
             {t('approvalRoutes.delegation_delegate', {
               defaultValue: 'Delegate to',
             })}
-            <span className="text-semantic-error ml-0.5">*</span>
+            <span className="text-semantic-error ms-0.5">*</span>
           </label>
           <select
             id="delegation-user"

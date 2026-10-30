@@ -397,14 +397,14 @@ function AddPeopleModal({
           <div className="relative">
             <Search
               size={14}
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
             />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t('teams.roster_add_search', 'Search users and contacts')}
-              className={`${INPUT_CLASS} pl-8`}
+              className={`${INPUT_CLASS} ps-8`}
             />
           </div>
 
@@ -1048,7 +1048,7 @@ export function RosterTab({ projectId }: { projectId: string }) {
           <div className="relative min-w-[12rem] flex-1">
             <Search
               size={14}
-              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+              className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
             />
             <input
               type="search"
@@ -1056,7 +1056,7 @@ export function RosterTab({ projectId }: { projectId: string }) {
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('teams.roster_search', 'Search name, firm or trade')}
               aria-label={t('teams.roster_search', 'Search name, firm or trade')}
-              className={`${INPUT_CLASS} pl-8`}
+              className={`${INPUT_CLASS} ps-8`}
             />
           </div>
 
@@ -1098,7 +1098,7 @@ export function RosterTab({ projectId }: { projectId: string }) {
             {t('teams.roster_show_leavers', 'Include people who have left')}
           </label>
 
-          <div className="ml-auto">{addButton}</div>
+          <div className="ms-auto">{addButton}</div>
         </div>
       </Card>
 
@@ -1124,7 +1124,7 @@ export function RosterTab({ projectId }: { projectId: string }) {
         <Card className="overflow-x-auto">
           <table className="w-full min-w-[60rem] text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-2xs uppercase tracking-wide text-content-tertiary">
+              <tr className="border-b border-border text-start text-2xs uppercase tracking-wide text-content-tertiary">
                 <th className="px-3 py-2 font-medium">
                   {t('teams.roster_col_person', 'Person')}
                 </th>
@@ -1232,7 +1232,7 @@ export function RosterTab({ projectId }: { projectId: string }) {
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     {confirmId === m.id ? (
                       <span className="inline-flex items-center gap-1.5">
                         <button

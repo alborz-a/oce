@@ -289,7 +289,7 @@ function PaneCanvas({
         <span className="text-xs font-semibold text-content-secondary uppercase tracking-wide">
           {label}
         </span>
-        <span className="text-xs text-content-tertiary truncate ml-1">{docName}</span>
+        <span className="text-xs text-content-tertiary truncate ms-1">{docName}</span>
       </div>
       {/* Canvas scroll area */}
       <div
@@ -866,7 +866,7 @@ export function PdfComparePage() {
   const inputCls =
     'h-8 rounded-lg border border-border bg-surface-primary px-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors';
 
-  const selectCls = inputCls + ' pr-7 appearance-none cursor-pointer';
+  const selectCls = inputCls + ' pe-7 appearance-none cursor-pointer';
 
   return (
     <div className="flex flex-col h-screen max-h-screen overflow-hidden bg-surface-primary animate-fade-in">
@@ -1047,7 +1047,7 @@ export function PdfComparePage() {
           {page} / {maxPages}
           {totalPages < maxPages && (
             <span
-              className="ml-1 text-amber-500"
+              className="ms-1 text-amber-500"
               title={t('pdf_compare.page_count_mismatch', {
                 defaultValue: 'Documents have different page counts; clamped to {{min}}',
                 min: totalPages,
@@ -1161,7 +1161,7 @@ export function PdfComparePage() {
       <div className="flex-1 flex min-h-0 overflow-hidden">
         {mode === 'sidebyside' ? (
           <>
-            <div className="flex-1 flex flex-col border-r border-border-light min-w-0">
+            <div className="flex-1 flex flex-col border-e border-border-light min-w-0">
               <PaneCanvas
                 pdfDoc={docA}
                 page={page}

@@ -195,7 +195,7 @@ export function ModuleBuilderPage() {
               'Build your own register for anything the site keeps track of, such as pours, permits, deliveries or briefings. It works like every other part of the platform, with its own list, form and checks, and it is ready the moment you create it.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-4 text-sm text-content-secondary">
+        <ol className="mt-2 list-decimal space-y-1 ps-4 text-sm text-content-secondary">
           <li>
             {t('module_builder.how_1_v2', {
               defaultValue: 'Say what you want to keep track of, in a sentence or by picking a template.',

@@ -848,7 +848,7 @@ export function FinanceSummaryCards({
                 {warningLevel !== 'normal' && (
                   <span
                     className={clsx(
-                      'ml-2 rounded-full px-2 py-0.5 text-2xs font-medium',
+                      'ms-2 rounded-full px-2 py-0.5 text-2xs font-medium',
                       warningLevel === 'critical'
                         ? 'bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300'
                         : 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300',
@@ -1392,11 +1392,11 @@ function BudgetsTab({ projectId }: { projectId: string }) {
             disabled={budgetMutPending || !canSubmitBudget}
           >
             {budgetMutPending ? (
-              <Loader2 size={16} className="animate-spin mr-1.5" />
+              <Loader2 size={16} className="animate-spin me-1.5" />
             ) : isEditingBudget ? (
-              <Pencil size={16} className="mr-1.5" />
+              <Pencil size={16} className="me-1.5" />
             ) : (
-              <Plus size={16} className="mr-1.5" />
+              <Plus size={16} className="me-1.5" />
             )}
             <span>
               {isEditingBudget
@@ -1454,7 +1454,7 @@ function BudgetsTab({ projectId }: { projectId: string }) {
           error={budgetErrors.original_budget}
         >
           <div className="relative">
-            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-xs text-content-tertiary font-medium">
+            <span className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-xs text-content-tertiary font-medium">
               {/* Prefer the active project's resolved currency (keyed on
                   projectId) so switching projects updates the prefix
                   immediately; fall back to an existing budget row's code,
@@ -1472,7 +1472,7 @@ function BudgetsTab({ projectId }: { projectId: string }) {
                 setBudgetForm((p) => ({ ...p, original_budget: e.target.value }));
                 if (budgetErrors.original_budget) setBudgetErrors((prev) => { const next = { ...prev }; delete next.original_budget; return next; });
               }}
-              className={clsx(inputCls, 'pl-12', budgetErrors.original_budget && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error')}
+              className={clsx(inputCls, 'ps-12', budgetErrors.original_budget && 'border-semantic-error focus:ring-red-300 focus:border-semantic-error')}
               placeholder="0.00"
             />
           </div>
@@ -1574,7 +1574,7 @@ function BudgetsTab({ projectId }: { projectId: string }) {
               variant="ghost"
               size="sm"
               onClick={() => navigate('/boq')}
-              className="ml-2 text-blue-700 dark:text-blue-300 hover:text-blue-900"
+              className="ms-2 text-blue-700 dark:text-blue-300 hover:text-blue-900"
             >
               {t('finance.go_to_boq', { defaultValue: 'Go to BOQ \u2192' })}
             </Button>
@@ -1650,7 +1650,7 @@ function BudgetsTab({ projectId }: { projectId: string }) {
       {/* Search + actions */}
       <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-sm">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={16} />
           </div>
           <input
@@ -1709,31 +1709,31 @@ function BudgetsTab({ projectId }: { projectId: string }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('finance.wbs', { defaultValue: 'WBS' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('finance.category', { defaultValue: 'Category' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.original', { defaultValue: 'Original' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.revised', { defaultValue: 'Revised' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.committed', { defaultValue: 'Committed' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.actual', { defaultValue: 'Actual' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.forecast', { defaultValue: 'Forecast' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.variance', { defaultValue: 'Variance' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('common.actions', { defaultValue: 'Actions' })}
               </th>
             </tr>
@@ -1771,19 +1771,19 @@ function BudgetsTab({ projectId }: { projectId: string }) {
                       currency={rowCurrency}
                     />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <MoneyDisplay amount={b.original_budget} currency={rowCurrency} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <MoneyDisplay amount={b.revised_budget} currency={rowCurrency} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <MoneyDisplay amount={b.committed} currency={rowCurrency} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <MoneyDisplay amount={b.actual} currency={rowCurrency} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <MoneyDisplay amount={forecastValue} currency={rowCurrency} />
                   </td>
                   {/* One authority for the colour. The wrapper span used to
@@ -1792,10 +1792,10 @@ function BudgetsTab({ projectId }: { projectId: string }) {
                       one figure, and the outer one compared a string that
                       arrives as money on the wire, so an empty variance read
                       as a surplus and painted green. MoneyDisplay decides. */}
-                  <td className="px-4 py-3 text-right font-medium">
+                  <td className="px-4 py-3 text-end font-medium">
                     <MoneyDisplay amount={b.variance} currency={rowCurrency} colorize />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     <button
                       type="button"
                       onClick={() => openEditBudget(b)}
@@ -1825,22 +1825,22 @@ function BudgetsTab({ projectId }: { projectId: string }) {
                 <td className="px-4 py-3 text-content-primary" colSpan={2}>
                   {t('common.total')}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.original} variant="inline" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.revised} variant="inline" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.committed} variant="inline" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.actual} variant="inline" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.forecast} variant="inline" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={totals.variance} variant="inline" />
                 </td>
                 <td />
@@ -2041,9 +2041,9 @@ function BudgetsTab({ projectId }: { projectId: string }) {
                 disabled={!importFile || importPending}
               >
                 {importPending ? (
-                  <Loader2 size={16} className="animate-spin mr-1.5" />
+                  <Loader2 size={16} className="animate-spin me-1.5" />
                 ) : (
-                  <Upload size={16} className="mr-1.5" />
+                  <Upload size={16} className="me-1.5" />
                 )}
                 <span>{t('finance.import_btn', { defaultValue: 'Import' })}</span>
               </Button>
@@ -2534,7 +2534,7 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
         {/* Search + Status filter */}
         <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="relative flex-1 max-w-sm">
-            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
               <Search size={16} />
             </div>
             <input
@@ -2613,27 +2613,27 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary/50">
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('finance.invoice_number', { defaultValue: 'Invoice #' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {subTab === 'payable'
                         ? t('finance.vendor', { defaultValue: 'Vendor' })
                         : t('finance.client', { defaultValue: 'Client' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('finance.issue_date', { defaultValue: 'Date' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('finance.due_date', { defaultValue: 'Due Date' })}
                     </th>
-                    <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                       {t('finance.amount', { defaultValue: 'Amount' })}
                     </th>
                     <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                       {t('common.status', { defaultValue: 'Status' })}
                     </th>
-                    <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                       {t('common.actions', { defaultValue: 'Actions' })}
                     </th>
                   </tr>
@@ -2714,7 +2714,7 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
                       <td className="px-4 py-3 text-content-secondary">
                         <DateDisplay value={inv.due_date} format="numeric" />
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-end">
                         <MoneyDisplay amount={inv.amount} currency={inv.currency} />
                       </td>
                       <td className="px-4 py-3 text-center">
@@ -2727,7 +2727,7 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
                           })}
                         </Badge>
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-end">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             type="button"
@@ -2812,7 +2812,7 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
                       <td className="px-4 py-3 text-content-primary" colSpan={4}>
                         {t('common.total')}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-3 text-end">
                         <MultiCurrencyTotal items={invoiceTotals.totalAmount} variant="inline" />
                       </td>
                       <td className="px-4 py-3 text-center text-xs text-content-tertiary">
@@ -3010,11 +3010,11 @@ export function InvoicesTab({ projectId }: { projectId: string }) {
                 }
               >
                 {(isEditingInvoice ? updateInvoiceMut.isPending : createInvoiceMut.isPending) ? (
-                  <Loader2 size={16} className="animate-spin mr-1.5" />
+                  <Loader2 size={16} className="animate-spin me-1.5" />
                 ) : isEditingInvoice ? (
-                  <Pencil size={16} className="mr-1.5" />
+                  <Pencil size={16} className="me-1.5" />
                 ) : (
-                  <Plus size={16} className="mr-1.5" />
+                  <Plus size={16} className="me-1.5" />
                 )}
                 <span>
                   {isEditingInvoice
@@ -3431,16 +3431,16 @@ function PaymentsTab({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('finance.invoice_ref', { defaultValue: 'Invoice Ref' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('finance.payment_date', { defaultValue: 'Payment Date' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('finance.amount', { defaultValue: 'Amount' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('finance.reference', { defaultValue: 'Reference' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -3460,7 +3460,7 @@ function PaymentsTab({
                 <td className="px-4 py-3 text-content-secondary">
                   <DateDisplay value={p.payment_date} format="numeric" />
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MoneyDisplay amount={p.amount} currency={p.currency_code || p.currency} />
                 </td>
                 <td className="px-4 py-3 text-content-secondary font-mono text-xs">
@@ -3488,7 +3488,7 @@ function PaymentsTab({
                 <td className="px-4 py-3 text-content-primary" colSpan={2}>
                   {t('common.total', { defaultValue: 'Total' })}
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   <MultiCurrencyTotal items={paymentTotals.total} variant="inline" />
                 </td>
                 <td colSpan={2} />

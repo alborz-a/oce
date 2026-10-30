@@ -584,13 +584,13 @@ export function QMSPage() {
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+          <Search size={14} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         <select
@@ -935,12 +935,12 @@ function ITPTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('qms.name', { defaultValue: 'Name' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.work_type', { defaultValue: 'Work type' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.wbs', { defaultValue: 'WBS' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.version', { defaultValue: 'Ver' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('qms.actions', { defaultValue: 'Actions' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.name', { defaultValue: 'Name' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.work_type', { defaultValue: 'Work type' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.wbs', { defaultValue: 'WBS' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.version', { defaultValue: 'Ver' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('qms.actions', { defaultValue: 'Actions' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -959,7 +959,7 @@ function ITPTable({
                   {statusLabel(t, r.status)}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 {r.status === 'draft' && (
                   <Button
                     variant="ghost"
@@ -1033,11 +1033,11 @@ function InspectionTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('qms.location', { defaultValue: 'Location' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.scheduled_at', { defaultValue: 'Scheduled' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.performed_at', { defaultValue: 'Performed' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.notes', { defaultValue: 'Notes' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.location', { defaultValue: 'Location' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.scheduled_at', { defaultValue: 'Scheduled' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.performed_at', { defaultValue: 'Performed' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.notes', { defaultValue: 'Notes' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -1119,11 +1119,11 @@ function NCRTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('qms.title_col', { defaultValue: 'Title' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.severity', { defaultValue: 'Severity' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.raised_at', { defaultValue: 'Raised' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('qms.cost_impact', { defaultValue: 'Cost impact' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.title_col', { defaultValue: 'Title' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.severity', { defaultValue: 'Severity' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.raised_at', { defaultValue: 'Raised' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('qms.cost_impact', { defaultValue: 'Cost impact' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -1145,7 +1145,7 @@ function NCRTable({
               <td className="px-4 py-2 text-xs text-content-secondary">
                 {r.raised_at ? <DateDisplay value={r.raised_at} /> : '—'}
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 {r.cost_impact_amount != null ? (
                   <MoneyDisplay
                     amount={Number(r.cost_impact_amount)}
@@ -1222,12 +1222,12 @@ function PunchTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('qms.title_col', { defaultValue: 'Title' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.category', { defaultValue: 'Category' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.severity', { defaultValue: 'Severity' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.due_date', { defaultValue: 'Due' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('qms.actions', { defaultValue: 'Actions' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.title_col', { defaultValue: 'Title' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.category', { defaultValue: 'Category' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.severity', { defaultValue: 'Severity' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.due_date', { defaultValue: 'Due' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('qms.actions', { defaultValue: 'Actions' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -1246,7 +1246,7 @@ function PunchTable({
               <td className="px-4 py-2 text-xs text-content-secondary">
                 {r.due_date ? <DateDisplay value={r.due_date} /> : '—'}
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 {r.status !== 'closed' && r.status !== 'rejected' && (
                   <Button
                     variant="ghost"
@@ -1325,12 +1325,12 @@ function AuditTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('qms.audit_type', { defaultValue: 'Type' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.standard', { defaultValue: 'Standard' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.planned_date', { defaultValue: 'Planned' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('qms.rating', { defaultValue: 'Rating' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('qms.actions', { defaultValue: 'Actions' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.audit_type', { defaultValue: 'Type' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.standard', { defaultValue: 'Standard' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.planned_date', { defaultValue: 'Planned' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('qms.rating', { defaultValue: 'Rating' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('qms.actions', { defaultValue: 'Actions' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -1349,7 +1349,7 @@ function AuditTable({
               <td className="px-4 py-2 text-xs tabular-nums">
                 {r.overall_rating != null ? `${r.overall_rating} / 5` : '—'}
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 {r.status === 'in_progress' && (
                   <Button
                     variant="ghost"
@@ -1804,7 +1804,7 @@ function ITPPlanDrawer({
                       <button
                         type="button"
                         onClick={() => setEditItemId(editItemId === it.id ? null : it.id)}
-                        className="flex w-full items-center justify-between gap-2 rounded-md border border-border-light bg-surface-secondary px-2.5 py-1.5 text-left text-xs hover:bg-surface-tertiary"
+                        className="flex w-full items-center justify-between gap-2 rounded-md border border-border-light bg-surface-secondary px-2.5 py-1.5 text-start text-xs hover:bg-surface-tertiary"
                       >
                         <span className="truncate font-medium text-content-primary">
                           {it.sequence}. {it.control_point_name}

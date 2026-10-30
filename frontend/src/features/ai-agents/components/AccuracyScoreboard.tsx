@@ -68,7 +68,7 @@ function MiniBar({ value, tint, label }: { value: number; tint: string; label: s
       <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-secondary">
         <div className={clsx('h-full rounded-full', tint)} style={{ width: `${pct(value)}%` }} />
       </div>
-      <span className="w-9 shrink-0 text-right text-2xs font-medium tabular-nums text-content-secondary">
+      <span className="w-9 shrink-0 text-end text-2xs font-medium tabular-nums text-content-secondary">
         {pct(value)}%
       </span>
     </div>
@@ -117,7 +117,7 @@ function ScoreCard({
         <span className="text-xs text-content-tertiary">
           {t('agents.accuracy.accurate', { defaultValue: 'accurate' })}
         </span>
-        <span className="ml-auto text-2xs text-content-tertiary">
+        <span className="ms-auto text-2xs text-content-tertiary">
           {t('agents.accuracy.brier', { defaultValue: 'Brier {{score}}', score: fmtFixed(score.brier_score, 2) })}
         </span>
       </div>

@@ -626,22 +626,22 @@ function InventoryTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_name', { defaultValue: 'Inventory' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_scope', { defaultValue: 'Scope' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_as_of', { defaultValue: 'As of' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_total', { defaultValue: 'Total' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -685,10 +685,10 @@ function InventoryTable({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.as_of_date ? <DateDisplay value={r.as_of_date} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums font-medium">
+                <td className="px-4 py-2 text-end tabular-nums font-medium">
                   {total > 0 ? formatKg(total) : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <RowActions
                     onEdit={() => onEdit(r)}
                     onDelete={() => onDelete(r)}
@@ -832,25 +832,25 @@ function EPDTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_product', { defaultValue: 'Product' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_class', { defaultValue: 'Class' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_region', { defaultValue: 'Region' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_source', { defaultValue: 'Source' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_gwp', { defaultValue: 'GWP A1–A3' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_unit', { defaultValue: 'Unit' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -868,11 +868,11 @@ function EPDTable({
                   {r.source}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right tabular-nums font-medium">
+              <td className="px-4 py-2 text-end tabular-nums font-medium">
                 {fmtFixed(toNum(r.gwp_a1a3), 3)}
               </td>
               <td className="px-4 py-2 text-xs text-content-tertiary">kg/{r.declared_unit}</td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <RowActions
                   onEdit={() => onEdit(r)}
                   onDelete={() => onDelete(r)}
@@ -1156,19 +1156,19 @@ function ReportTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_period', { defaultValue: 'Period' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_framework', { defaultValue: 'Framework' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('carbon.col_generated', { defaultValue: 'Generated' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_total', { defaultValue: 'Total kg CO2e' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('carbon.col_actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1195,10 +1195,10 @@ function ReportTable({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.generated_at ? <DateDisplay value={r.generated_at} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums font-medium">
+                <td className="px-4 py-2 text-end tabular-nums font-medium">
                   {total > 0 ? formatKg(total) : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <button
                     type="button"
                     onClick={() => onDelete(r)}
@@ -1743,7 +1743,7 @@ function TopEmitterRow({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left hover:bg-surface-secondary transition-colors"
+        className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start hover:bg-surface-secondary transition-colors"
       >
         <span className="flex min-w-0 items-center gap-1.5">
           <ChevronRight
@@ -2921,7 +2921,7 @@ function AssignBoqModal({
               <div className="relative mb-2">
                 <Search
                   size={13}
-                  className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+                  className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
                 />
                 <input
                   value={search}
@@ -2929,7 +2929,7 @@ function AssignBoqModal({
                   placeholder={t('carbon.boq_search_placeholder', {
                     defaultValue: 'Filter by description or ordinal…',
                   })}
-                  className={clsx(inputCls, 'pl-8')}
+                  className={clsx(inputCls, 'ps-8')}
                   autoComplete="off"
                 />
               </div>
@@ -2957,7 +2957,7 @@ function AssignBoqModal({
                           <td className="px-3 py-2 text-content-primary">
                             {p.description}
                           </td>
-                          <td className="px-3 py-2 text-right tabular-nums text-content-secondary whitespace-nowrap align-top">
+                          <td className="px-3 py-2 text-end tabular-nums text-content-secondary whitespace-nowrap align-top">
                             {(() => {
                               const d = displayQty.convert(toNum(p.quantity), p.unit || '');
                               return `${d.value.toLocaleString(getNumberLocale())} ${d.unit}`;

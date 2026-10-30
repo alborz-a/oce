@@ -241,11 +241,11 @@ function BarRow({
         aria-valuemax={100}
       >
         <span
-          className="absolute inset-y-0 left-0 rounded-full"
+          className="absolute inset-y-0 start-0 rounded-full"
           style={{ width: `${pct}%`, backgroundColor: color }}
         />
       </div>
-      <span className="w-16 shrink-0 text-right font-medium text-content-primary">
+      <span className="w-16 shrink-0 text-end font-medium text-content-primary">
         {fmt ? fmt(value) : value.toLocaleString(getNumberLocale())}
       </span>
     </div>

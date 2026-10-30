@@ -258,22 +258,22 @@ function SovStatusPanel({
           <table className="w-full text-sm">
             <thead className="text-2xs uppercase tracking-wide text-content-tertiary">
               <tr>
-                <th className="py-1 text-left">
+                <th className="py-1 text-start">
                   {t('contracts.sov_line', { defaultValue: 'Line' })}
                 </th>
-                <th className="py-1 text-right">
+                <th className="py-1 text-end">
                   {t('contracts.sov_scheduled', { defaultValue: 'Scheduled' })}
                 </th>
-                <th className="py-1 text-right">
+                <th className="py-1 text-end">
                   {t('contracts.sov_billed', { defaultValue: 'Billed' })}
                 </th>
-                <th className="py-1 text-right">
+                <th className="py-1 text-end">
                   {t('contracts.sov_earned', { defaultValue: 'Earned' })}
                 </th>
-                <th className="py-1 text-right">
+                <th className="py-1 text-end">
                   {t('contracts.sov_paid', { defaultValue: 'Paid' })}
                 </th>
-                <th className="py-1 text-right">
+                <th className="py-1 text-end">
                   {t('contracts.sov_percent', { defaultValue: '% Complete' })}
                 </th>
               </tr>
@@ -292,29 +292,29 @@ function SovStatusPanel({
                       : MUTED;
                 return (
                   <tr key={lineId} className="border-t border-border-light">
-                    <td className="py-1 pr-2 font-mono text-xs text-content-secondary">
+                    <td className="py-1 pe-2 font-mono text-xs text-content-secondary">
                       {labelFor(lineId)}
                     </td>
-                    <td className="py-1 text-right tabular-nums text-content-secondary">
+                    <td className="py-1 text-end tabular-nums text-content-secondary">
                       {money(row.scheduled)}
                     </td>
-                    <td className="py-1 text-right tabular-nums text-content-secondary">
+                    <td className="py-1 text-end tabular-nums text-content-secondary">
                       {money(row.billed)}
                     </td>
                     <td
                       className={clsx(
-                        'py-1 text-right tabular-nums',
+                        'py-1 text-end tabular-nums',
                         over ? DANGER : 'text-content-secondary',
                       )}
                     >
                       {money(row.earned)}
                     </td>
-                    <td className="py-1 text-right tabular-nums text-content-secondary">
+                    <td className="py-1 text-end tabular-nums text-content-secondary">
                       {money(row.paid)}
                     </td>
                     <td
                       className={clsx(
-                        'py-1 text-right tabular-nums font-medium',
+                        'py-1 text-end tabular-nums font-medium',
                         pctColor,
                       )}
                     >
@@ -326,22 +326,22 @@ function SovStatusPanel({
             </tbody>
             <tfoot>
               <tr className="border-t-2 border-border-light font-medium">
-                <td className="py-1 pr-2 text-xs uppercase tracking-wide text-content-tertiary">
+                <td className="py-1 pe-2 text-xs uppercase tracking-wide text-content-tertiary">
                   {t('contracts.sov_total', { defaultValue: 'Total' })}
                 </td>
-                <td className="py-1 text-right tabular-nums">
+                <td className="py-1 text-end tabular-nums">
                   {money(totals.scheduled)}
                 </td>
-                <td className="py-1 text-right tabular-nums">
+                <td className="py-1 text-end tabular-nums">
                   {money(totals.billed)}
                 </td>
-                <td className="py-1 text-right tabular-nums">
+                <td className="py-1 text-end tabular-nums">
                   {money(totals.earned)}
                 </td>
-                <td className="py-1 text-right tabular-nums">
+                <td className="py-1 text-end tabular-nums">
                   {money(totals.paid)}
                 </td>
-                <td className="py-1 text-right tabular-nums">
+                <td className="py-1 text-end tabular-nums">
                   {fmtPct(totals.percent_complete)}
                 </td>
               </tr>

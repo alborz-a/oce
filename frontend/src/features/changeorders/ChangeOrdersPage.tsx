@@ -609,7 +609,7 @@ function AddItemDialog({
               size="sm"
               onClick={() => setShowBoqPicker(true)}
             >
-              <FileText size={14} className="mr-1.5" />
+              <FileText size={14} className="me-1.5" />
               {t('changeorders.pick_from_boq', { defaultValue: 'Pick from BOQ' })}
             </Button>
           )}
@@ -898,16 +898,16 @@ function BoqPositionPickerDialog({
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                   <tr>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('changeorders.boq_picker_ordinal', { defaultValue: 'Ord.' })}
                     </th>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('common.description', { defaultValue: 'Description' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('changeorders.boq_picker_qty', { defaultValue: 'Qty' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('changeorders.boq_picker_rate', { defaultValue: 'Rate' })}
                     </th>
                   </tr>
@@ -933,10 +933,10 @@ function BoqPositionPickerDialog({
                         {p.ordinal}
                       </td>
                       <td className="px-3 py-2 text-content-primary">{p.description}</td>
-                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                      <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                         {formatQuantity(p.quantity)} {p.unit}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                      <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                         {formatCurrency(Number(p.unit_rate) || 0, currency)}
                       </td>
                     </tr>
@@ -1128,7 +1128,7 @@ function ApprovalChainBuilderDialog({
                       type="button"
                       onClick={() => addUser(u)}
                       disabled={busy || chosen.length >= 20}
-                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm hover:bg-surface-secondary disabled:opacity-50"
+                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm hover:bg-surface-secondary disabled:opacity-50"
                     >
                       <span className="min-w-0">
                         <span className="block truncate font-medium text-content-primary">{userLabel(u)}</span>
@@ -1747,7 +1747,7 @@ function DetailView({
                 });
                 if (ok) submitMut.mutate();
               }} disabled={submitMut.isPending}>
-                <Send size={14} className="mr-1.5" />
+                <Send size={14} className="me-1.5" />
                 {t('changeorders.submit', { defaultValue: 'Submit' })}
               </Button>
             )}
@@ -1795,7 +1795,7 @@ function DetailView({
                     });
                     if (ok) approveMut.mutate(targetBoqId || undefined);
                   }} disabled={approveMut.isPending || (mustNameBoq && !targetBoqId)}>
-                    <CheckCircle2 size={14} className="mr-1.5" />
+                    <CheckCircle2 size={14} className="me-1.5" />
                     {t('changeorders.approve', { defaultValue: 'Approve' })}
                   </Button>
                   <Button variant="ghost" size="sm" onClick={async () => {
@@ -1807,7 +1807,7 @@ function DetailView({
                     });
                     if (ok) rejectMut.mutate();
                   }} disabled={rejectMut.isPending}>
-                    <XCircle size={14} className="mr-1.5" />
+                    <XCircle size={14} className="me-1.5" />
                     {t('changeorders.reject', { defaultValue: 'Reject' })}
                   </Button>
                 </>
@@ -1842,7 +1842,7 @@ function DetailView({
                 });
                 if (ok) executeMut.mutate();
               }} disabled={executeMut.isPending}>
-                <CheckCheck size={14} className="mr-1.5" />
+                <CheckCheck size={14} className="me-1.5" />
                 {t('changeorders.mark_executed', { defaultValue: 'Mark as executed' })}
               </Button>
             )}
@@ -2207,7 +2207,7 @@ function DetailView({
         </h3>
         {canEdit && (
           <Button variant="secondary" size="sm" onClick={() => setShowAddItem(true)}>
-            <Plus size={14} className="mr-1.5" />
+            <Plus size={14} className="me-1.5" />
             {t('changeorders.add_item', { defaultValue: 'Add Item' })}
           </Button>
         )}
@@ -2232,19 +2232,19 @@ function DetailView({
             <table className="w-full text-sm" aria-label={t('changeorders.items_table_aria', { defaultValue: 'Change order line items' })}>
               <thead>
                 <tr className="border-b border-border bg-surface-secondary/50">
-                  <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                  <th className="px-4 py-3 text-start font-medium text-content-secondary">
                     {t('common.description', { defaultValue: 'Description' })}
                   </th>
-                  <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                  <th className="px-4 py-3 text-start font-medium text-content-secondary">
                     {t('changeorders.type', { defaultValue: 'Type' })}
                   </th>
-                  <th className="px-4 py-3 text-right font-medium text-content-secondary">
+                  <th className="px-4 py-3 text-end font-medium text-content-secondary">
                     {t('changeorders.orig_qty', { defaultValue: 'Orig Qty' })}
                   </th>
-                  <th className="px-4 py-3 text-right font-medium text-content-secondary">
+                  <th className="px-4 py-3 text-end font-medium text-content-secondary">
                     {t('changeorders.new_qty', { defaultValue: 'New Qty' })}
                   </th>
-                  <th className="px-4 py-3 text-right font-medium text-content-secondary">
+                  <th className="px-4 py-3 text-end font-medium text-content-secondary">
                     {t('changeorders.cost_delta', { defaultValue: 'Cost Delta' })}
                   </th>
                   {canEdit && (
@@ -2263,13 +2263,13 @@ function DetailView({
                         {t(`changeorders.type_${item.change_type}`, { defaultValue: item.change_type })}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
+                    <td className="px-4 py-3 text-end text-content-secondary tabular-nums">
                       {formatQuantity(item.original_quantity)} {item.unit}
                     </td>
-                    <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
+                    <td className="px-4 py-3 text-end text-content-secondary tabular-nums">
                       {formatQuantity(item.new_quantity)} {item.unit}
                     </td>
-                    <td className={`px-4 py-3 text-right font-medium tabular-nums whitespace-nowrap ${costDelta >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
+                    <td className={`px-4 py-3 text-end font-medium tabular-nums whitespace-nowrap ${costDelta >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
                       {formatSignedCurrency(costDelta, order.currency)}
                     </td>
                     {canEdit && (
@@ -2495,11 +2495,11 @@ export function ChangeOrdersPage() {
               {t('changeorders.export_csv', { defaultValue: 'Export CSV' })}
             </Button>
             <Button variant="secondary" onClick={() => setShowAIDraft(true)} disabled={!projectId}>
-              <Sparkles size={16} className="mr-1.5" />
+              <Sparkles size={16} className="me-1.5" />
               {t('changeorders.ai_draft', { defaultValue: 'AI Draft' })}
             </Button>
             <Button variant="primary" onClick={() => setShowCreate(true)} disabled={!projectId}>
-              <Plus size={16} className="mr-1.5" />
+              <Plus size={16} className="me-1.5" />
               {t('changeorders.new', { defaultValue: 'New Change Order' })}
             </Button>
           </>
@@ -2689,25 +2689,25 @@ export function ChangeOrdersPage() {
               <table className="w-full text-sm" aria-label={t('changeorders.table_aria', { defaultValue: 'Change orders list' })}>
                 <thead>
                   <tr className="border-b border-border bg-surface-secondary/50">
-                    <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-start font-medium text-content-secondary">
                       {t('changeorders.code', { defaultValue: 'Code' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-start font-medium text-content-secondary">
                       {t('common.title')}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-start font-medium text-content-secondary">
                       {t('common.status')}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-start font-medium text-content-secondary">
                       {t('changeorders.reason', { defaultValue: 'Reason' })}
                     </th>
-                    <th className="px-4 py-3 text-right font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-end font-medium text-content-secondary">
                       {t('changeorders.cost_impact', { defaultValue: 'Cost Impact' })}
                     </th>
-                    <th className="px-4 py-3 text-right font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-end font-medium text-content-secondary">
                       {t('changeorders.schedule', { defaultValue: 'Schedule' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-secondary">
+                    <th className="px-4 py-3 text-start font-medium text-content-secondary">
                       {t('common.date', { defaultValue: 'Date' })}
                     </th>
                     <th className="px-4 py-3 w-16" />
@@ -2740,10 +2740,10 @@ export function ChangeOrdersPage() {
                           defaultValue: getReasonLabels(t)[order.reason_category] || order.reason_category,
                         })}
                       </td>
-                      <td className={`px-4 py-3 text-right font-medium tabular-nums whitespace-nowrap ${impact >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
+                      <td className={`px-4 py-3 text-end font-medium tabular-nums whitespace-nowrap ${impact >= 0 ? 'text-semantic-error' : 'text-semantic-success'}`}>
                         {formatSignedCurrency(impact, order.currency)}
                       </td>
-                      <td className="px-4 py-3 text-right text-content-secondary tabular-nums">
+                      <td className="px-4 py-3 text-end text-content-secondary tabular-nums">
                         {order.schedule_impact_days > 0
                           ? `+${order.schedule_impact_days}d`
                           : order.schedule_impact_days === 0

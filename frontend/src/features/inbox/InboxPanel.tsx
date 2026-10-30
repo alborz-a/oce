@@ -237,7 +237,7 @@ function InboxRow({ item }: { item: InboxItem }) {
   return (
     <div
       className={clsx(
-        'group flex w-full items-start gap-1 px-2 py-2.5 text-left',
+        'group flex w-full items-start gap-1 px-2 py-2.5 text-start',
         'border-b border-border-light/60 last:border-b-0 transition-colors',
         clickable && 'hover:bg-surface-secondary',
         acknowledged && 'opacity-60',
@@ -249,7 +249,7 @@ function InboxRow({ item }: { item: InboxItem }) {
         <button
           type="button"
           onClick={onClick}
-          className="flex min-w-0 flex-1 items-start gap-3 rounded-md px-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+          className="flex min-w-0 flex-1 items-start gap-3 rounded-md px-2 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
         >
           {rowBody}
         </button>
@@ -390,11 +390,11 @@ export function InboxPanel({
   const hasItems = !isLoading && !isError && items.length > 0;
 
   const summaryRail = (
-    <div className="flex shrink-0 flex-row items-stretch gap-3 border-b border-border-light px-4 py-3 lg:w-52 lg:flex-col lg:gap-3 lg:border-b-0 lg:border-l lg:py-4">
+    <div className="flex shrink-0 flex-row items-stretch gap-3 border-b border-border-light px-4 py-3 lg:w-52 lg:flex-col lg:gap-3 lg:border-b-0 lg:border-s lg:py-4">
       <button
         type="button"
         onClick={() => navigate('/inbox')}
-        className="group flex flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-surface-secondary lg:flex-none"
+        className="group flex flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-surface-secondary lg:flex-none"
       >
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-semantic-warning-bg">
           <ClipboardCheck size={15} className="text-semantic-warning" />
@@ -411,7 +411,7 @@ export function InboxPanel({
       <button
         type="button"
         onClick={() => navigate('/inbox')}
-        className="group flex flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-surface-secondary lg:flex-none"
+        className="group flex flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 text-start transition-colors hover:bg-surface-secondary lg:flex-none"
       >
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-oe-blue-subtle">
           <Bell size={15} className="text-oe-blue" />

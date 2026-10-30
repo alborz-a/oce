@@ -122,7 +122,7 @@ export function BOQFilterBar({
 
       {/* Result count + clear */}
       {active && (
-        <span className="ml-auto inline-flex items-center gap-2 text-2xs text-content-tertiary tabular-nums">
+        <span className="ms-auto inline-flex items-center gap-2 text-2xs text-content-tertiary tabular-nums">
           {t('boq.filter_count', {
             defaultValue: '{{shown}} of {{total}}',
             shown,

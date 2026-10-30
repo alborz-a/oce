@@ -245,7 +245,7 @@ function StageRail({
               disabled={!reachable}
               onClick={() => reachable && onJump(s.id)}
               className={clsx(
-                'group flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
+                'group flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-start transition-colors',
                 isCurrent
                   ? 'bg-oe-blue/10 ring-1 ring-oe-blue/30'
                   : reachable
@@ -1275,7 +1275,7 @@ export function MatchWizardFlow() {
           {t('match.wizard.setupTools', {
             defaultValue: 'Setup & tools - language model, catalogues, analytics, templates',
           })}
-          <ChevronRight className="ml-auto h-4 w-4 text-content-tertiary transition-transform group-open:rotate-90" />
+          <ChevronRight className="ms-auto h-4 w-4 text-content-tertiary transition-transform group-open:rotate-90" />
         </summary>
         <div className="space-y-3 border-t border-border-light px-4 py-3">
           {/* Free language-model (BGE-M3) readiness + one-command install. */}
@@ -1307,7 +1307,7 @@ export function MatchWizardFlow() {
           {t('match.wizard.howItWorks', {
             defaultValue: 'How matching works - read this first',
           })}
-          <ChevronRight className="ml-auto h-4 w-4 text-content-tertiary transition-transform group-open:rotate-90" />
+          <ChevronRight className="ms-auto h-4 w-4 text-content-tertiary transition-transform group-open:rotate-90" />
         </summary>
         <div className="space-y-2 border-t border-border-light px-4 py-3 text-sm text-content-secondary">
           <p>
@@ -2022,7 +2022,7 @@ export function MatchWizardFlow() {
                           <div className="max-h-80 overflow-auto">
                             <table className="w-full text-sm">
                               <thead className="sticky top-0 bg-surface-primary">
-                                <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+                                <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
                                   <th className="px-3 py-2 font-medium">
                                     {t('match.wizard.colDescription', {
                                       defaultValue: 'Description',
@@ -2031,13 +2031,13 @@ export function MatchWizardFlow() {
                                   <th className="px-3 py-2 font-medium">
                                     {t('match.wizard.colUnit', { defaultValue: 'Unit' })}
                                   </th>
-                                  <th className="px-3 py-2 text-right font-medium">
+                                  <th className="px-3 py-2 text-end font-medium">
                                     {t('match.wizard.colQty', { defaultValue: 'Qty' })}
                                   </th>
-                                  <th className="px-3 py-2 text-right font-medium">
+                                  <th className="px-3 py-2 text-end font-medium">
                                     {t('match.wizard.colRate', { defaultValue: 'Rate' })}
                                   </th>
-                                  <th className="px-3 py-2 text-right font-medium">
+                                  <th className="px-3 py-2 text-end font-medium">
                                     {t('match.wizard.colTotal', { defaultValue: 'Total' })}
                                   </th>
                                 </tr>
@@ -2071,14 +2071,14 @@ export function MatchWizardFlow() {
                                       <td className="px-3 py-2 text-content-secondary">
                                         {p.unit}
                                       </td>
-                                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                                      <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                                         {Number(p.quantity).toLocaleString(getNumberLocale(), {
                                           maximumFractionDigits: 3,
                                         })}
                                       </td>
                                       <td
                                         className={clsx(
-                                          'px-3 py-2 text-right tabular-nums',
+                                          'px-3 py-2 text-end tabular-nums',
                                           zeroRate
                                             ? 'text-amber-700 dark:text-amber-300'
                                             : 'text-content-secondary',
@@ -2090,7 +2090,7 @@ export function MatchWizardFlow() {
                                             })
                                           : fmtDisplayMoney(Number(p.unit_rate), p.currency)}
                                       </td>
-                                      <td className="px-3 py-2 text-right tabular-nums font-medium text-content-primary">
+                                      <td className="px-3 py-2 text-end tabular-nums font-medium text-content-primary">
                                         {fmtDisplayMoney(Number(p.line_total), p.currency)}
                                       </td>
                                     </tr>

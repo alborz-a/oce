@@ -334,7 +334,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
         type="button"
         onClick={handleToggle}
         aria-expanded={open}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-secondary/50 transition-colors rounded-xl"
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-start hover:bg-surface-secondary/50 transition-colors rounded-xl"
       >
         <div className="flex items-center gap-3 min-w-0">
           <div className="shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-100 to-sky-100 dark:from-emerald-900/40 dark:to-sky-900/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center">
@@ -458,20 +458,20 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
           <div className="overflow-x-auto">
             <table className="w-full text-[11px]">
               <thead>
-                <tr className="text-left text-content-tertiary uppercase tracking-wider text-[10px] border-b border-border">
-                  <th className="py-1.5 pr-2">
+                <tr className="text-start text-content-tertiary uppercase tracking-wider text-[10px] border-b border-border">
+                  <th className="py-1.5 pe-2">
                     {t('catalogues.col_region', 'Region')}
                   </th>
-                  <th className="py-1.5 pr-2 hidden sm:table-cell">
+                  <th className="py-1.5 pe-2 hidden sm:table-cell">
                     {t('catalogues.col_language', 'Lang')}
                   </th>
-                  <th className="py-1.5 pr-2 hidden sm:table-cell">
+                  <th className="py-1.5 pe-2 hidden sm:table-cell">
                     {t('catalogues.col_currency', 'Curr')}
                   </th>
-                  <th className="py-1.5 pr-2 hidden md:table-cell">
+                  <th className="py-1.5 pe-2 hidden md:table-cell">
                     {t('catalogues.col_size', 'Size')}
                   </th>
-                  <th className="py-1.5 pr-2">
+                  <th className="py-1.5 pe-2">
                     {t('catalogues.col_status', 'Status')}
                   </th>
                   <th className="py-1.5">
@@ -493,7 +493,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                           'bg-indigo-50/60 dark:bg-indigo-900/15',
                       )}
                     >
-                      <td className="py-1.5 pr-2">
+                      <td className="py-1.5 pe-2">
                         <div className="flex items-center gap-1.5">
                           <span className="font-medium text-content-primary">
                             {c.country_iso}
@@ -503,22 +503,22 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                             {c.city}
                           </span>
                           {isPreferred && (
-                            <span className="ml-1 text-[9px] uppercase tracking-wider text-indigo-700 dark:text-indigo-300 font-bold">
+                            <span className="ms-1 text-[9px] uppercase tracking-wider text-indigo-700 dark:text-indigo-300 font-bold">
                               {t('catalogues.preferred_tag', 'Project')}
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="py-1.5 pr-2 hidden sm:table-cell text-content-secondary">
+                      <td className="py-1.5 pe-2 hidden sm:table-cell text-content-secondary">
                         {c.language}
                       </td>
-                      <td className="py-1.5 pr-2 hidden sm:table-cell text-content-secondary">
+                      <td className="py-1.5 pe-2 hidden sm:table-cell text-content-secondary">
                         {c.currency}
                       </td>
-                      <td className="py-1.5 pr-2 hidden md:table-cell text-content-tertiary">
+                      <td className="py-1.5 pe-2 hidden md:table-cell text-content-tertiary">
                         {c.size_mb ? `${c.size_mb} MB` : '—'}
                       </td>
-                      <td className="py-1.5 pr-2">
+                      <td className="py-1.5 pe-2">
                         <StatusBadge
                           status={isPending ? 'installing' : c.install_status}
                         />
@@ -545,19 +545,19 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                       key={`sk-${i}`}
                       className="border-b border-border/50 last:border-b-0"
                     >
-                      <td className="py-2 pr-2">
+                      <td className="py-2 pe-2">
                         <div className="h-3 w-32 rounded bg-black/[0.06] dark:bg-white/10 animate-pulse" />
                       </td>
-                      <td className="py-2 pr-2 hidden sm:table-cell">
+                      <td className="py-2 pe-2 hidden sm:table-cell">
                         <div className="h-3 w-6 rounded bg-black/[0.06] dark:bg-white/10 animate-pulse" />
                       </td>
-                      <td className="py-2 pr-2 hidden sm:table-cell">
+                      <td className="py-2 pe-2 hidden sm:table-cell">
                         <div className="h-3 w-8 rounded bg-black/[0.06] dark:bg-white/10 animate-pulse" />
                       </td>
-                      <td className="py-2 pr-2 hidden md:table-cell">
+                      <td className="py-2 pe-2 hidden md:table-cell">
                         <div className="h-3 w-12 rounded bg-black/[0.06] dark:bg-white/10 animate-pulse" />
                       </td>
-                      <td className="py-2 pr-2">
+                      <td className="py-2 pe-2">
                         <div className="h-4 w-16 rounded bg-black/[0.06] dark:bg-white/10 animate-pulse" />
                       </td>
                       <td className="py-2">

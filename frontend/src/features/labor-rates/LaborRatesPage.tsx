@@ -459,7 +459,7 @@ export function LaborRatesPage() {
         </div>
         {/* Live headline - all-in rate + labour burden, always in view */}
         <div className="flex items-center gap-4 rounded-xl border border-border bg-surface-elevated px-4 py-2.5 shadow-sm">
-          <div className="text-right">
+          <div className="text-end">
             <div className="text-[11px] font-medium uppercase tracking-wide text-content-tertiary">
               {t('laborRates.all_in_rate', { defaultValue: 'All-in hourly rate' })}
             </div>
@@ -468,7 +468,7 @@ export function LaborRatesPage() {
             </div>
           </div>
           {burdenPct !== null && (
-            <div className="border-l border-border pl-4 text-right">
+            <div className="border-s border-border ps-4 text-end">
               <div className="text-[11px] font-medium uppercase tracking-wide text-content-tertiary">
                 {t('laborRates.burden', { defaultValue: 'Labor burden' })}
               </div>
@@ -627,7 +627,7 @@ export function LaborRatesPage() {
                   <span className="w-32">
                     {t('laborRates.oncost_col_how', { defaultValue: 'How it is charged' })}
                   </span>
-                  <span className="w-28 text-right">
+                  <span className="w-28 text-end">
                     {t('laborRates.oncost_col_amount', { defaultValue: 'Amount' })}
                   </span>
                   <span className="w-7" aria-hidden />
@@ -661,14 +661,14 @@ export function LaborRatesPage() {
                   </select>
                   <div className="relative w-28">
                     <input
-                      className={`${inputClass} pr-6 text-right`}
+                      className={`${inputClass} pe-6 text-end`}
                       inputMode="decimal"
                       value={row.value}
                       onChange={(e) => updateOnCost(row.key, { value: e.target.value })}
                       placeholder="0"
                       aria-label={t('laborRates.oncost_value', { defaultValue: 'Value' })}
                     />
-                    <span className="pointer-events-none absolute right-2 top-1.5 text-xs text-gray-400">
+                    <span className="pointer-events-none absolute end-2 top-1.5 text-xs text-gray-400">
                       {row.kind === 'percentage' ? '%' : currency || '/h'}
                     </span>
                   </div>
@@ -708,7 +708,7 @@ export function LaborRatesPage() {
                     aria-label={t('laborRates.trade', { defaultValue: 'Trade' })}
                   />
                   <input
-                    className={`${inputClass} w-20 text-right`}
+                    className={`${inputClass} w-20 text-end`}
                     type="number"
                     min={0}
                     step={1}
@@ -718,7 +718,7 @@ export function LaborRatesPage() {
                   />
                   <div className="relative w-28">
                     <input
-                      className={`${inputClass} text-right`}
+                      className={`${inputClass} text-end`}
                       inputMode="decimal"
                       value={row.all_in_rate}
                       onChange={(e) => updateCrew(row.key, { all_in_rate: e.target.value })}
@@ -790,9 +790,9 @@ export function LaborRatesPage() {
                   key={`${line.label}-${i}`}
                   className="flex items-center justify-between text-gray-500 dark:text-gray-400"
                 >
-                  <dt className="truncate pr-2">
+                  <dt className="truncate pe-2">
                     {line.label}
-                    <span className="ml-1 text-xs">
+                    <span className="ms-1 text-xs">
                       {line.kind === 'percentage' ? `(${line.value}%)` : ''}
                     </span>
                   </dt>

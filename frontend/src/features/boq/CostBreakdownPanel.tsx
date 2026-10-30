@@ -162,7 +162,7 @@ export function CostBreakdownPanel({ boqId, locale = 'de-DE' }: { boqId: string;
       <button
         type="button"
         aria-expanded={!collapsed}
-        className="flex items-center justify-between w-full px-5 py-3.5 text-left hover:bg-surface-secondary/50 transition-colors"
+        className="flex items-center justify-between w-full px-5 py-3.5 text-start hover:bg-surface-secondary/50 transition-colors"
         onClick={() => setCollapsed((prev) => !prev)}
       >
         <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ function CategoryBar({
       <div className="flex items-center justify-between text-xs">
         <span className={`font-medium capitalize ${CATEGORY_TEXT_CLASSES[category.type] ?? 'text-gray-600'}`}>
           {t(`boq.cost_category_${category.type}`, { defaultValue: category.type })}
-          <span className="text-content-tertiary ml-1.5">
+          <span className="text-content-tertiary ms-1.5">
             ({category.item_count} {t('boq.cost_breakdown_items', { defaultValue: 'items' })})
           </span>
         </span>
@@ -361,7 +361,7 @@ function ResourceRow({
           ({resource.positions_count} {t('boq.cost_breakdown_pos', { defaultValue: 'pos.' })})
         </span>
       </div>
-      <span className="text-content-primary font-medium tabular-nums ml-3 flex-shrink-0">
+      <span className="text-content-primary font-medium tabular-nums ms-3 flex-shrink-0">
         {fmtCompact(resource.total_cost, fmt)}
       </span>
     </div>

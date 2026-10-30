@@ -399,13 +399,13 @@ export function TranslationManager() {
             <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
               {t('settings.tm_col_key', { defaultValue: 'Key' })}
             </div>
-            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light">
+            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-s border-border-light">
               {t('settings.tm_col_english', { defaultValue: 'English' })}
             </div>
-            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light">
+            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-s border-border-light">
               {t('settings.tm_col_current', { defaultValue: 'Current Language' })}
             </div>
-            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-l border-border-light w-20">
+            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-tertiary border-s border-border-light w-20">
               {t('settings.tm_col_actions', { defaultValue: '' })}
             </div>
           </div>
@@ -438,7 +438,7 @@ export function TranslationManager() {
                   </div>
 
                   {/* English */}
-                  <div className="flex items-center border-l border-border-light px-3 py-2 min-w-0">
+                  <div className="flex items-center border-s border-border-light px-3 py-2 min-w-0">
                     <span
                       className="truncate text-sm text-content-secondary"
                       title={row.english}
@@ -452,7 +452,7 @@ export function TranslationManager() {
                   </div>
 
                   {/* Current language — editable */}
-                  <div className="flex items-center border-l border-border-light px-3 py-2 min-w-0">
+                  <div className="flex items-center border-s border-border-light px-3 py-2 min-w-0">
                     {editingKey === row.key ? (
                       <EditCell
                         value={row.current}
@@ -462,7 +462,7 @@ export function TranslationManager() {
                       />
                     ) : (
                       <button
-                        className="group flex w-full items-center gap-1 text-left"
+                        className="group flex w-full items-center gap-1 text-start"
                         onClick={() => setEditingKey(row.key)}
                         title={t('settings.tm_click_to_edit', { defaultValue: 'Click to edit' })}
                         data-testid={`tm-edit-cell-${row.key}`}
@@ -493,7 +493,7 @@ export function TranslationManager() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-center border-l border-border-light px-2 py-2 w-20">
+                  <div className="flex items-center justify-center border-s border-border-light px-2 py-2 w-20">
                     {row.isCustom && (
                       <button
                         onClick={() => handleReset(row.key)}

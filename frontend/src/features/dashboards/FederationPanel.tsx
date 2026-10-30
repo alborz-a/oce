@@ -244,7 +244,7 @@ export function FederationPanel({
                   aria-selected={isSelected}
                   onClick={() => toggleSnapshot(opt.id)}
                   data-testid={`federation-snapshot-option-${opt.id}`}
-                  className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-xs hover:bg-surface-secondary ${
+                  className={`flex w-full items-center gap-2 px-3 py-1.5 text-start text-xs hover:bg-surface-secondary ${
                     isSelected ? 'bg-emerald-500/5 text-emerald-200' : 'text-content-primary'
                   }`}
                 >
@@ -294,12 +294,12 @@ export function FederationPanel({
           onClick={() => buildMutation.mutate()}
           disabled={!canBuild}
           data-testid="federation-build-btn"
-          className="ml-auto"
+          className="ms-auto"
         >
           {buildMutation.isPending ? (
-            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+            <Loader2 className="me-1 h-3 w-3 animate-spin" />
           ) : (
-            <Play className="mr-1 h-3 w-3" />
+            <Play className="me-1 h-3 w-3" />
           )}
           {t('dashboards.federation.build', { defaultValue: 'Build view' })}
         </Button>
@@ -388,12 +388,12 @@ export function FederationPanel({
               onClick={() => aggregateMutation.mutate()}
               disabled={!canAggregate}
               data-testid="federation-aggregate-btn"
-              className="ml-auto"
+              className="ms-auto"
             >
               {aggregateMutation.isPending ? (
-                <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                <Loader2 className="me-1 h-3 w-3 animate-spin" />
               ) : (
-                <Play className="mr-1 h-3 w-3" />
+                <Play className="me-1 h-3 w-3" />
               )}
               {t('dashboards.federation.run', { defaultValue: 'Run aggregate' })}
             </Button>

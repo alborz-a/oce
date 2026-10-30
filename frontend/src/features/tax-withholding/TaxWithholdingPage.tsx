@@ -42,7 +42,7 @@ export function TaxWithholdingPage() {
               'Several countries make the payer deduct tax at source when paying a construction subcontractor, at a rate that depends on whether that subcontractor is verified with the tax authority. Deducting at the wrong rate is the payer problem, not the payee problem, so this module works the figure out before the payment rather than after.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('tax_withholding.flow_step1', {
               defaultValue:

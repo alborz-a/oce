@@ -134,7 +134,7 @@ export function FleetOptimizationPanel({
           </p>
           <p className="mt-1 text-lg font-semibold tabular-nums text-content-primary">
             {o.underutilized_count}
-            <span className="ml-1 text-2xs font-normal text-content-tertiary">
+            <span className="ms-1 text-2xs font-normal text-content-tertiary">
               / {o.total_units}
             </span>
           </p>
@@ -184,18 +184,18 @@ export function FleetOptimizationPanel({
                     <table className="w-full text-xs">
                       <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
                         <tr>
-                          <th className="px-3 py-2 text-left">
+                          <th className="px-3 py-2 text-start">
                             {t('equipment.col_code', { defaultValue: 'Code' })}
                           </th>
-                          <th className="px-3 py-2 text-left">
+                          <th className="px-3 py-2 text-start">
                             {t('equipment.col_name', { defaultValue: 'Name' })}
                           </th>
-                          <th className="px-3 py-2 text-right">
+                          <th className="px-3 py-2 text-end">
                             {t('equipment.fleet_intel.utilization', {
                               defaultValue: 'Utilisation',
                             })}
                           </th>
-                          <th className="px-3 py-2 text-right">
+                          <th className="px-3 py-2 text-end">
                             {t('equipment.fleet_intel.saving', {
                               defaultValue: 'Saving',
                             })}
@@ -219,10 +219,10 @@ export function FleetOptimizationPanel({
                             <td className="px-3 py-2 truncate max-w-[180px]">
                               {u.name}
                             </td>
-                            <td className="px-3 py-2 text-right tabular-nums text-amber-600 dark:text-amber-400">
+                            <td className="px-3 py-2 text-end tabular-nums text-amber-600 dark:text-amber-400">
                               {fmtPercent(u.utilization_pct, 0)}
                             </td>
-                            <td className="px-3 py-2 text-right tabular-nums text-emerald-600 dark:text-emerald-400">
+                            <td className="px-3 py-2 text-end tabular-nums text-emerald-600 dark:text-emerald-400">
                               <MoneyDisplay
                                 amount={u.estimated_monthly_saving}
                                 currency={currency || undefined}

@@ -144,7 +144,7 @@ export function ContractTemplatesPanel({ search }: { search: string }) {
   return (
     <div className="flex flex-col gap-0 lg:flex-row" data-testid="contracts-template-library">
       {/* Catalogue */}
-      <div className="lg:w-[380px] lg:shrink-0 lg:border-r lg:border-border-light">
+      <div className="lg:w-[380px] lg:shrink-0 lg:border-e lg:border-border-light">
         <div className="flex items-center justify-between gap-2 border-b border-border-light px-4 py-2.5">
           <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-content-tertiary">
             <BookOpen size={13} />
@@ -174,7 +174,7 @@ export function ContractTemplatesPanel({ search }: { search: string }) {
                   type="button"
                   onClick={() => setSelected(row.code)}
                   className={clsx(
-                    'w-full border-b border-border-light px-4 py-2.5 text-left transition-colors',
+                    'w-full border-b border-border-light px-4 py-2.5 text-start transition-colors',
                     selected === row.code
                       ? 'bg-oe-blue-subtle'
                       : 'hover:bg-surface-secondary',
@@ -535,13 +535,13 @@ function TemplateDetail({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
             <tr>
-              <th className="w-24 px-3 py-2 text-left">
+              <th className="w-24 px-3 py-2 text-start">
                 {t('contracts.tpl_col_number', { defaultValue: 'No.' })}
               </th>
-              <th className="px-3 py-2 text-left">
+              <th className="px-3 py-2 text-start">
                 {t('contracts.tpl_col_title', { defaultValue: 'Clause' })}
               </th>
-              <th className="w-32 px-3 py-2 text-left">
+              <th className="w-32 px-3 py-2 text-start">
                 {t('contracts.tpl_col_risk', { defaultValue: 'Risk' })}
               </th>
               {editable && <th className="w-24 px-3 py-2" />}

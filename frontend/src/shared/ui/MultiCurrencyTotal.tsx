@@ -148,7 +148,7 @@ function InlineChipStrip({
       {groups.map((group, idx) => (
         <span key={group.currency} className="inline-flex items-baseline">
           {idx > 0 && (
-            <span className="mr-1 text-content-tertiary" aria-hidden="true">
+            <span className="me-1 text-content-tertiary" aria-hidden="true">
               +
             </span>
           )}
@@ -273,7 +273,7 @@ export function MultiCurrencyTotal({
         <span
           id={tooltipId}
           role="tooltip"
-          className="absolute top-full left-0 z-50 mt-1 min-w-[12rem] rounded-lg border border-divider bg-surface-primary p-2 shadow-lg"
+          className="absolute top-full start-0 z-50 mt-1 min-w-[12rem] rounded-lg border border-divider bg-surface-primary p-2 shadow-lg"
         >
           <span className="mb-1 block text-2xs uppercase tracking-wider text-content-tertiary">
             {t('multiCurrency.hover_breakdown', {

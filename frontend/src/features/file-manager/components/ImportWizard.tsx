@@ -358,7 +358,7 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
               </div>
               <div className="rounded-lg border border-border-light overflow-hidden">
                 <div className="grid grid-cols-2">
-                  <div className="px-3 py-2 border-r border-border-light">
+                  <div className="px-3 py-2 border-e border-border-light">
                     <div className="text-2xs uppercase tracking-wide text-content-tertiary">
                       {t('files.import.imported', { defaultValue: 'Imported' })}
                     </div>

@@ -123,7 +123,7 @@ export function MatrixView({ videos, rows, onRowsChange, labels, onPick }: Matri
           <tbody>
             {rowIds.map((row) => (
               <tr key={row}>
-                <th scope="row" className="max-w-[10rem] truncate pr-2 text-left text-xs font-medium text-content-secondary">
+                <th scope="row" className="max-w-[10rem] truncate pe-2 text-start text-xs font-medium text-content-secondary">
                   {rowLabel(row)}
                 </th>
                 {STAGE_META.map((s) => {

@@ -372,7 +372,7 @@ export function ValidationPortfolioCard() {
             ]}
           />
         )}
-        <ul className="max-h-[28rem] space-y-2 overflow-y-auto pr-1" data-testid="validation-portfolio-list">
+        <ul className="max-h-[28rem] space-y-2 overflow-y-auto pe-1" data-testid="validation-portfolio-list">
           {projects.map((project) => (
             <ProjectBlock
               key={project.project_id}

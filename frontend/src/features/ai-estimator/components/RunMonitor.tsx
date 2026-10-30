@@ -121,7 +121,7 @@ export function RunMonitor({
           </p>
         )}
 
-        <div className="mt-2.5 max-h-[360px] space-y-2 overflow-y-auto pr-1">
+        <div className="mt-2.5 max-h-[360px] space-y-2 overflow-y-auto pe-1">
           {steps.length === 0 ? (
             <p className="px-1 py-6 text-center text-xs text-content-tertiary">
               {t('aiest.monitor.empty', {

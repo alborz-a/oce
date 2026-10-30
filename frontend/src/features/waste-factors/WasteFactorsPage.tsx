@@ -215,7 +215,7 @@ function WasteFactorsContent() {
                 <li key={f.id} className="flex items-center justify-between gap-3 py-1.5 text-sm">
                   <span className="min-w-0">
                     <span className="font-mono text-content-primary">{f.category}</span>
-                    {f.label && <span className="ml-2 text-content-tertiary">{f.label}</span>}
+                    {f.label && <span className="ms-2 text-content-tertiary">{f.label}</span>}
                     {f.note && <div className="truncate text-xs text-content-tertiary">{f.note}</div>}
                   </span>
                   <span className="flex shrink-0 items-center gap-3">
@@ -389,13 +389,13 @@ function ApplyResults({ result }: { result: ApplyResponse }) {
     <div className="overflow-x-auto rounded-lg border border-border-light">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+          <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
             <th className="px-3 py-2 font-medium">{t('waste_factors.col_category', { defaultValue: 'Category' })}</th>
-            <th className="px-3 py-2 text-right font-medium">{t('waste_factors.col_net', { defaultValue: 'Net' })}</th>
-            <th className="px-3 py-2 text-right font-medium">
+            <th className="px-3 py-2 text-end font-medium">{t('waste_factors.col_net', { defaultValue: 'Net' })}</th>
+            <th className="px-3 py-2 text-end font-medium">
               {t('waste_factors.col_factor', { defaultValue: 'Factor' })}
             </th>
-            <th className="px-3 py-2 text-right font-medium">
+            <th className="px-3 py-2 text-end font-medium">
               {t('waste_factors.col_gross', { defaultValue: 'Gross' })}
             </th>
           </tr>
@@ -406,19 +406,19 @@ function ApplyResults({ result }: { result: ApplyResponse }) {
               <td className="px-3 py-2">
                 <span className="font-mono text-content-secondary">{r.category}</span>
                 {!r.matched && (
-                  <Badge variant="warning" size="sm" className="ml-2">
+                  <Badge variant="warning" size="sm" className="ms-2">
                     {t('waste_factors.unmatched', { defaultValue: 'no factor' })}
                   </Badge>
                 )}
               </td>
-              <td className="px-3 py-2 text-right font-mono text-content-secondary">{trimQty(r.net_qty)}</td>
-              <td className="px-3 py-2 text-right font-mono text-content-tertiary">
+              <td className="px-3 py-2 text-end font-mono text-content-secondary">{trimQty(r.net_qty)}</td>
+              <td className="px-3 py-2 text-end font-mono text-content-tertiary">
                 <span className="inline-flex items-center justify-end gap-1">
                   &times;{trimQty(r.factor)}
                   <ArrowRight className="h-3 w-3 text-content-tertiary" aria-hidden />
                 </span>
               </td>
-              <td className="px-3 py-2 text-right font-mono font-semibold text-content-primary">
+              <td className="px-3 py-2 text-end font-mono font-semibold text-content-primary">
                 {trimQty(r.gross_qty)}
               </td>
             </tr>

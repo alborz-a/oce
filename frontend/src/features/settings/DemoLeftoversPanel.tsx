@@ -153,11 +153,11 @@ export function DemoLeftoversPanel() {
                   <div key={project || '-'}>
                     <p className="text-xs font-semibold text-content-primary">{project || companyWide}</p>
                     {modules.map(([module, rows]) => (
-                      <details key={module} className="ml-3 mt-1">
+                      <details key={module} className="ms-3 mt-1">
                         <summary className="cursor-pointer text-xs text-content-secondary">
                           {module} ({rows.length})
                         </summary>
-                        <ul className="ml-4 mt-1 space-y-0.5">
+                        <ul className="ms-4 mt-1 space-y-0.5">
                           {rows.map((row) => (
                             <li key={row.id} className="text-xs text-content-tertiary">
                               {row.title}
@@ -180,7 +180,7 @@ export function DemoLeftoversPanel() {
                   count: preview.kept.length,
                 })}
               </p>
-              <ul className="ml-4 mt-1 space-y-0.5">
+              <ul className="ms-4 mt-1 space-y-0.5">
                 {preview.kept.map((row) => (
                   <li key={row.id} className="text-xs text-content-tertiary">
                     {(row.project_name || companyWide) + ' / ' + row.module + ': ' + row.title}

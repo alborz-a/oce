@@ -299,7 +299,7 @@ export function PopulatePreviewModal({
       busy={commitMut.isPending}
       footer={
         <>
-          <div className="mr-auto text-sm text-content-secondary" data-testid="populate-selected-summary">
+          <div className="me-auto text-sm text-content-secondary" data-testid="populate-selected-summary">
             {t('contracts.populate_selected', {
               count: selectedRows.length,
               defaultValue: '{{count}} selected',
@@ -339,7 +339,7 @@ export function PopulatePreviewModal({
 
         {previewQ.isLoading ? (
           <p className="py-6 text-center text-sm text-content-tertiary">
-            <Loader2 size={16} className="mr-2 inline animate-spin" />
+            <Loader2 size={16} className="me-2 inline animate-spin" />
             {t('common.loading', { defaultValue: 'Loading…' })}
           </p>
         ) : previewError ? (
@@ -368,29 +368,29 @@ export function PopulatePreviewModal({
             <table className="w-full text-sm" data-testid="populate-preview-table">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     <span className="sr-only">
                       {t('contracts.populate_include', { defaultValue: 'Include' })}
                     </span>
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('contracts.line', { defaultValue: 'Line' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {editable
                       ? t('contracts.populate_pct_to_date', { defaultValue: '% to date' })
                       : t('contracts.pct_complete', { defaultValue: '% complete' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('contracts.line_value', { defaultValue: 'Line value' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('contracts.populate_billed_before', { defaultValue: 'Billed before' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('contracts.period_value', { defaultValue: 'Period value' })}
                   </th>
-                  <th className="px-3 py-2 text-right">
+                  <th className="px-3 py-2 text-end">
                     {t('contracts.populate_to_date', { defaultValue: 'To date' })}
                   </th>
                 </tr>
@@ -472,7 +472,7 @@ function PreviewRow({
             </div>
           )}
         </td>
-        <td className="px-3 py-2 text-right">
+        <td className="px-3 py-2 text-end">
           {editable ? (
             <div className="flex items-center justify-end gap-1">
               <input
@@ -488,7 +488,7 @@ function PreviewRow({
                   defaultValue: 'Percent complete to date for line {{code}}',
                 })}
                 aria-invalid={row.invalid || undefined}
-                className={`h-8 w-24 rounded border bg-surface-primary px-2 text-right text-sm tabular-nums ${
+                className={`h-8 w-24 rounded border bg-surface-primary px-2 text-end text-sm tabular-nums ${
                   row.invalid ? 'border-semantic-error' : 'border-border'
                 }`}
               />
@@ -514,14 +514,14 @@ function PreviewRow({
             fmtPercent(observed, 2)
           )}
         </td>
-        <td className="px-3 py-2 text-right text-content-secondary">
+        <td className="px-3 py-2 text-end text-content-secondary">
           {money(toNum(item.contract_line_value))}
         </td>
-        <td className="px-3 py-2 text-right text-content-secondary">{money(row.prior)}</td>
-        <td className="px-3 py-2 text-right font-medium" data-testid={`populate-period-${item.contract_line_id}`}>
+        <td className="px-3 py-2 text-end text-content-secondary">{money(row.prior)}</td>
+        <td className="px-3 py-2 text-end font-medium" data-testid={`populate-period-${item.contract_line_id}`}>
           {money(row.period)}
         </td>
-        <td className="px-3 py-2 text-right" data-testid={`populate-to-date-${item.contract_line_id}`}>
+        <td className="px-3 py-2 text-end" data-testid={`populate-to-date-${item.contract_line_id}`}>
           {money(row.cumulative)}
         </td>
       </tr>

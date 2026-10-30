@@ -221,7 +221,7 @@ function SelectableTile({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'group relative text-left rounded-2xl px-4 py-3.5 transition-all duration-200',
+        'group relative text-start rounded-2xl px-4 py-3.5 transition-all duration-200',
         'border bg-surface-primary',
         selected
           ? 'border-indigo-500/60 bg-gradient-to-br from-indigo-50 to-white dark:from-indigo-950/40 dark:to-surface-primary shadow-md shadow-indigo-500/10 ring-1 ring-indigo-500/20'
@@ -231,7 +231,7 @@ function SelectableTile({
       )}
     >
       {selected && (
-        <span className="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-sm shadow-indigo-500/40">
+        <span className="absolute top-2.5 end-2.5 w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-sm shadow-indigo-500/40">
           <Check className="w-3 h-3" strokeWidth={3} />
         </span>
       )}
@@ -397,7 +397,7 @@ function StageStep({
         type="button"
         onClick={() => onPick('')}
         className={clsx(
-          'group w-full mb-5 rounded-2xl border px-5 py-3.5 text-left transition-all duration-200 flex items-center gap-3',
+          'group w-full mb-5 rounded-2xl border px-5 py-3.5 text-start transition-all duration-200 flex items-center gap-3',
           selected === ''
             ? 'border-indigo-500/60 bg-gradient-to-r from-indigo-50 to-white dark:from-indigo-950/40 dark:to-surface-primary shadow-md shadow-indigo-500/10 ring-1 ring-indigo-500/20'
             : 'border-border-light bg-surface-primary hover:border-indigo-300 dark:hover:border-indigo-800 hover:shadow-sm hover:-translate-y-px',
@@ -445,7 +445,7 @@ function StageStep({
               onClick={() => onPick(s)}
               aria-pressed={isSel}
               className={clsx(
-                'group relative overflow-hidden text-left rounded-2xl border p-4 transition-all duration-200',
+                'group relative overflow-hidden text-start rounded-2xl border p-4 transition-all duration-200',
                 'bg-surface-primary',
                 isSel
                   ? 'border-indigo-500/60 shadow-md shadow-indigo-500/15 ring-1 ring-indigo-500/25'
@@ -458,21 +458,21 @@ function StageStep({
               <div
                 aria-hidden
                 className={clsx(
-                  'pointer-events-none absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl opacity-70 transition-opacity duration-300',
+                  'pointer-events-none absolute -top-8 -end-8 w-32 h-32 rounded-full blur-2xl opacity-70 transition-opacity duration-300',
                   'bg-gradient-to-br',
                   v.tint,
                   'group-hover:opacity-100',
                 )}
               />
               {isSel && (
-                <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-sm shadow-indigo-500/40 z-10">
+                <span className="absolute top-3 end-3 w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-sm shadow-indigo-500/40 z-10">
                   <Check className="w-3 h-3" strokeWidth={3} />
                 </span>
               )}
               <div className={clsx('relative w-11 h-11 rounded-xl flex items-center justify-center mb-3', v.iconBg)}>
                 <Icon className="w-5 h-5" strokeWidth={1.75} />
               </div>
-              <div className="relative font-semibold text-sm text-content-primary mb-1 pr-7">
+              <div className="relative font-semibold text-sm text-content-primary mb-1 pe-7">
                 {labelFor(s)}
               </div>
               <div className="relative text-xs text-content-tertiary leading-snug line-clamp-2">
@@ -763,7 +763,7 @@ export function CatalogueStep({
                 selected={selected === c.region}
                 onClick={() => onPick(c.region)}
               >
-                <div className="font-medium text-sm text-content-primary mb-0.5 pr-7">
+                <div className="font-medium text-sm text-content-primary mb-0.5 pe-7">
                   {c.country_iso} · {c.city}
                 </div>
                 <div className="text-[11px] text-content-tertiary">
@@ -1014,7 +1014,7 @@ function SourceStep({
                   disabled={!isReady}
                   onClick={() => onPick({ kind: 'bim', modelId: m.id, modelName: m.name })}
                 >
-                  <div className="flex items-center gap-2 mb-0.5 pr-7">
+                  <div className="flex items-center gap-2 mb-0.5 pe-7">
                     <Building2 className="w-4 h-4 text-content-tertiary" />
                     <span className="font-medium text-sm truncate">{m.name}</span>
                   </div>

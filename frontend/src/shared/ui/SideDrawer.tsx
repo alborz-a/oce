@@ -242,7 +242,7 @@ export function SideDrawer({
           // Safe-area inset on the right matters on iOS notch landscape;
           // the bottom inset is reserved for body padding so the close
           // button stays reachable above the home indicator.
-          'pr-[env(safe-area-inset-right,0)]',
+          'pe-[env(safe-area-inset-right,0)]',
           className,
         )}
         // Stop propagation so a click inside the panel does not bubble

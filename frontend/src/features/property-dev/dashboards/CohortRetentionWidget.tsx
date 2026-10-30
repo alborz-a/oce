@@ -121,12 +121,12 @@ export function CohortRetentionWidget({
         <table className="min-w-full border-collapse text-xs">
           <thead>
             <tr className="border-b border-divider text-content-tertiary">
-              <th className="px-2 py-1.5 text-left font-medium">
+              <th className="px-2 py-1.5 text-start font-medium">
                 {t('propdev.dashboards.cohort.col_cohort', {
                   defaultValue: 'Cohort',
                 })}
               </th>
-              <th className="px-2 py-1.5 text-right font-medium">
+              <th className="px-2 py-1.5 text-end font-medium">
                 {t('propdev.dashboards.cohort.col_total', {
                   defaultValue: 'Total',
                 })}
@@ -134,7 +134,7 @@ export function CohortRetentionWidget({
               {OFFSETS.map((o) => (
                 <th
                   key={o.key}
-                  className="px-2 py-1.5 text-right font-medium"
+                  className="px-2 py-1.5 text-end font-medium"
                 >
                   {o.label}
                 </th>
@@ -147,7 +147,7 @@ export function CohortRetentionWidget({
                 <td className="px-2 py-1.5 font-medium text-content-primary">
                   {c.cohort_month}
                 </td>
-                <td className="px-2 py-1.5 text-right text-content-secondary">
+                <td className="px-2 py-1.5 text-end text-content-secondary">
                   {c.total}
                 </td>
                 {OFFSETS.map((o) => {
@@ -155,7 +155,7 @@ export function CohortRetentionWidget({
                   return (
                     <td
                       key={o.key}
-                      className="px-2 py-1.5 text-right"
+                      className="px-2 py-1.5 text-end"
                       aria-label={t(
                         'propdev.dashboards.cohort.cell_label',
                         {

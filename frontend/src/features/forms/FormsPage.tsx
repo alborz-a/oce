@@ -353,10 +353,10 @@ function LibraryTab({
         <div className="relative min-w-[200px] flex-1">
           <Search
             size={15}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
-            className={clsx(inputCls, 'pl-9')}
+            className={clsx(inputCls, 'ps-9')}
             value={search}
             onChange={(e) => onSearch(e.target.value)}
             placeholder={t('forms.search_templates', { defaultValue: 'Search templates' })}
@@ -584,7 +584,7 @@ function SubmissionRow({
         !first && 'border-t border-border-light',
       )}
     >
-      <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+      <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-center gap-3 text-start">
         <FileText size={16} className="shrink-0 text-content-tertiary" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">

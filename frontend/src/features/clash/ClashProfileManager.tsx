@@ -365,7 +365,7 @@ export default function ClashProfileManager() {
                 setForm(null);
               }}
               className={clsx(
-                'w-full text-left rounded-xl border px-3.5 py-3 transition-colors',
+                'w-full text-start rounded-xl border px-3.5 py-3 transition-colors',
                 selectedId === p.id && !form
                   ? 'border-oe-blue bg-oe-blue/5'
                   : 'border-border-subtle hover:border-border-strong bg-surface-1',
@@ -401,7 +401,7 @@ export default function ClashProfileManager() {
                     })}
                   </span>
                 )}
-                <span className="ml-auto">
+                <span className="ms-auto">
                   <DateDisplay value={p.created_at} />
                 </span>
               </div>
@@ -576,7 +576,7 @@ function ProfileDetail({
         {rows.map(([label, value]) => (
           <div key={label} className="flex items-center justify-between gap-3 border-b border-border-light pb-1.5">
             <dt className="text-sm text-content-tertiary">{label}</dt>
-            <dd className="text-sm font-medium text-content-primary text-right">
+            <dd className="text-sm font-medium text-content-primary text-end">
               {value}
             </dd>
           </div>

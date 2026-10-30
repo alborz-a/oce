@@ -253,7 +253,7 @@ export function ApprovalInstanceDetailDrawer({
                     })}
                   </Badge>
                 )}
-              <span className="text-2xs text-content-tertiary ml-auto">
+              <span className="text-2xs text-content-tertiary ms-auto">
                 {t('approvalRoutes.started_on', {
                   defaultValue: 'Started {{date}}',
                   date: new Date(instance.started_at).toLocaleDateString(getIntlLocale()),

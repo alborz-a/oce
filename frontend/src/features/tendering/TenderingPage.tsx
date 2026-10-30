@@ -376,7 +376,7 @@ function SubcontractorPickerModal({
         <div className="relative">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
@@ -385,7 +385,7 @@ function SubcontractorPickerModal({
             placeholder={t('tendering.pick_sub_search', {
               defaultValue: 'Search subcontractors by name or trade…',
             })}
-            className={`${fieldCls} pl-8`}
+            className={`${fieldCls} ps-8`}
             autoFocus
           />
         </div>
@@ -409,7 +409,7 @@ function SubcontractorPickerModal({
                 type="button"
                 onClick={() => pick(sub)}
                 disabled={resolvingId !== null}
-                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-surface-secondary disabled:opacity-60"
+                className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-start hover:bg-surface-secondary disabled:opacity-60"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium text-content-primary">
@@ -850,7 +850,7 @@ export function BidComparisonTable({
   }
 
   const stickyColClass =
-    'sticky left-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]';
+    'sticky start-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]';
   const hiddenCount = comparison.rows.length - visibleRows.length;
 
   return (
@@ -895,17 +895,17 @@ export function BidComparisonTable({
           <thead className="sticky top-0 z-10 bg-surface-primary">
             <tr className="border-b border-border-light">
               <th
-                className={`whitespace-nowrap px-3 py-2.5 text-left font-semibold text-content-primary ${stickyColClass} z-20`}
+                className={`whitespace-nowrap px-3 py-2.5 text-start font-semibold text-content-primary ${stickyColClass} z-20`}
               >
                 {t('tendering.position', 'Position')}
               </th>
-              <th className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-content-primary">
+              <th className="whitespace-nowrap px-3 py-2.5 text-end font-semibold text-content-primary">
                 {t('tendering.budget', 'Budget')}
               </th>
               {comparison.bid_totals.map((bt) => (
                 <th
                   key={bt.bid_id}
-                  className="whitespace-nowrap px-3 py-2.5 text-right font-semibold text-content-primary"
+                  className="whitespace-nowrap px-3 py-2.5 text-end font-semibold text-content-primary"
                 >
                   <span className="flex items-center justify-end gap-1.5">
                     <Building2 size={12} className="text-content-tertiary" />
@@ -923,11 +923,11 @@ export function BidComparisonTable({
               >
                 <td className={`px-3 py-2.5 ${stickyColClass} z-20 group-hover:bg-surface-secondary/30`}>
                   <span className="text-content-primary">{row.description || '-'}</span>
-                  <span className="ml-2 text-xs text-content-tertiary">
+                  <span className="ms-2 text-xs text-content-tertiary">
                     {localizedUnitCode(row.unit, i18n.language)}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-content-secondary">
+                <td className="whitespace-nowrap px-3 py-2.5 text-end tabular-nums text-content-secondary">
                   {formatNumber(row.budget_rate)}
                 </td>
                 {row.bids.map((bid) => {
@@ -950,7 +950,7 @@ export function BidComparisonTable({
                   return (
                     <td
                       key={`bid-${bid.bid_id}`}
-                      className={`whitespace-nowrap px-3 py-2.5 text-right tabular-nums ${flagCls}`}
+                      className={`whitespace-nowrap px-3 py-2.5 text-end tabular-nums ${flagCls}`}
                       title={
                         rate === null
                           ? t('tendering.not_priced_hint', {
@@ -969,12 +969,12 @@ export function BidComparisonTable({
                         <span className="text-content-primary">{formatNumber(rate)}</span>
                       )}
                       {flag && (
-                        <span className="ml-1 text-xs" aria-hidden="true">
+                        <span className="ms-1 text-xs" aria-hidden="true">
                           {flag === 'high' ? '▲' : '▼'}
                         </span>
                       )}
                       {rate !== null && rate > 0 && (
-                        <span className="ml-1.5">
+                        <span className="ms-1.5">
                           <DeviationBadge pct={bid.deviation_pct} />
                         </span>
                       )}
@@ -987,22 +987,22 @@ export function BidComparisonTable({
           <tfoot>
             <tr className="border-t-2 border-border bg-surface-secondary/30">
               <td
-                className={`px-3 py-3 font-bold text-content-primary sticky left-0 z-20 bg-surface-secondary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]`}
+                className={`px-3 py-3 font-bold text-content-primary sticky start-0 z-20 bg-surface-secondary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]`}
               >
                 {t('tendering.total', 'TOTAL')}
               </td>
-              <td className="whitespace-nowrap px-3 py-3 text-right font-bold tabular-nums text-content-primary">
+              <td className="whitespace-nowrap px-3 py-3 text-end font-bold tabular-nums text-content-primary">
                 {formatCurrency(comparison.budget_total, currency)}
               </td>
               {comparison.bid_totals.map((bt) => (
                 <td
                   key={`total-${bt.bid_id}`}
-                  className="whitespace-nowrap px-3 py-3 text-right tabular-nums"
+                  className="whitespace-nowrap px-3 py-3 text-end tabular-nums"
                 >
                   <span className="font-bold text-content-primary">
                     {formatCurrency(bt.total, bt.currency)}
                   </span>
-                  <span className="ml-1.5">
+                  <span className="ms-1.5">
                     <DeviationBadge pct={bt.deviation_pct} />
                   </span>
                   {/* A total that leaves lines out is cheaper by what it
@@ -1824,7 +1824,7 @@ function PackageDetail({
               <div
                 role="group"
                 aria-label={t('tendering.send_out_label', { defaultValue: 'Bill for bidders' })}
-                className="flex items-center gap-0.5 rounded-lg border border-border-light pl-2"
+                className="flex items-center gap-0.5 rounded-lg border border-border-light ps-2"
               >
                 <span className="text-xs text-content-tertiary">
                   {t('tendering.send_out_label', { defaultValue: 'Bill for bidders' })}
@@ -2009,7 +2009,7 @@ function PackageDetail({
                     {bid.company_name}
                   </span>
                   {bid.contact_email && (
-                    <span className="ml-2 text-xs text-content-tertiary items-center gap-1 inline-flex">
+                    <span className="ms-2 text-xs text-content-tertiary items-center gap-1 inline-flex">
                       <Mail size={10} />
                       {bid.contact_email}
                     </span>

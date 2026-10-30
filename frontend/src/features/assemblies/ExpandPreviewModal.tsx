@@ -135,7 +135,7 @@ export function ExpandPreviewModal({
                     if (e.key === 'Enter') runPreview();
                   }}
                   placeholder={p.value ?? '0'}
-                  className="w-full h-9 px-2.5 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary text-right tabular-nums focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
+                  className="w-full h-9 px-2.5 rounded-lg border border-border-light bg-surface-primary text-sm text-content-primary text-end tabular-nums focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
                 />
                 {p.description && (
                   <div className="text-[10px] text-content-tertiary mt-1 leading-snug">
@@ -215,20 +215,20 @@ export function ExpandPreviewModal({
           <div className="overflow-x-auto rounded-lg border border-border-light">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-light bg-surface-tertiary text-left">
+                <tr className="border-b border-border-light bg-surface-tertiary text-start">
                   <th className="px-3 py-2 font-medium text-content-secondary min-w-[200px]">
                     {t('boq.description', { defaultValue: 'Description' })}
                   </th>
                   <th className="px-3 py-2 font-medium text-content-secondary w-16 text-center">
                     {t('boq.unit', { defaultValue: 'Unit' })}
                   </th>
-                  <th className="px-3 py-2 font-medium text-content-secondary w-40 text-right">
+                  <th className="px-3 py-2 font-medium text-content-secondary w-40 text-end">
                     {t('assembly.preview.col_qty', { defaultValue: 'Qty (static -> computed)' })}
                   </th>
-                  <th className="px-3 py-2 font-medium text-content-secondary w-28 text-right">
+                  <th className="px-3 py-2 font-medium text-content-secondary w-28 text-end">
                     {t('assemblies.unit_cost', { defaultValue: 'Unit Cost' })}
                   </th>
-                  <th className="px-3 py-2 font-medium text-content-secondary w-28 text-right">
+                  <th className="px-3 py-2 font-medium text-content-secondary w-28 text-end">
                     {t('boq.total', { defaultValue: 'Total' })}
                   </th>
                 </tr>
@@ -242,7 +242,7 @@ export function ExpandPreviewModal({
                       <td className="px-3 py-2 text-center text-content-secondary uppercase text-xs">
                         {line.unit}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
+                      <td className="px-3 py-2 text-end tabular-nums">
                         <span className="inline-flex items-center justify-end gap-1">
                           <span className={changed ? 'text-content-tertiary line-through' : 'text-content-secondary'}>
                             {line.static_quantity}
@@ -257,10 +257,10 @@ export function ExpandPreviewModal({
                           )}
                         </span>
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                      <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                         {line.unit_cost}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums font-semibold text-content-primary">
+                      <td className="px-3 py-2 text-end tabular-nums font-semibold text-content-primary">
                         {line.total}
                       </td>
                     </tr>
@@ -269,12 +269,12 @@ export function ExpandPreviewModal({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border bg-surface-tertiary font-semibold">
-                  <td colSpan={4} className="px-3 py-2.5 text-right text-content-primary">
+                  <td colSpan={4} className="px-3 py-2.5 text-end text-content-primary">
                     {t('assembly.preview.total_rate', { defaultValue: 'Total rate' })}
                   </td>
-                  <td className="px-3 py-2.5 text-right tabular-nums text-content-primary">
+                  <td className="px-3 py-2.5 text-end tabular-nums text-content-primary">
                     {data.total_rate}
-                    <span className="ml-1 text-xs font-normal text-content-tertiary">
+                    <span className="ms-1 text-xs font-normal text-content-tertiary">
                       {currency} / {unit}
                     </span>
                   </td>

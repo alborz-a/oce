@@ -162,7 +162,7 @@ function StageBar({ stage, max }: { stage: StageDistribution; max: number }) {
       >
         {/* Mean bar */}
         <span
-          className="absolute inset-y-0 left-0"
+          className="absolute inset-y-0 start-0"
           style={{ width: `${meanPct}%`, backgroundColor: color, opacity: 0.85 }}
         />
         {/* p50 white tick */}

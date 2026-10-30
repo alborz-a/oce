@@ -260,14 +260,14 @@ function SearchableSelect<T extends string>({
               <div className="relative">
                 <Search
                   size={13}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none"
+                  className="absolute start-2 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none"
                 />
                 <input
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={placeholder}
-                  className="w-full rounded-md border border-border-light bg-surface-secondary pl-7 pr-2 py-1 text-xs text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
+                  className="w-full rounded-md border border-border-light bg-surface-secondary ps-7 pe-2 py-1 text-xs text-content-primary placeholder:text-content-quaternary focus:outline-none focus:ring-1 focus:ring-oe-blue/40"
                   autoFocus
                 />
               </div>
@@ -290,7 +290,7 @@ function SearchableSelect<T extends string>({
                         : 'text-content-primary hover:bg-surface-secondary',
                     )}
                   >
-                    <span className="truncate flex-1 text-left">{opt.label}</span>
+                    <span className="truncate flex-1 text-start">{opt.label}</span>
                     {opt.value === value && <Check size={14} className="shrink-0" />}
                   </button>
                 ))

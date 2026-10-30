@@ -185,7 +185,7 @@ export function NamingViolationBanner({
               defaultValue: 'Filename does not match the project naming rules',
             })}
           </div>
-          <ul className="mt-1 list-disc space-y-0.5 pl-5 text-xs text-content-secondary">
+          <ul className="mt-1 list-disc space-y-0.5 ps-5 text-xs text-content-secondary">
             {codes.map((c) => (
               <li key={c} data-testid={`violation-code-${c}`}>
                 {t(`files.naming.code.${c}`, {

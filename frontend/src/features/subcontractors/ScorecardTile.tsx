@@ -117,7 +117,7 @@ function Dial({ label, value, prior, icon: Icon }: DialProps) {
       </div>
       <p className={clsx('mt-1 text-base font-semibold tabular-nums', cls.text)}>
         {fmtFixed(v, 0)}
-        <span className="ml-0.5 text-xs font-normal text-content-tertiary">
+        <span className="ms-0.5 text-xs font-normal text-content-tertiary">
           /100
         </span>
       </p>
@@ -235,7 +235,7 @@ export function ScorecardTile({ ratings }: ScorecardTileProps) {
             )}
           >
             {fmtFixed(overall, 0)}
-            <span className="ml-1 text-sm font-normal text-content-tertiary">
+            <span className="ms-1 text-sm font-normal text-content-tertiary">
               /100
             </span>
           </p>

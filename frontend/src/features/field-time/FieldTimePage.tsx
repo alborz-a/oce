@@ -444,7 +444,7 @@ function TimesheetRow({
     <button
       type="button"
       onClick={onOpen}
-      className="flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-colors hover:bg-surface-secondary"
+      className="flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-start transition-colors hover:bg-surface-secondary"
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">

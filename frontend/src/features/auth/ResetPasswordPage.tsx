@@ -142,7 +142,7 @@ export function ResetPasswordPage() {
       {/* Language — top right */}
       {/* [RSC-IRAN] hidden: language dropdown (Farsi only) — do not delete */}
       {false && (
-      <div className="absolute top-3 right-3 z-30" ref={langRef}>
+      <div className="absolute top-3 end-3 z-30" ref={langRef}>
         <button
           onClick={() => setLangOpen(!langOpen)}
           className="flex items-center gap-1.5 rounded-lg border border-border-light bg-surface-elevated/80 backdrop-blur-sm px-2.5 py-1 text-xs text-content-secondary hover:bg-surface-elevated transition-colors shadow-sm"
@@ -153,7 +153,7 @@ export function ResetPasswordPage() {
           <ChevronDown size={11} className={`text-content-tertiary transition-transform ${langOpen ? 'rotate-180' : ''}`} />
         </button>
         {langOpen && (
-          <div className="absolute right-0 mt-1 w-44 max-h-72 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-0.5 animate-stagger-in">
+          <div className="absolute end-0 mt-1 w-44 max-h-72 overflow-y-auto rounded-xl border border-border-light bg-surface-elevated shadow-xl py-0.5 animate-stagger-in">
             {sortLanguagesByName(SUPPORTED_LANGUAGES).map((lang) => {
               const isActive = i18n.language === lang.code;
               return (

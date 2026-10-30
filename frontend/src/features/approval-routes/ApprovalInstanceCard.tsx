@@ -604,7 +604,7 @@ export function StepRow({
         <span className="text-sm text-content-primary truncate">
           {approverLabel}
         </span>
-        <Badge variant={cfg.variant} size="sm" className="ml-auto">
+        <Badge variant={cfg.variant} size="sm" className="ms-auto">
           {t(`approvalRoutes.step_status_${status}`, {
             defaultValue: status.charAt(0).toUpperCase() + status.slice(1),
           })}
@@ -727,7 +727,7 @@ function HistoryList({ instances }: { instances: ApprovalInstance[] }) {
             <InstanceStatusBadge status={i.status} />
             <span className="truncate">{i.id.slice(0, 8)}</span>
             {i.completed_at && (
-              <span className="text-content-tertiary text-2xs ml-auto">
+              <span className="text-content-tertiary text-2xs ms-auto">
                 {new Date(i.completed_at).toLocaleDateString(getIntlLocale())}
               </span>
             )}

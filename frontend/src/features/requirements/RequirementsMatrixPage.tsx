@@ -1029,7 +1029,7 @@ export function RequirementsMatrixPage() {
               )}
               {/* Set management for the active set */}
               {targetSet && (
-                <div className="ml-auto flex items-center gap-1">
+                <div className="ms-auto flex items-center gap-1">
                   <Button variant="ghost" size="sm" icon={<Pencil size={13} />} onClick={() => setSetEditor({ open: true, set: targetSet })}>
                     {t('requirements.matrix.rename_set', { defaultValue: 'Rename set' })}
                   </Button>
@@ -1100,32 +1100,32 @@ export function RequirementsMatrixPage() {
             <table className="min-w-full border-collapse">
               <thead className="bg-surface-secondary/60 text-xs uppercase tracking-wider text-content-secondary">
                 <tr>
-                  <th className="sticky left-0 z-10 min-w-[220px] bg-surface-secondary/60 px-3 py-2 text-left font-medium">
+                  <th className="sticky start-0 z-10 min-w-[220px] bg-surface-secondary/60 px-3 py-2 text-start font-medium">
                     {t('requirements.matrix.col_requirement', { defaultValue: 'Requirement' })}
                   </th>
                   {sets.length > 1 && !setFilter && (
-                    <th className="px-3 py-2 text-left font-medium">{t('requirements.matrix.col_set', { defaultValue: 'Set' })}</th>
+                    <th className="px-3 py-2 text-start font-medium">{t('requirements.matrix.col_set', { defaultValue: 'Set' })}</th>
                   )}
-                  <th className="px-3 py-2 text-left font-medium">{t('requirements.matrix.col_coverage', { defaultValue: 'Coverage' })}</th>
+                  <th className="px-3 py-2 text-start font-medium">{t('requirements.matrix.col_coverage', { defaultValue: 'Coverage' })}</th>
                   {cols.map((col) => (
-                    <th key={col} className="min-w-[120px] px-3 py-2 text-left font-medium">
+                    <th key={col} className="min-w-[120px] px-3 py-2 text-start font-medium">
                       {TYPE_LABEL[col] ?? col}
                     </th>
                   ))}
-                  <th className="px-3 py-2 text-right font-medium">{t('requirements.matrix.col_actions', { defaultValue: 'Actions' })}</th>
+                  <th className="px-3 py-2 text-end font-medium">{t('requirements.matrix.col_actions', { defaultValue: 'Actions' })}</th>
                 </tr>
               </thead>
               <tbody>
                 {visibleRows.map((row) => (
                   <tr key={row.requirement_id} className="group/row border-t border-border-light/60 hover:bg-surface-secondary/30">
-                    <td className="sticky left-0 z-10 max-w-[280px] bg-surface-elevated px-3 py-2 align-top group-hover/row:bg-surface-secondary/30">
+                    <td className="sticky start-0 z-10 max-w-[280px] bg-surface-elevated px-3 py-2 align-top group-hover/row:bg-surface-secondary/30">
                       <div className="truncate font-medium text-content-primary" title={`${row.entity}.${row.attribute}`}>
                         {row.entity}
                       </div>
                       <div className="text-xs text-content-secondary">
                         {row.attribute}
                         {row.priority && (
-                          <span className="ml-1 rounded bg-surface-secondary px-1 py-0.5 text-[10px] uppercase">
+                          <span className="ms-1 rounded bg-surface-secondary px-1 py-0.5 text-[10px] uppercase">
                             {t(`requirements.matrix.priority_${row.priority}`, { defaultValue: row.priority })}
                           </span>
                         )}
@@ -1163,7 +1163,7 @@ export function RequirementsMatrixPage() {
                             type="button"
                             onClick={() => setCellEditor({ open: true, row, deliverableType: col, cell: cell ?? null })}
                             className={clsx(
-                              'group flex w-full min-w-[120px] flex-col items-start gap-0.5 rounded-lg border px-2.5 py-1.5 text-left text-xs transition',
+                              'group flex w-full min-w-[120px] flex-col items-start gap-0.5 rounded-lg border px-2.5 py-1.5 text-start text-xs transition',
                               CELL_STYLE[status],
                             )}
                             aria-label={`${TYPE_LABEL[col] ?? col} - ${STATUS_LABEL[status]} - ${row.entity}.${row.attribute}`}
@@ -1185,7 +1185,7 @@ export function RequirementsMatrixPage() {
                         </td>
                       );
                     })}
-                    <td className="px-3 py-2 align-middle text-right">
+                    <td className="px-3 py-2 align-middle text-end">
                       <div className="inline-flex items-center gap-1 opacity-60 transition group-hover/row:opacity-100">
                         <button
                           type="button"

@@ -256,7 +256,7 @@ export function TabBar<TId extends string = string>({
             {tab.icon}
             <span className="truncate">{tab.label}</span>
             {tab.badge !== undefined && tab.badge !== null && (
-              <span className="ml-1">{tab.badge}</span>
+              <span className="ms-1">{tab.badge}</span>
             )}
           </button>
         );

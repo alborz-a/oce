@@ -809,7 +809,7 @@ function ConflictBadge({
       </button>
       {open && (
         <div
-          className="absolute left-0 top-full z-30 mt-1 w-80 rounded-lg border border-border-light bg-surface-primary p-3 text-xs shadow-lg"
+          className="absolute start-0 top-full z-30 mt-1 w-80 rounded-lg border border-border-light bg-surface-primary p-3 text-xs shadow-lg"
           role="tooltip"
         >
           <div className="flex items-start justify-between gap-2">
@@ -925,11 +925,11 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
         <Card padding="md">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
-              <label className={labelCls} htmlFor="pl-name">
+              <label className={labelCls} htmlFor="ps-name">
                 {t('propdev.pricing.name', 'Name')}
               </label>
               <input
-                id="pl-name"
+                id="ps-name"
                 className={inputCls}
                 value={form.name}
                 onChange={(e) =>
@@ -938,11 +938,11 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
               />
             </div>
             <div>
-              <label className={labelCls} htmlFor="pl-from">
+              <label className={labelCls} htmlFor="ps-from">
                 {t('propdev.pricing.effective_from', 'Effective from')}
               </label>
               <JalaliDateInput
-                id="pl-from"
+                id="ps-from"
                
                 className={inputCls}
                 value={form.effective_from}
@@ -952,11 +952,11 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
               />
             </div>
             <div>
-              <label className={labelCls} htmlFor="pl-cur">
+              <label className={labelCls} htmlFor="ps-cur">
                 {t('propdev.pricing.currency', 'Currency')}
               </label>
               <CurrencySelect
-                id="pl-cur"
+                id="ps-cur"
                 value={form.currency}
                 onChange={(next) =>
                   setForm((f) => ({ ...f, currency: next.toUpperCase() }))
@@ -965,11 +965,11 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className={labelCls} htmlFor="pl-notes">
+              <label className={labelCls} htmlFor="ps-notes">
                 {t('propdev.pricing.notes', 'Notes')}
               </label>
               <textarea
-                id="pl-notes"
+                id="ps-notes"
                 className={clsx(inputCls, 'h-20')}
                 value={form.notes}
                 onChange={(e) =>
@@ -1009,7 +1009,7 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
       ) : (
         <Card padding="none" className="overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-secondary">
+            <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-secondary">
               <tr>
                 <th className="px-3 py-2">{t('propdev.pricing.name', 'Name')}</th>
                 <th className="px-3 py-2">
@@ -1021,7 +1021,7 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
                 <th className="px-3 py-2">
                   {t('propdev.pricing.currency', 'Currency')}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('common.actions', 'Actions')}
                 </th>
               </tr>
@@ -1033,7 +1033,7 @@ function PriceListsTab({ devId }: PriceListsTabProps): JSX.Element {
                   <td className="px-3 py-2"><PriceListStatusBadge status={pl.status} /></td>
                   <td className="px-3 py-2">{pl.effective_from}</td>
                   <td className="px-3 py-2">{pl.currency}</td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     {pl.status === 'draft' && (
                       <Button
                         variant="secondary"
@@ -1408,7 +1408,7 @@ function RulesTab({ devId }: RulesTabProps): JSX.Element {
       ) : (
         <Card padding="none" className="overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-secondary">
+            <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-secondary">
               <tr>
                 <th className="px-3 py-2 w-12">
                   {t('propdev.pricing.priority_short', 'Pri')}
@@ -1431,7 +1431,7 @@ function RulesTab({ devId }: RulesTabProps): JSX.Element {
                 <th className="px-3 py-2">
                   {t('propdev.pricing.window', 'Window')}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('common.actions', 'Actions')}
                 </th>
               </tr>
@@ -1506,7 +1506,7 @@ function RulesTab({ devId }: RulesTabProps): JSX.Element {
                         </Badge>
                       )}
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -1591,11 +1591,11 @@ function QuoteWaterfall({
         </div>
       )}
       <table className="w-full text-sm">
-        <thead className="bg-surface-secondary text-left text-xs uppercase tracking-wide text-content-secondary">
+        <thead className="bg-surface-secondary text-start text-xs uppercase tracking-wide text-content-secondary">
           <tr>
             <th className="px-3 py-2">{t('propdev.pricing.line', 'Line')}</th>
             <th className="px-3 py-2">{t('propdev.pricing.rule_type', 'Type')}</th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('propdev.pricing.amount', 'Amount')}
             </th>
           </tr>
@@ -1619,7 +1619,7 @@ function QuoteWaterfall({
                 </td>
                 <td
                   className={clsx(
-                    'px-3 py-2 text-right tabular-nums whitespace-nowrap',
+                    'px-3 py-2 text-end tabular-nums whitespace-nowrap',
                     !isBase && amt < 0 && 'text-emerald-600',
                     !isBase && amt > 0 && 'text-amber-700',
                   )}
@@ -1969,7 +1969,7 @@ function HistoryDetailDrawer({
         <div className="flex flex-wrap items-center gap-2">
           {snapshotDate && (
             <Badge variant="neutral">
-              <Clock className="mr-1 inline h-3 w-3" />
+              <Clock className="me-1 inline h-3 w-3" />
               {t(
                 'propdev.pricing.history.snapshot_from',
                 'Snapshot from {{date}}',
@@ -2028,10 +2028,10 @@ function HistoryDetailDrawer({
             <table className="w-full text-xs">
               <thead className="text-content-tertiary">
                 <tr>
-                  <th className="px-2 py-1 text-left">
+                  <th className="px-2 py-1 text-start">
                     {t('propdev.pricing.line', 'Line')}
                   </th>
-                  <th className="px-2 py-1 text-right">
+                  <th className="px-2 py-1 text-end">
                     {t('propdev.pricing.amount', 'Amount')}
                   </th>
                 </tr>
@@ -2040,7 +2040,7 @@ function HistoryDetailDrawer({
                 {snap.lines.map((l, i) => (
                   <tr key={i} className="border-t border-border">
                     <td className="px-2 py-1">{l.rule_name}</td>
-                    <td className="px-2 py-1 text-right tabular-nums">
+                    <td className="px-2 py-1 text-end tabular-nums">
                       <MoneyDisplay
                         amount={l.amount}
                         currency={snap.currency ?? reservation.currency ?? 'EUR'}
@@ -2330,7 +2330,7 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
       ) : (
         <Card padding="none" className="overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-surface-secondary text-left">
+            <thead className="bg-surface-secondary text-start">
               <tr>
                 <th className="px-3 py-2">
                   {t('propdev.pricing.reservation_no', 'Reservation #')}
@@ -2352,10 +2352,10 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
                 <th className="px-3 py-2">
                   {t('propdev.pricing.history.col_plot', 'Plot')}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('propdev.pricing.base_price', 'Base')}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {sortHeader(
                     t('propdev.pricing.total', 'Total'),
                     'total_asc',
@@ -2398,7 +2398,7 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
                       </td>
                       <td className="px-3 py-2">{buyer?.full_name ?? '—'}</td>
                       <td className="px-3 py-2">{plot?.plot_number ?? '—'}</td>
-                      <td className="px-3 py-2 text-right tabular-nums">
+                      <td className="px-3 py-2 text-end tabular-nums">
                         {snap.base_price ? (
                           <MoneyDisplay
                             amount={snap.base_price}
@@ -2408,7 +2408,7 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
                           '—'
                         )}
                       </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
+                      <td className="px-3 py-2 text-end tabular-nums">
                         {snap.total ? (
                           <MoneyDisplay
                             amount={snap.total}
@@ -2427,13 +2427,13 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
                               'Pricing snapshotted on {{date}} - current active list differs.',
                               { date: snapDate },
                             )}
-                            className="ml-1 inline-flex items-center"
+                            className="ms-1 inline-flex items-center"
                           >
                             <Clock className="h-3 w-3 text-amber-600" />
                           </span>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-right text-content-tertiary">
+                      <td className="px-3 py-2 text-end text-content-tertiary">
                         <ArrowRight className="h-3 w-3" />
                       </td>
                     </tr>

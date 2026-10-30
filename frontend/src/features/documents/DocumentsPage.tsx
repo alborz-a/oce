@@ -496,7 +496,7 @@ function SortDropdown({
       </button>
       {open && (
         <div
-          className="absolute right-0 top-full mt-1 w-36 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-10 overflow-hidden"
+          className="absolute end-0 top-full mt-1 w-36 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-10 overflow-hidden"
           role="listbox"
           aria-label={t('documents.sort_options', { defaultValue: 'Sort options' })}
         >
@@ -506,7 +506,7 @@ function SortDropdown({
               role="option"
               aria-selected={value === field}
               onClick={() => { onChange(field); setOpen(false); }}
-              className={`w-full text-left px-3 py-2 text-xs transition-colors ${
+              className={`w-full text-start px-3 py-2 text-xs transition-colors ${
                 value === field
                   ? 'bg-oe-blue-subtle/30 text-oe-blue-text font-medium'
                   : 'text-content-secondary hover:bg-surface-secondary'
@@ -1179,7 +1179,7 @@ export function DocumentsPage() {
                   key={s.session_id}
                   type="button"
                   onClick={() => navigate(`/data-explorer?session=${s.session_id}`)}
-                  className="group text-left rounded-xl border border-border-light shadow-sm hover:shadow-md hover:border-oe-blue/30 transition-all bg-surface-primary p-4 flex flex-col"
+                  className="group text-start rounded-xl border border-border-light shadow-sm hover:shadow-md hover:border-oe-blue/30 transition-all bg-surface-primary p-4 flex flex-col"
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-oe-blue-subtle shrink-0">
@@ -1227,7 +1227,7 @@ export function DocumentsPage() {
                 key={`bim-${m.id}`}
                 type="button"
                 onClick={() => navigate(`/bim/${m.id}`)}
-                className="group text-left rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
+                className="group text-start rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
                 title={m.name}
               >
                 <div className="flex items-center gap-2">
@@ -1248,7 +1248,7 @@ export function DocumentsPage() {
                 key={`dwg-${d.id}`}
                 type="button"
                 onClick={() => navigate(`/dwg-takeoff?drawingId=${encodeURIComponent(d.id)}`)}
-                className="group text-left rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
+                className="group text-start rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
                 title={d.name}
               >
                 <div className="flex items-center gap-2">
@@ -1269,7 +1269,7 @@ export function DocumentsPage() {
                 key={`tk-${td.id}`}
                 type="button"
                 onClick={() => navigate(`/takeoff?tab=measurements&doc=${encodeURIComponent(td.id)}&name=${encodeURIComponent(td.filename)}`)}
-                className="group text-left rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
+                className="group text-start rounded-lg border border-border-light bg-surface-primary px-3 py-2 hover:border-oe-blue/30 hover:shadow-sm transition-all"
                 title={td.filename}
               >
                 <div className="flex items-center gap-2">
@@ -1438,7 +1438,7 @@ export function DocumentsPage() {
                       </div>
                     ) : isConfirming ? (
                       <div className="flex items-center gap-0.5 animate-fade-in">
-                        <span className="text-2xs text-semantic-error font-medium mr-0.5">
+                        <span className="text-2xs text-semantic-error font-medium me-0.5">
                           {t('common.confirm_question', { defaultValue: 'Delete?' })}
                         </span>
                         <button
@@ -1471,7 +1471,7 @@ export function DocumentsPage() {
                         {openMenuId === doc.id && (
                           <div
                             ref={menuRef}
-                            className="absolute right-0 top-full mt-1 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-xl z-20 py-1 animate-fade-in"
+                            className="absolute end-0 top-full mt-1 w-44 rounded-lg border border-border-light bg-surface-elevated shadow-xl z-20 py-1 animate-fade-in"
                             role="menu"
                           >
                             {previewKind && (

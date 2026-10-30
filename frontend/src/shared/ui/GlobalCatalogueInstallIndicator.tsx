@@ -99,7 +99,7 @@ export function GlobalCatalogueInstallIndicator() {
 
   // Stacked higher than BIM (bottom-20) / DWG (bottom-32-ish) docks so
   // all three are simultaneously visible if they all fire.
-  const pillPosition = 'oe-dock-aware fixed bottom-44 right-4 z-[60]';
+  const pillPosition = 'oe-dock-aware fixed bottom-44 end-4 z-[60]';
 
   if (!expanded) {
     const isActive = primary.status === 'downloading';
@@ -115,7 +115,7 @@ export function GlobalCatalogueInstallIndicator() {
         ) : (
           <X size={14} className="text-red-500 shrink-0" />
         )}
-        <div className="flex-1 min-w-0 text-left">
+        <div className="flex-1 min-w-0 text-start">
           <p className="text-xs font-medium text-content-primary truncate">
             {primary.label}
           </p>
@@ -217,7 +217,7 @@ function JobRow({ job, onDismiss }: { job: CatalogueInstallJob; onDismiss: () =>
                   style={{ width: `${job.progress}%` }}
                 />
               </div>
-              <span className="text-[10px] text-emerald-600 font-semibold tabular-nums w-8 text-right">
+              <span className="text-[10px] text-emerald-600 font-semibold tabular-nums w-8 text-end">
                 {job.progress}%
               </span>
             </div>

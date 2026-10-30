@@ -92,7 +92,7 @@ export function SupplierConfirmationModal({ po, projectId, onClose }: SupplierCo
             {t('common.cancel', { defaultValue: 'Cancel' })}
           </Button>
           <Button onClick={() => mut.mutate()} disabled={mut.isPending}>
-            {mut.isPending && <Loader2 size={14} className="animate-spin mr-1" />}
+            {mut.isPending && <Loader2 size={14} className="animate-spin me-1" />}
             {t('procurement.supplier_confirmation_save', { defaultValue: 'Save confirmation' })}
           </Button>
         </>

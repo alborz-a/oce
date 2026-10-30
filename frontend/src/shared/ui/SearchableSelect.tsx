@@ -282,7 +282,7 @@ export function SearchableSelect({
           'disabled:opacity-60 disabled:pointer-events-none',
         )}
       >
-        <span className="flex min-w-0 flex-1 items-center gap-2 text-left">
+        <span className="flex min-w-0 flex-1 items-center gap-2 text-start">
           {selected ? (
             <>
               <span className="truncate text-content-primary">{selected.label}</span>
@@ -290,7 +290,7 @@ export function SearchableSelect({
                 <span className="truncate text-xs text-content-tertiary">{selected.meta}</span>
               )}
               {selected.hint && (
-                <span className="ml-auto shrink-0 font-mono text-[10px] text-content-tertiary">
+                <span className="ms-auto shrink-0 font-mono text-[10px] text-content-tertiary">
                   {selected.hint}
                 </span>
               )}
@@ -416,7 +416,7 @@ export function SearchableSelect({
                     <span className="min-w-0 flex-1 truncate text-content-primary">
                       {highlightMatch(o.label, query)}
                       {o.meta && (
-                        <span className="ml-1.5 text-xs text-content-tertiary">
+                        <span className="ms-1.5 text-xs text-content-tertiary">
                           {highlightMatch(o.meta, query)}
                         </span>
                       )}

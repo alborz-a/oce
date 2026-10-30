@@ -853,14 +853,14 @@ export function ContractsPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
 
@@ -951,7 +951,7 @@ export function ContractsPage() {
             <button
               type="button"
               onClick={clearCounterpartyFilter}
-              className="ml-0.5 rounded-full p-0.5 hover:bg-oe-blue/10"
+              className="ms-0.5 rounded-full p-0.5 hover:bg-oe-blue/10"
               aria-label={t('common.clear', { defaultValue: 'Clear' })}
             >
               <X size={12} />
@@ -1124,22 +1124,22 @@ function ContractTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.code', { defaultValue: 'Code' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.type', { defaultValue: 'Type' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.counterparty', { defaultValue: 'Counterparty' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('contracts.value', { defaultValue: 'Value' })}
             </th>
           </tr>
@@ -1184,7 +1184,7 @@ function ContractTable({
                   <ContractExpiryBadge endDate={r.end_date} status={r.status} />
                 </div>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <MoneyDisplay
                   amount={toNum(r.total_value)}
                   currency={r.currency || undefined}
@@ -1200,7 +1200,7 @@ function ContractTable({
           <tr className="border-t border-border-light">
             <td colSpan={5} className="px-4 py-2 text-xs uppercase tracking-wide text-content-tertiary">
               {t('contracts.register_total', { defaultValue: 'Register total' })}
-              <span className="ml-2 normal-case text-content-secondary">
+              <span className="ms-2 normal-case text-content-secondary">
                 ({t('contracts.register_count', {
                   count: rows.length,
                   defaultValue_one: '{{count}} contract',
@@ -1208,7 +1208,7 @@ function ContractTable({
                 })})
               </span>
             </td>
-            <td className="px-4 py-2 text-right text-sm font-medium">
+            <td className="px-4 py-2 text-end text-sm font-medium">
               {/* Not compacted: the Value column above prints every figure in
                   full, and a register total written to a different precision
                   than the column it sums makes the reader do the conversion. */}
@@ -1275,22 +1275,22 @@ function ClaimsTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.claim_number', { defaultValue: 'Claim #' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.period', { defaultValue: 'Period' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('contracts.gross', { defaultValue: 'Gross' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('contracts.retention', { defaultValue: 'Retention' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('contracts.net_due', { defaultValue: 'Net due' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.status', { defaultValue: 'Status' })}
             </th>
           </tr>
@@ -1357,19 +1357,19 @@ function ClaimRow({
             string alone read "—" or a different date than the detail page. */}
         <ClaimPeriod claim={claim} />
       </td>
-      <td className="px-4 py-2 text-right">
+      <td className="px-4 py-2 text-end">
         <MoneyDisplay
           amount={toNum(claim.gross_amount)}
           currency={claim.currency || undefined}
         />
       </td>
-      <td className="px-4 py-2 text-right text-content-secondary">
+      <td className="px-4 py-2 text-end text-content-secondary">
         <MoneyDisplay
           amount={toNum(claim.retention_amount)}
           currency={claim.currency || undefined}
         />
       </td>
-      <td className="px-4 py-2 text-right font-medium">
+      <td className="px-4 py-2 text-end font-medium">
         <MoneyDisplay
           amount={toNum(claim.net_due)}
           currency={claim.currency || undefined}
@@ -1471,19 +1471,19 @@ function FinalAccountsView({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.code', { defaultValue: 'Code' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.type', { defaultValue: 'Type' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('contracts.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('contracts.value', { defaultValue: 'Value' })}
             </th>
           </tr>
@@ -1507,7 +1507,7 @@ function FinalAccountsView({
                   {contractStatusLabel(t, c.status)}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <MoneyDisplay
                   amount={toNum(c.total_value)}
                   currency={c.currency || undefined}
@@ -1696,7 +1696,7 @@ function SoVLineRow({
     const total = (parseFloat(draft.quantity) || 0) * (parseFloat(draft.unit_rate) || 0);
     return (
       <tr className="border-t border-border-light" data-testid={`sov-row-${line.id}`}>
-        <td className="py-1 pr-1">
+        <td className="py-1 pe-1">
           <input
             type="text"
             value={draft.code}
@@ -1705,7 +1705,7 @@ function SoVLineRow({
             aria-label={t('contracts.code', { defaultValue: 'Code' })}
           />
         </td>
-        <td className="py-1 pr-1">
+        <td className="py-1 pe-1">
           <input
             type="text"
             value={draft.description}
@@ -1715,13 +1715,13 @@ function SoVLineRow({
             autoFocus
           />
         </td>
-        <td className="py-1 pr-1">
+        <td className="py-1 pe-1">
           <div className="flex gap-1">
             <input
               type="number"
               value={draft.quantity}
               onChange={(e) => setDraft((p) => ({ ...p, quantity: e.target.value }))}
-              className={`${lineInputCls} w-20 text-right`}
+              className={`${lineInputCls} w-20 text-end`}
               aria-label={t('contracts.qty', { defaultValue: 'Qty' })}
             />
             <input
@@ -1733,19 +1733,19 @@ function SoVLineRow({
             />
           </div>
         </td>
-        <td className="py-1 pr-1">
+        <td className="py-1 pe-1">
           <input
             type="number"
             value={draft.unit_rate}
             onChange={(e) => setDraft((p) => ({ ...p, unit_rate: e.target.value }))}
-            className={`${lineInputCls} w-24 text-right`}
+            className={`${lineInputCls} w-24 text-end`}
             aria-label={t('contracts.unit_rate', { defaultValue: 'Rate' })}
           />
         </td>
-        <td className="py-1 text-right font-medium">
+        <td className="py-1 text-end font-medium">
           <MoneyDisplay amount={total} currency={currency || undefined} />
         </td>
-        <td className="py-1 text-right">
+        <td className="py-1 text-end">
           <div className="flex gap-1 justify-end">
             <Button size="sm" onClick={() => saveMut.mutate()} loading={saveMut.isPending}>
               {t('common.save', { defaultValue: 'Save' })}
@@ -1769,18 +1769,18 @@ function SoVLineRow({
           <span className="block truncate">{line.description || '—'}</span>
           <SovLineLinkSummary line={line} canLink={linkable} onOpen={() => setLinking((v) => !v)} />
         </td>
-        <td className="py-1 text-right text-content-secondary">
+        <td className="py-1 text-end text-content-secondary">
           {toNum(line.quantity).toLocaleString(getNumberLocale())} {line.unit || ''}
         </td>
-        <td className="py-1 text-right text-content-secondary">
+        <td className="py-1 text-end text-content-secondary">
           <MoneyDisplay amount={toNum(line.unit_rate)} currency={currency || undefined} />
         </td>
-        <td className="py-1 text-right font-medium">
+        <td className="py-1 text-end font-medium">
           <MoneyDisplay amount={toNum(line.total_value)} currency={currency || undefined} />
         </td>
         {editable && billed && <td className="py-1" />}
         {editable && !billed && (
-          <td className="py-1 text-right">
+          <td className="py-1 text-end">
             <div className="flex gap-1 justify-end">
               <Button
                 size="sm"
@@ -2404,7 +2404,7 @@ export function ContractDetailDrawer({
           <Card padding="sm">
             <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary mb-2">
               {t('contracts.sov', { defaultValue: 'Schedule of Values' })}
-              <span className="ml-2 text-content-tertiary normal-case">
+              <span className="ms-2 text-content-tertiary normal-case">
                 ({(linesQ.data ?? []).length}{' '}
                 {t('contracts.lines', { defaultValue: 'lines' })} ·{' '}
                 <MoneyDisplay
@@ -2417,7 +2417,7 @@ export function ContractDetailDrawer({
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="ml-auto"
+                  className="ms-auto"
                   onClick={() => setAddingLine(true)}
                 >
                   {t('contracts.add_line', { defaultValue: 'Add line' })}
@@ -2437,19 +2437,19 @@ export function ContractDetailDrawer({
                 <table className="w-full text-sm">
                   <thead className="text-xs uppercase tracking-wide text-content-tertiary">
                     <tr>
-                      <th className="text-left py-1">
+                      <th className="text-start py-1">
                         {t('contracts.code', { defaultValue: 'Code' })}
                       </th>
-                      <th className="text-left py-1">
+                      <th className="text-start py-1">
                         {t('contracts.description', { defaultValue: 'Description' })}
                       </th>
-                      <th className="text-right py-1">
+                      <th className="text-end py-1">
                         {t('contracts.qty', { defaultValue: 'Qty' })}
                       </th>
-                      <th className="text-right py-1">
+                      <th className="text-end py-1">
                         {t('contracts.unit_rate', { defaultValue: 'Rate' })}
                       </th>
-                      <th className="text-right py-1">
+                      <th className="text-end py-1">
                         {t('contracts.total', { defaultValue: 'Total' })}
                       </th>
                       {linesEditable && <th className="py-1" />}
@@ -2488,7 +2488,7 @@ export function ContractDetailDrawer({
                               placeholder={t('contracts.qty', { defaultValue: 'Qty' })}
                               value={newLine.quantity}
                               onChange={(e) => setNewLine((p) => ({ ...p, quantity: e.target.value }))}
-                              className="w-20 rounded border border-border-light bg-surface-elevated px-2 py-1 text-sm text-right"
+                              className="w-20 rounded border border-border-light bg-surface-elevated px-2 py-1 text-sm text-end"
                             />
                             <input
                               type="text"
@@ -2505,10 +2505,10 @@ export function ContractDetailDrawer({
                             placeholder={t('contracts.unit_rate', { defaultValue: 'Rate' })}
                             value={newLine.unit_rate}
                             onChange={(e) => setNewLine((p) => ({ ...p, unit_rate: e.target.value }))}
-                            className="w-24 rounded border border-border-light bg-surface-elevated px-2 py-1 text-sm text-right"
+                            className="w-24 rounded border border-border-light bg-surface-elevated px-2 py-1 text-sm text-end"
                           />
                         </td>
-                        <td className="py-1 text-right" colSpan={linesEditable ? 2 : 1}>
+                        <td className="py-1 text-end" colSpan={linesEditable ? 2 : 1}>
                           <div className="flex gap-1 justify-end">
                             <Button size="sm" onClick={() => addLineMut.mutate()} loading={addLineMut.isPending}>
                               {t('common.save', { defaultValue: 'Save' })}
@@ -2579,10 +2579,10 @@ export function ContractDetailDrawer({
               <div className="space-y-1">
                 <div className="grid grid-cols-[1fr_auto_auto] gap-x-4 text-2xs uppercase tracking-wide text-content-tertiary">
                   <span>{t('contracts.retention_scope_col', { defaultValue: 'Scope' })}</span>
-                  <span className="text-right">
+                  <span className="text-end">
                     {t('contracts.held', { defaultValue: 'Held' })}
                   </span>
-                  <span className="text-right">
+                  <span className="text-end">
                     {t('contracts.outstanding', { defaultValue: 'Outstanding' })}
                   </span>
                 </div>
@@ -2593,17 +2593,17 @@ export function ContractDetailDrawer({
                   >
                     <span className="truncate text-content-secondary">
                       {retentionDirectionLabel(t, row.direction)}
-                      <span className="ml-1.5 font-mono text-2xs text-content-tertiary">
+                      <span className="ms-1.5 font-mono text-2xs text-content-tertiary">
                         {row.currency_code}
                       </span>
                     </span>
-                    <span className="text-right tabular-nums text-content-primary">
+                    <span className="text-end tabular-nums text-content-primary">
                       <MoneyDisplay
                         amount={row.held_to_date}
                         currency={row.currency_code || undefined}
                       />
                     </span>
-                    <span className="text-right font-medium tabular-nums text-content-primary">
+                    <span className="text-end font-medium tabular-nums text-content-primary">
                       <MoneyDisplay
                         amount={row.outstanding}
                         currency={row.currency_code || undefined}
@@ -2629,7 +2629,7 @@ export function ContractDetailDrawer({
                   history rather than the rows on this page. It is read
                   as "how many claims have there been", and the page
                   length answers a question nobody asked. */}
-              <span className="ml-2 text-content-tertiary normal-case">
+              <span className="ms-2 text-content-tertiary normal-case">
                 ({claimsQ.data?.total ?? 0})
               </span>
             </p>
@@ -2652,7 +2652,7 @@ export function ContractDetailDrawer({
                     <Badge variant={CLAIM_STATUS_VARIANT[c.status]} dot>
                       {claimStatusLabel(t, c.status)}
                     </Badge>
-                    <span className="text-right">
+                    <span className="text-end">
                       <MoneyDisplay
                         amount={toNum(c.net_due)}
                         currency={c.currency || undefined}

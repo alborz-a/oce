@@ -312,7 +312,7 @@ function IndexStatusNote() {
       <AlertTriangle className="h-4 w-4 shrink-0 text-semantic-warning" aria-hidden />
       <span className="min-w-0 flex-1 text-sm text-content-secondary">{message}</span>
       <Button size="sm" variant="secondary" onClick={() => rebuild.mutate()} disabled={rebuild.isPending}>
-        <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${rebuild.isPending ? 'animate-spin' : ''}`} />
+        <RefreshCw className={`me-1.5 h-3.5 w-3.5 ${rebuild.isPending ? 'animate-spin' : ''}`} />
         {rebuild.isPending ? t('costExplorer.index.rebuilding', { defaultValue: 'Rebuilding...' }) : t('costExplorer.index.rebuild', { defaultValue: 'Rebuild index' })}
       </Button>
     </div>

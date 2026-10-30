@@ -501,7 +501,7 @@ export function NotificationsPage() {
                           <button
                             type="button"
                             onClick={() => handleRowClick(n)}
-                            className="flex items-start gap-3 flex-1 min-w-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
+                            className="flex items-start gap-3 flex-1 min-w-0 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-md -m-1 p-1"
                           >
                             <span
                               className={clsx(

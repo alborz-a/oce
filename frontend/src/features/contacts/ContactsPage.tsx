@@ -429,9 +429,9 @@ function AddContactModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -705,7 +705,7 @@ function AddContactModal({
                 placeholder={t('contacts.payment_terms_custom_ph', { defaultValue: 'Custom' })}
                 className="h-9 w-16 bg-transparent text-sm text-content-primary focus:outline-none"
               />
-              <span className="text-xs text-content-tertiary pr-0.5">
+              <span className="text-xs text-content-tertiary pe-0.5">
                 {t('contacts.days', { defaultValue: 'days' })}
               </span>
             </div>
@@ -924,9 +924,9 @@ function ImportContactsModal({
               disabled={!file || isPending}
             >
               {isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : (
-                <Upload size={16} className="mr-1.5" />
+                <Upload size={16} className="me-1.5" />
               )}
               <span>{t('contacts.import_btn', { defaultValue: 'Import' })}</span>
             </Button>
@@ -1009,7 +1009,7 @@ const ContactCard = React.memo(function ContactCard({
               defaultValue: contact.contact_type.charAt(0).toUpperCase() + contact.contact_type.slice(1),
             })}
           </Badge>
-          <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ml-1">
+          <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ms-1">
             <Button
               variant="ghost"
               size="sm"

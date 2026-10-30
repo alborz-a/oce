@@ -89,7 +89,7 @@ export function DashboardSitesPanel({ projects }: DashboardSitesPanelProps) {
               onClick={() => {
                 if (lead) navigate(`/projects/${lead.id}`);
               }}
-              className="group flex min-w-0 flex-col justify-center gap-1 rounded-lg border border-border-light bg-surface-primary/50 px-2.5 py-2 text-left transition-colors hover:border-oe-blue/40 hover:bg-surface-primary"
+              className="group flex min-w-0 flex-col justify-center gap-1 rounded-lg border border-border-light bg-surface-primary/50 px-2.5 py-2 text-start transition-colors hover:border-oe-blue/40 hover:bg-surface-primary"
             >
               <span className="flex items-center gap-1.5">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-oe-blue/10 text-oe-blue">
@@ -109,11 +109,11 @@ export function DashboardSitesPanel({ projects }: DashboardSitesPanelProps) {
                     lng={coords.lng}
                     locale={i18n.language}
                     variant="summary"
-                    className="pl-6"
+                    className="ps-6"
                   />
                 )
               ) : (
-                <span className="pl-6 text-[10px] text-content-quaternary">
+                <span className="ps-6 text-[10px] text-content-quaternary">
                   {t('dashboard.sites_no_location', { defaultValue: 'No location set' })}
                 </span>
               )}

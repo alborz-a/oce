@@ -33,7 +33,7 @@ export function RolePicker({ value, onPick, className }: RolePickerProps) {
               aria-pressed={active}
               onClick={() => onPick(meta.id)}
               className={clsx(
-                'flex h-full w-full items-center gap-2 rounded-xl border px-2.5 py-2 text-left text-xs font-medium transition-all',
+                'flex h-full w-full items-center gap-2 rounded-xl border px-2.5 py-2 text-start text-xs font-medium transition-all',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
                 active
                   ? 'border-oe-blue bg-oe-blue/10 text-oe-blue shadow-sm'

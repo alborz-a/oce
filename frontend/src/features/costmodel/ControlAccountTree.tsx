@@ -70,7 +70,7 @@ export function ControlAccountTree({
         type="button"
         onClick={() => onSelect(null)}
         aria-current={selectedId === null ? 'true' : undefined}
-        className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors ${
+        className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm transition-colors ${
           selectedId === null
             ? 'bg-oe-blue-subtle/60 font-medium text-oe-blue-text'
             : 'text-content-secondary hover:bg-surface-secondary'
@@ -92,7 +92,7 @@ export function ControlAccountTree({
             onClick={() => onSelect(account.id)}
             aria-current={isSelected ? 'true' : undefined}
             title={`${account.code} ${account.name}`}
-            className={`flex w-full items-center gap-2 rounded-md py-1.5 pr-2 text-left text-sm transition-colors ${
+            className={`flex w-full items-center gap-2 rounded-md py-1.5 pe-2 text-start text-sm transition-colors ${
               isSelected
                 ? 'bg-oe-blue-subtle/60 font-medium text-oe-blue-text'
                 : 'text-content-secondary hover:bg-surface-secondary'

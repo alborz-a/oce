@@ -584,9 +584,9 @@ function CreateMeetingModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('meetings.create_meeting', { defaultValue: 'Create Meeting' })}</span>
           </Button>
@@ -909,9 +909,9 @@ function EditMeetingModal({
             data-testid="edit-meeting-save"
           >
             {isPending ? (
-              <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <Edit3 size={16} className="mr-1.5 shrink-0" />
+              <Edit3 size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('common.save', { defaultValue: 'Save' })}</span>
           </Button>
@@ -1331,7 +1331,7 @@ function ImportSummaryModal({
                 onClick={handleExtractPreview}
                 disabled={!selectedFile}
               >
-                <FileUp size={16} className="mr-1.5 shrink-0" />
+                <FileUp size={16} className="me-1.5 shrink-0" />
                 <span>{t('meetings.extract_preview', { defaultValue: 'Extract & Preview' })}</span>
               </Button>
             </div>
@@ -1408,7 +1408,7 @@ function ImportSummaryModal({
                   >
                     {SOURCE_LABELS[previewData.source]?.label || previewData.source}
                   </Badge>
-                  <span className="text-xs text-content-tertiary ml-auto">
+                  <span className="text-xs text-content-tertiary ms-auto">
                     {t('meetings.segments_count', {
                       defaultValue: '{{count}} segments parsed',
                       count: previewData.segments_parsed,
@@ -1441,7 +1441,7 @@ function ImportSummaryModal({
                   <select
                     value={editMeetingType}
                     onChange={(e) => setEditMeetingType(e.target.value as MeetingType)}
-                    className={inputCls + ' appearance-none pr-9'}
+                    className={inputCls + ' appearance-none pe-9'}
                   >
                     {MEETING_TYPES.map((mt) => (
                       <option key={mt} value={mt}>
@@ -1451,7 +1451,7 @@ function ImportSummaryModal({
                       </option>
                     ))}
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+                  <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                     <ChevronDown size={14} />
                   </div>
                 </div>
@@ -1478,7 +1478,7 @@ function ImportSummaryModal({
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
                     {t('meetings.label_attendees', { defaultValue: 'Attendees' })}
-                    <span className="ml-1 text-content-tertiary font-normal">
+                    <span className="ms-1 text-content-tertiary font-normal">
                       ({editAttendees.filter((a) => a.included).length}/{editAttendees.length})
                     </span>
                   </label>
@@ -1514,7 +1514,7 @@ function ImportSummaryModal({
                 <div>
                   <label className="block text-xs font-medium text-content-tertiary mb-1.5 uppercase tracking-wide">
                     {t('meetings.label_actions', { defaultValue: 'Action Items' })}
-                    <span className="ml-1 text-content-tertiary font-normal">
+                    <span className="ms-1 text-content-tertiary font-normal">
                       ({editActionItems.filter((a) => a.included).length}/{editActionItems.length})
                     </span>
                   </label>
@@ -1574,7 +1574,7 @@ function ImportSummaryModal({
                         <div className="flex-1 min-w-0">
                           <span className="text-content-primary">{d.decision}</span>
                           {d.made_by && (
-                            <span className="text-xs text-content-tertiary ml-2">
+                            <span className="text-xs text-content-tertiary ms-2">
                               ({d.made_by})
                             </span>
                           )}
@@ -1617,9 +1617,9 @@ function ImportSummaryModal({
                   disabled={isPending || !selectedFile}
                 >
                   {isPending ? (
-                    <Loader2 size={16} className="mr-1.5 animate-spin shrink-0" />
+                    <Loader2 size={16} className="me-1.5 animate-spin shrink-0" />
                   ) : (
-                    <Plus size={16} className="mr-1.5 shrink-0" />
+                    <Plus size={16} className="me-1.5 shrink-0" />
                   )}
                   <span>{t('meetings.create_meeting', { defaultValue: 'Create Meeting' })}</span>
                 </Button>
@@ -1749,7 +1749,7 @@ const MeetingRow = React.memo(function MeetingRow({
         </Badge>
 
         {/* Attendee count */}
-        <span className="text-xs text-content-tertiary w-12 text-right shrink-0 flex items-center justify-end gap-1">
+        <span className="text-xs text-content-tertiary w-12 text-end shrink-0 flex items-center justify-end gap-1">
           <Users size={12} />
           {attendeeCount}
         </span>
@@ -1757,7 +1757,7 @@ const MeetingRow = React.memo(function MeetingRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Attendance check-in (meeting-minutes-tool-style) */}
           <AttendanceSection meetingId={meeting.id} />
 
@@ -1824,12 +1824,12 @@ const MeetingRow = React.memo(function MeetingRow({
                     <div className="flex-1 min-w-0">
                       <span className="text-content-primary">{item.title}</span>
                       {item.presenter && (
-                        <span className="text-xs text-content-tertiary ml-2">
+                        <span className="text-xs text-content-tertiary ms-2">
                           ({item.presenter})
                         </span>
                       )}
                       {item.duration_minutes > 0 && (
-                        <span className="text-xs text-content-tertiary ml-2 items-center gap-0.5 inline-flex">
+                        <span className="text-xs text-content-tertiary ms-2 items-center gap-0.5 inline-flex">
                           <Clock size={10} />
                           {/* #174: this printed the stored minutes with a fixed
                               "min" suffix at any size, so a half-day workshop
@@ -1927,7 +1927,7 @@ const MeetingRow = React.memo(function MeetingRow({
                   onSchedule(meeting.id);
                 }}
               >
-                <CalendarClock size={14} className="mr-1.5" />
+                <CalendarClock size={14} className="me-1.5" />
                 {t('meetings.action_schedule', { defaultValue: 'Schedule Meeting' })}
               </Button>
             )}
@@ -1940,7 +1940,7 @@ const MeetingRow = React.memo(function MeetingRow({
                   onComplete(meeting.id);
                 }}
               >
-                <CheckCircle2 size={14} className="mr-1.5" />
+                <CheckCircle2 size={14} className="me-1.5" />
                 {t('meetings.action_complete', { defaultValue: 'Complete Meeting' })}
               </Button>
             )}
@@ -1962,7 +1962,7 @@ const MeetingRow = React.memo(function MeetingRow({
               }
               data-testid="meeting-row-edit"
             >
-              <Edit3 size={14} className="mr-1.5" />
+              <Edit3 size={14} className="me-1.5" />
               {t('common.edit', { defaultValue: 'Edit' })}
             </Button>
             <Button
@@ -1974,7 +1974,7 @@ const MeetingRow = React.memo(function MeetingRow({
               }}
               data-testid="meeting-row-delete"
             >
-              <Trash2 size={14} className="mr-1.5" />
+              <Trash2 size={14} className="me-1.5" />
               {t('common.delete', { defaultValue: 'Delete' })}
             </Button>
             <Button
@@ -1987,9 +1987,9 @@ const MeetingRow = React.memo(function MeetingRow({
               disabled={isExporting}
             >
               {isExporting ? (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               ) : (
-                <FileDown size={14} className="mr-1.5" />
+                <FileDown size={14} className="me-1.5" />
               )}
               {t('meetings.export_pdf', { defaultValue: 'Export PDF' })}
             </Button>
@@ -2002,7 +2002,7 @@ const MeetingRow = React.memo(function MeetingRow({
               }}
               data-testid="meeting-row-minutes"
             >
-              <FileText size={14} className="mr-1.5" />
+              <FileText size={14} className="me-1.5" />
               {t('meetings.minutes', { defaultValue: 'Minutes' })}
             </Button>
           </div>
@@ -2508,7 +2508,7 @@ export function MeetingsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -2517,7 +2517,7 @@ export function MeetingsPage() {
               defaultValue: 'Search meetings...',
             })}
             aria-label={t('meetings.search_placeholder', { defaultValue: 'Search meetings' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -2630,7 +2630,7 @@ export function MeetingsPage() {
                 <span className="w-24 text-center">
                   {t('meetings.col_status', { defaultValue: 'Status' })}
                 </span>
-                <span className="w-12 text-right">
+                <span className="w-12 text-end">
                   <Users size={12} className="inline" />
                 </span>
               </div>

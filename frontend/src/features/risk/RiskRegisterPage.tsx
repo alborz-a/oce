@@ -111,7 +111,7 @@ const IMPACT_LABEL_FALLBACK: Record<string, string> = {
   very_low: 'Very Low', low: 'Low', medium: 'Medium', high: 'High', critical: 'Critical',
 };
 
-const selectCls = 'h-8 rounded-lg border border-border bg-surface-primary px-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors pr-7 appearance-none cursor-pointer';
+const selectCls = 'h-8 rounded-lg border border-border bg-surface-primary px-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors pe-7 appearance-none cursor-pointer';
 
 function fmtCur(n: number, c = 'EUR') {
   const s = /^[A-Z]{3}$/.test(c) ? c : 'EUR';
@@ -156,7 +156,7 @@ function RiskMatrix({ cells }: { cells: MatrixCell[] }) {
         <table className="w-full text-xs">
           <thead>
             <tr>
-              <th className="p-1 text-left text-content-tertiary w-20">{t('risk.probability', { defaultValue: 'Probability' })}</th>
+              <th className="p-1 text-start text-content-tertiary w-20">{t('risk.probability', { defaultValue: 'Probability' })}</th>
               {IMPACT_LEVELS.map((i) => <th key={i} className="p-1 text-center text-content-tertiary">{t(`risk.impact_${i}`, { defaultValue: IMPACT_LABEL_FALLBACK[i] ?? i })}</th>)}
             </tr>
           </thead>
@@ -221,7 +221,7 @@ function RiskMatrixHeatmap({ risks }: { risks: RiskItem[] }) {
         <table className="text-xs mx-auto">
           <thead>
             <tr>
-              <th className="p-1 text-right text-content-tertiary w-20 pr-2">
+              <th className="p-1 text-end text-content-tertiary w-20 pe-2">
                 {t('risk.probability', { defaultValue: 'Probability' })}
               </th>
               {impactLabels.map((il) => (
@@ -232,7 +232,7 @@ function RiskMatrixHeatmap({ risks }: { risks: RiskItem[] }) {
           <tbody>
             {probLabels.map((pl) => (
               <tr key={pl}>
-                <td className="p-1 text-right text-content-secondary font-medium pr-2">{pl}</td>
+                <td className="p-1 text-end text-content-secondary font-medium pe-2">{pl}</td>
                 {impactLabels.map((il) => {
                   const p = parseInt(pl, 10);
                   const i = parseInt(il, 10);
@@ -410,7 +410,7 @@ function DetailView({ riskId, onBack }: { riskId: string; onBack: () => void }) 
               <Badge variant="neutral">{t(`risk.cat_${risk.category}`, { defaultValue: CATEGORY_LABELS[risk.category] ?? risk.category })}</Badge>
               {risk.escalated && (
                 <Badge variant="error">
-                  <AlertTriangle size={12} className="mr-1 inline" />
+                  <AlertTriangle size={12} className="me-1 inline" />
                   {risk.escalation_trigger === 'review_lapsed'
                     ? t('risk.escalated_review', { defaultValue: 'Escalated: review lapsed' })
                     : t('risk.escalated_severity', { defaultValue: 'Escalated: severity' })}
@@ -809,7 +809,7 @@ export function RiskRegisterPage() {
             <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
             <ModuleGuideButton content={riskGuide} />
             <Button variant="primary" onClick={() => setShowCreate(true)} disabled={!projectId}>
-              <Plus size={16} className="mr-1.5" />{t('risk.new', { defaultValue: 'Add Risk' })}
+              <Plus size={16} className="me-1.5" />{t('risk.new', { defaultValue: 'Add Risk' })}
             </Button>
           </>
         }

@@ -112,7 +112,7 @@ function MomentRow({
               type="button"
               onClick={() => onOpen(video, c.t)}
               className={clsx(
-                'flex w-full items-start gap-2 rounded-md px-1.5 py-1 text-left text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
+                'flex w-full items-start gap-2 rounded-md px-1.5 py-1 text-start text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
                 lit.has(c.t) ? 'bg-oe-blue/10 text-oe-blue' : 'text-content-secondary hover:bg-surface-secondary',
               )}
             >

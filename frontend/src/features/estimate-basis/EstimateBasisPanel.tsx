@@ -706,7 +706,7 @@ function VersionPicker({
           >
             {item.title}
             {item.estimate_class !== null && (
-              <span className="ml-1 text-content-tertiary">
+              <span className="ms-1 text-content-tertiary">
                 {t('estimateBasis.versions.class', { defaultValue: 'cl. {{n}}', n: item.estimate_class })}
               </span>
             )}

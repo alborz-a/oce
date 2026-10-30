@@ -155,7 +155,7 @@ export function Stage1Intake(props: Stage1IntakeProps) {
               type="button"
               onClick={() => onSourceKind(tab.id)}
               className={clsx(
-                'flex flex-col gap-1.5 rounded-xl border p-3 text-left transition-all',
+                'flex flex-col gap-1.5 rounded-xl border p-3 text-start transition-all',
                 active
                   ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue/30'
                   : 'border-border-light hover:border-border hover:bg-surface-secondary',
@@ -243,7 +243,7 @@ export function Stage1Intake(props: Stage1IntakeProps) {
                     <button
                       type="button"
                       onClick={() => onFiles(files.filter((_, idx) => idx !== i))}
-                      className="ml-2 shrink-0 text-content-tertiary hover:text-rose-500"
+                      className="ms-2 shrink-0 text-content-tertiary hover:text-rose-500"
                       aria-label={t('common.remove', { defaultValue: 'Remove' })}
                     >
                       <X className="h-3.5 w-3.5" />

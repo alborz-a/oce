@@ -133,7 +133,7 @@ export function CertifiedPayrollPage() {
         >
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>{t('certified_payroll.how.intro')}</p>
-            <ol className="list-decimal space-y-1 pl-5">
+            <ol className="list-decimal space-y-1 ps-5">
               <li>{t('certified_payroll.how.step1')}</li>
               <li>{t('certified_payroll.how.step2')}</li>
               <li>{t('certified_payroll.how.step3')}</li>
@@ -259,9 +259,9 @@ function WeeksTab({ projectId }: { projectId: string }) {
           className="w-fit"
         >
           {create.isPending ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2 className="me-2 h-4 w-4 animate-spin" />
           ) : (
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="me-2 h-4 w-4" />
           )}
           {t('certified_payroll.week.open_action')}
         </Button>
@@ -304,7 +304,7 @@ function WeekRow({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-3 p-4 text-left"
+        className="flex w-full items-center justify-between gap-3 p-4 text-start"
       >
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -440,21 +440,21 @@ function WeekDetail({ weekId }: { weekId: string }) {
         <div className="overflow-x-auto">
           <table className="w-full min-w-[64rem] text-xs">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
+              <tr className="border-b border-border text-start text-muted-foreground">
                 <th className="p-2">{t('certified_payroll.col.worker')}</th>
                 <th className="p-2">{t('certified_payroll.col.classification')}</th>
                 {days.map((d) => (
-                  <th key={d} className="p-2 text-right">
+                  <th key={d} className="p-2 text-end">
                     {d.slice(5)}
                   </th>
                 ))}
-                <th className="p-2 text-right">{t('certified_payroll.col.straight')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.overtime')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.basic_rate')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.fringe_rate')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.gross')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.deductions')}</th>
-                <th className="p-2 text-right">{t('certified_payroll.col.net')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.straight')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.overtime')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.basic_rate')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.fringe_rate')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.gross')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.deductions')}</th>
+                <th className="p-2 text-end">{t('certified_payroll.col.net')}</th>
               </tr>
             </thead>
             <tbody>
@@ -476,36 +476,36 @@ function WeekDetail({ weekId }: { weekId: string }) {
                   {days.map((d) => {
                     const cell = line.hours_by_day?.[d];
                     return (
-                      <td key={d} className="p-2 text-right tabular-nums">
+                      <td key={d} className="p-2 text-end tabular-nums">
                         {hoursOf(cell?.straight)}
                         {Number(cell?.overtime ?? 0) > 0 && (
-                          <span className="ml-1 text-amber-600">
+                          <span className="ms-1 text-amber-600">
                             +{hoursOf(cell?.overtime)}
                           </span>
                         )}
                       </td>
                     );
                   })}
-                  <td className="p-2 text-right tabular-nums">{hoursOf(line.straight_hours)}</td>
-                  <td className="p-2 text-right tabular-nums">{hoursOf(line.overtime_hours)}</td>
-                  <td className="p-2 text-right tabular-nums">
+                  <td className="p-2 text-end tabular-nums">{hoursOf(line.straight_hours)}</td>
+                  <td className="p-2 text-end tabular-nums">{hoursOf(line.overtime_hours)}</td>
+                  <td className="p-2 text-end tabular-nums">
                     {money(line.paid_basic_rate, line.currency)}
                   </td>
-                  <td className="p-2 text-right tabular-nums">
+                  <td className="p-2 text-end tabular-nums">
                     {money(line.paid_fringe_rate, line.currency)}
                     {line.fringe_election && (
-                      <span className="ml-1 text-muted-foreground">
+                      <span className="ms-1 text-muted-foreground">
                         {t(`certified_payroll.election.${line.fringe_election}`)}
                       </span>
                     )}
                   </td>
-                  <td className="p-2 text-right tabular-nums">
+                  <td className="p-2 text-end tabular-nums">
                     {money(line.gross_amount, line.currency)}
                   </td>
-                  <td className="p-2 text-right tabular-nums">
+                  <td className="p-2 text-end tabular-nums">
                     {money(line.total_deductions, line.currency)}
                   </td>
-                  <td className="p-2 text-right tabular-nums">
+                  <td className="p-2 text-end tabular-nums">
                     {money(line.net_amount, line.currency)}
                   </td>
                 </tr>
@@ -517,7 +517,7 @@ function WeekDetail({ weekId }: { weekId: string }) {
 
       {week.governing_reason && (
         <p className="rounded-md border border-border p-3 text-xs text-muted-foreground">
-          <Gavel className="mr-1 inline h-3 w-3" />
+          <Gavel className="me-1 inline h-3 w-3" />
           {week.governing_reason}
         </p>
       )}
@@ -564,9 +564,9 @@ function WeekDetail({ weekId }: { weekId: string }) {
             className="w-fit"
           >
             {certify.isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="me-2 h-4 w-4 animate-spin" />
             ) : (
-              <ShieldCheck className="mr-2 h-4 w-4" />
+              <ShieldCheck className="me-2 h-4 w-4" />
             )}
             {t('certified_payroll.certify.action')}
           </Button>
@@ -590,7 +590,7 @@ function WeekDetail({ weekId }: { weekId: string }) {
           size="sm"
           onClick={() => void downloadWeekForm(week.id, week.week_ending, 'csv')}
         >
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="me-2 h-4 w-4" />
           {t('certified_payroll.export.csv')}
         </Button>
         <Button
@@ -598,7 +598,7 @@ function WeekDetail({ weekId }: { weekId: string }) {
           size="sm"
           onClick={() => void downloadWeekForm(week.id, week.week_ending, 'json')}
         >
-          <Download className="mr-2 h-4 w-4" />
+          <Download className="me-2 h-4 w-4" />
           {t('certified_payroll.export.json')}
         </Button>
       </div>
@@ -718,7 +718,7 @@ function DeterminationsTab({ projectId }: { projectId: string }) {
           disabled={!identifier || create.isPending}
           className="w-fit"
         >
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="me-2 h-4 w-4" />
           {t('certified_payroll.determination.add_action')}
         </Button>
       </Card>
@@ -741,7 +741,7 @@ function DeterminationsTab({ projectId }: { projectId: string }) {
                   </Badge>
                   {d.locked && (
                     <Badge variant="neutral">
-                      <Lock className="mr-1 h-3 w-3" />
+                      <Lock className="me-1 h-3 w-3" />
                       {t('certified_payroll.determination.locked')}
                     </Badge>
                   )}
@@ -766,11 +766,11 @@ function DeterminationsTab({ projectId }: { projectId: string }) {
             {d.classifications.length > 0 && (
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="border-b border-border text-left text-muted-foreground">
+                  <tr className="border-b border-border text-start text-muted-foreground">
                     <th className="p-2">{t('certified_payroll.col.classification')}</th>
-                    <th className="p-2 text-right">{t('certified_payroll.col.basic_rate')}</th>
-                    <th className="p-2 text-right">{t('certified_payroll.col.fringe_rate')}</th>
-                    <th className="p-2 text-right">{t('certified_payroll.col.package')}</th>
+                    <th className="p-2 text-end">{t('certified_payroll.col.basic_rate')}</th>
+                    <th className="p-2 text-end">{t('certified_payroll.col.fringe_rate')}</th>
+                    <th className="p-2 text-end">{t('certified_payroll.col.package')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -778,15 +778,15 @@ function DeterminationsTab({ projectId }: { projectId: string }) {
                     <tr key={c.id} className="border-b border-border/50">
                       <td className="p-2">
                         {c.title}
-                        <span className="ml-2 text-muted-foreground">{c.code}</span>
+                        <span className="ms-2 text-muted-foreground">{c.code}</span>
                       </td>
-                      <td className="p-2 text-right tabular-nums">
+                      <td className="p-2 text-end tabular-nums">
                         {money(c.basic_hourly_rate, d.currency)}
                       </td>
-                      <td className="p-2 text-right tabular-nums">
+                      <td className="p-2 text-end tabular-nums">
                         {money(c.fringe_rate, d.currency)}
                       </td>
-                      <td className="p-2 text-right tabular-nums">
+                      <td className="p-2 text-end tabular-nums">
                         {money(packageOf(c.basic_hourly_rate, c.fringe_rate), d.currency)}
                       </td>
                     </tr>
@@ -948,7 +948,7 @@ function WorkersTab({ projectId }: { projectId: string }) {
               disabled={!workerName || !classificationId || create.isPending}
               className="w-fit"
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="me-2 h-4 w-4" />
               {t('certified_payroll.worker.add_action')}
             </Button>
           </>
@@ -965,11 +965,11 @@ function WorkersTab({ projectId }: { projectId: string }) {
         <Card className="overflow-x-auto p-0">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-border text-left text-muted-foreground">
+              <tr className="border-b border-border text-start text-muted-foreground">
                 <th className="p-3">{t('certified_payroll.worker.name')}</th>
                 <th className="p-3">{t('certified_payroll.col.classification')}</th>
-                <th className="p-3 text-right">{t('certified_payroll.col.basic_rate')}</th>
-                <th className="p-3 text-right">{t('certified_payroll.col.fringe_rate')}</th>
+                <th className="p-3 text-end">{t('certified_payroll.col.basic_rate')}</th>
+                <th className="p-3 text-end">{t('certified_payroll.col.fringe_rate')}</th>
                 <th className="p-3">{t('certified_payroll.certify.election')}</th>
                 <th className="p-3" />
               </tr>
@@ -981,14 +981,14 @@ function WorkersTab({ projectId }: { projectId: string }) {
                   <td className="p-3">
                     {classificationLabel.get(a.classification_id) ?? a.classification_id}
                   </td>
-                  <td className="p-3 text-right tabular-nums">
+                  <td className="p-3 text-end tabular-nums">
                     {a.paid_basic_rate ?? (
                       <span className="text-muted-foreground">
                         {t('certified_payroll.worker.derived')}
                       </span>
                     )}
                   </td>
-                  <td className="p-3 text-right tabular-nums">
+                  <td className="p-3 text-end tabular-nums">
                     {a.paid_fringe_rate ?? (
                       <span className="text-muted-foreground">
                         {t('certified_payroll.worker.derived')}
@@ -1000,7 +1000,7 @@ function WorkersTab({ projectId }: { projectId: string }) {
                       ? t(`certified_payroll.election.${a.fringe_election}`)
                       : '-'}
                   </td>
-                  <td className="p-3 text-right">
+                  <td className="p-3 text-end">
                     <Button
                       variant="ghost"
                       size="sm"

@@ -88,7 +88,7 @@ export function TagFilterFacet({
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full mt-1 w-64 max-h-80 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 p-2"
+          className="absolute end-0 top-full mt-1 w-64 max-h-80 overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 p-2"
         >
           {tags.length === 0 && (
             <p className="px-2 py-3 text-xs text-content-tertiary text-center">

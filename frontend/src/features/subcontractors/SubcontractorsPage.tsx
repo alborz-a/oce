@@ -510,14 +510,14 @@ export function SubcontractorsPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         <select
@@ -614,22 +614,22 @@ function SubcontractorTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_name', { defaultValue: 'Name' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_trades', { defaultValue: 'Trades' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_insurance', { defaultValue: 'Insurance' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_rating', { defaultValue: 'Rating' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('subcontractors.col_country', { defaultValue: 'Country' })}
             </th>
           </tr>
@@ -648,7 +648,7 @@ function SubcontractorTable({
                   </div>
                   {r.is_blocked && (
                     <Badge variant="error" size="sm">
-                      <Ban size={10} className="mr-0.5 inline" />
+                      <Ban size={10} className="me-0.5 inline" />
                       {t('subcontractors.blocked_badge', {
                         defaultValue: 'Blocked',
                       })}
@@ -890,7 +890,7 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
               <ClipboardCheck size={12} />
               {t('subcontractors.prequalify', { defaultValue: 'Prequalify' })}
               {typeof sub?.prequal_score === 'number' && (
-                <span className="ml-0.5 tabular-nums text-content-tertiary">
+                <span className="ms-0.5 tabular-nums text-content-tertiary">
                   ({sub.prequal_score})
                 </span>
               )}
@@ -937,7 +937,7 @@ function DetailDrawer({ id, onClose }: { id: string; onClose: () => void }) {
             <button
               type="button"
               onClick={onClose}
-              className="ml-1 rounded p-1 hover:bg-surface-secondary"
+              className="ms-1 rounded p-1 hover:bg-surface-secondary"
               aria-label={t('common.close', { defaultValue: 'Close' })}
             >
               <X size={16} />
@@ -1386,7 +1386,7 @@ function AgreementRow({ agreement }: { agreement: Agreement }) {
             >
               <span className="truncate">{wp.name}</span>
               <WorkPackageSovPicker agreement={agreement} workPackage={wp} />
-              <span className="ml-2 tabular-nums">
+              <span className="ms-2 tabular-nums">
                 {fmtPercent(toNum(wp.completion_percent), 0)}
               </span>
             </div>
@@ -1592,22 +1592,22 @@ function PaymentList({
       <table className="w-full text-xs">
         <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('subcontractors.payment_no', { defaultValue: 'App #' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('subcontractors.period', { defaultValue: 'Period' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.gross', { defaultValue: 'Gross' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.net', { defaultValue: 'Net' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('subcontractors.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1619,14 +1619,14 @@ function PaymentList({
               <td className="px-3 py-2 text-content-secondary">
                 {p.period_start || '—'} → {p.period_end || '—'}
               </td>
-              <td className="px-3 py-2 text-right">
+              <td className="px-3 py-2 text-end">
                 <PayAppAmount
                   claimed={p.gross_amount}
                   approved={p.approved_gross_amount}
                   currency={p.currency}
                 />
               </td>
-              <td className="px-3 py-2 text-right font-medium">
+              <td className="px-3 py-2 text-end font-medium">
                 <PayAppAmount
                   claimed={p.net_amount}
                   approved={p.approved_net_amount}
@@ -1780,22 +1780,22 @@ function RatingsTab({
       <table className="w-full text-xs">
         <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('subcontractors.period', { defaultValue: 'Period' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.quality', { defaultValue: 'Quality' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.hse', { defaultValue: 'HSE' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.schedule', { defaultValue: 'Schedule' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.cost', { defaultValue: 'Cost' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('subcontractors.overall', { defaultValue: 'Overall' })}
             </th>
           </tr>
@@ -1804,19 +1804,19 @@ function RatingsTab({
           {data.map((r) => (
             <tr key={r.id} className="border-t border-border-light">
               <td className="px-3 py-2 font-mono">{r.period}</td>
-              <td className="px-3 py-2 text-right tabular-nums">
+              <td className="px-3 py-2 text-end tabular-nums">
                 {fmtFixed(toNum(r.quality_score), 0)}
               </td>
-              <td className="px-3 py-2 text-right tabular-nums">
+              <td className="px-3 py-2 text-end tabular-nums">
                 {fmtFixed(toNum(r.hse_score), 0)}
               </td>
-              <td className="px-3 py-2 text-right tabular-nums">
+              <td className="px-3 py-2 text-end tabular-nums">
                 {fmtFixed(toNum(r.schedule_score), 0)}
               </td>
-              <td className="px-3 py-2 text-right tabular-nums">
+              <td className="px-3 py-2 text-end tabular-nums">
                 {fmtFixed(toNum(r.cost_score), 0)}
               </td>
-              <td className="px-3 py-2 text-right font-semibold tabular-nums">
+              <td className="px-3 py-2 text-end font-semibold tabular-nums">
                 {fmtFixed(toNum(r.overall_score), 0)}
               </td>
             </tr>
@@ -1922,16 +1922,16 @@ function RetentionTab({
           <table className="w-full text-xs">
             <thead className="bg-surface-secondary text-content-tertiary uppercase tracking-wide">
               <tr>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.released_at', { defaultValue: 'Released at' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('subcontractors.accrued', { defaultValue: 'Accrued' })}
                 </th>
-                <th className="px-3 py-2 text-right">
+                <th className="px-3 py-2 text-end">
                   {t('subcontractors.released', { defaultValue: 'Released' })}
                 </th>
-                <th className="px-3 py-2 text-left">
+                <th className="px-3 py-2 text-start">
                   {t('subcontractors.reason', { defaultValue: 'Reason' })}
                 </th>
               </tr>
@@ -1942,13 +1942,13 @@ function RetentionTab({
                   <td className="px-3 py-2 text-content-secondary">
                     {e.released_at ? <DateDisplay value={e.released_at} /> : '—'}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     <MoneyDisplay
                       amount={toNum(e.accrued_amount)}
                       currency={currency}
                     />
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     <MoneyDisplay
                       amount={toNum(e.released_amount)}
                       currency={currency}

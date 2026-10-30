@@ -332,10 +332,10 @@ export function PreviewTotalsFooter({
     return (
       <tfoot>
         <tr className="font-semibold">
-          <td colSpan={3} className="py-2 text-right">
+          <td colSpan={3} className="py-2 text-end">
             {t('assemblies.library.grand_total', 'Grand total')}
           </td>
-          <td className="py-2 text-right font-mono">
+          <td className="py-2 text-end font-mono">
             {`${fmtFixed(Number(grandTotal), currencyFractionDigits(currencyLabel))} ${currencyLabel}`.trim()}
           </td>
         </tr>
@@ -347,7 +347,7 @@ export function PreviewTotalsFooter({
   return (
     <tfoot>
       <tr>
-        <td colSpan={4} className="pt-2 text-right text-[11px] font-normal text-zinc-500 dark:text-zinc-400">
+        <td colSpan={4} className="pt-2 text-end text-[11px] font-normal text-zinc-500 dark:text-zinc-400">
           {t(
             'assemblies.library.no_single_total',
             'No single total: this preview covers more than one currency, and part of it could not be converted.'
@@ -356,12 +356,12 @@ export function PreviewTotalsFooter({
       </tr>
       {buckets.map((sub) => (
         <tr key={sub.currency || 'unset'} className="font-semibold">
-          <td colSpan={3} className="py-1 text-right">
+          <td colSpan={3} className="py-1 text-end">
             {sub.currency
               ? t('assemblies.library.subtotal_in', 'Subtotal in {{currency}}', { currency: sub.currency })
               : t('assemblies.library.subtotal_currency_not_set', 'Subtotal, currency not set')}
           </td>
-          <td className="py-1 text-right font-mono">
+          <td className="py-1 text-end font-mono">
             {`${fmtFixed(Number(sub.amount), currencyFractionDigits(sub.currency))} ${sub.currency}`.trim()}
           </td>
         </tr>
@@ -571,7 +571,7 @@ function TemplateDrawer({
           {Object.keys(template.name_translations || {}).length > 0 && (
             <section>
               <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                <Globe className="mr-1 inline h-3.5 w-3.5" />
+                <Globe className="me-1 inline h-3.5 w-3.5" />
                 {t('assemblies.library.translations', 'Translations')}
               </h3>
               <ul className="space-y-1 text-sm">
@@ -623,7 +623,7 @@ function TemplateDrawer({
                     <div className="text-zinc-800 dark:text-zinc-200">{c.description}</div>
                     <div className="text-xs text-zinc-500">{roleLabel(c.role, t)}</div>
                   </div>
-                  <div className="text-right font-mono text-xs text-zinc-600 dark:text-zinc-400">
+                  <div className="text-end font-mono text-xs text-zinc-600 dark:text-zinc-400">
                     {c.factor} {unitGlyph(c.unit)}
                   </div>
                 </li>
@@ -697,9 +697,9 @@ function TemplateDrawer({
                 className="w-full"
               >
                 {applying ? (
-                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                  <Loader2 className="me-1.5 h-4 w-4 animate-spin" />
                 ) : (
-                  <Eye className="mr-1.5 h-4 w-4" />
+                  <Eye className="me-1.5 h-4 w-4" />
                 )}
                 {t('assemblies.library.preview_button', 'Preview pricing')}
               </Button>
@@ -723,18 +723,18 @@ function TemplateDrawer({
                 </div>
               )}
               <table className="w-full text-xs">
-                <thead className="text-left text-zinc-500">
+                <thead className="text-start text-zinc-500">
                   <tr>
-                    <th className="py-1 pr-2">
+                    <th className="py-1 pe-2">
                       {t('assemblies.library.component', 'Component')}
                     </th>
-                    <th className="py-1 pr-2 text-right">
+                    <th className="py-1 pe-2 text-end">
                       {t('assemblies.library.qty', 'Qty')}
                     </th>
-                    <th className="py-1 pr-2 text-right">
+                    <th className="py-1 pe-2 text-end">
                       {t('assemblies.library.rate', 'Rate')}
                     </th>
-                    <th className="py-1 text-right">
+                    <th className="py-1 text-end">
                       {t('assemblies.library.total', 'Total')}
                     </th>
                   </tr>
@@ -744,7 +744,7 @@ function TemplateDrawer({
                     const matched = Boolean(c.matched_cost_item_id);
                     return (
                       <tr key={i} className={matched ? '' : 'bg-zinc-50/60 dark:bg-zinc-800/30'}>
-                        <td className="py-1.5 pr-2">
+                        <td className="py-1.5 pe-2">
                           <div className="flex items-center gap-1.5 text-zinc-800 dark:text-zinc-200">
                             {c.description}
                             {!matched && (
@@ -759,18 +759,18 @@ function TemplateDrawer({
                             </div>
                           )}
                         </td>
-                        <td className="py-1.5 pr-2 text-right font-mono">
+                        <td className="py-1.5 pe-2 text-end font-mono">
                           {(() => {
                             const d = q.convert(c.scaled_quantity, c.unit || '');
                             return `${fmtFixed(d.value, 2)} ${c.unit ? d.unit : ''}`.trim();
                           })()}
                         </td>
-                        <td className="py-1.5 pr-2 text-right font-mono">
+                        <td className="py-1.5 pe-2 text-end font-mono">
                           {matched
                             ? `${fmtFixed(q.convertRate(Number(c.unit_rate), c.unit || ''), currencyFractionDigits(rowCurrency(c)))} ${rowCurrency(c)}`.trim()
                             : '—'}
                         </td>
-                        <td className="py-1.5 text-right font-mono">
+                        <td className="py-1.5 text-end font-mono">
                           {matched
                             ? `${fmtFixed(c.total, currencyFractionDigits(rowCurrency(c)))} ${rowCurrency(c)}`.trim()
                             : '—'}
@@ -802,9 +802,9 @@ function TemplateDrawer({
                   className="w-full"
                 >
                   {saving ? (
-                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                    <Loader2 className="me-1.5 h-4 w-4 animate-spin" />
                   ) : (
-                    <Save className="mr-1.5 h-4 w-4" />
+                    <Save className="me-1.5 h-4 w-4" />
                   )}
                   {t('assemblies.library.save_button', 'Create assembly from template')}
                 </Button>

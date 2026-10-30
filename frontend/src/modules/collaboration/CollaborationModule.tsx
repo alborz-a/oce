@@ -522,7 +522,7 @@ function HowItWorksCard() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-2 px-5 py-3 text-left"
+        className="flex w-full items-center justify-between gap-2 px-5 py-3 text-start"
         aria-expanded={open}
       >
         <span className="text-sm font-semibold text-content-primary">

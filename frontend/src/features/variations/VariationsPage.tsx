@@ -991,14 +991,14 @@ export function VariationsPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('common.search', { defaultValue: 'Search…' })}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         <select
@@ -1200,20 +1200,20 @@ function NoticeTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">{t('variations.code', { defaultValue: 'Code' })}</th>
+            <th className="px-4 py-2.5 text-start">
               {t('variations.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.recipient', { defaultValue: 'Recipient' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.target_response', { defaultValue: 'Response by' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1312,23 +1312,23 @@ function RequestTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">{t('variations.code', { defaultValue: 'Code' })}</th>
+            <th className="px-4 py-2.5 text-start">
               {t('variations.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.classification', { defaultValue: 'Type' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.cost_impact', { defaultValue: 'Cost' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.days', { defaultValue: 'Days' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1343,13 +1343,13 @@ function RequestTable({
               <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
               <td className="px-4 py-2 font-medium truncate max-w-[360px]">{r.title || '—'}</td>
               <td className="px-4 py-2 text-xs text-content-secondary">{classLabel(r.classification, t)}</td>
-              <td className="px-4 py-2 text-right tabular-nums">
+              <td className="px-4 py-2 text-end tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.estimated_cost_impact) || 0}
                   currency={r.currency || currency}
                 />
               </td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.estimated_schedule_days}</td>
+              <td className="px-4 py-2 text-end tabular-nums">{r.estimated_schedule_days}</td>
               <td className="px-4 py-2">
                 <Badge variant={VR_VARIANT[r.status]} dot>
                   {statusLabel(r.status, t)}
@@ -1429,23 +1429,23 @@ function OrderTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('variations.code', { defaultValue: 'Code' })}</th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">{t('variations.code', { defaultValue: 'Code' })}</th>
+            <th className="px-4 py-2.5 text-start">
               {t('variations.title_col', { defaultValue: 'Title' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.cost_impact', { defaultValue: 'Cost' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.days', { defaultValue: 'Days' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.agreed_at', { defaultValue: 'Agreed' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1459,13 +1459,13 @@ function OrderTable({
             >
               <td className="px-4 py-2 font-mono text-xs text-content-secondary">{r.code}</td>
               <td className="px-4 py-2 font-medium truncate max-w-[360px]">{r.title || '—'}</td>
-              <td className="px-4 py-2 text-right tabular-nums">
+              <td className="px-4 py-2 text-end tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.final_cost_impact) || 0}
                   currency={r.currency || currency}
                 />
               </td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.final_schedule_days}</td>
+              <td className="px-4 py-2 text-end tabular-nums">{r.final_schedule_days}</td>
               <td className="px-4 py-2 text-xs text-content-secondary">
                 {r.agreed_at ? <DateDisplay value={r.agreed_at} /> : '—'}
               </td>
@@ -1553,22 +1553,22 @@ function DayworkTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.sheet_no', { defaultValue: 'Sheet #' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.work_date', { defaultValue: 'Date' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.description', { defaultValue: 'Description' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.total', { defaultValue: 'Total' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1587,7 +1587,7 @@ function DayworkTable({
                 {r.work_date ? <DateDisplay value={r.work_date} /> : '—'}
               </td>
               <td className="px-4 py-2 truncate max-w-[360px]">{r.description || '—'}</td>
-              <td className="px-4 py-2 text-right tabular-nums">
+              <td className="px-4 py-2 text-end tabular-nums">
                 <MoneyDisplay
                   amount={Number(r.total_amount) || 0}
                   currency={r.currency || currency}
@@ -1670,25 +1670,25 @@ function EoTTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.description', { defaultValue: 'Description' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.cause', { defaultValue: 'Cause' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.requested_days', { defaultValue: 'Requested' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('variations.granted_days', { defaultValue: 'Granted' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.critical_path', { defaultValue: 'CP' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('variations.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -1702,8 +1702,8 @@ function EoTTable({
             >
               <td className="px-4 py-2 truncate max-w-[360px]">{r.description || '—'}</td>
               <td className="px-4 py-2 text-xs text-content-secondary">{r.root_cause_category}</td>
-              <td className="px-4 py-2 text-right tabular-nums">{r.requested_days}</td>
-              <td className="px-4 py-2 text-right tabular-nums">
+              <td className="px-4 py-2 text-end tabular-nums">{r.requested_days}</td>
+              <td className="px-4 py-2 text-end tabular-nums">
                 {r.granted_days ?? '—'}
               </td>
               <td className="px-4 py-2 text-xs">

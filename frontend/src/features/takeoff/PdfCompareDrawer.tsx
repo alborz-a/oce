@@ -293,7 +293,7 @@ export function PdfCompareDrawer({
               <Icon size={13} />
               <span className="truncate">{label}</span>
               {count > 0 && (
-                <Badge variant="neutral" className="ml-0.5 text-[9px]">
+                <Badge variant="neutral" className="ms-0.5 text-[9px]">
                   {count}
                 </Badge>
               )}

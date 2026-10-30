@@ -123,7 +123,7 @@ export function OverviewTab({
               <button
                 type="button"
                 onClick={() => navigate('/property-dev/dashboards')}
-                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-left hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
+                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-start hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
               >
                 <span className="flex items-center gap-2">
                   <LayoutDashboard
@@ -146,7 +146,7 @@ export function OverviewTab({
               <button
                 type="button"
                 onClick={() => onJumpTo('buyers')}
-                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-left hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
+                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-start hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
               >
                 <span className="flex items-center gap-2">
                   <Users
@@ -169,7 +169,7 @@ export function OverviewTab({
               <button
                 type="button"
                 onClick={() => onJumpTo('handovers')}
-                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-left hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
+                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-start hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
               >
                 <span className="flex items-center gap-2">
                   <Key
@@ -192,7 +192,7 @@ export function OverviewTab({
               <button
                 type="button"
                 onClick={() => onJumpTo('warranty')}
-                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-left hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
+                className="group flex w-full items-center justify-between gap-2 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-sm text-start hover:border-oe-blue hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-oe-blue/40"
               >
                 <span className="flex items-center gap-2">
                   <ShieldAlert
@@ -234,19 +234,19 @@ export function OverviewTab({
           <table className="w-full text-sm">
             <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
               <tr>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.development', { defaultValue: 'Development' })}
                 </th>
-                <th className="px-4 py-2.5 text-left">
+                <th className="px-4 py-2.5 text-start">
                   {t('propdev.phase', { defaultValue: 'Phase' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">
                   {t('propdev.sold_pct', { defaultValue: 'Sold %' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">
                   {t('propdev.contracted', { defaultValue: 'Contracted' })}
                 </th>
-                <th className="px-4 py-2.5 text-right">
+                <th className="px-4 py-2.5 text-end">
                   {t('propdev.open_snags', { defaultValue: 'Open snags' })}
                 </th>
               </tr>
@@ -317,7 +317,7 @@ function OverviewDevRow({
           })}
         </Badge>
       </td>
-      <td className="px-4 py-2 text-right">
+      <td className="px-4 py-2 text-end">
         <span className="inline-flex items-center gap-2">
           <span className="font-medium tabular-nums">{pct}%</span>
           <span className="hidden sm:inline-block h-1.5 w-16 overflow-hidden rounded-full bg-surface-secondary">
@@ -328,7 +328,7 @@ function OverviewDevRow({
           </span>
         </span>
       </td>
-      <td className="px-4 py-2 text-right font-medium">
+      <td className="px-4 py-2 text-end font-medium">
         {dashQ.isLoading ? (
           <span className="inline-block h-3 w-16 rounded bg-surface-secondary animate-pulse" />
         ) : dash ? (
@@ -347,7 +347,7 @@ function OverviewDevRow({
           '—'
         )}
       </td>
-      <td className="px-4 py-2 text-right">
+      <td className="px-4 py-2 text-end">
         {dashQ.isLoading ? '—' : dash ? dash.open_snags : '—'}
       </td>
     </tr>
@@ -549,7 +549,7 @@ function KpiTile({
       disabled={!onClick}
       aria-label={valueText ? `${label}: ${valueText}` : label}
       className={clsx(
-        'group rounded-xl border border-border-light bg-surface-primary p-3 text-left transition-all',
+        'group rounded-xl border border-border-light bg-surface-primary p-3 text-start transition-all',
         'focus:outline-none focus:ring-2 focus:ring-oe-blue/40',
         onClick && 'cursor-pointer',
         accent && accentRing[accent],

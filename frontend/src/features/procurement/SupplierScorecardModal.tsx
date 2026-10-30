@@ -166,7 +166,7 @@ export function SupplierScorecardModal({
     >
       {isLoading && (
         <div className="flex items-center justify-center py-12 text-content-tertiary">
-          <Loader2 size={20} className="animate-spin mr-2" />
+          <Loader2 size={20} className="animate-spin me-2" />
           {t('common.loading', { defaultValue: 'Loading...' })}
         </div>
       )}

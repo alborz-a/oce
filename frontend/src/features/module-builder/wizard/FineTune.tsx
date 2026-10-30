@@ -285,7 +285,7 @@ export function TablePreview({ spec }: { spec: ModuleSpec }) {
         <Table2 size={13} className="shrink-0 text-content-tertiary" />
         <p className="min-w-0 truncate text-xs font-medium text-content-secondary">
           {t('module_builder.preview_table', { defaultValue: 'The table this builds' })}
-          {caption && <span className="ml-1.5 font-normal text-content-tertiary">{caption}</span>}
+          {caption && <span className="ms-1.5 font-normal text-content-tertiary">{caption}</span>}
         </p>
       </div>
       {columns.length === 0 ? (
@@ -296,14 +296,14 @@ export function TablePreview({ spec }: { spec: ModuleSpec }) {
         </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-start">
             <thead>
               <tr className="border-b border-border-light">
                 {columns.map((field, i) => (
                   <th key={i} className="whitespace-nowrap px-3 py-1.5 text-xs font-medium text-content-secondary">
                     {field.label}
                     {field.unit.trim() !== '' && (
-                      <span className="ml-1 font-normal text-content-quaternary">{field.unit}</span>
+                      <span className="ms-1 font-normal text-content-quaternary">{field.unit}</span>
                     )}
                   </th>
                 ))}

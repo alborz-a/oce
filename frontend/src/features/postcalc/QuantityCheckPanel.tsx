@@ -141,23 +141,23 @@ export function QuantityCheckTable({
         <table className="w-full min-w-[1080px] text-xs" data-testid="qc-table">
           <thead>
             <tr className="border-b border-border-light text-2xs text-content-tertiary">
-              <th className="px-3 py-2 text-left">{t('postcalc.qc.col_ref', { defaultValue: 'Item' })}</th>
-              <th className="px-3 py-2 text-left">{t('postcalc.qc.col_description', { defaultValue: 'Description' })}</th>
-              <th className="px-3 py-2 text-left">{t('postcalc.qc.col_unit', { defaultValue: 'Unit' })}</th>
-              <th className="border-l border-border-light px-3 py-2 text-right">
+              <th className="px-3 py-2 text-start">{t('postcalc.qc.col_ref', { defaultValue: 'Item' })}</th>
+              <th className="px-3 py-2 text-start">{t('postcalc.qc.col_description', { defaultValue: 'Description' })}</th>
+              <th className="px-3 py-2 text-start">{t('postcalc.qc.col_unit', { defaultValue: 'Unit' })}</th>
+              <th className="border-s border-border-light px-3 py-2 text-end">
                 {t('postcalc.qc.col_contract_qty', { defaultValue: 'Contract qty' })}
               </th>
-              <th className="px-3 py-2 text-right">{t('postcalc.qc.col_measured_qty', { defaultValue: 'Measured qty' })}</th>
-              <th className="px-3 py-2 text-left">{t('postcalc.qc.col_source', { defaultValue: 'Source' })}</th>
-              <th className="border-l border-border-light px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">{t('postcalc.qc.col_measured_qty', { defaultValue: 'Measured qty' })}</th>
+              <th className="px-3 py-2 text-start">{t('postcalc.qc.col_source', { defaultValue: 'Source' })}</th>
+              <th className="border-s border-border-light px-3 py-2 text-end">
                 {t('postcalc.qc.col_difference', { defaultValue: 'Difference' })}
               </th>
-              <th className="px-3 py-2 text-right">{t('postcalc.qc.col_difference_pct', { defaultValue: 'Diff. %' })}</th>
-              <th className="border-l border-border-light px-3 py-2 text-right">
+              <th className="px-3 py-2 text-end">{t('postcalc.qc.col_difference_pct', { defaultValue: 'Diff. %' })}</th>
+              <th className="border-s border-border-light px-3 py-2 text-end">
                 {t('postcalc.qc.col_rate', { defaultValue: 'Contract rate' })}
               </th>
-              <th className="px-3 py-2 text-right">{t('postcalc.qc.col_cost_effect', { defaultValue: 'Cost effect' })}</th>
-              <th className="border-l border-border-light px-3 py-2 text-left">
+              <th className="px-3 py-2 text-end">{t('postcalc.qc.col_cost_effect', { defaultValue: 'Cost effect' })}</th>
+              <th className="border-s border-border-light px-3 py-2 text-start">
                 {t('postcalc.qc.col_status', { defaultValue: 'Status' })}
               </th>
             </tr>
@@ -182,18 +182,18 @@ export function QuantityCheckTable({
                   <td className="max-w-[260px] truncate px-3 py-2 text-content-primary" title={line.description}>
                     {line.description || '-'}
                     {!line.in_baseline && (
-                      <span className="ml-1.5 text-2xs text-semantic-warning">
+                      <span className="ms-1.5 text-2xs text-semantic-warning">
                         {t('postcalc.qc.added_since_baseline', { defaultValue: 'added after the baseline' })}
                       </span>
                     )}
                     {!line.in_bill && (
-                      <span className="ml-1.5 text-2xs text-content-tertiary">
+                      <span className="ms-1.5 text-2xs text-content-tertiary">
                         {t('postcalc.qc.removed_from_bill', { defaultValue: 'no longer in the bill' })}
                       </span>
                     )}
                   </td>
                   <td className="px-3 py-2 text-content-tertiary">{line.unit ? localizedUnitCode(line.unit, i18n.language) : '-'}</td>
-                  <td className="border-l border-border-light px-3 py-2 text-right tabular-nums">
+                  <td className="border-s border-border-light px-3 py-2 text-end tabular-nums">
                     {line.contract_quantity === null ? (
                       <span className="text-content-tertiary">-</span>
                     ) : (
@@ -210,7 +210,7 @@ export function QuantityCheckTable({
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">
+                  <td className="px-3 py-2 text-end tabular-nums">
                     {line.measured_quantity === null ? (
                       <span className="text-content-tertiary">-</span>
                     ) : (
@@ -222,7 +222,7 @@ export function QuantityCheckTable({
                   </td>
                   <td
                     className={clsx(
-                      'whitespace-nowrap border-l border-border-light px-3 py-2 text-right tabular-nums',
+                      'whitespace-nowrap border-s border-border-light px-3 py-2 text-end tabular-nums',
                       diff > 0 && 'text-semantic-error',
                       diff < 0 && 'text-oe-blue',
                     )}
@@ -231,7 +231,7 @@ export function QuantityCheckTable({
                       ? ''
                       : signedNumber(diff, 3)}
                   </td>
-                  <td className={clsx('whitespace-nowrap px-3 py-2 text-right tabular-nums', beyond && 'font-semibold')}>
+                  <td className={clsx('whitespace-nowrap px-3 py-2 text-end tabular-nums', beyond && 'font-semibold')}>
                     {Number.isNaN(pct)
                       ? Number.isNaN(diff)
                         ? ''
@@ -240,19 +240,19 @@ export function QuantityCheckTable({
                           value: signedNumber(pct, 1),
                         })}
                   </td>
-                  <td className="whitespace-nowrap border-l border-border-light px-3 py-2 text-right tabular-nums text-content-secondary">
+                  <td className="whitespace-nowrap border-s border-border-light px-3 py-2 text-end tabular-nums text-content-secondary">
                     {line.contract_unit_rate === null ? '-' : formatCurrency(line.contract_unit_rate, currency)}
                   </td>
                   <td
                     className={clsx(
-                      'whitespace-nowrap px-3 py-2 text-right font-medium tabular-nums',
+                      'whitespace-nowrap px-3 py-2 text-end font-medium tabular-nums',
                       cost > 0 && 'text-semantic-error',
                       cost < 0 && 'text-oe-blue',
                     )}
                   >
                     {Number.isNaN(cost) ? '' : signedMoney(cost, currency)}
                   </td>
-                  <td className="border-l border-border-light px-3 py-2">
+                  <td className="border-s border-border-light px-3 py-2">
                     <StatusCell line={line} />
                   </td>
                 </tr>
@@ -267,7 +267,7 @@ export function QuantityCheckTable({
                   defaultValue: 'Total of the {{count}} rows shown',
                 })}
               </td>
-              <td className="border-l border-border-light px-3 py-2 text-right" colSpan={3}>
+              <td className="border-s border-border-light px-3 py-2 text-end" colSpan={3}>
                 <span className="whitespace-nowrap text-semantic-error" data-testid="qc-footer-over">
                   {signedMoney(shown.over, currency)}
                 </span>
@@ -276,10 +276,10 @@ export function QuantityCheckTable({
                   {signedMoney(shown.under, currency)}
                 </span>
               </td>
-              <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums" data-testid="qc-footer-net">
+              <td className="whitespace-nowrap px-3 py-2 text-end tabular-nums" data-testid="qc-footer-net">
                 {signedMoney(shown.net, currency)}
               </td>
-              <td className="border-l border-border-light px-3 py-2" />
+              <td className="border-s border-border-light px-3 py-2" />
             </tr>
           </tfoot>
         </table>
@@ -454,7 +454,7 @@ export function QuantityCheckPanel({ projectId }: { projectId: string }) {
               {t('postcalc.qc.freeze', { defaultValue: 'Freeze current quantities as baseline' })}
             </Button>
           )}
-          <div className="ml-auto flex flex-wrap items-end gap-3">
+          <div className="ms-auto flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1">
               <label className="text-2xs text-content-tertiary" htmlFor="qc-threshold">
                 {t('postcalc.qc.threshold_label', { defaultValue: 'Highlight beyond +/- %' })}
@@ -464,7 +464,7 @@ export function QuantityCheckPanel({ projectId }: { projectId: string }) {
                 type="number"
                 min={0}
                 step={1}
-                className={clsx(selectCls, 'w-24 text-right')}
+                className={clsx(selectCls, 'w-24 text-end')}
                 value={threshold}
                 onChange={(e) => onThreshold(e.target.value)}
               />

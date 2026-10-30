@@ -161,9 +161,9 @@ function ClassifierModal({
           </Button>
           <Button variant="primary" onClick={() => onSubmit(form)} disabled={isPending}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Save size={16} className="mr-1.5 shrink-0" />
+              <Save size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {isEdit
@@ -247,9 +247,9 @@ function ClassifierModal({
       >
         <Button variant="secondary" size="sm" onClick={() => void runPreview()} disabled={previewing}>
           {previewing ? (
-            <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent mr-2 shrink-0" />
+            <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent me-2 shrink-0" />
           ) : (
-            <Sparkles size={14} className="mr-1.5 shrink-0" />
+            <Sparkles size={14} className="me-1.5 shrink-0" />
           )}
           {t('project_route.run_preview', { defaultValue: 'Preview suggested route' })}
         </Button>
@@ -341,7 +341,7 @@ const AssessmentRow = React.memo(function AssessmentRow({
           className="shrink-0"
         >
           {item.status === 'confirmed' ? (
-            <CheckCircle2 size={11} className="mr-1" />
+            <CheckCircle2 size={11} className="me-1" />
           ) : null}
           {item.status === 'confirmed'
             ? t('project_route.status_confirmed', { defaultValue: 'Confirmed' })
@@ -350,7 +350,7 @@ const AssessmentRow = React.memo(function AssessmentRow({
       </div>
 
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           <div className="rounded-lg bg-surface-secondary p-3">
             <p className="text-xs text-content-tertiary mb-1 font-medium uppercase tracking-wide">
               {t('project_route.label_rationale', { defaultValue: 'Rationale' })}

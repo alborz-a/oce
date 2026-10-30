@@ -172,7 +172,7 @@ export function VideoPlayerDialog({
                         <Play size={26} strokeWidth={2.4} className="translate-x-0.5" fill="currentColor" />
                       </span>
                       {start > 0 && (
-                        <span className="absolute bottom-3 left-3 rounded bg-black/75 px-2 py-0.5 font-mono text-xs text-white">
+                        <span className="absolute bottom-3 start-3 rounded bg-black/75 px-2 py-0.5 font-mono text-xs text-white">
                           {formatClock(start)}
                         </span>
                       )}
@@ -232,7 +232,7 @@ export function VideoPlayerDialog({
                   {watched ? <CheckCircle2 size={13} aria-hidden /> : <Circle size={13} aria-hidden />}
                   {t('videos.watched', { defaultValue: 'Watched' })}
                 </button>
-                <span className="ml-auto flex flex-wrap items-center gap-1 text-2xs text-content-tertiary">
+                <span className="ms-auto flex flex-wrap items-center gap-1 text-2xs text-content-tertiary">
                   <span className="rounded bg-surface-secondary px-1.5 py-0.5">{labels.stage(video.stage)}</span>
                   <span className="rounded bg-surface-secondary px-1.5 py-0.5">{labels.language(video.language)}</span>
                   {video.market && (
@@ -312,7 +312,7 @@ export function VideoPlayerDialog({
                     <button
                       type="button"
                       onClick={() => onOpenVideo(prev)}
-                      className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border-light px-2.5 py-2 text-left text-xs hover:border-oe-blue/40"
+                      className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border-light px-2.5 py-2 text-start text-xs hover:border-oe-blue/40"
                     >
                       <ChevronLeft size={14} className="shrink-0 text-content-tertiary" aria-hidden />
                       <span className="min-w-0">
@@ -327,7 +327,7 @@ export function VideoPlayerDialog({
                     <button
                       type="button"
                       onClick={() => onOpenVideo(next)}
-                      className="flex min-w-0 flex-1 items-center justify-end gap-2 rounded-lg border border-border-light px-2.5 py-2 text-right text-xs hover:border-oe-blue/40"
+                      className="flex min-w-0 flex-1 items-center justify-end gap-2 rounded-lg border border-border-light px-2.5 py-2 text-end text-xs hover:border-oe-blue/40"
                     >
                       <span className="min-w-0">
                         <span className="block text-2xs text-content-tertiary">{t('videos.next', { defaultValue: 'Next' })}</span>
@@ -346,11 +346,11 @@ export function VideoPlayerDialog({
           {/* ── Chapters ───────────────────────────────────────────────── */}
           <aside
             aria-labelledby={`${titleId}-chapters`}
-            className="border-t border-border-light bg-surface-secondary/30 lg:overflow-y-auto lg:border-l lg:border-t-0"
+            className="border-t border-border-light bg-surface-secondary/30 lg:overflow-y-auto lg:border-s lg:border-t-0"
           >
             <h3 id={`${titleId}-chapters`} className="sticky top-0 z-10 border-b border-border-light bg-surface-primary/95 px-4 py-2.5 text-xs font-semibold text-content-primary backdrop-blur">
               {t('videos.chapters', { defaultValue: 'Chapters' })}
-              <span className="ml-1.5 font-normal tabular-nums text-content-tertiary">{video.chapters.length}</span>
+              <span className="ms-1.5 font-normal tabular-nums text-content-tertiary">{video.chapters.length}</span>
             </h3>
             {video.chapters.length === 0 ? (
               <p className="px-4 py-3 text-xs text-content-tertiary">
@@ -374,7 +374,7 @@ export function VideoPlayerDialog({
                           onClick={() => seek(c.t)}
                           aria-current={active ? 'true' : undefined}
                           className={clsx(
-                            'flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
+                            'flex w-full items-start gap-2 rounded-lg px-2 py-1.5 text-start text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
                             active
                               ? 'bg-oe-blue/10 font-medium text-oe-blue'
                               : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary',

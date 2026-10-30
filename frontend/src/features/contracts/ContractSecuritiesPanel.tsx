@@ -504,47 +504,47 @@ export function ContractSecuritiesPanel({
             <table className="w-full text-sm">
               <thead className="text-xs uppercase tracking-wide text-content-tertiary">
                 <tr>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_type', {
                       defaultValue: 'Type',
                     })}
                   </th>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_issuer', {
                       defaultValue: 'Issuer',
                     })}
                   </th>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_reference', {
                       defaultValue: 'Reference',
                     })}
                   </th>
-                  <th className="text-right py-1">
+                  <th className="text-end py-1">
                     {t('contracts.securities.col_value', {
                       defaultValue: 'Value',
                     })}
                   </th>
-                  <th className="text-right py-1">
+                  <th className="text-end py-1">
                     {t('contracts.securities.col_percent', {
                       defaultValue: '% of contract',
                     })}
                   </th>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_valid_from', {
                       defaultValue: 'Valid from',
                     })}
                   </th>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_expiry', {
                       defaultValue: 'Expiry',
                     })}
                   </th>
-                  <th className="text-left py-1">
+                  <th className="text-start py-1">
                     {t('contracts.securities.col_status', {
                       defaultValue: 'Status',
                     })}
                   </th>
-                  <th className="text-right py-1">
+                  <th className="text-end py-1">
                     <span className="sr-only">
                       {t('common.actions', { defaultValue: 'Actions' })}
                     </span>
@@ -564,7 +564,7 @@ export function ContractSecuritiesPanel({
                     {/* The row's own currency, never the contract's: the two
                         differ often enough that assuming would misstate the
                         cover by the exchange rate. */}
-                    <td className="py-1.5 pe-2 text-right font-medium tabular-nums">
+                    <td className="py-1.5 pe-2 text-end font-medium tabular-nums">
                       {hasUsableCurrency(row.currency) ? (
                         <MoneyDisplay
                           amount={row.amount}
@@ -595,7 +595,7 @@ export function ContractSecuritiesPanel({
                         </span>
                       )}
                     </td>
-                    <td className="py-1.5 pe-2 text-right tabular-nums text-content-secondary">
+                    <td className="py-1.5 pe-2 text-end tabular-nums text-content-secondary">
                       {row.percent_of_contract == null
                         ? '—'
                         : fmtPercent(row.percent_of_contract)}
@@ -629,7 +629,7 @@ export function ContractSecuritiesPanel({
                         {statusLabel(t, row.status)}
                       </Badge>
                     </td>
-                    <td className="py-1.5 text-right whitespace-nowrap">
+                    <td className="py-1.5 text-end whitespace-nowrap">
                       <Button
                         variant="ghost"
                         size="sm"

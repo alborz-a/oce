@@ -2702,7 +2702,7 @@ export function ClashDetectionPage() {
                 >
                   <button
                     type="button"
-                    className="flex-1 truncate text-left"
+                    className="flex-1 truncate text-start"
                     title={r.description || r.name}
                     onClick={() =>
                       setParams((p) => {
@@ -2713,7 +2713,7 @@ export function ClashDetectionPage() {
                   >
                     {r.name}
                     {r.clash_type && r.clash_type !== 'both' && (
-                      <span className="ml-1 rounded-full bg-surface-secondary px-1.5 text-[10px] font-medium text-content-secondary">
+                      <span className="ms-1 rounded-full bg-surface-secondary px-1.5 text-[10px] font-medium text-content-secondary">
                         {r.clash_type === 'hard'
                           ? t('clash.type_hard', {
                               defaultValue: 'Hard',
@@ -2723,7 +2723,7 @@ export function ClashDetectionPage() {
                             })}
                       </span>
                     )}
-                    <span className="ml-1 text-content-tertiary">
+                    <span className="ms-1 text-content-tertiary">
                       · {r.total_clashes}
                     </span>
                   </button>
@@ -3057,7 +3057,7 @@ export function ClashDetectionPage() {
                       <tbody>
                         {disciplines.map((row) => (
                           <tr key={row}>
-                            <th className="p-2 text-right font-medium text-content-secondary">
+                            <th className="p-2 text-end font-medium text-content-secondary">
                               {row}
                             </th>
                             {disciplines.map((col) => {
@@ -3131,7 +3131,7 @@ export function ClashDetectionPage() {
                       </Badge>
                     </h2>
 
-                    <div className="relative ml-auto">
+                    <div className="relative ms-auto">
                       <Search className="pointer-events-none absolute start-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-tertiary" />
                       <input
                         value={fSearch}
@@ -3412,7 +3412,7 @@ export function ClashDetectionPage() {
 
                     {/* Keyboard-navigation hint — subtle, non-blocking. */}
                     <span
-                      className="ml-auto hidden items-center gap-1.5 text-2xs text-content-tertiary sm:flex"
+                      className="ms-auto hidden items-center gap-1.5 text-2xs text-content-tertiary sm:flex"
                       title={t('clash.kbd_hint_full', {
                         defaultValue:
                           'Use ↑/↓ or J/K to move between clashes, Enter to open the selected clash in 3D.',
@@ -3520,7 +3520,7 @@ export function ClashDetectionPage() {
                       <button
                         type="button"
                         onClick={clearAllFilters}
-                        className="ml-1 text-2xs font-medium text-oe-blue hover:underline"
+                        className="ms-1 text-2xs font-medium text-oe-blue hover:underline"
                       >
                         {t('clash.clear_all', {
                           defaultValue: 'Clear all',
@@ -3620,7 +3620,7 @@ export function ClashDetectionPage() {
                       </div>
                     )}
                     <div className="max-h-[640px] overflow-auto">
-                    <table className="w-full text-left text-xs">
+                    <table className="w-full text-start text-xs">
                       <thead className="sticky top-0 z-10 bg-surface-elevated">
                         <tr className="border-b border-border-light text-content-tertiary">
                           <th className="w-9 px-3 py-2.5">
@@ -3716,12 +3716,12 @@ export function ClashDetectionPage() {
                               module: surfaces the estimated rework cost
                               per clash so a coordinator can prioritise
                               by money, not just by geometry. */}
-                          <th className="px-3 py-2.5 text-right">
+                          <th className="px-3 py-2.5 text-end">
                             {t('clash.col_cost_impact', {
                               defaultValue: 'Cost impact',
                             })}
                           </th>
-                          <th className="px-3 py-2.5 text-right">
+                          <th className="px-3 py-2.5 text-end">
                             {t('clash.col_actions', {
                               defaultValue: 'Actions',
                             })}
@@ -3746,7 +3746,7 @@ export function ClashDetectionPage() {
                                   <button
                                     type="button"
                                     onClick={() => toggleGroup(it.key)}
-                                    className="flex w-full items-center gap-2 text-left text-2xs font-semibold text-content-primary"
+                                    className="flex w-full items-center gap-2 text-start text-2xs font-semibold text-content-primary"
                                   >
                                     {collapsed ? (
                                       <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" />
@@ -3781,7 +3781,7 @@ export function ClashDetectionPage() {
                                       onClick={() =>
                                         toggleSetKey(setExpandedPairs, it.key)
                                       }
-                                      className="inline-flex items-center gap-1 text-left text-xs font-semibold text-content-primary"
+                                      className="inline-flex items-center gap-1 text-start text-xs font-semibold text-content-primary"
                                       aria-expanded={expanded}
                                     >
                                       {expanded ? (
@@ -3800,7 +3800,7 @@ export function ClashDetectionPage() {
                                         n: it.members.length,
                                       })}
                                     </Badge>
-                                    <span className="ml-auto inline-flex items-center gap-1">
+                                    <span className="ms-auto inline-flex items-center gap-1">
                                       <StatusWorkflow
                                         status={head.status}
                                         onChange={(s) => {
@@ -3960,12 +3960,12 @@ export function ClashDetectionPage() {
                                   })()}
                                 </div>
                               </td>
-                              <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                              <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                                 {r.clash_type === 'hard'
                                   ? `${fmtFixed(r.penetration_m, 3)} m`
                                   : '—'}
                               </td>
-                              <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                              <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                                 {r.clash_type === 'clearance'
                                   ? `${fmtFixed(r.distance_m, 3)} m`
                                   : '—'}
@@ -4362,7 +4362,7 @@ function GroupMatrix({
         <tbody>
           {axes.map((row) => (
             <tr key={row}>
-              <th className="p-2 text-right font-medium text-content-secondary">
+              <th className="p-2 text-end font-medium text-content-secondary">
                 {row}
               </th>
               {axes.map((col) => {
@@ -4755,7 +4755,7 @@ function Kpi({
       disabled={!interactive}
       onClick={onClick}
       className={clsx(
-        'rounded-xl border bg-surface-elevated/90 p-3 text-left shadow-xs transition-all',
+        'rounded-xl border bg-surface-elevated/90 p-3 text-start shadow-xs transition-all',
         interactive && 'hover:-translate-y-0.5 hover:shadow-md',
         active
           ? 'border-oe-blue ring-2 ring-oe-blue/20'
@@ -4799,7 +4799,7 @@ function SortableTh({
       }
       className={clsx(
         'select-none px-3 py-2.5 font-medium',
-        align === 'right' ? 'text-right' : 'text-left',
+        align === 'right' ? 'text-end' : 'text-start',
         className,
       )}
     >
@@ -4836,7 +4836,7 @@ function FilterChip({
 }) {
   const { t } = useTranslation();
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-oe-blue/10 py-0.5 pl-2 pr-1 text-2xs font-medium text-oe-blue">
+    <span className="inline-flex items-center gap-1 rounded-full bg-oe-blue/10 py-0.5 ps-2 pe-1 text-2xs font-medium text-oe-blue">
       <span className="max-w-[160px] truncate">{label}</span>
       <button
         type="button"
@@ -5117,7 +5117,7 @@ function BulkActionsBar({
       <button
         type="button"
         onClick={onClear}
-        className="ml-auto text-2xs font-medium text-content-tertiary hover:text-content-primary"
+        className="ms-auto text-2xs font-medium text-content-tertiary hover:text-content-primary"
       >
         {t('clash.clear_selection', { defaultValue: 'Clear' })}
       </button>
@@ -5278,14 +5278,14 @@ function FacetGroup({
       <div className="mb-1.5 text-2xs font-semibold uppercase tracking-wide text-content-tertiary">
         {title}
       </div>
-      <div className="max-h-40 space-y-0.5 overflow-y-auto pr-1">
+      <div className="max-h-40 space-y-0.5 overflow-y-auto pe-1">
         {rows.map((r) => (
           <button
             key={r.key}
             type="button"
             onClick={r.onToggle}
             className={clsx(
-              'flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-left text-2xs transition-colors',
+              'flex w-full items-center justify-between gap-2 rounded-md px-2 py-1 text-start text-2xs transition-colors',
               r.on
                 ? 'bg-oe-blue/10 text-oe-blue ring-1 ring-oe-blue/30'
                 : 'hover:bg-surface-secondary text-content-secondary',
@@ -5487,18 +5487,18 @@ function SelectionSetPicker({
       </div>
 
       <div className="relative mt-1.5">
-        <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-content-tertiary" />
+        <Search className="pointer-events-none absolute start-2 top-1/2 h-3 w-3 -translate-y-1/2 text-content-tertiary" />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('clash.set_search', {
             defaultValue: 'Search…',
           })}
-          className="w-full rounded-md border border-border bg-surface-primary py-1 pl-7 pr-2 text-2xs"
+          className="w-full rounded-md border border-border bg-surface-primary py-1 ps-7 pe-2 text-2xs"
         />
       </div>
 
-      <div className="mt-1.5 max-h-44 space-y-2 overflow-y-auto pr-0.5">
+      <div className="mt-1.5 max-h-44 space-y-2 overflow-y-auto pe-0.5">
         {loading && (
           <p className="px-1 py-2 text-2xs text-content-tertiary">
             {t('common.loading', { defaultValue: 'Loading…' })}
@@ -5705,7 +5705,7 @@ function ModelCardPicker({
                 aria-pressed={isSel}
                 onClick={() => !disabled && onToggle(m.id)}
                 className={clsx(
-                  'group relative flex flex-col gap-2 rounded-xl border p-3 text-left transition-all',
+                  'group relative flex flex-col gap-2 rounded-xl border p-3 text-start transition-all',
                   disabled
                     ? 'cursor-not-allowed border-border-light bg-surface-secondary/40 opacity-60'
                     : isSel
@@ -6032,7 +6032,7 @@ function ClashDetailPanel({
         onClick={onClose}
         className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"
       />
-      <div className="relative flex h-full w-full max-w-md flex-col overflow-y-auto border-l border-border bg-surface-elevated shadow-2xl animate-slide-in-right">
+      <div className="relative flex h-full w-full max-w-md flex-col overflow-y-auto border-s border-border bg-surface-elevated shadow-2xl animate-slide-in-right">
         <div className="flex items-start justify-between gap-3 border-b border-border-light p-4">
           <div className="min-w-0">
             <h2 className="flex items-center gap-2 text-sm font-semibold text-content-primary">
@@ -6373,7 +6373,7 @@ function ClashDetailPanel({
                     </span>
                     <button
                       type="button"
-                      className="ml-auto rounded p-0.5 text-content-tertiary hover:bg-surface-primary"
+                      className="ms-auto rounded p-0.5 text-content-tertiary hover:bg-surface-primary"
                       onClick={() => setReplyTo(null)}
                       aria-label={t('clash.cancel_reply', {
                         defaultValue: 'Cancel reply',
@@ -6412,14 +6412,14 @@ function ClashDetailPanel({
                         role="option"
                         aria-selected={false}
                         onClick={() => insertMention(m.user_id)}
-                        className="flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs hover:bg-surface-secondary"
+                        className="flex w-full items-center gap-2 px-2 py-1.5 text-start text-xs hover:bg-surface-secondary"
                       >
                         <AtSign className="h-3 w-3 text-content-tertiary" />
                         <span className="truncate font-medium text-content-primary">
                           {(m.full_name && m.full_name.trim()) || m.email}
                         </span>
                         {m.full_name && (
-                          <span className="ml-auto truncate text-2xs text-content-tertiary">
+                          <span className="ms-auto truncate text-2xs text-content-tertiary">
                             {m.email}
                           </span>
                         )}
@@ -6527,7 +6527,7 @@ function ClashCommentBubble({
     <div
       className={clsx(
         'rounded-lg border border-border-light bg-surface-secondary/40 p-2',
-        indent > 0 && 'ml-6 border-l-2 border-l-oe-blue/40',
+        indent > 0 && 'ms-6 border-s-2 border-s-oe-blue/40',
       )}
     >
       <div className="flex items-center justify-between gap-2 text-[10px] text-content-tertiary">
@@ -6584,7 +6584,7 @@ function CompareBucket({
       <button
         type="button"
         onClick={() => onToggle(bucketKey)}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-semibold text-content-primary"
+        className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs font-semibold text-content-primary"
       >
         {collapsed ? (
           <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" />

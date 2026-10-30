@@ -201,15 +201,15 @@ export function ClashKpiPanel({ projectId, runId }: ClashKpiPanelProps) {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-content-tertiary text-xs uppercase">
+              <tr className="text-start text-content-tertiary text-xs uppercase">
                 <th className="py-1.5">{t('clash.kpi.pair', { defaultValue: 'Pair' })}</th>
-                <th className="py-1.5 w-20 text-right">
+                <th className="py-1.5 w-20 text-end">
                   {t('clash.kpi.count', { defaultValue: 'Count' })}
                 </th>
-                <th className="py-1.5 w-20 text-right">
+                <th className="py-1.5 w-20 text-end">
                   {t('clash.kpi.open_short', { defaultValue: 'Open' })}
                 </th>
-                <th className="py-1.5 w-24 text-right">
+                <th className="py-1.5 w-24 text-end">
                   {t('clash.kpi.open_share', { defaultValue: 'Open %' })}
                 </th>
               </tr>
@@ -220,9 +220,9 @@ export function ClashKpiPanel({ projectId, runId }: ClashKpiPanelProps) {
                   <td className="py-1.5">
                     {p.a} × {p.b}
                   </td>
-                  <td className="py-1.5 text-right font-medium">{p.count}</td>
-                  <td className="py-1.5 text-right">{p.open_count}</td>
-                  <td className="py-1.5 text-right">
+                  <td className="py-1.5 text-end font-medium">{p.count}</td>
+                  <td className="py-1.5 text-end">{p.open_count}</td>
+                  <td className="py-1.5 text-end">
                     {fmtPercent(p.open_share * 100, 0)}
                   </td>
                 </tr>

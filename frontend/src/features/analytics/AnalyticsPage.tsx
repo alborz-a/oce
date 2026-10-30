@@ -566,7 +566,7 @@ export function AnalyticsPage() {
             <option value="on_budget">{t('analytics.on_budget', { defaultValue: 'On Budget' })}</option>
             <option value="over_budget">{t('analytics.over_budget', { defaultValue: 'Over Budget' })}</option>
           </select>
-          <span className="text-2xs text-content-tertiary ml-auto">
+          <span className="text-2xs text-content-tertiary ms-auto">
             {sortedProjects.length} {t('analytics.of_total', { defaultValue: 'of' })} {data?.projects.length ?? 0}
           </span>
         </div>
@@ -609,7 +609,7 @@ export function AnalyticsPage() {
                     dir={sortDir}
                     onClick={handleSort}
                   />
-                  <th className="px-4 py-3 text-left text-xs font-medium text-content-tertiary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-start text-xs font-medium text-content-tertiary uppercase tracking-wider">
                     {t('analytics.col_region', { defaultValue: 'Region' })}
                   </th>
                   <SortHeader
@@ -655,7 +655,7 @@ export function AnalyticsPage() {
                   <th className="px-4 py-3 text-center text-xs font-medium text-content-tertiary uppercase tracking-wider">
                     {t('analytics.col_status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-content-tertiary uppercase tracking-wider">
+                  <th className="px-4 py-3 text-end text-xs font-medium text-content-tertiary uppercase tracking-wider">
                     {t('analytics.col_finance', { defaultValue: 'Finance' })}
                   </th>
                 </tr>
@@ -684,14 +684,14 @@ export function AnalyticsPage() {
                     <td className="px-4 py-3 text-content-secondary whitespace-nowrap">
                       {p.region}
                     </td>
-                    <td className="px-4 py-3 text-right text-content-primary tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3 text-end text-content-primary tabular-nums whitespace-nowrap">
                       {fmtCurrency(p.budget, p.currency)}
                     </td>
-                    <td className="px-4 py-3 text-right text-content-secondary tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3 text-end text-content-secondary tabular-nums whitespace-nowrap">
                       {fmtCurrency(p.actual, p.currency)}
                     </td>
                     <td
-                      className={`px-4 py-3 text-right tabular-nums font-medium whitespace-nowrap ${
+                      className={`px-4 py-3 text-end tabular-nums font-medium whitespace-nowrap ${
                         p.variance >= 0 ? 'text-semantic-success' : 'text-semantic-error'
                       }`}
                     >
@@ -699,7 +699,7 @@ export function AnalyticsPage() {
                       {fmtCurrency(p.variance, p.currency)}
                     </td>
                     <td
-                      className={`px-4 py-3 text-right tabular-nums whitespace-nowrap ${
+                      className={`px-4 py-3 text-end tabular-nums whitespace-nowrap ${
                         p.variance_pct == null
                           ? 'text-content-tertiary'
                           : p.variance_pct >= 0
@@ -716,7 +716,7 @@ export function AnalyticsPage() {
                         </>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap text-content-secondary">
+                    <td className="px-4 py-3 text-end tabular-nums whitespace-nowrap text-content-secondary">
                       {p.cost_per_sqm != null ? (
                         <>{fmtNumber(p.cost_per_sqm, 0)} {p.currency}/m²</>
                       ) : (
@@ -737,7 +737,7 @@ export function AnalyticsPage() {
                     {/* Per-row Finance deep link: the row itself opens the
                         project, this opens that project's Finance module so the
                         budget-vs-actual figure traces to its source (CONN-76). */}
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-end">
                       <button
                         type="button"
                         onClick={(e) => {
@@ -831,11 +831,11 @@ export function AnalyticsPage() {
                     {/* Planned bar */}
                     <div className="relative h-5 w-full rounded bg-surface-secondary overflow-hidden">
                       <div
-                        className="absolute inset-y-0 left-0 rounded bg-oe-blue/20"
+                        className="absolute inset-y-0 start-0 rounded bg-oe-blue/20"
                         style={{ width: `${plannedPct}%` }}
                       />
                       <div
-                        className={`absolute inset-y-0 left-0 rounded ${
+                        className={`absolute inset-y-0 start-0 rounded ${
                           p.status === 'over_budget'
                             ? 'bg-semantic-error/70'
                             : 'bg-oe-blue/60'

@@ -708,7 +708,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Every model you upload (RVT, IFC, DWG-to-IFC, CSV-with-geometry) lives here. Click a card to load it, the Plus tile to upload a new one, or the chevron to collapse the strip and reclaim the canvas.',
   'tour.bim.step.2.title': 'Active model',
   'tour.bim.step.2.body':
-    'Shows the name of the model currently in the 3D viewport - drag to rotate, scroll to zoom, right-drag to pan. Hover for the storage breakdown (artifacts + originals on disk).',
+    'Shows the name of the model currently in the 3D viewport - drag to rotate, scroll to zoom, end-drag to pan. Hover for the storage breakdown (artifacts + originals on disk).',
   'tour.bim.step.3.title': 'Filter & section box',
   'tour.bim.step.3.body':
     'Filter by storey, IFC class, discipline or any property - type a value or pick from the federation tree. Saved filter sets become reusable element groups. Hidden elements vanish from the canvas instantly.',
@@ -737,7 +737,7 @@ const STEP_FALLBACKS: Record<string, string> = {
     'Every project you can access that has a real-world anchor is listed here. Click the name to fly the camera to its pin, or "Open" to drop into that project\'s map. Collapse to a slim pill to reclaim canvas.',
   'tour.geo.step.4.title': '3D globe',
   'tour.geo.step.4.body':
-    'Drag to rotate, scroll to zoom, right-drag to pan. Click any pin (project, HSE incident, Punchlist defect, Daily Diary entry) to open it in its module. Tilesets fly into view as you zoom in.',
+    'Drag to rotate, scroll to zoom, end-drag to pan. Click any pin (project, HSE incident, Punchlist defect, Daily Diary entry) to open it in its module. Tilesets fly into view as you zoom in.',
   'tour.geo.step.5.title': 'Raster overlays',
   'tour.geo.step.5.body':
     'Pin a PDF site plan or a georeferenced image onto the globe - click Add, drop the file, then drag the corner handles to align. Use Crop to mask the title block. Opacity slider per overlay.',

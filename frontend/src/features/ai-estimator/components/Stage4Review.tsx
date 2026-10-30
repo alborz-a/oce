@@ -79,7 +79,7 @@ function ValidationPanel({ report }: { report: ValidationReport | null }) {
         onClick={() => hasDetail && setOpen((o) => !o)}
         aria-expanded={hasDetail ? open : undefined}
         disabled={!hasDetail}
-        className="flex w-full items-center gap-2.5 text-left disabled:cursor-default"
+        className="flex w-full items-center gap-2.5 text-start disabled:cursor-default"
       >
         <span className={clsx('flex h-8 w-8 items-center justify-center rounded-full', tone.dot)}>
           <Icon className="h-4 w-4 text-white" />
@@ -280,16 +280,16 @@ export function Stage4Review(props: Stage4ReviewProps) {
           <thead className="bg-surface-secondary text-content-secondary">
             <tr>
               <th className="w-8 px-3 py-2" />
-              <th className="px-3 py-2 text-left font-medium">
+              <th className="px-3 py-2 text-start font-medium">
                 {t('aiest.review.description', { defaultValue: 'Description' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('aiest.review.qty', { defaultValue: 'Qty' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('aiest.review.rate', { defaultValue: 'Rate' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('aiest.review.total', { defaultValue: 'Total' })}
               </th>
             </tr>
@@ -340,13 +340,13 @@ export function Stage4Review(props: Stage4ReviewProps) {
                         </div>
                       )}
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                    <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                       {toNum(p.quantity)} {p.unit}
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums text-content-secondary">
+                    <td className="px-3 py-2 text-end tabular-nums text-content-secondary">
                       {fmtMoneyStr(p.unit_rate, p.currency, locale)}
                     </td>
-                    <td className="px-3 py-2 text-right tabular-nums font-medium text-content-primary">
+                    <td className="px-3 py-2 text-end tabular-nums font-medium text-content-primary">
                       {fmtMoneyStr(p.line_total, p.currency, locale)}
                     </td>
                   </tr>

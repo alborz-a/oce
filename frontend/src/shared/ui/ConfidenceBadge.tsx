@@ -94,7 +94,7 @@ export function ConfidenceBadge({
     <Badge variant={LEVEL_VARIANT[resolved]} size={size} dot className={className}>
       {label}
       {showScore && pct !== undefined && (
-        <span className="ml-1 tabular-nums opacity-80">
+        <span className="ms-1 tabular-nums opacity-80">
           {t('confidence_badge.score', { defaultValue: '{{pct}}%', pct })}
         </span>
       )}

@@ -947,7 +947,7 @@ function PermitRow({
       <Button
         variant="ghost"
         size="sm"
-        className="ml-auto"
+        className="ms-auto"
         onClick={() => onEdit(permit)}
         icon={<Pencil size={12} />}
       >
@@ -1046,7 +1046,7 @@ function ItemRow({
 
       {/* Expanded detail */}
       {open && (
-        <div className="space-y-4 px-4 pb-4 pl-11 animate-fade-in">
+        <div className="space-y-4 px-4 pb-4 ps-11 animate-fade-in">
           {/* Gate summary */}
           <div className="flex flex-wrap items-center gap-4">
             <span
@@ -1342,13 +1342,13 @@ export function TemporaryWorksPage() {
       {/* Toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative max-w-sm flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+          <Search size={16} className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t('temporary_works.search_placeholder', { defaultValue: 'Search reference or title...' })}
             aria-label={t('temporary_works.search_placeholder', { defaultValue: 'Search reference or title...' })}
-            className={clsx(inputCls, 'pl-9')}
+            className={clsx(inputCls, 'ps-9')}
           />
         </div>
         <select

@@ -254,7 +254,7 @@ export function ManageTemplatesModal({
               disabled={createMut.isPending}
             >
               {createMut.isPending && (
-                <Loader2 size={14} className="mr-1.5 animate-spin" />
+                <Loader2 size={14} className="me-1.5 animate-spin" />
               )}
               {t('fieldreports.save_template', {
                 defaultValue: 'Save template',

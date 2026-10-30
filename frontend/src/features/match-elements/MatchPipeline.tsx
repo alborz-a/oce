@@ -241,7 +241,7 @@ export function MatchPipeline({ sessionId }: Props) {
                 'Seven steps from CAD file to priced BoQ - every step is visible and tunable',
               )}
               {stages.length > 0 && (
-                <span className="ml-1.5 font-semibold text-content-secondary">
+                <span className="ms-1.5 font-semibold text-content-secondary">
                   {doneCount}/{stages.length}{' '}
                   {t('match_elements.pipeline.done_suffix', 'done')}
                 </span>

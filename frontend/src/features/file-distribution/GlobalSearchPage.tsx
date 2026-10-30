@@ -288,7 +288,7 @@ export function GlobalSearchPage() {
           <button
             type="button"
             onClick={clearRecent}
-            className="ml-1 text-[11px] text-content-tertiary underline-offset-2 hover:text-content-secondary hover:underline"
+            className="ms-1 text-[11px] text-content-tertiary underline-offset-2 hover:text-content-secondary hover:underline"
           >
             {t('files.global_search.clear_recent', { defaultValue: 'Clear' })}
           </button>
@@ -324,7 +324,7 @@ export function GlobalSearchPage() {
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" />
-                    <span className="flex-1 text-left capitalize">
+                    <span className="flex-1 text-start capitalize">
                       {t(labelKey, { defaultValue: kind })}
                     </span>
                   </button>
@@ -358,7 +358,7 @@ export function GlobalSearchPage() {
                     )}
                   >
                     <ArrowUpDown className="h-3 w-3" />
-                    <span className="flex-1 text-left">{label}</span>
+                    <span className="flex-1 text-start">{label}</span>
                   </button>
                 );
               })}
@@ -381,7 +381,7 @@ export function GlobalSearchPage() {
               )}
             >
               <FolderOpen className="h-3.5 w-3.5" />
-              <span className="flex-1 text-left">
+              <span className="flex-1 text-start">
                 {t('files.global_search.group_by_project', {
                   defaultValue: 'Group by project',
                 })}

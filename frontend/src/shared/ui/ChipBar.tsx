@@ -75,7 +75,7 @@ export function ChipBar<T extends string>({
         <button
           type="button"
           onClick={onClear}
-          className="ml-1 text-xs text-content-tertiary hover:text-content-primary underline"
+          className="ms-1 text-xs text-content-tertiary hover:text-content-primary underline"
         >
           clear
         </button>

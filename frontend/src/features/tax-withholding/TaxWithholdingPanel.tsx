@@ -507,7 +507,7 @@ function PreviewResult({ result, regime }: { result: DeductionPreview; regime: R
           </p>
           {/* Prose the server wrote, rendered as it came. Unlike a validation
               finding these carry no i18n key, so there is nothing to look up. */}
-          <ul className="list-disc space-y-1 pl-5 text-sm text-content-secondary">
+          <ul className="list-disc space-y-1 ps-5 text-sm text-content-secondary">
             {result.reasons.map((reason, i) => (
               <li key={`${i}-${reason}`}>{reason}</li>
             ))}
@@ -733,7 +733,7 @@ function SchemesSection({
           {t('tax_withholding.schemes_title', { defaultValue: 'Schemes and the rates they apply' })}
         </h3>
         <Button size="sm" variant="secondary" onClick={onSeed} disabled={seeding}>
-          <Download className="mr-1 h-4 w-4" />
+          <Download className="me-1 h-4 w-4" />
           {t('tax_withholding.seed', { defaultValue: 'Install the shipped schemes' })}
         </Button>
       </div>
@@ -790,7 +790,7 @@ function SchemeCard({ regime }: { regime: Regime }) {
 
       <table className="mt-2 w-full text-sm">
         <thead>
-          <tr className="text-left text-xs uppercase tracking-wide text-content-tertiary">
+          <tr className="text-start text-xs uppercase tracking-wide text-content-tertiary">
             <th className="font-normal">{t('tax_withholding.band_col', { defaultValue: 'Band' })}</th>
             <th className="font-normal">{t('tax_withholding.rate_col', { defaultValue: 'Rate' })}</th>
             <th className="font-normal">
@@ -804,7 +804,7 @@ function SchemeCard({ regime }: { regime: Regime }) {
               <td className="py-0.5">
                 {band.label || band.code}
                 {band.code === regime.default_band_code && (
-                  <span className="ml-2 text-xs text-content-tertiary">
+                  <span className="ms-2 text-xs text-content-tertiary">
                     {t('tax_withholding.default_band', { defaultValue: 'default' })}
                   </span>
                 )}

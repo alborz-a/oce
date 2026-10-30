@@ -42,7 +42,7 @@ export function PaymentClockPage() {
               'Construction payment statutes give each application a timetable, and missing a step on it changes what is legally payable. This module keeps that timetable per application so the deadline is known before it passes rather than after.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('payment_clock.flow_step1', {
               defaultValue:

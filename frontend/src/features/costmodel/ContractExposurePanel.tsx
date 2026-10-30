@@ -288,22 +288,22 @@ export function ContractExposurePanel({ projectId, currency }: ContractExposureP
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b-2 border-border text-xs uppercase tracking-wider text-content-secondary">
-                  <th scope="col" className="py-3 pr-4 text-left font-semibold">
+                  <th scope="col" className="py-3 pe-4 text-start font-semibold">
                     {t('costmodel.exposure_col_group', { defaultValue: 'Cost group' })}
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right font-semibold">
+                  <th scope="col" className="px-4 py-3 text-end font-semibold">
                     {t('costmodel.exposure_col_budgeted', { defaultValue: 'Budgeted' })}
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right font-semibold">
+                  <th scope="col" className="px-4 py-3 text-end font-semibold">
                     {t('costmodel.exposure_col_committed', { defaultValue: 'Committed' })}
                   </th>
-                  <th scope="col" className="px-4 py-3 text-right font-semibold">
+                  <th scope="col" className="px-4 py-3 text-end font-semibold">
                     {t('costmodel.exposure_col_remaining', { defaultValue: 'Remaining' })}
                   </th>
                   <th scope="col" className="px-2 py-3 text-center font-semibold" style={{ minWidth: 96 }}>
                     {t('costmodel.exposure_col_ratio', { defaultValue: 'Committed %' })}
                   </th>
-                  <th scope="col" className="py-3 pl-4 text-right font-semibold">
+                  <th scope="col" className="py-3 ps-4 text-end font-semibold">
                     {t('costmodel.exposure_col_status', { defaultValue: 'Status' })}
                   </th>
                 </tr>
@@ -314,20 +314,20 @@ export function ContractExposurePanel({ projectId, currency }: ContractExposureP
                   const remNeg = Number(g.remaining_to_commit) < 0;
                   return (
                     <tr key={g.group} className="transition-colors hover:bg-surface-secondary/50">
-                      <td className="py-3.5 pr-4 font-medium text-content-primary">
+                      <td className="py-3.5 pe-4 font-medium text-content-primary">
                         <span>{labelFor(g.group)}</span>
                         {g.group && categoryLabels[g.group] && g.group !== categoryLabels[g.group] && (
                           <span className="block text-2xs font-normal text-content-tertiary">{g.group}</span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 text-right tabular-nums text-content-secondary">
+                      <td className="py-3.5 px-4 text-end tabular-nums text-content-secondary">
                         {fmtCurrency(g.budgeted, resolvedCurrency)}
                       </td>
-                      <td className="py-3.5 px-4 text-right tabular-nums text-content-secondary">
+                      <td className="py-3.5 px-4 text-end tabular-nums text-content-secondary">
                         {fmtCurrency(g.committed, resolvedCurrency)}
                       </td>
                       <td
-                        className={`py-3.5 px-4 text-right tabular-nums ${remNeg ? 'text-semantic-error' : 'text-content-secondary'}`}
+                        className={`py-3.5 px-4 text-end tabular-nums ${remNeg ? 'text-semantic-error' : 'text-content-secondary'}`}
                       >
                         {fmtCurrency(g.remaining_to_commit, resolvedCurrency)}
                       </td>
@@ -346,24 +346,24 @@ export function ContractExposurePanel({ projectId, currency }: ContractExposureP
                           </div>
                         </div>
                       </td>
-                      <td className="py-3.5 pl-4 text-right">{renderStatus(g, pct)}</td>
+                      <td className="py-3.5 ps-4 text-end">{renderStatus(g, pct)}</td>
                     </tr>
                   );
                 })}
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-border font-semibold">
-                  <td className="py-3.5 pr-4 text-content-primary">
+                  <td className="py-3.5 pe-4 text-content-primary">
                     {t('costmodel.exposure_total', { defaultValue: 'Project total' })}
                   </td>
-                  <td className="py-3.5 px-4 text-right tabular-nums text-content-primary">
+                  <td className="py-3.5 px-4 text-end tabular-nums text-content-primary">
                     {fmtCurrency(data?.total_budgeted, resolvedCurrency)}
                   </td>
-                  <td className="py-3.5 px-4 text-right tabular-nums text-content-primary">
+                  <td className="py-3.5 px-4 text-end tabular-nums text-content-primary">
                     {fmtCurrency(data?.total_committed, resolvedCurrency)}
                   </td>
                   <td
-                    className={`py-3.5 px-4 text-right tabular-nums ${remainingNegative ? 'text-semantic-error' : 'text-content-primary'}`}
+                    className={`py-3.5 px-4 text-end tabular-nums ${remainingNegative ? 'text-semantic-error' : 'text-content-primary'}`}
                   >
                     {fmtCurrency(data?.total_remaining_to_commit, resolvedCurrency)}
                   </td>
@@ -372,7 +372,7 @@ export function ContractExposurePanel({ projectId, currency }: ContractExposureP
                       {totalPct == null ? '-' : fmtPercent(totalPct, 0)}
                     </span>
                   </td>
-                  <td className="py-3.5 pl-4" />
+                  <td className="py-3.5 ps-4" />
                 </tr>
               </tfoot>
             </table>

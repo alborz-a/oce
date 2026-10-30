@@ -283,12 +283,12 @@ export function ExcelPasteModal({ open, onClose, onImport, loading }: ExcelPaste
                 <table className="w-full text-xs">
                   <thead className="bg-surface-secondary sticky top-0">
                     <tr>
-                      <th className="px-3 py-2 text-left font-semibold text-content-secondary">#</th>
-                      <th className="px-3 py-2 text-left font-semibold text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
+                      <th className="px-3 py-2 text-start font-semibold text-content-secondary">#</th>
+                      <th className="px-3 py-2 text-start font-semibold text-content-secondary">{t('boq.description', { defaultValue: 'Description' })}</th>
                       <th className="px-3 py-2 text-center font-semibold text-content-secondary">{t('boq.unit', { defaultValue: 'Unit' })}</th>
-                      <th className="px-3 py-2 text-right font-semibold text-content-secondary">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
-                      <th className="px-3 py-2 text-right font-semibold text-content-secondary">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
-                      <th className="px-3 py-2 text-right font-semibold text-content-secondary">{t('boq.total', { defaultValue: 'Total' })}</th>
+                      <th className="px-3 py-2 text-end font-semibold text-content-secondary">{t('boq.quantity', { defaultValue: 'Qty' })}</th>
+                      <th className="px-3 py-2 text-end font-semibold text-content-secondary">{t('boq.unit_rate', { defaultValue: 'Rate' })}</th>
+                      <th className="px-3 py-2 text-end font-semibold text-content-secondary">{t('boq.total', { defaultValue: 'Total' })}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border-light">
@@ -297,9 +297,9 @@ export function ExcelPasteModal({ open, onClose, onImport, loading }: ExcelPaste
                         <td className="px-3 py-1.5 font-mono text-content-tertiary">{r.ordinal}</td>
                         <td className="px-3 py-1.5 max-w-[300px] truncate">{r.description}</td>
                         <td className="px-3 py-1.5 text-center font-mono uppercase">{r.unit}</td>
-                        <td className="px-3 py-1.5 text-right tabular-nums">{r.quantity.toLocaleString(getNumberLocale())}</td>
-                        <td className="px-3 py-1.5 text-right tabular-nums">{r.unit_rate.toLocaleString(getNumberLocale(), { minimumFractionDigits: 2 })}</td>
-                        <td className="px-3 py-1.5 text-right tabular-nums font-medium">{(r.quantity * r.unit_rate).toLocaleString(getNumberLocale(), { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-1.5 text-end tabular-nums">{r.quantity.toLocaleString(getNumberLocale())}</td>
+                        <td className="px-3 py-1.5 text-end tabular-nums">{r.unit_rate.toLocaleString(getNumberLocale(), { minimumFractionDigits: 2 })}</td>
+                        <td className="px-3 py-1.5 text-end tabular-nums font-medium">{(r.quantity * r.unit_rate).toLocaleString(getNumberLocale(), { minimumFractionDigits: 2 })}</td>
                       </tr>
                     ))}
                   </tbody>

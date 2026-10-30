@@ -429,7 +429,7 @@ export function ProgressClaimDetailPage() {
       <Card padding="sm">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-content-secondary">
           {t('contracts.claim_lines', { defaultValue: 'Claim lines' })}
-          <span className="ml-2 normal-case text-content-tertiary">
+          <span className="ms-2 normal-case text-content-tertiary">
             ({(linesQ.data ?? []).length})
           </span>
         </p>

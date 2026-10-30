@@ -148,7 +148,7 @@ export function PaymentClockPanel() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Button size="sm" onClick={() => setCreating((v) => !v)}>
-          <Plus className="mr-1 h-4 w-4" />
+          <Plus className="me-1 h-4 w-4" />
           {t('payment_clock.open_clock', { defaultValue: 'Open a clock' })}
         </Button>
         <span className="text-sm text-content-secondary">
@@ -201,7 +201,7 @@ export function PaymentClockPanel() {
                     type="button"
                     onClick={() => setSelectedId(app.id)}
                     aria-current={selectedId === app.id}
-                    className={`flex w-full flex-col gap-1 p-3 text-left hover:bg-surface-secondary ${
+                    className={`flex w-full flex-col gap-1 p-3 text-start hover:bg-surface-secondary ${
                       selectedId === app.id ? 'bg-surface-secondary' : ''
                     }`}
                   >
@@ -273,7 +273,7 @@ export function PaymentClockPanel() {
               onClick={() => refresh.mutate()}
               loading={refresh.isPending}
             >
-              <RefreshCw className="mr-1 h-4 w-4" />
+              <RefreshCw className="me-1 h-4 w-4" />
               {t('payment_clock.register_refresh', { defaultValue: 'Bring up to today' })}
             </Button>
           </div>
@@ -382,7 +382,7 @@ function ClockDetail({
 
       <div className="flex gap-2">
         <Button size="sm" variant="secondary" onClick={() => onRecompute(false)} disabled={recomputing}>
-          <RefreshCw className="mr-1 h-4 w-4" />
+          <RefreshCw className="me-1 h-4 w-4" />
           {t('payment_clock.recompute', { defaultValue: 'Recompute dates' })}
         </Button>
         {app.dates_overridden && (
@@ -447,7 +447,7 @@ function ClockDetail({
           <summary className="cursor-pointer text-content-secondary">
             {t('payment_clock.derivation_title', { defaultValue: 'How these dates were derived' })}
           </summary>
-          <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-content-secondary">
+          <ol className="mt-1 list-decimal space-y-0.5 ps-5 text-content-secondary">
             {clock.derivation.map((line, i) => (
               <li key={`${i}-${line}`}>{line}</li>
             ))}

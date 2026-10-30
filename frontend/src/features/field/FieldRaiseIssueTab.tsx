@@ -403,7 +403,7 @@ export function FieldRaiseIssueTab({
               type="button"
               onClick={clearPhoto}
               aria-label={t('field.issue_photo_remove', { defaultValue: 'Remove photo' })}
-              className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/60 text-white"
+              className="absolute end-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/60 text-white"
             >
               <X size={20} aria-hidden="true" />
             </button>

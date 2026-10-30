@@ -391,7 +391,7 @@ function PortalHomeContent() {
                 {typeof it.count === 'number' && it.count > 0 ? (
                   <span
                     className={clsx(
-                      'ml-0.5 rounded-full px-1.5 text-2xs font-semibold',
+                      'ms-0.5 rounded-full px-1.5 text-2xs font-semibold',
                       tab === it.id
                         ? 'bg-oe-blue-subtle text-oe-blue-text'
                         : 'bg-surface-secondary text-content-tertiary',

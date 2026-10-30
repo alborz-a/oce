@@ -32,7 +32,7 @@ export function DependencyWarnings({ warnings }: DependencyWarningsProps) {
         <AlertTriangle size={15} />
         {t('aiest.dep.heading', { defaultValue: 'Sequence notes (non-blocking)' })}
       </div>
-      <ul className="mt-1.5 space-y-1 pl-6 text-xs text-[#92400e] dark:text-amber-200/90">
+      <ul className="mt-1.5 space-y-1 ps-6 text-xs text-[#92400e] dark:text-amber-200/90">
         {mapped.map((w) => (
           <li key={w.id} className="list-disc">
             {t(w.i18nKey, { defaultValue: w.defaultValue, ...w.params })}

@@ -168,7 +168,7 @@ export function SyncReportDrawer({
           >
             <RefreshCw
               className={clsx(
-                'mr-1 h-3 w-3',
+                'me-1 h-3 w-3',
                 healMutation.isPending && 'animate-spin',
               )}
             />

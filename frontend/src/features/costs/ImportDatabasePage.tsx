@@ -903,8 +903,8 @@ function CWICRDatabaseGrid(_props: { onLoadDatabase: (file: File) => void }) {
                 ) : (
                   <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-oe-blue-subtle">
                     <Database size={20} className="text-oe-blue" />
-                    <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-oe-blue animate-ping" />
-                    <div className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-oe-blue" />
+                    <div className="absolute -top-0.5 -end-0.5 h-3 w-3 rounded-full bg-oe-blue animate-ping" />
+                    <div className="absolute -top-0.5 -end-0.5 h-3 w-3 rounded-full bg-oe-blue" />
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
@@ -1010,7 +1010,7 @@ function CWICRDatabaseGrid(_props: { onLoadDatabase: (file: File) => void }) {
                 <span className="flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-green-400" /> {t('costs.materials', { defaultValue: 'Materials' })}
                 </span>
-                <span className="ml-auto font-medium text-content-secondary">
+                <span className="ms-auto font-medium text-content-secondary">
                   {result ? t('costs.available_offline', { defaultValue: 'Available offline' }) : t('costs.one_time_download', { defaultValue: 'One-time download' })}
                 </span>
               </div>
@@ -1255,9 +1255,9 @@ export function LoadedDatabasesSection() {
         <div className="rounded-lg border border-border-light overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-surface-tertiary text-left">
+              <tr className="bg-surface-tertiary text-start">
                 <th className="px-3 py-2 text-xs font-medium text-content-secondary">{t('costs.col_region', { defaultValue: 'Region' })}</th>
-                <th className="px-3 py-2 text-xs font-medium text-content-secondary text-right">{t('costs.col_items', { defaultValue: 'Items' })}</th>
+                <th className="px-3 py-2 text-xs font-medium text-content-secondary text-end">{t('costs.col_items', { defaultValue: 'Items' })}</th>
                 <th className="px-3 py-2 text-xs font-medium text-content-secondary text-center">{t('costs.col_status', { defaultValue: 'Status' })}</th>
                 <th className="px-3 py-2 text-xs font-medium text-content-secondary text-center">{t('costs.col_vector', { defaultValue: 'Vector' })}</th>
                 <th className="px-3 py-2 w-10" />
@@ -1296,7 +1296,7 @@ export function LoadedDatabasesSection() {
                             {regionLabel}
                           </span>
                           {db && (
-                            <span className="text-2xs text-content-tertiary ml-1.5">
+                            <span className="text-2xs text-content-tertiary ms-1.5">
                               {db.currency}
                             </span>
                           )}
@@ -1312,17 +1312,17 @@ export function LoadedDatabasesSection() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-right tabular-nums text-sm font-semibold text-content-primary">
+                    <td className="px-3 py-2.5 text-end tabular-nums text-sm font-semibold text-content-primary">
                       {rs.count.toLocaleString(getNumberLocale())}
                     </td>
                     <td className="px-3 py-2.5 text-center">
                       {isActive ? (
                         <Badge variant="blue" size="sm">
-                          <Star size={10} className="fill-current mr-0.5" /> Active
+                          <Star size={10} className="fill-current me-0.5" /> Active
                         </Badge>
                       ) : (
                         <Badge variant="success" size="sm">
-                          <CheckCircle2 size={10} className="mr-0.5" /> Loaded
+                          <CheckCircle2 size={10} className="me-0.5" /> Loaded
                         </Badge>
                       )}
                     </td>
@@ -1933,7 +1933,7 @@ export function VectorDatabaseSection() {
                       type="button"
                       onClick={() => handleLoadVectors(db)}
                       disabled={isLoading}
-                      className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-left transition-all duration-normal ease-oe active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue disabled:cursor-default"
+                      className="flex items-center gap-3 rounded-xl px-3.5 py-3 text-start transition-all duration-normal ease-oe active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue disabled:cursor-default"
                     >
                       <MiniFlag code={db.flagId} />
                       <div className="min-w-0 flex-1">
@@ -2102,8 +2102,8 @@ export function VectorDatabaseSection() {
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 text-white">
                         <Sparkles size={16} />
-                        <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-purple-400 animate-ping" />
-                        <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-purple-500" />
+                        <span className="absolute -top-0.5 -end-0.5 h-2 w-2 rounded-full bg-purple-400 animate-ping" />
+                        <span className="absolute -top-0.5 -end-0.5 h-2 w-2 rounded-full bg-purple-500" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -2478,7 +2478,7 @@ function ColumnMappingPanel({
           <div className="rounded-xl border border-border-light overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="bg-surface-tertiary text-left">
+                <tr className="bg-surface-tertiary text-start">
                   {data.headers.map((header, ci) => (
                     <th
                       key={`head-${ci}`}
@@ -2649,7 +2649,7 @@ function ColumnMappingPanel({
         {/* Inline blocker message - explains exactly why Import is disabled
             instead of leaving a dead button. */}
         {unmappedRequired.length > 0 && (
-          <span className="mr-auto inline-flex items-center gap-1.5 text-xs text-semantic-error">
+          <span className="me-auto inline-flex items-center gap-1.5 text-xs text-semantic-error">
             <AlertTriangle size={13} className="shrink-0" />
             {t('costs_catalogs.import_required_missing', {
               defaultValue: 'Map the required columns before importing: {{fields}}.',
@@ -3184,7 +3184,7 @@ export function ImportDatabasePage() {
                   })}
                 </p>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-medium text-content-secondary mr-1">
+                  <span className="text-xs font-medium text-content-secondary me-1">
                     {t('costs.import_templates_label', { defaultValue: 'Download a template:' })}
                   </span>
                   <a

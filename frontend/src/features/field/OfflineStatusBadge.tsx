@@ -55,7 +55,7 @@ export function OfflineStatusBadge({
         {pending > 0 && (
           <span
             data-testid="field-pending-count"
-            className="ml-0.5 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-amber-800 px-1.5 text-[11px] font-bold text-white"
+            className="ms-0.5 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-amber-800 px-1.5 text-[11px] font-bold text-white"
           >
             {pending}
           </span>
@@ -86,7 +86,7 @@ export function OfflineStatusBadge({
         {pending > 0 && (
           <span
             data-testid="field-pending-count"
-            className="ml-0.5 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-sky-700 px-1.5 text-[11px] font-bold text-white"
+            className="ms-0.5 inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-sky-700 px-1.5 text-[11px] font-bold text-white"
           >
             {pending}
           </span>

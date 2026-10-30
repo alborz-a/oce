@@ -59,7 +59,7 @@ export function RatingStars({ score }: { score: number | string | null | undefin
           )}
         />
       ))}
-      <span className="ml-1.5 text-xs text-content-secondary tabular-nums">
+      <span className="ms-1.5 text-xs text-content-secondary tabular-nums">
         {fmtFixed(num, 0)}/{fmtFixed(RATING_SCALE_MAX, 0)}
       </span>
     </span>

@@ -128,7 +128,7 @@ export function RecentlyViewedStrip({ projectId, onOpen }: RecentlyViewedStripPr
         <button
           type="button"
           onClick={clear}
-          className="ml-auto text-2xs text-content-quaternary hover:text-content-secondary transition-colors"
+          className="ms-auto text-2xs text-content-quaternary hover:text-content-secondary transition-colors"
         >
           {t('files.recent.clear', { defaultValue: 'Clear' })}
         </button>
@@ -158,7 +158,7 @@ function RecentChip({ item, onOpen, onRemove }: RecentChipProps) {
   return (
     <div
       className={clsx(
-        'group relative shrink-0 inline-flex items-center gap-1.5 h-8 pl-2.5 pr-1.5',
+        'group relative shrink-0 inline-flex items-center gap-1.5 h-8 ps-2.5 pe-1.5',
         'rounded-full border border-border-light bg-surface-elevated',
         'hover:border-oe-blue/40 hover:bg-surface-primary transition-colors',
       )}

@@ -100,7 +100,7 @@ export function renderTaggedText(text: string): React.ReactNode {
     const items = listBuffer;
     listBuffer = [];
     blocks.push(
-      <ul key={`ul-${blockKey++}`} className="list-disc space-y-0.5 pl-5">
+      <ul key={`ul-${blockKey++}`} className="list-disc space-y-0.5 ps-5">
         {items.map((item, i) => (
           <li key={i}>{renderInline(item, `li-${blockKey}-${i}`)}</li>
         ))}

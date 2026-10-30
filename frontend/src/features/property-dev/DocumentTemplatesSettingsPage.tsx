@@ -320,7 +320,7 @@ export function DocumentTemplatesSettingsPage() {
               <button
                 type="button"
                 onClick={() => setLocaleEditor('__new__')}
-                className="ml-1 rounded-full border border-dashed border-oe-blue/40 px-2 py-0.5 text-[11px] font-medium text-oe-blue hover:bg-oe-blue/5"
+                className="ms-1 rounded-full border border-dashed border-oe-blue/40 px-2 py-0.5 text-[11px] font-medium text-oe-blue hover:bg-oe-blue/5"
                 data-testid="open-locale-editor-new"
                 title={t('property_dev.doc_templates.add_locale_hint', {
                   defaultValue:
@@ -811,7 +811,7 @@ function UploadCustomTemplateForm({
             type="file"
             accept={accept}
             onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
-            className="block w-full text-xs file:mr-2 file:rounded-md file:border-0 file:bg-oe-blue/10 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-oe-blue hover:file:bg-oe-blue/20"
+            className="block w-full text-xs file:me-2 file:rounded-md file:border-0 file:bg-oe-blue/10 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-oe-blue hover:file:bg-oe-blue/20"
             data-testid="custom-upload-file"
           />
         </div>
@@ -1165,7 +1165,7 @@ function TemplateCard({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
             <div>
               <label className="block text-[10px] font-medium uppercase tracking-wide text-content-tertiary mb-1">
-                <Globe2 size={10} className="mr-1 inline" />
+                <Globe2 size={10} className="me-1 inline" />
                 {t('property_dev.doc_templates.locale', {
                   defaultValue: 'Locale',
                 })}
@@ -1187,7 +1187,7 @@ function TemplateCard({
                 htmlFor={`tpl-regulator-${docTypeKey}`}
                 className="block text-[10px] font-medium uppercase tracking-wide text-content-tertiary mb-1"
               >
-                <ShieldAlert size={10} className="mr-1 inline" />
+                <ShieldAlert size={10} className="me-1 inline" />
                 {t('property_dev.doc_templates.regulator', {
                   defaultValue: 'Regulator',
                 })}
@@ -1968,7 +1968,7 @@ function LocaleStatusList({
             >
               <Badge variant={variant}>
                 <span className="font-semibold">{s.code.toUpperCase()}</span>
-                <span className="ml-1 text-[10px] font-normal opacity-80">
+                <span className="ms-1 text-[10px] font-normal opacity-80">
                   {label}
                 </span>
               </Badge>

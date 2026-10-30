@@ -218,9 +218,9 @@ function InlineRespondForm({
           disabled={isPending || !response.trim()}
         >
           {isPending ? (
-            <Loader2 size={14} className="mr-1.5 animate-spin" />
+            <Loader2 size={14} className="me-1.5 animate-spin" />
           ) : (
-            <MessageSquare size={14} className="mr-1.5" />
+            <MessageSquare size={14} className="me-1.5" />
           )}
           {t('rfi.submit_response', { defaultValue: 'Submit Response' })}
         </Button>
@@ -612,7 +612,7 @@ export function RFIDetailPage() {
             </Badge>
             {isOverdue && (
               <Badge variant="error" size="md">
-                <AlertTriangle size={12} className="mr-1 inline" />
+                <AlertTriangle size={12} className="me-1 inline" />
                 {overdueDelta !== null && overdueDelta > 0
                   ? t('rfi.overdue_by_days', {
                       defaultValue: 'Overdue by {{count}} days',
@@ -934,7 +934,7 @@ export function RFIDetailPage() {
                         />
                         <ActivityStatusToken status={entry.to_status} />
                       </div>
-                      <div className="ml-auto flex flex-wrap items-center gap-x-2 text-xs text-content-tertiary">
+                      <div className="ms-auto flex flex-wrap items-center gap-x-2 text-xs text-content-tertiary">
                         {actor && actor !== '—' && (
                           <span className="text-content-secondary">
                             {t('rfi.history_by', {

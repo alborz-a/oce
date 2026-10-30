@@ -38,7 +38,7 @@ function toNum(v: number | string | null | undefined): number {
 }
 
 const inputCls =
-  'h-8 w-full rounded-md border border-border bg-surface-primary px-2 text-right text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
+  'h-8 w-full rounded-md border border-border bg-surface-primary px-2 text-end text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
 
 export interface ProgressClaimLineTableProps {
   claimId: string;
@@ -125,19 +125,19 @@ export function ProgressClaimLineTable({
       <table className="w-full text-sm" data-testid="claim-line-table">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('contracts.line', { defaultValue: 'Line' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('contracts.qty', { defaultValue: 'Qty' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('contracts.pct_complete', { defaultValue: '% complete' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('contracts.period_value', { defaultValue: 'Period value' })}
             </th>
-            {editable && <th className="px-3 py-2 text-right" />}
+            {editable && <th className="px-3 py-2 text-end" />}
           </tr>
         </thead>
         <tbody>
@@ -269,7 +269,7 @@ function ClaimLineAddRow({
           aria-label={t('contracts.period_value', { defaultValue: 'Period value' })}
         />
       </td>
-      <td className="px-3 py-2 text-right">
+      <td className="px-3 py-2 text-end">
         <div className="flex justify-end gap-1">
           <Button
             size="sm"
@@ -351,10 +351,10 @@ function ClaimLineRow({
       <td className="px-3 py-2 font-mono text-xs text-content-secondary">
         {clMap.get(line.contract_line_id)?.description || clMap.get(line.contract_line_id)?.code || line.contract_line_id.slice(0, 8)}
       </td>
-      <td className="px-3 py-2 text-right text-content-secondary">
+      <td className="px-3 py-2 text-end text-content-secondary">
         {toNum(line.period_completed_qty).toLocaleString(getIntlLocale())}
       </td>
-      <td className="px-3 py-2 text-right">
+      <td className="px-3 py-2 text-end">
         {editing ? (
           <input
             type="number"
@@ -370,7 +370,7 @@ function ClaimLineRow({
           fmtPercent(toNum(line.period_completed_pct), 2)
         )}
       </td>
-      <td className="px-3 py-2 text-right font-medium">
+      <td className="px-3 py-2 text-end font-medium">
         {editing ? (
           <input
             type="number"
@@ -389,7 +389,7 @@ function ClaimLineRow({
         )}
       </td>
       {editable && (
-        <td className="px-3 py-2 text-right">
+        <td className="px-3 py-2 text-end">
           {editing ? (
             <div className="flex justify-end gap-1">
               <Button

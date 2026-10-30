@@ -86,7 +86,7 @@ export function FederatedResultsTable({
             {orderedColumns.map((col) => (
               <th
                 key={col}
-                className="px-3 py-2 text-left font-medium"
+                className="px-3 py-2 text-start font-medium"
                 data-testid={`federation-results-th-${col}`}
               >
                 {formatHeader(col, t)}

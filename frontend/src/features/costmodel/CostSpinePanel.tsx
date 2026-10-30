@@ -231,7 +231,7 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr]">
           {/* Tree */}
-          <div className="border-b border-border-light p-3 lg:border-b-0 lg:border-r">
+          <div className="border-b border-border-light p-3 lg:border-b-0 lg:border-e">
             <ControlAccountTree
               accounts={data?.accounts ?? []}
               selectedId={selectedAccountId}
@@ -244,12 +244,12 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-sm">
               <thead>
-                <tr className="border-b border-border-light text-left text-xs text-content-tertiary">
+                <tr className="border-b border-border-light text-start text-xs text-content-tertiary">
                   <th scope="col" className="px-4 py-2 font-medium">
                     {t('costmodel.spine.col_line', { defaultValue: 'Cost line' })}
                   </th>
                   {columns.map((col) => (
-                    <th key={col.key} scope="col" className="px-4 py-2 text-right font-medium">
+                    <th key={col.key} scope="col" className="px-4 py-2 text-end font-medium">
                       {col.label}
                     </th>
                   ))}
@@ -264,7 +264,7 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
                       <tr className="bg-surface-secondary/50">
                         <th
                           scope="colgroup"
-                          className="px-4 py-1.5 text-left text-xs font-semibold text-content-primary"
+                          className="px-4 py-1.5 text-start text-xs font-semibold text-content-primary"
                         >
                           {group.account ? (
                             <span className="inline-flex items-center gap-2">
@@ -280,7 +280,7 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
                         {columns.map((col) => (
                           <td
                             key={col.key}
-                            className={`px-4 py-1.5 text-right text-xs font-semibold tabular-nums ${
+                            className={`px-4 py-1.5 text-end text-xs font-semibold tabular-nums ${
                               col.key === 'variance_estimate_vs_budget'
                                 ? varianceColor(
                                     String(sumAmounts(group.lines.map((l) => l[col.key]))),
@@ -323,7 +323,7 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
                           {columns.map((col) => (
                             <td
                               key={col.key}
-                              className={`px-4 py-2 text-right tabular-nums ${
+                              className={`px-4 py-2 text-end tabular-nums ${
                                 col.key === 'variance_estimate_vs_budget'
                                   ? varianceColor(line[col.key])
                                   : 'text-content-primary'
@@ -343,13 +343,13 @@ export function CostSpinePanel({ projectId, currency, boqId }: CostSpinePanelPro
               {totals && !data?.mixed_currency && (
                 <tfoot>
                   <tr className="border-t-2 border-border bg-surface-secondary/60">
-                    <th scope="row" className="px-4 py-2 text-left text-xs font-semibold text-content-primary">
+                    <th scope="row" className="px-4 py-2 text-start text-xs font-semibold text-content-primary">
                       {t('costmodel.spine.total', { defaultValue: 'Project total' })}
                     </th>
                     {columns.map((col) => (
                       <td
                         key={col.key}
-                        className={`px-4 py-2 text-right text-xs font-bold tabular-nums ${
+                        className={`px-4 py-2 text-end text-xs font-bold tabular-nums ${
                           col.key === 'variance_estimate_vs_budget'
                             ? varianceColor(totals[col.key])
                             : 'text-content-primary'

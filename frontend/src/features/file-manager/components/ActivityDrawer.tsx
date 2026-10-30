@@ -234,7 +234,7 @@ export function ActivityDrawer({
         aria-labelledby="activity-drawer-title"
         data-testid="activity-drawer"
         className={clsx(
-          'fixed top-0 right-0 z-50 h-full w-[360px] max-w-[100vw]',
+          'fixed top-0 end-0 z-50 h-full w-[360px] max-w-[100vw]',
           'border-s border-border-light bg-surface-elevated shadow-xl',
           'transition-transform duration-200 ease-oe',
           'flex flex-col',

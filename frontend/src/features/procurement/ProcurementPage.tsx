@@ -1405,7 +1405,7 @@ function PurchaseOrdersTab({
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-content-secondary">{t('procurement.tax', { defaultValue: 'Tax' })}</span>
                   <div className="relative w-32">
-                    <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5 text-2xs text-content-tertiary font-medium">
+                    <span className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-2.5 text-2xs text-content-tertiary font-medium">
                       {poForm.currency || projectCurrency}
                     </span>
                     <input
@@ -1415,7 +1415,7 @@ function PurchaseOrdersTab({
                       disabled={figuresLocked}
                       aria-label={t('procurement.tax', { defaultValue: 'Tax' })}
                       onChange={(e) => setPoTaxInput(e.target.value)}
-                      className={clsx(inputCls, 'h-8 text-xs pl-10 text-right')}
+                      className={clsx(inputCls, 'h-8 text-xs ps-10 text-end')}
                       placeholder="0.00"
                     />
                   </div>
@@ -1545,11 +1545,11 @@ function PurchaseOrdersTab({
               disabled={createPOMut.isPending || editPOMut.isPending || !canSubmitPO}
             >
               {createPOMut.isPending || editPOMut.isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : isEdit ? (
-                <Pencil size={16} className="mr-1.5" />
+                <Pencil size={16} className="me-1.5" />
               ) : (
-                <Plus size={16} className="mr-1.5" />
+                <Plus size={16} className="me-1.5" />
               )}
               <span>
                 {isEdit
@@ -1569,7 +1569,7 @@ function PurchaseOrdersTab({
       {/* Search + New PO button */}
       <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-sm">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={16} />
           </div>
           <input
@@ -1645,25 +1645,25 @@ function PurchaseOrdersTab({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.po_number', { defaultValue: 'PO #' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.vendor', { defaultValue: 'Vendor' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.issue_date', { defaultValue: 'Date' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.delivery_date', { defaultValue: 'Delivery' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('procurement.amount', { defaultValue: 'Amount' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
                 {t('common.status', { defaultValue: 'Status' })}
               </th>
-              <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                 {t('common.actions', { defaultValue: 'Actions' })}
               </th>
             </tr>
@@ -1723,7 +1723,7 @@ function PurchaseOrdersTab({
                             name: po.vendor_name,
                           })
                         }
-                        className="text-left text-oe-blue hover:underline focus:underline focus:outline-none"
+                        className="text-start text-oe-blue hover:underline focus:underline focus:outline-none"
                         title={t('procurement.open_scorecard', {
                           defaultValue: 'Open supplier scorecard',
                         })}
@@ -1751,7 +1751,7 @@ function PurchaseOrdersTab({
                     />
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   {/* Money bug fix: feed MoneyDisplay the REAL wire fields
                       `amount_total` (Decimal string) + `currency_code`. The
                       old `po.total_amount`/`po.currency` did not exist on the
@@ -1793,7 +1793,7 @@ function PurchaseOrdersTab({
                     <RetainageBadge percent={po.retention_percent} />
                   </div>
                 </td>
-                <td className="px-4 py-3 text-right">
+                <td className="px-4 py-3 text-end">
                   {isManager && (
                   <div className="flex items-center justify-end gap-1 flex-wrap">
                     <Button
@@ -1830,9 +1830,9 @@ function PurchaseOrdersTab({
                         })}
                       >
                         {approvePOMut.isPending && approvePOMut.variables === po.id ? (
-                          <Loader2 size={14} className="animate-spin mr-1" />
+                          <Loader2 size={14} className="animate-spin me-1" />
                         ) : (
-                          <CheckCircle2 size={14} className="mr-1" />
+                          <CheckCircle2 size={14} className="me-1" />
                         )}
                         {t('procurement.action_approve_short', { defaultValue: 'Approve' })}
                       </Button>
@@ -1847,9 +1847,9 @@ function PurchaseOrdersTab({
                         aria-label={t('procurement.action_issue', { defaultValue: 'Issue PO' })}
                       >
                         {issuePOMut.isPending && issuePOMut.variables === po.id ? (
-                          <Loader2 size={14} className="animate-spin mr-1" />
+                          <Loader2 size={14} className="animate-spin me-1" />
                         ) : (
-                          <Send size={14} className="mr-1" />
+                          <Send size={14} className="me-1" />
                         )}
                         {t('procurement.action_issue_short', { defaultValue: 'Issue' })}
                       </Button>
@@ -1872,7 +1872,7 @@ function PurchaseOrdersTab({
                       >
                         <CheckCircle2
                           size={14}
-                          className={po.supplier_acknowledged_at ? 'mr-1 text-semantic-success' : 'mr-1'}
+                          className={po.supplier_acknowledged_at ? 'me-1 text-semantic-success' : 'me-1'}
                         />
                         {po.supplier_acknowledged_at
                           ? t('procurement.supplier_confirmed_short', { defaultValue: 'Confirmed' })
@@ -1903,7 +1903,7 @@ function PurchaseOrdersTab({
                                 })
                           }
                         >
-                          <FileText size={14} className="mr-1" />
+                          <FileText size={14} className="me-1" />
                           {t('procurement.create_invoice_short', { defaultValue: 'Invoice' })}
                         </Button>
                       );
@@ -1920,7 +1920,7 @@ function PurchaseOrdersTab({
                           defaultValue: 'Manage retainage',
                         })}
                       >
-                        <Wallet size={14} className="mr-1" />
+                        <Wallet size={14} className="me-1" />
                         {t('procurement.retainage_short', { defaultValue: 'Retainage' })}
                       </Button>
                     )}
@@ -2185,7 +2185,7 @@ function GoodsReceiptsTab({
       {/* Search + Record Delivery */}
       <div className="p-4 border-b border-border-light flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="relative flex-1 max-w-sm">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
             <Search size={16} />
           </div>
           <input
@@ -2220,13 +2220,13 @@ function GoodsReceiptsTab({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border-light bg-surface-secondary/50">
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.gr_ref', { defaultValue: 'GR Reference' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.po_ref', { defaultValue: 'PO Reference' })}
               </th>
-              <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+              <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                 {t('procurement.receipt_date', { defaultValue: 'Date' })}
               </th>
               <th className="px-4 py-3 text-center font-medium text-content-tertiary">
@@ -2236,7 +2236,7 @@ function GoodsReceiptsTab({
                 {t('common.status', { defaultValue: 'Status' })}
               </th>
               {canReceive && (
-                <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                   {t('common.actions', { defaultValue: 'Actions' })}
                 </th>
               )}
@@ -2289,7 +2289,7 @@ function GoodsReceiptsTab({
                   </Badge>
                 </td>
                 {canReceive && (
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-end">
                     {/* A draft goods receipt is awaiting confirmation - the
                         load-bearing step that rolls the PO up and moves the
                         budget from committed to actual. Already-confirmed
@@ -2308,9 +2308,9 @@ function GoodsReceiptsTab({
                         })}
                       >
                         {confirmGRMut.isPending && confirmGRMut.variables === gr.id ? (
-                          <Loader2 size={14} className="animate-spin mr-1" />
+                          <Loader2 size={14} className="animate-spin me-1" />
                         ) : (
-                          <CheckCircle2 size={14} className="mr-1" />
+                          <CheckCircle2 size={14} className="me-1" />
                         )}
                         {t('procurement.gr_confirm_short', { defaultValue: 'Confirm' })}
                       </Button>

@@ -978,11 +978,11 @@ function LetterheadPreview({
     ? 'text-center'
     : logo
       ? align === 'right'
-        ? 'text-left'
-        : 'text-right'
+        ? 'text-start'
+        : 'text-end'
       : align === 'right'
-        ? 'text-right'
-        : 'text-left';
+        ? 'text-end'
+        : 'text-start';
 
   const notice = (text: string, testId?: string) => (
     <p

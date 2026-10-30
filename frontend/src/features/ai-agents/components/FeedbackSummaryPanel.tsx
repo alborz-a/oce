@@ -60,7 +60,7 @@ function SurfaceRow({ row }: { row: SurfaceFeedback }): JSX.Element {
             style={{ width: `${percent ?? 0}%` }}
           />
         </div>
-        <span className="w-9 shrink-0 text-right text-2xs font-medium tabular-nums text-content-secondary">
+        <span className="w-9 shrink-0 text-end text-2xs font-medium tabular-nums text-content-secondary">
           {percent === null ? '—' : `${percent}%`}
         </span>
       </div>
@@ -116,7 +116,7 @@ export function FeedbackSummaryPanel({ summary, loading }: FeedbackSummaryPanelP
             <span className="text-xs text-content-tertiary">
               {t('agents.feedback.overall_correct', { defaultValue: 'marked correct' })}
             </span>
-            <span className="ml-auto text-2xs text-content-tertiary">
+            <span className="ms-auto text-2xs text-content-tertiary">
               {t('agents.feedback.total_verdicts', {
                 defaultValue: '{{count}} verdict',
                 defaultValue_plural: '{{count}} verdicts',

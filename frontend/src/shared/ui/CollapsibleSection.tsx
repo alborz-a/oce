@@ -131,7 +131,7 @@ export function CollapsibleSection({
         onClick={collapse}
         aria-expanded
         aria-controls={bodyId}
-        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-secondary/40"
+        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-start transition-colors hover:bg-surface-secondary/40"
       >
         <span className="flex min-w-0 items-center gap-1.5">
           {icon}

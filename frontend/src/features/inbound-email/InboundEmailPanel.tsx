@@ -320,7 +320,7 @@ function DelaySignals({ signals }: { signals: DelaySignal[] }) {
                   defaultValue: 'Starter activities for the fragnet',
                 })}
               </p>
-              <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-content-secondary">
+              <ul className="mt-1 list-disc space-y-0.5 ps-5 text-sm text-content-secondary">
                 {signal.suggested_activities.map((activity) => (
                   <li key={activity}>{activity}</li>
                 ))}

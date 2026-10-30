@@ -250,7 +250,7 @@ export function CapacityPlanningPage() {
                         {/* Resource label — links to the resource detail in
                             Resources & Crew so a red over-allocated row can be
                             opened where its bookings are managed. */}
-                        <div className="flex min-w-0 items-center gap-2 pr-2">
+                        <div className="flex min-w-0 items-center gap-2 pe-2">
                           <Icon size={15} className="shrink-0 text-content-tertiary" />
                           <div className="min-w-0">
                             <div className="flex items-center gap-1.5">
@@ -261,7 +261,7 @@ export function CapacityPlanningPage() {
                                     `/resources?resourceId=${encodeURIComponent(row.resource_id)}`,
                                   )
                                 }
-                                className="truncate rounded text-left text-sm font-medium text-content-primary hover:text-oe-blue hover:underline focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+                                className="truncate rounded text-start text-sm font-medium text-content-primary hover:text-oe-blue hover:underline focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
                                 title={t('capacity.open_resource', {
                                   defaultValue: 'Open in Resources & Crew',
                                 })}

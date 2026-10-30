@@ -601,7 +601,7 @@ function ResultRow({
     >
       <button
         onClick={onToggle}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+        className="flex w-full items-center gap-3 px-4 py-3 text-start"
         title={tooltip}
         aria-expanded={expanded}
         aria-label={`${result.rule_name}: ${statusLabel}`}

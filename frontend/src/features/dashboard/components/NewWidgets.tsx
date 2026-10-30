@@ -477,7 +477,7 @@ export function BudgetVarianceWidget({ projects }: { projects?: ProjectRef[] }) 
                 </p>
               </div>
               <Badge variant={b.pct > 20 ? 'error' : 'warning'} size="sm">
-                <TrendingUp size={11} className="mr-1" />
+                <TrendingUp size={11} className="me-1" />
                 +{b.pct}%
               </Badge>
             </li>

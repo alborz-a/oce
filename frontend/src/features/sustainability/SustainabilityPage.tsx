@@ -606,24 +606,24 @@ export function SustainabilityPage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-border-light">
-                          <th className="py-2 pr-4 text-left text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_category', { defaultValue: 'Category' })}</th>
-                          <th className="py-2 px-4 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_positions', { defaultValue: 'Positions' })}</th>
-                          <th className="py-2 px-4 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary">%</th>
-                          <th className="py-2 pl-4 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_co2', { defaultValue: 'CO2 (t)' })}</th>
+                          <th className="py-2 pe-4 text-start text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_category', { defaultValue: 'Category' })}</th>
+                          <th className="py-2 px-4 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_positions', { defaultValue: 'Positions' })}</th>
+                          <th className="py-2 px-4 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary">%</th>
+                          <th className="py-2 ps-4 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_co2', { defaultValue: 'CO2 (t)' })}</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border-light">
                         {data.breakdown.map((item, i) => (
                           <tr key={item.category}>
-                            <td className="py-2.5 pr-4">
+                            <td className="py-2.5 pe-4">
                               <div className="flex items-center gap-2">
                                 <div className="h-3 w-3 rounded-sm shrink-0" style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }} />
                                 <span className="text-content-primary font-medium">{item.material}</span>
                               </div>
                             </td>
-                            <td className="py-2.5 px-4 text-right tabular-nums text-content-secondary">{item.positions_count}</td>
-                            <td className="py-2.5 px-4 text-right tabular-nums text-content-secondary">{fmtPercent(item.percentage)}</td>
-                            <td className="py-2.5 pl-4 text-right tabular-nums font-medium text-content-primary">
+                            <td className="py-2.5 px-4 text-end tabular-nums text-content-secondary">{item.positions_count}</td>
+                            <td className="py-2.5 px-4 text-end tabular-nums text-content-secondary">{fmtPercent(item.percentage)}</td>
+                            <td className="py-2.5 ps-4 text-end tabular-nums font-medium text-content-primary">
                               {/* ABSOLUTE CO2 mass - kept in t CO2e (EN 15804 standard) */}
                               {(item.co2_kg / 1000).toLocaleString(numberLocale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} t
                             </td>
@@ -646,13 +646,13 @@ export function SustainabilityPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border-light">
-                        <th className="py-2 pr-3 text-left text-xs font-medium uppercase tracking-wider text-content-tertiary w-[60px]">#</th>
-                        <th className="py-2 px-3 text-left text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_description', { defaultValue: 'Description' })}</th>
-                        <th className="py-2 px-3 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary w-[80px]">{t('sustainability.col_qty', { defaultValue: 'Qty' })}</th>
+                        <th className="py-2 pe-3 text-start text-xs font-medium uppercase tracking-wider text-content-tertiary w-[60px]">#</th>
+                        <th className="py-2 px-3 text-start text-xs font-medium uppercase tracking-wider text-content-tertiary">{t('sustainability.col_description', { defaultValue: 'Description' })}</th>
+                        <th className="py-2 px-3 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary w-[80px]">{t('sustainability.col_qty', { defaultValue: 'Qty' })}</th>
                         <th className="py-2 px-3 text-center text-xs font-medium uppercase tracking-wider text-content-tertiary w-[50px]">{t('sustainability.col_unit', { defaultValue: 'Unit' })}</th>
-                        <th className="py-2 px-3 text-left text-xs font-medium uppercase tracking-wider text-content-tertiary w-[220px]">{t('sustainability.col_epd_material', { defaultValue: 'EPD Material' })}</th>
-                        <th className="py-2 px-3 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary w-[90px]">{t('sustainability.col_gwp_unit', { defaultValue: 'GWP/unit' })}</th>
-                        <th className="py-2 pl-3 text-right text-xs font-medium uppercase tracking-wider text-content-tertiary w-[100px]">{t('sustainability.col_gwp_total', { defaultValue: 'GWP Total' })}</th>
+                        <th className="py-2 px-3 text-start text-xs font-medium uppercase tracking-wider text-content-tertiary w-[220px]">{t('sustainability.col_epd_material', { defaultValue: 'EPD Material' })}</th>
+                        <th className="py-2 px-3 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary w-[90px]">{t('sustainability.col_gwp_unit', { defaultValue: 'GWP/unit' })}</th>
+                        <th className="py-2 ps-3 text-end text-xs font-medium uppercase tracking-wider text-content-tertiary w-[100px]">{t('sustainability.col_gwp_total', { defaultValue: 'GWP Total' })}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-light">
@@ -668,9 +668,9 @@ export function SustainabilityPage() {
                         const gwpPerUnit = pos.gwp_per_unit / unitFactor;
                         return (
                         <tr key={pos.position_id} className={pos.source === 'none' ? 'opacity-50' : ''}>
-                          <td className="py-2 pr-3 tabular-nums text-content-secondary text-xs">{pos.ordinal}</td>
+                          <td className="py-2 pe-3 tabular-nums text-content-secondary text-xs">{pos.ordinal}</td>
                           <td className="py-2 px-3 text-content-primary truncate max-w-[300px]" title={pos.description}>{pos.description}</td>
-                          <td className="py-2 px-3 text-right tabular-nums text-content-secondary">{pq.value.toLocaleString(numberLocale, { maximumFractionDigits: 2 })}</td>
+                          <td className="py-2 px-3 text-end tabular-nums text-content-secondary">{pq.value.toLocaleString(numberLocale, { maximumFractionDigits: 2 })}</td>
                           <td className="py-2 px-3 text-center text-content-tertiary">{pq.unit}</td>
                           <td className="py-2 px-3">
                             <EPDSelect
@@ -680,11 +680,11 @@ export function SustainabilityPage() {
                               disabled={assignMut.isPending}
                             />
                           </td>
-                          <td className="py-2 px-3 text-right tabular-nums text-content-secondary text-xs">
+                          <td className="py-2 px-3 text-end tabular-nums text-content-secondary text-xs">
                             {/* RATE (reciprocal) per the displayed unit */}
                             {pos.gwp_per_unit ? `${gwpPerUnit.toLocaleString(numberLocale, { maximumFractionDigits: 4 })}` : '-'}
                           </td>
-                          <td className="py-2 pl-3 text-right tabular-nums font-medium text-content-primary">
+                          <td className="py-2 ps-3 text-end tabular-nums font-medium text-content-primary">
                             {pos.gwp_total ? (
                               <span className={pos.gwp_total < 0 ? 'text-emerald-600' : ''}>
                                 {/* ABSOLUTE CO2 mass - kept in kg CO2e */}

@@ -106,7 +106,7 @@ export function ModuleCasesButton({ className }: ModuleCasesButtonProps) {
           role="menu"
           aria-label={aria}
           className={clsx(
-            'absolute right-0 top-[calc(100%+6px)] z-50 w-72 max-w-[86vw]',
+            'absolute end-0 top-[calc(100%+6px)] z-50 w-72 max-w-[86vw]',
             'rounded-xl border border-border-light bg-surface-primary shadow-xl p-2',
             'animate-card-in',
           )}
@@ -125,7 +125,7 @@ export function ModuleCasesButton({ className }: ModuleCasesButtonProps) {
                   type="button"
                   role="menuitem"
                   onClick={() => goToCase(pb.id)}
-                  className="group w-full text-left flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-secondary transition-colors"
+                  className="group w-full text-start flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-surface-secondary transition-colors"
                 >
                   <span className="min-w-0 flex-1">
                     <span className="block text-xs font-medium text-content-primary leading-snug">

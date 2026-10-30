@@ -170,7 +170,7 @@ export function RegionalAdjustPanel({
         </div>
 
         {data && (
-          <div className="text-right">
+          <div className="text-end">
             <div className="text-2xs text-content-tertiary">
               {t('costs.regional_adjust.factor', { defaultValue: 'Factor' })}
               {' × '}

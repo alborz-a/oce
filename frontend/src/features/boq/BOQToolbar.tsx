@@ -390,7 +390,7 @@ export function BOQToolbar({
             >
               {isValidating ? t('boq.validating', { defaultValue: 'Checking...' }) : t('boq.validate', { defaultValue: 'Validate' })}
               {lastValidationScore != null && !isValidating && (
-                <span className={`ml-1 text-2xs font-bold tabular-nums ${scoreColor(lastValidationScore)}`}>
+                <span className={`ms-1 text-2xs font-bold tabular-nums ${scoreColor(lastValidationScore)}`}>
                   {lastValidationScore}%
                 </span>
               )}
@@ -565,7 +565,7 @@ export function BOQToolbar({
                         role="menuitem"
                         to={`/gaeb-exchange?project_id=${encodeURIComponent(projectId)}&boq_id=${encodeURIComponent(boqId)}&tab=export`}
                         onClick={() => setShowExportMenu(false)}
-                        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-sm leading-snug text-content-primary hover:bg-surface-secondary transition-colors rounded-b-lg"
+                        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-start text-sm leading-snug text-content-primary hover:bg-surface-secondary transition-colors rounded-b-lg"
                       >
                         <ArrowUpRight size={15} className="shrink-0 text-content-tertiary" />
                         {t('boq.export_gaeb_exchange', { defaultValue: 'GAEB Exchange (X81 / X83 / X84)' })}
@@ -1039,7 +1039,7 @@ function MenuRow({ icon, label, hint, active, disabled, trailing, onClick }: Men
       role="menuitem"
       onClick={onClick}
       disabled={disabled}
-      className={`w-full text-left px-3 py-2 flex items-start gap-2.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+      className={`w-full text-start px-3 py-2 flex items-start gap-2.5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
         active
           ? 'bg-violet-50 dark:bg-violet-950/30 hover:bg-violet-100 dark:hover:bg-violet-900/40'
           : 'hover:bg-surface-secondary'
@@ -1103,7 +1103,7 @@ function IconBtn({
     >
       {icon}
       {badge != null && badge > 0 && (
-        <span className="absolute -right-1 -top-1 inline-flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-oe-blue px-0.5 text-[9px] font-bold leading-none text-white tabular-nums">
+        <span className="absolute -end-1 -top-1 inline-flex h-3.5 min-w-[14px] items-center justify-center rounded-full bg-oe-blue px-0.5 text-[9px] font-bold leading-none text-white tabular-nums">
           {badge > 99 ? '99+' : badge}
         </span>
       )}

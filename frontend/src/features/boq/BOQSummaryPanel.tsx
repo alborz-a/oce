@@ -48,7 +48,7 @@ function QualityRow({ icon, label, value }: { icon: React.ReactNode; label: stri
           style={{ width: `${rounded}%` }}
         />
       </div>
-      <span className="text-xs font-medium text-content-primary tabular-nums w-8 text-right">
+      <span className="text-xs font-medium text-content-primary tabular-nums w-8 text-end">
         {rounded}%
       </span>
     </div>
@@ -120,7 +120,7 @@ export function QualityScoreRing({
             className="transition-all duration-700 ease-out"
           />
         </svg>
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center">
+        <div className="absolute start-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center">
           <span className="text-xs font-bold tabular-nums" style={{ color }}>
             {score}
           </span>
@@ -321,7 +321,7 @@ export function QuickAddFAB({
     <div ref={fabRef} className={`fixed bottom-4 z-30 print:hidden transition-[right] duration-300 ${sidePanelOpen ? 'right-[340px]' : 'right-4'}`}>
       {/* FAB menu */}
       {open && (
-        <div className="absolute bottom-12 right-0 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg overflow-hidden animate-fade-in">
+        <div className="absolute bottom-12 end-0 w-72 rounded-xl border border-border-light bg-surface-elevated shadow-lg overflow-hidden animate-fade-in">
           <div className="px-4 py-3 border-b border-border-light">
             <p className="text-xs font-semibold text-content-primary">
               {t('boq.quick_add', { defaultValue: 'Quick Add' })}
@@ -335,7 +335,7 @@ export function QuickAddFAB({
                   setOpen(false);
                   action.onClick();
                 }}
-                className="flex w-full items-start gap-3 px-4 py-3 hover:bg-surface-secondary transition-colors text-left"
+                className="flex w-full items-start gap-3 px-4 py-3 hover:bg-surface-secondary transition-colors text-start"
               >
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text">
                   {action.icon}

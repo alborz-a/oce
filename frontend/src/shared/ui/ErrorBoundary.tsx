@@ -148,7 +148,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               {i18n.t('error.unexpected_error')}
             </p>
             {this.state.error && (
-              <details className="mb-6 rounded-lg border border-border-light bg-surface-secondary p-3 text-left">
+              <details className="mb-6 rounded-lg border border-border-light bg-surface-secondary p-3 text-start">
                 <summary className="cursor-pointer text-xs font-medium text-content-secondary">
                   {i18n.t('error.details')}
                 </summary>

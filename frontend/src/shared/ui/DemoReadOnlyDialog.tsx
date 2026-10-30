@@ -162,7 +162,7 @@ export function DemoReadOnlyDialog() {
             {t('demo_read_only.install_heading', { defaultValue: 'Ways to install it' })}
           </h3>
 
-          <ul className="mt-2 space-y-1.5 text-sm text-content-secondary leading-relaxed list-disc pl-5">
+          <ul className="mt-2 space-y-1.5 text-sm text-content-secondary leading-relaxed list-disc ps-5">
             {INSTALL_OPTIONS.map((option) => (
               <li key={option.key}>{t(option.key, { defaultValue: option.fallback })}</li>
             ))}

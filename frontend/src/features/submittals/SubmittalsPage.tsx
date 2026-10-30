@@ -287,9 +287,9 @@ function SubmittalFormModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -363,7 +363,7 @@ function SubmittalFormModal({
               id={`${idPrefix}-type`}
               value={form.type}
               onChange={(e) => set('type', e.target.value as SubmittalType)}
-              className={inputCls + ' appearance-none pr-9'}
+              className={inputCls + ' appearance-none pe-9'}
             >
               {SUBMITTAL_TYPES.map((tp) => (
                 <option key={tp} value={tp}>
@@ -371,7 +371,7 @@ function SubmittalFormModal({
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
               <ChevronDown size={14} />
             </div>
           </div>
@@ -491,7 +491,7 @@ function ApproveModal({
                   aria-checked={decision === s}
                   onClick={() => setDecision(s)}
                   className={clsx(
-                    'rounded-lg border px-3 py-2 text-xs font-medium transition-colors text-left',
+                    'rounded-lg border px-3 py-2 text-xs font-medium transition-colors text-start',
                     decision === s
                       ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue-text'
                       : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary',
@@ -641,7 +641,7 @@ const SubmittalRow = React.memo(function SubmittalRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {submittal.description && (
             <div className="rounded-lg bg-surface-secondary p-3">
               <p className="text-xs text-content-tertiary mb-1 font-medium uppercase tracking-wide">
@@ -1322,7 +1322,7 @@ export function SubmittalsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1331,7 +1331,7 @@ export function SubmittalsPage() {
               defaultValue: 'Search submittals...',
             })}
             aria-label={t('submittals.search_placeholder', { defaultValue: 'Search submittals...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 

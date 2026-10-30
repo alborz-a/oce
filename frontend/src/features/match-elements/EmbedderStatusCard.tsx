@@ -63,7 +63,7 @@ function CopyableCommand({ command }: { command: string }) {
       <button
         type="button"
         onClick={onCopy}
-        className="shrink-0 inline-flex items-center gap-1.5 px-3 border-l border-amber-300/80 dark:border-amber-700/80 bg-amber-100/70 hover:bg-amber-200/70 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-100 text-xs font-semibold transition"
+        className="shrink-0 inline-flex items-center gap-1.5 px-3 border-s border-amber-300/80 dark:border-amber-700/80 bg-amber-100/70 hover:bg-amber-200/70 dark:bg-amber-900/40 dark:hover:bg-amber-900/60 text-amber-900 dark:text-amber-100 text-xs font-semibold transition"
         aria-label={t('match_elements.embedder_copy_command', 'Copy command')}
       >
         {copied ? (
@@ -115,7 +115,7 @@ function LoadedState({ status }: { status: EmbedderStatus }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2.5 px-3 py-2 text-left"
+        className="w-full flex items-center gap-2.5 px-3 py-2 text-start"
         aria-expanded={open}
       >
         <span className="shrink-0 w-6 h-6 rounded-md bg-emerald-500 text-white inline-flex items-center justify-center">

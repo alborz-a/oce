@@ -408,7 +408,7 @@ function CaseLinkCard({
       type="button"
       onClick={onOpen}
       className={clsx(
-        "group flex h-full w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all",
+        "group flex h-full w-full items-start gap-3 rounded-2xl border p-4 text-start transition-all",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
         primary
           ? "border-oe-blue/50 bg-oe-blue-subtle hover:border-oe-blue"
@@ -619,7 +619,7 @@ function MoreCaseTile({
       onClick={onOpen}
       title={title}
       className={clsx(
-        "group w-40 shrink-0 overflow-hidden rounded-xl border border-border-light bg-surface-primary text-left",
+        "group w-40 shrink-0 overflow-hidden rounded-xl border border-border-light bg-surface-primary text-start",
         "shadow-xs transition duration-200 hover:-translate-y-0.5 hover:border-oe-blue/40 hover:shadow-md",
         "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
@@ -636,7 +636,7 @@ function MoreCaseTile({
         )}
         {playbook.region && (
           <span
-            className="absolute left-1.5 top-1.5 inline-flex h-5 items-center gap-1 rounded bg-white/90 px-1 text-[9px] font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-900/10"
+            className="absolute start-1.5 top-1.5 inline-flex h-5 items-center gap-1 rounded bg-white/90 px-1 text-[9px] font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-900/10"
             title={regionDisplayName(playbook.region, language)}
             aria-label={regionDisplayName(playbook.region, language)}
           >
@@ -1277,7 +1277,7 @@ export function PlaybookRunner({ playbook, onBack }: PlaybookRunnerProps) {
                     aria-current={isCurrent ? "step" : undefined}
                     title={stepTitle}
                     className={clsx(
-                      "group flex h-full w-full flex-col gap-1 rounded-lg border p-1 text-left transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
+                      "group flex h-full w-full flex-col gap-1 rounded-lg border p-1 text-start transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40",
                       isCurrent
                         ? "border-oe-blue bg-oe-blue-subtle ring-1 ring-inset ring-oe-blue/30"
                         : done

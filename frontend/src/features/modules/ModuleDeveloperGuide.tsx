@@ -165,7 +165,7 @@ export function ModuleDeveloperGuide() {
                         onClick={(event) => handleTocClick(event, section.id)}
                         aria-current={active ? 'location' : undefined}
                         className={clsx(
-                          '-ml-px block border-l-2 py-1 pl-3 text-sm leading-snug transition-colors',
+                          '-ms-px block border-s-2 py-1 ps-3 text-sm leading-snug transition-colors',
                           active
                             ? 'border-oe-blue font-medium text-oe-blue'
                             : 'border-transparent text-content-tertiary hover:border-border hover:text-content-primary',

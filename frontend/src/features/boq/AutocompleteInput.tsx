@@ -303,14 +303,14 @@ export function AutocompleteInput({
 
       {/* Loading indicator */}
       {isLoading && (
-        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+        <div className="absolute end-2 top-1/2 -translate-y-1/2">
           <div className="h-3 w-3 rounded-full border-2 border-oe-blue/30 border-t-oe-blue animate-spin" />
         </div>
       )}
 
       {/* Dropdown */}
       {showDropdown && suggestions.length > 0 && (
-        <div className="absolute left-0 top-full mt-1 z-[100] w-[480px] max-h-[320px] overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg animate-fade-in">
+        <div className="absolute start-0 top-full mt-1 z-[100] w-[480px] max-h-[320px] overflow-y-auto rounded-lg border border-border-light bg-surface-elevated shadow-lg animate-fade-in">
           {/* AI Search header */}
           <div className="flex items-center gap-1.5 px-3 py-1.5 border-b border-border-light bg-gradient-to-r from-violet-50 to-blue-50 dark:from-violet-950/30 dark:to-blue-950/30">
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" className="text-violet-500 shrink-0">
@@ -319,7 +319,7 @@ export function AutocompleteInput({
             <span className="text-[10px] font-medium text-violet-600 dark:text-violet-400">
               AI Semantic Search
             </span>
-            <span className="text-[10px] text-content-tertiary ml-auto">
+            <span className="text-[10px] text-content-tertiary ms-auto">
               {suggestions.length} matches
             </span>
           </div>
@@ -335,7 +335,7 @@ export function AutocompleteInput({
               }}
               onMouseEnter={(e) => handleSuggestionMouseEnter(item, idx, e.currentTarget)}
               onMouseLeave={handleSuggestionMouseLeave}
-              className={`flex w-full items-start gap-3 px-3 py-2.5 text-left transition-colors ${
+              className={`flex w-full items-start gap-3 px-3 py-2.5 text-start transition-colors ${
                 idx === selectedIndex
                   ? 'bg-oe-blue-subtle/40'
                   : 'hover:bg-surface-secondary'
@@ -367,7 +367,7 @@ export function AutocompleteInput({
               </span>
 
               {/* Rate */}
-              <span className="shrink-0 text-sm text-content-primary tabular-nums font-medium w-20 text-right">
+              <span className="shrink-0 text-sm text-content-primary tabular-nums font-medium w-20 text-end">
                 {fmtRate(item.rate)}
               </span>
             </button>

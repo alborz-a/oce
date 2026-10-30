@@ -145,7 +145,7 @@ export function LatestSitePhotosCard() {
                   defaultValue: 'Open photos for {{project}}',
                   project: photo.project_name,
                 })}
-                className="group relative block aspect-[3/2] w-full overflow-hidden rounded-xl border border-border-light bg-surface-secondary text-left shadow-xs transition-all duration-normal ease-oe hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/40 animate-stagger-in"
+                className="group relative block aspect-[3/2] w-full overflow-hidden rounded-xl border border-border-light bg-surface-secondary text-start shadow-xs transition-all duration-normal ease-oe hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/40 animate-stagger-in"
                 style={{ animationDelay: `${180 + index * 40}ms` }}
               >
                 <AuthImage

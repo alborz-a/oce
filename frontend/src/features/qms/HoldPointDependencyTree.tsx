@@ -93,7 +93,7 @@ export function HoldPointDependencyTree({
         return (
           <li key={item.id}>
             {idx > 0 && (
-              <div className="ml-4 flex h-3 items-center">
+              <div className="ms-4 flex h-3 items-center">
                 <ArrowDown size={12} className="text-border" />
               </div>
             )}

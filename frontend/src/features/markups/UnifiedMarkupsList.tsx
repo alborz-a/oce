@@ -77,7 +77,7 @@ const TYPE_ICONS: Partial<Record<UnifiedMarkupType, React.ElementType>> = {
 
 const inputCls =
   'h-8 rounded-lg border border-border bg-surface-primary px-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue transition-colors';
-const selectCls = inputCls + ' pr-7 appearance-none cursor-pointer';
+const selectCls = inputCls + ' pe-7 appearance-none cursor-pointer';
 
 /* ── Table row ───────────────────────────────────────────────────────── */
 
@@ -145,7 +145,7 @@ function UnifiedRow({ item, onOpen }: { item: UnifiedMarkup; onOpen: () => void 
           {item.author}
         </span>
       </td>
-      <td className="px-3 py-2.5 text-right">
+      <td className="px-3 py-2.5 text-end">
         <ChevronRight size={14} className="inline text-content-tertiary" />
       </td>
     </tr>
@@ -212,7 +212,7 @@ export function UnifiedMarkupsList({ projectId }: UnifiedMarkupsListProps) {
         <div className="relative flex-1 min-w-[220px] max-w-sm">
           <Search
             size={14}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={search}
@@ -220,7 +220,7 @@ export function UnifiedMarkupsList({ projectId }: UnifiedMarkupsListProps) {
             placeholder={t('markups.unified_search', {
               defaultValue: 'Search across all annotations...',
             })}
-            className={inputCls + ' w-full pl-8'}
+            className={inputCls + ' w-full ps-8'}
             data-testid="unified-markups-search"
           />
         </div>
@@ -305,7 +305,7 @@ export function UnifiedMarkupsList({ projectId }: UnifiedMarkupsListProps) {
                 setSelectedFileId('');
                 setSearch('');
               }}
-              className="text-2xs text-oe-blue hover:underline ml-1"
+              className="text-2xs text-oe-blue hover:underline ms-1"
             >
               {t('markups.clear_filters', { defaultValue: 'Clear' })}
             </button>
@@ -345,28 +345,28 @@ export function UnifiedMarkupsList({ projectId }: UnifiedMarkupsListProps) {
             <table className="w-full text-sm" data-testid="unified-markups-table">
               <thead>
                 <tr className="border-b border-border-light bg-surface-secondary/50">
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                     {t('markups.col_file', { defaultValue: 'File' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
                     {t('markups.col_source', { defaultValue: 'Source' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[130px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[130px]">
                     {t('markups.col_type', { defaultValue: 'Type' })}
                   </th>
                   <th className="px-3 py-2 text-center text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[60px]">
                     {t('markups.col_page', { defaultValue: 'Pg' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                     {t('markups.col_label', { defaultValue: 'Label / Text' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[110px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[110px]">
                     {t('markups.col_created', { defaultValue: 'Created' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
                     {t('markups.col_author', { defaultValue: 'Author' })}
                   </th>
-                  <th className="px-3 py-2 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[40px]" />
+                  <th className="px-3 py-2 text-end text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[40px]" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-light">

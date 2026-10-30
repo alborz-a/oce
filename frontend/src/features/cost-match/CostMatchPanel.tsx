@@ -575,7 +575,7 @@ function OverridePicker({ run, result, onCancel, onPick, pending }: OverrideProp
                 type="button"
                 disabled={pending}
                 onClick={() => onPick({ id: row.id, code: row.code, description: row.description }, note)}
-                className="w-full rounded-md border border-border bg-surface-primary px-2 py-1.5 text-left text-xs hover:bg-surface-secondary disabled:opacity-50"
+                className="w-full rounded-md border border-border bg-surface-primary px-2 py-1.5 text-start text-xs hover:bg-surface-secondary disabled:opacity-50"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-content-secondary">{row.code}</span>
@@ -1012,7 +1012,7 @@ export function CostMatchPanel() {
                 setReport(null);
               }}
               className={
-                'rounded-md border px-2.5 py-1.5 text-left text-xs ' +
+                'rounded-md border px-2.5 py-1.5 text-start text-xs ' +
                 (run.id === runId
                   ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue-text'
                   : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary')

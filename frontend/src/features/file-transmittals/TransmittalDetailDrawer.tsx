@@ -119,8 +119,8 @@ export function TransmittalDetailDrawer({
           defaultValue: 'Transmittal details',
         })}
         className={clsx(
-          'fixed inset-y-0 right-0 z-50 w-full max-w-md',
-          'bg-surface-elevated border-l border-border-light shadow-2xl',
+          'fixed inset-y-0 end-0 z-50 w-full max-w-md',
+          'bg-surface-elevated border-s border-border-light shadow-2xl',
           'flex flex-col animate-slide-in-right',
         )}
       >
@@ -180,7 +180,7 @@ export function TransmittalDetailDrawer({
                           <span className="truncate flex-1">
                             {it.canonical_name_snapshot}
                             {it.file_version_snapshot && (
-                              <span className="text-xs text-content-tertiary ml-1">
+                              <span className="text-xs text-content-tertiary ms-1">
                                 v{it.file_version_snapshot}
                               </span>
                             )}

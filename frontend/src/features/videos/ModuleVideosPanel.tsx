@@ -144,7 +144,7 @@ export default function ModuleVideosPanel({ route }: { route: string }) {
             id={panelId}
             role="region"
             aria-label={t('videos.for_this_step', { defaultValue: 'Videos for this step' })}
-            className="absolute right-0 top-full mt-1.5 w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-border-light bg-surface-primary shadow-xl"
+            className="absolute end-0 top-full mt-1.5 w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-border-light bg-surface-primary shadow-xl"
           >
             <div className="flex items-start gap-2 border-b border-border-light px-3 py-2">
               <p className="min-w-0 flex-1 text-xs font-semibold text-content-primary">
@@ -175,12 +175,12 @@ export default function ModuleVideosPanel({ route }: { route: string }) {
                       setPlaying({ video, start: 0 });
                       setOpen(false);
                     }}
-                    className="flex w-full items-center gap-2.5 px-3 py-2 text-left hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
+                    className="flex w-full items-center gap-2.5 px-3 py-2 text-start hover:bg-surface-secondary focus:bg-surface-secondary focus:outline-none"
                   >
                     <span className="relative block h-[54px] w-24 shrink-0 overflow-hidden rounded-md bg-slate-900">
                       <VideoCover src={video.cover} width={96} height={54} className="h-full w-full object-cover" />
                       {video.duration ? (
-                        <span className="absolute bottom-0.5 right-0.5 rounded bg-black/75 px-1 font-mono text-[9px] text-white">
+                        <span className="absolute bottom-0.5 end-0.5 rounded bg-black/75 px-1 font-mono text-[9px] text-white">
                           {formatClock(video.duration)}
                         </span>
                       ) : null}

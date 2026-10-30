@@ -304,7 +304,7 @@ export function ParametersPanel({ assemblyId, parameters }: ParametersPanelProps
                   value={d.value}
                   onChange={(e) => patchDraft(d._id, { value: e.target.value })}
                   placeholder={t('assembly.params.value_ph', { defaultValue: 'e.g. 0.5' })}
-                  className={`${fieldClass} text-right tabular-nums`}
+                  className={`${fieldClass} text-end tabular-nums`}
                   aria-label={t('assembly.params.col_value', { defaultValue: 'Value / formula' })}
                 />
               )}

@@ -105,7 +105,7 @@ export function FindWorkPanel({ nav }: { nav: CrossNav }) {
             type="button"
             onClick={() => setDismissedSuggestion(hintView.suggestion)}
             aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-            className="ml-auto shrink-0 text-content-tertiary hover:text-content-secondary"
+            className="ms-auto shrink-0 text-content-tertiary hover:text-content-secondary"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>
@@ -141,7 +141,7 @@ export function FindWorkPanel({ nav }: { nav: CrossNav }) {
                   {row.score > 0 && <Meter value={row.score} tone="amber" label={`${t('costExplorer.byResources.match', { defaultValue: 'Match' })} ${pct(row.score)}`} />}
                 </div>
               </div>
-              <div className="shrink-0 text-right">
+              <div className="shrink-0 text-end">
                 <div className="font-semibold tabular-nums text-content-primary">{fmtMoney(row.rate, row.currency)}</div>
                 <div className="mt-2 flex flex-col items-end gap-1">
                   <button type="button" onClick={() => nav.openCompare(row.code)} className="inline-flex items-center gap-1 text-xs text-oe-blue hover:underline">

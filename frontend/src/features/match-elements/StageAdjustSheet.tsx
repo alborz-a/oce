@@ -185,7 +185,7 @@ export function StageAdjustSheet({
         aria-modal="true"
         aria-labelledby="stage-adjust-title"
         tabIndex={-1}
-        className="fixed right-0 top-0 bottom-0 w-full max-w-md z-50 bg-surface-primary border-l border-border shadow-2xl flex flex-col outline-none"
+        className="fixed end-0 top-0 bottom-0 w-full max-w-md z-50 bg-surface-primary border-s border-border shadow-2xl flex flex-col outline-none"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-3 px-4 py-3 border-b border-border">
@@ -335,7 +335,7 @@ export function StageAdjustSheet({
                         className="accent-oe-blue"
                       />
                       <span className="text-content-primary">{p.label}</span>
-                      <code className="ml-auto text-[10px] text-content-tertiary">
+                      <code className="ms-auto text-[10px] text-content-tertiary">
                         {p.id}
                       </code>
                     </label>

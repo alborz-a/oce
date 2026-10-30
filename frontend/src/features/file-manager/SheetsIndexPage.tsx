@@ -505,7 +505,7 @@ export function SheetsIndexPage() {
             <div className="relative flex-1 max-w-sm">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
               <input
                 value={searchQuery}
@@ -516,7 +516,7 @@ export function SheetsIndexPage() {
                 aria-label={t('sheets.search_placeholder', {
                   defaultValue: 'Search by sheet #, title, revision…',
                 })}
-                className={inputCls + ' pl-9'}
+                className={inputCls + ' ps-9'}
               />
             </div>
             <label className="inline-flex items-center gap-2 text-sm text-content-secondary">

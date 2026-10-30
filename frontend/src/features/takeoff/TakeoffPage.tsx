@@ -2176,7 +2176,7 @@ export function TakeoffPage() {
           ]}
         />
         <h1 className="sr-only">{t('nav.pdf_measurements', 'PDF Measurements')}</h1>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ms-auto flex shrink-0 items-center gap-2">
           <ModuleGuideButton
             content={takeoffGuide}
             onCta={() => setActiveTab('documents')}

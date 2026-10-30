@@ -618,7 +618,7 @@ function DashboardsGrid({
             <button
               type="button"
               onClick={() => onOpen(d.id)}
-              className="text-left w-full focus:outline-none"
+              className="text-start w-full focus:outline-none"
             >
               <div className="flex items-start justify-between gap-2">
                 <h3 className="font-semibold text-content-primary truncate">{d.name}</h3>
@@ -789,7 +789,7 @@ function KpiLibraryCard({ kpi }: { kpi: KpiDefinition }) {
           <p className="mt-1 text-xs text-content-tertiary">
             {kpi.unit}
             {isLive && (
-              <span className="ml-1 rounded bg-surface-tertiary px-1 py-0.5 text-2xs font-medium text-content-tertiary">
+              <span className="ms-1 rounded bg-surface-tertiary px-1 py-0.5 text-2xs font-medium text-content-tertiary">
                 {t('bi.live', { defaultValue: 'live' })}
               </span>
             )}
@@ -1150,11 +1150,11 @@ function ReportList({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('bi.code', { defaultValue: 'Code' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.name', { defaultValue: 'Name' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.scope', { defaultValue: 'Visibility scope' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('common.format')}</th>
-              <th className="px-4 py-2.5 text-right">{t('common.actions')}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.code', { defaultValue: 'Code' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.name', { defaultValue: 'Name' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.scope', { defaultValue: 'Visibility scope' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('common.format')}</th>
+              <th className="px-4 py-2.5 text-end">{t('common.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -1329,12 +1329,12 @@ function SchedulesList({
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                 <tr>
-                  <th className="px-4 py-2.5 text-left">{t('bi.report', { defaultValue: 'Report' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('bi.frequency', { defaultValue: 'Frequency' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('bi.next_run', { defaultValue: 'Next run' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('bi.recipients', { defaultValue: 'Recipients' })}</th>
-                  <th className="px-4 py-2.5 text-left">{t('bi.enabled', { defaultValue: 'Enabled' })}</th>
-                  <th className="px-4 py-2.5 text-right">{t('common.actions')}</th>
+                  <th className="px-4 py-2.5 text-start">{t('bi.report', { defaultValue: 'Report' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('bi.frequency', { defaultValue: 'Frequency' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('bi.next_run', { defaultValue: 'Next run' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('bi.recipients', { defaultValue: 'Recipients' })}</th>
+                  <th className="px-4 py-2.5 text-start">{t('bi.enabled', { defaultValue: 'Enabled' })}</th>
+                  <th className="px-4 py-2.5 text-end">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -1380,7 +1380,7 @@ function SchedulesList({
                         </span>
                       </label>
                     </td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-4 py-2 text-end">
                       <Button
                         variant="secondary"
                         icon={<Play size={12} />}
@@ -1634,12 +1634,12 @@ function AlertsList({
         <table className="w-full text-sm">
           <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
             <tr>
-              <th className="px-4 py-2.5 text-left">{t('bi.name', { defaultValue: 'Name' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.kpi', { defaultValue: 'KPI' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.condition', { defaultValue: 'Condition' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.severity', { defaultValue: 'Severity' })}</th>
-              <th className="px-4 py-2.5 text-left">{t('bi.last_triggered', { defaultValue: 'Last fired' })}</th>
-              <th className="px-4 py-2.5 text-right">{t('bi.enabled', { defaultValue: 'Enabled' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.name', { defaultValue: 'Name' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.kpi', { defaultValue: 'KPI' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.condition', { defaultValue: 'Condition' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.severity', { defaultValue: 'Severity' })}</th>
+              <th className="px-4 py-2.5 text-start">{t('bi.last_triggered', { defaultValue: 'Last fired' })}</th>
+              <th className="px-4 py-2.5 text-end">{t('bi.enabled', { defaultValue: 'Enabled' })}</th>
             </tr>
           </thead>
           <tbody>
@@ -1658,7 +1658,7 @@ function AlertsList({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {a.last_triggered_at ? <DateDisplay value={a.last_triggered_at} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <label
                     className="inline-flex items-center gap-2 cursor-pointer"
                     title={
@@ -2246,7 +2246,7 @@ function CrossFilterChips({
         <button
           type="button"
           onClick={onClear}
-          className="ml-auto text-xs text-content-tertiary hover:text-content-primary"
+          className="ms-auto text-xs text-content-tertiary hover:text-content-primary"
         >
           {t('bi.clear_filters', { defaultValue: 'Clear all' })}
         </button>
@@ -2372,7 +2372,7 @@ function WidgetCard({
               <thead className="text-content-tertiary">
                 <tr>
                   {cols.map((c) => (
-                    <th key={c} className="px-2 py-1 text-left font-medium">{c}</th>
+                    <th key={c} className="px-2 py-1 text-start font-medium">{c}</th>
                   ))}
                 </tr>
               </thead>

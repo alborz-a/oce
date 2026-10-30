@@ -494,7 +494,7 @@ function ImportDemoModal({
                       strokeWidth={1.5}
                       style={{ color: typeColor }}
                     />
-                    <span className="absolute -bottom-1 -right-1 text-sm leading-none">
+                    <span className="absolute -bottom-1 -end-1 text-sm leading-none">
                       {COUNTRY_FLAGS[demo.country] || ''}
                     </span>
                   </div>
@@ -747,7 +747,7 @@ function OnboardingSteps({
             >
               {/* Completed overlay checkmark */}
               {step.done && (
-                <div className="absolute top-3 right-3 z-10">
+                <div className="absolute top-3 end-3 z-10">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-semantic-success">
                     <CheckCircle2 size={14} className="text-content-inverse" strokeWidth={2.5} />
                   </div>
@@ -1065,7 +1065,7 @@ function KpiRibbon({
             key={card.label}
             type={clickable ? 'button' : undefined}
             onClick={clickable ? card.onClick : undefined}
-            className={`group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-left shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm animate-stagger-in ${
+            className={`group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-start shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm animate-stagger-in ${
               clickable ? 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-oe-blue/30' : ''
             }`}
             style={{ animationDelay: `${80 + i * 50}ms` }}
@@ -1209,10 +1209,10 @@ function PortfolioOverview() {
               <button
                 key={p.id}
                 onClick={() => navigate(`/projects/${p.id}`)}
-                className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-surface-secondary transition-colors text-left"
+                className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-surface-secondary transition-colors text-start"
               >
                 <span className="text-content-primary font-medium truncate">{p.name}</span>
-                <span className="text-amber-600 tabular-nums shrink-0 ml-2">
+                <span className="text-amber-600 tabular-nums shrink-0 ms-2">
                   {p.variance_pct > 0 ? '+' : ''}{p.variance_pct}%
                 </span>
               </button>
@@ -1370,7 +1370,7 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
             <button
               key={it.id}
               onClick={() => navigate(it.url)}
-              className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 px-3.5 py-3 text-left shadow-xs transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+              className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 px-3.5 py-3 text-start shadow-xs transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             >
               <span
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${s.iconBg} ${s.iconColor}`}
@@ -1569,7 +1569,7 @@ function NextSteps({
           <button
             key={s.id}
             onClick={() => navigate(s.url)}
-            className="group flex flex-col items-start gap-2 rounded-xl border border-border-light bg-surface-primary p-4 text-left transition-all duration-normal ease-oe hover:border-oe-blue/30 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-stagger-in"
+            className="group flex flex-col items-start gap-2 rounded-xl border border-border-light bg-surface-primary p-4 text-start transition-all duration-normal ease-oe hover:border-oe-blue/30 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-stagger-in"
             style={{ animationDelay: `${100 + i * 60}ms` }}
           >
             {/* Plain Stroke per 2026-05-11 design-system: icon-only, no chip.
@@ -2464,7 +2464,7 @@ function DashboardPageInner() {
       <button
         type="button"
         onClick={() => navigate(`/boq/${lastBoq.id}`)}
-        className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-left transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-card-in focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+        className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-4 py-3 text-start transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:bg-oe-blue-subtle/20 hover:shadow-sm animate-card-in focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
         style={{ animationDelay: '60ms' }}
         title={t('dashboard.continue_work', { defaultValue: 'Continue your work' })}
       >
@@ -2486,7 +2486,7 @@ function DashboardPageInner() {
             </span>
           </>
         )}
-        <span className="ml-auto flex items-center gap-3 shrink-0">
+        <span className="ms-auto flex items-center gap-3 shrink-0">
           {lastBoq.positionCount > 0 && (
             <span className="text-xs text-content-secondary tabular-nums hidden md:inline">
               <strong className="text-content-primary">{lastBoq.positionCount}</strong>{' '}
@@ -2704,7 +2704,7 @@ function DashboardPageInner() {
               return next;
             });
           }}
-          className="flex w-full items-center gap-2 px-4 py-3 text-left hover:bg-surface-secondary/50 transition-colors"
+          className="flex w-full items-center gap-2 px-4 py-3 text-start hover:bg-surface-secondary/50 transition-colors"
         >
           <MapPin size={16} className="text-oe-blue shrink-0" />
           <span className="text-sm font-semibold text-content-primary">
@@ -2712,7 +2712,7 @@ function DashboardPageInner() {
           </span>
           <ChevronDown
             size={16}
-            className={`ml-auto text-content-tertiary transition-transform duration-200 ${marketCasesExpanded ? '' : '-rotate-90'}`}
+            className={`ms-auto text-content-tertiary transition-transform duration-200 ${marketCasesExpanded ? '' : '-rotate-90'}`}
           />
         </button>
         {marketCasesExpanded && <DashboardMarketCasesCard />}
@@ -2746,7 +2746,7 @@ function DashboardPageInner() {
           below merges DDC attribution + OSS badge + status pills into a
           thin meta-strip. Saves ~180px above the fold. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between animate-card-in">
-        <h1 className="text-2xl font-semibold tracking-tight gradient-text pl-2">
+        <h1 className="text-2xl font-semibold tracking-tight gradient-text ps-2">
           {(() => {
             const h = new Date().getHours();
             const key =
@@ -2850,7 +2850,7 @@ function DashboardPageInner() {
       </div>
 
       {/* ─── 2. Hero · row B - thin meta-strip ───────────────────────── */}
-      <div className="flex items-center flex-wrap gap-x-4 gap-y-2 pl-2 animate-stagger-in" style={{ animationDelay: '140ms' }}>
+      <div className="flex items-center flex-wrap gap-x-4 gap-y-2 ps-2 animate-stagger-in" style={{ animationDelay: '140ms' }}>
         {/* [RSC-IRAN] hidden: upstream DDC attribution + upstream GitHub link — do not delete
         <a
           href="https://datadrivenconstruction.io/?utm_source=erp"
@@ -3133,7 +3133,7 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
         <button
           key={p.id}
           onClick={() => navigate(`/projects/${p.id}`)}
-          className="flex w-full items-center gap-4 px-6 py-3.5 text-left transition-all duration-normal ease-oe hover:bg-surface-secondary animate-stagger-in"
+          className="flex w-full items-center gap-4 px-6 py-3.5 text-start transition-all duration-normal ease-oe hover:bg-surface-secondary animate-stagger-in"
           style={{ animationDelay: `${300 + index * 60}ms` }}
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text text-xs font-bold">

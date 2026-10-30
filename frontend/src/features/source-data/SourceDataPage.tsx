@@ -245,9 +245,9 @@ function DocumentModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : !isEdit ? (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             ) : null}
             <span>
               {isEdit
@@ -473,7 +473,7 @@ function DocumentRow({
         {item.blocks_schedule && (
           <AlertOctagon
             size={12}
-            className="inline-block ml-1 -mt-0.5 shrink-0 text-semantic-error"
+            className="inline-block ms-1 -mt-0.5 shrink-0 text-semantic-error"
             aria-label={t('source_data.blocks_schedule_badge', { defaultValue: 'Blocks schedule' })}
           />
         )}
@@ -494,7 +494,7 @@ function DocumentRow({
       {item.days_until_expiry !== null && (
         <span
           className={clsx(
-            'hidden sm:inline text-xs tabular-nums w-20 text-right shrink-0',
+            'hidden sm:inline text-xs tabular-nums w-20 text-end shrink-0',
             item.days_until_expiry < 0
               ? 'text-semantic-error font-medium'
               : item.days_until_expiry <= 14
@@ -660,7 +660,7 @@ function DefectiveInputsPanel({ projectId }: { projectId: string }) {
               <p className="font-medium text-content-secondary mb-1">
                 {t('source_data.missing_items', { defaultValue: 'Missing prerequisites' })}
               </p>
-              <ul className="list-disc pl-4 space-y-0.5 text-content-tertiary">
+              <ul className="list-disc ps-4 space-y-0.5 text-content-tertiary">
                 {data.missing_items.map((m) => (
                   <li key={m}>{m}</li>
                 ))}
@@ -672,7 +672,7 @@ function DefectiveInputsPanel({ projectId }: { projectId: string }) {
               <p className="font-medium text-content-secondary mb-1">
                 {t('source_data.expired_documents', { defaultValue: 'Expired documents' })}
               </p>
-              <ul className="list-disc pl-4 space-y-0.5 text-content-tertiary">
+              <ul className="list-disc ps-4 space-y-0.5 text-content-tertiary">
                 {data.expired_documents.map((d, i) => (
                   <li key={i}>{typeof d.name === 'string' ? d.name : JSON.stringify(d)}</li>
                 ))}
@@ -976,7 +976,7 @@ export function SourceDataPage() {
                 <span className="text-sm font-semibold text-content-primary">
                   {t('source_data.expiring_soon_title', { defaultValue: 'Expiring soon' })}
                 </span>
-                <Badge variant="warning" size="sm" className="ml-auto">
+                <Badge variant="warning" size="sm" className="ms-auto">
                   {expiringSoon.length}
                 </Badge>
               </div>
@@ -1030,7 +1030,7 @@ export function SourceDataPage() {
                     {t('source_data.blocking_title', { defaultValue: 'Blocking the schedule' })}
                   </span>
                 )}
-                <Badge variant="error" size="sm" className="ml-auto">
+                <Badge variant="error" size="sm" className="ms-auto">
                   {blocking.length}
                 </Badge>
               </div>
@@ -1061,7 +1061,7 @@ export function SourceDataPage() {
                   {t('source_data.checklist_title', { defaultValue: 'Checklist completeness' })}
                 </span>
                 {checklistSummary && (
-                  <Badge variant={checklistSummary.complete ? 'success' : 'warning'} size="sm" className="ml-auto">
+                  <Badge variant={checklistSummary.complete ? 'success' : 'warning'} size="sm" className="ms-auto">
                     {checklistSummary.satisfied + checklistSummary.waived}/{checklistSummary.required}
                   </Badge>
                 )}

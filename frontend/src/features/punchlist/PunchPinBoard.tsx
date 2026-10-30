@@ -334,14 +334,14 @@ export function PunchPinBoard({
           </div>
 
           {placing && (
-            <span className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-oe-blue/10 px-2 py-1 text-xs font-medium text-oe-blue">
+            <span className="ms-auto inline-flex items-center gap-1.5 rounded-md bg-oe-blue/10 px-2 py-1 text-xs font-medium text-oe-blue">
               <Crosshair size={13} />
               {t('punch.click_to_place', { defaultValue: 'Click the drawing to drop the pin' })}
               <button
                 type="button"
                 onClick={() => setPlacing(false)}
                 aria-label={t('common.cancel', { defaultValue: 'Cancel' })}
-                className="ml-1 rounded hover:bg-oe-blue/20"
+                className="ms-1 rounded hover:bg-oe-blue/20"
               >
                 <X size={13} />
               </button>
@@ -389,7 +389,7 @@ export function PunchPinBoard({
                       backgroundColor: color,
                     }}
                     className={clsx(
-                      'absolute z-10 flex h-6 w-6 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full rounded-bl-none border-2 border-white text-2xs font-bold text-white shadow-md',
+                      'absolute z-10 flex h-6 w-6 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full rounded-es-none border-2 border-white text-2xs font-bold text-white shadow-md',
                       placing ? 'pointer-events-none opacity-70' : 'hover:scale-110',
                     )}
                   >
@@ -451,7 +451,7 @@ export function PunchPinBoard({
         <div className="rounded-xl border border-border-light bg-surface-primary p-3">
           <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-content-tertiary">
             {t('punch.pins_on_sheet', { defaultValue: 'Pins on this sheet' })}
-            <span className="ml-1.5 text-content-quaternary">({pins.length})</span>
+            <span className="ms-1.5 text-content-quaternary">({pins.length})</span>
           </h4>
           {pins.length === 0 ? (
             <p className="text-xs text-content-tertiary">
@@ -464,7 +464,7 @@ export function PunchPinBoard({
                   <button
                     type="button"
                     onClick={() => onOpenItem(pin)}
-                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                    className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
                   >
                     <span
                       style={{ backgroundColor: PIN_COLOR[pin.priority] }}

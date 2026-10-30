@@ -433,7 +433,7 @@ export function DesignOptionComparisonTable({
   }
 
   const stickyCol =
-    'sticky left-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]';
+    'sticky start-0 z-10 bg-surface-primary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]';
 
   const colFor = (row: TradeCells, optionId: string) =>
     row.per_option.find((p) => p.option_id === optionId) ?? null;
@@ -468,7 +468,7 @@ export function DesignOptionComparisonTable({
           <thead className="sticky top-0 z-10 bg-surface-primary">
             <tr className="border-b border-border-light">
               <th
-                className={`whitespace-nowrap px-3 py-2.5 text-left font-semibold text-content-primary ${stickyCol} z-20`}
+                className={`whitespace-nowrap px-3 py-2.5 text-start font-semibold text-content-primary ${stickyCol} z-20`}
               >
                 {t('designOptions.tradeHeader', { defaultValue: 'Trade / element' })}
               </th>
@@ -477,7 +477,7 @@ export function DesignOptionComparisonTable({
                 return (
                   <th
                     key={o.option_id}
-                    className="whitespace-nowrap px-3 py-2.5 text-right align-bottom font-semibold text-content-primary"
+                    className="whitespace-nowrap px-3 py-2.5 text-end align-bottom font-semibold text-content-primary"
                   >
                     <div className="flex flex-col items-end gap-1">
                       <span className="flex items-center gap-1.5">
@@ -526,7 +526,7 @@ export function DesignOptionComparisonTable({
                         {t(`designOptions.trade.${row.key}`, { defaultValue: row.label || '-' })}
                       </span>
                       {sys && (
-                        <span className="ml-2 text-xs text-content-tertiary">{sys}</span>
+                        <span className="ms-2 text-xs text-content-tertiary">{sys}</span>
                       )}
                     </td>
                     {options.map((o) => {
@@ -555,7 +555,7 @@ export function DesignOptionComparisonTable({
                       return (
                         <td
                           key={o.option_id}
-                          className={`whitespace-nowrap px-3 py-2.5 text-right align-top tabular-nums ${flagCls}`}
+                          className={`whitespace-nowrap px-3 py-2.5 text-end align-top tabular-nums ${flagCls}`}
                           title={flagLabel}
                           aria-label={flagLabel}
                         >
@@ -594,7 +594,7 @@ export function DesignOptionComparisonTable({
               {options.map((o) => (
                 <td
                   key={o.option_id}
-                  className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-secondary"
+                  className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-secondary"
                 >
                   {formatMoney(o.direct_cost, o.currency)}
                 </td>
@@ -608,7 +608,7 @@ export function DesignOptionComparisonTable({
               {options.map((o) => (
                 <td
                   key={o.option_id}
-                  className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-secondary"
+                  className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-secondary"
                 >
                   {formatMoney(o.markups_total, o.currency)}
                 </td>
@@ -617,7 +617,7 @@ export function DesignOptionComparisonTable({
             {/* Grand total */}
             <tr className="border-t-2 border-border bg-surface-secondary/40">
               <td
-                className={`px-3 py-3 font-bold text-content-primary sticky left-0 z-20 bg-surface-secondary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]`}
+                className={`px-3 py-3 font-bold text-content-primary sticky start-0 z-20 bg-surface-secondary shadow-[2px_0_3px_-2px_rgba(0,0,0,0.1)]`}
               >
                 {t('designOptions.total', { defaultValue: 'TOTAL' })}
               </td>
@@ -626,13 +626,13 @@ export function DesignOptionComparisonTable({
                 return (
                   <td
                     key={o.option_id}
-                    className="whitespace-nowrap px-3 py-3 text-right tabular-nums"
+                    className="whitespace-nowrap px-3 py-3 text-end tabular-nums"
                   >
                     <span className="font-bold text-content-primary">
                       {formatMoney(o.grand_total, o.currency)}
                     </span>
                     {!isBaseline && (
-                      <span className="ml-1.5 inline-block align-middle">
+                      <span className="ms-1.5 inline-block align-middle">
                         <DeltaBadge pct={num(o.delta_pct)} />
                       </span>
                     )}
@@ -648,7 +648,7 @@ export function DesignOptionComparisonTable({
               {options.map((o) => (
                 <td
                   key={o.option_id}
-                  className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-tertiary"
+                  className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-tertiary"
                 >
                   {num(o.cost_per_m2) > 0 ? formatMoney(o.cost_per_m2, o.currency) : '-'}
                 </td>
@@ -669,7 +669,7 @@ export function DesignOptionComparisonTable({
                   {options.map((o) => (
                     <td
                       key={o.option_id}
-                      className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-tertiary"
+                      className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-tertiary"
                     >
                       {o.has_programme ? (
                         <>
@@ -677,7 +677,7 @@ export function DesignOptionComparisonTable({
                           {o.delta_days_vs_baseline !== null &&
                             o.option_id !== baseline_option_id &&
                             num(o.delta_days_vs_baseline) !== 0 && (
-                              <span className="ml-1.5 inline-block align-middle">
+                              <span className="ms-1.5 inline-block align-middle">
                                 <DayDeltaBadge days={num(o.delta_days_vs_baseline)} />
                               </span>
                             )}
@@ -695,7 +695,7 @@ export function DesignOptionComparisonTable({
                   {options.map((o) => (
                     <td
                       key={o.option_id}
-                      className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-tertiary"
+                      className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-tertiary"
                     >
                       {o.has_programme && o.finish_date ? o.finish_date : '-'}
                     </td>
@@ -711,7 +711,7 @@ export function DesignOptionComparisonTable({
                 {options.map((o) => (
                   <td
                     key={o.option_id}
-                    className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-content-tertiary"
+                    className="whitespace-nowrap px-3 py-2 text-end tabular-nums text-content-tertiary"
                   >
                     {o.has_carbon ? formatQty(o.embodied_carbon_kg, o.carbon_unit || 'kgCO2e') : '-'}
                   </td>

@@ -336,13 +336,13 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
           />
           <div
             aria-hidden
-            className="absolute -top-10 -right-8 w-56 h-56 rounded-full bg-amber-300/30 dark:bg-amber-500/15 blur-3xl"
+            className="absolute -top-10 -end-8 w-56 h-56 rounded-full bg-amber-300/30 dark:bg-amber-500/15 blur-3xl"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label={t('common.close', { defaultValue: 'Close' })}
-            className="absolute top-3 right-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
+            className="absolute top-3 end-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <X size={18} />
           </button>
@@ -472,7 +472,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 ml-14">
+            <div className="flex flex-wrap gap-2 ms-14">
               <a
                 href={TWITTER_URL}
                 target="_blank"
@@ -583,7 +583,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 ml-14">
+            <div className="flex flex-wrap gap-2 ms-14">
               <a
                 href={PAYPAL_DONATE_URL}
                 target="_blank"

@@ -248,7 +248,7 @@ export function SavedViewsPage() {
       {/* Filter bar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[200px] flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder={t('saved_views.search', { defaultValue: 'Search views...' })}
@@ -261,7 +261,7 @@ export function SavedViewsPage() {
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2"
+              className="absolute end-3 top-1/2 -translate-y-1/2"
               aria-label={t('common.clear_search', { defaultValue: 'Clear search' })}
             >
               <X className="h-4 w-4 text-gray-400 hover:text-gray-600" aria-hidden />
@@ -298,7 +298,7 @@ export function SavedViewsPage() {
       {/* Loading */}
       {isLoading && (
         <div className="flex items-center justify-center py-16 text-content-tertiary">
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          <Loader2 className="me-2 h-5 w-5 animate-spin" />
           {t('common.loading', { defaultValue: 'Loading...' })}
         </div>
       )}
@@ -361,7 +361,7 @@ export function SavedViewsPage() {
                     variant={SCOPE_BADGE_VARIANT[view.share_scope as ShareScope] ?? 'neutral'}
                     size="sm"
                   >
-                    <ScopeIcon className="mr-1 inline h-3 w-3" aria-hidden />
+                    <ScopeIcon className="me-1 inline h-3 w-3" aria-hidden />
                     {t(`saved_views.scope_${view.share_scope}`, {
                       defaultValue: view.share_scope.charAt(0).toUpperCase() + view.share_scope.slice(1),
                     })}

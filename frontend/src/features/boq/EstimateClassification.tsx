@@ -184,7 +184,7 @@ function MetricRow({
             style={{ width: `${Math.min(pct, 100)}%` }}
           />
         </div>
-        <span className="w-10 text-right font-mono text-content-primary tabular-nums">
+        <span className="w-10 text-end font-mono text-content-primary tabular-nums">
           {fmtPercent(pct, 0)}
         </span>
       </div>
@@ -229,7 +229,7 @@ export function EstimateClassification({ boqId }: { boqId: string }) {
       {/* ── Header: clickable to expand ──────────────────────────────── */}
       <button
         onClick={() => setExpanded((prev) => !prev)}
-        className="w-full flex items-center justify-between gap-4 px-5 py-4 hover:bg-surface-secondary/50 transition-colors text-left"
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 hover:bg-surface-secondary/50 transition-colors text-start"
       >
         <div className="flex items-center gap-4">
           {/* Class badge — large number */}

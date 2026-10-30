@@ -442,7 +442,7 @@ function SyncResultPanel({ log }: { log: SyncLog }) {
         )}
       </div>
       {log.file_keys.length > 0 && (
-        <ul className="mt-1 list-disc pl-5 text-content-tertiary">
+        <ul className="mt-1 list-disc ps-5 text-content-tertiary">
           {log.file_keys.map((k) => (
             <li key={k} className="font-mono text-2xs break-all">
               {k}
@@ -477,7 +477,7 @@ function SyncHistory({ configId }: { configId: string }) {
   if (isLoading) {
     return (
       <div className="border-t border-border-light p-4 text-xs text-content-tertiary">
-        <Loader2 size={14} className="inline animate-spin mr-1.5" />
+        <Loader2 size={14} className="inline animate-spin me-1.5" />
         {t('common.loading', { defaultValue: 'Loading...' })}
       </div>
     );
@@ -497,12 +497,12 @@ function SyncHistory({ configId }: { configId: string }) {
       <table className="w-full text-xs">
         <thead>
           <tr className="bg-surface-secondary/50 text-content-tertiary">
-            <th className="px-4 py-2 text-left font-medium">{t('finance.connectors.col_when', { defaultValue: 'When' })}</th>
-            <th className="px-4 py-2 text-left font-medium">{t('finance.connectors.col_direction', { defaultValue: 'Direction' })}</th>
-            <th className="px-4 py-2 text-left font-medium">{t('finance.connectors.col_trigger', { defaultValue: 'Trigger' })}</th>
-            <th className="px-4 py-2 text-left font-medium">{t('finance.connectors.col_status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2 text-right font-medium">{t('finance.connectors.records_out', { defaultValue: 'Sent' })}</th>
-            <th className="px-4 py-2 text-right font-medium">{t('finance.connectors.records_in', { defaultValue: 'Read' })}</th>
+            <th className="px-4 py-2 text-start font-medium">{t('finance.connectors.col_when', { defaultValue: 'When' })}</th>
+            <th className="px-4 py-2 text-start font-medium">{t('finance.connectors.col_direction', { defaultValue: 'Direction' })}</th>
+            <th className="px-4 py-2 text-start font-medium">{t('finance.connectors.col_trigger', { defaultValue: 'Trigger' })}</th>
+            <th className="px-4 py-2 text-start font-medium">{t('finance.connectors.col_status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2 text-end font-medium">{t('finance.connectors.records_out', { defaultValue: 'Sent' })}</th>
+            <th className="px-4 py-2 text-end font-medium">{t('finance.connectors.records_in', { defaultValue: 'Read' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -522,8 +522,8 @@ function SyncHistory({ configId }: { configId: string }) {
                   })}
                 </Badge>
               </td>
-              <td className="px-4 py-2 text-right tabular-nums">{log.records_out}</td>
-              <td className="px-4 py-2 text-right tabular-nums">{log.records_in}</td>
+              <td className="px-4 py-2 text-end tabular-nums">{log.records_out}</td>
+              <td className="px-4 py-2 text-end tabular-nums">{log.records_in}</td>
             </tr>
           ))}
         </tbody>

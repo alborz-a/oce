@@ -66,7 +66,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
     : [];
 
   return (
-    <aside className="w-60 shrink-0 border-r border-border-light bg-surface-secondary/40 overflow-y-auto">
+    <aside className="w-60 shrink-0 border-e border-border-light bg-surface-secondary/40 overflow-y-auto">
       {totalBytes > 0 && (
         <div className="px-3 pt-3 pb-3 border-b border-border-light">
           <div className="flex items-center gap-1.5 mb-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary">
@@ -112,7 +112,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
           type="button"
           onClick={() => onSelect(null)}
           className={clsx(
-            'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm transition-colors',
+            'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-start text-sm transition-colors',
             selectedId === null
               ? 'bg-oe-blue/10 text-oe-blue font-medium'
               : 'text-content-secondary hover:bg-surface-secondary',
@@ -138,7 +138,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
                 type="button"
                 onClick={() => onSelect(kind)}
                 className={clsx(
-                  'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-sm transition-colors',
+                  'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-start text-sm transition-colors',
                   isActive
                     ? 'bg-oe-blue/10 text-oe-blue font-medium'
                     : 'text-content-secondary hover:bg-surface-secondary',

@@ -401,7 +401,7 @@ export function ForecastPanel({ projectId, onAlertCountChange }: ForecastPanelPr
           {t('project_intelligence.forecast.ftc_title', {
             defaultValue: 'Forecast to Completion',
           })}
-          <span className="ml-auto text-2xs font-normal text-content-tertiary">
+          <span className="ms-auto text-2xs font-normal text-content-tertiary">
             {t('project_intelligence.forecast.method', {
               defaultValue: 'Method: {{method}}',
               method: fc.method === 'spi_cpi' ? 'SPI×CPI' : 'CPI',
@@ -476,7 +476,7 @@ export function ForecastPanel({ projectId, onAlertCountChange }: ForecastPanelPr
           {t('project_intelligence.forecast.active_alerts', {
             defaultValue: 'Active Forecast Alerts',
           })}
-          <span className="ml-auto text-2xs font-normal text-content-tertiary">{alerts.length}</span>
+          <span className="ms-auto text-2xs font-normal text-content-tertiary">{alerts.length}</span>
         </h3>
 
         {alerts.length === 0 ? (
@@ -498,20 +498,20 @@ export function ForecastPanel({ projectId, onAlertCountChange }: ForecastPanelPr
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-content-tertiary text-left border-b border-border-light">
-                  <th className="py-2 pr-3 font-medium">
+                <tr className="text-content-tertiary text-start border-b border-border-light">
+                  <th className="py-2 pe-3 font-medium">
                     {t('project_intelligence.forecast.col_severity', { defaultValue: 'Severity' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('project_intelligence.forecast.col_reason', { defaultValue: 'Reason' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium text-right">
+                  <th className="py-2 pe-3 font-medium text-end">
                     {t('project_intelligence.forecast.col_eac', { defaultValue: 'EAC' })}
                   </th>
-                  <th className="py-2 pr-3 font-medium">
+                  <th className="py-2 pe-3 font-medium">
                     {t('project_intelligence.forecast.col_when', { defaultValue: 'Triggered' })}
                   </th>
-                  <th className="py-2 font-medium text-right">
+                  <th className="py-2 font-medium text-end">
                     {t('project_intelligence.forecast.col_actions', { defaultValue: 'Actions' })}
                   </th>
                 </tr>
@@ -526,7 +526,7 @@ export function ForecastPanel({ projectId, onAlertCountChange }: ForecastPanelPr
                       className="border-b border-border-light/60 last:border-0"
                       data-testid="forecast-alert-row"
                     >
-                      <td className="py-2.5 pr-3">
+                      <td className="py-2.5 pe-3">
                         <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-2xs font-medium ${sev.chip}`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${sev.dot}`} />
                           {t(`project_intelligence.forecast.sev_${a.severity}`, {
@@ -534,25 +534,25 @@ export function ForecastPanel({ projectId, onAlertCountChange }: ForecastPanelPr
                           })}
                         </span>
                         {isSnoozed && (
-                          <span className="ml-1 inline-flex items-center gap-1 text-2xs text-content-quaternary">
+                          <span className="ms-1 inline-flex items-center gap-1 text-2xs text-content-quaternary">
                             <BellOff size={11} />
                             {t('project_intelligence.forecast.snoozed', { defaultValue: 'Snoozed' })}
                           </span>
                         )}
                       </td>
-                      <td className="py-2.5 pr-3 text-content-secondary">
+                      <td className="py-2.5 pe-3 text-content-secondary">
                         {a.summary ||
                           t('project_intelligence.forecast.generic_reason', {
                             defaultValue: 'Forecast breached a configured threshold',
                           })}
                       </td>
-                      <td className="py-2.5 pr-3 text-right">
+                      <td className="py-2.5 pe-3 text-end">
                         <MoneyDisplay amount={num(a.eac)} currency={currency} className="tabular-nums" />
                       </td>
-                      <td className="py-2.5 pr-3 text-content-tertiary whitespace-nowrap">
+                      <td className="py-2.5 pe-3 text-content-tertiary whitespace-nowrap">
                         {a.triggered_at ? new Date(a.triggered_at).toLocaleDateString(getIntlLocale()) : '—'}
                       </td>
-                      <td className="py-2.5 text-right whitespace-nowrap">
+                      <td className="py-2.5 text-end whitespace-nowrap">
                         <div className="inline-flex items-center gap-1.5">
                           <button
                             onClick={() => handleAcknowledge(a.forecast_id)}

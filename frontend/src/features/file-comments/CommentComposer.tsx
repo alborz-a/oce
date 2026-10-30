@@ -275,7 +275,7 @@ export function CommentComposer({
           id="mention-popover"
           role="listbox"
           aria-label={t('comments.mentions', { defaultValue: 'Mentions' })}
-          className="absolute left-0 top-full z-20 mt-1 w-64 rounded-lg border border-border bg-surface-primary shadow-lg"
+          className="absolute start-0 top-full z-20 mt-1 w-64 rounded-lg border border-border bg-surface-primary shadow-lg"
         >
           {filtered.map((s, idx) => (
             <button
@@ -284,7 +284,7 @@ export function CommentComposer({
               onClick={() => insertSuggestion(s)}
               onMouseEnter={() => setHighlight(idx)}
               className={clsx(
-                'flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm',
+                'flex w-full items-center gap-2 px-3 py-1.5 text-start text-sm',
                 idx === highlight
                   ? 'bg-oe-blue/10 text-oe-blue'
                   : 'text-content-primary hover:bg-surface-secondary',

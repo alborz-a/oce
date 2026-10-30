@@ -205,7 +205,7 @@ function SourceRow({
       <span className={linked ? 'text-oe-blue' : 'text-content-quaternary'}>{icon}</span>
       <span className="shrink-0 text-content-tertiary">{label}</span>
       <span
-        className={`ml-auto min-w-0 truncate text-right ${
+        className={`ms-auto min-w-0 truncate text-end ${
           linked ? 'font-medium text-content-primary' : 'text-content-quaternary'
         }`}
       >
@@ -1428,7 +1428,7 @@ export function DesignOptionsPage() {
                       type="button"
                       aria-label={t('designOptions.deleteSet', { defaultValue: 'Delete set' })}
                       title={t('designOptions.deleteSet', { defaultValue: 'Delete set' })}
-                      className="ml-1 rounded-md p-1 text-content-tertiary transition-colors hover:bg-semantic-error-bg/40 hover:text-semantic-error disabled:opacity-50"
+                      className="ms-1 rounded-md p-1 text-content-tertiary transition-colors hover:bg-semantic-error-bg/40 hover:text-semantic-error disabled:opacity-50"
                       disabled={deleteSetMutation.isPending}
                       onClick={async () => {
                         const ok = await confirm({

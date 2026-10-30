@@ -167,7 +167,7 @@ export function BlockShell({
         <span className="truncate font-medium">{visibleLabel}</span>
       </div>
       {children !== undefined && children !== null && (
-        <div className={clsx('pl-7 text-xs', tokens.classes.textSubtle)}>{children}</div>
+        <div className={clsx('ps-7 text-xs', tokens.classes.textSubtle)}>{children}</div>
       )}
     </div>
   );

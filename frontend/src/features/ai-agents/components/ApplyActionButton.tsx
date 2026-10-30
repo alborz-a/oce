@@ -275,7 +275,7 @@ export function ApplyActionButton({ runId }: ApplyActionButtonProps): JSX.Elemen
             })}
           </p>
           {result.skipped_reasons.length > 0 && (
-            <ul className="mt-1 list-disc space-y-0.5 pl-4 text-content-tertiary">
+            <ul className="mt-1 list-disc space-y-0.5 ps-4 text-content-tertiary">
               {result.skipped_reasons.slice(0, 4).map((r, i) => (
                 <li key={i}>{r}</li>
               ))}

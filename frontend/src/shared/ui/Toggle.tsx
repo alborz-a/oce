@@ -58,7 +58,7 @@ export function Toggle({
       >
         <span
           className={clsx(
-            'absolute left-0 top-0 rounded-full bg-white shadow transition-transform',
+            'absolute start-0 top-0 rounded-full bg-white shadow transition-transform',
             knobCls,
             translateCls,
           )}

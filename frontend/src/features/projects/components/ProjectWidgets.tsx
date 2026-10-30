@@ -309,7 +309,7 @@ export function RFIInboxWidget({ projectId }: { projectId: string }) {
               <button
                 type="button"
                 onClick={() => navigate(`/rfi/${rfi.id}`)}
-                className="w-full text-left px-2 py-2 rounded-md hover:bg-surface-secondary transition-colors flex items-center gap-2"
+                className="w-full text-start px-2 py-2 rounded-md hover:bg-surface-secondary transition-colors flex items-center gap-2"
               >
                 <span className="text-2xs font-mono text-content-tertiary shrink-0 w-12 truncate">
                   {rfi.number ?? rfi.id.slice(0, 6)}

@@ -43,28 +43,28 @@ const SEVERITY_CONFIG: Record<
   blocker: {
     color: 'text-red-400',
     bg: 'bg-red-500/10',
-    border: 'border-l-red-500',
+    border: 'border-s-red-500',
     icon: AlertOctagon,
     label: 'BLOCKER',
   },
   critical: {
     color: 'text-orange-400',
     bg: 'bg-orange-500/10',
-    border: 'border-l-orange-500',
+    border: 'border-s-orange-500',
     icon: AlertTriangle,
     label: 'CRITICAL',
   },
   warning: {
     color: 'text-yellow-400',
     bg: 'bg-yellow-500/10',
-    border: 'border-l-yellow-500',
+    border: 'border-s-yellow-500',
     icon: AlertCircle,
     label: 'WARNING',
   },
   suggestion: {
     color: 'text-gray-400',
     bg: 'bg-gray-500/10',
-    border: 'border-l-gray-500',
+    border: 'border-s-gray-500',
     icon: Info,
     label: 'SUGGESTION',
   },
@@ -77,7 +77,7 @@ export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: Ga
   return (
     <div
       className={clsx(
-        'rounded-lg border-l-[3px] transition-all duration-200',
+        'rounded-lg border-s-[3px] transition-all duration-200',
         config?.border,
         isExpanded ? 'bg-surface-tertiary/70' : 'bg-surface-tertiary/30 hover:bg-surface-tertiary/50'
       )}
@@ -85,7 +85,7 @@ export function GapCard({ gap, isExpanded, onToggle, onAction, actionLabel }: Ga
       {/* Header — always visible */}
       <button
         onClick={onToggle}
-        className="w-full text-left px-3 py-2.5 flex items-start gap-2"
+        className="w-full text-start px-3 py-2.5 flex items-start gap-2"
         aria-expanded={isExpanded}
       >
         {Icon && <Icon size={14} className={clsx('shrink-0 mt-0.5', config?.color)} />}

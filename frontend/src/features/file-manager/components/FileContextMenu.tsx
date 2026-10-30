@@ -317,7 +317,7 @@ function MenuItem({
       )}
     >
       <span className="shrink-0">{icon}</span>
-      <span className="truncate text-left flex-1">{label}</span>
+      <span className="truncate text-start flex-1">{label}</span>
     </button>
   );
 }

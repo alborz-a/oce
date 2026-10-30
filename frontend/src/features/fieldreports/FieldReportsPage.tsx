@@ -603,9 +603,9 @@ export function FieldReportsPage() {
             className="shrink-0 whitespace-nowrap"
           >
             {exportMut.isPending ? (
-              <Loader2 size={14} className="mr-1.5 animate-spin shrink-0" />
+              <Loader2 size={14} className="me-1.5 animate-spin shrink-0" />
             ) : (
-              <Download size={14} className="mr-1.5 shrink-0" />
+              <Download size={14} className="me-1.5 shrink-0" />
             )}
             <span className="whitespace-nowrap">{t('fieldreports.export', { defaultValue: 'Export' })}</span>
           </Button>
@@ -615,7 +615,7 @@ export function FieldReportsPage() {
             onClick={() => setShowImportModal(true)}
             className="shrink-0 whitespace-nowrap"
           >
-            <Upload size={14} className="mr-1.5 shrink-0" />
+            <Upload size={14} className="me-1.5 shrink-0" />
             <span className="whitespace-nowrap">{t('fieldreports.import', { defaultValue: 'Import' })}</span>
           </Button>
           <Button
@@ -624,7 +624,7 @@ export function FieldReportsPage() {
             onClick={() => setShowTemplatesModal(true)}
             className="shrink-0 whitespace-nowrap"
           >
-            <LayoutTemplate size={14} className="mr-1.5 shrink-0" />
+            <LayoutTemplate size={14} className="me-1.5 shrink-0" />
             <span className="whitespace-nowrap">{t('fieldreports.templates', { defaultValue: 'Templates' })}</span>
           </Button>
           <Button variant="primary" size="sm" onClick={handleOpenNew} className="shrink-0 whitespace-nowrap" icon={<Plus size={14} />}>
@@ -921,22 +921,22 @@ export function FieldReportsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary/50">
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('fieldreports.col_date', { defaultValue: 'Date' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('fieldreports.col_type', { defaultValue: 'Type' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('fieldreports.col_weather', { defaultValue: 'Weather' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('fieldreports.col_workforce', { defaultValue: 'Workforce' })}
                     </th>
-                    <th className="px-4 py-3 text-left font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-start font-medium text-content-tertiary">
                       {t('fieldreports.col_status', { defaultValue: 'Status' })}
                     </th>
-                    <th className="px-4 py-3 text-right font-medium text-content-tertiary">
+                    <th className="px-4 py-3 text-end font-medium text-content-tertiary">
                       {t('common.actions', { defaultValue: 'Actions' })}
                     </th>
                   </tr>
@@ -984,7 +984,7 @@ export function FieldReportsPage() {
                             })}
                           </Badge>
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-4 py-3 text-end">
                           <div
                             className="flex items-center justify-end gap-1"
                             onClick={(e) => e.stopPropagation()}
@@ -1280,9 +1280,9 @@ function ImportFieldReportsModal({
               disabled={!file || isPending}
             >
               {isPending ? (
-                <Loader2 size={16} className="animate-spin mr-1.5" />
+                <Loader2 size={16} className="animate-spin me-1.5" />
               ) : (
-                <Upload size={16} className="mr-1.5" />
+                <Upload size={16} className="me-1.5" />
               )}
               <span>{t('fieldreports.import_btn', { defaultValue: 'Import' })}</span>
             </Button>
@@ -1872,7 +1872,7 @@ function ReportModal({
       }
       footer={
         <>
-          <div className="mr-auto flex items-center gap-2">
+          <div className="me-auto flex items-center gap-2">
             {isEdit && effectiveReport?.status === 'draft' && (
               <Button
                 size="sm"
@@ -1883,7 +1883,7 @@ function ReportModal({
                   defaultValue: 'Submitting sends the report for approval.',
                 })}
               >
-                <Send size={14} className="mr-1.5 shrink-0" />
+                <Send size={14} className="me-1.5 shrink-0" />
                 <span className="whitespace-nowrap">{t('fieldreports.submit', { defaultValue: 'Submit for Approval' })}</span>
               </Button>
             )}
@@ -1897,7 +1897,7 @@ function ReportModal({
                   defaultValue: 'Approve (locks the report permanently)',
                 })}
               >
-                <CheckCircle2 size={14} className="mr-1.5 shrink-0" />
+                <CheckCircle2 size={14} className="me-1.5 shrink-0" />
                 <span className="whitespace-nowrap">{t('fieldreports.approve', { defaultValue: 'Approve' })}</span>
               </Button>
             )}
@@ -2003,9 +2003,9 @@ function ReportModal({
                 onClick={() => void handleEnsureDraft()}
               >
                 {creatingDraft ? (
-                  <Loader2 size={14} className="mr-1.5 animate-spin" />
+                  <Loader2 size={14} className="me-1.5 animate-spin" />
                 ) : (
-                  <Upload size={14} className="mr-1.5" />
+                  <Upload size={14} className="me-1.5" />
                 )}
                 {t('fieldreports.start_attaching', {
                   defaultValue: 'Add photos & documents',

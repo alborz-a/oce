@@ -314,7 +314,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 type="button"
                 onClick={() => openLightbox(idx)}
                 data-testid={`photos-tab-tile-${row.id}`}
-                className="group relative flex flex-col text-left rounded-lg overflow-hidden bg-surface-secondary border border-border-light hover:border-oe-blue hover:shadow-md focus:outline-none focus:ring-2 focus:ring-oe-blue transition-all"
+                className="group relative flex flex-col text-start rounded-lg overflow-hidden bg-surface-secondary border border-border-light hover:border-oe-blue hover:shadow-md focus:outline-none focus:ring-2 focus:ring-oe-blue transition-all"
                 aria-label={t('projects.photos.open_photo_aria', {
                   defaultValue: 'Open {{name}}',
                   name: row.name,
@@ -381,7 +381,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               e.stopPropagation();
               closeLightbox();
             }}
-            className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+            className="absolute top-4 end-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
             data-testid="photos-tab-lightbox-close"
             aria-label={t('projects.photos.close_aria', { defaultValue: 'Close' })}
           >
@@ -396,7 +396,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 e.stopPropagation();
                 stepLightbox(-1);
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+              className="absolute start-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
               data-testid="photos-tab-lightbox-prev"
               aria-label={t('projects.photos.prev_aria', { defaultValue: 'Previous' })}
             >
@@ -412,7 +412,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 e.stopPropagation();
                 stepLightbox(1);
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
+              className="absolute end-4 top-1/2 -translate-y-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white"
               data-testid="photos-tab-lightbox-next"
               aria-label={t('projects.photos.next_aria', { defaultValue: 'Next' })}
             >

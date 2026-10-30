@@ -990,7 +990,7 @@ function PaymentScheduleSection({
                 <button
                   type="button"
                   onClick={() => setSelected(row)}
-                  className={`w-full text-left rounded-xl border p-3 transition-colors ${instalmentTimelineColor(row.status)}`}
+                  className={`w-full text-start rounded-xl border p-3 transition-colors ${instalmentTimelineColor(row.status)}`}
                   aria-label={t('buyer_portal.payments.open_detail', {
                     defaultValue: 'Open instalment {{n}} details',
                     n: row.sequence,
@@ -1028,27 +1028,27 @@ function PaymentScheduleSection({
           <div className="mt-3 hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-2xs uppercase tracking-wide text-content-tertiary">
-                  <th className="py-2 pr-3">#</th>
-                  <th className="py-2 pr-3">
+                <tr className="text-start text-2xs uppercase tracking-wide text-content-tertiary">
+                  <th className="py-2 pe-3">#</th>
+                  <th className="py-2 pe-3">
                     {t('buyer_portal.payments.milestone', {
                       defaultValue: 'Milestone',
                     })}
                   </th>
-                  <th className="py-2 pr-3">
+                  <th className="py-2 pe-3">
                     {t('buyer_portal.payments.due', { defaultValue: 'Due' })}
                   </th>
-                  <th className="py-2 pr-3 text-right">
+                  <th className="py-2 pe-3 text-end">
                     {t('buyer_portal.payments.amount', {
                       defaultValue: 'Amount',
                     })}
                   </th>
-                  <th className="py-2 pr-3 text-right">
+                  <th className="py-2 pe-3 text-end">
                     {t('buyer_portal.payments.paid', {
                       defaultValue: 'Paid',
                     })}
                   </th>
-                  <th className="py-2 pr-1">
+                  <th className="py-2 pe-1">
                     {t('buyer_portal.payments.status', {
                       defaultValue: 'Status',
                     })}
@@ -1062,24 +1062,24 @@ function PaymentScheduleSection({
                     onClick={() => setSelected(row)}
                     className="border-t border-border-light/50 cursor-pointer hover:bg-surface-secondary/50"
                   >
-                    <td className="py-2 pr-3 tabular-nums text-content-tertiary">
+                    <td className="py-2 pe-3 tabular-nums text-content-tertiary">
                       {row.sequence}
                     </td>
-                    <td className="py-2 pr-3 text-content-primary">
+                    <td className="py-2 pe-3 text-content-primary">
                       {row.milestone_label || '—'}
                     </td>
-                    <td className="py-2 pr-3 text-content-secondary">
+                    <td className="py-2 pe-3 text-content-secondary">
                       {row.due_date
                         ? formatDate(row.due_date)
                         : '—'}
                     </td>
-                    <td className="py-2 pr-3 text-right tabular-nums text-content-primary">
+                    <td className="py-2 pe-3 text-end tabular-nums text-content-primary">
                       {formatMoney(row.amount, row.currency, locale)}
                     </td>
-                    <td className="py-2 pr-3 text-right tabular-nums text-content-secondary">
+                    <td className="py-2 pe-3 text-end tabular-nums text-content-secondary">
                       {formatMoney(row.amount_paid, row.currency, locale)}
                     </td>
-                    <td className="py-2 pr-1">
+                    <td className="py-2 pe-1">
                       <InstalmentStatusPill status={row.status} />
                     </td>
                   </tr>
@@ -1873,7 +1873,7 @@ function ShellWrapper({
               })}
             </span>
           )}
-          <ModuleGuideButton content={buyerPortalGuide} className="ml-auto" />
+          <ModuleGuideButton content={buyerPortalGuide} className="ms-auto" />
           {/* [RSC-IRAN] hidden: region lock fa/IR/IRR — do not delete */}
           {!REGION_LOCK && (
           <nav

@@ -207,13 +207,13 @@ export function Stage2Groups({
             <tr>
               <th className="w-10 px-3 py-2" />
               <th className="w-10 px-3 py-2" />
-              <th className="px-3 py-2 text-left font-medium">
+              <th className="px-3 py-2 text-start font-medium">
                 {t('aiest.groups.group', { defaultValue: 'Group' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('aiest.groups.quantity', { defaultValue: 'Quantity' })}
               </th>
-              <th className="px-3 py-2 text-left font-medium">
+              <th className="px-3 py-2 text-start font-medium">
                 {t('aiest.groups.unit', { defaultValue: 'Unit' })}
               </th>
               <th className="w-12 px-3 py-2" />
@@ -277,7 +277,7 @@ export function Stage2Groups({
                       </div>
                     </div>
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <input
                       type="number"
                       value={qtyVal}
@@ -286,7 +286,7 @@ export function Stage2Groups({
                         setDraftQty((p) => ({ ...p, [g.id]: e.target.value }))
                       }
                       onBlur={() => commitQty(g)}
-                      className="w-28 rounded border border-border-light bg-surface-elevated px-2 py-1 text-right text-sm tabular-nums disabled:opacity-50"
+                      className="w-28 rounded border border-border-light bg-surface-elevated px-2 py-1 text-end text-sm tabular-nums disabled:opacity-50"
                       aria-label={t('aiest.groups.quantity', { defaultValue: 'Quantity' })}
                     />
                   </td>

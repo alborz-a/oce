@@ -368,7 +368,7 @@ function TreePanel({
                   aria-pressed={active}
                   onClick={() => onSelect(node.id)}
                   style={{ paddingLeft: `${8 + depth * 16}px` }}
-                  className={`flex w-full items-center gap-2 rounded-md py-1.5 pr-2 text-left text-sm transition-colors ${
+                  className={`flex w-full items-center gap-2 rounded-md py-1.5 pe-2 text-start text-sm transition-colors ${
                     active ? 'bg-oe-blue/10 text-oe-blue' : 'text-content-primary hover:bg-surface-secondary'
                   }`}
                 >
@@ -380,7 +380,7 @@ function TreePanel({
                   <span className="min-w-0 flex-1 truncate">
                     {node.name}
                     {node.code ? (
-                      <span className="ml-1.5 text-2xs text-content-tertiary">{node.code}</span>
+                      <span className="ms-1.5 text-2xs text-content-tertiary">{node.code}</span>
                     ) : null}
                   </span>
                   {node.project_ids.length > 0 && (
@@ -512,7 +512,7 @@ function AttachProjectRow({
   });
 
   return (
-    <div className="mb-1 ml-6 mt-1 flex items-center gap-2" data-testid="portfolio-attach-row">
+    <div className="mb-1 ms-6 mt-1 flex items-center gap-2" data-testid="portfolio-attach-row">
       <input
         type="text"
         value={projectId}
@@ -675,19 +675,19 @@ function CpmActivityTable({ rows }: { rows: PortfolioCpmActivity[] }) {
       <table className="w-full text-sm" data-testid="portfolio-cp-table">
         <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('portfolio.col_schedule', { defaultValue: 'Schedule' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('portfolio.col_activity', { defaultValue: 'Activity' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('portfolio.col_es', { defaultValue: 'ES' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('portfolio.col_ef', { defaultValue: 'EF' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('portfolio.col_float', { defaultValue: 'Float' })}
             </th>
           </tr>
@@ -705,9 +705,9 @@ function CpmActivityTable({ rows }: { rows: PortfolioCpmActivity[] }) {
                   {r.activity_name || shortId(r.activity_id)}
                 </span>
               </td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums">{r.es}</td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums">{r.ef}</td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums">{r.total_float}</td>
+              <td className="px-3 py-2 text-end font-mono tabular-nums">{r.es}</td>
+              <td className="px-3 py-2 text-end font-mono tabular-nums">{r.ef}</td>
+              <td className="px-3 py-2 text-end font-mono tabular-nums">{r.total_float}</td>
             </tr>
           ))}
         </tbody>
@@ -863,21 +863,21 @@ function CrossLinkList({ scheduleId, onError }: { scheduleId: string; onError: (
       <table className="w-full text-sm" data-testid="portfolio-crosslinks-table">
         <thead className="bg-surface-secondary text-2xs uppercase tracking-wide text-content-tertiary">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('portfolio.xl_predecessor', { defaultValue: 'Predecessor' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('portfolio.xl_successor', { defaultValue: 'Successor' })}
             </th>
             <th className="px-3 py-2 text-center">
               {t('portfolio.xl_type', { defaultValue: 'Type' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('portfolio.xl_lag', { defaultValue: 'Lag (d)' })}
             </th>
             {/* Named for assistive tech and hidden visually: a column of controls
                 still needs a heading, and a single space is not one. */}
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               <span className="sr-only">{t('portfolio.col_actions', { defaultValue: 'Actions' })}</span>
             </th>
           </tr>
@@ -906,8 +906,8 @@ function CrossLinkList({ scheduleId, onError }: { scheduleId: string; onError: (
                   {l.dep_type}
                 </Badge>
               </td>
-              <td className="px-3 py-2 text-right font-mono tabular-nums">{l.lag_days}</td>
-              <td className="px-3 py-2 text-right">
+              <td className="px-3 py-2 text-end font-mono tabular-nums">{l.lag_days}</td>
+              <td className="px-3 py-2 text-end">
                 <button
                   type="button"
                   onClick={() => onDelete(l.id)}

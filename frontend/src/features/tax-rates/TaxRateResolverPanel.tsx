@@ -322,16 +322,16 @@ function Answered({
         {t('tax_rates.breakdown_title', { defaultValue: 'How this was reached' })}
       </h3>
       <div className="mt-2 overflow-x-auto">
-        <table className="w-full min-w-[32rem] text-left text-xs">
+        <table className="w-full min-w-[32rem] text-start text-xs">
           <thead className="text-content-tertiary">
             <tr>
-              <th className="py-1 pr-3 font-medium">
+              <th className="py-1 pe-3 font-medium">
                 {t('tax_rates.col_tax', { defaultValue: 'Tax' })}
               </th>
-              <th className="py-1 pr-3 font-medium">
+              <th className="py-1 pe-3 font-medium">
                 {t('tax_rates.col_rate', { defaultValue: 'Rate' })}
               </th>
-              <th className="py-1 pr-3 font-medium">
+              <th className="py-1 pe-3 font-medium">
                 {t('tax_rates.col_base', { defaultValue: 'Charged on' })}
               </th>
               <th className="py-1 font-medium">
@@ -342,14 +342,14 @@ function Answered({
           <tbody className="text-content-secondary">
             {answer.components.map((c, i) => (
               <tr key={`${c.tax_code ?? c.tax_name}-${i}`} className="border-t border-border-light">
-                <td className="py-1.5 pr-3">
+                <td className="py-1.5 pe-3">
                   <span className="text-content-primary">{c.tax_name}</span>
                   <span className="block text-2xs text-content-tertiary">
                     {combinationLabel(t, c.combination)}
                   </span>
                 </td>
-                <td className="py-1.5 pr-3 tabular-nums">{c.rate_pct}%</td>
-                <td className="py-1.5 pr-3">{baseLabel(t, c.base)}</td>
+                <td className="py-1.5 pe-3 tabular-nums">{c.rate_pct}%</td>
+                <td className="py-1.5 pe-3">{baseLabel(t, c.base)}</td>
                 <td className="py-1.5 tabular-nums">{c.effective_rate_pct}%</td>
               </tr>
             ))}

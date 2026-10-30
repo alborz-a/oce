@@ -217,7 +217,7 @@ export function ShortcutsDialog({ open, onClose }: ShortcutsDialogProps) {
                           ? t(item.descriptionKey, { defaultValue: item.defaultValue })
                           : t(item.descriptionKey)}
                       </span>
-                      <div className="flex items-center gap-1 ml-4 shrink-0">
+                      <div className="flex items-center gap-1 ms-4 shrink-0">
                         {item.keys.map((key, keyIdx) => (
                           <span key={keyIdx} className="flex items-center gap-1">
                             {keyIdx > 0 && (

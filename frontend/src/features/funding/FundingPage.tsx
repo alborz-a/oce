@@ -363,7 +363,7 @@ export function FundingPage() {
           defaultValue: 'Programme, application, draw, proof of use - and the dates that decide all four',
         })}
       >
-        <ol className="ml-4 list-decimal space-y-1 text-sm text-gray-600 dark:text-gray-300">
+        <ol className="ms-4 list-decimal space-y-1 text-sm text-gray-600 dark:text-gray-300">
           <li>
             {t('funding.how_step_1', {
               defaultValue:
@@ -506,15 +506,15 @@ export function FundingPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <thead className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
+                <thead className="text-start text-xs uppercase text-gray-500 dark:text-gray-400">
                   <tr>
                     <th className="px-3 py-2">{t('funding.field.code', { defaultValue: 'Reference' })}</th>
                     <th className="px-3 py-2">{t('funding.field.programme', { defaultValue: 'Programme' })}</th>
                     <th className="px-3 py-2">{t('funding.field.status', { defaultValue: 'Status' })}</th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('funding.field.requested', { defaultValue: 'Requested' })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('funding.field.approved', { defaultValue: 'Approved' })}
                     </th>
                     <th className="px-3 py-2">{t('funding.field.period', { defaultValue: 'Award period' })}</th>
@@ -546,8 +546,8 @@ export function FundingPage() {
                             {t(`funding.status.${row.status}`, { defaultValue: row.status })}
                           </Badge>
                         </td>
-                        <td className="px-3 py-2 text-right tabular-nums">{money(row.requested_amount)}</td>
-                        <td className="px-3 py-2 text-right tabular-nums">{money(row.approved_amount)}</td>
+                        <td className="px-3 py-2 text-end tabular-nums">{money(row.requested_amount)}</td>
+                        <td className="px-3 py-2 text-end tabular-nums">{money(row.approved_amount)}</td>
                         {/* Two dates and a separator: keep the browser from choosing
                             the middle of one of them as the place to break. */}
                         <td className="whitespace-nowrap px-3 py-2 tabular-nums text-gray-600 dark:text-gray-300">
@@ -648,10 +648,10 @@ export function FundingPage() {
             />
             <Button
               variant="secondary"
-              className="ml-auto"
+              className="ms-auto"
               onClick={() => setShowProgrammeForm(true)}
             >
-              <Plus className="mr-1 h-4 w-4" />
+              <Plus className="me-1 h-4 w-4" />
               {t('funding.new_programme', { defaultValue: 'New programme' })}
             </Button>
           </div>
@@ -810,7 +810,7 @@ export function FundingPage() {
                       value={programmeDraft.funding_rate_percent}
                       onChange={(e) => setProgrammeField('funding_rate_percent', e.target.value)}
                       inputMode="decimal"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                   <label className="block text-sm">
@@ -821,7 +821,7 @@ export function FundingPage() {
                       value={programmeDraft.aid_intensity_cap_percent}
                       onChange={(e) => setProgrammeField('aid_intensity_cap_percent', e.target.value)}
                       inputMode="decimal"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                   <label className="block text-sm">
@@ -832,7 +832,7 @@ export function FundingPage() {
                       value={programmeDraft.own_share_percent}
                       onChange={(e) => setProgrammeField('own_share_percent', e.target.value)}
                       inputMode="decimal"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                 </div>
@@ -866,7 +866,7 @@ export function FundingPage() {
                       value={programmeDraft.proof_of_use_due_days}
                       onChange={(e) => setProgrammeField('proof_of_use_due_days', e.target.value)}
                       inputMode="numeric"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                   <label className="block text-sm">
@@ -877,7 +877,7 @@ export function FundingPage() {
                       value={programmeDraft.disbursement_spend_days}
                       onChange={(e) => setProgrammeField('disbursement_spend_days', e.target.value)}
                       inputMode="numeric"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                   <label className="block text-sm">
@@ -888,7 +888,7 @@ export function FundingPage() {
                       value={programmeDraft.retention_years}
                       onChange={(e) => setProgrammeField('retention_years', e.target.value)}
                       inputMode="numeric"
-                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                      className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                     />
                   </label>
                 </div>
@@ -976,7 +976,7 @@ export function FundingPage() {
                     value={draftBase}
                     onChange={(e) => setDraftBase(e.target.value)}
                     inputMode="decimal"
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                   />
                 </label>
                 <label className="block text-sm">
@@ -987,7 +987,7 @@ export function FundingPage() {
                     value={draftRequested}
                     onChange={(e) => setDraftRequested(e.target.value)}
                     inputMode="decimal"
-                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-right tabular-nums dark:border-gray-600 dark:bg-gray-800"
+                    className="w-full rounded border border-gray-300 px-2 py-1.5 text-end tabular-nums dark:border-gray-600 dark:bg-gray-800"
                   />
                 </label>
               </div>

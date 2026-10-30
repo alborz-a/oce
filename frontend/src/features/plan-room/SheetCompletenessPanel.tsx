@@ -365,7 +365,7 @@ function SheetCompletenessResult({
       )}
 
       <Button variant="ghost" size="sm" loading={exportPending} onClick={onExport}>
-        <Download size={14} className="mr-1.5" />
+        <Download size={14} className="me-1.5" />
         {t('sheetCompleteness.export', { defaultValue: 'Export findings' })}
       </Button>
     </div>

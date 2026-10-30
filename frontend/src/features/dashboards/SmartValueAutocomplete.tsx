@@ -208,7 +208,7 @@ export function SmartValueAutocomplete({
       data-testid="smart-value-autocomplete"
     >
       <div className="relative">
-        <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-tertiary" />
+        <Search className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-content-tertiary" />
         <input
           ref={inputRef}
           type="text"
@@ -231,7 +231,7 @@ export function SmartValueAutocomplete({
           className="w-full rounded border border-border-light bg-surface-primary px-7 py-1.5 text-sm text-content-primary placeholder:text-content-tertiary focus:border-oe-blue focus:outline-none focus:ring-1 focus:ring-oe-blue disabled:opacity-50"
           data-testid="smart-value-input"
         />
-        <div className="absolute right-1 top-1/2 flex -translate-y-1/2 items-center gap-1">
+        <div className="absolute end-1 top-1/2 flex -translate-y-1/2 items-center gap-1">
           {isLoading && (
             <Loader2 className="h-3.5 w-3.5 animate-spin text-content-tertiary" />
           )}

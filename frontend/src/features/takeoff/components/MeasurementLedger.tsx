@@ -246,7 +246,7 @@ export function MeasurementLedger({
             <Filter size={10} />
             {t('takeoff_viewer.filters', { defaultValue: 'Filters' })}
             {hasFilters && (
-              <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue" />
+              <span className="ms-0.5 h-1.5 w-1.5 rounded-full bg-oe-blue" />
             )}
           </button>
           <button
@@ -381,7 +381,7 @@ export function MeasurementLedger({
                       className={clsx(
                         'px-1.5 py-1 font-semibold text-content-secondary cursor-pointer select-none hover:bg-surface-secondary transition-colors',
                         'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 focus-visible:ring-inset',
-                        col.align === 'right' ? 'text-right' : 'text-left',
+                        col.align === 'right' ? 'text-end' : 'text-start',
                       )}
                       data-testid={`ledger-header-${col.key}`}
                       data-sort={isActive ? sortDir : undefined}
@@ -403,7 +403,7 @@ export function MeasurementLedger({
                 {hasActionColumn && (
                   <th
                     scope="col"
-                    className="px-1.5 py-1 font-semibold text-content-secondary text-right"
+                    className="px-1.5 py-1 font-semibold text-content-secondary text-end"
                     aria-label={t('takeoff_viewer.col_actions', {
                       defaultValue: 'Actions',
                     })}
@@ -455,7 +455,7 @@ export function MeasurementLedger({
                     data-testid="ledger-grand-total"
                     data-type={gt.type}
                   >
-                    <td className="px-1.5 py-1 text-right text-content-tertiary" />
+                    <td className="px-1.5 py-1 text-end text-content-tertiary" />
                     <td className="px-1.5 py-1 font-semibold text-content-primary capitalize">
                       {t('takeoff_viewer.total_of_type', {
                         defaultValue: 'Total {{type}}',
@@ -466,7 +466,7 @@ export function MeasurementLedger({
                       {gt.count} {t('takeoff_viewer.items', { defaultValue: 'items' })}
                     </td>
                     <td className="px-1.5 py-1" />
-                    <td className="px-1.5 py-1 text-right font-semibold text-content-primary">
+                    <td className="px-1.5 py-1 text-end font-semibold text-content-primary">
                       {/* Count totals are whole pieces (K-14). */}
                       {gt.type === 'count'
                         ? formatCountQuantity(disp.value)
@@ -548,14 +548,14 @@ function GroupRows({
             data-measurement-id={measurement.id}
             data-selected={selected}
           >
-            <td className="px-1.5 py-1 text-right text-content-tertiary font-mono">
+            <td className="px-1.5 py-1 text-end text-content-tertiary font-mono">
               {ordinal}
             </td>
             <td className="px-1.5 py-1 capitalize">
               {measurement.type}
               {measurement.isDeduction && (
                 <span
-                  className="ml-1 text-[9px] font-semibold uppercase text-semantic-error"
+                  className="ms-1 text-[9px] font-semibold uppercase text-semantic-error"
                   data-testid="ledger-deduction-badge"
                 >
                   {t('takeoff_viewer.deduction', { defaultValue: 'deduction' })}
@@ -563,7 +563,7 @@ function GroupRows({
               )}
               {isWall && (
                 <span
-                  className="ml-1 text-[9px] font-semibold uppercase text-oe-blue"
+                  className="ms-1 text-[9px] font-semibold uppercase text-oe-blue"
                   data-testid="ledger-wall-badge"
                   title={t('takeoff_wall.ledger_badge_hint', {
                     defaultValue: 'Wall area: length x height, minus openings',
@@ -579,7 +579,7 @@ function GroupRows({
               )}
               {adjustment && (
                 <span
-                  className="ml-1 text-[9px] font-semibold text-oe-blue tabular-nums"
+                  className="ms-1 text-[9px] font-semibold text-oe-blue tabular-nums"
                   data-testid="ledger-adjustment-badge"
                   title={t('takeoff_viewer.adjustment_hint', {
                     defaultValue:
@@ -607,7 +607,7 @@ function GroupRows({
             </td>
             <td
               className={clsx(
-                'px-1.5 py-1 text-right font-mono',
+                'px-1.5 py-1 text-end font-mono',
                 measurement.isDeduction && 'text-semantic-error',
               )}
             >
@@ -622,7 +622,7 @@ function GroupRows({
             <td className="px-1.5 py-1 text-content-secondary">
               {localizedUnitCode(disp.unit, i18n.language)}
             </td>
-            <td className="px-1.5 py-1 text-right text-content-tertiary">{measurement.page}</td>
+            <td className="px-1.5 py-1 text-end text-content-tertiary">{measurement.page}</td>
             {hasRowActions && (
               <td className="px-1 py-1 text-end">
                 {isLinkable(measurement) && (
@@ -709,7 +709,7 @@ function GroupRows({
                 {displayGroupName(group)} · {subtotal.count}
               </td>
               <td />
-              <td className="px-1.5 py-1 text-right font-semibold text-content-primary">
+              <td className="px-1.5 py-1 text-end font-semibold text-content-primary">
                 {isCount ? formatCountQuantity(disp.value) : formatQuantity(disp.value)}
               </td>
               <td className="px-1.5 py-1 text-content-secondary">

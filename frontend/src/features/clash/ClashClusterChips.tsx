@@ -150,7 +150,7 @@ export function ClashClusterChips({
           type="button"
           onClick={() => setActionOpen(true)}
           className={clsx(
-            'ml-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
+            'ms-1 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
             'ring-1 transition-colors',
             'bg-surface-primary text-oe-blue ring-oe-blue/40 hover:bg-oe-blue/10',
           )}

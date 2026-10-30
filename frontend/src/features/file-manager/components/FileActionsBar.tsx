@@ -243,7 +243,7 @@ export function FileActionsBar({
             {moreOpen && (
               <div
                 role="listbox"
-                className="absolute left-0 top-full mt-1 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
+                className="absolute start-0 top-full mt-1 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
               >
                 {EXTRA_PILLS.map((p) => (
                   <button
@@ -255,7 +255,7 @@ export function FileActionsBar({
                       setMoreOpen(false);
                     }}
                     className={clsx(
-                      'w-full px-3 py-1.5 text-left text-[11px] transition-colors',
+                      'w-full px-3 py-1.5 text-start text-[11px] transition-colors',
                       extension === p.ext
                         ? 'bg-oe-blue/10 text-oe-blue font-medium'
                         : 'text-content-secondary hover:bg-surface-secondary',
@@ -333,7 +333,7 @@ export function FileActionsBar({
           {sortOpen && (
             <div
               role="listbox"
-              className="absolute right-0 top-full mt-1 w-40 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
+              className="absolute end-0 top-full mt-1 w-40 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
             >
               {(['modified', 'name', 'size', 'kind'] as SortKey[]).map((k) => (
                 <button
@@ -345,7 +345,7 @@ export function FileActionsBar({
                     setSortOpen(false);
                   }}
                   className={clsx(
-                    'w-full px-3 py-2 text-left text-xs transition-colors',
+                    'w-full px-3 py-2 text-start text-xs transition-colors',
                     sort === k
                       ? 'bg-oe-blue/10 text-oe-blue font-medium'
                       : 'text-content-secondary hover:bg-surface-secondary',

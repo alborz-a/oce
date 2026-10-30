@@ -670,7 +670,7 @@ function PhotoInput({
                   type="button"
                   aria-label={t('forms.remove_photo', { defaultValue: 'Remove photo' })}
                   onClick={() => onChange(value.filter((_, idx) => idx !== i))}
-                  className="absolute -right-1.5 -top-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-semantic-error text-white shadow"
+                  className="absolute -end-1.5 -top-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-semantic-error text-white shadow"
                 >
                   <X size={11} />
                 </button>
@@ -742,7 +742,7 @@ function SignatureInput({
               type="button"
               aria-label={t('forms.clear_signature', { defaultValue: 'Clear signature' })}
               onClick={() => onChange({ name })}
-              className="ml-1 text-content-tertiary hover:text-semantic-error"
+              className="ms-1 text-content-tertiary hover:text-semantic-error"
             >
               <Trash2 size={12} />
             </button>

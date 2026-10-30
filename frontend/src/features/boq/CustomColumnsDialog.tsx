@@ -316,7 +316,7 @@ export function CustomColumnsDialog({
           key={preset.id}
           onClick={() => applyPreset(preset)}
           disabled={allApplied || addMut.isPending}
-          className="flex items-start gap-3 rounded-lg border border-border-light bg-surface-primary p-3 text-left transition-all hover:border-oe-blue/40 hover:bg-oe-blue-subtle/30 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-start gap-3 rounded-lg border border-border-light bg-surface-primary p-3 text-start transition-all hover:border-oe-blue/40 hover:bg-oe-blue-subtle/30 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <div
             className={`flex h-9 w-9 items-center justify-center rounded-lg shrink-0 ${preset.iconClass}`}
@@ -830,7 +830,7 @@ export function CustomColumnsDialog({
                           onClick={handleTestFormula}
                           disabled={!newFormula.trim() || !!formulaError}
                         >
-                          <PlayCircle size={14} className="mr-1.5" />
+                          <PlayCircle size={14} className="me-1.5" />
                           {t('boq.column_test_formula', { defaultValue: 'Test' })}
                         </Button>
                         {testResult !== null && (
@@ -867,7 +867,7 @@ export function CustomColumnsDialog({
                       size="sm"
                       disabled={!newName.trim() || addMut.isPending}
                     >
-                      <Plus size={14} className="mr-1.5" />
+                      <Plus size={14} className="me-1.5" />
                       {t('boq.add_column_btn', { defaultValue: 'Add column' })}
                     </Button>
                   </div>

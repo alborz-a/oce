@@ -231,7 +231,7 @@ export function SectionFullWidthRenderer(params: ICellRendererParams) {
   return (
     <div
       className={`flex items-center w-full h-full px-2 gap-2 select-none group/section transition-colors ${
-        depth > 0 ? 'border-l-[3px] border-oe-blue' : ''
+        depth > 0 ? 'border-s-[3px] border-oe-blue' : ''
       } ${
         dragOver ? 'bg-oe-blue-subtle border-t-2 border-oe-blue' : ''
       }`}
@@ -2058,10 +2058,10 @@ const BimLinkPopover = forwardRef<
             expands the list is an explicit "Show all" pill button on
             the right so the affordance is obvious. */}
         {canApply && (
-          <div className="w-[260px] shrink-0 flex flex-col border-r border-border-light dark:border-border-dark">
+          <div className="w-[260px] shrink-0 flex flex-col border-e border-border-light dark:border-border-dark">
             <div className="flex items-center gap-1.5 px-3 py-1.5 w-full bg-blue-50/50 dark:bg-blue-950/20 border-b border-border-light/50 dark:border-border-dark/50 shrink-0">
               <Info size={11} className="text-blue-600 shrink-0" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex-1 text-left">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400 flex-1 text-start">
                 {t('boq.bim_properties', { defaultValue: 'Properties' })}
               </span>
               <button
@@ -2174,7 +2174,7 @@ const BimLinkPopover = forwardRef<
         )}
 
         {/* MIDDLE column: 3D preview + element cards */}
-        <div className={canApply ? 'w-[380px] shrink-0 border-r border-border-light dark:border-border-dark flex flex-col' : 'w-full'}>
+        <div className={canApply ? 'w-[380px] shrink-0 border-e border-border-light dark:border-border-dark flex flex-col' : 'w-full'}>
           {/* 3D Preview — render the viewer while the model still serves
               geometry. When the GLB request fails (e.g. the linked element
               belongs to a data-only DWG model that is `needs_converter`, so
@@ -2263,7 +2263,7 @@ const BimLinkPopover = forwardRef<
           <div className="w-[260px] shrink-0 flex flex-col">
             <div className="flex items-center gap-1.5 px-3 py-1.5 w-full bg-emerald-50/50 dark:bg-emerald-950/20 border-b border-border-light/50 dark:border-border-dark/50 shrink-0">
               <Ruler size={11} className="text-emerald-600 shrink-0" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex-1 text-left">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex-1 text-start">
                 {t('boq.apply_to_boq', { defaultValue: 'Apply to BOQ' })}
               </span>
               {isEnriching && (
@@ -2413,7 +2413,7 @@ const BimLinkPopover = forwardRef<
                             <span className="font-semibold">{fmtVal(v)}</span>
                             {s.unit && <span className="text-[8px] opacity-70 group-hover/chip:opacity-100">{s.unit}</span>}
                             {!isCurrent && (
-                              <ArrowRight size={8} className="opacity-0 group-hover/chip:opacity-100 transition-opacity -mr-0.5" />
+                              <ArrowRight size={8} className="opacity-0 group-hover/chip:opacity-100 transition-opacity -me-0.5" />
                             )}
                           </button>
                         );
@@ -2655,7 +2655,7 @@ function PdfDwgSourcePopover(props: PdfDwgSourcePopoverProps) {
                 <span className="text-[11px] text-content-secondary font-medium">{displayMeasurementUnit}</span>
               )}
               {measurementType && (
-                <span className="ml-auto text-[9px] uppercase tracking-wide text-content-tertiary bg-surface-secondary/60 px-1.5 py-0.5 rounded">
+                <span className="ms-auto text-[9px] uppercase tracking-wide text-content-tertiary bg-surface-secondary/60 px-1.5 py-0.5 rounded">
                   {measurementType}
                 </span>
               )}
@@ -2781,14 +2781,14 @@ function InlineNumberInput({
             if (e.key === 'Enter') commit();
             if (e.key === 'Escape') setEditing(false);
           }}
-          className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 text-right tabular-nums outline-none w-full ${className ?? ''}`}
+          className={`bg-white dark:bg-surface-primary border border-oe-blue rounded px-1 py-0 text-end tabular-nums outline-none w-full ${className ?? ''}`}
           aria-label={t('boq.inline_edit_number', { defaultValue: 'Edit value' })}
           placeholder="123  or  =2*PI()*3"
           autoFocus
         />
         {livePreview !== null && (
           <span
-            className={`absolute right-0 top-full mt-0.5 text-[10px] tabular-nums pointer-events-none whitespace-nowrap z-10 px-1 rounded shadow-sm bg-surface-elevated border ${
+            className={`absolute end-0 top-full mt-0.5 text-[10px] tabular-nums pointer-events-none whitespace-nowrap z-10 px-1 rounded shadow-sm bg-surface-elevated border ${
               isNaN(livePreview)
                 ? 'border-rose-300 text-rose-600 dark:text-rose-400'
                 : 'border-emerald-300 text-emerald-600 dark:text-emerald-400 font-semibold'
@@ -3354,7 +3354,7 @@ function ResourceTypePicker({
                   onChange(rt.value);
                   setOpen(false);
                 }}
-                className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-left
+                className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-start
                             hover:bg-surface-secondary transition-colors
                             ${selected ? 'bg-oe-blue-subtle/30' : ''}`}
               >
@@ -3365,7 +3365,7 @@ function ResourceTypePicker({
                 <span className="text-content-primary uppercase tracking-wider font-medium">
                   {getResourceTypeLabel(rt.value, t)}
                 </span>
-                {selected && <Check size={11} strokeWidth={2.5} className="ml-auto text-oe-blue" />}
+                {selected && <Check size={11} strokeWidth={2.5} className="ms-auto text-oe-blue" />}
               </button>
             );
           })}
@@ -3564,7 +3564,7 @@ function ResourceCurrencyCombobox({
                 <div className="text-[9px] uppercase tracking-wider text-content-tertiary mb-1">
                   {t('boq.fx_rate_label', { defaultValue: 'FX rate' })}
                   {fxSource === 'project' ? (
-                    <span className="ml-1 px-1 rounded bg-oe-blue-subtle text-oe-blue-text text-[8px] font-bold">
+                    <span className="ms-1 px-1 rounded bg-oe-blue-subtle text-oe-blue-text text-[8px] font-bold">
                       {t('boq.fx_rate_project_badge', { defaultValue: 'PROJECT' })}
                     </span>
                   ) : (
@@ -3573,7 +3573,7 @@ function ResourceCurrencyCombobox({
                     // reads project rates. So anything that isn't a project
                     // rate must prompt the estimator to set one, otherwise the
                     // section sum silently stays unconverted.
-                    <span className="ml-1 px-1 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-[8px] font-bold">
+                    <span className="ms-1 px-1 rounded bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-[8px] font-bold">
                       {t('boq.fx_rate_missing_badge', { defaultValue: 'SET RATE' })}
                     </span>
                   )}
@@ -3788,7 +3788,7 @@ function CurrencyOption({
       role="option"
       aria-selected={selected}
       onClick={(e) => { e.stopPropagation(); onPick(); }}
-      className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-left
+      className={`flex items-center gap-2 w-full px-2 py-1.5 text-[11px] text-start
                   hover:bg-surface-secondary transition-colors
                   ${selected ? (custom ? 'bg-amber-100/40 dark:bg-amber-900/20' : 'bg-oe-blue-subtle/30') : ''}`}
     >
@@ -3798,7 +3798,7 @@ function CurrencyOption({
       <span className={`font-mono uppercase tracking-wide ${custom ? 'text-amber-800 dark:text-amber-200 font-bold' : 'text-content-primary'}`}>
         {code}
       </span>
-      {selected && <Check size={11} strokeWidth={2.5} className="ml-auto text-oe-blue" />}
+      {selected && <Check size={11} strokeWidth={2.5} className="ms-auto text-oe-blue" />}
     </button>
   );
 }
@@ -4248,7 +4248,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const renderOrdinalSlot = (width: number) => (
     <span
       key="ordinal"
-      className="shrink-0 inline-flex items-center justify-end self-center pr-2 text-[9px] font-mono whitespace-nowrap overflow-hidden"
+      className="shrink-0 inline-flex items-center justify-end self-center pe-2 text-[9px] font-mono whitespace-nowrap overflow-hidden"
       style={{ width: `${width}px` }}
       title={resourceCode
         ? ctx.t('boq.resource_catalog_code', { defaultValue: 'Catalogue code: {{code}}', code: resourceCode })
@@ -4282,7 +4282,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const renderDescriptionSlot = (width: number) => (
     <span
       key="description"
-      className="shrink-0 truncate min-w-0 self-center text-left text-content-secondary font-medium inline-flex items-center gap-1 pl-1"
+      className="shrink-0 truncate min-w-0 self-center text-start text-content-secondary font-medium inline-flex items-center gap-1 ps-1"
       style={{ width: `${width}px` }}
     >
       {hasVariants && (
@@ -4307,7 +4307,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           <span className="relative z-10 drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]">V</span>
         </span>
       )}
-      <InlineTextInput value={originalName} onCommit={handleNameChange} className="flex-1 min-w-0 text-xs text-left" />
+      <InlineTextInput value={originalName} onCommit={handleNameChange} className="flex-1 min-w-0 text-xs text-start" />
     </span>
   );
 
@@ -4339,12 +4339,12 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       className="shrink-0 self-stretch relative block"
       style={{ width: `${width}px` }}
     >
-      <span className="absolute inset-y-0 left-2 right-2 flex items-center justify-end text-right tabular-nums text-content-secondary text-xs">
+      <span className="absolute inset-y-0 start-2 end-2 flex items-center justify-end text-end tabular-nums text-content-secondary text-xs">
         <InlineNumberInput
           value={displayQty}
           onCommit={handleQtyChange}
           fmt={ctx.fmt}
-          className="text-right tabular-nums text-xs !px-0"
+          className="text-end tabular-nums text-xs !px-0"
         />
       </span>
     </span>
@@ -4356,7 +4356,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
       className="shrink-0 self-stretch relative block"
       style={{ width: `${width}px` }}
     >
-      <span className="absolute inset-y-0 left-2 right-2 flex items-center gap-1">
+      <span className="absolute inset-y-0 start-2 end-2 flex items-center gap-1">
         {/* LEFT chrome: combobox + optional pill, packed at the start
             of the available space — they grow only as much as they need. */}
         <ResourceCurrencyCombobox
@@ -4407,7 +4407,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           value={displayRate}
           onCommit={handleRateChange}
           fmt={ctx.fmt}
-          className="ml-auto text-right tabular-nums text-content-secondary text-xs !px-0"
+          className="ms-auto text-end tabular-nums text-content-secondary text-xs !px-0"
         />
       </span>
       {variantPickerOpen && hasVariants && (
@@ -4430,7 +4430,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
   const renderTotalSlot = (width: number) => (
     <span
       key="total"
-      className="shrink-0 text-right tabular-nums font-medium text-content-primary flex items-center justify-end gap-1 self-center pr-2 pl-2"
+      className="shrink-0 text-end tabular-nums font-medium text-content-primary flex items-center justify-end gap-1 self-center pe-2 ps-2"
       style={{ width: `${width}px` }}
       title={totalTitle}
     >
@@ -4577,7 +4577,7 @@ export function EditableResourceRow({ data, ctx, slots, leftPad }: { data: Recor
           aria-hidden="true"
           title={variantBarTooltip}
           data-testid={`resource-variant-bar-${data._resourceIndex}-${variantBarTone}`}
-          className={`absolute left-0 top-0 bottom-0 w-1 ${
+          className={`absolute start-0 top-0 bottom-0 w-1 ${
             variantBarTone === 'blue'
               ? 'bg-oe-blue/70'
               : variantBarTone === 'amber'
@@ -4759,7 +4759,7 @@ function VariantHeaderResourceRow({
   const renderOrdinalSlot = (width: number) => (
     <span
       key="ordinal"
-      className="shrink-0 inline-flex items-center justify-end self-center pr-2 text-[8px] font-mono whitespace-nowrap overflow-hidden"
+      className="shrink-0 inline-flex items-center justify-end self-center pe-2 text-[8px] font-mono whitespace-nowrap overflow-hidden"
       style={{ width: `${width}px` }}
       title={ctx.t('boq.variant_header_code_tooltip', {
         defaultValue: 'Abstract variant resource - inherits the position quantity',
@@ -4805,14 +4805,14 @@ function VariantHeaderResourceRow({
   const renderDescriptionSlot = (width: number) => (
     <span
       key="description"
-      className="shrink-0 truncate min-w-0 self-center text-left text-content-primary font-medium pl-1 pr-1 inline-flex items-center gap-1"
+      className="shrink-0 truncate min-w-0 self-center text-start text-content-primary font-medium ps-1 pe-1 inline-flex items-center gap-1"
       style={{ width: `${width}px` }}
       data-variant-header-interactive="1"
     >
       <InlineTextInput
         value={editedName}
         onCommit={(v) => setEditedName(v)}
-        className="flex-1 min-w-0 text-xs text-left"
+        className="flex-1 min-w-0 text-xs text-start"
       />
     </span>
   );
@@ -4830,7 +4830,7 @@ function VariantHeaderResourceRow({
   const renderQuantitySlot = (width: number) => (
     <span
       key="quantity"
-      className="shrink-0 text-right tabular-nums text-content-secondary self-center pr-2 pl-2"
+      className="shrink-0 text-end tabular-nums text-content-secondary self-center pe-2 ps-2"
       style={{ width: `${width}px` }}
       data-variant-header-interactive="1"
       title={ctx.t('boq.variant_header_qty_edit_tooltip', {
@@ -4853,7 +4853,7 @@ function VariantHeaderResourceRow({
   const renderUnitRateSlot = (width: number) => (
     <span
       key="unit_rate"
-      className="shrink-0 inline-flex items-center justify-end self-center gap-1 pr-2 pl-2"
+      className="shrink-0 inline-flex items-center justify-end self-center gap-1 pe-2 ps-2"
       style={{ width: `${width}px` }}
       data-variant-header-interactive="1"
     >
@@ -4883,7 +4883,7 @@ function VariantHeaderResourceRow({
           <span className="shrink-0 inline-flex items-center justify-center w-7 text-[10px] font-mono text-content-secondary">
             {currency}
           </span>
-          <span className="flex-1 min-w-0 text-right tabular-nums text-content-primary text-xs font-semibold">
+          <span className="flex-1 min-w-0 text-end tabular-nums text-content-primary text-xs font-semibold">
             <InlineNumberInput
               value={displayRate}
               onCommit={handleRateCommit}
@@ -4899,7 +4899,7 @@ function VariantHeaderResourceRow({
   const renderTotalSlot = (width: number) => (
     <span
       key="total"
-      className="shrink-0 text-right tabular-nums font-semibold text-content-primary self-center pr-2 pl-2"
+      className="shrink-0 text-end tabular-nums font-semibold text-content-primary self-center pe-2 ps-2"
       style={{ width: `${width}px` }}
     >
       {showNumbers ? fmtNum(total) : ''}
@@ -4953,7 +4953,7 @@ function VariantHeaderResourceRow({
           violet→fuchsia gradient announcing "this is the variant pick". */}
       <span
         aria-hidden="true"
-        className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-600"
+        className="absolute start-0 top-0 bottom-0 w-1 bg-gradient-to-b from-violet-500 to-fuchsia-600"
       />
 
       {/* Column-driven slot rendering — mirrors EditableResourceRow so
@@ -5074,7 +5074,7 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
       return (
         <span
           key="total"
-          className="shrink-0 self-center text-right tabular-nums text-[10px] font-medium text-content-tertiary pr-2 pl-2"
+          className="shrink-0 self-center text-end tabular-nums text-[10px] font-medium text-content-tertiary pe-2 ps-2"
           style={{ width: `${width}px` }}
           title={ctx.t('boq.resources_total', { defaultValue: 'Resources total' })}
         >
@@ -5086,7 +5086,7 @@ export function ResourceFullWidthRenderer(params: ICellRendererParams) {
     const renderDescriptionSlot = (width: number) => (
       <span
         key="description"
-        className="shrink-0 self-center inline-flex items-center gap-2 pl-1"
+        className="shrink-0 self-center inline-flex items-center gap-2 ps-1"
         style={{ width: `${width}px` }}
       >
         <button
@@ -5169,7 +5169,7 @@ export function QuantityCellRenderer(params: ICellRendererParams) {
     // Footer rows (Direct Cost / Net Total / VAT / Gross Total) must not
     // display a numeric Qty — totals don't have a meaningful quantity (Bug 15).
     if (data?._isFooter) return <span />;
-    return <span className="text-right text-xs tabular-nums">{value != null ? value : ''}</span>;
+    return <span className="text-end text-xs tabular-nums">{value != null ? value : ''}</span>;
   }
 
   const ctx = context as FullGridContext | undefined;

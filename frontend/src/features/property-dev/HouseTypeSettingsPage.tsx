@@ -168,7 +168,7 @@ export function HouseTypeSettingsPage() {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
             <label className={labelCls}>
-              <Globe2 size={12} className="mr-1 inline" />
+              <Globe2 size={12} className="me-1 inline" />
               {t('property_dev.house_type.country_label', {
                 defaultValue: 'Country',
               })}
@@ -187,7 +187,7 @@ export function HouseTypeSettingsPage() {
           </div>
           <div>
             <label className={labelCls}>
-              <Building2 size={12} className="mr-1 inline" />
+              <Building2 size={12} className="me-1 inline" />
               {t('property_dev.house_type.project_filter_label', {
                 defaultValue: 'Project (for custom entries)',
               })}
@@ -268,18 +268,18 @@ export function HouseTypeSettingsPage() {
               <table className="w-full text-sm">
                 <thead className="bg-surface-secondary text-xs uppercase text-content-tertiary">
                   <tr>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('property_dev.house_type.code_label', { defaultValue: 'Code' })}
                     </th>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('property_dev.house_type.name_label', { defaultValue: 'Name' })}
                     </th>
-                    <th className="px-3 py-2 text-left">
+                    <th className="px-3 py-2 text-start">
                       {t('property_dev.house_type.country_label', {
                         defaultValue: 'Country',
                       })}
                     </th>
-                    <th className="px-3 py-2 text-right">
+                    <th className="px-3 py-2 text-end">
                       {t('common.actions', { defaultValue: 'Actions' })}
                     </th>
                   </tr>
@@ -297,7 +297,7 @@ export function HouseTypeSettingsPage() {
                       <td className="px-3 py-2">
                         <CountryCell entry={entry} />
                       </td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2 text-end">
                         <div className="inline-flex gap-1">
                           <Button
                             size="sm"
@@ -337,18 +337,18 @@ export function HouseTypeSettingsPage() {
             <table className="w-full text-sm">
               <thead className="bg-surface-secondary text-xs uppercase text-content-tertiary">
                 <tr>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.house_type.code_label', { defaultValue: 'Code' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.house_type.name_label', { defaultValue: 'Name' })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.house_type.country_label', {
                       defaultValue: 'Country',
                     })}
                   </th>
-                  <th className="px-3 py-2 text-left">
+                  <th className="px-3 py-2 text-start">
                     {t('property_dev.house_type.area_typical_col', {
                       defaultValue: 'Typical {{unit}}',
                       unit: dq.unitFor('m²'),

@@ -74,7 +74,7 @@ export function VideoCard({ video, labels, onOpen, chapterHits, compact, jumpTo,
           className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0 opacity-80 transition-opacity group-hover:opacity-100"
         />
         {soon ? (
-          <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/65 px-2 py-0.5 text-2xs font-semibold uppercase tracking-wide text-amber-200 backdrop-blur-sm">
+          <span className="absolute start-2 top-2 inline-flex items-center gap-1 rounded-full bg-black/65 px-2 py-0.5 text-2xs font-semibold uppercase tracking-wide text-amber-200 backdrop-blur-sm">
             <Hourglass size={11} strokeWidth={2.2} aria-hidden />
             {t('videos.coming_soon', { defaultValue: 'Coming soon' })}
           </span>
@@ -87,18 +87,18 @@ export function VideoCard({ video, labels, onOpen, chapterHits, compact, jumpTo,
           </span>
         )}
         {watched && (
-          <span className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-emerald-600/90 px-2 py-0.5 text-2xs font-semibold text-white">
+          <span className="absolute end-2 top-2 inline-flex items-center gap-1 rounded-full bg-emerald-600/90 px-2 py-0.5 text-2xs font-semibold text-white">
             <CheckCircle2 size={11} strokeWidth={2.4} aria-hidden />
             {t('videos.watched', { defaultValue: 'Watched' })}
           </span>
         )}
         {video.duration ? (
-          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded bg-black/75 px-1.5 py-0.5 font-mono text-2xs tabular-nums text-white">
+          <span className="absolute bottom-2 end-2 inline-flex items-center gap-1 rounded bg-black/75 px-1.5 py-0.5 font-mono text-2xs tabular-nums text-white">
             <Clock size={10} strokeWidth={2.4} aria-hidden />
             {formatClock(video.duration)}
           </span>
         ) : null}
-        <span className="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-2xs font-semibold uppercase tracking-wide text-white/90">
+        <span className="absolute bottom-2 start-2 rounded bg-black/60 px-1.5 py-0.5 text-2xs font-semibold uppercase tracking-wide text-white/90">
           {video.language}
           {video.market ? ` · ${video.market}` : ''}
         </span>
@@ -109,7 +109,7 @@ export function VideoCard({ video, labels, onOpen, chapterHits, compact, jumpTo,
           {labels.series(video.series)}
         </p>
         <h3 lang={video.language} className="line-clamp-2 text-sm font-semibold leading-snug text-content-primary">
-          <button type="button" onClick={() => onOpen(video)} className="text-left hover:text-oe-blue focus:outline-none focus-visible:underline">
+          <button type="button" onClick={() => onOpen(video)} className="text-start hover:text-oe-blue focus:outline-none focus-visible:underline">
             {video.title}
           </button>
         </h3>
@@ -197,7 +197,7 @@ export function VideoCard({ video, labels, onOpen, chapterHits, compact, jumpTo,
           {video.result && <span className="rounded bg-surface-secondary px-1.5 py-0.5">{labels.result(video.result)}</span>}
           {video.chapters.length > 0 && (
             <span
-              className="ml-auto inline-flex items-center gap-1 tabular-nums"
+              className="ms-auto inline-flex items-center gap-1 tabular-nums"
               title={t('videos.chapters', { defaultValue: 'Chapters' })}
             >
               <ListOrdered size={11} strokeWidth={2.2} aria-hidden />

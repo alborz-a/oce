@@ -212,21 +212,21 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
           >
             <thead className="bg-surface-secondary text-xs text-content-tertiary">
               <tr>
-                <th className="px-3 py-2 text-left font-medium">
+                <th className="px-3 py-2 text-start font-medium">
                   {t('compliance.col.name', { defaultValue: 'Name' })}
                 </th>
-                <th className="px-3 py-2 text-left font-medium">
+                <th className="px-3 py-2 text-start font-medium">
                   {t('compliance.col.type', { defaultValue: 'Type' })}
                 </th>
-                <th className="px-3 py-2 text-left font-medium">
+                <th className="px-3 py-2 text-start font-medium">
                   {t('compliance.col.expires_at', { defaultValue: 'Expires' })}
                 </th>
-                <th className="px-3 py-2 text-left font-medium">
+                <th className="px-3 py-2 text-start font-medium">
                   {t('compliance.col.days_left', {
                     defaultValue: 'Days left',
                   })}
                 </th>
-                <th className="px-3 py-2 text-left font-medium">
+                <th className="px-3 py-2 text-start font-medium">
                   {t('compliance.col.status', { defaultValue: 'Status' })}
                 </th>
                 <th className="px-3 py-2" />
@@ -242,7 +242,7 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
                   <td className="px-3 py-2 font-medium text-content-primary">
                     {row.name}
                     {row.issuer ? (
-                      <span className="ml-2 text-xs text-content-tertiary">
+                      <span className="ms-2 text-xs text-content-tertiary">
                         ({row.issuer})
                       </span>
                     ) : null}
@@ -261,7 +261,7 @@ export function CompliancePage({ projectId }: CompliancePageProps) {
                   <td className="px-3 py-2">
                     <ComplianceStatusBadge status={row.status} />
                   </td>
-                  <td className="px-3 py-2 text-right">
+                  <td className="px-3 py-2 text-end">
                     <button
                       type="button"
                       onClick={async () => {

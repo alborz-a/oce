@@ -445,9 +445,9 @@ function CreateUnitModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('prefab.create_unit', { defaultValue: 'Create unit' })}</span>
           </Button>
@@ -477,7 +477,7 @@ const UnitCard = React.memo(function UnitCard({
     <button
       onClick={() => onOpen(unit)}
       className={clsx(
-        'w-full text-left rounded-lg border p-3 shadow-xs transition-all hover:shadow-sm',
+        'w-full text-start rounded-lg border p-3 shadow-xs transition-all hover:shadow-sm',
         overdue
           ? 'border-red-300 bg-red-50/50 hover:border-red-400 dark:border-red-900/50 dark:bg-red-950/15'
           : 'border-border-light bg-surface-primary hover:border-oe-blue/40',
@@ -624,7 +624,7 @@ function LinkCostSection({
             </span>
             <span className="text-sm font-semibold tabular-nums text-content-primary">
               {unit.cost_basis}
-              <span className="ml-1 text-2xs font-normal text-content-tertiary">{sourceLabel}</span>
+              <span className="ms-1 text-2xs font-normal text-content-tertiary">{sourceLabel}</span>
             </span>
           </div>
           <div className="flex items-baseline justify-between gap-2">
@@ -633,7 +633,7 @@ function LinkCostSection({
             </span>
             <span className="text-sm font-semibold tabular-nums text-emerald-700 dark:text-emerald-300">
               {unit.earned_value ?? '-'}
-              <span className="ml-1 text-2xs font-normal text-content-tertiary">({pct}%)</span>
+              <span className="ms-1 text-2xs font-normal text-content-tertiary">({pct}%)</span>
             </span>
           </div>
           {/* Progress bar - earned vs basis */}
@@ -763,7 +763,7 @@ function LinkCostSection({
               </Button>
             )}
             <Button variant="primary" size="sm" onClick={applyLink} disabled={!canLink || isLinking}>
-              <Link2 size={13} className="mr-1 shrink-0" />
+              <Link2 size={13} className="me-1 shrink-0" />
               {t('prefab.link_action', { defaultValue: 'Link' })}
             </Button>
           </div>
@@ -771,7 +771,7 @@ function LinkCostSection({
       ) : (
         !isLinked && (
           <Button variant="secondary" size="sm" onClick={() => setEditing(true)} className="w-full">
-            <Link2 size={13} className="mr-1.5 shrink-0" />
+            <Link2 size={13} className="me-1.5 shrink-0" />
             {t('prefab.link_to_cost', { defaultValue: 'Link to BOQ / assembly' })}
           </Button>
         )
@@ -825,7 +825,7 @@ function UnitDetailDrawer({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/50 animate-fade-in" onClick={onClose}>
       <div
-        className="h-full w-full max-w-md bg-surface-primary shadow-2xl border-l border-border flex flex-col animate-slide-in-right"
+        className="h-full w-full max-w-md bg-surface-primary shadow-2xl border-s border-border flex flex-col animate-slide-in-right"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -940,9 +940,9 @@ function UnitDetailDrawer({
                   className="w-full"
                 >
                   {isAdvancing ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
                   ) : (
-                    <ArrowRight size={14} className="mr-1.5 shrink-0" />
+                    <ArrowRight size={14} className="me-1.5 shrink-0" />
                   )}
                   {t('prefab.advance_to', {
                     defaultValue: 'Advance to {{stage}}',
@@ -976,14 +976,14 @@ function UnitDetailDrawer({
                 {t('prefab.no_events', { defaultValue: 'No production events yet.' })}
               </p>
             ) : (
-              <ol className="relative border-l border-border-light ml-1.5 space-y-3">
+              <ol className="relative border-s border-border-light ms-1.5 space-y-3">
                 {events.map((ev) => {
                   const evMeta = stageMeta(ev.stage);
                   return (
-                    <li key={ev.id} className="ml-4">
+                    <li key={ev.id} className="ms-4">
                       <span
                         className={clsx(
-                          'absolute -left-[5px] mt-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-surface-primary',
+                          'absolute -start-[5px] mt-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-surface-primary',
                           evMeta.dot,
                         )}
                       />
@@ -1010,7 +1010,7 @@ function UnitDetailDrawer({
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-3 border-t border-border shrink-0">
           <Button variant="ghost" size="sm" onClick={onDelete} className="text-semantic-error">
-            <Trash2 size={14} className="mr-1" />
+            <Trash2 size={14} className="me-1" />
             {t('common.delete', { defaultValue: 'Delete' })}
           </Button>
           <Button variant="ghost" size="sm" onClick={onClose}>

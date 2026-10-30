@@ -305,9 +305,9 @@ export function RecordDeliveryModal({
             disabled={!canSubmit || createGRMut.isPending}
           >
             {createGRMut.isPending ? (
-              <Loader2 size={16} className="animate-spin mr-1.5" />
+              <Loader2 size={16} className="animate-spin me-1.5" />
             ) : (
-              <PackageCheck size={16} className="mr-1.5" />
+              <PackageCheck size={16} className="me-1.5" />
             )}
             {t('procurement.gr_save', { defaultValue: 'Record Delivery' })}
           </Button>
@@ -399,7 +399,7 @@ export function RecordDeliveryModal({
 
             {detailLoading && (
               <div className="flex items-center justify-center py-8 text-content-tertiary">
-                <Loader2 size={18} className="animate-spin mr-2" />
+                <Loader2 size={18} className="animate-spin me-2" />
                 {t('common.loading', { defaultValue: 'Loading...' })}
               </div>
             )}
@@ -417,8 +417,8 @@ export function RecordDeliveryModal({
               <div className="space-y-2">
                 <div className="hidden sm:grid grid-cols-[1fr_90px_110px] gap-3 text-2xs font-medium text-content-tertiary uppercase tracking-wider px-1">
                   <span>{t('procurement.item_description', { defaultValue: 'Description' })}</span>
-                  <span className="text-right">{t('procurement.gr_ordered', { defaultValue: 'Ordered' })}</span>
-                  <span className="text-right">{t('procurement.gr_received', { defaultValue: 'Received' })}</span>
+                  <span className="text-end">{t('procurement.gr_ordered', { defaultValue: 'Ordered' })}</span>
+                  <span className="text-end">{t('procurement.gr_received', { defaultValue: 'Received' })}</span>
                 </div>
                 {lines.map((l) => (
                   <div
@@ -428,12 +428,12 @@ export function RecordDeliveryModal({
                     <div className="text-sm text-content-primary pt-2">
                       {l.description}
                       {l.unit ? (
-                        <span className="text-content-tertiary text-xs ml-1">
+                        <span className="text-content-tertiary text-xs ms-1">
                           ({l.unit})
                         </span>
                       ) : null}
                     </div>
-                    <div className="text-sm text-content-secondary tabular-nums text-right pt-2">
+                    <div className="text-sm text-content-secondary tabular-nums text-end pt-2">
                       {l.orderedQty}
                     </div>
                     <div>
@@ -444,7 +444,7 @@ export function RecordDeliveryModal({
                         step="any"
                         value={l.receivedQty}
                         onChange={(e) => updateReceived(l.poItemId, e.target.value)}
-                        className={`h-9 w-full rounded-lg border bg-surface-primary px-2.5 text-sm tabular-nums text-right focus:outline-none focus:ring-2 focus:ring-oe-blue/30 ${
+                        className={`h-9 w-full rounded-lg border bg-surface-primary px-2.5 text-sm tabular-nums text-end focus:outline-none focus:ring-2 focus:ring-oe-blue/30 ${
                           lineErrors[l.poItemId]
                             ? 'border-semantic-error'
                             : 'border-border focus:border-oe-blue'

@@ -337,7 +337,7 @@ export function NlRuleBuilderPanel() {
                       'No pattern matched. Try one of these forms:',
                   })}
                 </div>
-                <ul className="ml-4 list-disc space-y-0.5">
+                <ul className="ms-4 list-disc space-y-0.5">
                   {result.suggestions.map((s, i) => (
                     <li key={i}>{s}</li>
                   ))}

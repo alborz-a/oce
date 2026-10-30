@@ -93,7 +93,7 @@ export function SampleTemplateButton({ template }: { template: CountryTemplate }
         aria-expanded={open}
       >
         <FileSpreadsheet size={14} className="text-oe-blue shrink-0" />
-        <span className="flex-1 text-left">
+        <span className="flex-1 text-start">
           {t('exchange.expected_layout', {
             defaultValue: 'Expected file layout - {{standard}}',
             standard: template.classification || template.name,

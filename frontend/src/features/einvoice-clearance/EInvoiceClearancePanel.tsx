@@ -253,7 +253,7 @@ export function EInvoiceClearancePanel() {
             </h3>
             {!creating && (
               <Button size="sm" onClick={() => setCreating(true)} disabled={filingProfiles.length === 0}>
-                <Plus className="mr-1 h-3.5 w-3.5" />
+                <Plus className="me-1 h-3.5 w-3.5" />
                 {t('einvoice_clearance.document_new', { defaultValue: 'Prepare a document' })}
               </Button>
             )}
@@ -287,7 +287,7 @@ export function EInvoiceClearancePanel() {
               action={
                 creating ? undefined : filingProfiles.length > 0 ? (
                   <Button size="sm" onClick={() => setCreating(true)}>
-                    <Plus className="mr-1 h-3.5 w-3.5" />
+                    <Plus className="me-1 h-3.5 w-3.5" />
                     {t('einvoice_clearance.document_new', { defaultValue: 'Prepare a document' })}
                   </Button>
                 ) : (
@@ -310,7 +310,7 @@ export function EInvoiceClearancePanel() {
                     type="button"
                     onClick={() => setSelectedId(doc.id)}
                     aria-current={selectedId === doc.id}
-                    className={`flex w-full flex-col gap-1 p-3 text-left hover:bg-surface-secondary ${
+                    className={`flex w-full flex-col gap-1 p-3 text-start hover:bg-surface-secondary ${
                       selectedId === doc.id ? 'bg-surface-secondary' : ''
                     }`}
                   >
@@ -592,7 +592,7 @@ function DocumentDetail({
             onClick={() => check.mutate()}
             disabled={check.isPending}
           >
-            <ShieldCheck className="mr-1 h-4 w-4" />
+            <ShieldCheck className="me-1 h-4 w-4" />
             {t('einvoice_clearance.action_validate', { defaultValue: 'Check against the rules' })}
           </Button>
         )}
@@ -602,7 +602,7 @@ function DocumentDetail({
             onClick={() => setConfirmSubmit({ acceptWarnings: false })}
             disabled={send.isPending}
           >
-            <Send className="mr-1 h-4 w-4" />
+            <Send className="me-1 h-4 w-4" />
             {t('einvoice_clearance.action_submit', { defaultValue: 'Send to the platform' })}
           </Button>
         )}
@@ -624,7 +624,7 @@ function DocumentDetail({
             onClick={() => setOpenForm(openForm === 'resolve' ? null : 'resolve')}
             disabled={record.isPending}
           >
-            <History className="mr-1 h-4 w-4" />
+            <History className="me-1 h-4 w-4" />
             {t('einvoice_clearance.action_resolve', { defaultValue: 'Record what the platform did' })}
           </Button>
         )}
@@ -635,7 +635,7 @@ function DocumentDetail({
             onClick={() => setOpenForm(openForm === 'cancel' ? null : 'cancel')}
             disabled={withdraw.isPending}
           >
-            <Ban className="mr-1 h-4 w-4" />
+            <Ban className="me-1 h-4 w-4" />
             {t('einvoice_clearance.action_cancel', { defaultValue: 'Withdraw from the platform' })}
           </Button>
         )}
@@ -917,7 +917,7 @@ function PayloadView({
     <div>
       <div className="flex flex-wrap items-center gap-2">
         <Button size="sm" variant="ghost" onClick={onToggle}>
-          <FileText className="mr-1 h-4 w-4" />
+          <FileText className="me-1 h-4 w-4" />
           {open
             ? t('einvoice_clearance.payload_hide', { defaultValue: 'Hide what was sent' })
             : t('einvoice_clearance.payload_show', { defaultValue: 'Show exactly what was sent' })}
@@ -935,7 +935,7 @@ function PayloadView({
               )
             }
           >
-            <Download className="mr-1 h-4 w-4" />
+            <Download className="me-1 h-4 w-4" />
             {t('einvoice_clearance.payload_download', { defaultValue: 'Download it' })}
           </Button>
         )}
@@ -1311,7 +1311,7 @@ function ProfilesSection({
         </h3>
         {editing === null && (
           <Button size="sm" onClick={() => setEditing('new')}>
-            <Plus className="mr-1 h-3.5 w-3.5" />
+            <Plus className="me-1 h-3.5 w-3.5" />
             {t('einvoice_clearance.register_country', { defaultValue: 'Register a country' })}
           </Button>
         )}
@@ -1359,7 +1359,7 @@ function ProfilesSection({
           action={
             editing === null ? (
               <Button size="sm" onClick={() => setEditing('new')}>
-                <Plus className="mr-1 h-3.5 w-3.5" />
+                <Plus className="me-1 h-3.5 w-3.5" />
                 {t('einvoice_clearance.register_country', { defaultValue: 'Register a country' })}
               </Button>
             ) : undefined
@@ -1397,7 +1397,7 @@ function ProfilesSection({
                 </Badge>
               )}
 
-              <span className="ml-auto flex gap-1">
+              <span className="ms-auto flex gap-1">
                 <Button
                   size="sm"
                   variant="ghost"

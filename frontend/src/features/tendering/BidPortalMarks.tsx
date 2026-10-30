@@ -30,7 +30,7 @@ export function BidPortalMarks({ metadata }: { metadata: Record<string, unknown>
   return (
     <>
       {late && (
-        <Badge variant="warning" size="sm" className="ml-2">
+        <Badge variant="warning" size="sm" className="ms-2">
           {t('tendering.bid_late', { defaultValue: 'Late' })}
         </Badge>
       )}

@@ -265,11 +265,11 @@ function CashflowBar({
         aria-valuemax={100}
       >
         <span
-          className="absolute inset-y-0 left-0 rounded-full"
+          className="absolute inset-y-0 start-0 rounded-full"
           style={{ width: `${pct}%`, backgroundColor: color }}
         />
       </div>
-      <span className="w-16 shrink-0 text-right font-medium text-content-primary">
+      <span className="w-16 shrink-0 text-end font-medium text-content-primary">
         {fmtCompactNumber(value)}
       </span>
     </div>
@@ -287,7 +287,7 @@ function CashflowTotals({
   const renderRow = (label: string, rows: CurrencyAmount[]) => (
     <div className="text-xs">
       <span className="text-content-tertiary">{label}</span>{' '}
-      <span className="ml-1 inline-flex flex-wrap gap-1.5">
+      <span className="ms-1 inline-flex flex-wrap gap-1.5">
         {rows.length === 0 ? (
           <span className="text-content-tertiary">—</span>
         ) : (

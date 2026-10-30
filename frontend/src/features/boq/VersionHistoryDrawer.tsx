@@ -310,7 +310,7 @@ export function VersionHistoryDrawer({ boqId, isOpen, onClose }: VersionHistoryD
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 flex">
+    <div className="fixed inset-y-0 end-0 z-50 flex">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black/20" onClick={onClose} aria-hidden="true" />
 
@@ -319,7 +319,7 @@ export function VersionHistoryDrawer({ boqId, isOpen, onClose }: VersionHistoryD
         role="dialog"
         aria-modal="true"
         aria-label={t('boq.version_history', { defaultValue: 'Version History' })}
-        className="relative ml-auto flex h-full w-96 flex-col bg-surface-elevated border-l border-border shadow-2xl animate-slide-in-right"
+        className="relative ms-auto flex h-full w-96 flex-col bg-surface-elevated border-s border-border shadow-2xl animate-slide-in-right"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -622,7 +622,7 @@ export function VersionHistoryDrawer({ boqId, isOpen, onClose }: VersionHistoryD
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-content-primary">
                           <span className="font-mono text-oe-blue">{row.field}</span>
-                          <span className="ml-1 text-content-tertiary">
+                          <span className="ms-1 text-content-tertiary">
                             {formatAuditValue(row.oldValue)}
                           </span>
                           <span className="mx-1 text-content-quaternary">→</span>

@@ -266,10 +266,10 @@ export function EscalationCalculator({
             </p>
             <p className="text-sm font-semibold text-amber-600 tabular-nums">
               {fmtFixed(escalation.factor, 4)}x
-              <span className="text-2xs ml-1">(+{totalPctChange}%)</span>
+              <span className="text-2xs ms-1">(+{totalPctChange}%)</span>
             </p>
           </div>
-          <div className="text-right">
+          <div className="text-end">
             <p className="text-2xs text-content-tertiary mb-0.5">
               {t('costs.escalated_cost', { defaultValue: 'Escalated cost' })} ({targetYear})
             </p>

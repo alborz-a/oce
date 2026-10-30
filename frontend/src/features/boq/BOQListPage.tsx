@@ -369,10 +369,10 @@ function CompareModal({ boqIdA, boqIdB, currencyA, currencyB, onClose }: Compare
                         side's own ISO code so figures stay unambiguous. */}
                     <div className={`grid ${currencyMismatch ? 'grid-cols-[1fr_auto_auto]' : 'grid-cols-[1fr_auto_auto_auto]'} gap-2 bg-surface-secondary px-4 py-2.5 text-2xs font-medium text-content-tertiary uppercase tracking-wider`}>
                       <div>{t('boq.section', { defaultValue: 'Section' })}</div>
-                      <div className="w-28 text-right">A{currencyA ? ` (${currencyA})` : ''}</div>
-                      <div className="w-28 text-right">B{currencyB ? ` (${currencyB})` : ''}</div>
+                      <div className="w-28 text-end">A{currencyA ? ` (${currencyA})` : ''}</div>
+                      <div className="w-28 text-end">B{currencyB ? ` (${currencyB})` : ''}</div>
                       {!currencyMismatch && (
-                        <div className="w-24 text-right">{t('boq.compare_diff', { defaultValue: 'Diff' })}</div>
+                        <div className="w-24 text-end">{t('boq.compare_diff', { defaultValue: 'Diff' })}</div>
                       )}
                     </div>
                     {/* Rows */}
@@ -386,14 +386,14 @@ function CompareModal({ boqIdA, boqIdB, currencyA, currencyB, onClose }: Compare
                           <div className="text-content-primary truncate font-medium">
                             {row.nameA !== '--' ? row.nameA : row.nameB}
                           </div>
-                          <div className="w-28 text-right tabular-nums text-content-secondary">
+                          <div className="w-28 text-end tabular-nums text-content-secondary">
                             {row.totalA > 0 ? currencyFmt.format(row.totalA) : '--'}
                           </div>
-                          <div className="w-28 text-right tabular-nums text-content-secondary">
+                          <div className="w-28 text-end tabular-nums text-content-secondary">
                             {row.totalB > 0 ? currencyFmt.format(row.totalB) : '--'}
                           </div>
                           {!currencyMismatch && (
-                            <div className={`w-24 text-right tabular-nums font-medium ${diffColor(diff)}`}>
+                            <div className={`w-24 text-end tabular-nums font-medium ${diffColor(diff)}`}>
                               {row.totalA === 0 && row.totalB === 0
                                 ? '--'
                                 : `${diff >= 0 ? '+' : ''}${currencyFmt.format(diff)}`}
@@ -868,10 +868,10 @@ export function BOQListPage() {
   const uniqueStatuses = [...new Set((allBoqs ?? []).map((b) => b.status))];
 
   function valueBorderColor(value: number): string {
-    if (value > 10_000_000) return 'border-l-amber-500';
-    if (value > 1_000_000) return 'border-l-emerald-500';
-    if (value > 100_000) return 'border-l-blue-500';
-    return 'border-l-gray-300 dark:border-l-gray-600';
+    if (value > 10_000_000) return 'border-s-amber-500';
+    if (value > 1_000_000) return 'border-s-emerald-500';
+    if (value > 100_000) return 'border-s-blue-500';
+    return 'border-s-gray-300 dark:border-s-gray-600';
   }
 
   return (
@@ -1019,10 +1019,10 @@ export function BOQListPage() {
             ) : stats.multiCurrency ? (
               <div className="mt-1 text-lg font-semibold text-content-primary tabular-nums">
                 {compactMoney(stats.totalsByCurrency[0]!.total)}
-                <span className="ml-1 text-xs font-medium text-content-tertiary">
+                <span className="ms-1 text-xs font-medium text-content-tertiary">
                   {stats.totalsByCurrency[0]!.currency}
                 </span>
-                <span className="ml-1 text-2xs font-medium text-content-tertiary">
+                <span className="ms-1 text-2xs font-medium text-content-tertiary">
                   {t('boq.plus_n_more', {
                     defaultValue: '+{{count}} more',
                     count: stats.totalsByCurrency.length - 1,
@@ -1032,7 +1032,7 @@ export function BOQListPage() {
             ) : (
               <div className="mt-1 text-lg font-semibold text-content-primary tabular-nums">
                 {compactMoney(stats.totalsByCurrency[0]!.total)}
-                <span className="ml-1 text-xs font-medium text-content-tertiary">
+                <span className="ms-1 text-xs font-medium text-content-tertiary">
                   {stats.totalsByCurrency[0]!.currency}
                 </span>
               </div>
@@ -1057,7 +1057,7 @@ export function BOQListPage() {
           <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
             {/* Search */}
             <div className="relative flex-1">
-              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center pl-3 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-content-tertiary">
                 <Search size={16} />
               </div>
               <input
@@ -1231,9 +1231,9 @@ export function BOQListPage() {
               <span className="w-5 shrink-0" />
               <span className="flex-1 min-w-0">{t('boq.name', { defaultValue: 'Name' })}</span>
               <span className="w-36 shrink-0 hidden md:block">{t('boq.project', { defaultValue: 'Project' })}</span>
-              <span className="w-16 shrink-0 text-right">{t('boq.positions_short', { defaultValue: 'Pos.' })}</span>
-              <span className="w-32 shrink-0 text-right">{t('boq.total_value', { defaultValue: 'Total' })}</span>
-              <span className="w-24 shrink-0 text-right hidden lg:block">{t('boq.date', { defaultValue: 'Date' })}</span>
+              <span className="w-16 shrink-0 text-end">{t('boq.positions_short', { defaultValue: 'Pos.' })}</span>
+              <span className="w-32 shrink-0 text-end">{t('boq.total_value', { defaultValue: 'Total' })}</span>
+              <span className="w-24 shrink-0 text-end hidden lg:block">{t('boq.date', { defaultValue: 'Date' })}</span>
               <span className="w-28 shrink-0" />
             </div>
             {paginatedBoqs.map((boq, i) => (
@@ -1289,15 +1289,15 @@ export function BOQListPage() {
                 <span className="w-36 shrink-0 text-sm text-content-tertiary truncate hidden md:block">{boq.projectName}</span>
 
                 {/* Position count */}
-                <span className="w-16 shrink-0 text-sm text-content-secondary text-right tabular-nums hidden sm:block">{boq.positionCount}</span>
+                <span className="w-16 shrink-0 text-sm text-content-secondary text-end tabular-nums hidden sm:block">{boq.positionCount}</span>
 
                 {/* Total value */}
-                <span className="w-32 shrink-0 text-sm font-medium text-content-primary text-right tabular-nums hidden sm:block">
+                <span className="w-32 shrink-0 text-sm font-medium text-content-primary text-end tabular-nums hidden sm:block">
                   {currencyFmt.format(boq.grandTotal)} <span className="text-2xs text-content-tertiary">{boq.currency}</span>
                 </span>
 
                 {/* Date */}
-                <span className="w-24 shrink-0 text-2xs text-content-tertiary text-right hidden lg:block">
+                <span className="w-24 shrink-0 text-2xs text-content-tertiary text-end hidden lg:block">
                   <DateDisplay value={boq.created_at} format="numeric" />
                 </span>
 
@@ -1344,7 +1344,7 @@ export function BOQListPage() {
               key={boq.id}
               hoverable
               padding="none"
-              className={`group relative flex h-full flex-col cursor-pointer animate-card-in overflow-hidden border-l-4 ${valueBorderColor(boq.grandTotal)} ${selectedForCompare?.id === boq.id ? 'ring-2 ring-oe-blue' : ''}`}
+              className={`group relative flex h-full flex-col cursor-pointer animate-card-in overflow-hidden border-s-4 ${valueBorderColor(boq.grandTotal)} ${selectedForCompare?.id === boq.id ? 'ring-2 ring-oe-blue' : ''}`}
               style={{ animationDelay: `${50 + i * 30}ms` }}
               onClick={() => {
                 if (compareMode && selectedForCompare && selectedForCompare.id !== boq.id) {
@@ -1391,7 +1391,7 @@ export function BOQListPage() {
               <div className="mt-auto border-t border-border-light px-4 pb-2 pt-3">
                 <div className="text-xl font-bold leading-none text-content-primary tabular-nums">
                   {currencyFmt.format(boq.grandTotal)}
-                  <span className="ml-1 text-xs font-medium text-content-tertiary">{boq.currency}</span>
+                  <span className="ms-1 text-xs font-medium text-content-tertiary">{boq.currency}</span>
                 </div>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-content-tertiary">
                   <span className="tabular-nums">
@@ -1405,7 +1405,7 @@ export function BOQListPage() {
                     <DateDisplay value={boq.created_at} format="numeric" />
                   </span>
                   {isCollabEnabled && (
-                    <span className="ml-auto"><PresenceAvatars boqId={boq.id} /></span>
+                    <span className="ms-auto"><PresenceAvatars boqId={boq.id} /></span>
                   )}
                 </div>
               </div>
@@ -1416,7 +1416,7 @@ export function BOQListPage() {
               <div className="flex items-center justify-between gap-1 px-2.5 pb-2.5 pt-1">
                 {confirmDeleteId === boq.id ? (
                   <div className="flex w-full items-center justify-between gap-1" onClick={(e) => e.stopPropagation()}>
-                    <span className="pl-1 text-2xs text-content-tertiary">
+                    <span className="ps-1 text-2xs text-content-tertiary">
                       {t('boq.delete_confirm_q', { defaultValue: 'Delete?' })}
                     </span>
                     <div className="flex items-center gap-1">
@@ -1481,7 +1481,7 @@ export function BOQListPage() {
 
                     {/* Open affordance — appears on hover so the card reads as
                         clickable without adding permanent clutter. */}
-                    <span className="inline-flex items-center gap-1 pr-1 text-2xs font-semibold text-oe-blue-text opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="inline-flex items-center gap-1 pe-1 text-2xs font-semibold text-oe-blue-text opacity-0 transition-opacity group-hover:opacity-100">
                       {t('boq.open', { defaultValue: 'Open' })}
                       <ArrowRight size={13} />
                     </span>

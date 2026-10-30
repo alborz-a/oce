@@ -55,7 +55,7 @@ export function ShortcutsCheatsheet({ open, onClose }: ShortcutsCheatsheetProps)
             type="button"
             onClick={onClose}
             aria-label={t('common.close', { defaultValue: 'Close' })}
-            className="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
+            className="ms-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
           >
             <X size={14} />
           </button>

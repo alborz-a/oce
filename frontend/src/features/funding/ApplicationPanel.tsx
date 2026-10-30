@@ -143,7 +143,7 @@ function Field({
           value={value}
           inputMode={mode}
           onChange={(e) => onChange(e.target.value)}
-          className={mode ? `${shared} text-right tabular-nums` : shared}
+          className={mode ? `${shared} text-end tabular-nums` : shared}
         />
       )}
     </div>
@@ -680,12 +680,12 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
           </p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
+            <thead className="text-start text-xs uppercase text-gray-500 dark:text-gray-400">
               <tr>
                 <th className="px-2 py-1">{t('funding.field.cost_group', { defaultValue: 'Cost group' })}</th>
                 <th className="px-2 py-1">{t('common.description', { defaultValue: 'Description' })}</th>
-                <th className="px-2 py-1 text-right">{t('funding.field.amount', { defaultValue: 'Amount' })}</th>
-                <th className="px-2 py-1 text-right">{t('funding.field.eligible_amount', { defaultValue: 'Of which eligible' })}</th>
+                <th className="px-2 py-1 text-end">{t('funding.field.amount', { defaultValue: 'Amount' })}</th>
+                <th className="px-2 py-1 text-end">{t('funding.field.eligible_amount', { defaultValue: 'Of which eligible' })}</th>
                 <th className="px-2 py-1">{t('funding.field.eligibility', { defaultValue: 'Eligibility' })}</th>
               </tr>
             </thead>
@@ -694,8 +694,8 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
                 <tr key={row.id} className="border-t border-gray-100 dark:border-gray-800">
                   <td className="px-2 py-1 font-medium">{row.cost_group}</td>
                   <td className="px-2 py-1 text-gray-600 dark:text-gray-300">{row.description || '—'}</td>
-                  <td className="px-2 py-1 text-right tabular-nums">{money(row.amount)}</td>
-                  <td className="px-2 py-1 text-right tabular-nums">{money(row.eligible_amount)}</td>
+                  <td className="px-2 py-1 text-end tabular-nums">{money(row.amount)}</td>
+                  <td className="px-2 py-1 text-end tabular-nums">{money(row.eligible_amount)}</td>
                   <td className="px-2 py-1">
                     <Badge variant={eligibilityVariant(row.eligibility)} size="sm">
                       {t(`funding.eligibility.${row.eligibility}`, { defaultValue: row.eligibility })}
@@ -709,8 +709,8 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
                 <td className="px-2 py-1" colSpan={2}>
                   {t('common.total', { defaultValue: 'Total' })}
                 </td>
-                <td className="px-2 py-1 text-right tabular-nums">{money(summary.allocated_amount)}</td>
-                <td className="px-2 py-1 text-right tabular-nums">{money(summary.allocated_eligible_amount)}</td>
+                <td className="px-2 py-1 text-end tabular-nums">{money(summary.allocated_amount)}</td>
+                <td className="px-2 py-1 text-end tabular-nums">{money(summary.allocated_eligible_amount)}</td>
                 <td />
               </tr>
             </tfoot>
@@ -774,14 +774,14 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
           </p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
+            <thead className="text-start text-xs uppercase text-gray-500 dark:text-gray-400">
               <tr>
                 <th className="px-2 py-1">{t('funding.field.code', { defaultValue: 'Reference' })}</th>
                 {/* The draw's own spending period, which is a window inside
                     the award period and not the award period itself. */}
                 <th className="px-2 py-1">{t('funding.field.spend_period', { defaultValue: 'Spending period' })}</th>
-                <th className="px-2 py-1 text-right">{t('funding.field.requested', { defaultValue: 'Requested' })}</th>
-                <th className="px-2 py-1 text-right">{t('funding.field.received', { defaultValue: 'Received' })}</th>
+                <th className="px-2 py-1 text-end">{t('funding.field.requested', { defaultValue: 'Requested' })}</th>
+                <th className="px-2 py-1 text-end">{t('funding.field.received', { defaultValue: 'Received' })}</th>
                 <th className="px-2 py-1">{t('funding.field.spend_deadline', { defaultValue: 'Spend by' })}</th>
                 <th className="px-2 py-1">{t('funding.field.status', { defaultValue: 'Status' })}</th>
                 <th className="px-2 py-1" />
@@ -797,8 +797,8 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
                   <td className="whitespace-nowrap px-2 py-1 tabular-nums text-gray-600 dark:text-gray-300">
                     {row.period_from || row.period_to ? `${date(row.period_from)} … ${date(row.period_to)}` : '—'}
                   </td>
-                  <td className="px-2 py-1 text-right tabular-nums">{money(row.amount_requested)}</td>
-                  <td className="px-2 py-1 text-right tabular-nums">{money(row.amount_received)}</td>
+                  <td className="px-2 py-1 text-end tabular-nums">{money(row.amount_requested)}</td>
+                  <td className="px-2 py-1 text-end tabular-nums">{money(row.amount_received)}</td>
                   <td className="px-2 py-1 tabular-nums text-gray-600 dark:text-gray-300">{date(row.spend_deadline_on)}</td>
                   <td className="px-2 py-1">
                     <Badge variant={drawVariant(row.status)} size="sm">
@@ -917,11 +917,11 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
           </p>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
+            <thead className="text-start text-xs uppercase text-gray-500 dark:text-gray-400">
               <tr>
                 <th className="px-2 py-1">{t('funding.field.kind', { defaultValue: 'Kind' })}</th>
                 <th className="px-2 py-1">{t('funding.field.due_on', { defaultValue: 'Due on' })}</th>
-                <th className="px-2 py-1 text-right">{t('funding.field.spent', { defaultValue: 'Eligible costs spent' })}</th>
+                <th className="px-2 py-1 text-end">{t('funding.field.spent', { defaultValue: 'Eligible costs spent' })}</th>
                 <th className="px-2 py-1">{t('funding.field.status', { defaultValue: 'Status' })}</th>
                 <th className="px-2 py-1">{t('funding.field.retention_until', { defaultValue: 'Keep until' })}</th>
                 <th className="px-2 py-1" />
@@ -934,7 +934,7 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
                     {t(`funding.proof_kind.${row.kind}`, { defaultValue: row.kind })}
                   </td>
                   <td className="px-2 py-1 tabular-nums text-gray-600 dark:text-gray-300">{date(row.due_on)}</td>
-                  <td className="px-2 py-1 text-right tabular-nums">{money(row.total_eligible_spent)}</td>
+                  <td className="px-2 py-1 text-end tabular-nums">{money(row.total_eligible_spent)}</td>
                   <td className="px-2 py-1">
                     <Badge variant={proofVariant(row.status)} size="sm">
                       {t(`funding.proof_status.${row.status}`, { defaultValue: row.status })}

@@ -289,7 +289,7 @@ export function HandoverSection({ projectId }: SectionProps) {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-border-light text-left text-xs text-content-tertiary">
+                    <tr className="border-b border-border-light text-start text-xs text-content-tertiary">
                       <th className="px-4 py-2.5 font-medium">
                         {t('construction_control.col.number', { defaultValue: 'Number' })}
                       </th>
@@ -628,7 +628,7 @@ function GateBody({
         value={String(holds)}
       />
       {blockingNumbers.length > 0 && (
-        <p className="pl-6 text-2xs text-content-tertiary">
+        <p className="ps-6 text-2xs text-content-tertiary">
           {t('construction_control.handover.blocking_gates', {
             defaultValue: 'Blocking: {{gates}}',
             gates: fmtList(blockingNumbers),

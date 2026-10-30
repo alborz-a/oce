@@ -73,7 +73,7 @@ export function LinkToRecordMenu({ projectId }: { projectId: string }) {
             type="button"
             role="menuitem"
             onClick={() => go(rfiPath)}
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-content-primary hover:bg-surface-secondary"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm text-content-primary hover:bg-surface-secondary"
           >
             <HelpCircle className="h-4 w-4 shrink-0 text-content-tertiary" />
             {t('phonelog.link_open_rfi', { defaultValue: 'Open RFIs' })}
@@ -82,7 +82,7 @@ export function LinkToRecordMenu({ projectId }: { projectId: string }) {
             type="button"
             role="menuitem"
             onClick={() => go('/changeorders')}
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-content-primary hover:bg-surface-secondary"
+            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-start text-sm text-content-primary hover:bg-surface-secondary"
           >
             <FileEdit className="h-4 w-4 shrink-0 text-content-tertiary" />
             {t('phonelog.link_open_co', { defaultValue: 'Open change orders' })}

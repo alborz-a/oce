@@ -379,7 +379,7 @@ function FilterBar({
                       setUserOpen(false);
                       onChange({ ...draft, userId: u.id });
                     }}
-                    className="block w-full px-3 py-2 text-left text-sm hover:bg-surface-secondary"
+                    className="block w-full px-3 py-2 text-start text-sm hover:bg-surface-secondary"
                   >
                     <div className="font-medium">{u.full_name || u.email}</div>
                     <div className="text-xs text-content-tertiary">{u.email}</div>
@@ -496,7 +496,7 @@ function FilterBar({
 
       {/* Severity chips + reset */}
       <div className="flex flex-wrap items-center gap-2 px-4 pb-4">
-        <span className="text-xs font-medium text-content-secondary mr-1">
+        <span className="text-xs font-medium text-content-secondary me-1">
           {t('audit.severity', { defaultValue: 'Severity' })}:
         </span>
         {sevChips.map((c) => {
@@ -676,7 +676,7 @@ function DetailDrawer({
       />
       <aside
         data-testid="audit-drawer"
-        className="relative ml-auto h-full w-full max-w-2xl overflow-y-auto bg-surface-primary shadow-xl"
+        className="relative ms-auto h-full w-full max-w-2xl overflow-y-auto bg-surface-primary shadow-xl"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-surface-primary px-4 py-3">
           <div className="min-w-0">
@@ -1163,7 +1163,7 @@ export function AuditLogPage() {
                 </caption>
                 <thead className="bg-surface-secondary/50 text-xs uppercase tracking-wide text-content-tertiary">
                   <tr>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       <button
                         type="button"
                         onClick={handleSort}
@@ -1176,19 +1176,19 @@ export function AuditLogPage() {
                         {filters.sort === 'asc' ? <ArrowUpAZ size={12} /> : <ArrowDownAZ size={12} />}
                       </button>
                     </th>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       {t('audit.col_severity', { defaultValue: 'Severity' })}
                     </th>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       {t('audit.col_actor', { defaultValue: 'Actor' })}
                     </th>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       {t('audit.col_action', { defaultValue: 'Action' })}
                     </th>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       {t('audit.col_target', { defaultValue: 'Target' })}
                     </th>
-                    <th scope="col" className="px-4 py-2 text-left font-medium">
+                    <th scope="col" className="px-4 py-2 text-start font-medium">
                       {t('audit.col_preview', { defaultValue: 'Preview' })}
                     </th>
                   </tr>

@@ -145,7 +145,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className="block w-full text-left rounded-lg p-1 -m-1 hover:bg-surface-secondary/40 transition-colors"
+              className="block w-full text-start rounded-lg p-1 -m-1 hover:bg-surface-secondary/40 transition-colors"
               aria-label={t('branding.edit', { defaultValue: 'Customise branding' })}
               title={t('branding.edit', { defaultValue: 'Customise branding' })}
             >

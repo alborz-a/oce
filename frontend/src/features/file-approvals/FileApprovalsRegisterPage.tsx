@@ -354,21 +354,21 @@ function RegisterInner() {
             <table className="w-full text-sm min-w-[760px]">
               <thead>
                 <tr className="border-b border-border-light bg-surface-secondary/40">
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                     {t('files.approvals.col_file', { defaultValue: 'File' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
                     {t('files.approvals.col_kind', { defaultValue: 'Type' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[140px]">
                     {t('files.approvals.col_submitted', {
                       defaultValue: 'Submitted',
                     })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary w-[120px]">
                     {t('files.approvals.col_status', { defaultValue: 'Status' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                     {t('files.approvals.col_current_step', {
                       defaultValue: 'Current step',
                     })}

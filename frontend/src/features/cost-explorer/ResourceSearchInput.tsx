@@ -207,7 +207,7 @@ export function ResourceSearchInput({
                 onMouseEnter={() => setHighlight(i)}
                 onClick={() => pick(r)}
                 className={[
-                  'flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm',
+                  'flex w-full items-center justify-between gap-3 px-3 py-2 text-start text-sm',
                   isExcluded ? 'cursor-not-allowed opacity-45' : 'cursor-pointer',
                   i === highlight && !isExcluded ? 'bg-surface-tertiary' : 'hover:bg-surface-tertiary',
                 ].join(' ')}

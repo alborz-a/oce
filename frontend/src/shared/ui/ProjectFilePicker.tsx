@@ -443,7 +443,7 @@ export function ProjectFilePicker(props: ProjectFilePickerProps) {
         )}
 
         {!loading && rows.length > 0 && (
-          <div className="max-h-[22rem] space-y-3 overflow-y-auto pr-1">
+          <div className="max-h-[22rem] space-y-3 overflow-y-auto pe-1">
             {groups.map((group) => (
               <div key={group.kind} className="space-y-1.5">
                 {/* The group is named so a row's origin is never a guess. The
@@ -463,7 +463,7 @@ export function ProjectFilePicker(props: ProjectFilePickerProps) {
                         disabled={busyId !== null}
                         onClick={row.select}
                         data-testid="project-file-picker-row"
-                        className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-left transition-all hover:border-oe-blue/40 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary px-3 py-2.5 text-start transition-all hover:border-oe-blue/40 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border-light bg-surface-secondary text-content-tertiary group-hover:text-oe-blue">
                           {busyId === row.id ? (

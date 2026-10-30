@@ -67,7 +67,7 @@ export function OfflineBanner() {
         type="button"
         onClick={handleDismiss}
         aria-label={t('common.dismiss', { defaultValue: 'Dismiss' })}
-        className="ml-2 flex h-5 w-5 items-center justify-center rounded text-white/80 hover:bg-white/15 hover:text-white transition-colors"
+        className="ms-2 flex h-5 w-5 items-center justify-center rounded text-white/80 hover:bg-white/15 hover:text-white transition-colors"
       >
         <X size={12} />
       </button>

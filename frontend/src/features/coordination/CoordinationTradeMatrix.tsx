@@ -386,7 +386,7 @@ function RowFragment({
   const [hovered, setHovered] = useState<string | null>(null);
   return (
     <>
-      <div className="text-right text-xs font-medium uppercase tracking-wide text-content-secondary">
+      <div className="text-end text-xs font-medium uppercase tracking-wide text-content-secondary">
         {disciplineLabel(t, row)}
       </div>
       {trades.map((col) => {

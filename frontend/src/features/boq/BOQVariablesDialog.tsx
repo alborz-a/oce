@@ -270,16 +270,16 @@ export function BOQVariablesDialog({ open, onClose, boqId, seed }: BOQVariablesD
                 <table className="w-full text-sm">
                   <thead className="bg-surface-secondary/40 text-2xs uppercase tracking-wider text-content-tertiary">
                     <tr>
-                      <th className="px-3 py-2 text-left font-semibold w-[22%]">
+                      <th className="px-3 py-2 text-start font-semibold w-[22%]">
                         {t('boq.variables_name', { defaultValue: 'Name' })}
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold w-[14%]">
+                      <th className="px-3 py-2 text-start font-semibold w-[14%]">
                         {t('boq.variables_type', { defaultValue: 'Type' })}
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold w-[20%]">
+                      <th className="px-3 py-2 text-start font-semibold w-[20%]">
                         {t('boq.variables_value', { defaultValue: 'Value' })}
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold">
+                      <th className="px-3 py-2 text-start font-semibold">
                         {t('boq.variables_description', { defaultValue: 'Description' })}
                       </th>
                       <th className="w-10 px-2 py-2"></th>

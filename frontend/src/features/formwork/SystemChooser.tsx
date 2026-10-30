@@ -166,7 +166,7 @@ function CandidateCard({
       onClick={onSelect}
       aria-pressed={selected}
       className={[
-        'text-left rounded-xl border p-3 transition-colors w-full',
+        'text-start rounded-xl border p-3 transition-colors w-full',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
         selected
           ? 'border-oe-blue ring-2 ring-oe-blue bg-oe-blue-subtle'
@@ -254,13 +254,13 @@ function CandidateCard({
         </Badge>
         {isBestBuildable && (
           <Badge variant="success" size="sm">
-            <TrendingDown size={11} className="mr-1 inline" />
+            <TrendingDown size={11} className="me-1 inline" />
             {t('formwork.chooser.bestRate', { defaultValue: 'Best rate' })}
           </Badge>
         )}
         {blocked && (
           <Badge variant="error" size="sm">
-            <AlertTriangle size={11} className="mr-1 inline" />
+            <AlertTriangle size={11} className="me-1 inline" />
             {t('formwork.chooser.overReuseLimit', {
               defaultValue: 'Only survives {{max}} uses',
               max: candidate.reuses_max,

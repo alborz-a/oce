@@ -158,7 +158,7 @@ export default function ImageSourceSelector({ file, onPick }: Props) {
               })}
               className="w-32 h-32 object-cover rounded-xl border border-border-light shadow-sm shrink-0"
             />
-            <div className="min-w-0 text-left flex-1">
+            <div className="min-w-0 text-start flex-1">
               <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300 font-medium text-sm">
                 <Check className="w-4 h-4" strokeWidth={3} />
                 <span className="truncate">{file.name}</span>

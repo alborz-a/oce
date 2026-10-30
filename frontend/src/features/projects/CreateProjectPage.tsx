@@ -1330,7 +1330,7 @@ export function CreateProjectModal({
               <button
                 type="button"
                 onClick={() => { setMode('classic'); setStep(1); }}
-                className="group w-full text-left rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
+                className="group w-full text-start rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue/10 text-oe-blue">
                   <Zap size={20} />
@@ -1351,7 +1351,7 @@ export function CreateProjectModal({
               <button
                 type="button"
                 onClick={() => { setMode('wizard'); setStep(1); setMaxStep(1); }}
-                className="group w-full text-left rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
+                className="group w-full text-start rounded-xl border border-border-light hover:border-oe-blue hover:bg-oe-blue/5 transition-all p-4 flex items-start gap-3.5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-content-secondary">
                   <Wand2 size={20} />
@@ -1394,8 +1394,8 @@ export function CreateProjectModal({
                     className="text-sm font-medium text-content-primary block mb-1.5"
                   >
                     {t('projects.project_name')}
-                    <span aria-hidden className="ml-0.5 text-red-600 dark:text-red-400">*</span>
-                    <span className="ml-1.5 rounded-full bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:bg-red-900/30 dark:text-red-300">
+                    <span aria-hidden className="ms-0.5 text-red-600 dark:text-red-400">*</span>
+                    <span className="ms-1.5 rounded-full bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:bg-red-900/30 dark:text-red-300">
                       {t('projects.create.required_badge', { defaultValue: 'Required' })}
                     </span>
                   </label>
@@ -1434,7 +1434,7 @@ export function CreateProjectModal({
                   onClick={() => setOptionalOpen((v) => !v)}
                   aria-expanded={optionalOpen}
                   aria-controls="qc-optional-body"
-                  className="flex w-full items-center justify-between gap-2 text-left -m-1 p-1 rounded-lg hover:bg-surface-secondary/40 transition-colors"
+                  className="flex w-full items-center justify-between gap-2 text-start -m-1 p-1 rounded-lg hover:bg-surface-secondary/40 transition-colors"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wide text-content-tertiary">
                     {t('projects.create.optional_section', { defaultValue: 'Optional details' })}
@@ -2026,7 +2026,7 @@ export function CreateProjectModal({
                       key={p.id}
                       type="button"
                       onClick={() => choosePreset(p.id)}
-                      className={`text-left rounded-xl border p-3 transition-all ${
+                      className={`text-start rounded-xl border p-3 transition-all ${
                         selected
                           ? 'border-oe-blue bg-oe-blue/5 ring-1 ring-oe-blue'
                           : 'border-border-light hover:border-content-tertiary bg-surface-primary'
@@ -2473,7 +2473,7 @@ function OptionalLabel({
       className="text-sm font-medium text-content-primary block mb-1.5"
     >
       {text}
-      <span className="ml-1.5 text-[11px] font-normal text-content-tertiary">
+      <span className="ms-1.5 text-[11px] font-normal text-content-tertiary">
         ({optionalText})
       </span>
     </label>
@@ -2501,7 +2501,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
     <>
       <dt className="text-content-tertiary">{label}</dt>
       <dd
-        className="text-content-primary font-medium text-right truncate"
+        className="text-content-primary font-medium text-end truncate"
         title={value}
       >
         {value}
@@ -2529,7 +2529,7 @@ function GroupedSelectField({
       <label className="text-sm font-medium text-content-primary">
         {label}
         {optional && (
-          <span className="ml-1.5 text-[11px] font-normal text-content-tertiary">
+          <span className="ms-1.5 text-[11px] font-normal text-content-tertiary">
             ({optionalText})
           </span>
         )}
@@ -2575,7 +2575,7 @@ function SelectField({
       <label className="text-sm font-medium text-content-primary">
         {label}
         {optional && (
-          <span className="ml-1.5 text-[11px] font-normal text-content-tertiary">
+          <span className="ms-1.5 text-[11px] font-normal text-content-tertiary">
             ({optionalText})
           </span>
         )}

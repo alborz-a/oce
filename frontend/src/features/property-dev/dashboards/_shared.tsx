@@ -106,7 +106,7 @@ export function DashboardSkeleton({
         </div>
       )}
       {variant === 'timeline' && (
-        <div className="space-y-2.5 border-l-2 border-border-light pl-4 pt-2">
+        <div className="space-y-2.5 border-s-2 border-border-light ps-4 pt-2">
           {Array.from({ length: rows }).map((_, i) => (
             <div key={i} className="space-y-1">
               <Skeleton height={12} className="w-2/3" />

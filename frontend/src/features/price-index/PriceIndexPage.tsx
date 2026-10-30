@@ -87,7 +87,7 @@ export function PriceIndexPage() {
         })}
         actions={
           <Button variant="secondary" size="sm" onClick={() => navigate('/price-index/resource-index')}>
-            <Calculator className="mr-1 h-4 w-4" aria-hidden />
+            <Calculator className="me-1 h-4 w-4" aria-hidden />
             {t('price_index.ri.open', { defaultValue: 'Resource-index estimate (Russia)' })}
           </Button>
         }
@@ -289,7 +289,7 @@ function PriceIndexContent() {
                     }
                   >
                     {s.name}
-                    <span className="ml-2 text-xs text-content-tertiary">
+                    <span className="ms-2 text-xs text-content-tertiary">
                       {t('price_index.point_count', { defaultValue: '{{count}} pts', count: s.point_count })}
                     </span>
                   </button>
@@ -431,7 +431,7 @@ function PriceIndexContent() {
                   <li key={lf.id} className="flex items-center justify-between py-1.5 text-sm">
                     <span className="min-w-0">
                       <span className="font-mono text-content-primary">{lf.region_code}</span>
-                      {lf.label && <span className="ml-2 text-content-tertiary">{lf.label}</span>}
+                      {lf.label && <span className="ms-2 text-content-tertiary">{lf.label}</span>}
                     </span>
                     <span className="flex items-center gap-3">
                       <span className="inline-flex items-center gap-1 font-medium text-content-primary">
@@ -653,13 +653,13 @@ function AdjustResults({ result }: { result: AdjustResponse }) {
     <div className="overflow-x-auto rounded-lg border border-border-light">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+          <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
             <th className="px-3 py-2 font-medium">{t('price_index.col_amount', { defaultValue: 'Base amount' })}</th>
             <th className="px-3 py-2 font-medium">{t('price_index.col_move', { defaultValue: 'From / to' })}</th>
-            <th className="px-3 py-2 text-right font-medium">
+            <th className="px-3 py-2 text-end font-medium">
               {t('price_index.col_factor', { defaultValue: 'Applied factor' })}
             </th>
-            <th className="px-3 py-2 text-right font-medium">
+            <th className="px-3 py-2 text-end font-medium">
               {t('price_index.col_adjusted', { defaultValue: 'Adjusted amount' })}
             </th>
           </tr>
@@ -679,7 +679,7 @@ function AdjustResults({ result }: { result: AdjustResponse }) {
                 {r.note && <div className="text-xs text-semantic-warning">{r.note}</div>}
                 {r.error && <div className="text-xs text-semantic-error">{r.error}</div>}
               </td>
-              <td className="px-3 py-2 text-right">
+              <td className="px-3 py-2 text-end">
                 {r.applied_factor ? (
                   <span className="inline-flex items-center justify-end gap-1 font-medium">
                     <FactorArrow direction={factorDirection(r.applied_factor)} />
@@ -689,7 +689,7 @@ function AdjustResults({ result }: { result: AdjustResponse }) {
                   <span className="text-content-tertiary">&mdash;</span>
                 )}
               </td>
-              <td className="px-3 py-2 text-right font-semibold text-content-primary">
+              <td className="px-3 py-2 text-end font-semibold text-content-primary">
                 {r.adjusted_amount ?? (
                   <Badge variant="error" size="sm">
                     {t('price_index.not_adjusted', { defaultValue: 'not adjusted' })}
@@ -858,7 +858,7 @@ function EscalatePanel({ seriesList }: { seriesList: CostIndexSeries[] }) {
                     aria-pressed={scope === 'project'}
                     onClick={() => setScope('project')}
                     className={
-                      'inline-flex h-9 items-center gap-1.5 border-l border-border px-3 text-sm transition-colors ' +
+                      'inline-flex h-9 items-center gap-1.5 border-s border-border px-3 text-sm transition-colors ' +
                       (scope === 'project'
                         ? 'bg-oe-blue/10 text-oe-blue'
                         : 'text-content-secondary hover:bg-surface-secondary')
@@ -1102,19 +1102,19 @@ function EscalateResults({ result }: { result: EscalatePreviewResponse }) {
       <div className="overflow-x-auto rounded-lg border border-border-light">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border-light text-left text-xs uppercase tracking-wide text-content-tertiary">
+            <tr className="border-b border-border-light text-start text-xs uppercase tracking-wide text-content-tertiary">
               <th className="px-3 py-2 font-medium">{t('price_index.escalate_col_code', { defaultValue: 'Code' })}</th>
               <th className="px-3 py-2 font-medium">{t('price_index.escalate_col_unit', { defaultValue: 'Unit' })}</th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('price_index.escalate_col_base', { defaultValue: 'Base rate' })}
               </th>
               <th className="px-3 py-2 font-medium">
                 {t('price_index.escalate_col_base_date', { defaultValue: 'Base date' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('price_index.escalate_col_factor', { defaultValue: 'Factor' })}
               </th>
-              <th className="px-3 py-2 text-right font-medium">
+              <th className="px-3 py-2 text-end font-medium">
                 {t('price_index.escalate_col_escalated', { defaultValue: 'Escalated rate' })}
               </th>
             </tr>
@@ -1130,19 +1130,19 @@ function EscalateResults({ result }: { result: EscalatePreviewResponse }) {
               >
                 <td className="px-3 py-2 font-mono text-content-secondary">{r.code}</td>
                 <td className="px-3 py-2 text-content-secondary">{r.unit || '-'}</td>
-                <td className="px-3 py-2 text-right font-mono text-content-secondary">
+                <td className="px-3 py-2 text-end font-mono text-content-secondary">
                   {r.base_rate != null ? withCurrency(r.base_rate, r.currency) : '-'}
                 </td>
                 <td className="px-3 py-2 font-mono text-content-secondary">{r.base_date ?? '-'}</td>
                 {r.escalatable ? (
                   <>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <span className="inline-flex items-center justify-end gap-1 font-medium text-content-primary">
                         <FactorArrow direction={factorDirection(r.factor)} />
                         {formatFactor(r.factor)}
                       </span>
                     </td>
-                    <td className="px-3 py-2 text-right font-mono font-semibold text-content-primary">
+                    <td className="px-3 py-2 text-end font-mono font-semibold text-content-primary">
                       {r.escalated_rate != null ? withCurrency(r.escalated_rate, r.currency) : '-'}
                     </td>
                   </>

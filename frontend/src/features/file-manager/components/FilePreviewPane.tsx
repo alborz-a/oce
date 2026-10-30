@@ -178,7 +178,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
 
   if (!row) {
     return (
-      <aside className="w-80 shrink-0 border-l border-border-light bg-surface-secondary/40 flex items-center justify-center">
+      <aside className="w-80 shrink-0 border-s border-border-light bg-surface-secondary/40 flex items-center justify-center">
         <p className="text-xs text-content-tertiary px-4 text-center">
           {t('files.preview.empty', {
             defaultValue: 'Select a file to see details.',
@@ -268,7 +268,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
   );
 
   return (
-    <aside className="w-80 shrink-0 border-l border-border-light bg-surface-elevated overflow-y-auto">
+    <aside className="w-80 shrink-0 border-s border-border-light bg-surface-elevated overflow-y-auto">
       <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2.5 border-b border-border-light bg-surface-elevated">
         <span className="text-xs font-semibold text-content-primary truncate">
           {t('files.preview.title', { defaultValue: 'File details' })}
@@ -599,7 +599,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             <button
               type="button"
               onClick={handleCopyPath}
-              className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-left break-all"
+              className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-start break-all"
               title={t('files.actions.copy_path', { defaultValue: 'Copy path' })}
             >
               <Copy size={10} className="shrink-0" />
@@ -1208,7 +1208,7 @@ function CdeStatusControl({
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 top-full mt-1 w-40 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
+          className="absolute end-0 top-full mt-1 w-40 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
         >
           {CDE_ORDER.map((key) => {
             const cfg = CDE_BADGE[key]!;
@@ -1238,7 +1238,7 @@ function CdeStatusControl({
                 }
                 onClick={() => selectable && handlePick(key)}
                 className={clsx(
-                  'flex w-full items-center justify-between gap-2 px-2.5 py-1.5 text-left text-[11px] transition-colors',
+                  'flex w-full items-center justify-between gap-2 px-2.5 py-1.5 text-start text-[11px] transition-colors',
                   isActive
                     ? 'bg-oe-blue/10 text-oe-blue font-medium'
                     : selectable

@@ -425,7 +425,7 @@ export function AIPositionCopilot({
       data-testid="boq-ai-copilot"
       className={
         variant === 'inline'
-          ? 'h-full flex flex-col overflow-hidden border-l-2 border-oe-blue/60 bg-surface-elevated'
+          ? 'h-full flex flex-col overflow-hidden border-s-2 border-oe-blue/60 bg-surface-elevated'
           : 'mt-2 rounded-xl border border-border-light bg-surface-elevated shadow-xs flex flex-col overflow-hidden'
       }
     >

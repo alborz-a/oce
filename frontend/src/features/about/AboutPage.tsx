@@ -177,7 +177,7 @@ export function AboutPage() {
             alt={COMPANY_INFO.name}
             className="h-16 w-auto object-contain"
           />
-          <div className="text-center sm:text-right">
+          <div className="text-center sm:text-end">
             <h1 className="text-2xl font-bold text-content-primary">
               {COMPANY_INFO.name}
             </h1>
@@ -265,7 +265,7 @@ export function AboutPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6 items-center">
 
         {/* ── Left column — project identity (left-aligned on wide) ── */}
-        <div className="text-center lg:text-left">
+        <div className="text-center lg:text-start">
           <a
             href="https://openconstructionerp.com?utm_source=app&utm_medium=about"
             target="_blank"
@@ -612,13 +612,13 @@ export function AboutPage() {
                     }}
                   />
                 </p>
-                <blockquote className="my-4 rounded-r-lg border-l-4 border-oe-blue bg-oe-blue/[0.04] py-3 px-4 text-[15px] italic text-content-primary leading-relaxed">
+                <blockquote className="my-4 rounded-e-lg border-s-4 border-oe-blue bg-oe-blue/[0.04] py-3 px-4 text-[15px] italic text-content-primary leading-relaxed">
                   {t('about.founder_bio_p4', {
                     defaultValue:
                       "All of it was groundwork for something we'd wanted to build for a long time: an open, modular ERP for construction. The latest generation of tooling finally made it practical to pull the methodology, data models, and earlier implementations together into one platform. It's now public and open source.",
                   })}
                 </blockquote>
-                <p className="border-l-2 border-oe-blue/40 pl-3 italic text-content-primary">
+                <p className="border-s-2 border-oe-blue/40 ps-3 italic text-content-primary">
                   {t('about.founder_bio_p5', {
                     defaultValue:
                       'In our experience the best ideas tend to come out of conversation - and out of disagreement. If the questions around construction\'s move toward "Uberization," and toward more transparent cost and time estimation, are interesting to you, we\'d be glad to have you in that discussion.',
@@ -666,7 +666,7 @@ export function AboutPage() {
                 1. Flagship products (datadrivenconstruction.io)
                 2. Open source on GitHub
                 3. Find us across the network (social) */}
-          <aside className="lg:col-span-2 lg:border-l lg:border-border-light lg:pl-8 flex flex-col h-full">
+          <aside className="lg:col-span-2 lg:border-s lg:border-border-light lg:ps-8 flex flex-col h-full">
             <div className="mb-5 flex items-center gap-2">
               <Globe size={16} className="text-oe-blue" />
               <h3 className="text-sm font-semibold text-content-primary">
@@ -1023,7 +1023,7 @@ export function AboutPage() {
                   className="group flex w-full items-center gap-3 rounded-lg border border-border-light bg-surface-primary/80 backdrop-blur-sm px-3.5 py-3 hover:border-emerald-400/60 hover:bg-emerald-50/60 dark:hover:bg-emerald-900/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-1"
                 >
                   <Sparkles size={22} className="shrink-0 text-emerald-500 group-hover:scale-110 transition-transform" />
-                  <div className="min-w-0 flex-1 text-left">
+                  <div className="min-w-0 flex-1 text-start">
                     <p className="text-sm font-bold text-content-primary leading-tight">
                       {t('about.support_inside_track', { defaultValue: 'Backers inside track' })}
                     </p>
@@ -1043,7 +1043,7 @@ export function AboutPage() {
                 Two stat tiles on top mirror the visual weight of the left
                 column's hero block, so the two halves match height on wide
                 screens without leaving a gap below the bullets. ── */}
-            <div className="lg:border-l lg:border-border-light/60 dark:lg:border-white/[0.08] lg:pl-6 flex flex-col">
+            <div className="lg:border-s lg:border-border-light/60 dark:lg:border-white/[0.08] lg:ps-6 flex flex-col">
               <p className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3 flex items-center gap-1.5">
                 <Rocket size={12} className="text-oe-blue" />
                 {t('about.support_impact_label', { defaultValue: 'Impact so far' })}

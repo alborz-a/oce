@@ -32,7 +32,7 @@ export function InboundEmailPage() {
               'Most of what a project knows about a delay is written in correspondence long before anyone builds a claim out of it. This module reads one exported message and tells you which delay categories it touches and which phrases said so.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('inbound_email.flow_step1', {
               defaultValue:

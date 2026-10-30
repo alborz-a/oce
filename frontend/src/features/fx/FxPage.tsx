@@ -42,7 +42,7 @@ export function FxPage() {
               'A project priced in one currency and paid in another is normal, and so is being asked a year later why a number was what it was. The answer has to name the rates it used, which is why every set is kept as it was recorded rather than overwritten.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('fx.flow_step1', {
               defaultValue:

@@ -170,7 +170,7 @@ export function AICostFinderPanel({
   const offTranslate = isRTL ? '-translate-x-full' : 'translate-x-full';
   return (
     <div
-      className={`fixed right-0 top-[52px] z-50 h-[calc(100%-52px)] w-[380px] bg-surface-elevated border-l border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
+      className={`fixed end-0 top-[52px] z-50 h-[calc(100%-52px)] w-[380px] bg-surface-elevated border-s border-border-light shadow-xl flex flex-col transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : offTranslate
       }`}
     >
@@ -249,7 +249,7 @@ export function AICostFinderPanel({
         {/* Loading */}
         {isLoading && debouncedQuery.length >= 2 && (
           <div className="flex items-center justify-center py-8 text-content-tertiary text-sm">
-            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mr-2" />
+            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full me-2" />
             {t('common.loading', { defaultValue: 'Searching...' })}
           </div>
         )}
@@ -396,10 +396,10 @@ function ResultCard({
         </button>
       )}
       {expanded && hasComponents && (
-        <div className="mt-1 ml-4 space-y-0.5">
+        <div className="mt-1 ms-4 space-y-0.5">
           {item.components.map((c, i) => (
             <div key={`${c.description}-${c.unit}-${i}`} className="text-xs text-content-tertiary flex justify-between">
-              <span className="truncate mr-2">{c.description}</span>
+              <span className="truncate me-2">{c.description}</span>
               <span className="shrink-0">
                 {c.unit} {fmtWithCurrency(c.rate, locale, currencyCode)}
               </span>

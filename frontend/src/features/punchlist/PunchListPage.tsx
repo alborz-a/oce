@@ -146,10 +146,10 @@ const PRIORITY_BADGE_CLS: Record<PunchPriority, string> = {
 
 /** Left-edge stripe colors for Kanban cards, keyed by priority. */
 const PRIORITY_STRIPE_CLS: Record<PunchPriority, string> = {
-  low: 'border-l-gray-300 dark:border-l-gray-600',
-  medium: 'border-l-yellow-400 dark:border-l-yellow-500',
-  high: 'border-l-orange-500 dark:border-l-orange-400',
-  critical: 'border-l-red-500 dark:border-l-red-400',
+  low: 'border-s-gray-300 dark:border-s-gray-600',
+  medium: 'border-s-yellow-400 dark:border-s-yellow-500',
+  high: 'border-s-orange-500 dark:border-s-orange-400',
+  critical: 'border-s-red-500 dark:border-s-red-400',
 };
 
 const STATUS_BADGE_VARIANT: Record<PunchStatus, 'error' | 'warning' | 'blue' | 'success' | 'neutral'> = {
@@ -569,9 +569,9 @@ function AddPunchModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>{t('punch.create_item', { defaultValue: 'Create Item' })}</span>
           </Button>
@@ -892,7 +892,7 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
         }
       }}
       className={clsx(
-        'p-3 mb-2 hover:shadow-md transition-shadow border-l-4 cursor-pointer',
+        'p-3 mb-2 hover:shadow-md transition-shadow border-s-4 cursor-pointer',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
         PRIORITY_STRIPE_CLS[item.priority],
         isOverdue && 'bg-red-50/40 dark:bg-red-950/15',
@@ -968,7 +968,7 @@ const PunchKanbanCard = React.memo(function PunchKanbanCard({
                 }}
                 className="text-xs shrink-0 whitespace-nowrap"
               >
-                <Icon size={12} className="mr-1 shrink-0" />
+                <Icon size={12} className="me-1 shrink-0" />
                 <span className="whitespace-nowrap">{t(tr.labelKey, { defaultValue: tr.defaultLabel })}</span>
               </Button>
             );
@@ -1609,7 +1609,7 @@ export function PunchListPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1618,7 +1618,7 @@ export function PunchListPage() {
               defaultValue: 'Search title, description, location...',
             })}
             aria-label={t('punch.search', { defaultValue: 'Search title, description, location...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 
@@ -1629,7 +1629,7 @@ export function PunchListPage() {
             onClick={() => setShowFilters(!showFilters)}
             className={clsx('shrink-0 whitespace-nowrap', showFilters && 'text-oe-blue')}
           >
-            <Filter size={14} className="mr-1.5 shrink-0" />
+            <Filter size={14} className="me-1.5 shrink-0" />
             <span className="whitespace-nowrap">{t('common.filters', { defaultValue: 'Filters' })}</span>
           </Button>
 
@@ -1887,7 +1887,7 @@ export function PunchListPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border-light bg-surface-secondary/50">
-                    <th className="px-3 py-3 text-left w-8">
+                    <th className="px-3 py-3 text-start w-8">
                       <input
                         type="checkbox"
                         aria-label={t('punch.select_all', { defaultValue: 'Select all' })}
@@ -1905,31 +1905,31 @@ export function PunchListPage() {
                         className="h-4 w-4 rounded border-border accent-oe-blue cursor-pointer"
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_title', { defaultValue: 'Title' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_priority', { defaultValue: 'Priority' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_status', { defaultValue: 'Status' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_category', { defaultValue: 'Category' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_assigned_to', { defaultValue: 'Assigned To' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_due_date', { defaultValue: 'Due Date' })}
                     </th>
-                    <th className="px-4 py-3 text-left text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-start text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_photos', { defaultValue: 'Photos' })}
                     </th>
-                    <th className="px-4 py-3 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-end text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('punch.col_rework_cost', { defaultValue: 'Rework cost' })}
                     </th>
-                    <th className="px-4 py-3 text-right text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
+                    <th className="px-4 py-3 text-end text-2xs font-semibold uppercase tracking-wider text-content-tertiary">
                       {t('common.actions', { defaultValue: 'Actions' })}
                     </th>
                   </tr>
@@ -1988,7 +1988,7 @@ export function PunchListPage() {
         onClick={() => setShowAddModal(true)}
         disabled={!projectId}
         aria-label={t('punch.new_item', { defaultValue: 'New Item' })}
-        className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
+        className="fixed bottom-5 end-5 z-40 inline-flex h-14 w-14 min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-oe-blue text-white shadow-lg ring-1 ring-black/5 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 sm:hidden"
       >
         <Plus size={22} />
       </button>
@@ -2077,7 +2077,7 @@ const PunchTableRow = React.memo(function PunchTableRow({
             type="button"
             onClick={() => onOpen(item)}
             title={t('punch.open_detail', { defaultValue: 'Open item details' })}
-            className="max-w-[250px] truncate rounded text-left text-sm font-medium text-content-primary hover:text-oe-blue hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+            className="max-w-[250px] truncate rounded text-start text-sm font-medium text-content-primary hover:text-oe-blue hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
           >
             {item.title}
           </button>
@@ -2163,10 +2163,10 @@ const PunchTableRow = React.memo(function PunchTableRow({
           '-'
         )}
       </td>
-      <td className="px-4 py-3 text-right text-sm text-content-secondary tabular-nums whitespace-nowrap">
+      <td className="px-4 py-3 text-end text-sm text-content-secondary tabular-nums whitespace-nowrap">
         {reworkCost ?? '-'}
       </td>
-      <td className="px-4 py-3 text-right">
+      <td className="px-4 py-3 text-end">
         <div className="flex items-center justify-end gap-1 flex-nowrap">
           {transitions.map((tr) => {
             const Icon = tr.icon;

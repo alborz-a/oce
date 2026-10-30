@@ -687,14 +687,14 @@ export function AIConfigurationCard() {
                     onClick={() => handleProviderChange(provider.id)}
                     aria-pressed={isSelected}
                     aria-label={`${providerName}${isSelected ? ` (${t('settings.ai_selected', { defaultValue: 'selected' })})` : ''}`}
-                    className={`relative flex flex-col items-start gap-1 rounded-xl px-4 py-3 text-left transition-all duration-normal ease-oe ${
+                    className={`relative flex flex-col items-start gap-1 rounded-xl px-4 py-3 text-start transition-all duration-normal ease-oe ${
                       isSelected
                         ? 'bg-oe-blue-subtle border-2 border-oe-blue ring-2 ring-oe-blue/10'
                         : 'border-2 border-border-light hover:bg-surface-secondary hover:border-border'
                     }`}
                   >
                     {provider.recommended && (
-                      <Badge variant="blue" size="sm" className="absolute -top-2.5 right-2 z-10">
+                      <Badge variant="blue" size="sm" className="absolute -top-2.5 end-2 z-10">
                         {t('settings.ai_recommended', { defaultValue: 'Recommended' })}
                       </Badge>
                     )}
@@ -718,11 +718,11 @@ export function AIConfigurationCard() {
                         {providerName}
                       </span>
                     </div>
-                    <p className="text-xs text-content-secondary pl-5.5 leading-relaxed">
+                    <p className="text-xs text-content-secondary ps-5.5 leading-relaxed">
                       {t(provider.description, { defaultValue: provider.descriptionDefault })}
                     </p>
                     {hasKey && (
-                      <Badge variant="success" size="sm" className="mt-1 ml-5.5">
+                      <Badge variant="success" size="sm" className="mt-1 ms-5.5">
                         {t('settings.ai_key_set', { defaultValue: 'Key configured' })}
                       </Badge>
                     )}
@@ -770,17 +770,17 @@ export function AIConfigurationCard() {
                         defaultValue: `Paste your ${AI_PROVIDERS.find((p) => p.id === selectedProvider)?.keyPrefix || ''}... key here`,
                       })
                 }
-                className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 pr-20 font-mono text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)] transition-all duration-normal ease-oe hover:border-content-tertiary"
+                className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 pe-20 font-mono text-sm text-content-primary placeholder:text-content-tertiary focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue focus:shadow-[0_0_0_4px_rgba(0,113,227,0.08)] transition-all duration-normal ease-oe hover:border-content-tertiary"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
                 aria-label={showKey ? t('settings.hide_key', { defaultValue: 'Hide' }) : t('settings.show_key', { defaultValue: 'Show' })}
-                className="absolute inset-y-0 right-0 flex items-center px-3 text-content-tertiary hover:text-content-primary transition-colors duration-fast"
+                className="absolute inset-y-0 end-0 flex items-center px-3 text-content-tertiary hover:text-content-primary transition-colors duration-fast"
                 tabIndex={-1}
               >
                 {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
-                <span className="ml-1 text-xs">{showKey ? t('settings.hide_key', { defaultValue: 'Hide' }) : t('settings.show_key', { defaultValue: 'Show' })}</span>
+                <span className="ms-1 text-xs">{showKey ? t('settings.hide_key', { defaultValue: 'Hide' }) : t('settings.show_key', { defaultValue: 'Show' })}</span>
               </button>
             </div>
             <p className="mt-1.5 text-xs text-content-tertiary">
@@ -1068,7 +1068,7 @@ function InterfaceModeCard() {
         </div>
         <Link
           to="/modules"
-          className="mt-4 flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-left transition-all hover:bg-surface-secondary hover:border-border"
+          className="mt-4 flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-start transition-all hover:bg-surface-secondary hover:border-border"
         >
           <Package size={16} className="shrink-0 text-oe-blue" />
           <div className="min-w-0">
@@ -1079,11 +1079,11 @@ function InterfaceModeCard() {
               {t('settings.modules_link_desc', { defaultValue: 'Enable, disable, and configure individual modules in the Modules section.' })}
             </p>
           </div>
-          <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
         </Link>
         <Link
           to="/governance"
-          className="mt-2 flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-left transition-all hover:bg-surface-secondary hover:border-border"
+          className="mt-2 flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-start transition-all hover:bg-surface-secondary hover:border-border"
         >
           <Scale size={16} className="shrink-0 text-oe-blue" />
           <div className="min-w-0">
@@ -1094,7 +1094,7 @@ function InterfaceModeCard() {
               {t('settings.governance_link_desc', { defaultValue: 'Permissions, approval routes and validation rules in the Governance section.' })}
             </p>
           </div>
-          <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
         </Link>
       </CardContent>
     </Card>
@@ -1752,7 +1752,7 @@ export function SettingsPage() {
                   data-testid={`settings-tab-${tab.id}-desktop`}
                   tabIndex={isActive ? 0 : -1}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all duration-fast ${
+                  className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-start transition-all duration-fast ${
                     isActive
                       ? 'bg-oe-blue-subtle text-oe-blue-text'
                       : 'text-content-secondary hover:bg-surface-secondary hover:text-content-primary'
@@ -2176,7 +2176,7 @@ export function SettingsPage() {
                 <CardContent className="space-y-3">
                   <Link
                     to="/governance?tab=permissions"
-                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-left transition-all hover:bg-surface-secondary hover:border-border"
+                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-start transition-all hover:bg-surface-secondary hover:border-border"
                   >
                     <ShieldCheck size={16} className="shrink-0 text-oe-blue" />
                     <div className="min-w-0">
@@ -2187,11 +2187,11 @@ export function SettingsPage() {
                         {t('settings.governance_permissions_desc', { defaultValue: 'Role-based access control for modules and actions' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
                   </Link>
                   <Link
                     to="/governance?tab=approvals"
-                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-left transition-all hover:bg-surface-secondary hover:border-border"
+                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-start transition-all hover:bg-surface-secondary hover:border-border"
                   >
                     <Scale size={16} className="shrink-0 text-oe-blue" />
                     <div className="min-w-0">
@@ -2202,11 +2202,11 @@ export function SettingsPage() {
                         {t('settings.governance_approvals_desc', { defaultValue: 'Multi-step approval workflows for changes and documents' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
                   </Link>
                   <Link
                     to="/governance?tab=validation"
-                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-left transition-all hover:bg-surface-secondary hover:border-border"
+                    className="flex items-center gap-2.5 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 text-start transition-all hover:bg-surface-secondary hover:border-border"
                   >
                     <ShieldAlert size={16} className="shrink-0 text-oe-blue" />
                     <div className="min-w-0">
@@ -2217,7 +2217,7 @@ export function SettingsPage() {
                         {t('settings.governance_validation_desc', { defaultValue: 'Configure which validation rules apply to projects and BOQs' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ml-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
                   </Link>
                 </CardContent>
               </Card>
@@ -2270,7 +2270,7 @@ export function SettingsPage() {
                           {t('settings.databases_subtitle', { defaultValue: 'Load cost databases, resource catalogs, and demo projects' })}
                         </p>
                       </div>
-                      <Link to="/setup/databases" className="sm:ml-auto shrink-0">
+                      <Link to="/setup/databases" className="sm:ms-auto shrink-0">
                         <Button variant="secondary" size="sm" icon={<ChevronRight size={14} />} iconPosition="right">
                           {t('common.open', { defaultValue: 'Open' })}
                         </Button>
@@ -2293,7 +2293,7 @@ export function SettingsPage() {
                         size="sm"
                         icon={<ChevronRight size={14} />}
                         iconPosition="right"
-                        className="sm:ml-auto shrink-0"
+                        className="sm:ms-auto shrink-0"
                         onClick={() => {
                           try {
                             localStorage.removeItem('oe_onboarding_completed');

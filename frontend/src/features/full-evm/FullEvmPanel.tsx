@@ -864,7 +864,7 @@ export function FullEvmPanel() {
                 setReport(null);
               }}
               className={
-                'rounded-md border px-2.5 py-1.5 text-left text-xs ' +
+                'rounded-md border px-2.5 py-1.5 text-start text-xs ' +
                 (baseline.id === selected?.id
                   ? 'border-oe-blue bg-oe-blue-subtle text-oe-blue-text'
                   : 'border-border bg-surface-primary text-content-secondary hover:bg-surface-secondary')
@@ -1043,16 +1043,16 @@ export function FullEvmPanel() {
                     <table className="w-full min-w-[32rem] text-xs">
                       <thead>
                         <tr className="text-content-tertiary">
-                          <th className="py-1 text-left font-normal">
+                          <th className="py-1 text-start font-normal">
                             {t('full_evm.col_period', { defaultValue: 'Period' })}
                           </th>
-                          <th className="py-1 text-right font-normal">
+                          <th className="py-1 text-end font-normal">
                             {t('full_evm.col_planned', { defaultValue: 'Planned' })}
                           </th>
-                          <th className="py-1 text-right font-normal">
+                          <th className="py-1 text-end font-normal">
                             {t('full_evm.col_earned', { defaultValue: 'Earned' })}
                           </th>
-                          <th className="py-1 text-right font-normal">
+                          <th className="py-1 text-end font-normal">
                             {t('full_evm.col_actual', { defaultValue: 'Actual' })}
                           </th>
                         </tr>
@@ -1063,11 +1063,11 @@ export function FullEvmPanel() {
                             <td className="py-1 text-content-primary">
                               {point.label || point.as_of}
                             </td>
-                            <td className="py-1 text-right tabular-nums">{point.planned_value}</td>
-                            <td className="py-1 text-right tabular-nums">
+                            <td className="py-1 text-end tabular-nums">{point.planned_value}</td>
+                            <td className="py-1 text-end tabular-nums">
                               <Figure value={point.earned_value} />
                             </td>
-                            <td className="py-1 text-right tabular-nums">
+                            <td className="py-1 text-end tabular-nums">
                               <Figure value={point.actual_cost} />
                             </td>
                           </tr>

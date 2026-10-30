@@ -138,7 +138,7 @@ export function CDEApprovalPresetsCard({ projectId }: { projectId: string }) {
                 {active ? (
                   <div className="flex items-center gap-2">
                     <Badge variant="success" size="sm">
-                      <Check size={11} className="mr-1 shrink-0" />
+                      <Check size={11} className="me-1 shrink-0" />
                       {t('cde.preset_active', { defaultValue: 'Active' })}
                     </Badge>
                     <Button
@@ -146,7 +146,7 @@ export function CDEApprovalPresetsCard({ projectId }: { projectId: string }) {
                       size="sm"
                       onClick={() => navigate('/approval-routes')}
                     >
-                      <Pencil size={12} className="mr-1" />
+                      <Pencil size={12} className="me-1" />
                       {t('cde.preset_edit', { defaultValue: 'Edit in Approval routes' })}
                     </Button>
                   </div>

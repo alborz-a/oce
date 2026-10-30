@@ -1184,7 +1184,7 @@ function SortableHeader({
     <th
       className={clsx(
         'px-4 py-2.5',
-        align === 'right' ? 'text-right' : 'text-left',
+        align === 'right' ? 'text-end' : 'text-start',
       )}
       aria-sort={isActive ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}
       scope="col"
@@ -1265,7 +1265,7 @@ function InlineRateCell({ resource, pending, onSave }: InlineRateCellProps) {
         }}
         // Stop the row-click handler firing while the user types.
         onClick={(e) => e.stopPropagation()}
-        className="w-24 rounded border border-oe-blue bg-surface-primary px-2 py-0.5 text-right text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+        className="w-24 rounded border border-oe-blue bg-surface-primary px-2 py-0.5 text-end text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
         aria-label={t('resources.edit_rate_aria', {
           defaultValue: 'Edit rate for {{name}}',
           name: resource.name,
@@ -1287,7 +1287,7 @@ function InlineRateCell({ resource, pending, onSave }: InlineRateCellProps) {
         setEditing(true);
       }}
       className={clsx(
-        'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-right tabular-nums transition-colors',
+        'inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-end tabular-nums transition-colors',
         'hover:bg-oe-blue-subtle hover:text-oe-blue-text',
         pending && 'opacity-50',
       )}
@@ -1426,7 +1426,7 @@ function ResourceTable({
         <table className="w-full text-sm" data-testid="resources-table">
           <thead className="bg-surface-secondary text-content-tertiary text-xs">
             <tr>
-              <th className="px-3 py-2.5 text-left w-8" scope="col">
+              <th className="px-3 py-2.5 text-start w-8" scope="col">
                 <input
                   type="checkbox"
                   aria-label={t('common.select_all', { defaultValue: 'Select all' })}
@@ -1475,7 +1475,7 @@ function ResourceTable({
                 onSort={onSort}
               />
               <th
-                className="px-4 py-2.5 text-right w-24 uppercase tracking-wide font-medium"
+                className="px-4 py-2.5 text-end w-24 uppercase tracking-wide font-medium"
                 scope="col"
               >
                 {t('resources.actions', { defaultValue: 'Actions' })}
@@ -1541,14 +1541,14 @@ function ResourceTable({
                       {resourceStatusLabel(t, r.status)}
                     </Badge>
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end">
                     <InlineRateCell
                       resource={r}
                       pending={pendingRateId === r.id}
                       onSave={onInlineRateSave}
                     />
                   </td>
-                  <td className="px-4 py-2 text-right">
+                  <td className="px-4 py-2 text-end">
                     <div className="inline-flex gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
                       <button
                         type="button"
@@ -1880,7 +1880,7 @@ function RequestsTab({
             <div className="relative">
               <Search
                 size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
               />
               <input
                 type="text"
@@ -1889,7 +1889,7 @@ function RequestsTab({
                 })}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className={clsx(inputCls, 'pl-8')}
+                className={clsx(inputCls, 'ps-8')}
                 data-testid="requests-search"
               />
             </div>
@@ -2184,7 +2184,7 @@ function RequestsTable({
   const SortArrow = ({ active }: { active: boolean }) => (
     <span
       className={clsx(
-        'inline-block ml-1 transition-transform',
+        'inline-block ms-1 transition-transform',
         active ? 'opacity-100' : 'opacity-30',
         sortDir === 'desc' && active ? 'rotate-180' : '',
       )}
@@ -2199,7 +2199,7 @@ function RequestsTable({
       <table className="min-w-full text-sm">
         <thead className="bg-surface-secondary/50 border-b border-border-light">
           <tr className="text-xs uppercase text-content-secondary">
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               <button
                 type="button"
                 onClick={() => onSort('priority')}
@@ -2209,10 +2209,10 @@ function RequestsTable({
                 <SortArrow active={sortKey === 'priority'} />
               </button>
             </th>
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               {t('resources.req_col_title', { defaultValue: 'Title' })}
             </th>
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               <button
                 type="button"
                 onClick={() => onSort('start_at')}
@@ -2222,7 +2222,7 @@ function RequestsTable({
                 <SortArrow active={sortKey === 'start_at'} />
               </button>
             </th>
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               <button
                 type="button"
                 onClick={() => onSort('quantity')}
@@ -2232,13 +2232,13 @@ function RequestsTable({
                 <SortArrow active={sortKey === 'quantity'} />
               </button>
             </th>
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               {t('resources.req_col_skills', { defaultValue: 'Skills' })}
             </th>
-            <th className="text-left px-4 py-2 font-medium">
+            <th className="text-start px-4 py-2 font-medium">
               {t('common.status', { defaultValue: 'Status' })}
             </th>
-            <th className="text-right px-4 py-2 font-medium">
+            <th className="text-end px-4 py-2 font-medium">
               {t('resources.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -2305,7 +2305,7 @@ function RequestRow({
     <tr className="hover:bg-surface-secondary/30">
       <td className="px-4 py-2.5">
         <Badge variant={PRIORITY_VARIANT[r.priority]} size="sm">
-          {PriorityIcon && <PriorityIcon size={10} className="inline mr-1" />}
+          {PriorityIcon && <PriorityIcon size={10} className="inline me-1" />}
           {requestPriorityLabel(t, r.priority)}
         </Badge>
       </td>
@@ -2347,7 +2347,7 @@ function RequestRow({
           {requestStatusLabel(t, r.status)}
         </Badge>
       </td>
-      <td className="px-4 py-2.5 text-right">
+      <td className="px-4 py-2.5 text-end">
         <div className="inline-flex items-center gap-1">
           {isOpen && (
             <Button
@@ -2377,13 +2377,13 @@ function RequestRow({
             {menuOpen && (
               <div
                 role="menu"
-                className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-xl py-1 text-sm"
+                className="absolute end-0 z-20 mt-1 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-xl py-1 text-sm"
                 data-testid={`request-menu-open-${r.id}`}
               >
                 <button
                   type="button"
                   role="menuitem"
-                  className="w-full px-3 py-1.5 text-left hover:bg-surface-secondary flex items-center gap-2"
+                  className="w-full px-3 py-1.5 text-start hover:bg-surface-secondary flex items-center gap-2"
                   onClick={() => {
                     setMenuOpen(false);
                     onEdit();
@@ -2396,7 +2396,7 @@ function RequestRow({
                   <button
                     type="button"
                     role="menuitem"
-                    className="w-full px-3 py-1.5 text-left hover:bg-surface-secondary flex items-center gap-2"
+                    className="w-full px-3 py-1.5 text-start hover:bg-surface-secondary flex items-center gap-2"
                     onClick={() => {
                       setMenuOpen(false);
                       onFulfill();
@@ -2410,7 +2410,7 @@ function RequestRow({
                   <button
                     type="button"
                     role="menuitem"
-                    className="w-full px-3 py-1.5 text-left hover:bg-surface-secondary flex items-center gap-2 text-content-secondary"
+                    className="w-full px-3 py-1.5 text-start hover:bg-surface-secondary flex items-center gap-2 text-content-secondary"
                     onClick={() => {
                       setMenuOpen(false);
                       onCancel();
@@ -2424,7 +2424,7 @@ function RequestRow({
                 <button
                   type="button"
                   role="menuitem"
-                  className="w-full px-3 py-1.5 text-left hover:bg-semantic-error/10 text-semantic-error flex items-center gap-2"
+                  className="w-full px-3 py-1.5 text-start hover:bg-semantic-error/10 text-semantic-error flex items-center gap-2"
                   onClick={() => {
                     setMenuOpen(false);
                     onDelete();
@@ -2753,7 +2753,7 @@ function RequestFormFields({ form, setForm, skills }: RequestFormFieldsProps) {
                         : 'border-border-light text-content-secondary hover:bg-surface-secondary',
                     )}
                   >
-                    <Wrench size={10} className="inline mr-1" />
+                    <Wrench size={10} className="inline me-1" />
                     {s.name}
                   </button>
                 );
@@ -3235,7 +3235,7 @@ function AssignmentsTab({
                   <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
                     <tr>
                       {canEdit && (
-                        <th className="px-3 py-2 text-left w-8">
+                        <th className="px-3 py-2 text-start w-8">
                           <input
                             type="checkbox"
                             aria-label={t('common.select_all', {
@@ -3254,27 +3254,27 @@ function AssignmentsTab({
                           />
                         </th>
                       )}
-                      <th className="px-3 py-2 text-left">
+                      <th className="px-3 py-2 text-start">
                         {t('resources.col_resource', { defaultValue: 'Resource' })}
                       </th>
-                      <th className="px-3 py-2 text-left">
+                      <th className="px-3 py-2 text-start">
                         {t('resources.col_project_task', {
                           defaultValue: 'Project / Task',
                         })}
                       </th>
-                      <th className="px-3 py-2 text-left">
+                      <th className="px-3 py-2 text-start">
                         {t('resources.start', { defaultValue: 'Start' })}
                       </th>
-                      <th className="px-3 py-2 text-left">
+                      <th className="px-3 py-2 text-start">
                         {t('resources.end', { defaultValue: 'End' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('resources.alloc', { defaultValue: 'Alloc' })}
                       </th>
-                      <th className="px-3 py-2 text-left">
+                      <th className="px-3 py-2 text-start">
                         {t('resources.col_status', { defaultValue: 'Status' })}
                       </th>
-                      <th className="px-3 py-2 text-right">
+                      <th className="px-3 py-2 text-end">
                         {t('resources.actions', { defaultValue: 'Actions' })}
                       </th>
                     </tr>
@@ -3318,7 +3318,7 @@ function AssignmentsTab({
                           <td className="px-3 py-1.5">
                             <button
                               type="button"
-                              className="text-left font-medium text-content-primary hover:text-oe-blue"
+                              className="text-start font-medium text-content-primary hover:text-oe-blue"
                               onClick={() => onSelectResource(a.resource_id)}
                             >
                               {a.resource_name}
@@ -3329,7 +3329,7 @@ function AssignmentsTab({
                               {a.project_id ? (
                                 <button
                                   type="button"
-                                  className="inline-flex w-fit items-center gap-1 text-left text-content-primary hover:text-oe-blue hover:underline"
+                                  className="inline-flex w-fit items-center gap-1 text-start text-content-primary hover:text-oe-blue hover:underline"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     navigate(`/projects/${a.project_id}`);
@@ -3353,7 +3353,7 @@ function AssignmentsTab({
                               {a.task_id && (
                                 <button
                                   type="button"
-                                  className="inline-flex w-fit items-center gap-1 text-left text-2xs text-content-tertiary hover:text-oe-blue hover:underline"
+                                  className="inline-flex w-fit items-center gap-1 text-start text-2xs text-content-tertiary hover:text-oe-blue hover:underline"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     // The Tasks route reads no per-task parameter, so
@@ -3376,7 +3376,7 @@ function AssignmentsTab({
                               {a.activity_id && (
                                 <button
                                   type="button"
-                                  className="inline-flex w-fit items-center gap-1 text-left text-2xs text-content-tertiary hover:text-oe-blue hover:underline"
+                                  className="inline-flex w-fit items-center gap-1 text-start text-2xs text-content-tertiary hover:text-oe-blue hover:underline"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     // /schedule does consume project_id: it pre-selects
@@ -3412,7 +3412,7 @@ function AssignmentsTab({
                               </span>
                             )}
                           </td>
-                          <td className="px-3 py-1.5 text-xs tabular-nums text-right">
+                          <td className="px-3 py-1.5 text-xs tabular-nums text-end">
                             {a.allocation_percent}%
                           </td>
                           <td className="px-3 py-1.5">
@@ -3420,7 +3420,7 @@ function AssignmentsTab({
                               {assignmentStatusLabel(t, a.status)}
                             </Badge>
                           </td>
-                          <td className="px-3 py-1.5 text-right">
+                          <td className="px-3 py-1.5 text-end">
                             {canEdit ? (
                               <div className="inline-flex gap-1">
                                 <button
@@ -4090,19 +4090,19 @@ function AssignmentTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('resources.start', { defaultValue: 'Start' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('resources.end', { defaultValue: 'End' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('resources.alloc', { defaultValue: 'Alloc' })}
             </th>
-            <th className="px-3 py-2 text-left">
+            <th className="px-3 py-2 text-start">
               {t('resources.col_status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-3 py-2 text-right">
+            <th className="px-3 py-2 text-end">
               {t('resources.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -4124,7 +4124,7 @@ function AssignmentTable({
                   {assignmentStatusLabel(t, a.status)}
                 </Badge>
               </td>
-              <td className="px-3 py-1.5 text-right">
+              <td className="px-3 py-1.5 text-end">
                 {a.status === 'proposed' && (canConfirm || canDecline) ? (
                   <div className="inline-flex gap-1">
                     {canConfirm && (
@@ -4689,7 +4689,7 @@ function ProposeAssignmentModal({
                         : 'border-border-light text-content-secondary hover:bg-surface-secondary',
                     )}
                   >
-                    <Wrench size={10} className="inline mr-1" />
+                    <Wrench size={10} className="inline me-1" />
                     {s.name}
                   </button>
                 );

@@ -320,7 +320,7 @@ function ProjectJourneyPanel({
                           strokeWidth={1}
                           aria-hidden
                           className={clsx(
-                            'pointer-events-none absolute -bottom-6 -right-5 z-0',
+                            'pointer-events-none absolute -bottom-6 -end-5 z-0',
                             isCurrent
                               ? 'text-oe-blue opacity-[0.10]'
                               : clsx(accent.glyph, 'opacity-[0.07]'),
@@ -753,7 +753,7 @@ function CasesPill({
                         type="button"
                         onClick={() => onOpenCase(pb.id)}
                         onMouseEnter={() => setActive(i)}
-                        className="group flex w-full items-center gap-2 px-3 py-1.5 text-left text-2xs text-content-primary transition-colors hover:bg-oe-blue/5 focus:bg-oe-blue/10 focus:outline-none"
+                        className="group flex w-full items-center gap-2 px-3 py-1.5 text-start text-2xs text-content-primary transition-colors hover:bg-oe-blue/5 focus:bg-oe-blue/10 focus:outline-none"
                       >
                         <span className="flex-1 truncate">
                           {t(pb.titleKey, { defaultValue: pb.titleDefault })}

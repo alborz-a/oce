@@ -40,7 +40,7 @@ export function FloatingQueuePanel() {
   // Minimized: just a small badge
   if (minimized) {
     return (
-      <div className="oe-dock-aware fixed bottom-4 right-4 z-50">
+      <div className="oe-dock-aware fixed bottom-4 end-4 z-50">
         <button
           onClick={() => setMinimized(false)}
           className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface-elevated border border-border-light shadow-lg hover:shadow-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue focus-visible:ring-offset-1"
@@ -67,7 +67,7 @@ export function FloatingQueuePanel() {
   }
 
   return (
-    <div className="oe-dock-aware fixed bottom-4 right-4 z-50 w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in">
+    <div className="oe-dock-aware fixed bottom-4 end-4 z-50 w-80 rounded-xl bg-surface-elevated border border-border-light shadow-xl overflow-hidden animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 bg-surface-secondary/50 border-b border-border-light">
         <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export function FloatingQueuePanel() {
           {completedTasks.length > 0 && activeTasks.length === 0 && (
             <button
               onClick={clearCompleted}
-              className="text-2xs text-oe-blue hover:underline mr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded"
+              className="text-2xs text-oe-blue hover:underline me-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue rounded"
             >
               {t('queue.clear', { defaultValue: 'Clear' })}
             </button>
@@ -130,7 +130,7 @@ export function FloatingQueuePanel() {
                         style={{ width: `${task.progress}%` }}
                       />
                     </div>
-                    <span className="text-2xs text-oe-blue font-semibold tabular-nums w-8 text-right">
+                    <span className="text-2xs text-oe-blue font-semibold tabular-nums w-8 text-end">
                       {Math.round(task.progress)}%
                     </span>
                   </div>

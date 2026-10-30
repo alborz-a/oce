@@ -163,13 +163,13 @@ function RollupTableRow({
   const displayUnit = row.unit === NO_UNIT ? '' : row.unit;
   return (
     <tr className="border-b border-border-light last:border-0 hover:bg-surface-secondary/50">
-      <td className="py-2 pr-4">
+      <td className="py-2 pe-4">
         <span className="font-mono text-xs text-content-secondary">
           {row.unit === NO_UNIT ? t('quantities.no_unit', { defaultValue: 'No unit' }) : row.unit}
         </span>
       </td>
-      <td className="py-2 pr-4 text-right tabular-nums text-content-tertiary">{row.count}</td>
-      <td className="py-2 pr-4 text-right tabular-nums font-medium text-content-primary">
+      <td className="py-2 pe-4 text-end tabular-nums text-content-tertiary">{row.count}</td>
+      <td className="py-2 pe-4 text-end tabular-nums font-medium text-content-primary">
         <QuantityDisplay value={row.total} unit={displayUnit} precision={2} />
       </td>
       <td className="py-2">
@@ -601,7 +601,7 @@ export function QuantitySummaryPanel({
                 <button
                   onClick={() => setDocFilter(null)}
                   aria-label={t('quantities.clear_doc_filter', { defaultValue: 'Clear document filter' })}
-                  className="ml-0.5 rounded-full p-0.5 hover:bg-oe-blue/20 transition-colors"
+                  className="ms-0.5 rounded-full p-0.5 hover:bg-oe-blue/20 transition-colors"
                 >
                   <X size={12} />
                 </button>
@@ -620,14 +620,14 @@ export function QuantitySummaryPanel({
             <div className="mt-5 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border-light text-left text-xs text-content-tertiary">
-                    <th className="pb-2 pr-4 font-medium">
+                  <tr className="border-b border-border-light text-start text-xs text-content-tertiary">
+                    <th className="pb-2 pe-4 font-medium">
                       {t('quantities.col_unit', { defaultValue: 'Unit' })}
                     </th>
-                    <th className="pb-2 pr-4 font-medium text-right">
+                    <th className="pb-2 pe-4 font-medium text-end">
                       {t('quantities.col_measurements', { defaultValue: 'Measurements' })}
                     </th>
-                    <th className="pb-2 pr-4 font-medium text-right">
+                    <th className="pb-2 pe-4 font-medium text-end">
                       {t('quantities.col_total', { defaultValue: 'Total quantity' })}
                     </th>
                     <th className="pb-2 font-medium">
@@ -649,7 +649,7 @@ export function QuantitySummaryPanel({
                           <span className="text-xs font-semibold text-content-secondary">
                             {groupLabelFor(section.group)}
                           </span>
-                          <span className="ml-2 text-2xs text-content-quaternary">
+                          <span className="ms-2 text-2xs text-content-quaternary">
                             {t('quantities.group_count', {
                               defaultValue: '{{count}} measured',
                               count: section.rows.reduce((sum, r) => sum + r.count, 0),

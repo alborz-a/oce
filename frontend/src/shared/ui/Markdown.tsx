@@ -82,8 +82,8 @@ function isTableDelim(line: string): boolean {
 
 function alignClass(a: string): string {
   if (a === 'center') return 'text-center';
-  if (a === 'right') return 'text-right';
-  return 'text-left';
+  if (a === 'right') return 'text-end';
+  return 'text-start';
 }
 
 function consumeTable(lines: string[], start: number): { html: string; next: number } {

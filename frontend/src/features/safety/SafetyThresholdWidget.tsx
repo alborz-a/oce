@@ -160,7 +160,7 @@ function ThresholdDetail({
           </div>
           <div className="font-semibold tabular-nums text-content-primary">
             {alert.ltifr_delta === null ? '—' : alert.ltifr_delta}
-            {ltifrPct && <span className="ml-1 text-content-tertiary">({ltifrPct})</span>}
+            {ltifrPct && <span className="ms-1 text-content-tertiary">({ltifrPct})</span>}
           </div>
         </div>
         <div>
@@ -169,7 +169,7 @@ function ThresholdDetail({
           </div>
           <div className="font-semibold tabular-nums text-content-primary">
             {alert.trir_delta === null ? '—' : alert.trir_delta}
-            {trirPct && <span className="ml-1 text-content-tertiary">({trirPct})</span>}
+            {trirPct && <span className="ms-1 text-content-tertiary">({trirPct})</span>}
           </div>
         </div>
       </div>

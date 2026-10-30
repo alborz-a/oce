@@ -224,7 +224,7 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
                               <td className="px-3 py-1.5 font-mono text-[11px] text-content-secondary truncate">
                                 {tbl}
                               </td>
-                              <td className="px-3 py-1.5 text-right tabular-nums text-content-tertiary">
+                              <td className="px-3 py-1.5 text-end tabular-nums text-content-tertiary">
                                 {count}
                               </td>
                             </tr>

@@ -154,7 +154,7 @@ function KPICard({
       <div
         aria-hidden
         className={clsx(
-          'pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full bg-gradient-radial to-transparent blur-2xl opacity-60',
+          'pointer-events-none absolute -top-12 -end-12 h-32 w-32 rounded-full bg-gradient-radial to-transparent blur-2xl opacity-60',
           styles.glow,
         )}
       />

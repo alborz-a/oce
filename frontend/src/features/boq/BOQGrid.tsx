@@ -3626,7 +3626,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                 already used in the project triggers the reuse prompt. */}
             <label className="block text-[11px] font-medium text-content-secondary mb-1">
               {t('boq.resource_code', { defaultValue: 'Code' })}
-              <span className="text-content-tertiary font-normal ml-1">
+              <span className="text-content-tertiary font-normal ms-1">
                 ({t('common.optional', { defaultValue: 'optional' })})
               </span>
             </label>
@@ -3697,7 +3697,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                   type="text"
                   value={manualResourceDialog.quantity}
                   onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, quantity: e.target.value })}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-end outline-none focus:border-oe-blue"
                 />
               </div>
               <div className="flex-1">
@@ -3709,7 +3709,7 @@ const BOQGrid = forwardRef<BOQGridHandle, BOQGridProps>(function BOQGrid({
                   value={manualResourceDialog.unitRate}
                   onChange={(e) => setManualResourceDialog({ ...manualResourceDialog, unitRate: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter') handleManualResourceSubmit(); }}
-                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-right outline-none focus:border-oe-blue"
+                  className="w-full h-8 rounded-md border border-border-medium bg-surface-primary px-2 text-xs text-content-primary tabular-nums text-end outline-none focus:border-oe-blue"
                 />
               </div>
               <div className="w-24">
@@ -3944,7 +3944,7 @@ function CtxItem({ icon, label, onClick, danger, disabled, title }: {
       disabled={disabled}
       title={title}
       aria-disabled={disabled || undefined}
-      className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-xs text-left transition-colors ${
+      className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-xs text-start transition-colors ${
         disabled
           ? 'text-content-tertiary opacity-50 cursor-not-allowed'
           : danger

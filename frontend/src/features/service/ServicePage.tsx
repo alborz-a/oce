@@ -614,14 +614,14 @@ export function ServicePage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         {tab === 'assets' && contracts.length > 0 && (
@@ -813,12 +813,12 @@ function TicketTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('service.ticket', { defaultValue: 'Ticket' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.title_col', { defaultValue: 'Title' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.priority', { defaultValue: 'Priority' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.sla_chip', { defaultValue: 'SLA' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.reported_at', { defaultValue: 'Reported' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.ticket', { defaultValue: 'Ticket' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.title_col', { defaultValue: 'Title' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.priority', { defaultValue: 'Priority' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.sla_chip', { defaultValue: 'SLA' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.reported_at', { defaultValue: 'Reported' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -902,11 +902,11 @@ function WorkOrderTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('service.wo_number', { defaultValue: 'WO #' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.scheduled_for', { defaultValue: 'Scheduled' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.technician', { defaultValue: 'Technician' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('service.billed', { defaultValue: 'Billed' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.wo_number', { defaultValue: 'WO #' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.scheduled_for', { defaultValue: 'Scheduled' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.technician', { defaultValue: 'Technician' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('service.billed', { defaultValue: 'Billed' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -924,7 +924,7 @@ function WorkOrderTable({
               <td className="px-4 py-2">
                 <Badge variant={WO_STATUS_VARIANT[r.status]} dot>{woStatusLabel(r.status, t)}</Badge>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <MoneyDisplay amount={Number(r.billed_amount) || 0} currency={r.currency || undefined} />
               </td>
             </tr>
@@ -965,12 +965,12 @@ function ContractTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('service.contract_number', { defaultValue: 'Contract #' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.title_col', { defaultValue: 'Title' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.period', { defaultValue: 'Period' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.sla_tier', { defaultValue: 'SLA' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.status', { defaultValue: 'Status' })}</th>
-            <th className="px-4 py-2.5 text-right">{t('service.value', { defaultValue: 'Value' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.contract_number', { defaultValue: 'Contract #' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.title_col', { defaultValue: 'Title' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.period', { defaultValue: 'Period' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.sla_tier', { defaultValue: 'SLA' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-end">{t('service.value', { defaultValue: 'Value' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -989,7 +989,7 @@ function ContractTable({
               <td className="px-4 py-2">
                 <Badge variant={CONTRACT_STATUS_VARIANT[r.status]} dot>{contractStatusLabel(r.status, t)}</Badge>
               </td>
-              <td className="px-4 py-2 text-right">
+              <td className="px-4 py-2 text-end">
                 <MoneyDisplay amount={Number(r.value) || 0} currency={r.currency || undefined} />
               </td>
             </tr>
@@ -1043,11 +1043,11 @@ function AssetTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">{t('service.asset_tag', { defaultValue: 'Tag' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.name', { defaultValue: 'Name' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.asset_type', { defaultValue: 'Type' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.location', { defaultValue: 'Location' })}</th>
-            <th className="px-4 py-2.5 text-left">{t('service.status', { defaultValue: 'Status' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.asset_tag', { defaultValue: 'Tag' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.name', { defaultValue: 'Name' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.asset_type', { defaultValue: 'Type' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.location', { defaultValue: 'Location' })}</th>
+            <th className="px-4 py-2.5 text-start">{t('service.status', { defaultValue: 'Status' })}</th>
           </tr>
         </thead>
         <tbody>
@@ -1306,7 +1306,7 @@ function DetailDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="ml-1 rounded p-1 hover:bg-surface-secondary"
+              className="ms-1 rounded p-1 hover:bg-surface-secondary"
               aria-label={t('common.close', { defaultValue: 'Close' })}
             >
               <X size={16} />

@@ -42,7 +42,7 @@ export function FullEvmPage() {
               'Spending forty percent of a budget tells you nothing on its own. It is either half the story or all of it, depending on how much work that money bought. Earned value puts the three figures side by side: what was planned by now, what the completed work was worth, and what it cost.',
           })}
         </p>
-        <ol className="mt-2 list-decimal space-y-1 pl-5 text-xs text-content-tertiary">
+        <ol className="mt-2 list-decimal space-y-1 ps-5 text-xs text-content-tertiary">
           <li>
             {t('full_evm.flow_step1', {
               defaultValue:

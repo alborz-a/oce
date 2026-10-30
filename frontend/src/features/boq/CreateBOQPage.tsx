@@ -287,13 +287,13 @@ export function CreateBOQModal({ open, onClose, defaultProjectId }: CreateBOQMod
           <div>
             <label className="text-sm font-medium text-content-primary block mb-1.5">
               {t('common.project')}
-              <span aria-hidden="true" className="ml-1 text-semantic-error">*</span>
+              <span aria-hidden="true" className="ms-1 text-semantic-error">*</span>
             </label>
             <div className="relative">
               <select
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
-                className={`w-full h-10 appearance-none rounded-lg border px-3 pr-9 text-sm text-content-primary bg-surface-primary focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-fast ease-oe ${
+                className={`w-full h-10 appearance-none rounded-lg border px-3 pe-9 text-sm text-content-primary bg-surface-primary focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-fast ease-oe ${
                   projectError
                     ? 'border-semantic-error focus:ring-semantic-error/30'
                     : 'border-border focus:ring-oe-blue hover:border-content-tertiary'
@@ -308,7 +308,7 @@ export function CreateBOQModal({ open, onClose, defaultProjectId }: CreateBOQMod
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
               </select>
-              <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
+              <ChevronDown size={14} className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-content-tertiary" />
             </div>
             {projectError && (
               <p className="mt-1 text-xs text-semantic-error" role="alert">{projectError}</p>
@@ -357,7 +357,7 @@ export function CreateBOQModal({ open, onClose, defaultProjectId }: CreateBOQMod
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex w-full items-center gap-3 rounded-lg border border-dashed px-3 py-3 text-left text-sm transition-colors ${
+                className={`flex w-full items-center gap-3 rounded-lg border border-dashed px-3 py-3 text-start text-sm transition-colors ${
                   fileError
                     ? 'border-semantic-error'
                     : 'border-border hover:border-oe-blue hover:bg-oe-blue/5'

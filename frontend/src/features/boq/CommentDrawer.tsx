@@ -223,7 +223,7 @@ export function CommentDrawer({
                     <span className="text-xs font-medium text-content-primary">
                       {authorDisplay(comment.author)}
                     </span>
-                    <span className="flex items-center gap-0.5 text-[10px] text-content-quaternary ml-auto">
+                    <span className="flex items-center gap-0.5 text-[10px] text-content-quaternary ms-auto">
                       <Clock size={9} />
                       {formatRelativeTime(comment.created_at, t)}
                     </span>
@@ -242,7 +242,7 @@ export function CommentDrawer({
                     )}
                   </div>
                   {/* Text */}
-                  <p className="text-xs text-content-secondary leading-relaxed whitespace-pre-wrap break-words pl-7">
+                  <p className="text-xs text-content-secondary leading-relaxed whitespace-pre-wrap break-words ps-7">
                     {comment.text}
                   </p>
                 </div>

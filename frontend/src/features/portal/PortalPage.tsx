@@ -426,14 +426,14 @@ export function PortalPage() {
         <div className="relative flex-1 min-w-[200px] max-w-md">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             type="text"
             placeholder={t('common.search', { defaultValue: 'Search…' })}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={clsx(inputCls, 'pl-8')}
+            className={clsx(inputCls, 'ps-8')}
           />
         </div>
         {tab === 'users' && (
@@ -670,19 +670,19 @@ function UserTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.email', { defaultValue: 'Email' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.full_name', { defaultValue: 'Name' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.role', { defaultValue: 'Role' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.status', { defaultValue: 'Status' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.last_login', { defaultValue: 'Last login' })}
             </th>
           </tr>
@@ -772,22 +772,22 @@ function AccessRuleTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.user', { defaultValue: 'User' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.resource_type', { defaultValue: 'Resource Type' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.resource_id', { defaultValue: 'Resource ID' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.permission', { defaultValue: 'Permission' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.expires', { defaultValue: 'Expires' })}
             </th>
-            <th className="px-4 py-2.5 text-right">
+            <th className="px-4 py-2.5 text-end">
               {t('common.actions', { defaultValue: 'Actions' })}
             </th>
           </tr>
@@ -834,7 +834,7 @@ function AccessRuleTable({
                 <td className="px-4 py-2 text-xs text-content-secondary">
                   {r.expires_at ? <DateDisplay value={r.expires_at} /> : '—'}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-2 text-end">
                   <Button
                     size="sm"
                     variant="ghost"
@@ -884,22 +884,22 @@ function AuditLogTable({
       <table className="w-full text-sm">
         <thead className="bg-surface-secondary text-content-tertiary text-xs uppercase tracking-wide">
           <tr>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.user', { defaultValue: 'User' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.document_type', { defaultValue: 'Document Type' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.document_id', { defaultValue: 'Document ID' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.action', { defaultValue: 'Action' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.ip', { defaultValue: 'IP' })}
             </th>
-            <th className="px-4 py-2.5 text-left">
+            <th className="px-4 py-2.5 text-start">
               {t('portal.when', { defaultValue: 'When' })}
             </th>
           </tr>
@@ -1145,7 +1145,7 @@ function UserDrawer({
                     <span className="font-mono text-content-tertiary truncate">
                       {e.document_id.slice(0, 8)}
                     </span>
-                    <span className="ml-auto text-content-tertiary">
+                    <span className="ms-auto text-content-tertiary">
                       <DateDisplay value={e.occurred_at ?? e.created_at} />
                     </span>
                   </li>

@@ -244,9 +244,9 @@ function CreateTransmittalModal({
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={isPending || !canSubmit}>
             {isPending ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent mr-2 shrink-0" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
             ) : (
-              <Plus size={16} className="mr-1.5 shrink-0" />
+              <Plus size={16} className="me-1.5 shrink-0" />
             )}
             <span>
               {t('transmittals.create_transmittal', { defaultValue: 'Create Transmittal' })}
@@ -297,7 +297,7 @@ function CreateTransmittalModal({
               id="tr-purpose"
               value={form.purpose}
               onChange={(e) => set('purpose', e.target.value as TransmittalPurpose)}
-              className={inputCls + ' appearance-none pr-9'}
+              className={inputCls + ' appearance-none pe-9'}
             >
               {(Object.keys(PURPOSE_LABELS) as TransmittalPurpose[]).map((p) => (
                 <option key={p} value={p}>
@@ -305,7 +305,7 @@ function CreateTransmittalModal({
                 </option>
               ))}
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+            <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
               <ChevronDown size={14} />
             </div>
           </div>
@@ -370,7 +370,7 @@ function CreateTransmittalModal({
                 aria-label={t('transmittals.picker_container_label', { defaultValue: 'Container' })}
                 value={pickerContainerId}
                 onChange={(e) => setPickerContainerId(e.target.value)}
-                className={inputCls + ' appearance-none pr-9'}
+                className={inputCls + ' appearance-none pe-9'}
               >
                 <option value="">
                   {t('transmittals.picker_select_container', { defaultValue: 'Select container…' })}
@@ -381,7 +381,7 @@ function CreateTransmittalModal({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -393,7 +393,7 @@ function CreateTransmittalModal({
                   const rev = revisions.find((r) => r.id === e.target.value);
                   if (rev) addRevision(rev);
                 }}
-                className={inputCls + ' appearance-none pr-9'}
+                className={inputCls + ' appearance-none pe-9'}
                 disabled={!pickerContainerId}
               >
                 <option value="">
@@ -405,7 +405,7 @@ function CreateTransmittalModal({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-content-tertiary">
+              <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-2.5 text-content-tertiary">
                 <ChevronDown size={14} />
               </div>
             </div>
@@ -576,7 +576,7 @@ const TransmittalRow = React.memo(function TransmittalRow({
 
       {/* Expanded detail */}
       {expanded && (
-        <div className="px-4 pb-4 pl-12 space-y-3 animate-fade-in">
+        <div className="px-4 pb-4 ps-12 space-y-3 animate-fade-in">
           {/* Cover note */}
           {transmittal.cover_note && (
             <div className="rounded-lg bg-surface-secondary p-3">
@@ -620,11 +620,11 @@ const TransmittalRow = React.memo(function TransmittalRow({
                     {r.acknowledged_at && (
                       <DateDisplay
                         value={r.acknowledged_at}
-                        className="text-xs text-content-tertiary ml-auto"
+                        className="text-xs text-content-tertiary ms-auto"
                       />
                     )}
                     {r.response && (
-                      <span className="text-xs text-content-secondary ml-auto truncate max-w-xs">
+                      <span className="text-xs text-content-secondary ms-auto truncate max-w-xs">
                         {r.response}
                       </span>
                     )}
@@ -632,7 +632,7 @@ const TransmittalRow = React.memo(function TransmittalRow({
                       <button
                         type="button"
                         onClick={() => onRemoveRecipient(transmittal.id, r.id)}
-                        className="ml-auto shrink-0 text-content-tertiary hover:text-semantic-error"
+                        className="ms-auto shrink-0 text-content-tertiary hover:text-semantic-error"
                         aria-label={t('transmittals.remove_recipient', {
                           defaultValue: 'Remove recipient',
                         })}
@@ -759,7 +759,7 @@ const TransmittalRow = React.memo(function TransmittalRow({
                     onIssue(transmittal.id);
                   }}
                 >
-                  <Send size={13} className="mr-1" />
+                  <Send size={13} className="me-1" />
                   {t('transmittals.action_issue', { defaultValue: 'Issue Transmittal' })}
                 </Button>
                 <Button
@@ -771,7 +771,7 @@ const TransmittalRow = React.memo(function TransmittalRow({
                     onEdit(transmittal);
                   }}
                 >
-                  <Pencil size={13} className="mr-1" />
+                  <Pencil size={13} className="me-1" />
                   {t('common.edit', { defaultValue: 'Edit' })}
                 </Button>
                 <Button
@@ -784,7 +784,7 @@ const TransmittalRow = React.memo(function TransmittalRow({
                     onDelete(transmittal);
                   }}
                 >
-                  <Trash2 size={13} className="mr-1" />
+                  <Trash2 size={13} className="me-1" />
                   {t('common.delete', { defaultValue: 'Delete' })}
                 </Button>
               </>
@@ -868,7 +868,7 @@ function EditTransmittalModal({
             <div>
               <label className="block text-xs font-medium text-content-secondary mb-1">
                 {t('transmittals.field_subject', { defaultValue: 'Subject' })}
-                <span className="text-semantic-error ml-0.5">*</span>
+                <span className="text-semantic-error ms-0.5">*</span>
               </label>
               <input
                 type="text"
@@ -1506,7 +1506,7 @@ export function TransmittalsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
           />
           <input
             value={searchQuery}
@@ -1515,7 +1515,7 @@ export function TransmittalsPage() {
               defaultValue: 'Search transmittals...',
             })}
             aria-label={t('transmittals.search_placeholder', { defaultValue: 'Search transmittals...' })}
-            className={inputCls + ' pl-9'}
+            className={inputCls + ' ps-9'}
           />
         </div>
 

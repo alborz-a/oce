@@ -256,7 +256,7 @@ export function FileGrid({
                 : undefined
             }
             className={clsx(
-              'group relative flex flex-col rounded-xl border bg-surface-elevated text-left transition-all',
+              'group relative flex flex-col rounded-xl border bg-surface-elevated text-start transition-all',
               'overflow-hidden',
               isSelected
                 ? 'border-oe-blue ring-2 ring-oe-blue/30 shadow-md'
@@ -287,7 +287,7 @@ export function FileGrid({
               }}
               onDoubleClick={() => onOpen(row)}
               onKeyDown={(e) => handleTileKeyDown(e, idx, row)}
-              className="flex flex-col text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+              className="flex flex-col text-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
             >
               <div className={clsx('relative aspect-[4/3] flex items-center justify-center', tint)}>
                 {row.thumbnail_url ? (
@@ -303,7 +303,7 @@ export function FileGrid({
                   <Icon size={32} strokeWidth={1.5} />
                 )}
                 {row.extension && (
-                  <span className="absolute bottom-1.5 left-1.5 px-1.5 py-px rounded bg-black/60 text-white text-[9px] font-mono uppercase tracking-wide">
+                  <span className="absolute bottom-1.5 start-1.5 px-1.5 py-px rounded bg-black/60 text-white text-[9px] font-mono uppercase tracking-wide">
                     {row.extension.replace(/^\./, '')}
                   </span>
                 )}
@@ -368,7 +368,7 @@ export function FileGrid({
                 onOpen(row);
               }}
               className={clsx(
-                'absolute top-1.5 right-1.5 inline-flex items-center gap-1 h-6 px-2 rounded-md',
+                'absolute top-1.5 end-1.5 inline-flex items-center gap-1 h-6 px-2 rounded-md',
                 'bg-surface-elevated/95 backdrop-blur-sm shadow-sm border border-border-light',
                 'text-[10px] font-medium text-content-secondary',
                 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity',
@@ -392,7 +392,7 @@ export function FileGrid({
                 }}
                 aria-pressed={isFavorite}
                 className={clsx(
-                  'absolute top-1.5 left-1.5 inline-flex items-center justify-center h-6 w-6 rounded-md',
+                  'absolute top-1.5 start-1.5 inline-flex items-center justify-center h-6 w-6 rounded-md',
                   'bg-surface-elevated/95 backdrop-blur-sm shadow-sm border border-border-light',
                   'transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40',
                   isFavorite

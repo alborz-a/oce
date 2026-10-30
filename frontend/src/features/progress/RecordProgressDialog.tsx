@@ -208,12 +208,12 @@ export function RecordProgressDialog({
             <div className="relative">
               <Search
                 size={14}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-quaternary"
+                className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-content-quaternary"
               />
               <Input
                 id="progress-position-search"
                 type="search"
-                className="pl-8"
+                className="ps-8"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('progress.record_position_search', {
@@ -234,7 +234,7 @@ export function RecordProgressDialog({
                     key={p.boq_position_id}
                     type="button"
                     onClick={() => setPositionId(p.boq_position_id)}
-                    className={`flex w-full items-baseline gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-surface-secondary/60 ${
+                    className={`flex w-full items-baseline gap-2 px-3 py-2 text-start text-xs transition-colors hover:bg-surface-secondary/60 ${
                       positionId === p.boq_position_id ? 'bg-oe-blue/[0.07]' : ''
                     }`}
                   >
@@ -248,7 +248,7 @@ export function RecordProgressDialog({
                         t('progress.record_position_untitled', { defaultValue: 'Untitled position' })}
                     </span>
                     {p.unit && (
-                      <span className="ml-auto shrink-0 text-2xs text-content-tertiary">
+                      <span className="ms-auto shrink-0 text-2xs text-content-tertiary">
                         {p.unit}
                       </span>
                     )}

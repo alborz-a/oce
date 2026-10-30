@@ -210,7 +210,7 @@ export function WideModal({
               disabled={busy}
               aria-label={t('common.close', { defaultValue: 'Close' })}
               className={clsx(
-                'shrink-0 -mt-1 -mr-1 inline-flex h-8 w-8 items-center justify-center rounded-lg',
+                'shrink-0 -mt-1 -me-1 inline-flex h-8 w-8 items-center justify-center rounded-lg',
                 'text-content-secondary hover:text-content-primary',
                 'hover:bg-surface-secondary',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue',
