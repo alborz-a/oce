@@ -170,7 +170,7 @@ function HowDeadlinesWork() {
       }),
     },
     {
-      icon: <ArrowRight size={14} className="text-oe-blue" />,
+      icon: <ArrowRight size={14} className="text-oe-blue rtl:rotate-180" />,
       title: t('deadlines.flow_4_title', { defaultValue: 'Act in the source' }),
       desc: t('deadlines.flow_4_desc', {
         defaultValue:

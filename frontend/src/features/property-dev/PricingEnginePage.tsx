@@ -1609,7 +1609,7 @@ function QuoteWaterfall({
             ) : amt > 0 ? (
               <ArrowUp className="inline h-3 w-3 text-amber-700" />
             ) : (
-              <ArrowRight className="inline h-3 w-3 text-content-tertiary" />
+              <ArrowRight className="inline h-3 w-3 text-content-tertiary rtl:rotate-180" />
             );
             return (
               <tr key={i} className="border-t border-border">
@@ -2434,7 +2434,7 @@ function QuoteHistoryTab({ devId }: { devId: string }): JSX.Element {
                         )}
                       </td>
                       <td className="px-3 py-2 text-end text-content-tertiary">
-                        <ArrowRight className="h-3 w-3" />
+                        <ArrowRight className="h-3 w-3 rtl:rotate-180" />
                       </td>
                     </tr>
                   </Fragment>

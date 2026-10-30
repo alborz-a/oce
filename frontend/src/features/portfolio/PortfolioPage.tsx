@@ -635,7 +635,7 @@ function CpmPanel({ selectedNodeId, flat }: { selectedNodeId: string; flat: Flat
       {/* The cross-portfolio critical path */}
       <Card padding="none">
         <div className="flex items-center gap-2 border-b border-border-light px-4 py-3">
-          <ChevronRight size={16} className="text-content-secondary" />
+          <ChevronRight size={16} className="text-content-secondary rtl:rotate-180" />
           <h4 className="text-sm font-semibold text-content-primary">
             {t('portfolio.cp_table_title', { defaultValue: 'Critical path' })}
           </h4>

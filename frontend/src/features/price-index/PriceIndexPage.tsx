@@ -1070,7 +1070,7 @@ function EscalateResults({ result }: { result: EscalatePreviewResponse }) {
             <Button
               variant="secondary"
               size="sm"
-              icon={<ArrowRight className="h-4 w-4" />}
+              icon={<ArrowRight className="h-4 w-4 rtl:rotate-180" />}
               onClick={() => {
                 setActiveProject(projectId, result.project_name ?? '');
                 navigate(`/boq?project=${encodeURIComponent(projectId)}`);

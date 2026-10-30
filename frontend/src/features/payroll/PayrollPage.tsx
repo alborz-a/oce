@@ -856,7 +856,7 @@ export default function PayrollPage() {
                       </p>
                       <p className="text-xs text-content-tertiary">{hours(b.total_hours)} h</p>
                     </div>
-                    <ChevronRight size={16} className="text-content-tertiary" />
+                    <ChevronRight size={16} className="text-content-tertiary rtl:rotate-180" />
                   </button>
                 </li>
               ))}

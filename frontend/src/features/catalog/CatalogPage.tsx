@@ -445,7 +445,7 @@ function RegionTabBar({
           aria-label={t('common.scroll_left', { defaultValue: 'Scroll left' })}
           className="absolute start-0 top-0 bottom-0 z-10 flex items-center ps-0.5 pe-3 bg-gradient-to-r from-surface-elevated/80 via-surface-elevated/60 to-transparent rounded-s-xl"
         >
-          <ChevronLeft size={16} className="text-content-tertiary" />
+          <ChevronLeft size={16} className="text-content-tertiary rtl:rotate-180" />
         </button>
       )}
       {canScrollRight && (
@@ -454,7 +454,7 @@ function RegionTabBar({
           aria-label={t('common.scroll_right', { defaultValue: 'Scroll right' })}
           className="absolute end-0 top-0 bottom-0 z-10 flex items-center pe-0.5 ps-3 bg-gradient-to-l from-surface-elevated/80 via-surface-elevated/60 to-transparent rounded-e-xl"
         >
-          <ChevronRight size={16} className="text-content-tertiary" />
+          <ChevronRight size={16} className="text-content-tertiary rtl:rotate-180" />
         </button>
       )}
 

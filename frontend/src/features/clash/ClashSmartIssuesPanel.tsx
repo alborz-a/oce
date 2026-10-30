@@ -477,7 +477,7 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   data-testid="clash-issues-prev"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
                   {t('common.previous', { defaultValue: 'Previous' })}
                 </Button>
                 <Button
@@ -490,7 +490,7 @@ export function ClashSmartIssuesPanel({ projectId }: ClashSmartIssuesPanelProps)
                   data-testid="clash-issues-next"
                 >
                   {t('common.next', { defaultValue: 'Next' })}
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 rtl:rotate-180" />
                 </Button>
               </div>
             </div>

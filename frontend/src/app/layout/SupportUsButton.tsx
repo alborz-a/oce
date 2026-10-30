@@ -637,7 +637,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             {t('support.see_contributors', {
               defaultValue: 'See who is already building it with us',
             })}
-            <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
           </button>
         </div>
       </div>

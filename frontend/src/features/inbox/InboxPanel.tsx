@@ -223,7 +223,7 @@ function InboxRow({ item }: { item: InboxItem }) {
       {clickable && (
         <ArrowRight
           size={14}
-          className="shrink-0 mt-0.5 text-content-quaternary opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-oe-blue group-hover:opacity-100"
+          className="shrink-0 mt-0.5 text-content-quaternary opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-oe-blue group-hover:opacity-100 rtl:rotate-180"
         />
       )}
     </>

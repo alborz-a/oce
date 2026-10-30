@@ -3978,7 +3978,7 @@ export function QuickEstimatePage() {
                               <td className="px-2 py-2">
                                 {isExpanded
                                   ? <ChevronDown size={14} className="text-content-tertiary" />
-                                  : <ChevronRight size={14} className="text-content-tertiary" />
+                                  : <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
                                 }
                               </td>
                               <td className="px-4 py-2 text-sm text-content-primary font-semibold">

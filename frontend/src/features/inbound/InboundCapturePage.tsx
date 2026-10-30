@@ -272,7 +272,7 @@ export function InboundCapturePage() {
           className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-sm font-medium text-content-secondary hover:bg-surface-secondary"
         >
           {t('inbound.manage_sources', { defaultValue: 'Manage sources' })}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4 rtl:rotate-180" />
         </a>
       </header>
 
@@ -370,7 +370,7 @@ export function InboundCapturePage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        icon={<ChevronLeft className="h-4 w-4" aria-hidden />}
+                        icon={<ChevronLeft className="h-4 w-4 rtl:rotate-180" aria-hidden />}
                         disabled={!canPrev || capturedQ.isFetching}
                         onClick={() => setOffset((o) => Math.max(0, o - PAGE_SIZE))}
                       >
@@ -379,7 +379,7 @@ export function InboundCapturePage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        icon={<ChevronRight className="h-4 w-4" aria-hidden />}
+                        icon={<ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />}
                         iconPosition="right"
                         disabled={!canNext || capturedQ.isFetching}
                         onClick={() => setOffset((o) => o + PAGE_SIZE)}

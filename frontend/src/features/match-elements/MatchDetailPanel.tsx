@@ -581,7 +581,7 @@ export function MatchDetailPanel({ sessionId, group, projectId, onClose }: Props
           </button>
           <div className="flex items-center gap-1.5 text-xs text-slate-500">
             {t('match_elements.col.status', 'Status')}: <strong>{t(`match_elements.status.${group.status}`, { defaultValue: group.status })}</strong>
-            <ChevronRight className="w-3 h-3" />
+            <ChevronRight className="w-3 h-3 rtl:rotate-180" />
             <CheckCircle2 className={`w-4 h-4 ${group.status === 'confirmed' ? 'text-emerald-500' : 'text-slate-300'}`} />
           </div>
         </footer>

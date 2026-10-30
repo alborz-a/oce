@@ -219,7 +219,7 @@ export function CompactProjectCard({
           </div>
           <ArrowRight
             size={12}
-            className="shrink-0 text-content-tertiary transition-transform duration-normal ease-oe group-hover:translate-x-0.5 group-hover:text-oe-blue"
+            className="shrink-0 text-content-tertiary transition-transform duration-normal ease-oe group-hover:translate-x-0.5 group-hover:text-oe-blue rtl:rotate-180"
           />
         </div>
       </div>

@@ -702,7 +702,7 @@ const NCRRow = React.memo(function NCRRow({
               <Badge variant="blue" size="sm">
                 {ncr.change_order_id.slice(0, 8)}
               </Badge>
-              <ChevronRight size={14} className="ms-auto text-blue-400 dark:text-blue-500" />
+              <ChevronRight size={14} className="ms-auto text-blue-400 dark:text-blue-500 rtl:rotate-180" />
             </div>
           )}
 
@@ -917,7 +917,7 @@ const NCRRow = React.memo(function NCRRow({
                       onUpdate(ncr.id, { status: next });
                     }}
                   >
-                    <ArrowRight size={14} className="me-1.5" />
+                    <ArrowRight size={14} className="me-1.5 rtl:rotate-180" />
                     {t('ncr.action_advance', { defaultValue: 'Advance' })}:{' '}
                     {t(`ncr.status_${next}`, { defaultValue: next.replace(/_/g, ' ') })}
                   </Button>

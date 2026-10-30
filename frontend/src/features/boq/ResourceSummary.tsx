@@ -353,7 +353,7 @@ export function ResourceSummary({
           )}
         </div>
         {collapsed ? (
-          <ChevronRight size={14} className="text-content-tertiary" />
+          <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
         ) : (
           <ChevronDown size={14} className="text-content-tertiary" />
         )}

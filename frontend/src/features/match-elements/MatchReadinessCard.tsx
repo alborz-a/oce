@@ -386,7 +386,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-rose-900 underline-offset-2 hover:underline dark:text-rose-100"
             >
               {t('match_readiness.open_search_settings', { defaultValue: 'Set up search' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </Link>
           )}
           {onOpenSetup && data.blockers.some((b) => b.code === 'no_catalogue_installed') && (
@@ -396,7 +396,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-rose-900 underline-offset-2 hover:underline dark:text-rose-100"
             >
               {t('match_readiness.open_setup', { defaultValue: 'Open Setup & tools' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </button>
           )}
         </div>
@@ -455,7 +455,7 @@ export function MatchReadinessCard({ projectId, onOpenSetup }: Props) {
               className="inline-flex items-center gap-1 text-xs font-semibold text-amber-900 underline-offset-2 hover:underline dark:text-amber-100"
             >
               {t('match_readiness.open_setup', { defaultValue: 'Open Setup & tools' })}
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 rtl:rotate-180" />
             </button>
           )}
         </div>

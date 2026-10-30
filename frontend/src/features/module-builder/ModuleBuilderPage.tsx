@@ -176,7 +176,7 @@ export function ModuleBuilderPage() {
             data-testid="module-builder-connect-ai"
           >
             {t('module_builder.connect_ai', { defaultValue: 'Connect an AI provider' })}
-            <ArrowRight size={12} className="shrink-0" />
+            <ArrowRight size={12} className="shrink-0 rtl:rotate-180" />
           </Link>
         </div>
       )}

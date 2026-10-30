@@ -247,7 +247,7 @@ export function SubstitutePanel({ seed }: { seed: SubstituteSeed | null }) {
               <div className="text-xs text-content-tertiary">{t('costExplorer.substitute.oldRate', { defaultValue: 'Current rate' })}</div>
               <div className="text-lg font-semibold tabular-nums text-content-primary">{fmtMoney(result.old_rate, result.currency)}</div>
             </div>
-            <ArrowRight className="h-5 w-5 text-content-tertiary" aria-hidden />
+            <ArrowRight className="h-5 w-5 text-content-tertiary rtl:rotate-180" aria-hidden />
             <div>
               <div className="text-xs text-content-tertiary">{t('costExplorer.substitute.newRate', { defaultValue: 'New rate' })}</div>
               <div className="text-lg font-semibold tabular-nums text-content-primary">{fmtMoney(result.new_rate, result.currency)}</div>

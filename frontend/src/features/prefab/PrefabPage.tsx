@@ -942,7 +942,7 @@ function UnitDetailDrawer({
                   {isAdvancing ? (
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent me-2 shrink-0" />
                   ) : (
-                    <ArrowRight size={14} className="me-1.5 shrink-0" />
+                    <ArrowRight size={14} className="me-1.5 shrink-0 rtl:rotate-180" />
                   )}
                   {t('prefab.advance_to', {
                     defaultValue: 'Advance to {{stage}}',

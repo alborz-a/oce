@@ -289,7 +289,7 @@ export function DashboardMarketCasesCard() {
             })}
             <ArrowRight
               size={13}
-              className="transition-transform group-hover:translate-x-0.5"
+              className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180"
               aria-hidden="true"
             />
           </button>

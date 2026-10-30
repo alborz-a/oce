@@ -3749,7 +3749,7 @@ export function ClashDetectionPage() {
                                     className="flex w-full items-center gap-2 text-start text-2xs font-semibold text-content-primary"
                                   >
                                     {collapsed ? (
-                                      <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" />
+                                      <ChevronRight className="h-3.5 w-3.5 text-content-tertiary rtl:rotate-180" />
                                     ) : (
                                       <ChevronLeft className="h-3.5 w-3.5 rotate-[-90deg] text-content-tertiary" />
                                     )}
@@ -3787,7 +3787,7 @@ export function ClashDetectionPage() {
                                       {expanded ? (
                                         <ChevronDown className="h-3.5 w-3.5 text-content-tertiary" />
                                       ) : (
-                                        <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" />
+                                        <ChevronRight className="h-3.5 w-3.5 text-content-tertiary rtl:rotate-180" />
                                       )}
                                       <Link2 className="h-3.5 w-3.5 text-oe-blue" />
                                       <span className="truncate">
@@ -4247,7 +4247,7 @@ export function ClashDetectionPage() {
                         variant="ghost"
                         size="sm"
                         disabled={safePage === 0}
-                        icon={<ChevronLeft className="h-4 w-4" />}
+                        icon={<ChevronLeft className="h-4 w-4 rtl:rotate-180" />}
                         onClick={() => setPage((p) => Math.max(0, p - 1))}
                       >
                         {t('clash.prev', { defaultValue: 'Prev' })}
@@ -4263,7 +4263,7 @@ export function ClashDetectionPage() {
                         variant="ghost"
                         size="sm"
                         disabled={safePage >= pageCount - 1}
-                        icon={<ChevronRight className="h-4 w-4" />}
+                        icon={<ChevronRight className="h-4 w-4 rtl:rotate-180" />}
                         iconPosition="right"
                         onClick={() =>
                           setPage((p) =>
@@ -4705,7 +4705,7 @@ function HowClashWorks() {
                 aria-hidden="true"
                 className="hidden shrink-0 items-center self-center text-content-quaternary lg:flex"
               >
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 rtl:rotate-180" />
               </li>
             )}
           </Fragment>
@@ -6587,7 +6587,7 @@ function CompareBucket({
         className="flex w-full items-center gap-2 px-3 py-2 text-start text-xs font-semibold text-content-primary"
       >
         {collapsed ? (
-          <ChevronRight className="h-3.5 w-3.5 text-content-tertiary" />
+          <ChevronRight className="h-3.5 w-3.5 text-content-tertiary rtl:rotate-180" />
         ) : (
           <ChevronLeft className="h-3.5 w-3.5 rotate-[-90deg] text-content-tertiary" />
         )}

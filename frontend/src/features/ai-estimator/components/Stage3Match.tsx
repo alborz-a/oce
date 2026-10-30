@@ -690,7 +690,7 @@ export function Stage3Match(props: Stage3MatchProps) {
                     className="flex w-full items-center gap-2 bg-surface-secondary px-3 py-2 text-start"
                   >
                     {collapsed ? (
-                      <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary" />
+                      <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary rtl:rotate-180" />
                     ) : (
                       <ChevronDown className="h-4 w-4 shrink-0 text-content-tertiary" />
                     )}

@@ -350,7 +350,7 @@ function InstanceRow({
         {new Date(instance.started_at).toLocaleDateString(getIntlLocale())}
       </td>
       <td className="px-3 py-2.5 text-end">
-        <ChevronRight size={14} className="text-content-tertiary inline" />
+        <ChevronRight size={14} className="text-content-tertiary inline rtl:rotate-180" />
       </td>
     </tr>
   );

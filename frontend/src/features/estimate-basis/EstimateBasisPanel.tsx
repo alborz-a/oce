@@ -954,7 +954,7 @@ function Section({
             {open ? (
               <ChevronDown className="h-4 w-4 text-content-tertiary" aria-hidden />
             ) : (
-              <ChevronRight className="h-4 w-4 text-content-tertiary" aria-hidden />
+              <ChevronRight className="h-4 w-4 text-content-tertiary rtl:rotate-180" aria-hidden />
             )}
             {heading}{' '}
             <span className="font-normal text-content-tertiary">

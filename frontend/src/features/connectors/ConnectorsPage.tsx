@@ -129,7 +129,7 @@ export function ConnectorsPage() {
           className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-sm font-medium text-content-secondary hover:bg-surface-secondary"
         >
           {t('connectors.view_inbound', { defaultValue: 'View inbound capture' })}
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4 rtl:rotate-180" />
         </Link>
       </header>
 

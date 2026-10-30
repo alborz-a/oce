@@ -903,7 +903,7 @@ function BuildAssemblyResultView({ result }: { result: BuildAssemblyResult }) {
             data-testid="norm-build-assembly-link"
           >
             {result.code}
-            <ArrowRight size={13} className="shrink-0" />
+            <ArrowRight size={13} className="shrink-0 rtl:rotate-180" />
           </Link>
           <div className="text-2xs text-content-tertiary">
             {t('normExpansion.build_apply_hint', {

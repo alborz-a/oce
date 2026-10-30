@@ -100,7 +100,7 @@ function HistoryRow({ row }: { row: StateTransitionEntry }) {
         <Badge variant="neutral" size="sm" className="font-mono">
           {t(`cde.state_${row.from_state}`, { defaultValue: row.from_state })}
         </Badge>
-        <ArrowRight size={12} className="text-content-tertiary" />
+        <ArrowRight size={12} className="text-content-tertiary rtl:rotate-180" />
         <Badge variant="blue" size="sm" className="font-mono">
           {t(`cde.state_${row.to_state}`, { defaultValue: row.to_state })}
         </Badge>

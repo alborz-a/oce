@@ -105,7 +105,7 @@ function ValidationPanel({ report }: { report: ValidationReport | null }) {
           (open ? (
             <ChevronDown className="h-4 w-4 shrink-0 text-content-tertiary" />
           ) : (
-            <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary" />
+            <ChevronRight className="h-4 w-4 shrink-0 text-content-tertiary rtl:rotate-180" />
           ))}
       </button>
 
@@ -315,7 +315,7 @@ export function Stage4Review(props: Stage4ReviewProps) {
                           {expanded ? (
                             <ChevronDown className="h-4 w-4 text-content-tertiary" />
                           ) : (
-                            <ChevronRight className="h-4 w-4 text-content-tertiary" />
+                            <ChevronRight className="h-4 w-4 text-content-tertiary rtl:rotate-180" />
                           )}
                         </button>
                       )}

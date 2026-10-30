@@ -271,7 +271,7 @@ function ResultRow({
         className="flex w-full items-center gap-1 border-t border-border-light px-3 py-1.5 text-xs text-content-tertiary hover:bg-surface-secondary"
         aria-expanded={expanded}
       >
-        {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+        {expanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />}
         {t('costExplorer.byResources.matched', {
           defaultValue: '{{n}} matched, {{m}} missing',
           n: matched.length,

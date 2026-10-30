@@ -283,7 +283,7 @@ function TemplateRow({ tpl, first, onPick }: { tpl: TemplateSummary; first: bool
       <Badge variant={CATEGORY_BADGE[tpl.category]} size="sm">
         {CATEGORY_LABELS[tpl.category]}
       </Badge>
-      <ChevronRight size={16} className="shrink-0 text-content-tertiary" />
+      <ChevronRight size={16} className="shrink-0 text-content-tertiary rtl:rotate-180" />
     </button>
   );
 }

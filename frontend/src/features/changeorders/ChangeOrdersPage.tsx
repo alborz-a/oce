@@ -2776,7 +2776,7 @@ export function ChangeOrdersPage() {
                               <Trash2 size={14} />
                             </button>
                           )}
-                          <ChevronRight size={14} className="text-content-tertiary" />
+                          <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
                         </div>
                       </td>
                     </tr>

@@ -360,7 +360,7 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
           title={t('funding.load_failed', { defaultValue: 'Could not load applications' })}
           action={
             <Button variant="secondary" onClick={onBack}>
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
               {t('common.back', { defaultValue: 'Back' })}
             </Button>
           }
@@ -412,7 +412,7 @@ export function ApplicationPanel({ applicationId, projectId, currency, onBack }:
             onClick={onBack}
             className="mb-1 flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
             {t('funding.back_to_register', { defaultValue: 'Back to the register' })}
           </button>
           <h2 className="text-lg font-semibold">

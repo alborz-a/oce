@@ -1006,7 +1006,7 @@ const ContainerRow = React.memo(function ContainerRow({
                   onPromote(container);
                 }}
               >
-                <ArrowRight size={14} className="me-1" />
+                <ArrowRight size={14} className="me-1 rtl:rotate-180" />
                 {t('cde.action_promote', {
                   defaultValue: 'Promote to {{state}}',
                   state: t(`cde.state_${nextState}`, {

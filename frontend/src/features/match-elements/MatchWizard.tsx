@@ -1468,7 +1468,7 @@ export function MatchWizard({
           disabled={step === 1 || createMut.isPending}
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium text-content-secondary hover:text-content-primary hover:bg-surface-secondary disabled:opacity-30 transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
           {t('common.back', 'Back')}
         </button>
 
@@ -1486,7 +1486,7 @@ export function MatchWizard({
             )}
           >
             {t('common.next', 'Next')}
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-5 h-5 rtl:rotate-180" />
           </button>
         ) : (
           <button

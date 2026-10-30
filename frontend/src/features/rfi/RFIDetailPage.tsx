@@ -927,7 +927,7 @@ export function RFIDetailPage() {
                         <ActivityStatusToken status={entry.from_status} />
                         <ArrowRight
                           size={13}
-                          className="shrink-0 text-content-tertiary"
+                          className="shrink-0 text-content-tertiary rtl:rotate-180"
                           aria-label={t('rfi.history_changed_to', {
                             defaultValue: 'changed to',
                           })}

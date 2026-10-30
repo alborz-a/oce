@@ -167,7 +167,7 @@ export function CostBreakdownPanel({ boqId, locale = 'de-DE' }: { boqId: string;
       >
         <div className="flex items-center gap-2">
           {collapsed ? (
-            <ChevronRight size={16} className="text-content-tertiary" />
+            <ChevronRight size={16} className="text-content-tertiary rtl:rotate-180" />
           ) : (
             <ChevronDown size={16} className="text-content-tertiary" />
           )}

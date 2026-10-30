@@ -703,7 +703,7 @@ export function AboutPage() {
                         {item.desc}
                       </p>
                     </div>
-                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                   </a>
                 </li>
               ))}
@@ -735,7 +735,7 @@ export function AboutPage() {
                         {item.desc}
                       </p>
                     </div>
-                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                    <ArrowRight size={14} className="mt-1 shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                   </a>
                 </li>
               ))}
@@ -960,7 +960,7 @@ export function AboutPage() {
                       {t('about.support_star_desc', { defaultValue: 'Show your support - it takes 2 seconds and helps others discover the project' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -978,7 +978,7 @@ export function AboutPage() {
                       {t('about.support_sponsor_desc', { defaultValue: 'Fund new features, regional databases, and keep the project free for everyone' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-rose-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-rose-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -996,7 +996,7 @@ export function AboutPage() {
                       {t('about.support_paypal_desc', { defaultValue: 'A one-time donation of any size keeps the platform free and moving forward' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <a
@@ -1014,7 +1014,7 @@ export function AboutPage() {
                       {t('about.support_consulting_desc', { defaultValue: 'Need custom features, deployment, or training? We deliver professional solutions worldwide' })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </a>
 
                 <button
@@ -1033,7 +1033,7 @@ export function AboutPage() {
                       })}
                     </p>
                   </div>
-                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" />
+                  <ArrowRight size={14} className="shrink-0 text-content-quaternary group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
                 </button>
               </div>
             </div>
@@ -1063,7 +1063,7 @@ export function AboutPage() {
               </div>
 
               <p className="text-xs font-semibold uppercase tracking-wider text-content-tertiary mb-3 flex items-center gap-1.5">
-                <ArrowRight size={12} className="text-oe-blue" />
+                <ArrowRight size={12} className="text-oe-blue rtl:rotate-180" />
                 {t('about.support_enables', { defaultValue: 'Your support enables:' })}
               </p>
               <ul className="space-y-1.5">

@@ -71,7 +71,7 @@ export function PipelineBanner({
                 chip
               )}
               {i < steps.length - 1 && (
-                <ArrowRight size={12} className="text-content-tertiary shrink-0" />
+                <ArrowRight size={12} className="text-content-tertiary shrink-0 rtl:rotate-180" />
               )}
             </div>
           );

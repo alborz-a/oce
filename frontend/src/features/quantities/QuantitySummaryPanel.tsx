@@ -113,7 +113,7 @@ function FlowStrip() {
       </span>
       <ArrowRight size={14} className="text-content-quaternary" />
       {node(<Layers3 size={13} className="text-oe-blue" />, t('quantities.flow_measured', { defaultValue: 'Measured quantities' }))}
-      <ArrowRight size={14} className="text-content-quaternary" />
+      <ArrowRight size={14} className="text-content-quaternary rtl:rotate-180" />
       {node(<Table2 size={13} className="text-content-tertiary" />, t('quantities.flow_boq', { defaultValue: 'BOQ / estimate' }))}
     </div>
   );

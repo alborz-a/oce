@@ -276,7 +276,7 @@ function KPICard({
         className="group flex w-full items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 p-4 text-start shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
       >
         {inner}
-        <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary transition-colors group-hover:text-oe-blue-text" />
+        <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary transition-colors group-hover:text-oe-blue-text rtl:rotate-180" />
       </button>
     );
   }
@@ -1048,7 +1048,7 @@ function ExecutiveDashboard({
                       <td className="px-4 py-3 text-end">
                         <ChevronRight
                           size={16}
-                          className="text-content-quaternary transition-colors group-hover:text-oe-blue-text"
+                          className="text-content-quaternary transition-colors group-hover:text-oe-blue-text rtl:rotate-180"
                         />
                       </td>
                     </tr>

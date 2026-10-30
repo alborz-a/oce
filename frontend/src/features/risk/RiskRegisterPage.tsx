@@ -1041,7 +1041,7 @@ export function RiskRegisterPage() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(r.id); }} className="text-content-tertiary hover:text-semantic-error transition-colors p-1" title={t('common.delete', { defaultValue: 'Delete' })} aria-label={t('common.delete', { defaultValue: 'Delete' })}><Trash2 size={14} /></button>
-                          <ChevronRight size={14} className="text-content-tertiary" />
+                          <ChevronRight size={14} className="text-content-tertiary rtl:rotate-180" />
                         </div>
                       </td>
                     </tr>

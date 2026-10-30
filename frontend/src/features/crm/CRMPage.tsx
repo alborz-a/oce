@@ -1554,7 +1554,7 @@ function DealDrawer({
                     {idx < stages.length - 1 && (
                       <ArrowRight
                         size={12}
-                        className="shrink-0 text-content-tertiary"
+                        className="shrink-0 text-content-tertiary rtl:rotate-180"
                       />
                     )}
                   </div>
@@ -1898,7 +1898,7 @@ function DealDrawer({
                     >
                       <ArrowRight
                         size={13}
-                        className="mt-0.5 shrink-0 text-content-tertiary"
+                        className="mt-0.5 shrink-0 text-content-tertiary rtl:rotate-180"
                       />
                       <div className="flex-1">
                         <p className="text-sm">
@@ -2301,7 +2301,7 @@ function LeadDrawer({
           {lead.status === 'qualified' && (
             <Card padding="sm">
               <div className="mb-1 flex items-center gap-2">
-                <ArrowRight size={14} className="text-oe-blue" />
+                <ArrowRight size={14} className="text-oe-blue rtl:rotate-180" />
                 <p className="text-xs font-semibold uppercase tracking-wide text-content-secondary">
                   {t('crm.convert_to_deal', { defaultValue: 'Convert to deal' })}
                 </p>

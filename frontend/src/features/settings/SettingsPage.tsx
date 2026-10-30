@@ -1079,7 +1079,7 @@ function InterfaceModeCard() {
               {t('settings.modules_link_desc', { defaultValue: 'Enable, disable, and configure individual modules in the Modules section.' })}
             </p>
           </div>
-          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
+          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary rtl:rotate-180" />
         </Link>
         <Link
           to="/governance"
@@ -1094,7 +1094,7 @@ function InterfaceModeCard() {
               {t('settings.governance_link_desc', { defaultValue: 'Permissions, approval routes and validation rules in the Governance section.' })}
             </p>
           </div>
-          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
+          <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary rtl:rotate-180" />
         </Link>
       </CardContent>
     </Card>
@@ -2187,7 +2187,7 @@ export function SettingsPage() {
                         {t('settings.governance_permissions_desc', { defaultValue: 'Role-based access control for modules and actions' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary rtl:rotate-180" />
                   </Link>
                   <Link
                     to="/governance?tab=approvals"
@@ -2202,7 +2202,7 @@ export function SettingsPage() {
                         {t('settings.governance_approvals_desc', { defaultValue: 'Multi-step approval workflows for changes and documents' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary rtl:rotate-180" />
                   </Link>
                   <Link
                     to="/governance?tab=validation"
@@ -2217,7 +2217,7 @@ export function SettingsPage() {
                         {t('settings.governance_validation_desc', { defaultValue: 'Configure which validation rules apply to projects and BOQs' })}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary" />
+                    <ChevronRight size={16} className="ms-auto shrink-0 text-content-quaternary rtl:rotate-180" />
                   </Link>
                 </CardContent>
               </Card>

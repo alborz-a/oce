@@ -241,7 +241,7 @@ function RuleSetCard({
           {open ? (
             <ChevronDown size={14} className="text-content-tertiary flex-shrink-0" />
           ) : (
-            <ChevronRight size={14} className="text-content-tertiary flex-shrink-0" />
+            <ChevronRight size={14} className="text-content-tertiary flex-shrink-0 rtl:rotate-180" />
           )}
           <div className="min-w-0">
             <p className="font-semibold text-content-primary truncate">

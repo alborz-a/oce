@@ -1346,7 +1346,7 @@ export function CreateProjectModal({
                     })}
                   </p>
                 </div>
-                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue" />
+                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue rtl:rotate-180" />
               </button>
               <button
                 type="button"
@@ -1367,7 +1367,7 @@ export function CreateProjectModal({
                     })}
                   </p>
                 </div>
-                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue" />
+                <ArrowRight size={16} className="mt-1 shrink-0 text-content-quaternary transition-transform group-hover:translate-x-0.5 group-hover:text-oe-blue rtl:rotate-180" />
               </button>
             </div>
           )}

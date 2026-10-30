@@ -146,7 +146,7 @@ function UnifiedRow({ item, onOpen }: { item: UnifiedMarkup; onOpen: () => void 
         </span>
       </td>
       <td className="px-3 py-2.5 text-end">
-        <ChevronRight size={14} className="inline text-content-tertiary" />
+        <ChevronRight size={14} className="inline text-content-tertiary rtl:rotate-180" />
       </td>
     </tr>
   );

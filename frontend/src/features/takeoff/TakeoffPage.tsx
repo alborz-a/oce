@@ -661,7 +661,7 @@ function DocumentCard({
                   >
                     <Box size={13} />
                     {t('takeoff.open_in_bim', 'Open in BIM Viewer')}
-                    <ArrowRight size={11} className="text-content-quaternary" />
+                    <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
                   </a>
                   <a
                     href="/boq"
@@ -669,7 +669,7 @@ function DocumentCard({
                   >
                     <Link2 size={13} />
                     {t('takeoff.link_to_boq', 'Link to BOQ')}
-                    <ArrowRight size={11} className="text-content-quaternary" />
+                    <ArrowRight size={11} className="text-content-quaternary rtl:rotate-180" />
                   </a>
                 </div>
               </div>

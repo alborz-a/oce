@@ -272,7 +272,7 @@ function ButtonsSection() {
 
         <Specimen no={5} name="Brutalist Hard Shadow" family="Bold" note="Чёрный border + offset-shadow. Маркетинг, dev-инструменты. r=8px.">
           <button className="inline-flex h-10 items-center gap-2 px-5 rounded-[8px] text-sm font-bold bg-yellow-300 text-black border-2 border-black shadow-[3px_3px_0_0_#000] hover:shadow-[5px_5px_0_0_#000] hover:-translate-x-0.5 hover:-translate-y-0.5 active:shadow-[1px_1px_0_0_#000] active:translate-x-0.5 active:translate-y-0.5 transition-all duration-fast">
-            <ArrowRight className="h-4 w-4" /> Ship it
+            <ArrowRight className="h-4 w-4 rtl:rotate-180" /> Ship it
           </button>
         </Specimen>
 

@@ -260,7 +260,7 @@ function UnlockedPanel() {
               className="group mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-oe-blue hover:text-oe-blue-text transition-colors"
             >
               {t('inside.shipped_full_link', { defaultValue: 'See the full changelog' })}
-              <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
             </button>
           </div>
         </Card>

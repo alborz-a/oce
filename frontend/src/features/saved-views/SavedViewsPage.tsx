@@ -382,7 +382,7 @@ export function SavedViewsPage() {
                   >
                     <Trash2 className="h-4 w-4" aria-hidden />
                   </button>
-                  <ChevronRight className="h-4 w-4 text-content-tertiary" aria-hidden />
+                  <ChevronRight className="h-4 w-4 text-content-tertiary rtl:rotate-180" aria-hidden />
                 </div>
               </div>
             );

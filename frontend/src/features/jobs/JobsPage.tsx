@@ -453,7 +453,7 @@ export function JobsPage() {
               className="rounded p-1.5 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
               aria-label={t('common.next_page', { defaultValue: 'Next page' })}
             >
-              <ChevronRight className="h-4 w-4" aria-hidden />
+              <ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
             </button>
           </div>
         </div>

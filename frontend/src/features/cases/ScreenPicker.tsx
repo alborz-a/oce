@@ -273,7 +273,7 @@ export function ScreenPicker({ value, onPick, onClose }: ScreenPickerProps) {
             onClick={() => onPick(custom.trim(), '')}
           >
             {t('cases.editor.pick_use', { defaultValue: 'Use it' })}
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </Button>
         </div>
       </div>
