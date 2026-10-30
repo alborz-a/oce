@@ -127,24 +127,24 @@
     "errors": "خطاها",
     "score": "امتیاز کیفیت",
     "run_validation": "اجرای اعتبارسنجی",
-    "missing_quantity": "ردیف {position} فاقد مقدار است",
-    "missing_rate": "ردیف {position} فاقد بهای واحد است",
-    "missing_description": "ردیف {position} فاقد شرح است",
+    "missing_quantity": "ردیف {position} مقدار ندارد",
+    "missing_rate": "ردیف {position} نرخ واحد ندارد",
+    "missing_description": "شرح ردیف {position} خالی است",
     "missing_classification": "ردیف {position} به کد طبقه‌بندی نیاز دارد",
     "duplicate_ordinal": "شماره ردیف تکراری: {ordinal}",
-    "rate_anomaly": "بهای واحد {rate} از حد آستانه ({threshold}) فراتر رفته است"
+    "rate_anomaly": "نرخ واحد {rate} از آستانه ({threshold}) بیشتر است"
   },
   "schedule": {
     "title": "زمان‌بندی 4D",
     "generated": {
       "position_label": "ردیف {ordinal}",
       "section_label": "فصل {ordinal}",
-      "task_description": "به‌صورت خودکار از ردیف {ordinal} صورت مقادیر ایجاد شد ({quantity} {unit})",
-      "section_description": "خلاصه: بخش {ordinal} صورت مقادیر",
+      "task_description": "تولید خودکار از ردیف {ordinal} فهرست بها ({quantity} {unit})",
+      "section_description": "خلاصه: فصل {ordinal} فهرست بها",
       "start_milestone": "شروع پروژه",
-      "start_milestone_description": "مایلستون (رویداد کلیدی) شروع پروژه",
-      "completion_milestone": "تکمیل پروژه",
-      "completion_milestone_description": "مایلستون (رویداد کلیدی) تکمیل پروژه"
+      "start_milestone_description": "نقطه عطف آغاز پروژه",
+      "completion_milestone": "پایان پروژه",
+      "completion_milestone_description": "نقطه عطف پایان پروژه"
     }
   },
   "cad": {
@@ -157,12 +157,12 @@
   "takeoff": {
     "title": "متره‌برداری (Takeoff) / ریزه‌متره",
     "auto_detect": "تشخیص خودکار",
-    "manual_measure": "اندازه‌گیری دستی",
+    "manual_measure": "متره دستی",
     "confidence": "اطمینان"
   },
   "tendering": {
     "title": "مناقصه‌گذاری",
-    "create_tender": "ایجاد مناقصه",
+    "create_tender": "ساخت مناقصه",
     "bid": "پیشنهاد",
     "award": "واگذاری"
   },
@@ -378,7 +378,7 @@
     "purpose": "هدف",
     "for_approval": "برای تأیید",
     "for_information": "برای اطلاع",
-    "for_construction": "برای اجرا",
+    "for_construction": "برای ساخت",
     "recipients": "گیرندگان",
     "acknowledge": "تأیید دریافت",
     "locked": "قفل‌شده",
@@ -418,7 +418,7 @@
   },
   "reporting": {
     "title": "گزارش‌ها و داشبوردها",
-    "kpi": "داشبورد KPI",
+    "kpi": "داشبورد شاخص‌ها",
     "generate_report": "تولید گزارش",
     "templates": "قالب‌ها",
     "project_status": "وضعیت پروژه",
@@ -449,7 +449,7 @@
   },
   "users": {
     "management": "مدیریت کاربران",
-    "management_desc": "اعضای تیم، نقش‌ها و دسترسی را مدیریت کنید",
+    "management_desc": "مدیریت اعضای تیم، نقش‌ها و دسترسی‌ها",
     "invite_user": "دعوت کاربر",
     "invite": "دعوت",
     "full_name": "نام کامل",
@@ -460,14 +460,14 @@
     "last_login": "آخرین ورود",
     "actions": "اقدامات",
     "name": "نام",
-    "total": "جمع کاربران",
+    "total": "کل کاربران",
     "active": "فعال",
     "inactive": "غیرفعال",
     "admins": "مدیران سیستم",
     "managers": "مدیران",
-    "search": "جستجو بر اساس نام یا ایمیل...",
-    "no_users": "کاربری یافت نشد",
-    "updated": "کاربر به‌روزشد",
+    "search": "جست‌وجو با نام یا ایمیل…",
+    "no_users": "کاربری پیدا نشد",
+    "updated": "کاربر به‌روز شد",
     "invited": "کاربر با موفقیت دعوت شد",
     "deactivate": "غیرفعال‌سازی",
     "activate": "فعال‌سازی",
@@ -475,6 +475,6 @@
     "role_admin_desc": "دسترسی کامل به همه امکانات",
     "role_manager_desc": "مدیریت پروژه و تیم",
     "role_editor_desc": "ایجاد و ویرایش محتوا",
-    "role_viewer_desc": "دسترسی فقط‌خواندنی"
+    "role_viewer_desc": "دسترسی فقط خواندنی"
   }
 }
