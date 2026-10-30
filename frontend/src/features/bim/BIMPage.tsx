@@ -144,7 +144,7 @@ import {
   isNon3DBimFormat,
   type BIMElementGroup,
 } from './api';
-import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
+import { getIntlLocale, fmtFixed, formatFileSize } from '@/shared/lib/formatters';
 
 /* ── Helpers ─────────────────────────────────────────────────────────── */
 
@@ -180,13 +180,6 @@ function isCADFile(fn: string): boolean {
 function isDataFile(fn: string): boolean {
   return DATA_EXTENSIONS.has(getFileExtension(fn));
 }
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-  return `${fmtFixed(bytes / (1024 * 1024 * 1024), 1)} GB`;
-}
-
 /* ── Stat Pill ───────────────────────────────────────────────────────── */
 
 function StatPill({ label, value, icon: Icon }: { label: string; value: string | number; icon: React.ElementType }) {

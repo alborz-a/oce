@@ -65,7 +65,7 @@ import {
 import { PointCloudBackground } from './PointCloudBackground';
 import { PointCloudViewer } from './PointCloudViewer';
 import { pointcloudGuide } from './pointcloudGuide';
-import { fmtFixed } from '@/shared/lib/formatters';
+import { fmtFixed, formatFileSize } from '@/shared/lib/formatters';
 
 /* The accepted upload containers, mirrored from the backend allow-list
    (backend/app/modules/pointcloud/models.py ACCEPTED_SCAN_FORMATS). The
@@ -124,13 +124,6 @@ function formatPointCount(n: number): string {
   if (n >= 1_000_000) return `${fmtFixed(n / 1_000_000, 1)}M pts`;
   if (n >= 1_000) return `${fmtFixed(n / 1_000, 1)}K pts`;
   return `${n} pts`;
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
-  return `${fmtFixed(bytes / (1024 * 1024 * 1024), 1)} GB`;
 }
 
 /* Format a single linear span (max - min) with the scan's declared units. The

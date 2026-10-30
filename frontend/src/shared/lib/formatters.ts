@@ -589,18 +589,40 @@ export function formatNumber(n: number, currency?: string): string {
 }
 
 /**
- * Human-readable byte size — short form (``523 B`` / ``12.4 KB`` /
- * ``3.1 MB``). Always returns 1 decimal place above 1 KiB so file
- * lists line up visually.
+ * Human-readable byte size - short form (``523 B`` / ``12.4 KB`` /
+ * ``3.1 MB`` / ``1.2 GB``). Always returns 1 decimal place above 1 KiB so
+ * file lists line up visually.
  *
- * Uses binary 1024 units (KB/MB) to match what users see in OS file
- * managers; callers showing wire-bytes should use the SI variant
- * elsewhere.
+ * Uses binary 1024 units to match what users see in OS file managers.
+ *
+ * In Persian (number locale ``fa``) the digits, the decimal separator and the
+ * unit names are Persian, and number plus unit are wrapped in a bidi isolate
+ * (U+2068 ... U+2069) so the run never reorders inside right-to-left text
+ * (which otherwise renders ``MB 27/9``). Other locales are unchanged.
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
-  return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
+  const locale = getNumberLocale();
+  const isFa = locale.toLowerCase().startsWith('fa');
+  const enUnits = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const faUnits = ['\u0628\u0627\u06CC\u062A', '\u06A9\u06CC\u0644\u0648\u0628\u0627\u06CC\u062A', '\u0645\u06AF\u0627\u0628\u0627\u06CC\u062A', '\u06AF\u06CC\u06AF\u0627\u0628\u0627\u06CC\u062A', '\u062A\u0631\u0627\u0628\u0627\u06CC\u062A'];
+  let value = bytes;
+  let unit = 0;
+  if (Number.isFinite(value)) {
+    while (value >= 1024 && unit < enUnits.length - 1) {
+      value /= 1024;
+      unit += 1;
+    }
+  }
+  if (!isFa) {
+    return unit === 0 ? `${bytes} ${enUnits[0]}` : `${fmtFixed(value, 1)} ${enUnits[unit]}`;
+  }
+  const num = Number.isFinite(value)
+    ? new Intl.NumberFormat(locale, {
+        minimumFractionDigits: unit === 0 ? 0 : 1,
+        maximumFractionDigits: unit === 0 ? 0 : 1,
+      }).format(value)
+    : String(value);
+  return `\u2068${num} ${faUnits[unit]}\u2069`;
 }
 
 /**

@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
+import { getIntlLocale, formatFileSize } from '@/shared/lib/formatters';
 import { TranslationManager } from './TranslationManager';
 import { BackupRestore } from './BackupRestore';
 import { RegionalSettings } from './RegionalSettings';
@@ -2366,9 +2366,7 @@ const DDC_REPO_URL =
 
 function formatBytes(n: number | null): string {
   if (n === null || n === undefined) return '—';
-  if (n < 1024) return `${n} B`;
-  if (n < 1024 * 1024) return `${fmtFixed(n / 1024, 1)} KB`;
-  return `${fmtFixed(n / (1024 * 1024), 1)} MB`;
+  return formatFileSize(n);
 }
 
 function ConverterStatusPanel() {
