@@ -27,6 +27,8 @@ interface FileActionsBarProps {
   onImport: () => void;
   /** Import and Export are system-admin only. */
   canImportExport?: boolean;
+  /** Sharing allowed (false in restricted mode). */
+  canShare?: boolean;
   totalCount: number;
   extension?: string | undefined;
   /** Extensions present in this project and category; only matching type chips show. */
@@ -77,6 +79,7 @@ export function FileActionsBar({
   canImportExport = false,
   totalCount,
   extension,
+  availableExts,
   onExtensionChange,
   projectId,
   category,

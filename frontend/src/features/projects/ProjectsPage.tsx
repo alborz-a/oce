@@ -287,7 +287,7 @@ export function ProjectsPage() {
     isFetching: isFetchingBoqStats,
   } = useQuery({
     queryKey: ['projects-dashboard-cards', projectIdsKey],
-    enabled: !useAuthStore.getState().restrictedMode,
+    enabled: !useAuthStore.getState().restrictedMode && !!projects && projects.length > 0,
     queryFn: async () => {
       const cards = await apiGet<DashboardCard[]>('/v1/projects/dashboard/cards/');
       const cardMap = new Map(cards.map((c) => [c.id, c]));
@@ -301,7 +301,6 @@ export function ProjectsPage() {
         };
       });
     },
-    enabled: !!projects && projects.length > 0,
     staleTime: 60_000,
   });
 
