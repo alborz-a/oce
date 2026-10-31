@@ -842,7 +842,12 @@ function UploadZone({
     [],
   );
 
-  const handleFiles = useCallback(async (files: FileList | File[]) => {
+  // Chosen files wait here for the description; nothing uploads until the
+  // user confirms in the caption panel.
+  const [pending, setPending] = useState<File[] | null>(null);
+  const [pendingCaption, setPendingCaption] = useState('');
+
+  const handleFiles = useCallback((files: FileList | File[]) => {
     const fileArray = Array.from(files).filter((f) => f.type.startsWith('image/'));
     if (fileArray.length === 0) {
       addToast({
@@ -852,8 +857,12 @@ function UploadZone({
       });
       return;
     }
+    setPendingCaption('');
+    setPending(fileArray);
+    if (inputRef.current) inputRef.current.value = '';
+  }, [addToast, t]);
 
-    const validFiles = fileArray;
+  const uploadFiles = useCallback(async (validFiles: File[], caption: string) => {
     if (validFiles.length === 0) return;
 
     setUploading(true);
@@ -873,6 +882,7 @@ function UploadZone({
         // the capture time) and could shadow the backend's correct value.
         await uploadPhoto(projectId, file, {
           category,
+          caption: caption.trim() || undefined,
           tags: tags.length > 0 ? tags : undefined,
         });
         successCount++;
@@ -967,6 +977,41 @@ function UploadZone({
           defaultValue: 'Category and tags apply to every photo in this upload - you can refine each one afterwards.',
         })}
       </p>
+      {pending && (
+        <div className="rounded-xl border border-border-light bg-surface-secondary/50 p-3 space-y-2" data-testid="photo-upload-caption-panel">
+          <p className="text-xs font-medium text-content-secondary">
+            {t('photos.selected_count', { defaultValue: '{{count}} photo(s) selected', count: pending.length })}
+          </p>
+          <label className="block text-xs font-medium text-content-secondary">
+            {t('photos.caption', { defaultValue: 'Caption' })}
+          </label>
+          <input
+            type="text"
+            autoFocus
+            value={pendingCaption}
+            onChange={(e) => setPendingCaption(e.target.value)}
+            placeholder={t('photos.caption_placeholder', { defaultValue: 'Add a description...' })}
+            className="w-full h-9 rounded-lg border border-border bg-surface-primary px-3 text-sm"
+          />
+          <div className="flex gap-2 justify-end">
+            <Button size="sm" variant="secondary" onClick={() => setPending(null)}>
+              {t('common.cancel', { defaultValue: 'Cancel' })}
+            </Button>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {
+                const files = pending;
+                const cap = pendingCaption;
+                setPending(null);
+                void uploadFiles(files, cap);
+              }}
+            >
+              {t('photos.upload_confirm', { defaultValue: 'Upload' })}
+            </Button>
+          </div>
+        </div>
+      )}
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}

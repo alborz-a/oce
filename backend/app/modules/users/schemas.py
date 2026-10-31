@@ -356,6 +356,9 @@ class UserMeResponse(UserResponse):
     """Current user response with extra details."""
 
     permissions: list[str] = Field(default_factory=list)
+    # Restricted project-user mode: the UI shows only the user's project pages,
+    # tasks, photos and documents. Display hint only; the API keeps its own checks.
+    restricted_mode: bool = False
 
 
 class UserPreferencesUpdate(BaseModel):

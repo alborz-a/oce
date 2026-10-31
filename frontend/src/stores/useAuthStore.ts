@@ -98,6 +98,8 @@ interface AuthState {
    *   so a demoted/promoted user sees the correct UI on the next load.
    */
   userRole: string | null;
+  /** Restricted project-user mode, from `/v1/users/me/` (`restricted_mode`). */
+  restrictedMode: boolean;
   /**
    * Record a sign-in. Every open tab of this browser adopts it; a tab signed
    * in as someone else reloads.
@@ -304,6 +306,8 @@ export function createAuthStore(env: AuthTabEnv) {
         userId: null,
         userFullName: null,
         userRole: null,
+      restrictedMode: false,
+        restrictedMode: false,
       });
     };
 
@@ -605,6 +609,7 @@ export function createAuthStore(env: AuthTabEnv) {
             role?: string;
             email?: string;
             full_name?: string;
+            restricted_mode?: boolean;
           };
           // Another account signed in on this tab while the call was on the
           // wire: this answer describes the previous one, so drop it.
@@ -612,6 +617,7 @@ export function createAuthStore(env: AuthTabEnv) {
           if (typeof data.role === 'string') {
             set({ userRole: data.role });
           }
+          set({ restrictedMode: data.restricted_mode === true });
           // The server's email is the account's own. Some sign-ins hand
           // setTokens no email (SSO, desktop bootstrap), which left userEmail
           // null and kept the previous account's address in storage, so a

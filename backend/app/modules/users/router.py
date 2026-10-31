@@ -687,6 +687,23 @@ async def reset_password(
 # ── Current user ───────────────────────────────────────────────────────────
 
 
+def is_restricted_mode(user: Any) -> bool:
+    """True when the user gets the restricted project-user UI.
+
+    Per user: ``users.metadata['restricted_project_mode'] = true``.
+    For everyone but the system admin: env ``OCE_RESTRICTED_PROJECT_MODE_ALL=1``.
+    The system admin is never restricted.
+    """
+    import os
+
+    if getattr(user, "role", "") == "admin":
+        return False
+    if os.environ.get("OCE_RESTRICTED_PROJECT_MODE_ALL", "").strip().lower() in ("1", "true", "yes"):
+        return True
+    meta = getattr(user, "metadata_", None) or {}
+    return meta.get("restricted_project_mode") is True
+
+
 @router.get("/me/", response_model=UserMeResponse)
 @router.get("/me", response_model=UserMeResponse, include_in_schema=False)
 async def get_me(
@@ -708,6 +725,7 @@ async def get_me(
     return UserMeResponse(
         **UserResponse.model_validate(user).model_dump(),
         permissions=permissions,
+        restricted_mode=is_restricted_mode(user),
     )
 
 

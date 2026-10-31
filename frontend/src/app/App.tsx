@@ -30,6 +30,7 @@ import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { RestrictedRouteGuard } from './RestrictedRouteGuard';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
@@ -838,7 +839,9 @@ function AppShell() {
             </ErrorBoundary>
             <ErrorBoundary key={location.pathname}>
               <PageTitleContext.Provider value={setTitle}>
-                <Outlet />
+                <RestrictedRouteGuard>
+                  <Outlet />
+                </RestrictedRouteGuard>
               </PageTitleContext.Provider>
             </ErrorBoundary>
           </Suspense>

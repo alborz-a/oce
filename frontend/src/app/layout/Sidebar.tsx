@@ -40,6 +40,7 @@ import { LEARN_ANCHOR_ATTR, anchorRect, flyLearn } from './learnFlight';
 import { PRESET_WORKSPACES, resolveWorkspace, shownTab } from './workspaces';
 import { useCompanyWorkspace } from './useCompanyWorkspace';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
 import { useModuleStore } from '@/stores/useModuleStore';
 import { useToastStore } from '@/stores/useToastStore';
 import { apiGet } from '@/shared/lib/api';
@@ -532,6 +533,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const toggleIconified = useSidebarCollapseStore((s) => s.toggle);
   const isRTL = useIsRTL();
   const userRole = useAuthStore((s) => s.userRole);
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   // Backend module enabled-state. The System Modules tab disables/enables
@@ -577,7 +579,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   // `hiddenModules` are in scope) so these bottom tiles can be hidden and
   // restored through the same Edit menu gesture as the nav rows.
   const roleVisibleAdminGridItems = adminGridItems.filter(
-    (item) => !item.roleGate || (userRole && (item.roleGate as string[]).includes(userRole)),
+    (item) =>
+      (!restrictedMode || isRestrictedRouteAllowed(item.to)) &&
+      (!item.roleGate || (userRole && (item.roleGate as string[]).includes(userRole))),
   );
 
   // Drive the global CSS variable so both the aside (`w-sidebar`) and
@@ -765,6 +769,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         // Admin-only rows are internal/dev surfaces, not product modules, so
         // they do not count toward the platform total for a regular user.
         if (item.adminOnly && userRole !== 'admin') continue;
+        if (restrictedMode && !isRestrictedRouteAllowed(item.to)) continue;
         total += 1;
         const visible =
           !groupHidden &&
@@ -780,7 +785,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     // `enabledModules` is a dep so the count reacts to enable/disable; it feeds
     // `isModuleEnabled` even though that function reference is stable.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showAdvancedRows, userRole, hiddenModules, hiddenGroups, enabledModules, isRouteBackendDisabled]);
+  }, [showAdvancedRows, userRole, restrictedMode, hiddenModules, hiddenGroups, enabledModules, isRouteBackendDisabled]);
 
   // Custom-module request dialog — opens from the "Request a custom
   // module" CTA at the bottom of the nav (below the "+ Add module"
@@ -1019,6 +1024,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     // annotates rows with a sequence number; it never drops them.
     (editMode || !item.moduleKey || isModuleEnabled(item.moduleKey)) &&
     (!item.adminOnly || userRole === 'admin') &&
+    (!restrictedMode || isRestrictedRouteAllowed(item.to)) &&
     // Backend-disabled gate - a System Module a company admin has
     // explicitly switched off on the System Modules admin tab hides
     // its sidebar route here so we never link to a broken/blank
