@@ -57,10 +57,11 @@ class ChatSession(Base):
 
     # Relationships
     messages: Mapped[list[ChatMessage]] = relationship(
+        "app.modules.erp_chat.models.ChatMessage",
         back_populates="session",
         cascade="all, delete-orphan",
         lazy="selectin",
-        order_by="ChatMessage.created_at",
+        order_by="app.modules.erp_chat.models.ChatMessage.created_at",
     )
 
     def __repr__(self) -> str:
@@ -146,7 +147,7 @@ class ChatTurnFeedback(Base):
     rating: Mapped[int] = mapped_column(Integer, nullable=False)
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    message: Mapped[ChatMessage] = relationship(back_populates="feedback")
+    message: Mapped[ChatMessage] = relationship("app.modules.erp_chat.models.ChatMessage", back_populates="feedback")
 
     def __repr__(self) -> str:
         return f"<ChatTurnFeedback {self.id} msg={self.message_id} r={self.rating}>"
