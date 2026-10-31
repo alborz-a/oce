@@ -775,9 +775,11 @@ const TaskCard = React.memo(function TaskCard({
               <Pencil size={10} />
             </Button>
           )}
+          {!useAuthStore.getState().restrictedMode && (
           <Button variant="ghost" size="sm" onClick={() => onDelete(task.id)} className="!p-0.5 text-content-quaternary hover:text-red-500 h-auto" title={t('common.delete', { defaultValue: 'Delete' })} aria-label={t('common.delete', { defaultValue: 'Delete' })}>
             <Trash2 size={10} />
           </Button>
+          )}
         </div>
       </div>
 
@@ -1518,6 +1520,7 @@ export function TasksPage() {
               variant="primary"
               size="sm"
               onClick={() => setShowAddModal(true)}
+              style={useAuthStore.getState().restrictedMode ? { display: 'none' } : undefined}
               disabled={!projectId}
               title={!projectId ? t('common.select_project_first', { defaultValue: 'Please select a project first' }) : undefined}
               icon={<Plus size={14} />}
@@ -1791,7 +1794,7 @@ export function TasksPage() {
                   })
             }
             action={
-              !searchQuery && !typeFilter && !myTasksOnly
+              !searchQuery && !typeFilter && !myTasksOnly && !useAuthStore.getState().restrictedMode
                 ? {
                     label: t('tasks.new_task', { defaultValue: 'New Task' }),
                     onClick: () => setShowAddModal(true),

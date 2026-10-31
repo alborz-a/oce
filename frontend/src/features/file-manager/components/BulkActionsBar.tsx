@@ -25,6 +25,7 @@
  * manager exposes no cross-kind move endpoint.
  */
 
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -697,7 +698,7 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
               <X size={12} />
             </button>
           </div>
-        ) : (
+        ) : useAuthStore.getState().restrictedMode ? null : (
           <button
             type="button"
             disabled={deletableRows.length === 0}

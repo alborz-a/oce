@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { useAuthStore } from '@/stores/useAuthStore';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -286,6 +287,7 @@ export function ProjectsPage() {
     isFetching: isFetchingBoqStats,
   } = useQuery({
     queryKey: ['projects-dashboard-cards', projectIdsKey],
+    enabled: !useAuthStore.getState().restrictedMode,
     queryFn: async () => {
       const cards = await apiGet<DashboardCard[]>('/v1/projects/dashboard/cards/');
       const cardMap = new Map(cards.map((c) => [c.id, c]));

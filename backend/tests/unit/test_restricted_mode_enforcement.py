@@ -102,3 +102,15 @@ async def test_non_member_task_access_denied():
         with pytest.raises(HTTPException) as e:
             await verify_project_access(uuid.uuid4(), str(uuid.uuid4()), AsyncMock())
     assert e.value.status_code == 404
+
+
+def test_photo_file_and_document_download_check_membership():
+    import inspect
+
+    from app.modules.documents import router as r
+
+    for name in ("serve_photo_file",):
+        assert "verify_project_access" in inspect.getsource(getattr(r, name))
+    src = inspect.getsource(r)
+    i = src.index('"/{document_id}/download')
+    assert "verify_project_access" in src[i : i + 2500]

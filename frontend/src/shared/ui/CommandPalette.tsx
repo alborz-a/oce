@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
@@ -209,7 +210,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   useEffect(() => {
     if (!open) return;
     const trimmed = query.trim();
-    if (trimmed.length < 2) {
+    if (trimmed.length < 2 || useAuthStore.getState().restrictedMode) {
       setGlobalResults([]);
       return;
     }

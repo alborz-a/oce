@@ -11,6 +11,7 @@
  * defaults when no project is selected or the query is still loading.
  */
 
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useQuery } from '@tanstack/react-query';
 import { apiGet } from '@/shared/lib/api';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
@@ -38,7 +39,7 @@ export function useSidebarBadges(): SidebarBadgeCounts {
       apiGet<SidebarBadgesResponse>(
         `/v1/sidebar/badges/?project_id=${encodeURIComponent(projectId!)}`,
       ),
-    enabled: !!projectId,
+    enabled: !!projectId && !useAuthStore.getState().restrictedMode,
     staleTime: 60_000, // 60 seconds — avoid refetching on every render
     refetchInterval: 120_000, // refresh every 2 minutes in background
     refetchOnWindowFocus: false,

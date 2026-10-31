@@ -7,6 +7,7 @@
  * and filtering for project site photos.
  */
 
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -294,6 +295,7 @@ function Lightbox({
               >
                 <Pencil size={16} />
               </button>
+              {!useAuthStore.getState().restrictedMode && (
               <button
                 onClick={() => onDelete(photo)}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-red-500/30 hover:text-red-300 transition-colors"
@@ -301,6 +303,7 @@ function Lightbox({
               >
                 <Trash2 size={16} />
               </button>
+              )}
             </div>
           </div>
 

@@ -14,6 +14,7 @@
                      leaves `documents` and Restore is what puts them back.
 */
 
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -271,6 +272,7 @@ export function FileContextMenu({
           nothing points at the file, which is the usual case, so the menu
           keeps its present shape. */}
       {row.kind === 'document' && <DocumentDeleteWarning documentId={row.id} />}
+      {!useAuthStore.getState().restrictedMode && (<>
       <div className="h-px bg-border-light" />
       <MenuItem
         icon={<Trash2 size={13} />}
@@ -281,6 +283,7 @@ export function FileContextMenu({
         }}
         danger
       />
+      </>)}
     </div>
   );
 }

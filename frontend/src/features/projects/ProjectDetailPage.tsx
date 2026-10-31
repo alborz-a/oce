@@ -2290,6 +2290,16 @@ export function ProjectDetailPage() {
 
       {/* ── Tab Bar ──────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1 border-b border-border-light">
+        {restrictedMode && (
+          <>
+            <button onClick={() => navigate(`/projects/${projectId}/tasks`)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary">
+              {t('tasks.title', { defaultValue: 'Tasks' })}
+            </button>
+            <button onClick={() => navigate(`/projects/${projectId}/files`)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 border-transparent text-content-tertiary hover:text-content-primary hover:bg-surface-secondary">
+              {t('nav.documents', { defaultValue: 'Documents' })}
+            </button>
+          </>
+        )}
         {([
           { key: 'dashboard' as ProjectTab, label: t('projects.dashboard', { defaultValue: 'Dashboard' }), icon: <LayoutDashboard size={15} /> },
           { key: 'overview' as ProjectTab, label: t('projects.overview'), icon: <Table2 size={15} /> },
