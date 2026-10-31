@@ -22,6 +22,8 @@ const ADMIN_ONLY: RegExp[] = [
   /^\/profile$/,
   /^\/chat$/,
   /^\/advisor$/,
+  /^\/ai-(estimate|estimator|agents)$/,
+  /^\/estimate-copilot$/,
   /^\/styles-lab$/,
   /^\/match-elements$/,
   /^\/(projects\/[^/]+\/)?connectors$/,

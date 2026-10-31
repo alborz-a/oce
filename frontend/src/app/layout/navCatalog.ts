@@ -930,9 +930,9 @@ export const navGroups: NavGroup[] = [
     defaultOpen: false,
     hideInSimple: true,
     items: [
-      { labelKey: 'nav.ai_estimate', to: '/ai-estimate', icon: Sparkles, badge: 'BETA' },
-      { labelKey: 'nav.ai_estimator', to: '/ai-estimator', icon: Wand2, badge: 'BETA' },
-      { labelKey: 'nav.estimate_copilot', to: '/estimate-copilot', icon: Bot, badge: 'BETA' },
+      { labelKey: 'nav.ai_estimate', to: '/ai-estimate', icon: Sparkles, badge: 'BETA', adminOnly: true },
+      { labelKey: 'nav.ai_estimator', to: '/ai-estimator', icon: Wand2, badge: 'BETA', adminOnly: true },
+      { labelKey: 'nav.estimate_copilot', to: '/estimate-copilot', icon: Bot, badge: 'BETA', adminOnly: true },
     ],
   },
   // ── 21. AUTOMATION & AI ────────────────────────────────────────────
@@ -955,7 +955,7 @@ export const navGroups: NavGroup[] = [
     defaultOpen: true,
     hideInSimple: true,
     items: [
-      { labelKey: 'nav.ai_agents', to: '/ai-agents', icon: Bot, badge: 'BETA' },
+      { labelKey: 'nav.ai_agents', to: '/ai-agents', icon: Bot, badge: 'BETA', adminOnly: true },
       { labelKey: 'nav.ai_advisor', to: '/advisor', icon: MessageSquare, adminOnly: true },
       { labelKey: 'nav.erp_chat', to: '/chat', icon: MessageSquare, adminOnly: true },
       { labelKey: 'nav.pipelines', to: '/pipelines', icon: GitBranch, moduleKey: 'pipelines', advancedOnly: true, badge: 'BETA' },

@@ -71,6 +71,7 @@ import {
 } from './context/DashboardRollupContext';
 import { useDashboardRollup } from './hooks/useDashboardRollup';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 // Static Tailwind class strings (dynamic `lg:col-span-${n}` would be purged).
 const DASH_SPAN_CLASS: Record<number, string> = {
@@ -567,6 +568,7 @@ function OnboardingSteps({
   boqs?: BOQWithTotal[];
   vectorCount?: number;
 }) {
+  const isSystemAdmin = useIsSystemAdmin();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [demoModalOpen, setDemoModalOpen] = useState(false);
@@ -588,15 +590,15 @@ function OnboardingSteps({
   const completedCount = [
     hasDatabase,
     hasVectors,
-    aiConfigured,
+    isSystemAdmin && aiConfigured,
     hasProjects,
     hasBoqs,
     hasQuantities,
   ].filter(Boolean).length;
 
-  const TOTAL_STEPS = 6;
+  const TOTAL_STEPS = isSystemAdmin ? 6 : 5;
 
-  const steps: OnboardingStep[] = [
+  const allSteps: OnboardingStep[] = [
     {
       id: 1,
       icon: <Database size={22} strokeWidth={1.5} />,
@@ -682,6 +684,7 @@ function OnboardingSteps({
       },
     },
   ];
+  const steps = allSteps.filter((s) => isSystemAdmin || s.id !== 3);
 
   return (
     <div>
