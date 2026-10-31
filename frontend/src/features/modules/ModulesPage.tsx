@@ -2719,7 +2719,7 @@ function SystemModulesTab({ query, onClearQuery }: SystemModulesTabProps) {
                       <div
                         className={clsx(
                           'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200',
-                          mod.enabled ? 'translate-x-[18px]' : 'translate-x-0.5',
+                          mod.enabled ? 'translate-x-[18px] rtl:-translate-x-[18px]' : 'translate-x-0.5 rtl:-translate-x-0.5',
                         )}
                       />
                     </div>
@@ -2843,7 +2843,7 @@ function ModuleToggleCard({
           <div
             className={clsx(
               'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200',
-              enabled ? 'translate-x-[18px]' : 'translate-x-0.5',
+              enabled ? 'translate-x-[18px] rtl:-translate-x-[18px]' : 'translate-x-0.5 rtl:-translate-x-0.5',
             )}
           />
         </div>

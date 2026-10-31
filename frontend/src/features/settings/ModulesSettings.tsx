@@ -139,7 +139,7 @@ function ModuleToggle({
       <span
         className={clsx(
           'pointer-events-none inline-flex h-5 w-5 transform items-center justify-center rounded-full bg-white shadow transition duration-200 ease-in-out',
-          enabled ? 'translate-x-5' : 'translate-x-0',
+          enabled ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0',
         )}
       >
         {busy && <Loader2 size={11} className="animate-spin text-oe-blue" aria-hidden />}

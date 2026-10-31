@@ -993,7 +993,7 @@ function ToggleSwitch({
       <span
         className={clsx(
           'pointer-events-none flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-lg ring-0 transition-all duration-300 ease-in-out',
-          enabled ? 'translate-x-[22px] scale-[1.05]' : 'translate-x-0 scale-100',
+          enabled ? 'translate-x-[22px] rtl:-translate-x-[22px] scale-[1.05]' : 'translate-x-0 scale-100',
         )}
       >
         {enabled && <Check size={11} className="text-oe-blue" strokeWidth={3} />}

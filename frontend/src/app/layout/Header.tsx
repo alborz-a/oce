@@ -522,9 +522,6 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         >
           <Search size={14} strokeWidth={1.75} className="shrink-0" />
           <span className="truncate">{t('common.search')}</span>
-          <kbd className="ms-auto inline-flex items-center gap-0.5 rounded border border-border-light bg-surface-primary px-1 py-px text-[9px] font-medium text-content-quaternary">
-            ⌘K
-          </kbd>
         </button>
 
         {/* Mobile search icon — collapses the search bar on tiny screens. */}

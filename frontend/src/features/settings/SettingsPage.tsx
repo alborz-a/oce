@@ -1487,7 +1487,7 @@ function DemoLoginAdminRow() {
       >
         <span
           className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-normal ease-oe ${
-            enabled ? 'translate-x-5' : 'translate-x-0.5'
+            enabled ? 'translate-x-5 rtl:-translate-x-5' : 'translate-x-0.5 rtl:-translate-x-0.5'
           }`}
         />
       </button>

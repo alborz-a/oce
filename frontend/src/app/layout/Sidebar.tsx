@@ -1242,7 +1242,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           // half its width protruding into the main content area.
           // LTR → outer = right; RTL → outer = left.
           'hidden lg:flex absolute top-1/2 z-10',
-          isRTL ? 'start-0' : 'end-0',
+          'end-0',
           // Size + shape: tall pill, narrow.
           'h-12 w-5 items-center justify-center rounded-full',
           // Surface: clean white with a subtle ring; hover lifts to the
@@ -1265,6 +1265,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         <ChevronRight
           size={12}
           strokeWidth={2.5}
+          // index.css mirrors .lucide-chevron-right in RTL and beats rotate classes, so set the transform inline.
+          style={isRTL ? { transform: iconified ? 'scaleX(-1)' : 'none' } : undefined}
           className={clsx(
             'transition-transform duration-200 ease-oe',
             // The chevron always points in the direction the click will
@@ -1303,9 +1305,6 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               <span className="truncate">
                 {t('common.search', { defaultValue: 'Search' })}
               </span>
-              <kbd className="ms-auto hidden sm:inline-flex items-center gap-0.5 rounded border border-border-light bg-surface-primary px-1 py-px text-[9px] font-medium text-content-quaternary group-hover:text-content-tertiary">
-                ⌘K
-              </kbd>
             </>
           )}
         </button>
@@ -1431,13 +1430,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                   <span className="min-w-0 flex-1 truncate text-start text-[12px] font-medium">
                     {t('sidebar.more_modules', { defaultValue: 'More modules' })}
                   </span>
-                  <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{moreCount}</span>
+                  <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{new Intl.NumberFormat(getIntlLocale()).format(moreCount)}</span>
                   <ChevronDown
                     size={11}
                     strokeWidth={2}
                     className={clsx(
                       'shrink-0 text-content-quaternary transition-transform duration-200',
-                      !moreExpanded && '-rotate-90',
+                      !moreExpanded && '-rotate-90 rtl:rotate-90',
                     )}
                     aria-hidden
                   />
@@ -1951,7 +1950,7 @@ function NavGroupSection({
           className={clsx(
             'shrink-0 text-content-quaternary group-hover:text-content-secondary',
             'transition-transform duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)]',
-            isCollapsed && '-rotate-90',
+            isCollapsed && '-rotate-90 rtl:rotate-90',
           )}
           aria-hidden
         />
@@ -2364,7 +2363,7 @@ function SidebarItem({
                   : 'bg-surface-tertiary text-content-secondary',
               )}
             >
-              {numericBadge > 99 ? '99+' : numericBadge}
+              {numericBadge > 99 ? `${new Intl.NumberFormat(getIntlLocale()).format(99)}+` : new Intl.NumberFormat(getIntlLocale()).format(numericBadge)}
             </span>
           )}
           {item.badge && (

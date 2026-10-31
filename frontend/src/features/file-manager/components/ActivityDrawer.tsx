@@ -238,7 +238,7 @@ export function ActivityDrawer({
           'border-s border-border-light bg-surface-elevated shadow-xl',
           'transition-transform duration-200 ease-oe',
           'flex flex-col',
-          open ? 'translate-x-0' : 'translate-x-full',
+          open ? 'translate-x-0' : 'translate-x-full rtl:-translate-x-full',
         )}
       >
         {/* Header */}

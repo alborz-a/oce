@@ -1305,7 +1305,7 @@ export default function BIMFilterPanel({
           >
             <span
               className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${
-                state.buildingsOnly ? 'translate-x-3.5' : 'translate-x-0.5'
+                state.buildingsOnly ? 'translate-x-3.5 rtl:-translate-x-3.5' : 'translate-x-0.5 rtl:-translate-x-0.5'
               }`}
             />
           </button>

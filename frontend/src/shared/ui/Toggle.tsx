@@ -30,11 +30,11 @@ export function Toggle({
   const translateCls =
     size === 'sm'
       ? checked
-        ? 'translate-x-3.5'
-        : 'translate-x-0.5'
+        ? 'translate-x-3.5 rtl:-translate-x-3.5'
+        : 'translate-x-0.5 rtl:-translate-x-0.5'
       : checked
-        ? 'translate-x-4'
-        : 'translate-x-0.5';
+        ? 'translate-x-4 rtl:-translate-x-4'
+        : 'translate-x-0.5 rtl:-translate-x-0.5';
   return (
     <label
       className={clsx(
