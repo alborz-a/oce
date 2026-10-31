@@ -27,6 +27,8 @@ export interface FileRow {
   id: string;
   kind: FileKind;
   name: string;
+  /** Photo description; shown on cards in place of the file name. */
+  caption?: string | null;
   project_id: string;
   size_bytes: number;
   mime_type: string | null;

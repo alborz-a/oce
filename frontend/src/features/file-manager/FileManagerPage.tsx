@@ -332,6 +332,26 @@ export function FileManagerPage() {
   );
   const listTotal = listPages?.pages[0]?.total ?? 0;
 
+  // Type chips show only formats that exist in this project and category. Learned from
+  // the unfiltered list (union as pages load) so picking a chip does not hide the others.
+  const extScopeKey = `${projectId ?? ''}|${selectedKind ?? ''}`;
+  const [seenExts, setSeenExts] = useState<{ key: string; exts: string[] }>({ key: '', exts: [] });
+  useEffect(() => {
+    if (extension || query || flatItems.length === 0) return;
+    setSeenExts((prev) => {
+      const set = new Set(prev.key === extScopeKey ? prev.exts : []);
+      for (const r of flatItems) {
+        const e = (r.extension || r.name.split('.').pop() || '').toLowerCase().replace(/^\./, '');
+        if (e) set.add(e);
+      }
+      return prev.key === extScopeKey && set.size === prev.exts.length ? prev : { key: extScopeKey, exts: [...set] };
+    });
+  }, [flatItems, extension, query, extScopeKey]);
+  const availableExts = useMemo(
+    () => (seenExts.key === extScopeKey ? new Set(seenExts.exts) : undefined),
+    [seenExts, extScopeKey],
+  );
+
   // ── Content (OCR) search ─────────────────────────────────────────────
   // Fires only in content mode with a non-empty query. Hits are mapped to
   // FileRow-shaped rows so they render through the very same grid/list and
@@ -978,6 +998,7 @@ export function FileManagerPage() {
                       : listTotal
                 }
                 extension={extension}
+                availableExts={availableExts}
                 onExtensionChange={setExtension}
                 projectId={projectId}
                 category={selectedKind}

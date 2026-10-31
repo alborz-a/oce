@@ -332,8 +332,8 @@ export function FileList({
                           {row.extra.drawing_number}
                         </span>
                       )}
-                      <span className="truncate text-content-primary" title={row.name}>
-                        {row.name}
+                      <span className="truncate text-content-primary" title={row.caption ? `${row.caption} (${row.name})` : row.name}>
+                        {row.caption || row.name}
                       </span>
                       {typeof row.extra?.revision_code === 'string' && row.extra.revision_code && (
                         <span

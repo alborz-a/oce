@@ -314,8 +314,8 @@ export function FileGrid({
                     {row.extra.drawing_number}
                   </p>
                 )}
-                <p className="text-xs font-medium text-content-primary truncate" title={row.name}>
-                  {row.name}
+                <p className="text-xs font-medium text-content-primary truncate" title={row.caption ? `${row.caption} (${row.name})` : row.name}>
+                  {row.caption || row.name}
                 </p>
                 <div className="mt-1 flex items-center gap-1 flex-wrap">
                   {typeof row.extra?.revision_code === 'string' && row.extra.revision_code && (

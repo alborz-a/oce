@@ -252,6 +252,7 @@ async def _collect_photos(
                 id=str(r.id),
                 kind="photo",
                 name=r.filename,
+                caption=(r.caption or None),
                 project_id=str(project_id),
                 size_bytes=_file_size(path),
                 mime_type=_mime_of(r.filename),

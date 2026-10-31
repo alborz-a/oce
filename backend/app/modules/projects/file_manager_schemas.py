@@ -67,6 +67,10 @@ class FileRow(BaseModel):
         description="Inline preview URL when one is supported (PDF page 1 PNG, photo thumb, ...)",
     )
     thumbnail_url: str | None = None
+    caption: str | None = Field(
+        default=None,
+        description="Photo description; the UI shows it on the card in place of the phone file name.",
+    )
     discipline: str | None = None
     category: str | None = None
     extra: dict = Field(

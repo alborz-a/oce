@@ -4,7 +4,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, X, ChevronDown, LayoutGrid, List, Download, Upload, MoreHorizontal, Star, Loader2, RefreshCw } from 'lucide-react';
+import { Search, X, ChevronDown, LayoutGrid, List, Download, Upload, Star, Loader2, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
 import type { FileFilters } from '../types';
 import { SaveViewButton } from '@/features/file-saved-views';
@@ -29,6 +29,8 @@ interface FileActionsBarProps {
   canImportExport?: boolean;
   totalCount: number;
   extension?: string | undefined;
+  /** Extensions present in this project and category; only matching type chips show. */
+  availableExts?: ReadonlySet<string>;
   onExtensionChange?: (ext: string | undefined) => void;
   /** Active project — enables Save-view + Tag filter facet (W4/W5). */
   projectId?: string | null;
@@ -54,26 +56,13 @@ interface FileActionsBarProps {
 
 /* Always-visible type pills — the high-traffic AECO formats. Each maps to one
    `?extension=` value passed to the backend. */
-const TYPE_PILLS: { key: string; label: string; ext?: string }[] = [
+const TYPE_PILLS: { key: string; label: string; ext?: string; group?: string[] }[] = [
   { key: 'all', label: 'All' },
-  { key: 'pdf', label: 'PDF', ext: 'pdf' },
-  { key: 'image', label: 'Images', ext: 'jpg' },
-  { key: 'cad', label: 'CAD', ext: 'dwg' },
-  { key: 'bim', label: 'BIM', ext: 'ifc' },
-  { key: 'office', label: 'Office', ext: 'xlsx' },
-];
-
-/* Long tail of less-frequent but still essential AECO formats. Surface them
-   in a "More" overflow popover so the primary row stays compact. */
-const EXTRA_PILLS: { key: string; label: string; ext: string }[] = [
-  { key: 'rvt', label: 'BIM Model (RVT)', ext: 'rvt' },
-  { key: 'rfa', label: 'BIM Family (RFA)', ext: 'rfa' },
-  { key: 'nwd', label: 'Coordination Model (NWD)', ext: 'nwd' },
-  { key: 'dwf', label: 'Design Web Format (DWF)', ext: 'dwf' },
-  { key: 'docx', label: 'Word (DOCX)', ext: 'docx' },
-  { key: 'mpp', label: 'MS Project (MPP)', ext: 'mpp' },
-  { key: 'pptx', label: 'PowerPoint (PPTX)', ext: 'pptx' },
-  { key: 'zip', label: 'Archive (ZIP)', ext: 'zip' },
+  { key: 'pdf', label: 'PDF', ext: 'pdf', group: ['pdf'] },
+  { key: 'image', label: 'Images', ext: 'jpg', group: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'tif', 'tiff', 'bmp'] },
+  { key: 'cad', label: 'CAD', ext: 'dwg', group: ['dwg', 'dxf', 'dwf'] },
+  { key: 'bim', label: 'BIM', ext: 'ifc', group: ['ifc', 'rvt', 'rfa', 'nwd', 'nwc'] },
+  { key: 'office', label: 'Office', ext: 'xlsx', group: ['xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'csv'] },
 ];
 
 export function FileActionsBar({
@@ -104,9 +93,7 @@ export function FileActionsBar({
   const { t } = useTranslation();
   const [draft, setDraft] = useState(query);
   const [sortOpen, setSortOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
-  const moreRef = useRef<HTMLDivElement>(null);
 
   // Sync external query changes back into the draft (e.g. when user clears).
   useEffect(() => {
@@ -127,15 +114,11 @@ export function FileActionsBar({
       if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
         setSortOpen(false);
       }
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
-        setMoreOpen(false);
-      }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const extraActive = !!extension && EXTRA_PILLS.some((p) => p.ext === extension);
 
   const sortLabels: Record<SortKey, string> = {
     modified: t('files.sort.modified', { defaultValue: 'Modified' }),
@@ -206,7 +189,11 @@ export function FileActionsBar({
 
       {onExtensionChange && (
         <div className="inline-flex items-center gap-1">
-          {TYPE_PILLS.map((p) => {
+          {TYPE_PILLS.filter((p) => {
+            if (!p.group) return true;
+            if (extension && p.group.includes(extension)) return true;
+            return !!availableExts && p.group.some((x) => availableExts.has(x));
+          }).map((p) => {
             const active = p.ext ? extension === p.ext : !extension;
             return (
               <button
@@ -225,51 +212,6 @@ export function FileActionsBar({
               </button>
             );
           })}
-          <div ref={moreRef} className="relative">
-            <button
-              type="button"
-              onClick={() => setMoreOpen((p) => !p)}
-              aria-haspopup="listbox"
-              aria-expanded={moreOpen}
-              className={clsx(
-                'inline-flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium transition-colors',
-                extraActive
-                  ? 'bg-oe-blue text-white'
-                  : 'border border-border-light text-content-secondary hover:bg-surface-secondary',
-              )}
-            >
-              {extraActive
-                ? EXTRA_PILLS.find((p) => p.ext === extension)?.label.split(' ')[0]
-                : t('files.type_pill.more', { defaultValue: 'More' })}
-              <MoreHorizontal size={11} />
-            </button>
-            {moreOpen && (
-              <div
-                role="listbox"
-                className="absolute start-0 top-full mt-1 w-48 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
-              >
-                {EXTRA_PILLS.map((p) => (
-                  <button
-                    key={p.key}
-                    role="option"
-                    aria-selected={extension === p.ext}
-                    onClick={() => {
-                      onExtensionChange(extension === p.ext ? undefined : p.ext);
-                      setMoreOpen(false);
-                    }}
-                    className={clsx(
-                      'w-full px-3 py-1.5 text-start text-[11px] transition-colors',
-                      extension === p.ext
-                        ? 'bg-oe-blue/10 text-oe-blue font-medium'
-                        : 'text-content-secondary hover:bg-surface-secondary',
-                    )}
-                  >
-                    {t(`files.type_pill.${p.key}`, { defaultValue: p.label })}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       )}
 
