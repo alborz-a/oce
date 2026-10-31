@@ -322,6 +322,7 @@ async def reject_revoked_session(
 
 
 async def get_current_user_payload(
+    request: Request,
     credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
     settings: SettingsDep,
 ) -> dict[str, Any]:
@@ -372,6 +373,14 @@ async def get_current_user_payload(
 
                 reject_token_issued_before_password_change(iat, user.password_changed_at)
                 await reject_revoked_session(session, payload.get("sid"), user.id)
+
+                # Restricted project-user mode: deny-by-default API allowlist.
+                # Reuses the user row loaded above (no extra query).
+                from app.core.restricted_mode import enforce_restricted_access, is_restricted_user
+
+                if is_restricted_user(user):
+                    payload["restricted_mode"] = True
+                    enforce_restricted_access(request.method, request.url.path)
         except HTTPException:
             raise
         except Exception:

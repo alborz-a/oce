@@ -1433,18 +1433,28 @@ export function ProjectDetailPage() {
   } | null>(null);
 
   const [searchParams] = useSearchParams();
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  // Restricted project users only get the Photos tab (backend denies the rest).
+  const tabAllowed = (k: string) => !restrictedMode || k === 'photos';
   const urlTab = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<ProjectTab>(() =>
-    urlTab && (PROJECT_TABS as readonly string[]).includes(urlTab) ? (urlTab as ProjectTab) : 'dashboard',
+    urlTab && (PROJECT_TABS as readonly string[]).includes(urlTab) && tabAllowed(urlTab)
+      ? (urlTab as ProjectTab)
+      : restrictedMode
+        ? 'photos'
+        : 'dashboard',
   );
   // Keep the tab in sync with the ?tab= query param so deep links and the
   // dashboard "view all" jumps (which navigate to ?tab=photos / ?tab=compliance)
   // actually switch the tab, not just the URL.
   useEffect(() => {
-    if (urlTab && (PROJECT_TABS as readonly string[]).includes(urlTab)) {
+    if (urlTab && (PROJECT_TABS as readonly string[]).includes(urlTab) && tabAllowed(urlTab)) {
       setActiveTab(urlTab as ProjectTab);
+    } else if (restrictedMode) {
+      setActiveTab('photos');
     }
-  }, [urlTab]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlTab, restrictedMode]);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState(INITIAL_PROJECT_EDIT_FORM);
   const [customizing, setCustomizing] = useState(false);
@@ -2288,7 +2298,7 @@ export function ProjectDetailPage() {
           { key: 'tendering' as ProjectTab, label: t('projects.tendering'), icon: <Gavel size={15} /> },
           { key: 'photos' as ProjectTab, label: t('projects.photos.tab_label', { defaultValue: 'Photos' }), icon: <ImageIcon size={15} /> },
           { key: 'compliance' as ProjectTab, label: t('compliance.tab_label', { defaultValue: 'Compliance' }), icon: <ShieldCheck size={15} /> },
-        ]).map((tab) => (
+        ]).filter((tab) => tabAllowed(tab.key)).map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}

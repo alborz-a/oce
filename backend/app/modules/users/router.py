@@ -694,14 +694,9 @@ def is_restricted_mode(user: Any) -> bool:
     For everyone but the system admin: env ``OCE_RESTRICTED_PROJECT_MODE_ALL=1``.
     The system admin is never restricted.
     """
-    import os
+    from app.core.restricted_mode import is_restricted_user
 
-    if getattr(user, "role", "") == "admin":
-        return False
-    if os.environ.get("OCE_RESTRICTED_PROJECT_MODE_ALL", "").strip().lower() in ("1", "true", "yes"):
-        return True
-    meta = getattr(user, "metadata_", None) or {}
-    return meta.get("restricted_project_mode") is True
+    return is_restricted_user(user)
 
 
 @router.get("/me/", response_model=UserMeResponse)
