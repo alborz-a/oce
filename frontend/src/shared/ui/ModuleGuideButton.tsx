@@ -18,11 +18,16 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GraduationCap } from 'lucide-react';
+import { GraduationCap, Pencil } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { ModuleGuide, type ModuleGuideContent } from './ModuleGuide';
 import { ModuleCasesButton } from '@/features/cases/ModuleCasesButton';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { GuideEditorDialog } from './GuideEditorDialog';
+import { applyGuideOverride, moduleKeyFromPath, useResolvedGuides } from './guideOverrides';
 
 export interface ModuleGuideButtonProps {
   /** The guide content to teach when the button is clicked. */
@@ -37,13 +42,26 @@ export interface ModuleGuideButtonProps {
 }
 
 export function ModuleGuideButton({
-  content,
+  content: baseContent,
   className,
   label,
   onCta,
 }: ModuleGuideButtonProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const isSystemAdmin = useIsSystemAdmin();
+  const restricted = useAuthStore((st) => st.restrictedMode);
+  const { pathname } = useLocation();
+  const moduleKey = moduleKeyFromPath(pathname);
+  const { data: resolved } = useResolvedGuides();
+  const override = resolved?.[moduleKey];
+  // Normal users see a guide only after the system admin enables it; the admin always sees it.
+  const showGuide = isSystemAdmin || override?.visible === true;
+  const content = applyGuideOverride(baseContent, moduleKey, override?.content, {
+    isAdmin: isSystemAdmin,
+    restricted,
+  });
 
   const resolvedLabel = label ?? t('guide.button', { defaultValue: 'How it works' });
   const aria = t('guide.button_aria', {
@@ -62,6 +80,7 @@ export function ModuleGuideButton({
           It is not rendered in both places: two controls for one action drift
           apart, and the point of the move was that the control stops shifting
           around with the width of each page's action row. */}
+      {showGuide && (<>
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -81,6 +100,20 @@ export function ModuleGuideButton({
         <GraduationCap size={13} strokeWidth={2} />
         <span className="hidden sm:inline">{resolvedLabel}</span>
       </button>
+      {isSystemAdmin && (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          aria-label={t('guide.editor.open', { defaultValue: 'Edit guide' })}
+          title={t('guide.editor.open', { defaultValue: 'Edit guide' })}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border-light text-content-tertiary hover:bg-surface-secondary"
+        >
+          <Pencil size={12} />
+        </button>
+      )}
+      {isSystemAdmin && editing && (
+        <GuideEditorDialog open onClose={() => setEditing(false)} moduleKey={moduleKey} base={baseContent} />
+      )}
 
       <ModuleGuide
         open={open}
@@ -88,6 +121,7 @@ export function ModuleGuideButton({
         content={content}
         onCta={onCta}
       />
+      </>)}
     </>
   );
 }
