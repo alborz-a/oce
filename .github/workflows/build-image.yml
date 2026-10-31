@@ -82,5 +82,16 @@ jobs:
             ghcr.io/alborz-a/oce:latest-ir
           cache-from: type=gha
           cache-to: type=gha,mode=min
+      # Production image (base + aioboto3). The server pulls this tag and never builds.
+      - uses: docker/build-push-action@v6
+        with:
+          context: deploy/docker
+          file: deploy/docker/Dockerfile.s3
+          push: true
+          build-args: |
+            BASE_IMAGE=ghcr.io/alborz-a/oce:sha-${{ github.sha }}
+          tags: |
+            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}-s3
+            ghcr.io/alborz-a/oce:latest-ir-s3
       - name: Prune older build caches
         run: docker buildx prune -f

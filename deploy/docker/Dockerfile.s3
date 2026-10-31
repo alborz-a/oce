@@ -1,0 +1,9 @@
+# Thin layer on top of the fork image: adds aioboto3 for the S3 storage
+# backend (backend/app/core/storage.py imports it; the unified image installs
+# extras "server,semantic-clients" only). Built on GitHub Actions so the
+# production server only pulls, never builds.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+USER root
+RUN pip install --no-cache-dir "aioboto3>=12.0.0,<16"
+USER oe
