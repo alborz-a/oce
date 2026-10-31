@@ -66,6 +66,7 @@ import {
 import { Button } from '@/shared/ui';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { formatCurrency } from '@/shared/lib/money';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { useBoqDescDensityStore, type BoqDescDensity } from '@/stores/useBoqDescDensityStore';
 import { useModuleStore } from '@/stores/useModuleStore';
 import { REGION_LOCK } from '@/app/regionLock';
@@ -259,6 +260,7 @@ export function BOQToolbar({
   expandableResourceCount,
   summary,
 }: BOQToolbarProps) {
+  const isSystemAdmin = useIsSystemAdmin();
   // Routes are registered per enabled module (ModuleRoutes filters on the same
   // flag), so linking to a module the operator switched off would dead-end.
   const gaebExchangeEnabled = useModuleStore((s) => s.isModuleEnabled('gaeb-exchange'));
@@ -395,7 +397,7 @@ export function BOQToolbar({
                 </span>
               )}
             </Button>
-            <Button
+            {isSystemAdmin && <Button
               variant={aiChatOpen ? 'secondary' : 'ghost'}
               size="sm"
               aria-pressed={!!aiChatOpen}
@@ -408,7 +410,7 @@ export function BOQToolbar({
               data-testid="boq-ai-chat-button"
             >
               {t('boq.ai_chat_short', { defaultValue: 'AI Chat' })}
-            </Button>
+            </Button>}
             <QualityAiMenu
               t={t}
               onRecalculate={onRecalculate}
@@ -869,6 +871,7 @@ interface QualityAiMenuProps {
 }
 
 function QualityAiMenu(props: QualityAiMenuProps) {
+  const isSystemAdmin = useIsSystemAdmin();
   const {
     t,
     onRecalculate,
@@ -993,6 +996,7 @@ function QualityAiMenu(props: QualityAiMenuProps) {
               )}
             </div>
 
+            {isSystemAdmin && <>
             {/* AI section */}
             <div className="px-3 pt-2.5 pb-1 border-b border-t border-border-light dark:border-border-dark bg-gradient-to-r from-violet-50/40 to-blue-50/40 dark:from-violet-950/20 dark:to-blue-950/20">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300 inline-flex items-center gap-1">
@@ -1015,6 +1019,7 @@ function QualityAiMenu(props: QualityAiMenuProps) {
                 onClick={fire(onToggleSmartPanel, false)}
               />
             </div>
+            </>}
           </div>,
           document.body,
         )}

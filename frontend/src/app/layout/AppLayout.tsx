@@ -29,6 +29,7 @@ import { useOfflineSync } from '@/shared/hooks/useOnlineStatus';
 import { usePartnerPackLocale } from '@/shared/hooks/usePartnerPackLocale';
 import { useBrandingStore } from '@/stores/useBrandingStore';
 import { useReviewPromptStore } from '@/stores/useReviewPromptStore';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { useGlobalPresenceSocket } from '@/features/global_presence';
 
 interface AppLayoutProps {
@@ -40,6 +41,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const isRTL = useIsRTL();
+  const isSystemAdmin = useIsSystemAdmin();
   const location = useLocation();
   const backdropVariant = backdropVariantForPath(location.pathname);
   const { t, i18n } = useTranslation();
@@ -202,8 +204,8 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           stay out of /chat, which is the full-page version of the same
           assistant. Mounted at the layout level so the conversation
           survives navigation. */}
-      <FloatingChatButton />
-      <FloatingChatPanel />
+      {isSystemAdmin && <FloatingChatButton />}
+      {isSystemAdmin && <FloatingChatPanel />}
 
       {/* Occasional, non-blocking ask for a rating or review. Mounted here
           rather than at App.tsx top level on purpose: this shell is behind

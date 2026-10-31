@@ -956,8 +956,8 @@ export const navGroups: NavGroup[] = [
     hideInSimple: true,
     items: [
       { labelKey: 'nav.ai_agents', to: '/ai-agents', icon: Bot, badge: 'BETA' },
-      { labelKey: 'nav.ai_advisor', to: '/advisor', icon: MessageSquare },
-      { labelKey: 'nav.erp_chat', to: '/chat', icon: MessageSquare },
+      { labelKey: 'nav.ai_advisor', to: '/advisor', icon: MessageSquare, adminOnly: true },
+      { labelKey: 'nav.erp_chat', to: '/chat', icon: MessageSquare, adminOnly: true },
       { labelKey: 'nav.pipelines', to: '/pipelines', icon: GitBranch, moduleKey: 'pipelines', advancedOnly: true, badge: 'BETA' },
       // The register of modules built on this instance. Readable by anyone, so
       // no role gate here: the build and remove controls on the page are what

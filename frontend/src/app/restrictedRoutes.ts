@@ -12,7 +12,6 @@ const ALLOWED: RegExp[] = [
   /^\/photos$/,
   /^\/files$/,
   /^\/documents$/,
-  /^\/profile$/,
 ];
 
 /** True when `to` (path, optional ?query / #hash) is open to a restricted user. */

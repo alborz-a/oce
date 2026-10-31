@@ -1598,14 +1598,14 @@ function UserMenu() {
               <div className="my-1 border-t border-border-light" role="separator" />
             </>
           )}
-          <button
+          {isSystemAdmin && (<button
             role="menuitem"
             onClick={() => { setOpen(false); navigate('/settings'); }}
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <User size={14} className="text-content-tertiary" />
             {t('auth.profile', 'Profile')}
-          </button>
+          </button>)}
           {isSystemAdmin && (<button
             role="menuitem"
             onClick={() => { setOpen(false); navigate('/settings'); }}

@@ -59,6 +59,7 @@ import { alreadyImported, importFailureFromBody, importFailureText } from './imp
 import { toolbarImportRoute } from './importRoute';
 import { AICostFinderPanel } from './AICostFinderPanel';
 import { AISmartPanel } from './AISmartPanel';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { AIPositionCopilot } from './AIPositionCopilot';
 // ClassificationPicker used in sub-components
 // import { ClassificationPicker } from './ClassificationPicker';
@@ -212,6 +213,7 @@ function withoutDeletedRows(data: BOQWithPositions, deletedIds: ReadonlySet<stri
 
 export function BOQEditorPage() {
   const { t } = useTranslation();
+  const isSystemAdmin = useIsSystemAdmin();
   const { boqId } = useParams<{ boqId: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -1658,7 +1660,7 @@ export function BOQEditorPage() {
    */
   const renderInlineCopilot = useCallback(
     (posId: string) => {
-      if (!boqId) return null;
+      if (!boqId || !isSystemAdmin) return null;
       const pos = boq?.positions.find((p) => p.id === posId) ?? null;
       return (
         <AIPositionCopilot
@@ -1672,7 +1674,7 @@ export function BOQEditorPage() {
         />
       );
     },
-    [boqId, boq?.positions, handleCopilotReviewApplied],
+    [boqId, isSystemAdmin, boq?.positions, handleCopilotReviewApplied],
   );
 
   /* ── Batch action handlers ──────────────────────────────────────── */
@@ -5542,16 +5544,16 @@ export function BOQEditorPage() {
       />
 
       {/* ── AI Chat Panel ──────────────────────────────────────────────── */}
-      <AIChatPanel
+      {isSystemAdmin && <AIChatPanel
         boqId={boqId!}
         context={aiChatContext}
         isOpen={aiChatOpen}
         onClose={() => setAiChatOpen(false)}
         onAddPositions={handleAIAddPositions}
-      />
+      />}
 
       {/* ── AI Cost Finder Panel ───────────────────────────────────── */}
-      <AICostFinderPanel
+      {isSystemAdmin && <AICostFinderPanel
         boqId={boqId!}
         isOpen={costFinderOpen}
         onClose={() => setCostFinderOpen(false)}
@@ -5561,10 +5563,10 @@ export function BOQEditorPage() {
         projectRegion={project?.region}
         currencyCode={currencyCode}
         locale={locale}
-      />
+      />}
 
       {/* ── AI Smart Panel ───────────────────────────────────────── */}
-      <AISmartPanel
+      {isSystemAdmin && <AISmartPanel
         boqId={boqId!}
         isOpen={smartPanelOpen}
         onClose={() => setSmartPanelOpen(false)}
@@ -5581,7 +5583,7 @@ export function BOQEditorPage() {
         currencyCode={currencyCode}
         locale={locale}
         projectRegion={project?.region}
-      />
+      />}
 
       {/* ── Cost Database Search Modal ──────────────────────────────── */}
       {costDbModalOpen && boqId && (
