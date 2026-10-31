@@ -36090,7 +36090,7 @@ const resource = {
     "schedule_advanced.rnc_top_reasons": "مهم‌ترین دلایل عدم تکمیل",
     "schedule_advanced.rnc_total": "دلایل ثبت‌شده",
     "schedule_advanced.start": "شروع",
-    "schedule_advanced.subtitle": "برنامه‌ریزی کششی، برنامه‌های میان‌مدت، تعهدات هفتگی، محدودیت‌ها و خطوط مبنا.",
+    "schedule_advanced.subtitle": "برنامه‌ریزی کششی، برنامه نگاه به آینده (Lookahead)، تعهدات هفتگی، محدودیت‌ها و برنامه زمان‌بندی مبنا (Baseline).",
     "schedule_advanced.summary": "خلاصه",
     "schedule_advanced.tabs_aria": "بخش‌های برنامه زمان‌بندی",
     "schedule_advanced.tasks_total": "تعداد کل وظایف",
