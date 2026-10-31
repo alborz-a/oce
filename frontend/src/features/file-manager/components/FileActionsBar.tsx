@@ -25,6 +25,8 @@ interface FileActionsBarProps {
   onViewChange: (v: ViewMode) => void;
   onExport: () => void;
   onImport: () => void;
+  /** Import and Export are system-admin only. */
+  canImportExport?: boolean;
   totalCount: number;
   extension?: string | undefined;
   onExtensionChange?: (ext: string | undefined) => void;
@@ -83,6 +85,7 @@ export function FileActionsBar({
   onViewChange,
   onExport,
   onImport,
+  canImportExport = false,
   totalCount,
   extension,
   onExtensionChange,
@@ -375,6 +378,7 @@ export function FileActionsBar({
           </ViewBtn>
         </div>
 
+        {canImportExport && (<>
         <button
           type="button"
           onClick={onImport}
@@ -391,6 +395,7 @@ export function FileActionsBar({
           <Download size={13} />
           {t('files.actions.export', { defaultValue: 'Export' })}
         </button>
+        </>)}
       </div>
     </div>
   );

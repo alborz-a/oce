@@ -49,6 +49,8 @@ interface FileContextMenuProps {
   y: number;
   onClose: () => void;
   onRename: (row: FileRow) => void;
+  /** False hides Rename (restricted project users). */
+  canRename?: boolean;
   onDelete: (row: FileRow) => void;
   /**
    * Open a PDF document in the focused inline reader (#284). When omitted,
@@ -71,6 +73,7 @@ export function FileContextMenu({
   y,
   onClose,
   onRename,
+  canRename = true,
   onDelete,
   onInlinePreview,
   onMediaPreview,
@@ -253,7 +256,7 @@ export function FileContextMenu({
         />
       )}
       <div className="h-px bg-border-light" />
-      <MenuItem
+      {canRename && (<MenuItem
         icon={<Pencil size={13} />}
         label={t('files.context.rename', { defaultValue: 'Rename' })}
         onClick={() => {
@@ -264,7 +267,7 @@ export function FileContextMenu({
         disabledTitle={t('files.context.rename_unsupported', {
           defaultValue: 'Rename is only available for documents',
         })}
-      />
+      />)}
       {/* What the delete severs, above Delete so it is read before the eye
           lands on the item. Documents only - the endpoint answers for one of
           the eight kinds, and letting the other seven ask would draw the

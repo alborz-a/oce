@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import {
   Route as RouteIcon,
   X,
@@ -90,7 +91,13 @@ const ARC_ACCENT: Record<
   },
 };
 
+/** System admin only: everyone else gets nothing (no button, no journey map). */
 export function ProjectJourneyButton() {
+  const isSystemAdmin = useIsSystemAdmin();
+  return isSystemAdmin ? <ProjectJourneyButtonInner /> : null;
+}
+
+function ProjectJourneyButtonInner() {
   const { t } = useTranslation();
   const location = useLocation();
   const [open, setOpen] = useState(false);

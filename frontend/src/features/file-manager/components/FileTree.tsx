@@ -7,6 +7,7 @@ import { FileText, Image as ImageIcon, Layout, Box, Pencil, Folder, Tag, FileBar
 import clsx from 'clsx';
 import type { FileTreeNode, FileKind } from '../types';
 import { TrashNode } from '@/features/file-trash/TrashNode';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { SavedViewsRail } from '@/features/file-saved-views';
 import { fmtFixed } from '@/shared/lib/formatters';
 
@@ -41,6 +42,7 @@ function fmtBytes(bytes: number): string {
 
 export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: FileTreeProps) {
   const { t } = useTranslation();
+  const isSystemAdmin = useIsSystemAdmin();
 
   const totalCount = nodes.reduce((acc, n) => acc + n.file_count, 0);
   const totalBytes = nodes.reduce((acc, n) => acc + n.total_bytes, 0);
@@ -173,9 +175,11 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
         </div>
       )}
 
+      {isSystemAdmin && (
       <div className="mt-2 px-3 pb-3 border-t border-border-light pt-2">
         <TrashNode projectId={projectId ?? null} active={selectedId === 'trash'} />
       </div>
+      )}
     </aside>
   );
 }

@@ -4433,7 +4433,7 @@ def _validate_cost_upload(content: bytes, filename: str) -> bool:
 
 @router.post(
     "/import/preview/",
-    dependencies=[Depends(RequirePermission("costs.create"))],
+    dependencies=[Depends(RequirePermission("costs.create")), Depends(RequireRole("admin"))],
 )
 async def preview_cost_file(
     user: CurrentUserPayload,
@@ -4588,7 +4588,7 @@ async def _discard_failed_import(
 
 @router.post(
     "/import/file/",
-    dependencies=[Depends(RequirePermission("costs.create"))],
+    dependencies=[Depends(RequirePermission("costs.create")), Depends(RequireRole("admin"))],
 )
 async def import_cost_file(
     user: CurrentUserPayload,

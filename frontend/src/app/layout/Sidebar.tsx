@@ -67,6 +67,7 @@ import {
   buildModuleGate,
 } from '@/features/projects/useProjectProfile';
 import { getIntlLocale } from '@/shared/lib/formatters';
+import { isSystemAdminRole } from '@/shared/lib/systemAdmin';
 
 // [RSC-IRAN] suppress TS6133 unused locals when hidden
 void Sparkles;
@@ -578,8 +579,10 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   // hidden-state filter is applied further down (once `editMode` and
   // `hiddenModules` are in scope) so these bottom tiles can be hidden and
   // restored through the same Edit menu gesture as the nav rows.
+  const isSystemAdmin = isSystemAdminRole(userRole);
   const roleVisibleAdminGridItems = adminGridItems.filter(
     (item) =>
+      isSystemAdmin &&
       (!restrictedMode || isRestrictedRouteAllowed(item.to)) &&
       (!item.roleGate || (userRole && (item.roleGate as string[]).includes(userRole))),
   );
@@ -636,10 +639,11 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const [editingHiddenGroups, setEditingHiddenGroups] = useState<string[]>([]);
 
   const enterEditMode = useCallback(() => {
+    if (!isSystemAdmin) return;
     setEditingHidden(hiddenModules);
     setEditingHiddenGroups(hiddenGroups);
     setEditMode(true);
-  }, [hiddenModules, hiddenGroups]);
+  }, [hiddenModules, hiddenGroups, isSystemAdmin]);
 
   const cancelEditMode = useCallback(() => {
     setEditMode(false);
@@ -720,6 +724,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     onClick: enterEditMode,
   };
   const adminGridWithEdit: AdminGridItem[] = useMemo(() => {
+    if (!isSystemAdmin) return [];
     if (editMode) return visibleAdminGridItems;
     const aboutIdx = visibleAdminGridItems.findIndex((item) => item.to === '/about');
     if (aboutIdx === -1) return [...visibleAdminGridItems, editMenuGridItem];
@@ -729,7 +734,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       ...visibleAdminGridItems.slice(aboutIdx),
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editMode, visibleAdminGridItems, enterEditMode]);
+  }, [editMode, visibleAdminGridItems, enterEditMode, isSystemAdmin]);
 
   // Module counter shown at the foot of the nav (before the "Add module"
   // tile): how many module rows are visible in the menu right now versus how
@@ -1528,6 +1533,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              offers in total. Updates automatically as modules are enabled /
              disabled or hidden / shown. Iconified mode shows a compact
              "shown/total" so the number is never lost. */}
+        {isSystemAdmin && (
         <div className={clsx('pt-2 pb-0.5', iconified ? 'px-1' : 'px-3')}>
           <div
             className={clsx(
@@ -1574,6 +1580,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             )}
           </div>
         </div>
+        )}
         {/* Edit-menu shortcut — deliberately the same action as the "Edit menu"
              tile in the admin grid further down, repeated here directly under
              the module count. That grid sits below the entire nav list, so on a
@@ -1582,7 +1589,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              entry points call `enterEditMode`, so whichever one is found first
              behaves identically. Dropped in edit mode, where the Save / Cancel
              bar has already taken over. */}
-        {!editMode && (
+        {!editMode && isSystemAdmin && (
           <div className={clsx('pt-1.5 pb-0.5', iconified ? 'px-1 flex justify-center' : 'px-3')}>
             <button
               type="button"
@@ -1610,6 +1617,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
              contributors a clearer first step. When iconified, shrinks
              to a centred icon-only square — the dashed border still
              signals "add something". */}
+        {isSystemAdmin && (
         <div className={clsx('pt-2 pb-1', iconified ? 'px-0 flex justify-center' : 'px-3')}>
           <NavLink
             to="/modules/developer-guide"
@@ -1635,6 +1643,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             )}
           </NavLink>
         </div>
+        )}
         {/* Request-a-custom-module CTA — second dashed tile, purple
              accent, opens a popup instead of navigating. The popup
              routes the request to two destinations depending on the

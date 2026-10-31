@@ -103,7 +103,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
       return (
         <button
           type="button"
-          onClick={() => setEditing(true)}
+          onClick={() => isAdmin && setEditing(true)}
           className="hover:opacity-80 transition-opacity"
           title={companyName || t('branding.edit', { defaultValue: 'Customise branding' })}
           aria-label={t('branding.edit', { defaultValue: 'Customise branding' })}
@@ -144,7 +144,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
           {customised ? (
             <button
               type="button"
-              onClick={() => setEditing(true)}
+              onClick={() => isAdmin && setEditing(true)}
               className="block w-full text-start rounded-lg p-1 -m-1 hover:bg-surface-secondary/40 transition-colors"
               aria-label={t('branding.edit', { defaultValue: 'Customise branding' })}
               title={t('branding.edit', { defaultValue: 'Customise branding' })}
@@ -212,7 +212,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
         {isAdmin && (
         <button
           type="button"
-          onClick={() => setEditing(true)}
+          onClick={() => isAdmin && setEditing(true)}
           className={clsx(
             'shrink-0 h-8 w-8 flex items-center justify-center rounded-lg',
             'border border-border-light bg-surface-secondary/30',
@@ -231,7 +231,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
         )}
       </div>
 
-      {editing && (
+      {isAdmin && editing && (
         <BrandingEditorModal
           onClose={() => setEditing(false)}
           canPersist={isAdmin}

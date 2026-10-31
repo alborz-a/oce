@@ -648,14 +648,14 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
         </button>
 
         {/* W4 — bulk-tag selected files. */}
-        <button
+        {!useAuthStore.getState().restrictedMode && (<button
           type="button"
           onClick={() => setTagDrawerOpen(true)}
           className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium border border-border-light text-content-secondary hover:bg-surface-secondary"
         >
           <Tag size={13} />
           {t('files.tags.bulk.button', { defaultValue: 'Tag selected' })}
-        </button>
+        </button>)}
 
         {/* W7 — Send transmittal for the selection. */}
         <button

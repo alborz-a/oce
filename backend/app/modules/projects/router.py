@@ -2986,6 +2986,7 @@ async def post_export_bundle(
 
 @router.post(
     "/import/validate/",
+    dependencies=[Depends(RequireRole("admin"))],
     response_model=ImportPreview,
     summary="Inspect a .ocep bundle without committing",
 )
@@ -3009,6 +3010,7 @@ async def post_import_validate(
 
 @router.post(
     "/import/",
+    dependencies=[Depends(RequireRole("admin"))],
     response_model=ImportResult,
     summary="Import a .ocep bundle into a fresh or existing project",
 )

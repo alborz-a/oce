@@ -41,6 +41,8 @@ import { FileGrid } from './components/FileGrid';
 import { FileList } from './components/FileList';
 import { FileContextMenu } from './components/FileContextMenu';
 import { RenameDialog } from './components/RenameDialog';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { FilePreviewPane } from './components/FilePreviewPane';
 import { FileActionsBar, type ViewMode } from './components/FileActionsBar';
 import { useContentSearch, useReindexProject } from '@/features/file-search/hooks';
@@ -638,7 +640,13 @@ export function FileManagerPage() {
     setQuery('');
   }
 
+  // Restricted project users do not add documents here (photos have their own page).
+  // Import, export and the recycle bin are for the system admin only.
+  const restrictedMode = useAuthStore((st) => st.restrictedMode);
+  const isSystemAdmin = useIsSystemAdmin();
+
   function handleOpenUpload(kind: FileKind | null) {
+    if (restrictedMode) return;
     setUploadKind(kind);
     setShowUpload(true);
   }
@@ -731,7 +739,7 @@ export function FileManagerPage() {
     e.preventDefault();
     dragDepthRef.current = 0;
     setPageDragOver(false);
-    if (e.dataTransfer.files.length > 0) {
+    if (!restrictedMode && e.dataTransfer.files.length > 0) {
       void doUpload(e.dataTransfer.files, selectedKind);
     }
   }
@@ -872,7 +880,7 @@ export function FileManagerPage() {
               opens the upload dialog. */}
           <ModuleGuideButton
             content={filesGuide}
-            onCta={() => handleOpenUpload(selectedKind)}
+            onCta={restrictedMode ? undefined : () => handleOpenUpload(selectedKind)}
           />
           {/* W10 — cross-project search */}
           <Link
@@ -886,7 +894,7 @@ export function FileManagerPage() {
             </span>
           </Link>
           {/* W7 — transmittal log entry point */}
-          <Link
+          {!restrictedMode && (<Link
             to="/files/transmittals"
             data-guide="files-transmittal-link"
             className="hidden sm:inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg text-xs font-medium text-content-secondary hover:text-content-primary hover:bg-surface-secondary transition-colors"
@@ -896,9 +904,9 @@ export function FileManagerPage() {
             <span className="hidden md:inline">
               {t('files.transmittals.open_log', { defaultValue: 'Transmittal log' })}
             </span>
-          </Link>
+          </Link>)}
           {/* Project-wide file-approvals register + one-click Excel export */}
-          <Link
+          {!restrictedMode && (<Link
             to="/files/approvals"
             data-guide="files-approvals-link"
             className="hidden sm:inline-flex items-center gap-1.5 h-9 px-2.5 rounded-lg text-xs font-medium text-content-secondary hover:text-content-primary hover:bg-surface-secondary transition-colors"
@@ -908,8 +916,8 @@ export function FileManagerPage() {
             <span className="hidden md:inline">
               {t('files.approvals.register_title', { defaultValue: 'Approvals register' })}
             </span>
-          </Link>
-          <button
+          </Link>)}
+          {!restrictedMode && (<button
             type="button"
             data-guide="files-upload-button"
             onClick={() => handleOpenUpload(selectedKind)}
@@ -917,7 +925,7 @@ export function FileManagerPage() {
           >
             <UploadCloud size={14} />
             {t('files.upload', { defaultValue: 'Upload files' })}
-          </button>
+          </button>)}
         </div>
       </div>
 
@@ -960,6 +968,8 @@ export function FileManagerPage() {
                 onViewChange={setView}
                 onExport={() => setShowExport(true)}
                 onImport={() => setShowImport(true)}
+                canImportExport={isSystemAdmin}
+                canShare={!restrictedMode}
                 totalCount={
                   contentActive
                     ? contentSearch.data?.total ?? displayItems.length
@@ -1088,7 +1098,8 @@ export function FileManagerPage() {
             row={previewRow}
             onClose={() => setPreviewRow(null)}
             onEmail={(row) => setEmailRow(row)}
-            onShare={(row) => setShareRow(row)}
+            onShare={restrictedMode ? undefined : (row) => setShareRow(row)}
+            canRename={!restrictedMode}
             onManageAccess={
               isOwner ? (row) => setPermsKind(row.kind) : undefined
             }
@@ -1163,7 +1174,8 @@ export function FileManagerPage() {
           x={menu.x}
           y={menu.y}
           onClose={() => setMenu(null)}
-          onRename={(row) => setRenameRow(row)}
+          onRename={(row) => !restrictedMode && setRenameRow(row)}
+          canRename={!restrictedMode}
           onDelete={(row) => handleContextDelete(row)}
           onInlinePreview={(row) => setInlinePdfRow(row)}
           onMediaPreview={(row) => setLightboxId(row.id)}

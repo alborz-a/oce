@@ -43,6 +43,7 @@ void changeLanguage;
 void LearnTopBarButton;
 void ModuleBuilderButton;
 import { ProjectJourneyButton } from './ProjectJourney';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { PresenceAvatarStack } from '@/features/global_presence';
 import { getRouteIcon } from './routeIcons';
 import { resolveStaleProject } from './staleProject';
@@ -1517,6 +1518,7 @@ function UserMenu() {
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const userEmail = useAuthStore((s) => s.userEmail);
+  const isSystemAdmin = useIsSystemAdmin();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : 'U';
@@ -1603,14 +1605,14 @@ function UserMenu() {
             <User size={14} className="text-content-tertiary" />
             {t('auth.profile', 'Profile')}
           </button>
-          <button
+          {isSystemAdmin && (<button
             role="menuitem"
             onClick={() => { setOpen(false); navigate('/settings'); }}
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
           >
             <Settings size={14} className="text-content-tertiary" />
             {t('nav.settings', 'Settings')}
-          </button>
+          </button>)}
           <div className="my-1 border-t border-border-light" role="separator" />
           <button
             role="menuitem"

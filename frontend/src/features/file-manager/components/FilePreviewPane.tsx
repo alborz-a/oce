@@ -56,6 +56,8 @@ interface FilePreviewPaneProps {
   onClose: () => void;
   onEmail: (row: FileRow) => void;
   onShare?: (row: FileRow) => void;
+  /** False hides rename (restricted project users). */
+  canRename?: boolean;
   /** Owner-only: opens FolderPermissionsModal scoped to this row's kind. */
   onManageAccess?: (row: FileRow) => void;
 }
@@ -98,7 +100,7 @@ function decodeUserIdFromToken(token: string | null): string | null {
   }
 }
 
-export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess }: FilePreviewPaneProps) {
+export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess, canRename = true }: FilePreviewPaneProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const addToast = useToastStore((s) => s.addToast);
@@ -296,7 +298,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           fileKind={row.kind}
           fileId={row.id}
           onRename={
-            row.kind === 'document'
+            row.kind === 'document' && canRename
               ? (nextFilename) =>
                   renameMut.mutateAsync({ documentId: row.id, name: nextFilename })
               : undefined
