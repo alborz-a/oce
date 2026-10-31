@@ -11,7 +11,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision = "v3325_team_chat"
-down_revision = "v3324_buyer_selection_currency"
+down_revision = "v65_po_invoice_tolerance"
 branch_labels = None
 depends_on = None
 
