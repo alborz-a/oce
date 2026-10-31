@@ -67,6 +67,7 @@ import {
   buildModuleGate,
 } from '@/features/projects/useProjectProfile';
 import { getIntlLocale } from '@/shared/lib/formatters';
+import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { isSystemAdminRole } from '@/shared/lib/systemAdmin';
 
 // [RSC-IRAN] suppress TS6133 unused locals when hidden
@@ -1435,7 +1436,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                   <span className="min-w-0 flex-1 truncate text-start text-[12px] font-medium">
                     {t('sidebar.more_modules', { defaultValue: 'More modules' })}
                   </span>
-                  <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{new Intl.NumberFormat(getIntlLocale()).format(moreCount)}</span>
+                  <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{new Intl.NumberFormat(getNumberLocale()).format(moreCount)}</span>
                   <ChevronDown
                     size={11}
                     strokeWidth={2}
@@ -2372,7 +2373,7 @@ function SidebarItem({
                   : 'bg-surface-tertiary text-content-secondary',
               )}
             >
-              {numericBadge > 99 ? `${new Intl.NumberFormat(getIntlLocale()).format(99)}+` : new Intl.NumberFormat(getIntlLocale()).format(numericBadge)}
+              {numericBadge > 99 ? `${new Intl.NumberFormat(getNumberLocale()).format(99)}+` : new Intl.NumberFormat(getNumberLocale()).format(numericBadge)}
             </span>
           )}
           {item.badge && (
