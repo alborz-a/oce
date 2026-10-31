@@ -306,7 +306,6 @@ export function createAuthStore(env: AuthTabEnv) {
         userId: null,
         userFullName: null,
         userRole: null,
-      restrictedMode: false,
         restrictedMode: false,
       });
     };
@@ -464,6 +463,7 @@ export function createAuthStore(env: AuthTabEnv) {
       authPending: false,
       userEmail: null,
       userId: null,
+      restrictedMode: false,
       userFullName: null,
       userRole: null,
 
