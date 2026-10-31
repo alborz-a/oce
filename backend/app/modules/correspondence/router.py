@@ -37,6 +37,7 @@ from app.core.storage import contained_upload_candidates, module_uploads_dir
 # correspondence attachments are PDFs, images, and Office docs (ZIP/OLE).
 ALLOWED_ATTACHMENT_TYPES = frozenset({"pdf", "png", "jpeg", "gif", "webp", "zip", "ole"})
 from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
+from app.modules.documents import object_store
 from app.modules.correspondence.schemas import (
     CorrespondenceCreate,
     CorrespondenceListResponse,
@@ -288,9 +289,15 @@ async def upload_attachment(
     # mkdir belongs inside the try: it, not the write, is what fails when the
     # storage root is not writable, and outside the try that failure bypassed
     # this handler and surfaced as a bare 500.
+    s3_key = (
+        object_store.build_key(existing.project_id, "correspondence", safe_name) if object_store.s3_enabled() else None
+    )
     try:
-        ATTACHMENTS_DIR.mkdir(parents=True, exist_ok=True)
-        filepath.write_bytes(content)
+        if s3_key is not None:
+            await object_store.put_object(s3_key, content)
+        else:
+            ATTACHMENTS_DIR.mkdir(parents=True, exist_ok=True)
+            filepath.write_bytes(content)
     except Exception as exc:
         logger.exception(
             "Unable to save attachment for correspondence %s",
@@ -301,7 +308,9 @@ async def upload_attachment(
             detail="Unable to save attachment - storage error",
         ) from exc
 
-    relative_path = f"correspondence/attachments/{safe_name}"
+    relative_path = (
+        object_store.S3_PATH_PREFIX + s3_key if s3_key is not None else f"correspondence/attachments/{safe_name}"
+    )
     updated = await service.add_attachment(correspondence_id, relative_path)
     return _to_response(updated)
 
@@ -358,6 +367,13 @@ async def download_attachment(
         )
 
     relative_path = attachments[index]
+
+    if object_store.is_object_path(relative_path):
+        return await object_store.stream_response(  # type: ignore[return-value]
+            relative_path,
+            Path(relative_path).name.split("_", 1)[-1],
+            _DOWNLOAD_MEDIA_TYPES.get(Path(relative_path).suffix.lower(), "application/octet-stream"),
+        )
 
     # Path-traversal guard - the stored path is trusted (we derived it), but
     # resolve-then-relative_to is cheap insurance against a poisoned row or a

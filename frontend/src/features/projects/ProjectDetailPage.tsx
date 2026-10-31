@@ -1997,6 +1997,15 @@ export function ProjectDetailPage() {
                     <ClipboardList size={13} />
                     {t('project.settings.link', { defaultValue: 'Settings' })}
                   </button>
+                  <button
+                    onClick={() => navigate(`/projects/${project.id}/chat`)}
+                    className="flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs text-content-tertiary hover:bg-surface-secondary hover:text-content-secondary transition-colors"
+                    title={t('team_chat.project_chat', { defaultValue: 'گفتگوی پروژه' })}
+                    data-testid="project-chat-button"
+                  >
+                    <MessagesSquare size={13} />
+                    {t('team_chat.project_chat', { defaultValue: 'گفتگوی پروژه' })}
+                  </button>
                 </div>
                 {project.description && (
                   <p className="mt-2 text-sm text-content-secondary max-w-2xl leading-relaxed">

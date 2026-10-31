@@ -81,4 +81,6 @@ jobs:
             ghcr.io/alborz-a/oce:sha-${{ github.sha }}
             ghcr.io/alborz-a/oce:latest-ir
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
+      - name: Prune older build caches
+        run: docker buildx prune -f

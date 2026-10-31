@@ -28,6 +28,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, Response, UploadFile, status
 from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field
 
 from app.core.demo_placeholders import materialize_placeholder
 from app.core.i18n import get_locale
@@ -41,6 +42,7 @@ from app.dependencies import (
     SessionDep,
     verify_project_access,
 )
+from app.modules.documents import object_store
 from app.modules.documents.schemas import (
     DocumentActivityListResponse,
     DocumentActivityResponse,
@@ -196,6 +198,140 @@ async def get_summary(
     await verify_project_access(project_id, user_id, session)
     data = await service.get_summary(project_id)
     return DocumentSummary(**data)
+
+
+# ── Register objects already in storage (admin import) ───────────────────────
+
+
+class RegisterObjectRequest(BaseModel):
+    """Create a document/photo row for a file that is already in the object store (no byte transfer)."""
+
+    project_id: uuid.UUID
+    key: str = Field(description="Logical key without the S3_KEY_PREFIX, e.g. projects/<project>/<category>/<uuid>_<name>")
+    name: str = Field(min_length=1, max_length=255)
+    category: str = "other"
+    size: int | None = None
+    mime: str = ""
+    tags: list[str] = Field(default_factory=list)
+    metadata: dict = Field(default_factory=dict)
+    uploaded_by: str = ""
+    description: str = ""
+    caption: str | None = None
+
+
+async def _checked_object_size(body: RegisterObjectRequest) -> int:
+    if not object_store.s3_enabled():
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Object storage is not enabled")
+    if not object_store.key_in_scope(body.key, body.project_id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Key is outside projects/<project_id>/")
+    try:
+        return await object_store.object_size(body.key)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Object not found in storage") from exc
+
+
+@router.post(
+    "/register-object/",
+    response_model=DocumentResponse,
+    status_code=201,
+    dependencies=[Depends(RequirePermission("documents.admin_import"))],
+)
+async def register_object(
+    body: RegisterObjectRequest,
+    session: SessionDep,
+    user_id: CurrentUserId = "",  # type: ignore[assignment]
+) -> DocumentResponse:
+    """Admin only. HEAD-checks the object, then creates the document row (idempotent per key)."""
+    from sqlalchemy import select
+
+    from app.modules.documents.models import Document
+    from app.modules.documents.service import VALID_CATEGORIES
+
+    await verify_project_access(body.project_id, user_id, session)
+    size = await _checked_object_size(body)
+    file_path = object_store.S3_PATH_PREFIX + body.key
+    existing = (
+        await session.execute(
+            select(Document).where(Document.project_id == body.project_id, Document.file_path == file_path)
+        )
+    ).scalars().first()
+    if existing is not None:
+        return _doc_to_response(existing)
+    doc = Document(
+        project_id=body.project_id,
+        name=_sanitize_filename(body.name),
+        description=body.description,
+        category=body.category if body.category in VALID_CATEGORIES else "other",
+        file_size=size,
+        mime_type=body.mime or mimetypes.guess_type(body.name)[0] or "",
+        file_path=file_path,
+        uploaded_by=(body.uploaded_by or str(user_id))[:36],
+        tags=body.tags,
+        metadata_=body.metadata,
+    )
+    session.add(doc)
+    await session.flush()
+    return _doc_to_response(doc)
+
+
+@router.post(
+    "/photos/register-object/",
+    response_model=PhotoResponse,
+    status_code=201,
+    dependencies=[Depends(RequirePermission("documents.admin_import"))],
+)
+async def register_photo_object(
+    body: RegisterObjectRequest,
+    session: SessionDep,
+    user_id: CurrentUserId = "",  # type: ignore[assignment]
+) -> PhotoResponse:
+    """Admin only. Photo twin of ``register-object``; also cross-links a Document row like a normal photo upload."""
+    from sqlalchemy import select
+
+    from app.modules.documents.models import Document, ProjectPhoto
+
+    await verify_project_access(body.project_id, user_id, session)
+    size = await _checked_object_size(body)
+    file_path = object_store.S3_PATH_PREFIX + body.key
+    existing = (
+        await session.execute(
+            select(ProjectPhoto).where(ProjectPhoto.project_id == body.project_id, ProjectPhoto.file_path == file_path)
+        )
+    ).scalars().first()
+    if existing is not None:
+        return _photo_to_response(existing)
+    name = _sanitize_filename(body.name)
+    uploader = (body.uploaded_by or str(user_id))[:36]
+    photo = ProjectPhoto(
+        project_id=body.project_id,
+        filename=name,
+        file_path=file_path,
+        thumbnail_path=None,
+        caption=body.caption,
+        tags=body.tags,
+        category=body.category or "site",
+        metadata_=body.metadata,
+        created_by=uploader,
+    )
+    session.add(photo)
+    await session.flush()
+    session.add(
+        Document(
+            project_id=body.project_id,
+            name=name,
+            description=body.caption or "",
+            category="photo",
+            file_size=size,
+            mime_type=body.mime or mimetypes.guess_type(name)[0] or "",
+            file_path=file_path,
+            version=1,
+            uploaded_by=uploader,
+            tags=["photo", body.category or "site"],
+            metadata_={},
+        )
+    )
+    await session.flush()
+    return _photo_to_response(photo)
 
 
 # ── Upload ───────────────────────────────────────────────────────────────────
@@ -782,6 +918,10 @@ async def serve_photo_file(
     """Serve the actual photo file."""
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    if object_store.is_object_path(photo.file_path):
+        return await object_store.stream_response(  # type: ignore[return-value]
+            photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), None
+        )
     photo_base = Path(PHOTO_BASE).resolve()
 
     # Re-home the blob against the current data dir: a photo whose absolute
@@ -856,6 +996,14 @@ async def serve_photo_thumbnail(
         )
 
     # Fallback: serve the full file so the gallery never breaks, re-homed too.
+    if object_store.is_object_path(photo.file_path):
+        return await object_store.stream_response(  # type: ignore[return-value]
+            photo.file_path,
+            _sanitize_filename(photo.filename or "photo.jpg"),
+            None,
+            attachment=False,
+            headers={"Cache-Control": "public, max-age=3600"},
+        )
     file_path = _resolve_photo_blob(photo.file_path, photo_base, ("photos",))
     if file_path is None:
         raise HTTPException(
@@ -1635,6 +1783,10 @@ async def serve_share_link_file(
 
     link, doc = await access_share_link(session, token=token, password=password)
 
+    if object_store.is_object_path(doc.file_path):
+        return await object_store.stream_response(  # type: ignore[return-value]
+            doc.file_path, doc.name, _serve_media_type(doc.name, doc.mime_type)
+        )
     upload_base = Path(UPLOAD_BASE).resolve()
     raw = Path(doc.file_path) if doc.file_path else None
     if raw is None:
@@ -1782,6 +1934,10 @@ async def download_document(
     """
     doc = await service.get_document(document_id)
     await verify_project_access(doc.project_id, user_id, session)
+    if object_store.is_object_path(doc.file_path):
+        return await object_store.stream_response(  # type: ignore[return-value]
+            doc.file_path, doc.name, _serve_media_type(doc.name, doc.mime_type)
+        )
     upload_base = Path(UPLOAD_BASE).resolve()
     meta = getattr(doc, "metadata_", None) or {}
     is_demo = bool(meta.get("is_demo"))
