@@ -340,6 +340,7 @@ interface HeaderProps {
 
 export function Header({ title, onMenuClick }: HeaderProps) {
   const { t, i18n } = useTranslation();
+  const isSystemAdmin = useIsSystemAdmin();
   // Header mounts at app boot, before lazy-loaded locale chunks arrive.
   // ``useTranslation`` doesn't always pick up bundle-added events under
   // React StrictMode (subscription gets churned by double-mount), so we
@@ -550,7 +551,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
         */}
         {/* Background services: what the platform keeps loaded, at every
             width, because it is the way back to a feature that stopped. */}
-        <ProcessesButton />
+        {isSystemAdmin && <ProcessesButton />}
         <NotificationBell />
         {/* [RSC-IRAN] hidden: upstream news/changelog button hidden — do not delete
         <HeaderNewsButton />
