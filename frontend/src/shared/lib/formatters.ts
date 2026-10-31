@@ -601,8 +601,7 @@ export function formatNumber(n: number, currency?: string): string {
  * (which otherwise renders ``MB 27/9``). Other locales are unchanged.
  */
 export function formatFileSize(bytes: number): string {
-  const locale = getNumberLocale();
-  const isFa = locale.toLowerCase().startsWith('fa');
+  const isFa = getNumberLocale().toLowerCase().startsWith('fa');
   const enUnits = ['B', 'KB', 'MB', 'GB', 'TB'];
   const faUnits = ['\u0628\u0627\u06CC\u062A', '\u06A9\u06CC\u0644\u0648\u0628\u0627\u06CC\u062A', '\u0645\u06AF\u0627\u0628\u0627\u06CC\u062A', '\u06AF\u06CC\u06AF\u0627\u0628\u0627\u06CC\u062A', '\u062A\u0631\u0627\u0628\u0627\u06CC\u062A'];
   let value = bytes;
@@ -617,7 +616,7 @@ export function formatFileSize(bytes: number): string {
     return unit === 0 ? `${bytes} ${enUnits[0]}` : `${fmtFixed(value, 1)} ${enUnits[unit]}`;
   }
   const num = Number.isFinite(value)
-    ? new Intl.NumberFormat(locale, {
+    ? new Intl.NumberFormat(getNumberLocale(), {
         minimumFractionDigits: unit === 0 ? 0 : 1,
         maximumFractionDigits: unit === 0 ? 0 : 1,
       }).format(value)
