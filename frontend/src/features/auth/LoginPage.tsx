@@ -878,7 +878,7 @@ export function LoginPage() {
             {/* Inner soft glow gradient on the top-left corner */}
             <div
               aria-hidden
-              className="pointer-events-none absolute top-0 start-0 w-32 h-32 rounded-tl-2xl opacity-60"
+              className="pointer-events-none absolute top-0 start-0 w-32 h-32 rounded-ss-2xl opacity-60"
               style={{
                 background:
                   'radial-gradient(circle at 0% 0%, rgba(255,255,255,0.5), transparent 70%)',

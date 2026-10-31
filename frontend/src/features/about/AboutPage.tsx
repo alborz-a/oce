@@ -264,7 +264,7 @@ export function AboutPage() {
           spot a new release at a glance. */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-6 items-center">
 
-        {/* ── Left column — project identity (start-aligned on wide) ── */}
+        {/* ── Left column — project identity (left-aligned on wide) ── */}
         <div className="text-center lg:text-start">
           <a
             href="https://openconstructionerp.com?utm_source=app&utm_medium=about"
@@ -360,7 +360,7 @@ export function AboutPage() {
             </h2>
           </div>
           {/* Stats — one row on wide screens (6 tiles × 1 row) so the card
-              stays compact and lines up vertically with the end-hand
+              stays compact and lines up vertically with the right-hand
               Community card. Smaller tile padding + value font keep the
               shorter tile readable at narrower widths. */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
@@ -853,7 +853,7 @@ export function AboutPage() {
                 <ul className="mt-auto space-y-1.5">
                   {svc.bullets.map((b, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-content-secondary">
-                      <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
+                      <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
                       <span>{b}</span>
                     </li>
                   ))}
@@ -1076,7 +1076,7 @@ export function AboutPage() {
                   t('about.support_e6', { defaultValue: 'Free workshops and documentation' }),
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-content-secondary">
-                    <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
+                    <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1100,7 +1100,7 @@ export function AboutPage() {
               <h2 className="text-lg font-semibold text-content-primary">
                 {t('about.book_title', { defaultValue: 'Data-Driven Construction' })}
               </h2>
-              <Badge variant="blue" size="sm">{t('about.free_badge', { defaultValue: 'Free' })}</Badge>
+              <Badge variant="blue" size="sm">Free</Badge>
             </div>
             <p className="text-xs text-content-tertiary mb-4">
               {t('about.book_subtitle', { defaultValue: 'By the DataDrivenConstruction team · 16 languages · 600+ pages · 10 parts, 173 chapters' })}
@@ -1199,7 +1199,7 @@ export function AboutPage() {
                 t('about.docs_b4', { defaultValue: 'Module SDK - write your own plugin' }),
               ].map((b, i) => (
                 <li key={i} className="flex items-start gap-2">
-                  <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue rtl:rotate-180" />
+                  <ArrowRight size={11} className="mt-1 shrink-0 text-oe-blue" />
                   <span>{b}</span>
                 </li>
               ))}
@@ -1231,7 +1231,7 @@ export function AboutPage() {
                   <span className="text-2xs text-content-secondary group-hover:text-content-primary leading-snug">
                     {topic.label}
                   </span>
-                  <ArrowRight size={11} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all rtl:rotate-180" />
+                  <ArrowRight size={11} className="shrink-0 text-content-quaternary group-hover:text-oe-blue group-hover:translate-x-0.5 transition-all" />
                 </a>
               ))}
             </div>

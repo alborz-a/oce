@@ -58,7 +58,7 @@ export function CollaborationBar({
       </div>
 
       <span className="text-xs text-content-secondary">
-        <Users size={12} className="inline mr-1" />
+        <Users size={12} className="inline me-1" />
         {users.length} {t('collab.online', { defaultValue: 'online' })}
       </span>
 
@@ -66,7 +66,7 @@ export function CollaborationBar({
       {onOpenShareDialog && (
         <button
           onClick={onOpenShareDialog}
-          className="ml-auto flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1 text-xs font-medium text-white hover:bg-oe-blue-hover transition-colors"
+          className="ms-auto flex items-center gap-1.5 rounded-lg bg-oe-blue px-3 py-1 text-xs font-medium text-white hover:bg-oe-blue-hover transition-colors"
         >
           {t('collab.share', { defaultValue: 'Share' })}
         </button>
@@ -99,7 +99,7 @@ function UserAvatar({
     >
       {initials || '?'}
       {isLocal && (
-        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-surface-primary" />
+        <span className="absolute -bottom-0.5 -end-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-surface-primary" />
       )}
     </div>
   );

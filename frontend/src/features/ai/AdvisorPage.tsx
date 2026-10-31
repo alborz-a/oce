@@ -878,7 +878,7 @@ export function AdvisorPage() {
           {/* Typing indicator */}
           {loading && (
             <div className="flex items-start animate-msg-in">
-              <div className="rounded-[20px] rounded-bl-[6px] bg-surface-secondary">
+              <div className="rounded-[20px] rounded-es-[6px] bg-surface-secondary">
                 <TypingDots />
               </div>
             </div>

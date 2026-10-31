@@ -180,7 +180,6 @@ function isCADFile(fn: string): boolean {
 function isDataFile(fn: string): boolean {
   return DATA_EXTENSIONS.has(getFileExtension(fn));
 }
-
 /* ── Stat Pill ───────────────────────────────────────────────────────── */
 
 function StatPill({ label, value, icon: Icon }: { label: string; value: string | number; icon: React.ElementType }) {

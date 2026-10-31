@@ -2413,7 +2413,7 @@ const BimLinkPopover = forwardRef<
                             <span className="font-semibold">{fmtVal(v)}</span>
                             {s.unit && <span className="text-[8px] opacity-70 group-hover/chip:opacity-100">{s.unit}</span>}
                             {!isCurrent && (
-                              <ArrowRight size={8} className="opacity-0 group-hover/chip:opacity-100 transition-opacity -me-0.5 rtl:rotate-180" />
+                              <ArrowRight size={8} className="opacity-0 group-hover/chip:opacity-100 transition-opacity -me-0.5" />
                             )}
                           </button>
                         );

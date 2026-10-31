@@ -27,7 +27,7 @@ import {
 } from './api';
 import { ConverterInstallProgressBar } from './ConverterInstallProgressBar';
 import { useToastStore } from '@/stores/useToastStore';
-import { formatBytes } from '@/shared/lib/formatters';
+import { formatFileSize } from '@/shared/lib/formatters';
 
 interface InstallConverterPromptProps {
   open: boolean;
@@ -40,7 +40,6 @@ interface InstallConverterPromptProps {
    *  upload with the same file + metadata and then call `onClose()`. */
   onInstalledAndRetry: () => void;
 }
-
 
 export function InstallConverterPrompt({
   open,
@@ -123,7 +122,7 @@ export function InstallConverterPrompt({
       format: formatLabel,
     });
   const converterSizeMb = converter?.size_mb ?? 0;
-  const sizeFormatted = formatBytes(fileSize);
+  const sizeFormatted = formatFileSize(fileSize);
   const installing = installMutation.isPending;
 
   return (

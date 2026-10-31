@@ -1293,7 +1293,7 @@ function MarkupTableRow({
             {isExpanded ? (
               <ChevronDown size={12} className="text-content-tertiary shrink-0" />
             ) : (
-              <ChevronRight size={12} className="text-content-tertiary shrink-0" />
+              <ChevronRight size={12} className="text-content-tertiary shrink-0 rtl:rotate-180" />
             )}
             <TypeIcon size={14} className={clsx('shrink-0', iconColor)} />
             <span className="text-xs text-content-secondary capitalize">

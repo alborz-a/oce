@@ -390,7 +390,7 @@ export default function RegionalExchangeHubPage() {
             <Search
               size={13}
               aria-hidden="true"
-              className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-content-quaternary"
+              className="pointer-events-none absolute start-2 top-1/2 -translate-y-1/2 text-content-quaternary"
             />
             <input
               type="search"
@@ -399,7 +399,7 @@ export default function RegionalExchangeHubPage() {
               data-testid="exchange-market-search"
               placeholder={t('exchange.search_market', { defaultValue: 'Find a market' })}
               aria-label={t('exchange.search_market', { defaultValue: 'Find a market' })}
-              className="h-7 w-44 rounded-md border border-border-light bg-surface-primary pl-7 pr-2 text-2xs text-content-primary placeholder:text-content-quaternary focus:border-oe-blue focus:outline-none"
+              className="h-7 w-44 rounded-md border border-border-light bg-surface-primary ps-7 pe-2 text-2xs text-content-primary placeholder:text-content-quaternary focus:border-oe-blue focus:outline-none"
             />
           </label>
         </div>
@@ -491,7 +491,7 @@ export default function RegionalExchangeHubPage() {
                 }}
                 aria-pressed={active}
                 data-testid={`exchange-format-${fmt.format_id}`}
-                className={`flex flex-col gap-1.5 rounded-xl border p-3 text-left transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue ${
+                className={`flex flex-col gap-1.5 rounded-xl border p-3 text-start transition-shadow duration-normal ease-oe hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue ${
                   active ? 'border-oe-blue bg-oe-blue/5 shadow-xs' : 'border-border-light bg-surface-primary'
                 }`}
               >
@@ -685,7 +685,7 @@ export default function RegionalExchangeHubPage() {
                       </p>
                     ) : null}
                     {outcome.errors.length > 0 ? (
-                      <ul className="mt-1 list-disc space-y-0.5 pl-4 text-content-secondary">
+                      <ul className="mt-1 list-disc space-y-0.5 ps-4 text-content-secondary">
                         {outcome.errors.slice(0, 8).map((line, idx) => (
                           <li key={idx}>{line}</li>
                         ))}

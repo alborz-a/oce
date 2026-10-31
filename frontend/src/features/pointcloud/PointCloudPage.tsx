@@ -126,7 +126,6 @@ function formatPointCount(n: number): string {
   return `${n} pts`;
 }
 
-
 /* Format a single linear span (max - min) with the scan's declared units. The
    header sniff reports extents in the cloud's own units (metres by default);
    we show a compact, locale-neutral number so a surveyor can sanity-check the

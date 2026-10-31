@@ -26,8 +26,6 @@ import {
 import { useDwgUploadStore, type DwgUploadJob } from '@/stores/useDwgUploadStore';
 import { formatFileSize } from '@/shared/lib/formatters';
 
-
-
 function elapsed(startedAt: number): string {
   const sec = Math.round((Date.now() - startedAt) / 1000);
   if (sec < 60) return `${sec}s`;

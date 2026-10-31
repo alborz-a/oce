@@ -1397,7 +1397,7 @@ function CadConverterSection({
               {s.num}
             </span>
             <span>{s.label}</span>
-            {i < 2 && <ArrowRight size={12} className="text-content-quaternary ms-1 rtl:rotate-180" />}
+            {i < 2 && <ArrowRight size={12} className="text-content-quaternary ms-1" />}
           </div>
         ))}
       </div>

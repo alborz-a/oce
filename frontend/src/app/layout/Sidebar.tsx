@@ -2344,7 +2344,7 @@ function SidebarItem({
               {kbdHint ?? (
                 <ChevronRight
                   size={12}
-                  className="oe-hover-arrow text-content-tertiary"
+                  className="oe-hover-arrow text-content-tertiary rtl:rotate-180"
                 />
               )}
             </span>

@@ -70,7 +70,7 @@ export function ConnectionStatus({ connectionInfo }: ConnectionStatusProps) {
           <p className="text-2xs text-content-tertiary">{peerLabel}</p>
           {syncLabel && <p className="text-2xs text-content-tertiary mt-0.5">{syncLabel}</p>}
           {/* Small arrow pointing up */}
-          <div className="absolute left-1/2 -translate-x-1/2 -top-1 h-2 w-2 rotate-45 border-l border-t border-border bg-surface-elevated" />
+          <div className="absolute left-1/2 -translate-x-1/2 -top-1 h-2 w-2 rotate-45 border-s border-t border-border bg-surface-elevated" />
         </div>
       )}
     </div>

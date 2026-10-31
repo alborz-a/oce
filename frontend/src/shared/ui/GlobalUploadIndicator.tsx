@@ -34,8 +34,6 @@ import { formatFileSize } from '@/shared/lib/formatters';
 
 /* ── Helpers ───────────────────────────────────────────────────────────── */
 
-
-
 function elapsed(startedAt: number): string {
   const sec = Math.round((Date.now() - startedAt) / 1000);
   if (sec < 60) return `${sec}s`;

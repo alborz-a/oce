@@ -417,7 +417,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             <ChevronRight
               size={14}
               strokeWidth={1.75}
-              className="hidden lg:block shrink-0 text-content-quaternary/60"
+              className="hidden lg:block shrink-0 text-content-quaternary/60 rtl:rotate-180"
               aria-hidden
             />
             {/* text-base until xl: at lg widths the right cluster + project

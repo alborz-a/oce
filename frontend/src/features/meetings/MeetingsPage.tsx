@@ -97,7 +97,7 @@ import { RecurringSeriesDialog } from './RecurringSeriesDialog';
 import { meetingsGuide } from './meetingsGuide';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
 import { buildMeetingsInsights } from './meetingsInsights';
-import { fmtFixed, formatBytes } from '@/shared/lib/formatters';
+import { fmtFixed, formatFileSize } from '@/shared/lib/formatters';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 // [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
 
@@ -247,7 +247,6 @@ const EMPTY_FORM: MeetingFormData = {
   minutes: '',
   attachments: [],
 };
-
 
 /* -- People fields (Chairperson + Attendees, shared by Create + Edit) -------
  *
@@ -501,7 +500,7 @@ function AttachmentDropzone({
                 {att.name}
               </span>
               <span className="text-xs text-content-tertiary tabular-nums shrink-0">
-                {formatBytes(att.size)}
+                {formatFileSize(att.size)}
               </span>
               <a
                 href={getMeetingDocumentDownloadUrl(att.id)}

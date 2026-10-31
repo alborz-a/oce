@@ -248,17 +248,17 @@ export default function SustainabilityModule() {
                   >
                     {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                     {catInfo?.label ?? cat}
-                    <span className="ml-auto text-content-quaternary">{materials.length}</span>
+                    <span className="ms-auto text-content-quaternary">{materials.length}</span>
                   </button>
                   {isExpanded && (
-                    <div className="ml-4 space-y-0.5">
+                    <div className="ms-4 space-y-0.5">
                       {materials.map((m) => (
                         <div
                           key={m.id}
                           className="flex items-center justify-between rounded px-2 py-1 text-xs hover:bg-surface-secondary"
                         >
                           <span className="text-content-primary truncate">{m.name}</span>
-                          <span className={`ml-2 whitespace-nowrap font-mono ${m.gwp < 0 ? 'text-emerald-600' : 'text-content-tertiary'}`}>
+                          <span className={`ms-2 whitespace-nowrap font-mono ${m.gwp < 0 ? 'text-emerald-600' : 'text-content-tertiary'}`}>
                             {m.gwp < 0 ? '' : '+'}{fmtFixed(m.gwp, m.gwp < 1 ? 3 : 1)} {m.unit}
                           </span>
                         </div>
@@ -310,19 +310,19 @@ export default function SustainabilityModule() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-surface-secondary/50">
-                  <th className="px-3 py-2 text-left text-xs font-medium text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-xs font-medium text-content-tertiary">
                     {t('common.description', { defaultValue: 'Description' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-xs font-medium text-content-tertiary">
                     {t('sustainability.material', { defaultValue: 'Material' })}
                   </th>
-                  <th className="px-3 py-2 text-right text-xs font-medium text-content-tertiary">
+                  <th className="px-3 py-2 text-end text-xs font-medium text-content-tertiary">
                     {t('common.quantity', { defaultValue: 'Qty' })}
                   </th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-content-tertiary">
+                  <th className="px-3 py-2 text-start text-xs font-medium text-content-tertiary">
                     {t('common.unit')}
                   </th>
-                  <th className="px-3 py-2 text-right text-xs font-medium text-content-tertiary">
+                  <th className="px-3 py-2 text-end text-xs font-medium text-content-tertiary">
                     {t('sustainability.gwp_column', { defaultValue: 'GWP (kg CO2e)' })}
                   </th>
                   <th className="px-3 py-2 w-8" />
@@ -359,17 +359,17 @@ export default function SustainabilityModule() {
                         ))}
                       </select>
                     </td>
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-2 text-end">
                       <input
                         type="number"
                         value={item.quantity}
                         onChange={(e) => updatePosition(item.id, 'quantity', Number(e.target.value) || 0)}
-                        className="w-20 text-right bg-transparent text-content-primary outline-none"
+                        className="w-20 text-end bg-transparent text-content-primary outline-none"
                         aria-label={t('common.quantity', { defaultValue: 'Quantity' })}
                       />
                     </td>
                     <td className="px-3 py-2 text-xs text-content-tertiary">{item.unit}</td>
-                    <td className={`px-3 py-2 text-right font-mono text-xs ${item.gwp < 0 ? 'text-emerald-600' : 'text-content-primary'}`}>
+                    <td className={`px-3 py-2 text-end font-mono text-xs ${item.gwp < 0 ? 'text-emerald-600' : 'text-content-primary'}`}>
                       {item.gwp < 0 ? '' : '+'}{item.gwp.toLocaleString(getNumberLocale(), { maximumFractionDigits: 0 })}
                     </td>
                     <td className="px-3 py-2">
@@ -389,7 +389,7 @@ export default function SustainabilityModule() {
                   <td colSpan={4} className="px-3 py-2 text-sm font-semibold text-content-primary">
                     {t('common.total', { defaultValue: 'Total' })}
                   </td>
-                  <td className={`px-3 py-2 text-right font-mono text-sm font-bold ${carbonBreakdown.totalGWP < 0 ? 'text-emerald-600' : 'text-content-primary'}`}>
+                  <td className={`px-3 py-2 text-end font-mono text-sm font-bold ${carbonBreakdown.totalGWP < 0 ? 'text-emerald-600' : 'text-content-primary'}`}>
                     {carbonBreakdown.totalGWP.toLocaleString(getNumberLocale(), { maximumFractionDigits: 0 })} kg
                   </td>
                   <td />
@@ -449,7 +449,7 @@ export default function SustainabilityModule() {
                         style={{ width: `${(cat.value / maxCategoryValue) * 100}%` }}
                       />
                     </div>
-                    <span className="w-24 text-right text-xs font-mono text-content-tertiary">
+                    <span className="w-24 text-end text-xs font-mono text-content-tertiary">
                       {cat.value.toLocaleString(getNumberLocale(), { maximumFractionDigits: 0 })} kg
                     </span>
                   </div>

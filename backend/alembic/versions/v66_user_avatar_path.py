@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision = "v66_user_avatar_path"
-down_revision = "v65_po_invoice_tolerance"
+down_revision = "v3325_team_chat"
 branch_labels = None
 depends_on = None
 

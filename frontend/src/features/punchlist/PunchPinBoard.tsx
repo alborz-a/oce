@@ -389,7 +389,7 @@ export function PunchPinBoard({
                       backgroundColor: color,
                     }}
                     className={clsx(
-                      'absolute z-10 flex h-6 w-6 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full rounded-bl-none border-2 border-white text-2xs font-bold text-white shadow-md',
+                      'absolute z-10 flex h-6 w-6 -translate-x-1/2 -translate-y-full items-center justify-center rounded-full rounded-es-none border-2 border-white text-2xs font-bold text-white shadow-md',
                       placing ? 'pointer-events-none opacity-70' : 'hover:scale-110',
                     )}
                   >

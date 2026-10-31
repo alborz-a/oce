@@ -427,7 +427,7 @@ export function CadLoginView({
         </div>
 
         <div className="flex items-center gap-4 font-mono-cad text-[11px]">
-          <span id="coordReadout" className="text-[#e2e8f0] min-w-[185px] text-left">
+          <span id="coordReadout" className="text-[#e2e8f0] min-w-[185px] text-start">
             {coordText}
           </span>
           <span className="px-1.5 py-0.5 bg-[#1b222c] text-[#cbd5e1] border border-[#2e3846] text-[10px]">

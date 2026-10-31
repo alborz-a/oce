@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getIntlLocale, formatBytes } from '@/shared/lib/formatters';
+import { getIntlLocale, formatFileSize } from '@/shared/lib/formatters';
 import { TranslationManager } from './TranslationManager';
 import { BackupRestore } from './BackupRestore';
 import { RegionalSettings } from './RegionalSettings';
@@ -2349,7 +2349,7 @@ export function SettingsPage() {
                         </p>
                       </div>
                       <Link to="/setup/databases" className="sm:ms-auto shrink-0">
-                        <Button variant="secondary" size="sm" icon={<ChevronRight size={14} className="rtl:rotate-180" />} iconPosition="right">
+                        <Button variant="secondary" size="sm" icon={<ChevronRight size={14} />} iconPosition="right">
                           {t('common.open', { defaultValue: 'Open' })}
                         </Button>
                       </Link>
@@ -2442,7 +2442,10 @@ interface ConverterStatusResponse {
 const DDC_REPO_URL =
   'https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto';
 
-
+function formatBytes(n: number | null): string {
+  if (n === null || n === undefined) return '—';
+  return formatFileSize(n);
+}
 
 function ConverterStatusPanel() {
   const { t } = useTranslation();

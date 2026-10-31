@@ -174,22 +174,22 @@ function ImportPreview({
         <table className="w-full text-xs">
           <thead>
             <tr className="bg-surface-secondary/50 sticky top-0">
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-24">
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary w-24">
                 {t('boq.ordinal', { defaultValue: 'Ordinal' })}
               </th>
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary">
                 {t('boq.description', { defaultValue: 'Description' })}
               </th>
               <th className="px-3 py-1.5 text-center font-medium text-content-secondary w-16">
                 {t('boq.unit', { defaultValue: 'Unit' })}
               </th>
-              <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
+              <th className="px-3 py-1.5 text-end font-medium text-content-secondary w-20">
                 {t('boq.quantity', { defaultValue: 'Qty' })}
               </th>
-              <th className="px-3 py-1.5 text-right font-medium text-content-secondary w-20">
+              <th className="px-3 py-1.5 text-end font-medium text-content-secondary w-20">
                 {t('boq.unit_rate', { defaultValue: 'Rate' })}
               </th>
-              <th className="px-3 py-1.5 text-left font-medium text-content-secondary w-32">
+              <th className="px-3 py-1.5 text-start font-medium text-content-secondary w-32">
                 {template.excelTemplate.classification ||
                   t('regional.classification', { defaultValue: 'Classification' })}
               </th>
@@ -218,10 +218,10 @@ function ImportPreview({
                   <td className="px-3 py-1.5 text-center text-content-secondary">
                     {pos.unit || '-'}
                   </td>
-                  <td className="px-3 py-1.5 text-right tabular-nums">
+                  <td className="px-3 py-1.5 text-end tabular-nums">
                     {pos.quantity > 0 ? fmtFixed(pos.quantity, 3) : '-'}
                   </td>
-                  <td className="px-3 py-1.5 text-right tabular-nums">
+                  <td className="px-3 py-1.5 text-end tabular-nums">
                     {pos.unitRate > 0 ? fmtFixed(pos.unitRate, 2) : '-'}
                   </td>
                   <td
@@ -584,7 +584,7 @@ export default function RegionalExchangePage({ template }: RegionalExchangePageP
         srTitle={template.label}
         subtitle={
           <span data-testid="regional-format-hint">
-            <span aria-hidden="true" className="mr-1.5" data-testid="regional-flag">
+            <span aria-hidden="true" className="me-1.5" data-testid="regional-flag">
               {template.flag}
             </span>
             <span data-testid="regional-label">{template.label}</span>
@@ -672,7 +672,7 @@ export default function RegionalExchangePage({ template }: RegionalExchangePageP
                   <button
                     type="button"
                     onClick={handleClearImport}
-                    className="ml-2 p-1 rounded hover:bg-surface-secondary"
+                    className="ms-2 p-1 rounded hover:bg-surface-secondary"
                     aria-label={t('regional.clear_file', { defaultValue: 'Clear file' })}
                   >
                     <X size={14} className="text-content-tertiary" />
@@ -686,7 +686,7 @@ export default function RegionalExchangePage({ template }: RegionalExchangePageP
                       defaultValue_one: '{{count}} position found',
                       defaultValue: '{{count}} positions found',
                     })}
-                    <Badge variant="blue" className="ml-2">
+                    <Badge variant="blue" className="ms-2">
                       {template.excelTemplate.classification}
                     </Badge>
                   </div>
@@ -1068,20 +1068,20 @@ export default function RegionalExchangePage({ template }: RegionalExchangePageP
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-surface-tertiary/50 sticky top-0">
-                        <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
+                        <th className="px-3 py-1.5 text-start font-medium text-content-secondary">
                           {t('boq.ordinal', { defaultValue: 'Ordinal' })}
                         </th>
-                        <th className="px-3 py-1.5 text-left font-medium text-content-secondary">
+                        <th className="px-3 py-1.5 text-start font-medium text-content-secondary">
                           {t('boq.description', { defaultValue: 'Description' })}
                         </th>
                         <th className="px-3 py-1.5 text-center font-medium text-content-secondary">
                           {t('boq.unit', { defaultValue: 'Unit' })}
                         </th>
-                        <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
+                        <th className="px-3 py-1.5 text-end font-medium text-content-secondary">
                           {t('boq.quantity', { defaultValue: 'Qty' })}
                         </th>
                         {includePrices && (
-                          <th className="px-3 py-1.5 text-right font-medium text-content-secondary">
+                          <th className="px-3 py-1.5 text-end font-medium text-content-secondary">
                             {t('boq.unit_rate', { defaultValue: 'Rate' })}
                           </th>
                         )}
@@ -1105,11 +1105,11 @@ export default function RegionalExchangePage({ template }: RegionalExchangePageP
                             <td className="px-3 py-1.5 text-center text-content-secondary">
                               {pos.unit}
                             </td>
-                            <td className="px-3 py-1.5 text-right tabular-nums">
+                            <td className="px-3 py-1.5 text-end tabular-nums">
                               {fmtFixed(pos.quantity, 3)}
                             </td>
                             {includePrices && (
-                              <td className="px-3 py-1.5 text-right tabular-nums">
+                              <td className="px-3 py-1.5 text-end tabular-nums">
                                 {fmtFixed(pos.unitRate, 2)}
                               </td>
                             )}

@@ -121,10 +121,10 @@ function ElementRow({
       <div className="relative h-3 flex-1 overflow-hidden rounded-sm bg-surface-secondary">
         <div className={`h-full rounded-sm ${barClass}`} style={{ width: `${widthPct}%` }} />
       </div>
-      <span className="w-9 shrink-0 text-right tabular-nums text-content-tertiary">
+      <span className="w-9 shrink-0 text-end tabular-nums text-content-tertiary">
         {fmtPercent(row.pct * 100, 0)}
       </span>
-      <span className="w-20 shrink-0 text-right tabular-nums font-medium text-content-primary">
+      <span className="w-20 shrink-0 text-end tabular-nums font-medium text-content-primary">
         {/* RATE (reciprocal): EUR/m2 element share -> EUR/ft2 for imperial */}
         {formatCurrency(row.value / rateFactor, currency)}
       </span>
@@ -279,7 +279,7 @@ export default function BenchmarkModule() {
             the "How it works" guide is the single entry point here. It keeps
             the shared pill geometry so it reads like the Tour button on other
             module headers. */}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2">
           <ModuleGuideButton content={benchmarksGuide} />
         </div>
       </div>
@@ -941,7 +941,7 @@ export default function BenchmarkModule() {
               <button
                 key={bt.id}
                 onClick={() => setBuildingType(bt.id)}
-                className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left transition-all ${
+                className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-start transition-all ${
                   isSelected ? 'bg-oe-blue/10 ring-1 ring-oe-blue' : 'hover:bg-surface-secondary'
                 }`}
                 aria-pressed={isSelected}
@@ -963,7 +963,7 @@ export default function BenchmarkModule() {
                     style={{ left: `${((range.median - range.min) / (range.max - range.min)) * 100}%` }}
                   />
                 </div>
-                <span className="w-24 text-right text-xs font-mono text-content-tertiary">
+                <span className="w-24 text-end text-xs font-mono text-content-tertiary">
                   {/* RATE (reciprocal); the Q1-Q3 bar positions stay metric */}
                   {fmtRate(range.median, regionInfo.currency)}
                 </span>
