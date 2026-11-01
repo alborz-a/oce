@@ -255,7 +255,8 @@ export function ProfilePage() {
             </div>
           </div>
 
-          {/* Edit Name Form */}
+          {/* Edit Name Form: system admin only (backend enforces it too) */}
+          {profile?.role === 'admin' && (
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -285,6 +286,7 @@ export function ProfilePage() {
               </div>
             </div>
           </form>
+          )}
         </CardContent>
       </Card>
 

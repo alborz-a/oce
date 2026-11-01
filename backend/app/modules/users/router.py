@@ -733,6 +733,19 @@ async def update_me(
     """Update current user profile."""
     fields = data.model_dump(exclude_unset=True)
 
+    # Only the system admin may change a full name (staff names come from the
+    # company directory). An unchanged name is accepted so the profile form
+    # can keep sending the whole payload.
+    if "full_name" in fields:
+        current = await service.get_user(uuid.UUID(user_id))
+        if getattr(current, "role", "") != "admin":
+            if (fields["full_name"] or "").strip() != (getattr(current, "full_name", "") or "").strip():
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Only a system administrator can change a full name",
+                )
+            fields.pop("full_name")
+
     # Map schema field 'metadata' to model column 'metadata_'. The
     # self-service profile update must NOT be able to clobber the whole
     # metadata blob: it holds admin-managed and security-relevant keys
