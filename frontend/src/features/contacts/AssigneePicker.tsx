@@ -18,12 +18,15 @@
  * them, and contacts, readable by every role, are the list they pick from.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { BookUser, User, X } from 'lucide-react';
 import { apiGet, type Page } from '@/shared/lib/api';
 import { normalizeRole, ROLE_RANK } from '@/shared/lib/roles';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useProjectContextStore } from '@/stores/useProjectContextStore';
+import { isHiddenSystemUser } from '@/shared/lib/hiddenUsers';
 import { fetchContacts, type Contact } from './api';
 
 export interface AssigneeValue {
@@ -40,6 +43,14 @@ interface UserRow {
   email: string;
   full_name: string;
   is_active?: boolean;
+}
+
+interface ProjectMemberRow {
+  user_id: string;
+  email: string;
+  full_name: string;
+  role: string;
+  is_owner?: boolean;
 }
 
 interface Option {
@@ -64,6 +75,7 @@ export function AssigneePicker({
   inputClassName,
   placeholder,
   includeUsers = true,
+  projectId,
   testIdPrefix = 'task-assignee',
   ariaLabel,
   disabled = false,
@@ -73,8 +85,10 @@ export function AssigneePicker({
   onChange: (next: AssigneeValue) => void;
   inputClassName: string;
   placeholder?: string;
-  /** Offer platform users next to contacts (managers only, see above). */
+  /** Offer platform users next to contacts (managers only when no project, or project members). */
   includeUsers?: boolean;
+  /** Project id whose members are listed. Falls back to route / context store. */
+  projectId?: string;
   testIdPrefix?: string;
   ariaLabel?: string;
   disabled?: boolean;
@@ -85,6 +99,9 @@ export function AssigneePicker({
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
   const role = useAuthStore((s) => s.userRole);
+  const routeParams = useParams<{ projectId?: string }>();
+  const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
+  const effectiveProjectId = (projectId || routeParams.projectId || activeProjectId || '').trim();
   const mayListUsers =
     includeUsers && ((ROLE_RANK as Readonly<Record<string, number>>)[normalizeRole(role)] ?? 0) >= ROLE_RANK.manager;
 
@@ -107,12 +124,20 @@ export function AssigneePicker({
     enabled: open && query.length > 0,
     retry: false,
   });
-  // Same raw-row cache the approval and issue pickers share.
+  // Project members list accessible to any project member role
+  const { data: projectMembers = [] } = useQuery({
+    queryKey: ['project-members', effectiveProjectId],
+    queryFn: () => apiGet<ProjectMemberRow[]>(`/v1/projects/${effectiveProjectId}/members/`),
+    staleTime: 60_000,
+    enabled: open && includeUsers && Boolean(effectiveProjectId),
+    retry: false,
+  });
+  // Fallback global users list (managers only) when no project context exists
   const { data: users = [] } = useQuery({
     queryKey: ['users-search'],
     queryFn: () => apiGet<UserRow[]>('/v1/users/?limit=100&is_active=true'),
     staleTime: 60_000,
-    enabled: open && mayListUsers,
+    enabled: open && includeUsers && !effectiveProjectId && mayListUsers,
     retry: false,
   });
 
@@ -128,13 +153,32 @@ export function AssigneePicker({
   const options = useMemo<Option[]>(() => {
     const contactRows = new Map<string, ContactRow>();
     for (const c of [...(searchPage?.items ?? []), ...(contactsPage?.items ?? [])]) contactRows.set(c.id, c);
+
+    let userOptions: Option[] = [];
+    if (includeUsers) {
+      if (effectiveProjectId && Array.isArray(projectMembers)) {
+        userOptions = projectMembers
+          .filter((m) => !isHiddenSystemUser(m))
+          .map((m) => ({
+            kind: 'user' as const,
+            id: m.user_id,
+            label: m.full_name || m.email,
+            detail: m.email,
+          }));
+      } else if (mayListUsers && Array.isArray(users)) {
+        userOptions = users
+          .filter((u) => !isHiddenSystemUser(u))
+          .map((u) => ({
+            kind: 'user' as const,
+            id: u.id,
+            label: u.full_name || u.email,
+            detail: u.email,
+          }));
+      }
+    }
+
     const all: Option[] = [
-      ...(mayListUsers && Array.isArray(users) ? users : []).map((u) => ({
-        kind: 'user' as const,
-        id: u.id,
-        label: u.full_name || u.email,
-        detail: u.email,
-      })),
+      ...userOptions,
       ...[...contactRows.values()].map((c) => ({
         kind: 'contact' as const,
         id: c.id,
@@ -147,7 +191,7 @@ export function AssigneePicker({
       ? all.filter((o) => o.label.toLowerCase().includes(q) || o.detail.toLowerCase().includes(q))
       : all;
     return hits.slice(0, MAX_OPTIONS);
-  }, [users, mayListUsers, contactsPage, searchPage, query]);
+  }, [effectiveProjectId, projectMembers, users, mayListUsers, includeUsers, contactsPage, searchPage, query]);
 
   const pick = (o: Option) => {
     onChange({

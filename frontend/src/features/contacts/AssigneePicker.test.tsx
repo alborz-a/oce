@@ -35,6 +35,21 @@ function renderPicker() {
   );
 }
 
+function HarnessWithProject({ projectId }: { projectId?: string }) {
+  const [value, setValue] = useState({ name: '', userId: '', contactId: '' });
+  last = value;
+  return <AssigneePicker value={value} onChange={setValue} inputClassName="" projectId={projectId} />;
+}
+
+function renderPickerWithProject(projectId?: string) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={client}>
+      <HarnessWithProject projectId={projectId} />
+    </QueryClientProvider>,
+  );
+}
+
 describe('AssigneePicker', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -66,6 +81,25 @@ describe('AssigneePicker', () => {
     fireEvent.focus(screen.getByTestId('task-assignee-input'));
     fireEvent.click(await screen.findByTestId('task-assignee-option-user-u1'));
     expect(last).toEqual({ name: 'Max Manager', userId: 'u1', contactId: '' });
+  });
+
+  it('offers project members to an editor when projectId is provided', async () => {
+    useAuthStore.setState({ userRole: 'editor' });
+    (apiGet as any).mockImplementation(async (url: string) => {
+      if (url === '/v1/projects/proj-123/members/') {
+        return [
+          { user_id: 'm1', full_name: 'Ebrahim Rahmani', email: 'ebrahim@example.com', role: 'editor' },
+          { user_id: 'm-imp', full_name: 'Mizito Importer', email: 'mizito-importer@royalstars.co', role: 'admin' },
+        ];
+      }
+      return [];
+    });
+    renderPickerWithProject('proj-123');
+    fireEvent.focus(screen.getByTestId('task-assignee-input'));
+    const memberOption = await screen.findByTestId('task-assignee-option-user-m1');
+    expect(screen.queryByTestId('task-assignee-option-user-m-imp')).toBeNull();
+    fireEvent.click(memberOption);
+    expect(last).toEqual({ name: 'Ebrahim Rahmani', userId: 'm1', contactId: '' });
   });
 
   it('turns a pick back into a typed name when the text is edited', async () => {

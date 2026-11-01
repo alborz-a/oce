@@ -1525,8 +1525,7 @@ function UserMenu() {
   const isSystemAdmin = useIsSystemAdmin();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : 'U';
-  // Same query key as the Settings profile card, so one request feeds both.
+    // Same query key as the Settings profile card, so one request feeds both.
   const { data: me } = useQuery({
     queryKey: ['me'],
     queryFn: () => apiGet<{ avatar_url?: string | null }>('/v1/users/me/'),
@@ -1570,7 +1569,6 @@ function UserMenu() {
         <UserAvatar
           url={me?.avatar_url}
           alt={userEmail ?? ''}
-          fallback={userInitial}
           className="h-full w-full rounded-full object-cover"
         />
         {/* Online status dot — bottom-right of the avatar. Matches the

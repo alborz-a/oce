@@ -225,17 +225,18 @@ export default function GlobalSearchModal() {
       >
         {/* Search input */}
         <div className="flex items-center gap-2 px-4 py-3 border-b border-border-light shrink-0">
-          <SearchIcon size={16} className="text-content-tertiary" />
+          <SearchIcon size={16} className="text-content-tertiary shrink-0" />
           <input
             ref={inputRef}
             type="text"
+            dir="auto"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('global_search.placeholder', {
               defaultValue:
                 'Search anything - BOQ positions, drawings, tasks, risks, BIM elements…',
             })}
-            className="flex-1 bg-transparent outline-none text-sm placeholder:text-content-quaternary"
+            className="flex-1 bg-transparent outline-none text-sm placeholder:text-content-quaternary text-start"
           />
           {searchQuery.isFetching && (
             <Loader2 size={14} className="text-content-tertiary animate-spin" />
@@ -444,7 +445,7 @@ export default function GlobalSearchModal() {
                             {navigable && (
                               <ArrowUpRight
                                 size={13}
-                                className="text-content-quaternary group-hover:text-oe-blue shrink-0 mt-0.5"
+                                className="text-content-quaternary group-hover:text-oe-blue shrink-0 mt-0.5 rtl:-scale-x-100"
                               />
                             )}
                           </button>
@@ -467,7 +468,9 @@ export default function GlobalSearchModal() {
               defaultValue: 'Semantic search powered by vector embeddings',
             })}
           </span>
-          <span className="font-mono">esc</span>
+          <span className="font-mono">
+            {t('common.esc', { defaultValue: 'Esc' })}
+          </span>
         </div>
       </div>
     </div>

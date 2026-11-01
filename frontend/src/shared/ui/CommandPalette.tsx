@@ -566,6 +566,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           <input
             ref={inputRef}
             type="text"
+            dir="auto"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -575,7 +576,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               defaultValue: 'Search pages, projects, BOQs...',
             })}
             className={clsx(
-              'flex-1 h-12 bg-transparent text-sm text-content-primary',
+              'flex-1 h-12 bg-transparent text-sm text-content-primary text-start',
               'placeholder:text-content-tertiary',
               'focus:outline-none',
             )}
@@ -636,7 +637,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                       )}
                     </div>
                     {isActive && (
-                      <CornerDownLeft size={14} className="shrink-0 text-content-tertiary" />
+                      <CornerDownLeft size={14} className="shrink-0 text-content-tertiary rtl:scale-x-[-1]" />
                     )}
                   </button>
                 );
