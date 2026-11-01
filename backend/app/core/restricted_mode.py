@@ -55,6 +55,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_ANY, r"^notifications(/.*)?$"),
     # shell: enabled-module list (read only)
     _rule(_R, r"^modules/?$"),
+    # admin-controlled help banners: read only
+    _rule(_R, r"^info-banners/?$"),
 )
 
 

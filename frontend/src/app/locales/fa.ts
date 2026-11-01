@@ -46277,6 +46277,9 @@ const resource = {
     "cases.turn_a_document_into_a_tracked_action.step.close.in.badge": "Source badge",
     "cases.turn_a_document_into_a_tracked_action.step.close.out.done": "Completed task",
     "cases.turn_a_document_into_a_tracked_action.step.close.out.trace": "Traceable to the document",
+    "info_banner.show_to_all": "نمایش برای همه کاربران",
+    "info_banner.edit_text": "ویرایش متن",
+    "info_banner.text_label": "متن راهنما",
   }
 } as { translation: Record<string, string> };
 

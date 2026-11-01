@@ -2,7 +2,10 @@
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ChevronUp, Info, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { ChevronDown, ChevronUp, Info, Pencil, X } from 'lucide-react';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
+import { bannerShownTo, infoBannersApi, INFO_BANNERS_KEY, useInfoBanners } from './infoBanners';
 import { useModuleInfoStore } from '@/stores/useModuleInfoStore';
 import { useInfoBlockPrefsStore, readLegacyCollapsed } from '@/stores/useInfoBlockPrefsStore';
 
@@ -124,6 +127,24 @@ export function DismissibleInfo({
 }) {
   const { t } = useTranslation();
 
+  // Admin-controlled visibility and text (S3): staff see the banner only when
+  // the system admin switched it on for this page; admin always sees it.
+  const isAdmin = useIsSystemAdmin();
+  const qc = useQueryClient();
+  const { data: banners } = useInfoBanners();
+  const setting = banners?.[storageKey];
+  const shown = bannerShownTo(isAdmin, setting);
+  const customText = setting?.text?.trim() ? setting.text : null;
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+  const saveSetting = useCallback(
+    async (visible: boolean, text: string | null) => {
+      await infoBannersApi.save(storageKey, { visible, text });
+      await qc.invalidateQueries({ queryKey: INFO_BANNERS_KEY });
+    },
+    [qc, storageKey],
+  );
+
   // Per-user collapse state, synced across devices. `blocks[storageKey]` is
   // the authoritative value once known; until then (a card this browser/user
   // has never toggled) fall back once to the legacy per-card localStorage flag
@@ -154,12 +175,12 @@ export function DismissibleInfo({
   const register = useModuleInfoStore((s) => s.register);
   const unregister = useModuleInfoStore((s) => s.unregister);
   useEffect(() => {
-    if (!collapsed) return undefined;
+    if (!collapsed || !shown) return undefined;
     register({ key: storageKey, expand });
     return () => unregister(storageKey);
-  }, [collapsed, storageKey, expand, register, unregister]);
+  }, [collapsed, shown, storageKey, expand, register, unregister]);
 
-  if (collapsed) return null;
+  if (!shown || collapsed) return null;
 
   // Expanded: a soft, translucent card - a VISIBLE light blue tint
   // (bg-oe-blue/10 ~ #e5f1fc over white; /[0.14] over the dark surfaces),
@@ -204,8 +225,61 @@ export function DismissibleInfo({
           <p className="flex min-h-7 items-center text-base font-medium leading-snug text-content-primary">
             {title}
           </p>
-          {children != null && (
+          {customText != null ? (
+            <div className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-content-secondary">
+              {customText}
+            </div>
+          ) : children != null && (
             <div className="mt-1.5 text-sm leading-relaxed text-content-secondary">{children}</div>
+          )}
+          {isAdmin && (
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs" data-testid="banner-admin-controls">
+              <label className="inline-flex items-center gap-1.5">
+                <input
+                  type="checkbox"
+                  checked={setting?.visible === true}
+                  onChange={(e) => void saveSetting(e.target.checked, setting?.text ?? null)}
+                />
+                {t('info_banner.show_to_all', { defaultValue: 'نمایش برای همه کاربران' })}
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setDraft(customText ?? '');
+                  setEditing((v) => !v);
+                }}
+                className="inline-flex items-center gap-1 text-oe-blue-text hover:underline"
+              >
+                <Pencil size={12} />
+                {t('info_banner.edit_text', { defaultValue: 'ویرایش متن' })}
+              </button>
+              {editing && (
+                <div className="flex w-full flex-col gap-2">
+                  <textarea
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    rows={4}
+                    aria-label={t('info_banner.text_label', { defaultValue: 'متن راهنما' })}
+                    className="w-full rounded-md border border-border-light bg-surface-primary p-2 text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await saveSetting(setting?.visible === true, draft.trim() || null);
+                        setEditing(false);
+                      }}
+                      className="rounded-md bg-oe-blue px-3 py-1 text-content-inverse"
+                    >
+                      {t('common.save', { defaultValue: 'ذخیره' })}
+                    </button>
+                    <button type="button" onClick={() => setEditing(false)} className="px-3 py-1">
+                      {t('common.cancel', { defaultValue: 'لغو' })}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
           {more != null && (
             <>
