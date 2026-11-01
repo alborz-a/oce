@@ -1823,7 +1823,7 @@ export function ProjectDetailPage() {
         <Breadcrumb
           items={[
             { label: t('projects.title', 'Projects'), to: '/projects' },
-            { label: project.name },
+            { label: REGION_LOCK ? toPersianDigits(project.name) : project.name },
           ]}
         />
         <Button
@@ -1975,7 +1975,7 @@ export function ProjectDetailPage() {
             ) : (
               <>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-content-primary">{project.name}</h1>
+                  <h1 className="text-2xl font-bold text-content-primary">{REGION_LOCK ? toPersianDigits(project.name) : project.name}</h1>
                   <ProjectStatusBadge status={project.status} size="md" />
                   {/* Owner/admin status picker (#274). Archiving stays its
                       own action (the project menu / list), so 'archived' is
@@ -2030,25 +2030,13 @@ export function ProjectDetailPage() {
                   </>
                   )}
                 </div>
-                {project.description && (
+                {project.description && !project.description.includes('میزیتو') && (
                   <p className="mt-2 text-sm text-content-secondary max-w-2xl leading-relaxed">
                     {project.description}
                   </p>
                 )}
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <Badge variant="blue" size="sm">
-                    {standardLabels[project.classification_standard] ??
-                      project.classification_standard}
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {/* [RSC-IRAN] */}
-                    {REGION_LOCK && currency === 'IRR' ? 'ریال' : (currency ?? t('projects.currency_not_set', { defaultValue: 'Currency not set' }))}
-                  </Badge>
-                  <Badge variant="neutral" size="sm">
-                    {/* [RSC-IRAN] */}
-                    {REGION_LOCK && project.region === 'IR' ? 'ایران' : project.region}
-                  </Badge>
-                  <span className="text-xs text-content-tertiary ms-2">
+                  <span className="text-xs text-content-tertiary">
                     {t('projects.created', { date: formatDate(project.created_at, i18n.language) })}
                   </span>
                 </div>

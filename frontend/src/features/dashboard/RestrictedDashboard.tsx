@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { Card, Badge, Skeleton, EmptyState, AuthImage } from '@/shared/ui';
 import { apiGet, API_BASE } from '@/shared/lib/api';
-import { formatJalali } from '@/shared/lib/jalali';
+import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ProjectStatusBadge } from '@/features/projects/ProjectStatusBadge';
 
@@ -135,13 +135,13 @@ export function RestrictedDashboard() {
             <div className="rounded-xl border border-border-light bg-surface-elevated px-4 py-2.5 text-center shadow-xs">
               <span className="block text-2xs text-content-tertiary">پروژه‌های دردسترس</span>
               <span className="text-lg font-bold text-content-primary tabular-nums">
-                {projects?.length ?? '—'}
+                {projects?.length != null ? toPersianDigits(projects.length) : '—'}
               </span>
             </div>
             <div className="rounded-xl border border-border-light bg-surface-elevated px-4 py-2.5 text-center shadow-xs">
               <span className="block text-2xs text-content-tertiary">وظایف جاری</span>
               <span className="text-lg font-bold text-oe-blue tabular-nums">
-                {openTasksCount}
+                {toPersianDigits(openTasksCount)}
               </span>
             </div>
           </div>
@@ -197,7 +197,7 @@ export function RestrictedDashboard() {
                       to={`/projects/${project.id}?tab=photos`}
                       className="font-semibold text-content-primary group-hover:text-oe-blue transition-colors line-clamp-1 text-sm"
                     >
-                      {project.name}
+                      {toPersianDigits(project.name)}
                     </Link>
                     <ProjectStatusBadge status={project.status} size="sm" />
                   </div>
@@ -295,12 +295,12 @@ export function RestrictedDashboard() {
                     </div>
                     <div className="min-w-0">
                       <p className={`text-sm font-medium truncate ${isCompleted ? 'line-through text-content-tertiary' : 'text-content-primary'}`}>
-                        {task.title}
+                        {toPersianDigits(task.title)}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 mt-0.5 text-2xs text-content-tertiary">
                         {task.project_name && (
                           <span className="font-medium text-content-secondary">
-                            {task.project_name}
+                            {toPersianDigits(task.project_name)}
                           </span>
                         )}
                         {task.due_date && (

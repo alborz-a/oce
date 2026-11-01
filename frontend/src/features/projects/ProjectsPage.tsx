@@ -1519,7 +1519,7 @@ export function ProjectCard({
                 {t('projects.confirm_delete', 'Delete this project?')}
               </p>
               <p className="text-xs text-content-tertiary mb-4 max-w-[200px] mx-auto">
-                {project.name}
+                {REGION_LOCK ? toPersianDigits(project.name) : project.name}
               </p>
               <div className="flex items-center justify-center gap-2">
                 <Button
@@ -1539,7 +1539,7 @@ export function ProjectCard({
         )}
 
         <h3 className="mt-4 text-base font-semibold tracking-tight text-content-primary truncate">
-          {project.name}
+          {REGION_LOCK ? toPersianDigits(project.name) : project.name}
         </h3>
         {isArchived && (
           <div
@@ -1568,20 +1568,22 @@ export function ProjectCard({
           </p>
         )}
         <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center gap-1 rounded-full border border-oe-blue/20 bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
-            <Building2 size={11} strokeWidth={2.25} />
-            {standardLabels[project.classification_standard] ?? project.classification_standard}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
-            <CurrencyIcon size={11} strokeWidth={2.25} />
-            {/* [RSC-IRAN] */}
-            {REGION_LOCK && project.currency === 'IRR' ? 'ریال' : project.currency}
-          </span>
-          {project.region && (
+          {!REGION_LOCK && project.classification_standard && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-oe-blue/20 bg-oe-blue-subtle px-2 py-0.5 text-2xs font-medium text-oe-blue-text">
+              <Building2 size={11} strokeWidth={2.25} />
+              {standardLabels[project.classification_standard] ?? project.classification_standard}
+            </span>
+          )}
+          {!REGION_LOCK && project.currency && (
+            <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
+              <CurrencyIcon size={11} strokeWidth={2.25} />
+              {project.currency}
+            </span>
+          )}
+          {!REGION_LOCK && project.region && (
             <span className="inline-flex items-center gap-1 rounded-full border border-border-light bg-surface-secondary px-2 py-0.5 text-2xs font-medium text-content-secondary">
               <Globe2 size={11} strokeWidth={2.25} />
-              {/* [RSC-IRAN] */}
-              {REGION_LOCK && project.region === 'IR' ? 'ایران' : project.region}
+              {project.region}
             </span>
           )}
           {project.address?.city && (

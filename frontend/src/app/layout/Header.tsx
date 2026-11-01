@@ -48,6 +48,8 @@ import { PresenceAvatarStack } from '@/features/global_presence';
 import { getRouteIcon } from './routeIcons';
 import { resolveStaleProject } from './staleProject';
 import { isModuleI18nKey } from '@/modules/_i18n';
+import { REGION_LOCK } from '@/app/regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali';
 
 /**
  * Map the English page titles passed from App.tsx routes to i18n keys.
@@ -202,6 +204,7 @@ export const TITLE_I18N_MAP: Record<string, string> = {
   'Module': 'modules.module_title',
   'E-invoice Clearance': 'nav.einvoice_clearance',
   'Settings': 'nav.settings',
+  'Profile': 'nav.profile',
   'About': 'nav.about',
   'Not Found': 'error.not_found',
 
@@ -1854,7 +1857,7 @@ function ProjectSwitcher() {
             )}
             title={activeProjectName || undefined}
           >
-            {activeProjectName || t('projects.select_active', { defaultValue: 'Select Project' })}
+            {(REGION_LOCK && activeProjectName ? toPersianDigits(activeProjectName) : activeProjectName) || t('projects.select_active', { defaultValue: 'Select Project' })}
           </span>
         </button>
         <button
@@ -1950,7 +1953,7 @@ function ProjectSwitcher() {
                 )}>
                   <FolderOpen size={14} className="shrink-0" />
                 </div>
-                <span className="truncate">{p.name}</span>
+                <span className="truncate">{REGION_LOCK ? toPersianDigits(p.name) : p.name}</span>
                 {p.id === activeProjectId && (
                   <span className="ms-auto text-2xs text-oe-blue font-normal shrink-0">
                     {t('common.active', { defaultValue: 'Active' })}

@@ -33,6 +33,8 @@ import { PageHeader } from '@/shared/ui/PageHeader';
 import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
+import { REGION_LOCK } from '@/app/regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali';
 import { PlanningCrossLinks } from '@/features/schedule/PlanningCrossLinks';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useConfirm } from '@/shared/hooks/useConfirm';
@@ -623,7 +625,7 @@ const TaskCard = React.memo(function TaskCard({
                   : 'text-content-primary',
             )}
           >
-            {task.title}
+            {REGION_LOCK ? toPersianDigits(task.title) : task.title}
           </h4>
         </div>
         <Badge variant={pb.variant} size="sm" className="shrink-0 text-[9px] px-1 py-0">
@@ -794,7 +796,7 @@ const TaskCard = React.memo(function TaskCard({
             />
           </div>
           <span className="text-[9px] text-content-quaternary tabular-nums shrink-0">
-            {checklistDone}/{checklistTotal}
+            {REGION_LOCK ? `${toPersianDigits(checklistDone)}/${toPersianDigits(checklistTotal)}` : `${checklistDone}/${checklistTotal}`}
           </span>
         </div>
       )}
@@ -1883,7 +1885,7 @@ export function TasksPage() {
                         className="text-[10px] font-bold rounded-full px-1.5 py-0.5 bg-white/30 tabular-nums"
                         aria-label={t('tasks.task_count', { defaultValue: '{{count}} tasks', count: colItems.length })}
                       >
-                        {colItems.length}
+                        {REGION_LOCK ? toPersianDigits(colItems.length) : colItems.length}
                       </span>
                       {!isBuiltin && (
                         <button

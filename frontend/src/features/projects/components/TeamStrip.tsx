@@ -24,6 +24,8 @@ import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { UserSearchInput } from '@/shared/ui/UserSearchInput';
+import { REGION_LOCK } from '@/app/regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -435,13 +437,18 @@ export function TeamStrip({
             onClick={() => setListOpen(true)}
             className="inline-flex items-center justify-center h-8 px-2 rounded-full bg-surface-secondary text-xs font-semibold text-content-secondary border-2 border-white hover:bg-surface-tertiary transition-colors -ms-2"
             data-testid="team-strip-more"
-            aria-label={t('projects.team.more_count', {
-              count: overflowCount,
-              defaultValue: '+{{count}} more',
-            })}
+            aria-label={
+              REGION_LOCK
+                ? `${toPersianDigits(overflowCount)}+ ${t('projects.team.more', { defaultValue: 'بیشتر' })}`
+                : t('projects.team.more_count', {
+                    count: overflowCount,
+                    defaultValue: '+{{count}} more',
+                  })
+            }
           >
-            +{overflowCount}{' '}
-            {t('projects.team.more', { defaultValue: 'more' })}
+            {REGION_LOCK
+              ? `${toPersianDigits(overflowCount)}+ ${t('projects.team.more', { defaultValue: 'بیشتر' })}`
+              : `+${overflowCount} ${t('projects.team.more', { defaultValue: 'more' })}`}
           </button>
         )}
         {/* Render the manage shortcut even when the strip is empty so the
