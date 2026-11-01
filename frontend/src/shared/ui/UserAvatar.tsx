@@ -34,7 +34,7 @@ interface UserAvatarProps {
  *
  * When no picture is available, renders a neutral silhouette avatar placeholder (never a letter initial).
  */
-export function UserAvatar({ url, fallback, alt, className }: UserAvatarProps) {
+export function UserAvatar({ url, alt, className }: UserAvatarProps) {
   const [src, setSrc] = useState<string | null>(null);
 
   useEffect(() => {
