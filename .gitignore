@@ -528,3 +528,6 @@ email-delivery-failures*.jsonl
 # Locale bootstrap batches, see scripts/i18n_new_locale.py
 .i18n-work/
 .repowise/
+.repowise/.augment-session.json
+.repowise/.augment-session.json
+.repowise/.augment-session.json
