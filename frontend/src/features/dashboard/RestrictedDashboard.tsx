@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Card, Badge, Skeleton, EmptyState, AuthImage } from '@/shared/ui';
 import { apiGet, API_BASE } from '@/shared/lib/api';
+import { formatJalali } from '@/shared/lib/jalali';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ProjectStatusBadge } from '@/features/projects/ProjectStatusBadge';
 
@@ -292,7 +293,7 @@ export function RestrictedDashboard() {
                         {task.due_date && (
                           <span className="flex items-center gap-0.5">
                             <Calendar size={11} />
-                            <span>{new Date(task.due_date).toLocaleDateString('fa-IR')}</span>
+                            <span>{formatJalali(task.due_date)}</span>
                           </span>
                         )}
                       </div>
@@ -418,7 +419,7 @@ export function RestrictedDashboard() {
               />
             </div>
             <div className="px-4 py-2.5 border-t border-border-light bg-surface-secondary/40 flex items-center justify-between text-xs text-content-secondary">
-              <span>تاریخ ثبت: {new Date(selectedPhoto.captured_at || selectedPhoto.created_at).toLocaleDateString('fa-IR')}</span>
+              <span>تاریخ ثبت: {formatJalali(selectedPhoto.captured_at || selectedPhoto.created_at)}</span>
               <Link
                 to={`/projects/${selectedPhoto.project_id}?tab=photos`}
                 className="inline-flex items-center gap-1 text-oe-blue hover:underline text-2xs font-medium"
