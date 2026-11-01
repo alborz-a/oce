@@ -58,13 +58,8 @@ export function PageHeader({ subtitle, actions, srTitle, className }: PageHeader
     // double gaps the founder flagged.
     <div className={clsx('flex min-h-9 flex-wrap items-center justify-between gap-x-4 gap-y-2', className)}>
       {srTitle && <h1 className="sr-only">{srTitle}</h1>}
-      {subtitle ? (
-        <p className="min-w-0 flex-1 basis-64 text-sm leading-relaxed text-content-tertiary">
-          {subtitle}
-        </p>
-      ) : (
-        <div className="min-w-0 flex-1" aria-hidden />
-      )}
+      {/* Subtitle taglines removed for everyone per Track A3 */}
+      <div className="min-w-0 flex-1" aria-hidden />
       {/* max-w-full: shrink-0 keeps the buttons from being squeezed while they
           share the row with the subtitle, but it also meant this box was never
           narrowed to the container, so its own flex-wrap could never fire. On a

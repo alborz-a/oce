@@ -430,15 +430,7 @@ const PRODUCT_TOUR_NAV_TESTIDS: Record<string, string> = {
 // sequence is `G` then a single letter — the same convention modern
 // SaaS apps use, so muscle memory transfers. We surface the hint inline
 // next to the item so users can discover the shortcut without docs.
-const KBD_HINTS: Record<string, string> = {
-  '/': 'G D',
-  '/projects': 'G P',
-  '/boq': 'G B',
-  '/costs': 'G C',
-  '/bim': 'G M',
-  '/ai-estimate': 'G A',
-  '/settings': 'G ,',
-};
+const KBD_HINTS: Record<string, string> = {};
 const KBD_BY_LETTER: Record<string, string> = {
   d: '/',
   p: '/projects',
@@ -1309,21 +1301,12 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         <ChevronRight
           size={12}
           strokeWidth={2.5}
-          // index.css mirrors .lucide-chevron-right in RTL and beats rotate classes, so set the transform inline.
-          style={isRTL ? { transform: iconified ? 'scaleX(-1)' : 'none' } : undefined}
-          className={clsx(
-            'transition-transform duration-200 ease-oe',
-            // The chevron always points in the direction the click will
-            // move the panel. In RTL the outward direction flips, so
-            // the rotation logic flips too.
-            isRTL
-              ? iconified
-                ? 'rotate-180'
-                : 'rotate-0'
-              : iconified
-                ? 'rotate-0'
-                : 'rotate-180',
-          )}
+          style={{
+            transform: isRTL
+              ? (iconified ? 'rotate(180deg)' : 'rotate(0deg)')
+              : (iconified ? 'rotate(0deg)' : 'rotate(180deg)'),
+          }}
+          className="transition-transform duration-200 ease-oe"
         />
       </button>
 
@@ -2696,8 +2679,8 @@ export function FloatingRecentButton() {
   const displayed = recentItems.slice(0, 5);
 
   return (
-    // Smaller, slightly higher than the Chat FAB so they stack visually
-    <div className="oe-dock-aware fixed bottom-24 end-4 z-40">
+    // Positioned in bottom corner (was bottom-24 when stacked over AI chat)
+    <div className="oe-dock-aware fixed bottom-4 end-4 z-40">
       {/* Popover */}
       {open && (
         <div className="absolute bottom-12 end-0 w-72 rounded-xl border border-border-light bg-surface-primary shadow-xl overflow-hidden">
