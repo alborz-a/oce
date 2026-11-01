@@ -1516,17 +1516,18 @@ export function TasksPage() {
                 });
               }}
             />
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setShowAddModal(true)}
-              style={useAuthStore.getState().restrictedMode ? { display: 'none' } : undefined}
-              disabled={!projectId}
-              title={!projectId ? t('common.select_project_first', { defaultValue: 'Please select a project first' }) : undefined}
-              icon={<Plus size={14} />}
-            >
-              {t('tasks.new_task', { defaultValue: 'New Task' })}
-            </Button>
+            {!useAuthStore.getState().restrictedMode && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setShowAddModal(true)}
+                disabled={!projectId}
+                title={!projectId ? t('common.select_project_first', { defaultValue: 'Please select a project first' }) : undefined}
+                icon={<Plus size={14} />}
+              >
+                {t('tasks.new_task', { defaultValue: 'New Task' })}
+              </Button>
+            )}
           </>
         }
       />

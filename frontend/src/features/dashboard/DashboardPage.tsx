@@ -54,6 +54,7 @@ import { dashboardGuide } from './dashboardGuide';
 import { pricedPositions, type PositionCounts } from './pricedPositions';
 import { MultiCurrencyTotal } from '@/shared/ui/MultiCurrencyTotal';
 import { WhatsNewCard } from '@/shared/ui/WhatsNewCard';
+import { RestrictedDashboard } from './RestrictedDashboard';
 import { DashboardCasesCard } from './DashboardCasesCard';
 import { CompactProjectCard } from './components/CompactProjectCard';
 import { type ProjectPin } from './components/DashboardProjectsMap';
@@ -2093,6 +2094,10 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
 /* ── Main Page ─────────────────────────────────────────────────────────── */
 
 export function DashboardPage() {
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  if (restrictedMode) {
+    return <RestrictedDashboard />;
+  }
   // Mount the rollup provider ONCE so every wave-2 widget - and the inner
   // page's KPI ribbon / lastBoq / Analytics - reads from the same single
   // ``GET /api/v1/dashboard/rollup/`` instead of fanning out per-project.
@@ -2112,6 +2117,9 @@ const NO_PROJECTS: ProjectSummary[] = [];
 function DashboardPageInner() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isSystemAdmin = useIsSystemAdmin();
+  const userRole = useAuthStore((s) => s.userRole);
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
 
   const [showAllActivity, setShowAllActivity] = useState(false);
   const [customizing, setCustomizing] = useState(false);
@@ -2255,6 +2263,9 @@ function DashboardPageInner() {
         return; // cannot determine — do nothing
       }
       if (!onboardingState.completed) {
+        if (restrictedMode || (!isSystemAdmin && userRole !== 'admin')) {
+          return;
+        }
         // Server says NOT completed — clear any stale localStorage flags
         // (e.g. from a previous install) and redirect to the wizard.
         localStorage.removeItem('oe_onboarding_completed');
@@ -2742,7 +2753,7 @@ function DashboardPageInner() {
           localStorage `oe_whats_new_seen_<version>` flag so it only
           appears once per release per browser. Sits above the hero so
           the user sees release highlights before the dashboard hero. */}
-      <WhatsNewCard />
+      {!restrictedMode && <WhatsNewCard />}
       {/* ─── 1. Hero · row A - greeting + primary actions ────────────────
           Compressed from the previous 6-row hero (audit 2026-05-11): the
           greeting and the 3 CTAs share a single line on desktop; row B
