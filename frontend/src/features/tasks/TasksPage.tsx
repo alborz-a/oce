@@ -44,6 +44,7 @@ import { fetchProjectList } from '@/shared/lib/projectList';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import {
   fetchTasks,
   fetchMyTasks,
@@ -805,6 +806,7 @@ const TaskCard = React.memo(function TaskCard({
 
 export function TasksPage() {
   const { t } = useTranslation();
+  const isSystemAdmin = useIsSystemAdmin();
   const navigate = useNavigate();
   const { projectId: routeProjectId } = useParams<{ projectId: string }>();
   const qc = useQueryClient();
@@ -1467,11 +1469,13 @@ export function TasksPage() {
         })}
         actions={
           <>
-            <InsightsToggleButton open={insights.open} onClick={insights.toggle} />
+            {isSystemAdmin && <InsightsToggleButton open={insights.open} onClick={insights.toggle} />}
             <ModuleGuideButton
               content={tasksGuide}
               onCta={() => setShowAddModal(true)}
             />
+            {isSystemAdmin && (
+            <>
             <Button
               variant="secondary"
               size="sm"
@@ -1501,6 +1505,9 @@ export function TasksPage() {
             >
               {t('tasks.import', { defaultValue: 'Import' })}
             </Button>
+            </>
+            )}
+            {isSystemAdmin && (
             <VoiceEntry
               projectId={projectId}
               target="task"
@@ -1516,6 +1523,7 @@ export function TasksPage() {
                 });
               }}
             />
+            )}
             {!useAuthStore.getState().restrictedMode && (
               <Button
                 variant="primary"
@@ -1645,7 +1653,8 @@ export function TasksPage() {
           </div>
         ))}
 
-        {/* Add category button + popover */}
+        {/* Add category button + popover (system admin only) */}
+        {isSystemAdmin && (
         <div className="relative">
           <button
             onClick={() => {
@@ -1713,6 +1722,7 @@ export function TasksPage() {
             </div>
           )}
         </div>
+        )}
       </div>
 
       {/* Toolbar */}

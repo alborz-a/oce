@@ -20,6 +20,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { UserSearchInput } from '@/shared/ui/UserSearchInput';
@@ -347,7 +348,7 @@ export function TeamStrip({
   const [addOpen, setAddOpen] = useState(false);
   const [addError, setAddError] = useState<string | undefined>();
 
-  const { data: members = [], isLoading } = useQuery<ProjectMember[]>({
+  const { data: allMembers = [], isLoading } = useQuery<ProjectMember[]>({
     queryKey: ['project-members', projectId],
     queryFn: () =>
       apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
@@ -387,6 +388,8 @@ export function TeamStrip({
       });
     },
   });
+
+  const members = useVisibleMembers(allMembers);
 
   const visible = useMemo(
     () => members.slice(0, MAX_VISIBLE_AVATARS),

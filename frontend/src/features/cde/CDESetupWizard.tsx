@@ -14,6 +14,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import {
   ArrowLeft,
   ArrowRight,
@@ -155,7 +156,8 @@ export function CDESetupWizard({ open, onClose, projectId }: CDESetupWizardProps
   }, [open]);
 
   const presets = useMemo(() => presetsQuery.data?.presets ?? [], [presetsQuery.data]);
-  const members = membersQuery.data ?? [];
+  const allMembers = membersQuery.data ?? [];
+  const members = useVisibleMembers(allMembers);
   const roles = rolesQuery.data?.roles ?? [];
 
   const saveMut = useMutation({

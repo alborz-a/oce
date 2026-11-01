@@ -20,6 +20,7 @@ import { BookOpen, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 
 import { playbooksForRoute } from './playbookModules';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const MAX_SHOWN = 6;
 
@@ -32,6 +33,7 @@ export function ModuleCasesButton({ className }: ModuleCasesButtonProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const isSystemAdmin = useIsSystemAdmin();
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
 
@@ -57,7 +59,8 @@ export function ModuleCasesButton({ className }: ModuleCasesButtonProps) {
   }, [clearClose]);
 
   // Nothing touches this route — render nothing so headers stay clean.
-  if (cases.length === 0) return null;
+  // The guides/playbooks badge is system-admin only.
+  if (!isSystemAdmin || cases.length === 0) return null;
 
   const shown = cases.slice(0, MAX_SHOWN);
   const label = t('cases_for_module.button', { defaultValue: 'Cases' });

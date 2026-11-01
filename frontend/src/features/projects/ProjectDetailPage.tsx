@@ -51,6 +51,9 @@ import {
 } from '@/shared/ui';
 import { DismissibleInfo } from '@/shared/ui/DismissibleInfo';
 import { ProjectLayoutManager } from './ProjectLayoutManager';
+import { isProjectWidgetAvailable } from './projectWidgetRegistry';
+import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { ProjectStatusBadge, CURATED_PROJECT_STATUSES, useProjectStatusLabel } from './ProjectStatusBadge';
 import { StatusHistoryTimeline } from './StatusHistoryTimeline';
 import { useProjectDetailLayoutStore } from '@/stores/useProjectDetailLayoutStore';
@@ -1464,9 +1467,15 @@ export function ProjectDetailPage() {
   // re-arranged or trimmed live. Tab content below the tab bar is NOT
   // affected — only the always-visible header stack.
   const layoutHidden = useProjectDetailLayoutStore((s) => s.hidden);
+  const canOpenRoute = useCanOpenRoute();
+  const isSystemAdmin = useIsSystemAdmin();
+  // A card is hidden when the user toggled it off OR cannot open the page
+  // its "view all" link points to (computed per render, nothing persisted).
   const isWidgetHidden = useCallback(
-    (id: string) => layoutHidden.includes(id),
-    [layoutHidden],
+    (id: string) =>
+      layoutHidden.includes(id) ||
+      !isProjectWidgetAvailable(id, canOpenRoute, isSystemAdmin),
+    [layoutHidden, canOpenRoute, isSystemAdmin],
   );
 
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
@@ -1980,6 +1989,8 @@ export function ProjectDetailPage() {
                       }}
                     />
                   )}
+                  {isSystemAdmin && (
+                  <>
                   <button
                     onClick={() => {
                       setEditForm({
@@ -2016,6 +2027,8 @@ export function ProjectDetailPage() {
                     <MessagesSquare size={13} />
                     {t('team_chat.project_chat', { defaultValue: 'گفتگوی پروژه' })}
                   </button>
+                  </>
+                  )}
                 </div>
                 {project.description && (
                   <p className="mt-2 text-sm text-content-secondary max-w-2xl leading-relaxed">

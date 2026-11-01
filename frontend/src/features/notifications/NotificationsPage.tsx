@@ -49,6 +49,7 @@ import { PageHeader } from '@/shared/ui/PageHeader';
 import { DismissibleInfo, IntroRichText } from '@/shared/ui/DismissibleInfo';
 import { apiGet, apiPost, apiDelete, type Page } from '@/shared/lib/api';
 import { PreferencesTab } from './PreferencesTab';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { notificationsGuide } from './notificationsGuide';
 
 type Tab = 'inbox' | 'preferences';
@@ -172,7 +173,10 @@ export function NotificationsPage() {
     new URLSearchParams(location.search).get('tab') === 'preferences'
       ? 'preferences'
       : 'inbox';
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const isSystemAdmin = useIsSystemAdmin();
+  const [requestedTab, setActiveTab] = useState<Tab>(initialTab);
+  // Preferences tab is system-admin only; everyone else always sees the inbox.
+  const activeTab: Tab = isSystemAdmin ? requestedTab : 'inbox';
   const [filter, setFilter] = useState<NotificationFilter>('all');
   const [page, setPage] = useState(0);
 
@@ -365,6 +369,7 @@ export function NotificationsPage() {
         >
           {t('notifications.tab_inbox', { defaultValue: 'Inbox' })}
         </button>
+        {isSystemAdmin && (
         <button
           type="button"
           onClick={() => selectTab('preferences')}
@@ -378,6 +383,7 @@ export function NotificationsPage() {
         >
           {t('notifications.tab_preferences', { defaultValue: 'Preferences' })}
         </button>
+        )}
       </div>
 
       {activeTab === 'preferences' ? (

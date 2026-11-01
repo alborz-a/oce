@@ -14,6 +14,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import {
   AlertTriangle,
   Loader2,
@@ -116,12 +117,13 @@ export function FolderPermissionsModal({
   });
 
   // Project members — used for the "grant access" picker.
-  const { data: members = [] } = useQuery<ProjectMember[]>({
+  const { data: allMembers = [] } = useQuery<ProjectMember[]>({
     queryKey: ['project-members', projectId],
     queryFn: () => apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
     enabled: open && !!projectId,
     staleTime: 30_000,
   });
+  const members = useVisibleMembers(allMembers);
 
   useEffect(() => {
     if (!open) {

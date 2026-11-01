@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import {
   CalendarDays,
   GitBranch,
@@ -46,6 +47,7 @@ interface LinkDef {
 export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isSystemAdmin = useIsSystemAdmin();
 
   const links: LinkDef[] = [
     {
@@ -97,6 +99,9 @@ export function PlanningCrossLinks({ active }: { active: PlanningRouteKey }) {
       label: t('planning.link_meetings', { defaultValue: 'Meetings' }),
     },
   ];
+
+  // The planning/control tab strip is system-admin only; staff keep the page's own tab.
+  if (!isSystemAdmin) return null;
 
   return (
     // No own margin (audit fix S4): the page root's space-y-5 provides the

@@ -269,3 +269,38 @@ export const PROJECT_WIDGET_IDS: readonly string[] = PROJECT_WIDGETS.map(
 export const PROJECT_WIDGET_BY_ID: Readonly<
   Record<string, ProjectWidgetMeta>
 > = Object.fromEntries(PROJECT_WIDGETS.map((w) => [w.id, w]));
+
+/**
+ * Page each card's "view all" link opens. A card renders only when the user
+ * may open that page (see shared/lib/canOpenRoute). Widgets absent here have
+ * no link and are always available.
+ */
+export const PROJECT_WIDGET_TARGET: Readonly<Record<string, string>> = {
+  'rfi-inbox': '/rfi',
+  'change-orders': '/changeorders',
+  variations: '/variations',
+  'daily-diary': '/daily-diary',
+  'hse-incidents': '/hse-advanced',
+  'quality-ncr': '/qms',
+  'schedule-strip': '/schedule',
+  'budget-burn': '/finance',
+  'recent-files': '/files',
+  'ai-insights': '/ai-agents',
+};
+
+/** Cards shown to the system admin only, regardless of route access. */
+export const PROJECT_WIDGET_ADMIN_ONLY: ReadonlySet<string> = new Set([
+  'activity-feed',
+  'health-bar',
+  'ai-insights',
+]);
+
+/** True when the user may see this widget at all (card and picker). */
+export function isProjectWidgetAvailable(
+  id: string,
+  canOpen: (to: string | null | undefined) => boolean,
+  isAdmin: boolean,
+): boolean {
+  if (PROJECT_WIDGET_ADMIN_ONLY.has(id) && !isAdmin) return false;
+  return canOpen(PROJECT_WIDGET_TARGET[id]);
+}

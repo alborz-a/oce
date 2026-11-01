@@ -53,6 +53,7 @@ vi.mock('../PreferencesTab', () => ({
 }));
 
 import { NotificationsPage } from '../NotificationsPage';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 /* ── Helpers ──────────────────────────────────────────────────────── */
 
@@ -115,6 +116,8 @@ function renderPage(initialEntry = '/notifications') {
 
 beforeEach(() => {
   cleanup();
+  // Preferences tab is system-admin only.
+  useAuthStore.setState({ userRole: 'admin' });
   vi.clearAllMocks();
   // Default GET returns one unread notification.
   apiMocks.apiGet.mockResolvedValue({
@@ -170,6 +173,16 @@ describe('<NotificationsPage />', () => {
     // No click needed: the deep link lands the user on their notification
     // routing so other surfaces (Settings, Integrations) can point here.
     expect(await screen.findByTestId('preferences-tab-stub')).toBeTruthy();
+  });
+
+  it('hides the Preferences tab for non-admins', async () => {
+    useAuthStore.setState({ userRole: 'editor' });
+    renderPage('/notifications?tab=preferences');
+    await waitFor(() => {
+      expect(screen.getByText('Welcome aboard')).toBeTruthy();
+    });
+    expect(screen.queryByRole('button', { name: /Preferences/i })).toBeNull();
+    expect(screen.queryByTestId('preferences-tab-stub')).toBeNull();
   });
 
   it('fetches /v1/notifications with limit + offset query params', async () => {

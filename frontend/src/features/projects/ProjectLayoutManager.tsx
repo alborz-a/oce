@@ -13,7 +13,6 @@
  * features (per-tenant defaults, drag-between-grids) that don't
  * apply here.
  */
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   DndContext,
@@ -41,7 +40,10 @@ import {
 import {
   PROJECT_WIDGET_IDS,
   PROJECT_WIDGET_BY_ID,
+  isProjectWidgetAvailable,
 } from './projectWidgetRegistry';
+import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 interface RowProps {
   id: string;
@@ -146,9 +148,11 @@ export function ProjectLayoutManager({ onClose, className }: ManagerProps) {
   const toggleHidden = useProjectDetailLayoutStore((s) => s.toggleHidden);
   const reset = useProjectDetailLayoutStore((s) => s.reset);
 
-  const resolved = useMemo(
-    () => reconcileProjectOrder(order, PROJECT_WIDGET_IDS),
-    [order],
+  const canOpen = useCanOpenRoute();
+  const isAdmin = useIsSystemAdmin();
+  // Never offer a card the user cannot open (recomputed each render).
+  const resolved = reconcileProjectOrder(order, PROJECT_WIDGET_IDS).filter((id) =>
+    isProjectWidgetAvailable(id, canOpen, isAdmin),
   );
 
   const sensors = useSensors(
