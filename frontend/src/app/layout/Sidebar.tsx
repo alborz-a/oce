@@ -1757,6 +1757,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           </button>
         </div>
         */}
+          </>
+        )}
       </nav>
 
       {/* Admin / setup surfaces — rendered as a 2-column button grid
