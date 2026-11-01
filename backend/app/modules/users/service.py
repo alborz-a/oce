@@ -604,6 +604,27 @@ class UserService:
 
     # ── Authentication ─────────────────────────────────────────────────
 
+    async def _find_login_user(self, identifier: str) -> User | None:
+        """Resolve the login identifier: e-mail, or an Iranian mobile number.
+
+        A mobile shared by several users is ambiguous and resolves to nobody,
+        so the caller answers with the same generic 401 as a wrong password.
+        """
+        ident = (identifier or "").strip()
+        if "@" in ident:
+            return await self.user_repo.get_by_email(ident)
+        from app.core.mobile import normalize_mobile
+
+        mobile = normalize_mobile(ident)
+        if mobile is None:
+            return await self.user_repo.get_by_email(ident)
+        matches = await self.user_repo.get_by_mobile(mobile)
+        if len(matches) != 1:
+            if len(matches) > 1:
+                logger.warning("Login by mobile refused: %d users share one number", len(matches))
+            return None
+        return matches[0]
+
     async def login(self, data: LoginRequest) -> TokenResponse:
         """Authenticate user and return JWT tokens.
 
@@ -643,7 +664,7 @@ class UserService:
         if email_norm in _DEMO_EMAIL_WHITELIST and _demo_allowed:
             return await self.demo_login(email_norm)
 
-        user = await self.user_repo.get_by_email(data.email)
+        user = await self._find_login_user(data.email)
 
         if user is None:
             # Dummy bcrypt check to prevent timing side-channel (user enumeration)

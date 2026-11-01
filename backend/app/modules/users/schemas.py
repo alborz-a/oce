@@ -83,7 +83,8 @@ class LoginRequest(BaseModel):
 
     model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
 
-    email: EmailStr
+    # E-mail, or an Iranian mobile number (login by mobile + password).
+    email: str = Field(..., min_length=1, max_length=255)
     password: str = Field(..., min_length=1, max_length=128)
 
 

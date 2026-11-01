@@ -351,9 +351,11 @@ export function CadLoginView({
             >
               <input
                 id="emailInput"
-                type="email"
+                type="text"
+                inputMode="email"
+                autoComplete="username"
                 required
-                placeholder="ایمیل"
+                placeholder="شماره موبایل یا ایمیل"
                 className="cad-input-overlay"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

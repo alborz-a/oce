@@ -50,6 +50,12 @@ class UserRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_by_mobile(self, mobile: str) -> list[User]:
+        """Users carrying this normalised mobile (more than one means ambiguous)."""
+        stmt = select(User).where(User.mobile == mobile)
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
     async def list_all(
         self,
         *,

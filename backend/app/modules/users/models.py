@@ -47,6 +47,9 @@ class User(Base):
     # (``avatars/<user_id>.webp``). NULL means no picture: the UI falls back to
     # the initials badge. The bytes live on disk, never in the DB or the image.
     avatar_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # Normalised Iranian mobile (09xxxxxxxxx). Login accepts it in place of the
+    # e-mail until SMS OTP exists. Not unique: an ambiguous number refuses login.
+    mobile: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
     metadata_: Mapped[dict] = mapped_column(  # type: ignore[assignment]
         "metadata",
         JSON,

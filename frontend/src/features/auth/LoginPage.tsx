@@ -893,7 +893,7 @@ export function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-3" aria-label={t('auth.login', 'Sign in')}>
               <div className="animate-stagger-in" style={{ animationDelay: '280ms' }}>
-                <Input id="login-email" name="email" label={t('auth.email', 'Email')} type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" required aria-required="true" autoFocus icon={<Mail size={15} />} />
+                <Input id="login-email" name="email" label={t('auth.email_or_mobile', 'Mobile number or email')} type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="09123456789 / you@company.com" autoComplete="username" required aria-required="true" autoFocus icon={<Mail size={15} />} />
               </div>
 
               <div className="flex flex-col gap-1 animate-stagger-in" style={{ animationDelay: '340ms' }}>

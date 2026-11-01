@@ -633,12 +633,12 @@ export function LoginPageNext() {
                 <Input
                   id="login-email-next"
                   name="email"
-                  label={t('auth.email', 'Email')}
-                  type="email"
+                  label={t('auth.email_or_mobile', 'Mobile number or email')}
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  autoComplete="email"
+                  placeholder="09123456789 / you@company.com"
+                  autoComplete="username"
                   required aria-required="true"
                   autoFocus
                   icon={<Mail size={15} />}
