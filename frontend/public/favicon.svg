@@ -1,29 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" viewBox="0 0 512 512" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" viewBox="100 600 784 784" fill="none">
   <metadata>
     <rdf:RDF>
       <rdf:Description rdf:about="">
-        <dc:title>OpenConstructionERP</dc:title>
-        <dc:creator>Artem Boiko · Data Driven Construction</dc:creator>
-        <dc:source>https://datadrivenconstruction.io</dc:source>
-        <dc:identifier>urn:ddc:oce:cwicr:2026</dc:identifier>
-        <dc:rights>AGPL-3.0-or-later · DDC-CWICR-OE-2026</dc:rights>
+        <dc:title>Royal Stars Construction ERP</dc:title>
+        <dc:creator>Royal Stars Co.</dc:creator>
+        <dc:rights>AGPL-3.0-or-later</dc:rights>
       </rdf:Description>
     </rdf:RDF>
   </metadata>
-  <defs>
-    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0066ff"/>
-      <stop offset="100%" stop-color="#5856d6"/>
-    </linearGradient>
-  </defs>
-  <!-- Background -->
-  <rect x="32" y="32" width="448" height="448" rx="96" fill="url(#lg)"/>
-  <!-- Bar 1 (short) -->
-  <rect x="102" y="296" width="42" height="114" rx="6" fill="#fff" opacity=".85"/>
-  <!-- Bar 2 (medium) -->
-  <rect x="162" y="233" width="42" height="177" rx="6" fill="#fff" opacity=".95"/>
-  <!-- Bar 3 (tall) -->
-  <rect x="222" y="176" width="42" height="234" rx="6" fill="#fff" opacity=".85"/>
-  <!-- Building body -->
-  <rect x="282" y="150" width="128" height="260" rx="8" fill="#fff" opacity=".9"/>
+  <rect x="100" y="600" width="784" height="784" rx="160" fill="#ffffff" />
+  <path transform="matrix(2.7777777,0,0,-2.7777777,812.21609,941.6782)" d="M 0 0 L -.004 0 L -.004 41.099 C -.004 71.626 -24.752 96.374 -55.28 96.374 L -96.72 96.374 L -96.72 96.394 C -106.102 96.394 -113.707 103.999 -113.707 113.382 L -116.747 113.382 C -116.747 103.999 -124.354 96.394 -133.735 96.394 L -133.735 96.374 L -175.186 96.374 C -205.713 96.374 -230.461 71.626 -230.461 41.099 L -230.461 0 L -230.465 0 C -230.465 -9.382 -238.07 -16.987 -247.452 -16.987 L -247.452 -20.027 C -238.07 -20.027 -230.465 -28.743 -230.465 -38.125 L -230.461 -38.125 L -230.461 -78.006 C -230.461 -108.534 -205.713 -133.282 -175.186 -133.282 L -133.162 -133.282 C -124.057 -133.597 -116.767 -141.058 -116.767 -150.239 L -113.727 -150.239 C -113.727 -141.058 -106.437 -133.597 -97.331 -133.282 L -55.28 -133.282 C -24.752 -133.282 -.004 -108.534 -.004 -78.006 L -.004 -37.016 L 0 -37.016 C 0 -27.634 7.605 -20.027 16.987 -20.027 L 16.987 -16.987 C 7.605 -16.987 0 -9.382 0 0 " fill="#0d468a"/>
+  <path transform="matrix(2.7777777,0,0,-2.7777777,496.2928,988.3822)" d="M 0 0 L -3 0 C -3 26.063 -32.204 55.268 -58.268 55.268 L -58.268 58.268 C -32.204 58.268 -3 87.472 -3 113.535 L 0 113.535 C 0 87.472 29.204 58.268 55.268 58.268 L 55.268 55.268 C 29.204 55.268 0 26.063 0 0 " fill="#daba7a"/>
+  <path transform="matrix(2.7777777,0,0,-2.7777777,496.2928,1312.7313)" d="M 0 0 L -3 0 C -3 26.062 -32.204 55.267 -58.268 55.267 L -58.268 58.267 C -32.204 58.267 -3 87.471 -3 113.534 L 0 113.534 C 0 87.471 29.204 58.267 55.268 58.267 L 55.268 55.267 C 29.204 55.267 0 26.062 0 0 " fill="#daba7a"/>
+  <path transform="matrix(2.7777777,0,0,-2.7777777,493.42277,1204.143)" d="M 0 0 L -.934 0 C -.934 8.114 -10.027 17.208 -18.143 17.208 L -18.143 18.142 C -10.027 18.142 -.934 27.235 -.934 35.351 L 0 35.351 C 0 27.235 9.094 18.142 17.209 18.142 L 17.209 17.208 C 9.094 17.208 0 8.114 0 0 " fill="#0d468a"/>
+  <path transform="matrix(2.7777777,0,0,-2.7777777,333.9583,1150.7169)" d="M 0 0 L -3 0 C -3 26.063 -32.204 55.268 -58.268 55.268 L -58.268 58.268 C -32.204 58.268 -3 87.472 -3 113.535 L 0 113.535 C 0 87.472 29.204 58.268 55.268 58.268 L 55.268 55.268 C 29.204 55.268 0 26.063 0 0 " fill="#daba7a"/>
+  <path transform="matrix(2.7777777,0,0,-2.7777777,658.6272,1150.7169)" d="M 0 0 L -3 0 C -3 26.063 -32.204 55.268 -58.268 55.268 L -58.268 58.268 C -32.204 58.268 -3 87.472 -3 113.535 L 0 113.535 C 0 87.472 29.204 58.268 55.268 58.268 L 55.268 55.268 C 29.204 55.268 0 26.063 0 0 " fill="#daba7a"/>
 </svg>
