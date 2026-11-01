@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   Image as ImageIcon,
 } from 'lucide-react';
-import { Card, Badge, Skeleton, AuthImage } from '@/shared/ui';
+import { Card, Badge, Skeleton, EmptyState, AuthImage } from '@/shared/ui';
 import { apiGet, API_BASE } from '@/shared/lib/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ProjectStatusBadge } from '@/features/projects/ProjectStatusBadge';
