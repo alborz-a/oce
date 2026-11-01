@@ -19,7 +19,6 @@ const ADMIN_ONLY: RegExp[] = [
   /^\/property-dev\/(admin|settings)(\/.*)?$/,
   /^\/about$/,
   /^\/settings(\/.*)?$/,
-  /^\/profile$/,
   /^\/chat$/,
   /^\/advisor$/,
   /^\/ai-(estimate|estimator|agents)$/,

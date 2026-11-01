@@ -33,9 +33,47 @@ import {
   Loader2,
   LayoutGrid,
   GraduationCap,
+  FolderKanban,
+  CheckSquare,
+  Camera,
+  Bell,
+  User,
   type LucideIcon,
 } from 'lucide-react';
 import { LEARN_GROUP_ID, navGroups, type NavGroup, type NavItem } from './navCatalog';
+
+const RESTRICTED_NAV_ITEMS: NavItem[] = [
+  {
+    to: '/projects',
+    labelKey: 'nav.projects',
+    defaultLabel: 'پروژه‌ها',
+    icon: FolderKanban,
+  },
+  {
+    to: '/tasks',
+    labelKey: 'nav.tasks',
+    defaultLabel: 'وظایف',
+    icon: CheckSquare,
+  },
+  {
+    to: '/files',
+    labelKey: 'nav.files',
+    defaultLabel: 'تصاویر و اسناد',
+    icon: Camera,
+  },
+  {
+    to: '/notifications',
+    labelKey: 'nav.notifications',
+    defaultLabel: 'اعلان‌ها',
+    icon: Bell,
+  },
+  {
+    to: '/profile',
+    labelKey: 'nav.profile',
+    defaultLabel: 'پروفایل کاربری',
+    icon: User,
+  },
+];
 import { LEARN_ANCHOR_ATTR, anchorRect, flyLearn } from './learnFlight';
 import { PRESET_WORKSPACES, resolveWorkspace, shownTab } from './workspaces';
 import { useCompanyWorkspace } from './useCompanyWorkspace';
@@ -547,7 +585,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const { data: backendModules } = useQuery({
     queryKey: ['system-modules'],
     queryFn: () => apiGet<BackendModuleState[]>('/v1/modules/'),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !restrictedMode,
     staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
   });
@@ -725,7 +763,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     onClick: enterEditMode,
   };
   const adminGridWithEdit: AdminGridItem[] = useMemo(() => {
-    if (!isSystemAdmin) return [];
+    if (restrictedMode || !isSystemAdmin) return [];
     if (editMode) return visibleAdminGridItems;
     const aboutIdx = visibleAdminGridItems.findIndex((item) => item.to === '/about');
     if (aboutIdx === -1) return [...visibleAdminGridItems, editMenuGridItem];
@@ -1330,6 +1368,28 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         )}
         data-engine="cwicr"
       >
+        {restrictedMode ? (
+          <ul className="space-y-1">
+            {RESTRICTED_NAV_ITEMS.map((item, i) => (
+              <li
+                key={item.to}
+                className="oe-stagger"
+                style={{ animationDelay: `${i * 18}ms` }}
+              >
+                <SidebarItem
+                  item={item}
+                  label={t(item.labelKey, { defaultValue: item.defaultLabel })}
+                  onClick={onClose}
+                  badge={badgeMap[item.to]}
+                  isPinned={false}
+                  activeRoute={activeRoute}
+                  iconified={iconified}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <>
         {/* Learn: videos and cases, above everything else, Pinned included.
             Hidden from its own header into a cap in the top bar, and restored
             from there. */}

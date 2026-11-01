@@ -236,6 +236,9 @@ const PostCalcPage = lazy(() =>
 );
 // Delivery-lifecycle registers (backend modules oe_site_inventory / oe_site_prep /
 // oe_temporary_works / oe_interface_management / oe_defects_liability).
+const ProfilePage = lazy(() =>
+  import('@/features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage }))
+);
 const SiteInventoryPage = lazy(() =>
   import('@/features/site-inventory/SiteInventoryPage').then((m) => ({ default: m.SiteInventoryPage }))
 );
@@ -1031,6 +1034,7 @@ function useDocumentDirection() {
 
 export default function App() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   useDocumentDirection();
   // The Simple / Advanced menu mode: the user's stored choice, or while there
   // is none a default derived from the company profile.
@@ -1139,7 +1143,7 @@ export default function App() {
           `OnboardingTour` component still ships for per-feature
           custom tours (e.g. Pipelines page), but is no longer mounted
           globally. */}
-      {isAuthenticated && <ProductTour />}
+      {isAuthenticated && !restrictedMode && <ProductTour />}
       <Routes>
         {/* Public share-link landing page — no auth required, no app shell */}
         <Route path="/share/:token" element={<SharePage />} />
@@ -1210,7 +1214,11 @@ export default function App() {
 
         {/* Onboarding — full-screen, no layout */}
         <Route path="/onboarding" element={
-          <RequireAuth><Suspense fallback={<LoadingScreen />}><OnboardingWizard /></Suspense></RequireAuth>
+          <RequireAuth>
+            <AdminOnly redirectTo="/dashboard">
+              <Suspense fallback={<LoadingScreen />}><OnboardingWizard /></Suspense>
+            </AdminOnly>
+          </RequireAuth>
         } />
 
         {/* App — all protected, all real pages.  Every route below shares one
@@ -1709,7 +1717,7 @@ export default function App() {
         <Route path="/find" element={<P title="Find Records"><RetrievalPage /></P>} />
         <Route path="/projects/:projectId/find" element={<P title="Find Records"><RetrievalPage /></P>} />
         <Route path="/estimates" element={<Navigate to="/boq" replace />} />
-        <Route path="/profile" element={<Navigate to="/settings" replace />} />
+        <Route path="/profile" element={<P title="Profile"><ProfilePage /></P>} />
         <Route path="/notifications" element={<P title="Notifications"><NotificationsPage /></P>} />
 
         {/* Plugin module routes — lazy-loaded */}

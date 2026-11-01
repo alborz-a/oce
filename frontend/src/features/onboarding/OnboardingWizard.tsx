@@ -4893,17 +4893,17 @@ export function OnboardingWizard() {
                   {t('onboarding.skip_setup', { defaultValue: 'Skip setup' })}
                 </button>
               )}
-              {/* Persistent escape hatch on every step: open the app now in
-                  English. A quiet secondary pill so it never competes with the
-                  wizard's primary CTA. */}
-              <button
-                type="button"
-                onClick={handleSkipAll}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-elevated/70 px-3 py-1 text-xs font-medium text-content-tertiary backdrop-blur-sm transition-colors hover:border-oe-blue/40 hover:bg-surface-elevated hover:text-content-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
-              >
-                <Globe size={13} strokeWidth={2} />
-                {t('onboarding.skip_all', { defaultValue: 'Skip setup - open in English' })}
-              </button>
+              {/* [RSC-IRAN] hidden: "Skip setup - open in English" hidden — do not delete */}
+              {false && (
+                <button
+                  type="button"
+                  onClick={handleSkipAll}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border-light bg-surface-elevated/70 px-3 py-1 text-xs font-medium text-content-tertiary backdrop-blur-sm transition-colors hover:border-oe-blue/40 hover:bg-surface-elevated hover:text-content-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
+                >
+                  <Globe size={13} strokeWidth={2} />
+                  {t('onboarding.skip_all', { defaultValue: 'Skip setup - open in English' })}
+                </button>
+              )}
             </div>
           </div>
           <ProgressBar current={step} total={TOTAL_STEPS} />

@@ -5,6 +5,8 @@
  * (redirect). Hiding a row is not access control; the backend still checks.
  */
 const ALLOWED: RegExp[] = [
+  /^\/$/,
+  /^\/dashboard$/,
   /^\/projects$/,
   /^\/projects\/(?!new(?:\/|$))[^/]+$/,
   /^\/projects\/[^/]+\/(tasks|files)$/,
@@ -12,6 +14,8 @@ const ALLOWED: RegExp[] = [
   /^\/photos$/,
   /^\/files$/,
   /^\/documents$/,
+  /^\/notifications$/,
+  /^\/profile$/,
 ];
 
 /** True when `to` (path, optional ?query / #hash) is open to a restricted user. */
