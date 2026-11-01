@@ -354,3 +354,30 @@ export const DASHBOARD_WIDGET_IDS: readonly string[] =
 export const DASHBOARD_WIDGET_BY_ID: Readonly<
   Record<string, DashboardWidgetMeta>
 > = Object.fromEntries(DASHBOARD_WIDGETS.map((w) => [w.id, w]));
+
+/**
+ * Page each card's "view all" link opens. A card renders (and is offered in
+ * the customize picker) only when the user may open that page. Cards absent
+ * here have no gated link and are always available.
+ */
+export const DASHBOARD_WIDGET_TARGET: Readonly<Record<string, string>> = {
+  cases_learn: '/cases',
+  cases_market: '/cases',
+  finance_summary: '/finance',
+  estimate_resources: '/resource-summary',
+  projects: '/projects',
+  validation_portfolio: '/validation',
+  bim_coverage: '/bim',
+  upcoming_milestones: '/schedule',
+  rfi_turnaround: '/rfi',
+  submittals_pending: '/submittals',
+  inspections_quality: '/inspections',
+  punch_quality: '/punchlist',
+};
+
+export function isDashboardWidgetAvailable(
+  id: string,
+  canOpen: (to: string | null | undefined) => boolean,
+): boolean {
+  return canOpen(DASHBOARD_WIDGET_TARGET[id]);
+}

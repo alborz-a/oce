@@ -60,7 +60,12 @@ import { CompactProjectCard } from './components/CompactProjectCard';
 import { type ProjectPin } from './components/DashboardProjectsMap';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { DashboardLayoutManager } from './DashboardLayoutManager';
-import { DASHBOARD_WIDGET_IDS, DASHBOARD_WIDGET_BY_ID } from './widgetRegistry';
+import {
+  DASHBOARD_WIDGET_IDS,
+  DASHBOARD_WIDGET_BY_ID,
+  isDashboardWidgetAvailable,
+} from './widgetRegistry';
+import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
 import {
   useDashboardLayoutStore,
   reconcileOrder,
@@ -2179,9 +2184,10 @@ function DashboardPageInner() {
   const widgetOrder = useDashboardLayoutStore((s) => s.order);
   const widgetHidden = useDashboardLayoutStore((s) => s.hidden);
   const widgetSpans = useDashboardLayoutStore((s) => s.spans);
-  const resolvedWidgets = useMemo(
-    () => reconcileOrder(widgetOrder, DASHBOARD_WIDGET_IDS),
-    [widgetOrder],
+  const canOpenRoute = useCanOpenRoute();
+  // Never render a card whose "view all" page the user cannot open.
+  const resolvedWidgets = reconcileOrder(widgetOrder, DASHBOARD_WIDGET_IDS).filter((id) =>
+    isDashboardWidgetAvailable(id, canOpenRoute),
   );
 
   // Friendly display name for the greeting. We prefer the user's REAL profile

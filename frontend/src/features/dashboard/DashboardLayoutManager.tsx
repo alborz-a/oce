@@ -9,7 +9,6 @@
  * State lives in `useDashboardLayoutStore` (localStorage-persisted), so a
  * change here is reflected on the dashboard immediately and survives reloads.
  */
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   DndContext,
@@ -34,8 +33,10 @@ import {
   useDashboardLayoutStore,
   reconcileOrder,
 } from '@/stores/useDashboardLayoutStore';
+import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
 import {
   DASHBOARD_WIDGET_IDS,
+  isDashboardWidgetAvailable,
   DASHBOARD_WIDGET_BY_ID,
 } from './widgetRegistry';
 
@@ -201,9 +202,10 @@ export function DashboardLayoutManager({ onClose, className }: ManagerProps) {
   const setSpan = useDashboardLayoutStore((s) => s.setSpan);
   const reset = useDashboardLayoutStore((s) => s.reset);
 
-  const resolved = useMemo(
-    () => reconcileOrder(order, DASHBOARD_WIDGET_IDS),
-    [order],
+  const canOpenRoute = useCanOpenRoute();
+  // Never offer a card the user cannot open.
+  const resolved = reconcileOrder(order, DASHBOARD_WIDGET_IDS).filter((id) =>
+    isDashboardWidgetAvailable(id, canOpenRoute),
   );
 
   const sensors = useSensors(
