@@ -1,10 +1,11 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { User, Mail, Shield, Camera, Trash2, KeyRound, Check, ArrowRight } from 'lucide-react';
-import { Button, Input, Card, CardHeader, CardContent, Badge, UserAvatar } from '@/shared/ui';
+import { Mail, Camera, Trash2, KeyRound, Check } from 'lucide-react';
+import { Button, Input, Card, CardHeader, CardContent, Badge } from '@/shared/ui';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { apiGet, apiPatch, apiPost, fetchWithAuth, API_BASE } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -26,7 +27,7 @@ export function ProfilePage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   // Profile data
-  const { data: profile, isLoading } = useQuery<UserProfile>({
+  const { data: profile } = useQuery<UserProfile>({
     queryKey: ['me'],
     queryFn: () => apiGet<UserProfile>('/v1/users/me/'),
     staleTime: 60_000,

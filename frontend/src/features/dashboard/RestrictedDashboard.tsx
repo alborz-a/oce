@@ -1,27 +1,21 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   FolderKanban,
   CheckSquare,
   Camera,
   Calendar,
   Clock,
-  ArrowRight,
-  ExternalLink,
   Building2,
   CheckCircle2,
-  AlertCircle,
   X,
   ChevronLeft,
-  ChevronRight,
   Image as ImageIcon,
-  User,
 } from 'lucide-react';
-import { Card, CardHeader, CardContent, Badge, Button, Skeleton, EmptyState, AuthImage } from '@/shared/ui';
+import { Card, Badge, Skeleton, AuthImage } from '@/shared/ui';
 import { apiGet, API_BASE } from '@/shared/lib/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { ProjectStatusBadge } from '@/features/projects/ProjectStatusBadge';
@@ -58,8 +52,6 @@ interface PhotoItem {
 }
 
 export function RestrictedDashboard() {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
   const userFullName = useAuthStore((s) => s.userFullName);
   const userEmail = useAuthStore((s) => s.userEmail);
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
@@ -307,7 +299,7 @@ export function RestrictedDashboard() {
                     </div>
                   </div>
                   <Badge
-                    variant={isCompleted ? 'success' : task.priority === 'urgent' || task.priority === 'high' ? 'danger' : 'neutral'}
+                    variant={isCompleted ? 'success' : task.priority === 'urgent' || task.priority === 'high' ? 'error' : 'neutral'}
                     size="sm"
                   >
                     {isCompleted ? 'تکمیل‌شده' : task.priority === 'urgent' ? 'فوری' : task.priority === 'high' ? 'مهم' : 'عادی'}
@@ -357,7 +349,6 @@ export function RestrictedDashboard() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {photos.slice(0, 8).map((photo) => {
-              const photoUrl = `${API_BASE}/v1/documents/photos/${photo.id}/file`;
               const thumbUrl = `${API_BASE}/v1/documents/photos/${photo.id}/thumb`;
               return (
                 <div
