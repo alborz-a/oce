@@ -578,7 +578,10 @@ async def list_project_members_endpoint(
     await _verify_project_access(service, project_id, user_id, session, payload)
     from app.modules.projects.member_service import list_project_members
 
-    return await list_project_members(session, project_id)
+    from app.core.hidden_users import viewer_is_admin
+    from app.modules.projects.member_service import present_members
+
+    return present_members(await list_project_members(session, project_id), viewer_is_admin(payload))
 
 
 @router.post(

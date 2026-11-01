@@ -67,6 +67,25 @@ async def _load_project(session: AsyncSession, project_id: uuid.UUID) -> Project
     return project
 
 
+def present_members(members: list[ProjectMemberResponse], viewer_is_admin: bool) -> list[ProjectMemberResponse]:
+    """Shape the member list for display.
+
+    Non-admins never see the Mizito import account. The project owner shown is the
+    project manager when one exists (the import account owns every project row only
+    because the API has no ownership transfer). Admins get the list unchanged.
+    """
+    from app.core.hidden_users import is_hidden_system_user
+
+    if viewer_is_admin:
+        return members
+    visible = [m for m in members if not is_hidden_system_user(m.email, m.full_name)]
+    manager = next((m for m in visible if m.role == "project_manager"), None)
+    if manager is not None:
+        for m in visible:
+            m.is_owner = m is manager
+    return visible
+
+
 async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> list[ProjectMemberResponse]:
     """Return all members of the project's default team, joined to User.
 

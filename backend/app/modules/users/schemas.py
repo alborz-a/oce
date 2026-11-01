@@ -321,6 +321,9 @@ class UserAdminUpdate(BaseModel):
     role: str | None = Field(default=None, pattern=r"^(admin|manager|editor|viewer)$")
     is_active: bool | None = None
     locale: str | None = Field(default=None, max_length=10)
+    email: EmailStr | None = None
+    # Iranian mobile for login by mobile + password. "" clears it.
+    mobile: str | None = Field(default=None, max_length=32)
 
     @field_validator("full_name")
     @classmethod
@@ -328,6 +331,25 @@ class UserAdminUpdate(BaseModel):
         if v is not None:
             return _sanitize_name(v)
         return v
+
+    @field_validator("email")
+    @classmethod
+    def _lower_email(cls, v: str | None) -> str | None:
+        return v.strip().lower() if v else v
+
+    @field_validator("mobile")
+    @classmethod
+    def _normalize_mobile(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        if not v.strip():
+            return ""
+        from app.core.mobile import normalize_mobile
+
+        out = normalize_mobile(v)
+        if out is None:
+            raise ValueError("mobile must be an Iranian mobile number (09xxxxxxxxx)")
+        return out
 
 
 class UserResponse(BaseModel):

@@ -1683,6 +1683,7 @@ async def admin_create_user(
 )
 async def list_users(
     viewer_id: CurrentUserId,
+    payload: CurrentUserPayload,
     service: UserService = Depends(_get_service),
     offset: int = Query(default=0, ge=0),
     # Directory/assignee pickers load the full active-user list in one call,
@@ -1703,6 +1704,10 @@ async def list_users(
     real.
     """
     users, _ = await service.list_users(offset=offset, limit=limit, is_active=is_active)
+    from app.core.hidden_users import is_hidden_system_user, viewer_is_admin
+
+    if not viewer_is_admin(payload):
+        users = [u for u in users if not is_hidden_system_user(u.email, u.full_name)]
     return [redact_model(UserResponse.model_validate(u), subject_id=u.id, viewer_id=viewer_id) for u in users]
 
 
@@ -1738,6 +1743,12 @@ async def update_user(
 ) -> UserResponse:
     """Update user (admin only). The echoed record is redacted in demo mode."""
     fields = data.model_dump(exclude_unset=True)
+    if fields.get("email"):
+        other = await service.user_repo.get_by_email(fields["email"])
+        if other is not None and other.id != user_id:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already in use")
+    if "mobile" in fields and fields["mobile"] == "":
+        fields["mobile"] = None
     user = await service.update_profile(user_id, **fields)
     return redact_model(UserResponse.model_validate(user), subject_id=user.id, viewer_id=viewer_id)
 
