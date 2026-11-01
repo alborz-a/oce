@@ -344,6 +344,7 @@ const standardLabels: Record<string, string> = {
   birimfiyat: 'Birim Fiyat',
   nlsfb: 'NL/SfB',
 };
+void standardLabels;
 
 // ---------------------------------------------------------------------------
 // Subcomponents
