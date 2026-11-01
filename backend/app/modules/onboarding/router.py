@@ -30,12 +30,12 @@ import uuid
 from collections.abc import Awaitable, Callable
 from typing import Any
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 
 from app.core.job_run import JobRun
 from app.core.job_runner import submit_job
-from app.dependencies import CurrentUserId, SessionDep
+from app.dependencies import CurrentUserId, RequireRole, SessionDep
 from app.modules.onboarding.handlers import KIND_INSTALL_DEMO, KIND_LOAD_CWICR
 from app.modules.onboarding.schemas import (
     JobState,
@@ -171,7 +171,7 @@ async def _sample_still_there(session: SessionDep, row: JobRun) -> bool:
     return (await session.execute(select(Project.id).where(Project.id == project_id))).first() is not None
 
 
-@router.post("/provision", response_model=ProvisionResponse)
+@router.post("/provision", response_model=ProvisionResponse, dependencies=[Depends(RequireRole("admin"))])
 async def provision(body: ProvisionRequest, user_id: CurrentUserId, session: SessionDep) -> ProvisionResponse:
     """Kick off the heavy first-run work as background jobs and return their ids.
 

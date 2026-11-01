@@ -623,7 +623,7 @@ def _slim_list_row(payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(RequirePermission("costs.read"))])
 async def search_cost_items(
     user: CurrentUserPayload = None,  # type: ignore[assignment]
     service: CostItemService = Depends(_get_service),
