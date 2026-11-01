@@ -86,7 +86,20 @@ export function RestrictedDashboard() {
     queryKey: ['restricted-dashboard-photos'],
     queryFn: async () => {
       try {
-        return await apiGet<{ items?: PhotoItem[] }>('/v1/documents/photos/?limit=8');
+        // The plain photo list needs a project_id (422 without it); the
+        // "recent" feed is already scoped to the caller's projects.
+        const recent = await apiGet<
+          { id: string; project_id: string; project_name?: string; caption?: string | null; created_at: string; taken_at?: string | null }[]
+        >('/v1/documents/photos/recent/?limit=8');
+        return recent.map((r) => ({
+          id: r.id,
+          file_name: r.caption ?? '',
+          description: r.caption ?? undefined,
+          project_id: r.project_id,
+          project_name: r.project_name,
+          created_at: r.created_at,
+          captured_at: r.taken_at ?? undefined,
+        }));
       } catch {
         return [];
       }

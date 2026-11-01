@@ -35,6 +35,9 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, r"^projects/?$"),
     _rule(_R, rf"^projects/{_ID}/?$"),
     _rule(_R, rf"^projects/{_ID}/members/?$"),
+    # project file manager (documents + photos list, tree, storage locations). Read only;
+    # membership is checked in the handler. Backs the project Photos tab and the files page.
+    _rule(_R, rf"^projects/{_ID}/files(/(tree|locations))?/?$"),
     # tasks: read, change (status etc.), complete. NO create, NO delete, NO batch, NO import/export.
     _rule(_R, r"^tasks/?$"),
     _rule(_R, r"^tasks/(my-tasks|stats)/?$"),
@@ -48,9 +51,15 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, rf"^documents/{_ID}(/(download|references))?/?$"),
     _rule(_R, r"^documents/file-types-by-project/?$"),
     _rule(_R, r"^documents/photos(/.*)?$"),
+    # document upload (needs documents.create; membership + folder grants checked in the handler). No delete.
+    _rule(frozenset({"POST"}), r"^documents/upload/?$"),
     # photo upload (with caption) and caption update. No delete.
     _rule(frozenset({"POST"}), r"^documents/photos/upload/?$"),
     _rule(frozenset({"PATCH"}), rf"^documents/photos/{_ID}/?$"),
+    # global search: read only. Handler scopes hits to the caller's projects and
+    # narrows collections with ``restrict_search_types``.
+    _rule(_R, r"^search/?$"),
+    _rule(_R, r"^search/(status|types)/?$"),
     # own notifications (the shell polls unread-count)
     _rule(_ANY, r"^notifications(/.*)?$"),
     # shell: enabled-module list (read only)
@@ -58,6 +67,15 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # admin-controlled help banners: read only
     _rule(_R, r"^info-banners/?$"),
 )
+
+
+# Collections a restricted user may search: only what they can open (tasks, documents).
+RESTRICTED_SEARCH_COLLECTIONS: tuple[str, ...] = ("oe_tasks", "oe_documents")
+
+
+def restrict_search_types(canonical: list[str]) -> list[str]:
+    """Keep only collections a restricted user may see; never empty-means-all."""
+    return [c for c in canonical if c in RESTRICTED_SEARCH_COLLECTIONS]
 
 
 def is_restricted_user(user: Any) -> bool:

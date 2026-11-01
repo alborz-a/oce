@@ -27,6 +27,17 @@ from app.modules.search.service import (
 router = APIRouter(tags=["search"])
 
 
+async def _caller_is_restricted(session: SessionDep, user_id: str) -> bool:
+    from app.core.restricted_mode import is_restricted_user
+    from app.modules.users.repository import UserRepository
+
+    try:
+        user = await UserRepository(session).get_by_id(uuid.UUID(str(user_id)))
+    except (ValueError, TypeError):
+        return False
+    return user is not None and is_restricted_user(user)
+
+
 @router.get("/", response_model=UnifiedSearchResponse)
 async def unified_search_endpoint(
     _user_id: CurrentUserId,
@@ -59,6 +70,12 @@ async def unified_search_endpoint(
     """
     if project_id:
         await verify_project_access(uuid.UUID(project_id), _user_id, session)
+    if await _caller_is_restricted(session, _user_id):
+        from app.core.restricted_mode import restrict_search_types
+        from app.modules.search.service import _normalize_types
+
+        # Restricted staff only search what they can open (tasks, documents).
+        types = restrict_search_types(_normalize_types(types))
     return await unified_search_service(
         query=q,
         user_id=_user_id,
@@ -81,7 +98,7 @@ async def search_status_endpoint(_user_id: CurrentUserId) -> SearchStatusRespons
 
 
 @router.get("/types/")
-async def list_search_types(_user_id: CurrentUserId) -> dict[str, list[dict[str, str]]]:
+async def list_search_types(_user_id: CurrentUserId, session: SessionDep) -> dict[str, list[dict[str, str]]]:
     """List the collection short names accepted by ``GET /search/?types=...``.
 
     Returns a structured list with both the canonical name and a human
@@ -89,6 +106,11 @@ async def list_search_types(_user_id: CurrentUserId) -> dict[str, list[dict[str,
     """
     from app.core.vector_index import ALL_COLLECTIONS, COLLECTION_LABELS
 
+    names = list(ALL_COLLECTIONS)
+    if await _caller_is_restricted(session, _user_id):
+        from app.core.restricted_mode import restrict_search_types
+
+        names = restrict_search_types(names)
     return {
         "types": [
             {
@@ -96,6 +118,6 @@ async def list_search_types(_user_id: CurrentUserId) -> dict[str, list[dict[str,
                 "label": COLLECTION_LABELS.get(collection, collection),
                 "short": collection.removeprefix("oe_"),
             }
-            for collection in ALL_COLLECTIONS
+            for collection in names
         ]
     }
