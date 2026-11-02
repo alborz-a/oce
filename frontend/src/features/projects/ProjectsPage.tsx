@@ -1331,6 +1331,7 @@ export function ProjectCard({
           locale: getDateFnsLocale(),
         })
       : null;
+  const relativeModifiedText = relativeModified && REGION_LOCK ? toPersianDigits(relativeModified) : relativeModified; // [RSC-IRAN]
   const absoluteModified = modifiedDate && isValidDate(modifiedDate)
     ? modifiedDate.toLocaleDateString(getIntlLocale())
     : '';
@@ -1658,7 +1659,7 @@ export function ProjectCard({
                 className="text-2xs text-content-tertiary"
                 title={absoluteModified}
               >
-                {relativeModified}
+                {relativeModifiedText}
               </span>
             )}
             {boqStats && boqStats.boqCount > 0 && (
