@@ -4,6 +4,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { useTranslation as useI18nTranslation } from 'react-i18next';
 import { REGION_LOCK, LOCKED } from './regionLock';
+import { toPersianDigits } from '@/shared/lib/jalali';
 
 export const SUPPORTED_LANGUAGES = [
   // Plain English names no region, and the two entries under it are how a
@@ -553,9 +554,23 @@ const initialLanguage = resolveInitialLanguage();
 // still reading the one source of truth.
 applyDocumentDirection(initialLanguage);
 
+// [RSC-IRAN] Every translated string shows Persian digits when the UI is Farsi
+// (counts, "{{from}}-{{to}}", times inside sentences), so no component has to
+// convert on its own.
+const persianDigitsPostProcessor = {
+  type: 'postProcessor' as const,
+  name: 'faDigits',
+  process: (value: string): string =>
+    REGION_LOCK && typeof value === 'string' && (i18n.language ?? '').toLowerCase().startsWith('fa')
+      ? toPersianDigits(value)
+      : value,
+};
+
 i18n
   .use(initReactI18next)
+  .use(persianDigitsPostProcessor)
   .init({
+    postProcess: ['faDigits'],
     // Initialize synchronously: every resource this init needs is already in
     // memory (the bundled EN object), so deferring init to a timer only opens
     // a boot window where ``t()`` echoes raw keys. With sync init the store
