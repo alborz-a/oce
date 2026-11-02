@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CadBackgroundSvg } from './CadBackgroundSvg';
 import { CadFloorplanSvg } from './CadFloorplanSvg';
 import './LoginPage.cad.css';
+import { APP_VERSION } from '@/shared/lib/version';
 
 interface CadLoginViewProps {
   email: string;
@@ -415,6 +416,12 @@ export function CadLoginView({
               </button>
             </div>
           </form>
+          <div
+            dir="ltr"
+            className="absolute left-0 right-0 top-full pt-0.5 text-center text-[10px] leading-none text-[#94a3b8] opacity-60"
+          >
+            {APP_VERSION}
+          </div>
         </div>
       </main>
 

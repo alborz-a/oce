@@ -1349,7 +1349,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           'flex-1 overflow-y-auto pt-2 pb-3',
           iconified ? 'px-2' : 'px-3',
         )}
-        data-engine="cwicr"
+       
       >
         {restrictedMode ? (
           <ul className="space-y-1">

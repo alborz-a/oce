@@ -631,7 +631,7 @@ export function CadBackgroundSvg({ isMobile }: CadBackgroundSvgProps) {
           <text x="282.5" y="273" textAnchor="middle">سیستم مختصات: UTM-WGS84 | مقیاس ۱:۱۰۰</text>
           <text x="282.5" y="314" textAnchor="middle">واحد مالی پیمان: ریال ایران (شمسـی)</text>
           <text x="87.5" y="273" textAnchor="middle" fontFamily="JetBrains Mono">DWG NO: RSC-1405-01</text>
-          <text x="87.5" y="314" textAnchor="middle" fontFamily="JetBrains Mono">REV: rsd0.4 | SHEET 01/01</text>
+          <text x="87.5" y="314" textAnchor="middle" fontFamily="JetBrains Mono">SHEET 01/01</text>
         </g>
       </g>
     </svg>
