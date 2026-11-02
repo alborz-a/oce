@@ -82,6 +82,14 @@ export function formatJalaliWithOptions(value: string | Date, options: Intl.Date
   return [weekday, text].filter(Boolean).join('، ');
 }
 
+/**
+ * [RSC-IRAN] Persian digits for text built from Latin-digit sources (date-fns,
+ * padStart, ISO slices) when the UI is Farsi. No-op in every other language.
+ */
+export function localizeDigits(text: string): string {
+  return REGION_LOCK && getIntlLocale().toLowerCase().startsWith('fa') ? toPersianDigits(text) : text;
+}
+
 /** Currency-style number formatter (e.g. 1,234.56) using current locale. */
 export function fmtNumber(value: number | string | null | undefined, decimals = 2): string {
   const n = typeof value === 'number' ? value : Number(value ?? 0);
@@ -439,9 +447,9 @@ export function fmtDate(dateStr: string, options?: Intl.DateTimeFormatOptions): 
   const finalOpts = dateOnlyFormatOptions(dateStr, opts);
   const pref = getDateFormatPreference();
   if (pref === 'auto') {
-    return new Date(dateStr).toLocaleDateString(getIntlLocale(), finalOpts);
+    return localizeDigits(new Date(dateStr).toLocaleDateString(getIntlLocale(), finalOpts));
   }
-  return formatDateWithPreference(new Date(dateStr), getIntlLocale(), finalOpts, pref);
+  return localizeDigits(formatDateWithPreference(new Date(dateStr), getIntlLocale(), finalOpts, pref));
 }
 
 /**
@@ -466,7 +474,7 @@ export function formatDateValue(
     const j = formatJalaliWithOptions(value, options);
     if (j !== null) return j;
   }
-  return new Intl.DateTimeFormat(locale, dateOnlyFormatOptions(value, options)).format(date);
+  return localizeDigits(new Intl.DateTimeFormat(locale, dateOnlyFormatOptions(value, options)).format(date));
 }
 
 // ---------------------------------------------------------------------------
