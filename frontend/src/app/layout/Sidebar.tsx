@@ -104,7 +104,7 @@ import {
   useActiveProjectProfile,
   buildModuleGate,
 } from '@/features/projects/useProjectProfile';
-import { getIntlLocale } from '@/shared/lib/formatters';
+import { getIntlLocale, localizeDigits } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { isSystemAdminRole } from '@/shared/lib/systemAdmin';
 
@@ -2709,7 +2709,7 @@ export function FloatingRecentButton() {
                     <Icon size={14} strokeWidth={1.75} className="shrink-0 text-content-tertiary" />
                     <span className="truncate flex-1">{item.title}</span>
                     <span className="text-[10px] text-content-quaternary shrink-0 tabular-nums">
-                      {new Date(item.visitedAt).toLocaleTimeString(getIntlLocale(), { hour: '2-digit', minute: '2-digit' })}
+                      {localizeDigits(new Date(item.visitedAt).toLocaleTimeString(getIntlLocale(), { hour: '2-digit', minute: '2-digit' }))}
                     </span>
                   </NavLink>
                 </li>
