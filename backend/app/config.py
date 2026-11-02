@@ -293,7 +293,7 @@ class Settings(BaseSettings):
         )
 
     # ── App ──────────────────────────────────────────────────────────────
-    app_name: str = "OpenConstructionERP"
+    app_name: str = "Royal Stars Portal"
     app_version: str = Field(default_factory=_detect_version)
     app_env: Literal["development", "staging", "production"] = "development"
     # Off unless asked for. Debug switches on verbose 422 bodies (the raw
@@ -694,7 +694,7 @@ class Settings(BaseSettings):
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""
-    smtp_from: str = "info@datadrivenconstruction.io"
+    smtp_from: str = "noreply@royalstars.co"
     smtp_tls: bool = True
     # Public URL used to build password-reset and notification links.
     # Falls back to the first CORS origin so dev installs work without

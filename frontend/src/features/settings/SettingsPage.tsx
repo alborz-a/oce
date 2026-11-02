@@ -187,7 +187,7 @@ const AI_PROVIDERS: ProviderInfo[] = [
     id: 'together',
     name: 'Together AI',
     description: 'settings.ai_desc_together',
-    descriptionDefault: 'Open-source model hosting - Llama, Qwen, and more',
+    descriptionDefault: 'Model hosting - Llama, Qwen, and more',
     keyPrefix: '',
     docsUrl: 'https://api.together.ai/settings/api-keys',
     region: 'global',
@@ -1521,13 +1521,13 @@ const TABS: readonly TabDef[] = [
   DEFAULT_TAB,
   { id: 'dashboard',    labelKey: 'settings.tab_dashboard',    defaultLabel: 'Dashboard',    icon: LayoutGrid, descKey: 'settings.tab_dashboard_desc',  descDefault: 'Reorder, show or hide dashboard sections' },
   { id: 'account',      labelKey: 'settings.tab_account',      defaultLabel: 'Account',      icon: User,     descKey: 'settings.tab_account_desc',      descDefault: 'Password and sign out' },
-  { id: 'team',         labelKey: 'settings.tab_team',         defaultLabel: 'Team & Plan',  icon: Users,    descKey: 'settings.tab_team_desc',         descDefault: 'Members, roles, and license' },
+  { id: 'team',         labelKey: 'settings.tab_team',         defaultLabel: 'Team & Plan',  icon: Users,    descKey: 'settings.tab_team_desc',         descDefault: 'Members and roles' },
   // Company & documents - logos and the letterhead printed on exported
   // documents. Visible to everyone; the panel is read-only below admin.
   { id: 'company',      labelKey: 'settings.tab_company',      defaultLabel: 'Company & documents', icon: Building2, descKey: 'settings.tab_company_desc', descDefault: 'Logos, letterhead, and how printed documents look' },
   { id: 'regional',     labelKey: 'settings.tab_regional',     defaultLabel: 'Regional',     icon: Globe,    descKey: 'settings.tab_regional_desc',     descDefault: 'Language, timezone, and formats' },
   { id: 'einvoice',     labelKey: 'settings.tab_einvoice',     defaultLabel: 'E-invoice',    icon: ReceiptText, descKey: 'settings.tab_einvoice_desc',  descDefault: 'Seller identity and bank account for electronic invoices' },
-  { id: 'converters',   labelKey: 'settings.tab_converters',   defaultLabel: 'Converters',  icon: Layers,   descKey: 'settings.tab_converters_desc',   descDefault: 'DDC converters - installed versions and GitHub sources' },
+  { id: 'converters',   labelKey: 'settings.tab_converters',   defaultLabel: 'Converters',  icon: Layers,   descKey: 'settings.tab_converters_desc',   descDefault: 'Installed converters and their versions' },
   { id: 'ai',           labelKey: 'settings.tab_ai',           defaultLabel: 'AI',           icon: Sparkles, descKey: 'settings.tab_ai_desc',           descDefault: 'AI provider and semantic search' },
   { id: 'security',     labelKey: 'settings.tab_security',     defaultLabel: 'Data & Security', icon: ShieldCheck, descKey: 'settings.tab_security_desc', descDefault: 'Where your data lives and what leaves this instance' },
   { id: 'integrations', labelKey: 'settings.tab_integrations', defaultLabel: 'Integrations', icon: Plug,     descKey: 'settings.tab_integrations_desc', descDefault: 'Slack, Teams, Telegram, webhooks' },
@@ -1764,7 +1764,7 @@ export function SettingsPage() {
       >
         {t('settings.intro_body', {
           defaultValue:
-            'Connect an AI provider key, choose language, timezone and number formats, manage DDC converter versions, and wire integrations like Slack, Teams, Telegram and webhooks from one place. The Advanced tab holds backup, restore and the database setup wizard, so the choices made here flow into every module for this workspace.',
+            'Connect an AI provider key, choose language, timezone and number formats, manage converter versions, and wire integrations like Slack, Teams, Telegram and webhooks from one place. The Advanced tab holds backup, restore and the database setup wizard, so the choices made here flow into every module for this workspace.',
         })}
       </DismissibleInfo>
 
@@ -1848,16 +1848,6 @@ export function SettingsPage() {
             })}
           </nav>
 
-          {/* About link */}
-          <div className="hidden lg:block mt-4 px-3 text-center">
-            <Link
-              to="/about"
-              className="inline-flex items-center gap-1 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
-            >
-              {t('settings.about_link', { defaultValue: 'About OpenConstructionERP' })}
-              <ChevronRight size={11} className="rtl:rotate-180" />
-            </Link>
-          </div>
         </aside>
 
         {/* ── Tab content ──────────────────────────────────────────── */}
@@ -2024,7 +2014,7 @@ export function SettingsPage() {
                         {t('settings.sign_out_title', { defaultValue: 'Sign out of all sessions' })}
                       </p>
                       <p className="text-xs text-content-secondary mt-0.5">
-                        {t('settings.sign_out_desc', { defaultValue: 'You will need to enter your credentials to access OpenConstructionERP again.' })}
+                        {t('settings.sign_out_desc', { defaultValue: 'You will need to enter your credentials to access Royal Stars Portal again.' })}
                       </p>
                     </div>
                     <Button
@@ -2392,16 +2382,6 @@ export function SettingsPage() {
           )}
           </div>{/* End cards grid */}
 
-          {/* About link — mobile only (desktop has it in sidebar) */}
-          <div className="lg:hidden mt-8 text-center">
-            <Link
-              to="/about"
-              className="inline-flex items-center gap-1 text-sm text-content-tertiary hover:text-oe-blue transition-colors"
-            >
-              {t('settings.about_link', { defaultValue: 'About OpenConstructionERP' })}
-              <ChevronRight size={12} className="rtl:rotate-180" />
-            </Link>
-          </div>
         </div>
       </div>
     </div>
@@ -2439,8 +2419,6 @@ interface ConverterStatusResponse {
   ttl_seconds: number;
 }
 
-const DDC_REPO_URL =
-  'https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto';
 
 function formatBytes(n: number | null): string {
   if (n === null || n === undefined) return '—';
@@ -2469,7 +2447,7 @@ function ConverterStatusPanel() {
         title={t('settings.converters_title', { defaultValue: 'Converters' })}
         subtitle={t('settings.converters_subtitle', {
           defaultValue:
-            'DDC cad2data pipeline - installed bridges and the latest source available on GitHub.',
+            'Installed CAD/BIM converters and their versions.',
         })}
         action={
           <button
@@ -2485,31 +2463,6 @@ function ConverterStatusPanel() {
         }
       />
       <CardContent>
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-lg border border-border-light bg-surface-secondary/40 px-3.5 py-2.5">
-          <div className="min-w-0">
-            <p className="text-xs font-semibold text-content-primary">
-              {t('settings.converters_source_title', {
-                defaultValue: 'Source repository',
-              })}
-            </p>
-            <p className="text-2xs text-content-tertiary">
-              {t('settings.converters_source_desc', {
-                defaultValue:
-                  'Open-source converters for Revit® (RVT), IFC, DWG and DGN, maintained by DataDrivenConstruction.',
-              })}
-            </p>
-          </div>
-          <a
-            href={DDC_REPO_URL}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-oe-blue/30 bg-oe-blue/[0.04] px-2.5 py-1.5 text-xs font-medium text-oe-blue hover:bg-oe-blue/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
-          >
-            <ExternalLink size={12} />
-            {t('settings.converters_open_repo', { defaultValue: 'GitHub repo' })}
-          </a>
-        </div>
-
         {isLoading && (
           <div className="space-y-2">
             <Skeleton className="h-16 w-full" />

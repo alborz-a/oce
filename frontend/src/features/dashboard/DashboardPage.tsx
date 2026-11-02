@@ -1552,7 +1552,7 @@ function NextSteps({
       id: 'explore-costs',
       icon: <Database size={18} strokeWidth={1.75} />,
       title: t('dashboard.next_explore_costs', { defaultValue: 'Explore the cost database' }),
-      description: t('dashboard.next_explore_costs_desc', { defaultValue: 'Browse 55,000+ regional unit rates with semantic search across CWICR / GAEB sources.' }),
+      description: t('dashboard.next_explore_costs_desc', { defaultValue: 'Browse 55,000+ regional unit rates with semantic search across regional sources.' }),
       actionLabel: t('dashboard.next_explore_costs_action', { defaultValue: 'Open Costs' }),
       url: '/costs',
     });

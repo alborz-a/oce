@@ -166,7 +166,6 @@ export const NEVER_GATE_ROUTES: ReadonlySet<string> = new Set([
   '/users',
   '/modules',
   '/settings',
-  '/about',
   '/project-intelligence', // PI is always-on core — never suppress.
 ]);
 

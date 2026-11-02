@@ -130,7 +130,7 @@ const gapSizeMap = {
 /**
  * Logo + brand name. Per BRAND.md:
  * - Font: Plus Jakarta Sans 800
- * - Name: "OpenConstructionERP" (PascalCase, one word)
+ * - Name: "Royal Stars Portal" (PascalCase, one word)
  * - Letter-spacing: -0.02em
  * - Icon is compact, name is prominent
  */

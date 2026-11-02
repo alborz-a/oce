@@ -40,13 +40,13 @@ const GITHUB_SPONSORS_URL = 'https://github.com/sponsors/datadrivenconstruction'
 const G2_REVIEWS_URL = 'https://www.g2.com/products/openconstructionerp/reviews';
 const CASE_STUDY_EMAIL = 'info@datadrivenconstruction.io';
 const CASE_STUDY_MAILTO = `mailto:${CASE_STUDY_EMAIL}?subject=${encodeURIComponent(
-  'Case study / article - OpenConstructionERP',
+  'Case study / article - Royal Stars Portal',
 )}&body=${encodeURIComponent(
-  'Hi DDC team,\n\nI have a case study / video / article about how we use OpenConstructionERP that you may want to share.\n\nLink / attachment:\n\nA few lines about the project:\n\n- ',
+  'Hi DDC team,\n\nI have a case study / video / article about how we use Royal Stars Portal that you may want to share.\n\nLink / attachment:\n\nA few lines about the project:\n\n- ',
 )}`;
 
 const SHARE_TEXT =
-  'OpenConstructionERP - free open-source construction cost estimation platform (BOQ, BIM takeoff, AI, 41 languages). Self-hosted. AGPL-3.0.';
+  'Royal Stars Portal - free open-source construction cost estimation platform (BOQ, BIM takeoff, AI, 41 languages). Self-hosted. AGPL-3.0.';
 
 const TWITTER_URL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
   SHARE_TEXT,
@@ -355,13 +355,13 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
               className="text-xl sm:text-2xl font-bold text-content-primary leading-tight"
             >
               {t('support.modal_title', {
-                defaultValue: 'Help OpenConstructionERP grow',
+                defaultValue: 'Help Royal Stars Portal grow',
               })}
             </h2>
             <p className="mt-3 mx-auto max-w-[560px] text-sm text-content-secondary leading-relaxed">
               {t('support.modal_subtitle', {
                 defaultValue:
-                  'We build OpenConstructionERP in the open and ship every feature for free. If you share a video, case study or article about your work – there is a very high chance industry professionals will notice it: senior estimators, BIM managers, planning leads and cost engineers from the largest construction and engineering firms follow DataDrivenConstruction across LinkedIn, X and our newsletter (tens of thousands of subscribers). One repost from us can put your project in front of the right people overnight.',
+                  'We build Royal Stars Portal in the open and ship every feature for free. If you share a video, case study or article about your work – there is a very high chance industry professionals will notice it: senior estimators, BIM managers, planning leads and cost engineers from the largest construction and engineering firms follow DataDrivenConstruction across LinkedIn, X and our newsletter (tens of thousands of subscribers). One repost from us can put your project in front of the right people overnight.',
               })}
             </p>
           </div>
@@ -531,7 +531,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
               <p className="mt-1 text-xs text-content-secondary leading-relaxed">
                 {t('support.action_case_study_body', {
                   defaultValue:
-                    'Show us how you use OpenConstructionERP - a video, a case study, a LinkedIn write-up. You can send us the link directly, or just tag @DataDrivenConstruction in your post - we will spot it and re-share through our newsletter and social channels, where tens of thousands of construction professionals and senior industry experts follow our work. Email for links: ',
+                    'Show us how you use Royal Stars Portal - a video, a case study, a LinkedIn write-up. You can send us the link directly, or just tag @DataDrivenConstruction in your post - we will spot it and re-share through our newsletter and social channels, where tens of thousands of construction professionals and senior industry experts follow our work. Email for links: ',
                 })}
                 <span className="font-semibold text-purple-700 dark:text-purple-300">
                   {CASE_STUDY_EMAIL}
@@ -567,7 +567,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 <p className="mt-0.5 text-xs text-content-secondary leading-relaxed">
                   {t('support.action_donate_body', {
                     defaultValue:
-                      'Donations keep OpenConstructionERP free and open for everyone. They fund new regional cost data, AI estimation and support for more CAD and file formats.',
+                      'Donations keep Royal Stars Portal free and open for everyone. They fund new regional cost data, AI estimation and support for more CAD and file formats.',
                   })}
                 </p>
                 {/* Perk line - additive, inline-default only (do not fold into

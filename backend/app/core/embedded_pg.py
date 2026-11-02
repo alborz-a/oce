@@ -74,7 +74,7 @@ _TRUTHY = {"1", "true", "yes", "on"}
 _FALSY = {"0", "false", "no", "off"}
 
 #: Support contact surfaced (in the log) when embedded PostgreSQL cannot start.
-_CONTACT_EMAIL = "info@datadrivenconstruction.io"
+_CONTACT_EMAIL = "the system administrator"
 
 #: Name of the logger ``pixeltable-pgserver`` writes everything through. Both of
 #: its emitters (``postgres_server`` and ``pgexec``) take this one name, so a

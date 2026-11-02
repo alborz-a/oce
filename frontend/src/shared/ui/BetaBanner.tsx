@@ -18,7 +18,6 @@ export function BetaBanner({
   moduleKey,
   title,
   description,
-  feedbackUrl = 'https://github.com/datadrivenconstruction/OpenConstructionERP/issues/new',
   className = '',
 }: BetaBannerProps) {
   const { t } = useTranslation();
@@ -67,17 +66,7 @@ export function BetaBanner({
       <div className="flex-1 text-sm">
         <p className="font-medium">{resolvedTitle}</p>
         <p className="mt-0.5 text-xs opacity-90">
-          {resolvedDescription}{' '}
-          <a
-            href={feedbackUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2 hover:text-amber-700 dark:hover:text-amber-200"
-          >
-            {t('common.beta_module.feedback_link', {
-              defaultValue: 'Send feedback',
-            })}
-          </a>
+          {resolvedDescription}
         </p>
       </div>
       <button

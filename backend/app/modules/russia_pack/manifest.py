@@ -15,7 +15,7 @@ manifest = ModuleManifest(
     description=(
         "Russian construction standards: GESN/FER/TER cost databases, NDS rates, and Russian contract templates."
     ),
-    author="OpenConstructionERP Core Team",
+    author="Royal Stars",
     category="regional",
     depends=[],
     auto_install=False,

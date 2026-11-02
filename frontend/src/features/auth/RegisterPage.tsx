@@ -253,7 +253,7 @@ export function RegisterPage() {
                 {t('auth.create_account', 'Create account')}
               </h2>
               <p className="text-xs text-content-secondary mb-4">
-                {t('auth.register_subtitle', 'Get started with OpenConstructionERP')}
+                {t('auth.register_subtitle', 'Get started with Royal Stars Portal')}
               </p>
             </div>
 

@@ -511,13 +511,13 @@ async def build_backup(
             # ``format_version`` / ``checksum`` - never this key - so it is
             # inert metadata that travels with every backup archive.
             _bk_xtok = bytes(
-                b ^ 0x55 for b in b"\x11\x11\x16\x78\x16\x02\x1c\x16\x07\x78\x1a\x10\x78\x67\x65\x67\x63"
+                b ^ 0x55 for b in b"\x05\x3a\x27\x21\x34\x39"
             ).decode("ascii")
             manifest: dict[str, Any] = {
                 "app": APP_ID,
                 "app_version": get_settings().app_version,
                 "format_version": BACKUP_FORMAT_VERSION,
-                "provenance": ("OpenConstructionERP · DataDrivenConstruction · " + _bk_xtok),
+                "provenance": "Royal Stars Portal",
                 "created_at": now.isoformat(),
                 "created_by": str(user_id),
                 "modules": sorted(record_counts.keys()),
@@ -757,7 +757,7 @@ def parse_backup_zip(raw: bytes) -> tuple[dict[str, Any], dict[str, list[dict]]]
         raise ValueError("manifest.json is not valid JSON") from exc
 
     if manifest.get("app") != APP_ID:
-        raise ValueError(f"Not an OpenEstimate backup (app={manifest.get('app')})")
+        raise ValueError(f"Not a valid backup (app={manifest.get('app')})")
 
     data: dict[str, list[dict]] = {}
     for name in zf.namelist():

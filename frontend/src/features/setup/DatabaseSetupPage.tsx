@@ -522,7 +522,7 @@ export function DatabaseSetupPage() {
           backendDetail ||
           t('setup.load_failed_unreachable', {
             defaultValue:
-              'Could not reach the data host to download this region. This is often a blocked network or a GitHub connection issue. Check your connection and that github.com is reachable, then try again.',
+              'Could not reach the data host to download this region. This is often a blocked network or a connection issue. Check your connection and that github.com is reachable, then try again.',
           });
         addToast({
           type: 'error',

@@ -264,6 +264,9 @@ COPY frontend/ .
 # frontend/package.json build script, which beats NODE_OPTIONS; the value
 # here only mirrors it. The type check alone peaks at about 9.2 GB, so the
 # Docker host needs about 14 GB of memory to build this stage.
+# Fork version baked into the bundle (vite.config.ts reads VITE_APP_VERSION). CI passes RSD_VERSION.
+ARG APP_VERSION=dev
+ENV VITE_APP_VERSION=$APP_VERSION
 RUN NODE_OPTIONS=--max-old-space-size=12288 npm run build
 
 # --- Stage: unified (all-in-one, port 8080) --------------------------------

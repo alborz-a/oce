@@ -48,10 +48,9 @@ import { apiGet, ApiError } from '@/shared/lib/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { fetchUsers, type User, type UserRole } from '@/features/users/api';
 
-// Commercial license request page on the marketing site. The product is
-// AGPL-3.0; this is the honest upgrade path (no in-app payment flow).
-const LICENSE_REQUEST_URL = 'https://openconstructionerp.com/license-request.html';
-const AGPL_URL = 'https://www.gnu.org/licenses/agpl-3.0.html';
+// Icons kept imported for other cards.
+void ExternalLink;
+void Lock;
 
 // ── Role display config (icon + badge variant). The human labels are read
 // from the SAME i18n keys the User Management page uses (users.roles.*), so
@@ -371,101 +370,7 @@ export function SettingsTeamPanel() {
         </CardContent>
       </Card>
 
-      {/* ── License & Plan card ─────────────────────────────────────────── */}
-      <Card>
-        <CardHeader
-          title={t('settings.license_title', { defaultValue: 'License & plan' })}
-          subtitle={t('settings.license_subtitle', {
-            defaultValue: 'Your edition, version and commercial licensing options',
-          })}
-          action={<BadgeCheck size={20} className="text-oe-blue" aria-hidden="true" />}
-        />
-        <CardContent>
-          {/* Edition + version row */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-content-primary">
-                  {t('settings.license_edition_community', { defaultValue: 'Community Edition' })}
-                </span>
-                <Badge variant="blue" size="sm">
-                  AGPL-3.0
-                </Badge>
-              </div>
-              <p className="mt-1 max-w-prose text-xs leading-relaxed text-content-secondary">
-                {t('settings.license_community_desc', {
-                  defaultValue:
-                    'This is the free, open-source build. You can use it for any purpose, including commercial, self-host it on your own hardware, and modify it. In return, network users must be able to get the source under the same AGPL-3.0 license.',
-                })}
-              </p>
-            </div>
-            <a
-              href={AGPL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
-            >
-              {t('settings.license_read_agpl', { defaultValue: 'Read the AGPL-3.0 license' })}
-              <ExternalLink size={11} />
-            </a>
-          </div>
-
-          {/* Version / build facts from /api/health */}
-          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border border-border-light bg-surface-secondary/40 px-4 py-3 sm:grid-cols-3">
-            <div>
-              <dt className="text-2xs uppercase tracking-wider text-content-tertiary">
-                {t('settings.license_version', { defaultValue: 'Version' })}
-              </dt>
-              <dd className="mt-0.5 font-mono text-sm text-content-primary">
-                {healthQuery.data?.version ? `v${healthQuery.data.version}` : '-'}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-2xs uppercase tracking-wider text-content-tertiary">
-                {t('settings.license_environment', { defaultValue: 'Environment' })}
-              </dt>
-              <dd className="mt-0.5 font-mono text-sm text-content-primary">
-                {healthQuery.data?.env ?? '-'}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-2xs uppercase tracking-wider text-content-tertiary">
-                {t('settings.license_modules', { defaultValue: 'Modules loaded' })}
-              </dt>
-              <dd className="mt-0.5 font-mono text-sm text-content-primary">
-                {typeof healthQuery.data?.modules_loaded === 'number' ? healthQuery.data.modules_loaded : '-'}
-              </dd>
-            </div>
-          </dl>
-
-          {/* Commercial upgrade path - honest, no in-app payment flow */}
-          <div className="mt-4 rounded-lg border border-oe-blue/20 bg-oe-blue/[0.04] px-4 py-3.5">
-            <div className="flex items-start gap-3">
-              <Lock size={16} className="mt-0.5 shrink-0 text-oe-blue" />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-content-primary">
-                  {t('settings.license_commercial_title', { defaultValue: 'Need a commercial license?' })}
-                </p>
-                <p className="mt-0.5 text-xs leading-relaxed text-content-secondary">
-                  {t('settings.license_commercial_desc', {
-                    defaultValue:
-                      'If you cannot meet the AGPL source-sharing obligations, or you want an enterprise agreement with support and an SLA, request a commercial license. This opens a form on our website - there is no payment or subscription inside the app.',
-                  })}
-                </p>
-                <a
-                  href={LICENSE_REQUEST_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-oe-blue/30 bg-surface-elevated px-4 py-2 text-sm font-medium text-oe-blue transition-colors hover:bg-oe-blue/10"
-                >
-                  {t('settings.license_request_cta', { defaultValue: 'Request a commercial license' })}
-                  <ExternalLink size={13} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {void healthQuery}
     </div>
   );
 }

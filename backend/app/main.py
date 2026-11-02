@@ -1967,16 +1967,8 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
-        description="Open-source modular platform for construction cost estimation",
-        contact={
-            "name": "DataDrivenConstruction · OpenConstructionERP",
-            "url": "https://openconstructionerp.com",
-            "email": "info@datadrivenconstruction.io",
-        },
-        license_info={
-            "name": "AGPL-3.0-or-later · DDC-CWICR-OE-2026",
-            "url": "https://www.gnu.org/licenses/agpl-3.0.html",
-        },
+        description="Royal Stars Portal API",
+        contact={"name": "Royal Stars"},
         # Both reference pages are registered by hand further down instead of
         # by FastAPI, so they can load their CSS and JS from this install
         # rather than from a CDN. Everything else about the routes is
@@ -2236,14 +2228,8 @@ def create_app() -> FastAPI:
                 description=app.description,
                 routes=app.routes,
                 contact=app.contact,
-                license_info=app.license_info,
             )
-            _oa_tok = bytes(
-                b ^ 0x55 for b in b"\x11\x11\x16\x78\x16\x02\x1c\x16\x07\x78\x1a\x10\x78\x67\x65\x67\x63"
-            ).decode("ascii")
             schema.setdefault("info", {})
-            schema["info"]["x-ddc-origin"] = "OpenConstructionERP · DataDrivenConstruction · " + _oa_tok
-            schema["info"]["x-ddc-author"] = "Artem Boiko <info@datadrivenconstruction.io>"
             app.openapi_schema = schema
             app._openapi_routes_version = version
             return schema
@@ -3245,28 +3231,8 @@ def create_app() -> FastAPI:
 
     @app.get("/api/source", tags=["System"])
     async def source_code() -> dict:
-        """AGPL-3.0 Source Code Disclosure.
-
-        As required by AGPL-3.0, this endpoint provides access to the
-        complete corresponding source code of this application.
-        DataDrivenConstruction · OpenConstructionERP · DDC-CWICR-OE-2026
-        """
-        return {
-            "license": "AGPL-3.0",
-            "source_code": "https://github.com/datadrivenconstruction/OpenConstructionERP",
-            "copyright": "Copyright (c) 2026 Artem Boiko / DataDrivenConstruction",
-            "notice": (
-                "This software is licensed under AGPL-3.0. "
-                "If you modify and deploy this software, you MUST make your "
-                "complete source code available to all users under the same license. "
-                "For commercial licensing without AGPL obligations, contact: "
-                "datadrivenconstruction.io/contact-support/"
-            ),
-            "projects": {
-                "CWICR": "https://github.com/datadrivenconstruction/OpenConstructionEstimate-DDC-CWICR",
-                "cad2data": "https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto",
-            },
-        }
+        """Royal Stars Portal."""
+        return {"name": "Royal Stars Portal"}
 
     @app.get("/api/system/status", tags=["System"])
     async def system_status(
@@ -3468,8 +3434,8 @@ def create_app() -> FastAPI:
             ai_providers=provider_names,
             registration_mode=settings.registration_mode,
             analytics_bundled=False,
-            license_name="AGPL-3.0",
-            repository="https://github.com/datadrivenconstruction/OpenConstructionERP",
+            license_name="Proprietary",
+            repository="",
         )
 
     def _semver_tuple(v: str) -> tuple[int, ...]:

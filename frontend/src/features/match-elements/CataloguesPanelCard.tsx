@@ -162,7 +162,7 @@ function InstallButton({
   if (status === 'coming_soon') {
     return (
       <span className="text-[11px] text-content-quaternary italic">
-        {t('catalogues.coming_soon_hint', 'Not yet published by DDC')}
+        {t('catalogues.coming_soon_hint', 'Not yet published')}
       </span>
     );
   }
@@ -390,7 +390,7 @@ export function CataloguesPanelCard({ preferredRegion }: Props) {
                 <div className="mt-0.5">
                   {t(
                     'catalogues.demo_notice_body',
-                    'You can browse the cost databases the full product ships, but installing them is disabled on the demo (each is 400+ MB and it runs on a small shared box). To load any region, or your own cost data, download and run OpenConstructionERP on your own PC or server: pip install openconstructionerp.',
+                    'You can browse the cost databases the full product ships, but installing them is disabled on the demo (each is 400+ MB and it runs on a small shared box). To load any region, or your own cost data, download and run Royal Stars Portal on your own PC or server: pip install openconstructionerp.',
                   )}
                 </div>
               </div>

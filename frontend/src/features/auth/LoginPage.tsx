@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
-  Eye, EyeOff, Mail, Lock, Globe, ChevronDown, X, Github, Users, ArrowUpRight, Pencil,
+  Eye, EyeOff, Mail, Lock, Globe, ChevronDown, X, Users, Pencil,
   ShieldCheck, Zap, Brain, Info,
   FileSpreadsheet, CalendarClock, TrendingUp, Boxes, Database,
   BarChart3, Upload, FileCheck,
@@ -85,7 +85,7 @@ export function LoginPage() {
   const showBrandEdit = useAuthStore((s) => !!s.accessToken && s.userRole === 'admin');
   // White-label brand (same localStorage store the in-app sidebar editor
   // writes to). When a tenant has set a logo / company name we show it
-  // on the login card instead of the default OpenConstructionERP wordmark.
+  // on the login card instead of the default Royal Stars Portal wordmark.
   const { mode: brandMode, logoDataUrl: brandLogo, companyName: brandName } =
     useBrandingStore();
   const brandCustomised = brandMode === 'logo' || brandMode === 'text';
@@ -763,7 +763,7 @@ export function LoginPage() {
         <div className="w-full max-w-[380px] relative z-10">
           {/* Logo - tenant white-label (logo / company name) when set via
               the in-app sidebar editor; otherwise the default brand. The
-              small "by OpenConstructionERP" attribution stays visible in
+              small "by Royal Stars Portal" attribution stays visible in
               customised modes (AGPL-3.0 requirement). */}
           <div className="relative mb-5 flex flex-col items-center animate-stagger-in" style={{ animationDelay: '0ms' }}>
             {/* Brand + edit-pencil row - grouped together and visually
@@ -789,18 +789,6 @@ export function LoginPage() {
                       {brandName}
                     </span>
                   )}
-                  {/* [RSC-IRAN] hidden: "by OpenConstructionERP" */}
-                  <span
-                    className="hidden mt-2 text-[11px] leading-none text-content-tertiary"
-                    style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '0.02em' }}
-                    aria-hidden="true"
-                  >
-                    by{' '}
-                    <span className="font-semibold tracking-tight">
-                      Open<span className="text-oe-blue/80">Construction</span>
-                      <span className="text-content-quaternary">ERP</span>
-                    </span>
-                  </span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
@@ -810,16 +798,6 @@ export function LoginPage() {
                   >
                     {COMPANY_INFO.name}
                   </span>
-                  {/* [RSC-IRAN] hidden: OpenConstructionERP logo and wordmark */}
-                  <div className="hidden" aria-hidden="true">
-                    <Logo size="md" animate />
-                    <span
-                      className="text-2xl font-medium text-content-primary whitespace-nowrap"
-                      style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", letterSpacing: '-0.02em' }}
-                    >
-                      Open<span className="text-oe-blue">Construction</span><span className="text-content-quaternary">ERP</span>
-                    </span>
-                  </div>
                 </div>
               )}
               {/* White-label trigger - same editor as the in-app sidebar
@@ -840,22 +818,6 @@ export function LoginPage() {
             <p className="mt-2 text-sm text-content-tertiary">
               {COMPANY_INFO.tagline}
             </p>
-          </div>
-
-          {/* [RSC-IRAN] hidden: Open-source banner (mobile) */}
-          <div className="hidden lg:hidden mb-4 animate-stagger-in" style={{ animationDelay: '100ms' }} aria-hidden="true">
-            <div className="rounded-xl bg-gradient-to-r from-oe-blue/10 via-violet-500/10 to-emerald-500/10 border border-oe-blue/20 px-4 py-3 text-center">
-              <div className="flex items-center justify-center gap-1.5 mb-1">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Open Source</span>
-              </div>
-              <p className="text-sm font-bold bg-gradient-to-r from-oe-blue via-violet-600 to-emerald-600 bg-clip-text text-transparent">
-                {t('login.open_source_badge', { defaultValue: 'The #1 Open-Source Construction ERP' })}
-              </p>
-            </div>
           </div>
 
           {/* Form - premium multi-layer glass.
@@ -1053,72 +1015,10 @@ export function LoginPage() {
           </div>
           )}
 
-          {/* [RSC-IRAN] hidden: GitHub + Community - promo cards hidden */}
-          <div className="hidden mt-4 grid-cols-2 gap-3 animate-stagger-in" style={{ animationDelay: '520ms' }} aria-hidden="true">
-            <a
-              href="https://github.com/datadrivenconstruction/OpenConstructionERP"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${t('login.github', { defaultValue: 'GitHub' })} - ${t('login.github_sub', { defaultValue: 'Source code' })}`}
-              className="group relative flex items-center gap-3 overflow-hidden rounded-xl border border-border-light/70 dark:border-white/15 bg-white/75 dark:bg-white/[0.07] backdrop-blur-sm px-3.5 py-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 dark:hover:bg-white/[0.12] dark:hover:border-white/25 hover:border-content-primary/25 hover:shadow-lg"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-content-primary/[0.06] dark:bg-white/10 text-content-primary transition-colors group-hover:bg-content-primary/10 dark:group-hover:bg-white/15">
-                <Github size={17} strokeWidth={1.9} />
-              </span>
-              <span className="min-w-0 flex-1 leading-tight">
-                <span className="block text-[13px] font-semibold text-content-primary">
-                  {t('login.github', { defaultValue: 'GitHub' })}
-                </span>
-                <span className="block truncate text-[11px] text-content-tertiary dark:text-content-secondary">
-                  {t('login.github_sub', { defaultValue: 'Source code' })}
-                </span>
-              </span>
-              <ArrowUpRight
-                size={15}
-                className="shrink-0 text-content-quaternary dark:text-content-tertiary transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-content-secondary"
-              />
-            </a>
-            <a
-              href="https://t.me/datadrivenconstruction"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${t('login.community', { defaultValue: 'Community' })} - ${t('login.community_sub', { defaultValue: 'Get help & discuss' })}`}
-              className="group relative flex items-center gap-3 overflow-hidden rounded-xl border border-border-light/70 dark:border-white/15 bg-white/75 dark:bg-white/[0.07] backdrop-blur-sm px-3.5 py-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 dark:hover:bg-white/[0.12] dark:hover:border-white/25 hover:border-content-primary/25 hover:shadow-lg"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-content-primary/[0.06] dark:bg-white/10 text-content-primary transition-colors group-hover:bg-content-primary/10 dark:group-hover:bg-white/15">
-                <Users size={17} strokeWidth={1.9} />
-              </span>
-              <span className="min-w-0 flex-1 leading-tight">
-                <span className="block text-[13px] font-semibold text-content-primary">
-                  {t('login.community', { defaultValue: 'Community' })}
-                </span>
-                <span className="block truncate text-[11px] text-content-tertiary dark:text-content-secondary">
-                  {t('login.community_sub', { defaultValue: 'Get help & discuss' })}
-                </span>
-              </span>
-              <ArrowUpRight
-                size={15}
-                className="shrink-0 text-content-quaternary dark:text-content-tertiary transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-content-secondary"
-              />
-            </a>
+          {/* Build version (RSD-x.y) */}
+          <div dir="ltr" className="mt-3 text-center text-[10px] leading-none text-content-tertiary opacity-60">
+            {APP_VERSION}
           </div>
-          {/* [RSC-IRAN] hidden: mobile promo footer */}
-          <div className="hidden lg:hidden mt-2 text-center text-2xs text-content-quaternary" aria-hidden="true">
-            <div className="flex items-center justify-center gap-3">
-              <a href="https://OpenConstructionERP.com" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">OpenConstructionERP.com</a>
-              <span>·</span>
-              <a href="https://github.com/datadrivenconstruction/OpenConstructionERP" target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">GitHub</a>
-            </div>
-          </div>
-          {/* Running build version - always visible so it's obvious which
-              version is live on a fresh open. Matches the Sidebar / About
-              treatment (v{APP_VERSION}). */}
-          {/* [RSC-IRAN] hidden: build version label — do not delete */}
-          {false && (
-          <div className="mt-3 text-center text-2xs font-mono text-content-quaternary/80 tabular-nums">
-            v{APP_VERSION}
-          </div>
-          )}
         </div>
       </div>
 
@@ -1126,7 +1026,7 @@ export function LoginPage() {
       {brandOpen && <BrandingEditorModal onClose={() => setBrandOpen(false)} />}
 
       {/* ── About modal ── */}
-      {/* [RSC-IRAN] hidden: About modal (OpenConstructionERP marketing) — do not delete */}
+      {/* [RSC-IRAN] hidden: About modal (Royal Stars Portal marketing) — do not delete */}
       {false && showInfo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" onClick={() => setShowInfo(false)} />
@@ -1146,10 +1046,10 @@ export function LoginPage() {
                 {t('about.title', 'Professional construction cost estimation - free and open source')}
               </h3>
               <p className="text-[13px] text-content-secondary leading-relaxed">
-                {t('about.intro', 'OpenConstructionERP is a modern platform for construction cost management. It covers the full estimation workflow - from creating a bill of quantities to tendering and bid comparison. Designed for professionals worldwide, it supports international standards and works in 24 languages.')}
+                {t('about.intro', 'Royal Stars Portal is a modern platform for construction cost management. It covers the full estimation workflow - from creating a bill of quantities to tendering and bid comparison. Designed for professionals worldwide, it supports international standards and works in 24 languages.')}
               </p>
               <p className="mt-2 text-[13px] text-content-secondary leading-relaxed">
-                {t('about.intro2', 'Unlike traditional commercial solutions, OpenConstructionERP runs entirely on your computer. Your project data never leaves your machine - you have full ownership and control. The source code is open and auditable, so you always know exactly what the software does.')}
+                {t('about.intro2', 'Unlike traditional commercial solutions, Royal Stars Portal runs entirely on your computer. Your project data never leaves your machine - you have full ownership and control. The source code is open and auditable, so you always know exactly what the software does.')}
               </p>
             </div>
 
@@ -1192,7 +1092,7 @@ export function LoginPage() {
               </h3>
               <div className="space-y-2 text-[13px] text-content-secondary leading-relaxed">
                 <p>{t('about.why_1', 'Construction cost data is one of the most valuable assets a company owns. With proprietary software, your data is often locked inside formats you cannot control. If the vendor raises prices, changes terms, or discontinues the product - you may lose access to years of work.')}</p>
-                <p>{t('about.why_2', 'OpenConstructionERP takes a different approach. Your data is stored in open formats (SQLite, JSON, CSV) on your own hardware. You can export everything at any time. The source code is publicly auditable under AGPL-3.0, so there are no hidden data transfers, no telemetry, and no surprises.')}</p>
+                <p>{t('about.why_2', 'Royal Stars Portal takes a different approach. Your data is stored in open formats (SQLite, JSON, CSV) on your own hardware. You can export everything at any time. The source code is publicly auditable under AGPL-3.0, so there are no hidden data transfers, no telemetry, and no surprises.')}</p>
                 <p>{t('about.why_3', 'The platform is modular - install only what you need. Community modules extend functionality without bloating the core. And because it runs locally, it works offline and performs fast even with large projects.')}</p>
               </div>
             </div>
@@ -1203,7 +1103,7 @@ export function LoginPage() {
                 {t('about.who_title', 'Who is it for')}
               </h3>
               <p className="text-[13px] text-content-secondary leading-relaxed mb-3">
-                {t('about.who_desc', 'OpenConstructionERP is designed for anyone involved in construction cost management - whether you work on residential projects or large-scale infrastructure, in-house or as a consultant.')}
+                {t('about.who_desc', 'Royal Stars Portal is designed for anyone involved in construction cost management - whether you work on residential projects or large-scale infrastructure, in-house or as a consultant.')}
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {[
@@ -1251,14 +1151,14 @@ export function LoginPage() {
                 {t('about.ai_title', 'About AI features')}
               </h3>
               <p className="text-[13px] text-content-secondary leading-relaxed">
-                {t('about.ai_desc', 'OpenConstructionERP includes optional AI-powered tools - quick estimation from text descriptions, smart cost suggestions, and BOQ chat assistant. These features require an API key from a provider of your choice (Anthropic, OpenAI, Google). AI is always opt-in: it only activates when you configure it, and you decide what data to send. Without an API key, all other features work fully offline.')}
+                {t('about.ai_desc', 'Royal Stars Portal includes optional AI-powered tools - quick estimation from text descriptions, smart cost suggestions, and BOQ chat assistant. These features require an API key from a provider of your choice (Anthropic, OpenAI, Google). AI is always opt-in: it only activates when you configure it, and you decide what data to send. Without an API key, all other features work fully offline.')}
               </p>
             </div>
 
             {/* Footer */}
             <div className="px-6 py-4 border-t border-border-light flex items-center justify-between">
               <div className="flex items-center gap-3 text-2xs text-content-quaternary">
-                <a href={COMPANY_INFO.sourceRepoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">بر پایهٔ OpenConstructionERP (AGPL-3.0) · کد منبع</a>
+                <a href={COMPANY_INFO.sourceRepoUrl} target="_blank" rel="noopener noreferrer" className="hover:text-content-secondary transition-colors">بر پایهٔ Royal Stars Portal (AGPL-3.0) · کد منبع</a>
               </div>
               <Button variant="primary" size="sm" onClick={() => setShowInfo(false)}>
                 {t('about.close', 'بستن')}

@@ -16,8 +16,17 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-_LOGO_URL = "https://openconstructionerp.com/logo-128.png"
-_APP_NAME = "OpenConstructionERP"
+_LOGO_URL = ""
+
+
+def _logo_img() -> str:
+    if not _LOGO_URL:
+        return ""
+    return (
+        f'<img src="{_LOGO_URL}" alt="{_APP_NAME}" width="40" height="40" '
+        f'style="margin-bottom:12px;"/>'
+    )
+_APP_NAME = "Royal Stars Portal"
 
 
 @lru_cache(maxsize=1)
@@ -53,8 +62,7 @@ def wrap(
     return (
         f"<!DOCTYPE html><html><head><meta charset='utf-8'></head>"
         f'<body style="{_base_style()}">'
-        f'<img src="{_LOGO_URL}" alt="{_APP_NAME}" width="40" height="40" '
-        f'style="margin-bottom:12px;"/>'
+        f'{_logo_img()}'
         f"<h2 style='margin:0 0 12px;'>{title}</h2>"
         f"{body}"
         f"{btn}"
@@ -149,7 +157,7 @@ def template_password_reset(
     to copy-paste or forwarded-email attack paths.
     """
     greeting = f"Hi {recipient_name}," if recipient_name else "Hello,"
-    subject = "Reset your OpenConstructionERP password"
+    subject = "Reset your Royal Stars Portal password"
     body = (
         f"<p>{greeting}</p>"
         f"<p>We received a request to reset the password on your "

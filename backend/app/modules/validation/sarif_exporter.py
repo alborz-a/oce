@@ -302,7 +302,7 @@ def report_to_sarif(report: Any) -> dict[str, Any]:
             "ruleSets": norm["rule_sets"],
             # Authorship pin - SARIF properties survive even when tool.driver
             # values get rebranded by a downstream consumer / fork.
-            "engineSignature": "DDC-CWICR-OE-2026",
+            "engineSignature": "Royal Stars",
             "engineUri": "https://datadrivenconstruction.io",
         },
     }

@@ -149,7 +149,7 @@ def classify_rate(rate: Decimal, line_rates: Sequence[Decimal]) -> str | None:
 
 def _set_properties(wb: Any, title: str) -> None:
     wb.properties.creator = "OpenConstructionERP"
-    wb.properties.lastModifiedBy = "OpenConstructionERP"
+    wb.properties.lastModifiedBy = "Royal Stars"
     wb.properties.title = title
 
 

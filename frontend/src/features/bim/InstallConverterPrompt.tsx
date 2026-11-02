@@ -118,7 +118,7 @@ export function InstallConverterPrompt({
   const converterName =
     converter?.name ??
     t('bim.install_prompt_default_converter_name', {
-      defaultValue: 'DDC {{format}} Converter',
+      defaultValue: '{{format}} Converter',
       format: formatLabel,
     });
   const converterSizeMb = converter?.size_mb ?? 0;
@@ -182,7 +182,7 @@ export function InstallConverterPrompt({
           <p className="text-sm text-content-secondary leading-relaxed">
             {t('bim.install_prompt_body', {
               defaultValue:
-                'To process “{{fileName}}” ({{fileSize}}), OpenConstructionERP needs the {{converterName}} ({{converterSize}} MB one-time download).',
+                'To process “{{fileName}}” ({{fileSize}}), The system needs the {{converterName}} ({{converterSize}} MB one-time download).',
               fileName,
               fileSize: sizeFormatted,
               converterName,

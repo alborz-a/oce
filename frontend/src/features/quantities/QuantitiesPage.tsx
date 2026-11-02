@@ -14,7 +14,6 @@ import {
   Ruler,
   Layers3,
   MessageSquareText,
-  ExternalLink,
   CheckCircle2,
   Download,
   HardDrive,
@@ -121,8 +120,6 @@ function removeInstalledConverter(id: string): void {
 
 // ── Static data ──────────────────────────────────────────────────────────
 
-const GITHUB_RELEASES_URL =
-  'https://github.com/datadrivenconstruction/ddc-community-toolkit/releases';
 
 const methods: MethodCard[] = [
   {
@@ -646,9 +643,6 @@ function InstallProgressPanel({
             <HardDrive size={10} /> {t('quantities.module_label', { defaultValue: 'Module' })}
           </span>
           <span className="flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> {t('quantities.open_source', { defaultValue: 'Open Source' })}
-          </span>
-          <span className="flex items-center gap-1">
             <span className="h-1.5 w-1.5 rounded-full bg-blue-400" /> {t('quantities.free_label', { defaultValue: 'Free' })}
           </span>
           <span className="ms-auto font-medium text-content-secondary">
@@ -1108,11 +1102,6 @@ export function QuantitiesPage() {
                   {installedCount}/{totalCount} {t('quantities.installed_label', { defaultValue: 'installed' })}
                 </span>
               </div>
-              <p className="mt-0.5 text-xs text-content-quaternary">
-                {t('quantities.converters_author', {
-                  defaultValue: 'DDC Community · Open Source · Free',
-                })}
-              </p>
             </div>
           </div>
           <p className="mt-3 text-sm text-content-secondary leading-relaxed">
@@ -1205,17 +1194,6 @@ export function QuantitiesPage() {
               defaultValue: 'Modules are managed automatically by the platform',
             })}
           </span>
-          <a
-            href={GITHUB_RELEASES_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-content-tertiary hover:text-oe-blue transition-colors"
-          >
-            <ExternalLink size={11} />
-            {t('quantities.source_code', {
-              defaultValue: 'Source code',
-            })}
-          </a>
         </div>
       </div>
 

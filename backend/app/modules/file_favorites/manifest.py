@@ -13,7 +13,7 @@ manifest = ModuleManifest(
         "personal bookmarks; pins are elevated favourites that always sort "
         "first in the user's Recently Viewed strip."
     ),
-    author="OpenConstructionERP Core Team",
+    author="Royal Stars",
     category="core",
     depends=["oe_projects", "oe_users"],
     auto_install=True,

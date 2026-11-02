@@ -745,7 +745,7 @@ export function BugReportMenu() {
     setOpen(false);
     setDescription('');
     const { body, title } = buildBugReportUrl(trimmedDescription);
-    const subject = `OpenConstructionERP Issue - ${title}`;
+    const subject = `Royal Stars Portal Issue - ${title}`;
     // mailto bodies are also length-limited (~2000 chars in Chrome),
     // so we trim aggressively. The downloaded log JSON is the long form.
     const safeBody = body.length > 1500 ? `${body.slice(0, 1500)}\n\n_[truncated - attach the JSON log if needed]_` : body;
@@ -806,33 +806,6 @@ export function BugReportMenu() {
 
   const channels: Channel[] = [
     {
-      icon: Github,
-      iconColor: 'text-content-primary',
-      // Labelled "Report a bug (with logs)" so the primary action people knew
-      // from the Help menu lives here, in the dedicated bug menu. It opens a
-      // GitHub issue pre-filled with the last error and environment.
-      title: t('app.report_bug', { defaultValue: 'Report a bug (with logs)' }),
-      desc: t('bug.channel_github_desc', { defaultValue: 'Pre-filled with the last error and environment. Public.' }),
-      onClick: handleGithub,
-      requiresDescription: true,
-    },
-    {
-      icon: Mail,
-      iconColor: 'text-oe-blue',
-      title: t('bug.channel_email', { defaultValue: 'Email the team' }),
-      desc: t('bug.channel_email_desc', { defaultValue: 'Opens your mail client with the report attached.' }),
-      onClick: handleEmail,
-      requiresDescription: true,
-    },
-    {
-      icon: MessageSquarePlus,
-      iconColor: 'text-emerald-500',
-      title: t('bug.channel_form', { defaultValue: 'Web feedback form' }),
-      desc: t('bug.channel_form_desc', { defaultValue: 'Richer fields and screenshots on openconstructionerp.com.' }),
-      onClick: handleFeedbackForm,
-      requiresDescription: false,
-    },
-    {
       icon: Upload,
       iconColor: 'text-violet-500',
       title: t('bug.channel_download', { defaultValue: 'Download log only' }),
@@ -841,6 +814,13 @@ export function BugReportMenu() {
       requiresDescription: false,
     },
   ];
+  // Upstream report channels are disabled in the Royal Stars build.
+  void handleGithub;
+  void handleEmail;
+  void handleFeedbackForm;
+  void Github;
+  void Mail;
+  void MessageSquarePlus;
 
   return (
     <div className="relative hidden sm:block" ref={ref}>
@@ -1125,20 +1105,6 @@ function HelpMenu() {
             <ExternalLink size={11} className="text-content-quaternary shrink-0" />
           </a>
           */}
-          {/* [RSC-IRAN] Fork source link */}
-          <a
-            role="menuitem"
-            href="https://github.com/alborz-a/oce"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
-            className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
-          >
-            <Github size={14} className="text-content-tertiary shrink-0" />
-            <span className="flex-1">{t('nav.github', { defaultValue: 'GitHub repository' })}</span>
-            <ExternalLink size={11} className="text-content-quaternary shrink-0" />
-          </a>
-
           {/* Desktop only: open the same app in the user's normal web browser.
               The app window stays open; this just gives people who prefer
               browser tabs the local address in one click. */}
@@ -1354,7 +1320,6 @@ const ROUTE_COMPONENT_MAP: ReadonlyArray<readonly [string, string]> = [
   ['/setup', 'Setup'],
   ['/settings', 'Settings'],
   ['/integrations', 'Integrations'],
-  ['/about', 'About'],
   ['/project-intelligence', 'Project Intelligence'],
   ['/service', 'Service & Maintenance'],
   ['/equipment', 'Equipment & Fleet'],

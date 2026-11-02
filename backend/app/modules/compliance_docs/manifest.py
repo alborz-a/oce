@@ -12,7 +12,7 @@ manifest = ModuleManifest(
         "certifications per project with reminder windows and a "
         "convenience expiring-soon endpoint for dashboards."
     ),
-    author="OpenConstructionERP Core Team",
+    author="Royal Stars",
     category="core",
     depends=["oe_users", "oe_projects"],
     auto_install=True,

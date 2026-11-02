@@ -500,7 +500,7 @@ export function LoginPageNext() {
       )}
 
       <div className="relative z-10 grid min-h-screen grid-cols-1">
-        {/* [RSC-IRAN] hidden: left hero panel (modules, linkedin, mailto, OpenConstructionERP credit) — do not delete */}
+        {/* [RSC-IRAN] hidden: left hero panel (modules, linkedin, mailto, Royal Stars Portal credit) — do not delete */}
         {false && (
         <div
           ref={heroRef}
@@ -582,7 +582,7 @@ export function LoginPageNext() {
             >
               Artem Boiko
             </a>{' '}
-            · OpenConstructionERP
+            · Royal Stars Portal
             · <a href="mailto:info@datadrivenconstruction.io" className="hover:text-content-secondary transition-colors">info@datadrivenconstruction.io</a>
           </div>
         </div>

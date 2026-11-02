@@ -50,7 +50,7 @@ export const teamsModules: ModuleExplanation[] = [
       {
         key: 'howto.teams.how.5',
         default:
-          'Check the License & Plan card for your edition (Community, AGPL-3.0), version and modules loaded, and request a commercial license from there if you need support or an enterprise agreement.',
+          'Check the Team & Plan panel for your members, roles and loaded modules.',
       },
     ],
     tips: [

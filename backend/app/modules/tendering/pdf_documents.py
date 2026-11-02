@@ -274,9 +274,9 @@ def _document(buffer: io.BytesIO, title: str, *, letterhead_on_first_page: bool 
         meta = {
             "author": "OpenConstructionERP",
             "subject": "Tender decision · DDC-CWICR-OE",
-            "creator": "OpenConstructionERP · DataDrivenConstruction",
+            "creator": "Royal Stars",
             "producer": "OpenConstructionERP / reportlab · datadrivenconstruction.io",
-            "keywords": "DDC-CWICR-OE-2026,OpenConstructionERP,Tendering,DataDrivenConstruction",
+            "keywords": "Royal Stars,Tendering",
         }
     doc = BaseDocTemplate(
         buffer,

@@ -2311,7 +2311,7 @@ function DataPackagesTab() {
                 </h2>
               </div>
               <p className="text-sm text-content-secondary leading-relaxed mb-4">
-                {t('modules.community_desc', { defaultValue: 'OpenConstructionERP has a modular plugin architecture. Anyone can create custom modules - cost databases, regional standards, CAD converters, analytics dashboards, integrations with external systems, or any other functionality.' })}
+                {t('modules.community_desc', { defaultValue: 'Royal Stars Portal has a modular plugin architecture. Anyone can create custom modules - cost databases, regional standards, CAD converters, analytics dashboards, integrations with external systems, or any other functionality.' })}
               </p>
               <div className="flex flex-wrap gap-3">
                 <a

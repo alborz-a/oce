@@ -3486,17 +3486,9 @@ export function BIMViewer({
               <span>
                 {t('bim.placeholder_banner.body', {
                   defaultValue:
-                    'install DDC IFC Converter for accurate meshes.',
+                    'install the IFC converter for accurate meshes.',
                 })}
-              </span>{' '}
-              <a
-                href="https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium underline underline-offset-2 hover:text-amber-700 dark:hover:text-amber-200"
-              >
-                {t('bim.placeholder_banner.learn_more', { defaultValue: 'Learn more →' })}
-              </a>
+              </span>
             </div>
             <button
               type="button"

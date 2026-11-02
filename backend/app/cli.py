@@ -1,6 +1,6 @@
 # DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 # Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-"""OpenConstructionERP CLI - run the platform from the command line.
+"""Royal Stars Portal CLI - run the platform from the command line.
 
 The happy path for a new user is two commands:
 
@@ -183,11 +183,11 @@ DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8080
 MIN_PYTHON = (3, 12)
 
-DOCS_URL = "https://openconstructionerp.com/docs"
-TROUBLESHOOTING_URL = "https://openconstructionerp.com/docs#troubleshooting"
-ISSUES_URL = "https://github.com/datadrivenconstruction/OpenConstructionERP/issues"
-COMMUNITY_URL = "https://t.me/datadrivenconstruction"
-GITHUB_URL = "https://github.com/datadrivenconstruction/OpenConstructionERP"
+DOCS_URL = ""
+TROUBLESHOOTING_URL = ""
+ISSUES_URL = ""
+COMMUNITY_URL = ""
+GITHUB_URL = ""
 
 logger = logging.getLogger("openestimate.cli")
 
@@ -344,7 +344,7 @@ def print_startup_banner(
     print()
     print(_amber(_BANNER_ART))
     print()
-    print(f"  {bar}  {_bold('OpenConstructionERP is starting')}  {_dim('v' + version)}")
+    print(f"  {bar}  {_bold('Royal Stars Portal is starting')}  {_dim('v' + version)}")
     print(f"  {bar}")
     print(f"  {bar}  {_bold('Open in your browser')}")
     print(f"  {bar}     {_amber(url)}")
@@ -426,7 +426,7 @@ def _setup_env(data_dir: Path, host: str, port: int) -> None:
                     + str(embedded_pg.resolve_pgdata(data_dir) / "log")
                     + " (and "
                     + str(Path.home() / ".openestimate" / "desktop-launcher.log")
-                    + "). If it keeps happening, send those logs to info@datadrivenconstruction.io."
+                    + "). If it keeps happening, send those logs to the system administrator."
                 )
             )
             raise SystemExit(1)
@@ -789,7 +789,7 @@ def check_env_overrides() -> Check:
             "DATABASE_URL",
             "warn",
             f"unsupported scheme: {db.split(':', 1)[0]}",
-            "OpenConstructionERP runs only on PostgreSQL. Use postgresql+asyncpg://... "
+            "Royal Stars Portal runs only on PostgreSQL. Use postgresql+asyncpg://... "
             "or leave DATABASE_URL unset to use the embedded PostgreSQL.",
         )
     if db.startswith("postgresql"):
@@ -1277,8 +1277,8 @@ def _run_fatal_preflight(data_dir: Path, host: str, port: int) -> None:
         _red(
             _bold(
                 _u(
-                    "Cannot start OpenConstructionERP — pre-flight checks failed:",
-                    "Cannot start OpenConstructionERP - pre-flight checks failed:",
+                    "Cannot start Royal Stars Portal — pre-flight checks failed:",
+                    "Cannot start Royal Stars Portal - pre-flight checks failed:",
                 )
             )
         )
@@ -1293,7 +1293,7 @@ def _run_fatal_preflight(data_dir: Path, host: str, port: int) -> None:
 
 
 def cmd_serve(args: argparse.Namespace) -> None:
-    """Start the OpenConstructionERP server."""
+    """Start the Royal Stars Portal server."""
     data_dir = _data_dir_from_args(args)
 
     # First, before anything native is imported: a crash inside torch, Arrow or
@@ -2766,7 +2766,7 @@ def _build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command")
 
     # serve
-    serve_p = subparsers.add_parser("serve", help="Start the OpenConstructionERP server")
+    serve_p = subparsers.add_parser("serve", help="Start the Royal Stars Portal server")
     _add_common_server_args(serve_p)
     serve_p.add_argument("--open", action="store_true", help="Open browser after startup")
     serve_p.add_argument("--quiet", action="store_true", help="Suppress banner and info logs")

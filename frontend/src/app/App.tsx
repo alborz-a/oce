@@ -36,7 +36,7 @@ import { useBrandingStore } from '@/stores/useBrandingStore';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import { hydrateInfoBlocksFromServer } from '@/stores/useInfoBlockPrefsStore';
 import { useViewModeDefault } from './layout/useViewModeDefault';
-import { ddcVerifyIntegrity, ddcInjectMeta, DDC_ORIGIN } from '@/shared/lib/ddc-integrity';
+import { ddcVerifyIntegrity } from '@/shared/lib/ddc-integrity';
 import { NavigationProgress } from '@/shared/lib/navigationProgress';
 import { useKeyboardShortcuts } from '@/shared/hooks/useKeyboardShortcuts';
 import { useTranslation } from 'react-i18next';
@@ -620,9 +620,6 @@ const ImportDatabasePage = lazy(() =>
 const OnboardingWizard = lazy(() =>
   import('@/features/onboarding/OnboardingWizard').then((m) => ({ default: m.OnboardingWizard }))
 );
-const LoginPageNext = lazy(() =>
-  import('@/features/auth/LoginPageNext').then((m) => ({ default: m.LoginPageNext }))
-);
 const OidcCallbackPage = lazy(() =>
   import('@/features/auth/OidcCallback').then((m) => ({ default: m.OidcCallback }))
 );
@@ -707,9 +704,6 @@ const QuantitiesPage = lazy(() =>
 const IntegrationsPage = lazy(() =>
   import('@/features/integrations').then((m) => ({ default: m.IntegrationsPage }))
 );
-const AboutPage = lazy(() =>
-  import('@/features/about/AboutPage').then((m) => ({ default: m.AboutPage }))
-);
 const HowItWorksPage = lazy(() => import('@/features/help/HowItWorksPage'));
 // Cases (playbooks) - cross-module, end-to-end guided scenarios. Lazy so the
 // playbook data + runner stay out of the boot bundle.
@@ -724,11 +718,6 @@ const VideosPage = lazy(() =>
 // The case editor, split from the hub: most readers never author one.
 const CaseEditorPage = lazy(() =>
   import('@/features/cases').then((m) => ({ default: m.CaseEditorPage }))
-);
-// Inside track - backers-only early-look panel (donation perk). Lazy so the
-// changelog it reuses does not weigh down the boot bundle.
-const InsidePage = lazy(() =>
-  import('@/features/inside').then((m) => ({ default: m.InsidePage }))
 );
 
 // Module UIs that sit behind their backend counterpart (no data without
@@ -988,25 +977,6 @@ useAuthStore.getState().syncRoleFromServer();
 // Initialize the anonymized error logger (global handlers for unhandled errors)
 initErrorLogger();
 
-// Inject DDC origin meta tags + subtle console banner. These provide
-// provenance fingerprints: if someone clones the UI and serves it
-// unmodified, the meta tags and console message are direct evidence of
-// the origin. Removing them is not a functional break, but does prove
-// the distribution was tampered with.
-if (typeof document !== 'undefined') {
-  ddcInjectMeta();
-}
-if (typeof window !== 'undefined' && typeof console !== 'undefined') {
-  try {
-    // eslint-disable-next-line no-console
-    console.info(
-      `%c${DDC_ORIGIN}%c · Artem Boiko · datadrivenconstruction.io`,
-      'color:#0071E3;font-weight:700',
-      'color:#64748b',
-    );
-  } catch { /* noop */ }
-}
-
 /** Keeps <html dir="..."> and lang attribute in sync with the active i18n language. */
 function useDocumentDirection() {
   const { i18n } = useTranslation();
@@ -1201,7 +1171,7 @@ export default function App() {
 
         {/* Auth — public */}
         <Route path="/login" element={isAuthenticated ? <AuthedHome /> : <LoginPage />} />
-        <Route path="/login-next" element={isAuthenticated ? <AuthedHome /> : <Suspense fallback={<LoadingScreen />}><LoginPageNext /></Suspense>} />
+        <Route path="/login-next" element={<Navigate to="/login" replace />} />
         <Route path="/register" element={isAuthenticated ? <AuthedHome /> : <RegisterPage />} />
         <Route path="/auth/oidc/callback" element={<Suspense fallback={<LoadingScreen />}><OidcCallbackPage /></Suspense>} />
         <Route path="/forgot-password" element={isAuthenticated ? <AuthedHome /> : <ForgotPasswordPage />} />
@@ -1511,7 +1481,12 @@ export default function App() {
         <Route path="/projects/:projectId/rfq-bidding" element={<P title="RFQ Bidding"><RFQBiddingPage /></P>} />
         <Route path="/saved-views" element={<P title="Saved Views"><SavedViewsPage /></P>} />
         <Route path="/projects/:projectId/saved-views" element={<P title="Saved Views"><SavedViewsPage /></P>} />
-        <Route path="/about" element={<P title="About"><AboutPage /></P>} />
+        <Route path="/about" element={<Navigate to="/" replace />} />
+        <Route path="/inside" element={<Navigate to="/" replace />} />
+        <Route path="/licenses" element={<Navigate to="/" replace />} />
+        <Route path="/third-party-licenses" element={<Navigate to="/" replace />} />
+        <Route path="/changelog" element={<Navigate to="/" replace />} />
+        <Route path="/acknowledgments" element={<Navigate to="/" replace />} />
         <Route path="/how-it-works" element={<P title="How it works"><HowItWorksPage /></P>} />
         {/* Cases (playbooks) - list at /cases, the stepper at /cases/:playbookId
             (one component serves both so it stays a single lazy chunk).
@@ -1524,11 +1499,6 @@ export default function App() {
         <Route path="/cases/new" element={<P title="Cases"><CaseEditorPage /></P>} />
         <Route path="/cases/:playbookId/edit" element={<P title="Cases"><CaseEditorPage /></P>} />
         <Route path="/cases/:playbookId" element={<P title="Cases"><CasesPage /></P>} />
-        {/* Inside track - backers-only early-look panel (donation perk):
-            recent releases (reused from the /about changelog) + a short
-            coming-next list. Gated client-side by a supporter access code
-            remembered in localStorage; never gates the AGPL code itself. */}
-        <Route path="/inside" element={<P title="Inside track"><InsidePage /></P>} />
         <Route path="/project-intelligence" element={<P title="Project Intelligence"><ProjectIntelligencePage /></P>} />
         {/* Architecture Map — internal tool, admin-only. Surfaces module
             dependency graph + DDC integrity audit; not for day-to-day use. */}

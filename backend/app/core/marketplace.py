@@ -60,8 +60,8 @@ class MarketplaceModule:
 # Registry - all available marketplace modules
 # ---------------------------------------------------------------------------
 
-_DDC = "Data Driven Construction"
-_OE = "OpenConstructionERP Core Team"
+_DDC = "Royal Stars"
+_OE = "Royal Stars"
 
 #: What a vector-index card says about the encoder it needs. sentence-transformers
 #: is in requirements-desktop.lock, reaching the bundle through the

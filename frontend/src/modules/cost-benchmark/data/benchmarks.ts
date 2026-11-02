@@ -472,7 +472,7 @@ const AREA_PER_UNIT: Partial<Record<BuildingType, { unitId: string; label: strin
  * this string everywhere it renders, so repeating it here would add nothing.
  * Currency and year stay per region because those do differ.
  */
-const INDICATIVE_BAND = 'Indicative planning band, compiled by DataDrivenConstruction';
+const INDICATIVE_BAND = 'Indicative planning band, compiled by Royal Stars';
 
 const PROVENANCE: Record<BenchmarkRegion, { source: string; sourceYear: number; currency: CurrencyCode }> = {
   DE: { source: INDICATIVE_BAND, sourceYear: 2024, currency: 'EUR' },

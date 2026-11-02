@@ -72,13 +72,11 @@ const PANEL_CONVERTER_IDS = ['rvt', 'ifc', 'dwg', 'dgn'] as const;
  *  IFC text-parser at ``ifc_processor.py`` produces 2D placeholder
  *  geometry without DDC, so users see a working — if approximate —
  *  model even when the binary is not installed. The banner annotates
- *  these rows with a green "Works without DDC (fallback)" badge so the
+ *  these rows with a green "Works without converter (fallback)" badge so the
  *  user does not interpret "0/4 installed" as "0/4 functional". */
 const CONVERTERS_WITH_FALLBACK = new Set<string>(['ifc']);
 
 /** GitHub root for the manual-install fallback links. */
-const DDC_REPO_URL =
-  'https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN';
 
 const VC_REDIST_URL =
   'https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist';
@@ -998,7 +996,7 @@ function CollapsedConverterPill({
         : health === 'unknown'
           ? t('bim.converter_pill_unknown', { defaultValue: 'Installed (verify pending)' })
           : hasFallback
-            ? t('bim.converter_pill_fallback', { defaultValue: 'Works without DDC (fallback parser)' })
+            ? t('bim.converter_pill_fallback', { defaultValue: 'Works without converter (fallback parser)' })
             : t('bim.converter_pill_missing', { defaultValue: 'Not installed' });
   return (
     <span
@@ -1127,7 +1125,7 @@ function ConverterRow({
         pillTone =
           'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800';
         pillText = t('bim.converter_row_fallback', {
-          defaultValue: 'Works without DDC (fallback)',
+          defaultValue: 'Works without converter (fallback)',
         });
       } else {
         icon = (
@@ -1298,7 +1296,7 @@ function ConverterRow({
             <p className="text-[11px] text-emerald-800 dark:text-emerald-200">
               {t('bim.converter_row_fallback_msg', {
                 defaultValue:
-                  'IFC files are parsed by a built-in fallback. Install the DDC binary to upgrade placeholder boxes to real meshes.',
+                  'IFC files are parsed by a built-in fallback. Install the converter binary to upgrade placeholder boxes to real meshes.',
               })}
             </p>
           )}
@@ -1452,19 +1450,7 @@ function ActionButton({
         </a>
       );
     case 'manual_install_from_github':
-      return (
-        <a
-          href={DDC_REPO_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-        >
-          <ExternalLink size={11} />
-          {t('bim.converter_panel_manual_install_btn', {
-            defaultValue: 'Manual install on GitHub',
-          })}
-        </a>
-      );
+      return null;
     case 'unblock_files':
       return (
         <span

@@ -76,10 +76,10 @@ jobs:
           context: .
           file: deploy/docker/Dockerfile.unified
           push: true
+          build-args: |
+            APP_VERSION=${{ steps.ver.outputs.v }}
           tags: |
-            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
             ghcr.io/alborz-a/oce:sha-${{ github.sha }}
-            ghcr.io/alborz-a/oce:latest-ir
           cache-from: type=gha
           cache-to: type=gha,mode=min
       # Production image (base + aioboto3). The server pulls this tag and never builds.
@@ -91,7 +91,7 @@ jobs:
           build-args: |
             BASE_IMAGE=ghcr.io/alborz-a/oce:sha-${{ github.sha }}
           tags: |
-            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}-s3
-            ghcr.io/alborz-a/oce:latest-ir-s3
+            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
+            ghcr.io/alborz-a/oce:latest-ir
       - name: Prune older build caches
         run: docker buildx prune -f

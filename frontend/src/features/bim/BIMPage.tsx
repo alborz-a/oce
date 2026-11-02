@@ -457,12 +457,12 @@ function ConverterVersionBadge({
   const source = typeof metadata.converter_source === 'string' ? metadata.converter_source : null;
   const tooltip = source
     ? t('bim.converter_version_tooltip', {
-        defaultValue: 'Processed with DDC converter v{{version}} (source: {{source}})',
+        defaultValue: 'Processed with converter v{{version}} (source: {{source}})',
         version,
         source,
       })
     : t('bim.converter_version_tooltip_no_source', {
-        defaultValue: 'Processed with DDC converter v{{version}}',
+        defaultValue: 'Processed with converter v{{version}}',
         version,
       });
   return (
@@ -474,7 +474,7 @@ function ConverterVersionBadge({
       <span className="inline-block w-1 h-1 rounded-full bg-emerald-400" />
       <span>
         {t('bim.converter_version_label', {
-          defaultValue: 'DDC v{{version}}',
+          defaultValue: 'v{{version}}',
           version,
         })}
       </span>
@@ -1357,7 +1357,7 @@ function NonReadyOverlay({ model, onUploadConverted, onDelete, onRetry, onInstal
     && (errorCode === 'ddc_not_found' || !!backendMessage)
       ? t('bim.overlay_converter_unavailable_calm', {
           defaultValue:
-            "We couldn't convert this {{format}} file. The CAD converter (DDC cad2data) isn't available in this environment - it's an optional, separate install. Add it, then retry the conversion.",
+            "We couldn't convert this {{format}} file. The CAD converter (CAD converter) isn't available in this environment - it's an optional, separate install. Add it, then retry the conversion.",
           format: fmt || 'CAD',
         })
       : null;
@@ -1882,15 +1882,6 @@ function LandingPage({ projectId, onUploadComplete: _onUploadComplete, breadcrum
                     <span className="text-xs text-emerald-700 dark:text-emerald-300/90 font-medium">
                       {t('common.local_processing', { defaultValue: '100% Local Processing \u00B7 Your files never leave your computer' })}
                     </span>
-                    <span className="text-[10px] text-emerald-500/40">|</span>
-                    <a
-                      href="https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[10px] text-emerald-600/80 dark:text-emerald-400/70 hover:text-emerald-700 dark:hover:text-emerald-300 hover:underline whitespace-nowrap"
-                    >
-                      {t('common.powered_by_cad2data', { defaultValue: 'Powered by DDC cad2data' })}
-                    </a>
                   </div>
                 </div>
               </div>

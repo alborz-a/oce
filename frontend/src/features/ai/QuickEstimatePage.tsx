@@ -673,7 +673,7 @@ function SaveToBOQDialog({ open, onClose, onSave, saving, enrichedMatches = 0, e
               />
               <span className="text-sm text-content-secondary">
                 <span className="font-medium text-content-primary">
-                  {t('ai.apply_cwicr_rates', { defaultValue: 'Use matched CWICR rates' })}
+                  {t('ai.apply_cwicr_rates', { defaultValue: 'Use matched cost rates' })}
                 </span>
                 <span className="mt-0.5 block text-xs text-content-tertiary">
                   {t('ai.apply_cwicr_rates_hint', {
@@ -827,7 +827,7 @@ function ResultsTable({ result, selectedCurrency, enrichResult }: { result: Esti
                               the converted qty (qty * rate == total). */}
                           {formatNumber(displayQty.convertRate(item.unit_rate, item.unit || ''), currencyArg)}
                         </span>
-                        <span className="text-emerald-600 font-semibold" title={`CWICR: ${bestMatch.code} (${Math.round(bestMatch.score * 100)}% match)`}>
+                        <span className="text-emerald-600 font-semibold" title={`${bestMatch.code} (${Math.round(bestMatch.score * 100)}% match)`}>
                           {/* Show the matched rate in ITS OWN currency so we never
                               imply a foreign rate is in the estimate currency.
                               Issue #270: only when it is in the estimate currency
@@ -1377,7 +1377,7 @@ function CadConverterSection({
         <div className="flex items-center gap-2">
           <HardHat size={18} className="text-oe-blue" />
           <h3 className="text-sm font-semibold text-content-primary">
-            {t('ai.cad_converters_title', { defaultValue: 'DDC Converter Modules' })}
+            {t('ai.cad_converters_title', { defaultValue: 'Converter Modules' })}
           </h3>
           <Badge variant={installedCount > 0 ? 'success' : 'warning'} size="sm">
             {installedCount}/{totalCount} {t('ai.cad_installed', { defaultValue: 'installed' })}
@@ -1389,7 +1389,7 @@ function CadConverterSection({
       <div className="flex items-center gap-4 text-xs text-content-tertiary">
         {[
           { num: '1', label: t('ai.cad_step_upload', { defaultValue: 'Upload CAD/BIM file' }) },
-          { num: '2', label: t('ai.cad_step_convert', { defaultValue: 'Auto-convert via DDC' }) },
+          { num: '2', label: t('ai.cad_step_convert', { defaultValue: 'Auto-convert' }) },
           { num: '3', label: t('ai.cad_step_extract', { defaultValue: 'Get quantities & elements' }) },
         ].map((s, i) => (
           <div key={i} className="flex items-center gap-2">
@@ -1559,7 +1559,7 @@ function CadConverterSection({
         <Info size={14} className="shrink-0 mt-0.5 text-oe-blue-text" />
         <p className="text-xs text-oe-blue-text leading-relaxed">
           {t('ai.cad_module_info_extract', {
-            defaultValue: 'CAD/BIM files are converted using DDC converters and quantities are extracted directly - no AI API key required.',
+            defaultValue: 'CAD/BIM files are converted using converters and quantities are extracted directly - no AI API key required.',
           })}
         </p>
       </div>
@@ -1997,7 +1997,7 @@ export function QuickEstimatePage() {
         message:
           enriched > 0
             ? t('ai.boq_saved_enriched_msg', {
-                defaultValue: '{{count}} line(s) saved with matched CWICR rates',
+                defaultValue: '{{count}} line(s) saved with matched cost rates',
                 count: enriched,
               })
             : undefined,
@@ -2046,7 +2046,7 @@ export function QuickEstimatePage() {
 
   // Count enrich matches that share the estimate currency - only these can be
   // safely persisted as the line rate (the rest are flagged but never folded
-  // into the total). Drives the "Use matched CWICR rates" toggle in the save
+  // into the total). Drives the "Use matched cost rates" toggle in the save
   // dialog so it only appears when there is something real to apply.
   const enrichedSameCurrencyCount = useMemo(() => {
     if (!enrichResult?.items) return 0;
@@ -2667,7 +2667,7 @@ export function QuickEstimatePage() {
         >
           {t('cad_takeoff.intro_body', {
             defaultValue:
-              'Upload a CAD or BIM file and DDC converters extract its elements and quantities directly, with no AI key required. Group the results, match them against the cost database, and save the confirmed lines as a BOQ on any project.',
+              'Upload a CAD or BIM file and converters extract its elements and quantities directly, with no AI key required. Group the results, match them against the cost database, and save the confirmed lines as a BOQ on any project.',
           })}
         </DismissibleInfo>
       ) : (
@@ -2811,7 +2811,7 @@ export function QuickEstimatePage() {
               <p className="text-xs text-content-secondary leading-relaxed">
                 {t('ai.estimate_intro_desc', {
                   defaultValue:
-                    'Pick a source below. The AI returns a structured BOQ with quantities and indicative unit rates. Match those rates against the real CWICR cost database, save it as a project BOQ, then validate it. Treat AI numbers as a starting point - always review before pricing a tender.',
+                    'Pick a source below. The AI returns a structured BOQ with quantities and indicative unit rates. Match those rates against the real cost database, save it as a project BOQ, then validate it. Treat AI numbers as a starting point - always review before pricing a tender.',
                 })}
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-1.5 text-2xs text-content-tertiary">
@@ -3346,7 +3346,7 @@ export function QuickEstimatePage() {
                     disabled={isPending}
                   />
                 )}
-                {/* ── DDC Converter Modules ─────────────────────── */}
+                {/* ── Converter Modules ─────────────────────── */}
                 {isCadRoute ? (
                   /* Full converter management UI on /data-explorer */
                   <CadConverterSection
@@ -3368,7 +3368,7 @@ export function QuickEstimatePage() {
                     <div className="flex items-center justify-between mb-2.5">
                       <h4 className="text-xs font-semibold text-content-primary flex items-center gap-1.5">
                         <HardHat size={13} />
-                        {t('ai.cad_converters_title', { defaultValue: 'DDC Converter Modules' })}
+                        {t('ai.cad_converters_title', { defaultValue: 'Converter Modules' })}
                       </h4>
                       {convertersData && (
                         <Badge variant={convertersData.installed_count > 0 ? 'success' : 'warning'} size="sm">
@@ -3403,7 +3403,7 @@ export function QuickEstimatePage() {
                         <p>
                           {t('ai.cad_module_info_extract', {
                             defaultValue:
-                              'CAD/BIM files are converted using DDC converters and quantities are extracted directly - no AI API key required.',
+                              'CAD/BIM files are converted using converters and quantities are extracted directly - no AI API key required.',
                           })}
                         </p>
                         <Link
@@ -4505,7 +4505,7 @@ export function QuickEstimatePage() {
             {!enrichResult && (
               <p className="text-xs text-content-tertiary">
                 {t('ai.cost_db_matching_desc', {
-                  defaultValue: 'Match AI-estimated rates against the CWICR cost database for your region. Matched rates will replace AI estimates in the table above.',
+                  defaultValue: 'Match AI-estimated rates against the cost database for your region. Matched rates will replace AI estimates in the table above.',
                 })}
               </p>
             )}
@@ -4536,7 +4536,7 @@ export function QuickEstimatePage() {
                 <span className="text-oe-blue font-bold shrink-0">1.</span>
                 {t('ai.estimate_after_1', {
                   defaultValue:
-                    'Match rates against the CWICR cost database above so prices reflect real regional data, not AI guesses.',
+                    'Match rates against the cost database above so prices reflect real regional data, not AI guesses.',
                 })}
               </li>
               <li className="flex gap-2">

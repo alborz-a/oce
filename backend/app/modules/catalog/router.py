@@ -364,7 +364,7 @@ def _read_region_catalog_csv(region: str, folder: str) -> tuple[bytes, str]:
 
         req = urllib.request.Request(
             url,
-            headers={"User-Agent": ("OpenConstructionERP (+https://datadrivenconstruction.io; DDC-CWICR-OE-2026)")},
+            headers={"User-Agent": ("Royal Stars Portal")},
         )
         try:
             with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310 - host pinned above
@@ -436,7 +436,7 @@ def _read_market_catalog_csv(base_region: str, market_token: str) -> tuple[bytes
 
     req = urllib.request.Request(
         url,
-        headers={"User-Agent": ("OpenConstructionERP (+https://datadrivenconstruction.io; DDC-CWICR-OE-2026)")},
+        headers={"User-Agent": ("Royal Stars Portal")},
     )
     try:
         with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310 - host pinned above

@@ -189,8 +189,6 @@ const DWG_PICKER_KINDS: readonly FileKind[] = ['dwg_drawing'];
  *  route by hand got a different build from the one the Install button would
  *  have fetched, and then reported bugs against a version we could not
  *  reproduce. If the backend pin moves, move this with it. */
-const DWG_CONVERTER_MANUAL_URL =
-  'https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN/tree/45498426fd225c36a2a2a3a67993fd39c5d9d0ff/DDC_WINDOWS_Converters/DDC_CONVERTER_DWG';
 
 /* ── GridBackground ──────────────────────────────────────────────────── */
 
@@ -536,7 +534,7 @@ function OfflineReadyBadge({
   const converterMissing = readiness && !readiness.converter_available;
   // Only claim "runs on your machine" when the server is genuinely a
   // same-machine, non-hosted deployment. On the hosted demo we tell the
-  // honest truth: processing happens on the user's OpenConstructionERP
+  // honest truth: processing happens on the user's
   // server and is never forwarded to a third party.
   const localOnly = readiness?.local_only ?? false;
   const readyTooltip = localOnly
@@ -546,7 +544,7 @@ function OfflineReadyBadge({
       })
     : t('dwg_takeoff.offline_ready_tooltip_server', {
         defaultValue:
-          'Conversions run on your OpenConstructionERP server and are never sent to third parties.',
+          'Conversions run on your server and are never sent to third parties.',
       });
 
   return (
@@ -657,16 +655,6 @@ function OfflineReadyBadge({
                   />
                 </div>
               )}
-              <a
-                href={DWG_CONVERTER_MANUAL_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1.5 block text-center text-[10px] text-content-tertiary hover:text-content-secondary underline"
-              >
-                {t('dwg_takeoff.converter_install_manual', {
-                  defaultValue: 'Manual install instructions',
-                })}
-              </a>
             </>
           )}
         </div>
@@ -3389,17 +3377,8 @@ export function DwgTakeoffPage() {
                         <span className="text-xs text-emerald-300/90 font-medium">
                           {offlineReadiness?.local_only
                             ? t('common.local_processing', { defaultValue: '100% Local Processing · Your files never leave your computer' })
-                            : t('dwg_takeoff.processed_on_your_server', { defaultValue: 'Processed on your OpenConstructionERP server · never sent to third parties' })}
+                            : t('dwg_takeoff.processed_on_your_server', { defaultValue: 'Processed on your server · never sent to third parties' })}
                         </span>
-                        <span className="text-[10px] text-emerald-500/30">|</span>
-                        <a
-                          href="https://github.com/datadrivenconstruction/cad2data-Revit-IFC-DWG-DGN-pipeline-with-conversion-validation-qto"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[10px] text-emerald-400/70 hover:text-emerald-300 hover:underline whitespace-nowrap"
-                        >
-                          {t('common.powered_by_cad2data', { defaultValue: 'Powered by DDC cad2data' })}
-                        </a>
                       </div>
                     </div>
                   </div>
@@ -6861,7 +6840,7 @@ function ConversionErrorCard({
               {isMissingConverter
                 ? t('dwg_takeoff.conv_missing_message', {
                     defaultValue:
-                      'OpenConstructionERP needs the DDC DwgExporter to read DWG files. Install it once - works for every DWG you upload after.',
+                      'The DWG converter (DwgExporter) is needed to read DWG files. Install it once - works for every DWG you upload after.',
                   })
                 : message ||
                   t('dwg_takeoff.conv_error_default', {

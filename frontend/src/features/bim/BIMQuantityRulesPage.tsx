@@ -4292,7 +4292,7 @@ export function BIMQuantityRulesPage() {
               <span>·</span>
               <button
                 type="button"
-                onClick={() => navigate('/about')}
+                onClick={() => navigate('/how-it-works')}
                 className="flex items-center gap-1 hover:text-content-secondary"
               >
                 <BookOpen size={12} />

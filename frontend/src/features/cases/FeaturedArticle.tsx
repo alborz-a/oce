@@ -17,7 +17,7 @@ import { ArrowUpRight, Newspaper } from 'lucide-react';
 export const FEATURED_ARTICLE_URL = 'https://openconstructionerp.com/uberization-of-construction/';
 export const FEATURED_ARTICLE_COVER = 'https://openconstructionerp.com/uberization-of-construction/img/og-en.jpg';
 
-export function FeaturedArticle() {
+function FeaturedArticleUpstream() {
   const { t } = useTranslation();
   const [coverFailed, setCoverFailed] = useState(false);
 
@@ -77,4 +77,10 @@ export function FeaturedArticle() {
       </div>
     </a>
   );
+}
+
+/* Royal Stars build: upstream article promo disabled. */
+void FeaturedArticleUpstream;
+export function FeaturedArticle() {
+  return null;
 }

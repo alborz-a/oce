@@ -233,6 +233,5 @@ def test_the_schema_is_rebuilt_when_the_route_table_moves() -> None:
     after = app.openapi()
 
     assert marker in after["paths"], "a route added after the first build never reached the schema"
-    # The markers the override exists to add must survive the rebuild.
-    assert after["info"]["x-ddc-author"].startswith("Artem Boiko")
-    assert "DataDrivenConstruction" in after["info"]["x-ddc-origin"]
+    assert "x-ddc-author" not in after["info"]
+    assert "x-ddc-origin" not in after["info"]

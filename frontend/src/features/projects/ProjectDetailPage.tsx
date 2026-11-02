@@ -1161,16 +1161,7 @@ function ImportDialog({
                           <div className="space-y-1.5">
                             <p>{t('import.cad_converter_missing', { defaultValue: 'CAD converter not installed.' })}</p>
                             <p className="text-xs text-semantic-error">
-                              Download DDC converters from{' '}
-                              <a
-                                href="https://github.com/datadrivenconstruction/ddc-community-toolkit/releases"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="underline font-medium hover:text-semantic-error"
-                              >
-                                GitHub
-                              </a>{' '}
-                              and place .exe files in{' '}
+                              Install the CAD converters and place the .exe files in{' '}
                               <code className="bg-semantic-error/10 px-1 rounded">
                                 {navigator.platform?.startsWith('Win') ? '%USERPROFILE%\\.openestimator\\converters\\' : '~/.openestimator/converters/'}
                               </code>
@@ -1218,7 +1209,7 @@ function ImportDialog({
                     {t('import.cad_elements_count', { defaultValue: '{{count}} CAD elements', count: result.cad_elements })}
                   </span>
                   <span className="text-oe-blue/60">
-                    {t('import.cad_extracted', { defaultValue: 'extracted from .{{format}} file via DDC converter', format: result.cad_format })}
+                    {t('import.cad_extracted', { defaultValue: 'extracted from .{{format}} file via converter', format: result.cad_format })}
                   </span>
                 </div>
               )}

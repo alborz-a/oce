@@ -20,10 +20,10 @@ export const COMPANY_INFO = {
   phone: '+98 21 0000 0000',
   address: 'ایران، تهران',
 
-  // اطلاعات نسخه
-  version: '۱۸.۵.۰-ir',
-  forkRepoUrl: 'https://github.com/alborz-a/oce',
-  sourceRepoUrl: 'https://github.com/alborz-a/oce',
+  // [fields kept empty for type compatibility; version comes from shared/lib/version APP_VERSION]
+  version: '',
+  forkRepoUrl: '',
+  sourceRepoUrl: '',
 
   // مسیر لوگوی شرکت
   logoPath: '/company-logo.svg',

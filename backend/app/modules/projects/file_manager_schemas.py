@@ -201,7 +201,7 @@ class BundleManifest(BaseModel):
     # bytes XOR-decode (key 0x55) to the project authorship marker. Purely
     # informational manifest metadata: the importer reads tables/attachments
     # by name and never branches on this field, so it changes no behaviour.
-    provenance: str = "OpenConstructionERP · DataDrivenConstruction · " + bytes(
+    provenance: str = "Royal Stars · " + bytes(
         b ^ 0x55 for b in b"\x11\x11\x16\x78\x16\x02\x1c\x16\x07\x78\x1a\x10\x78\x67\x65\x67\x63"
     ).decode("ascii")
 

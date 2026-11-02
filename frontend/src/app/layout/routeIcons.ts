@@ -89,7 +89,6 @@ import {
   Bot,
   MessageSquare,
   Settings,
-  Info,
   ScrollText,
   Plus,
   PackageCheck,
@@ -263,7 +262,6 @@ const EXTRA_ROUTE_ICONS: Record<string, LucideIcon> = {
   '/modules': Package,
   '/governance': Scale,
   '/admin/audit-log': ScrollText,
-  '/about': Info,
   // ── v10.6.0 modules ───────────────────────────────────────────────
   '/prefab': Factory,
   '/cvr': Scale,

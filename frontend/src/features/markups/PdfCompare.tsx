@@ -13,7 +13,7 @@
  * worker, the wasm decoders and the ICC profile for every viewer.
  */
 
-// DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
+// DDC-CWICR-OE: DataDrivenConstruction · Royal Stars Portal
 
 import {
   useState,
