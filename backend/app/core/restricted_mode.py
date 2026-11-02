@@ -31,6 +31,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # auth + own profile / avatar / own password
     _rule(_ANY, r"^users/auth(/.*)?$"),
     _rule(_ANY, r"^users/me(/.*)?$"),
+    # other users' profile pictures (avatar image only; no user list, no edit)
+    _rule(_R, rf"^users/{_ID}/avatar/?$"),
     # projects: read only (list is membership-limited in the handler)
     _rule(_R, r"^projects/?$"),
     _rule(_R, rf"^projects/{_ID}/?$"),
