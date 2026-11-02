@@ -1118,7 +1118,7 @@ export function ProjectsPage() {
                             : 'border border-border-light text-content-secondary hover:bg-surface-secondary'
                         }`}
                       >
-                        {item}
+                        {REGION_LOCK ? toPersianDigits(item) : item} {/* [RSC-IRAN] */}
                       </button>
                     ),
                   )}
@@ -1144,12 +1144,12 @@ export function ProjectsPage() {
             <p className="text-sm text-content-tertiary">
               {t('projects.showing_of', {
                 defaultValue: '{{from}}–{{to}} of {{filtered}} projects',
-                from: (page - 1) * ITEMS_PER_PAGE + 1,
-                to: Math.min(page * ITEMS_PER_PAGE, filtered.length),
-                filtered: filtered.length,
+                from: REGION_LOCK ? toPersianDigits((page - 1) * ITEMS_PER_PAGE + 1) : (page - 1) * ITEMS_PER_PAGE + 1, // [RSC-IRAN]
+                to: REGION_LOCK ? toPersianDigits(Math.min(page * ITEMS_PER_PAGE, filtered.length)) : Math.min(page * ITEMS_PER_PAGE, filtered.length),
+                filtered: REGION_LOCK ? toPersianDigits(filtered.length) : filtered.length,
               })}
               {hasActiveFilter && filtered.length !== (projects?.length ?? 0)
-                ? ` (${t('projects.filtered_from', { defaultValue: 'filtered from {{total}}', total: projects?.length ?? 0 })})`
+                ? ` (${t('projects.filtered_from', { defaultValue: 'filtered from {{total}}', total: REGION_LOCK ? toPersianDigits(projects?.length ?? 0) : (projects?.length ?? 0) })})`
                 : ''}
             </p>
           </div>

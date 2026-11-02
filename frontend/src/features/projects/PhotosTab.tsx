@@ -26,6 +26,8 @@ import {
 } from 'lucide-react';
 import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
 import { useFileList } from '@/features/file-manager/hooks';
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import { UploadDialog } from '@/features/file-manager/components/UploadDialog';
 import type { FileRow } from '@/features/file-manager/types';
 import { formatBytes as fmtBytes } from '@/shared/lib/formatters';
@@ -276,8 +278,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
       <div className="text-xs text-content-tertiary tabular-nums">
         {t('projects.photos.count_label', {
           defaultValue: '{{count}} of {{total}} photos',
-          count: filtered.length,
-          total: photos.length,
+          count: REGION_LOCK ? toPersianDigits(filtered.length) : filtered.length, // [RSC-IRAN]
+          total: REGION_LOCK ? toPersianDigits(photos.length) : photos.length,
         })}
       </div>
 
@@ -451,8 +453,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 {' · '}
                 {t('projects.photos.position_label', {
                   defaultValue: '{{current}} / {{total}}',
-                  current: (lightboxIndex ?? 0) + 1,
-                  total: filtered.length,
+                  current: REGION_LOCK ? toPersianDigits((lightboxIndex ?? 0) + 1) : (lightboxIndex ?? 0) + 1, // [RSC-IRAN]
+                  total: REGION_LOCK ? toPersianDigits(filtered.length) : filtered.length,
                 })}
               </div>
             </div>
