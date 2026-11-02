@@ -53,3 +53,34 @@ def test_staff_denied(method, path):
 def test_search_types_narrowed():
     out = restrict_search_types(["oe_boq_positions", "oe_tasks", "oe_documents", "oe_chat"])
     assert out == ["oe_tasks", "oe_documents"]
+
+
+def test_search_router_boq_only_returns_nothing_for_staff(monkeypatch):
+    import asyncio
+
+    from app.modules.search import router as search_router
+
+    async def _restricted(session, user_id):
+        return True
+
+    async def _must_not_run(*args, **kwargs):
+        raise AssertionError("service must not run when no allowed type remains")
+
+    monkeypatch.setattr(search_router, "_caller_is_restricted", _restricted)
+    monkeypatch.setattr(search_router, "unified_search_service", _must_not_run)
+
+    res = asyncio.run(
+        search_router.unified_search_endpoint(
+            _user_id="u",
+            session=None,
+            q="beton",
+            types=["boq"],
+            project_id=None,
+            tenant_id=None,
+            limit_per_collection=10,
+            final_limit=25,
+        )
+    )
+    assert res.total == 0
+    assert res.hits == []
+    assert res.types == []
