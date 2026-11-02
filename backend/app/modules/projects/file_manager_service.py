@@ -247,6 +247,15 @@ async def _collect_photos(
     out: list[FileRow] = []
     for r in rows:
         path = r.file_path
+        # [RSC-IRAN] Photos imported from Mizito live on the read-only rclone
+        # bucket mount. One os.stat there is one S3 HEAD when the attr cache is
+        # cold, so a 1,700-photo project took minutes and the /files list timed
+        # out in the browser (empty list, "0 files"). Use the stored size only.
+        meta = r.metadata_ if isinstance(r.metadata_, dict) else {}
+        if meta.get("storage") == "bucket-mount":
+            size_bytes = int(meta.get("size_bytes") or 0)
+        else:
+            size_bytes = _file_size(path)
         out.append(
             FileRow(
                 id=str(r.id),
@@ -254,7 +263,7 @@ async def _collect_photos(
                 name=r.filename,
                 caption=(r.caption or None),
                 project_id=str(project_id),
-                size_bytes=_file_size(path),
+                size_bytes=size_bytes,
                 mime_type=_mime_of(r.filename),
                 extension=_ext_of(r.filename),
                 modified_at=r.taken_at or getattr(r, "created_at", None),

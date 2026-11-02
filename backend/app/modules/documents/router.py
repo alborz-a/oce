@@ -1839,6 +1839,14 @@ def _serve_media_type(name: str | None, stored_mime: str | None) -> str:
     served type, not the recorded one.
     """
     generic = "application/octet-stream"
+    # [RSC-IRAN] Older Office uploads were stored as application/zip (or the
+    # OLE container type); serve them with the real Office type by extension.
+    from app.core.file_signature import CONTAINER_MIMES, office_mime_for_name
+
+    if stored_mime and stored_mime.lower() in CONTAINER_MIMES:
+        office = office_mime_for_name(name)
+        if office:
+            return office
     if stored_mime and stored_mime.lower() != generic:
         return stored_mime
     guessed, _ = mimetypes.guess_type(name or "")

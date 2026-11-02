@@ -39,6 +39,7 @@ import { SubmitForApprovalModal } from '@/features/file-approvals/SubmitForAppro
 import { ApprovalDrawer } from '@/features/file-approvals/ApprovalDrawer';
 import { useApprovals } from '@/features/file-approvals/hooks';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -62,13 +63,14 @@ interface FilePreviewPaneProps {
   onManageAccess?: (row: FileRow) => void;
 }
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 /* Inline preview probe — relies on file extension first (cheap, exact)
    and falls back to mime sniff for documents uploaded without a .pdf

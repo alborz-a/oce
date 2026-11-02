@@ -15,14 +15,16 @@ import type { FileKind, FileTreeNode, StorageLocations } from '../types';
 import { ALL_KINDS, KIND_COLORS } from '../kindModule';
 import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { localizeSize, fmtCount } from '../fmt'; // [RSC-IRAN]
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (bytes === 0 || !Number.isFinite(bytes)) return '0 B';
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   const v = bytes / Math.pow(1024, i);
   return `${fmtFixed(v, v >= 100 || i === 0 ? 0 : 1)} ${units[i] ?? 'TB'}`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 interface FilesStatsStripProps {
   tree: FileTreeNode[] | undefined;
@@ -75,7 +77,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
         <Metric
           icon={<Layers size={14} />}
           label={t('files.stats_categories', { defaultValue: 'Categories' })}
-          value={`${stats.populated} / ${ALL_KINDS.length}`}
+          value={`${fmtCount(stats.populated)} / ${fmtCount(ALL_KINDS.length)}`}
         />
         <Metric
           icon={<Database size={14} />}

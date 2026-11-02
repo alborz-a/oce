@@ -10,6 +10,7 @@ import { TrashNode } from '@/features/file-trash/TrashNode';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { SavedViewsRail } from '@/features/file-saved-views';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { localizeSize, fmtCount } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICONS: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -32,13 +33,14 @@ interface FileTreeProps {
   projectId?: string | null;
 }
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: FileTreeProps) {
   const { t } = useTranslation();
@@ -81,7 +83,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
           <div className="text-[10px] text-content-tertiary mb-2">
             {t('files.tree.file_count', {
               defaultValue: '{{count}} files',
-              count: totalCount,
+              count: fmtCount(totalCount),
             })}
           </div>
           <div
@@ -124,7 +126,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
           <span className="flex-1 truncate">
             {t('files.tree.all', { defaultValue: 'All files' })}
           </span>
-          <span className="text-2xs text-content-tertiary tabular-nums">{totalCount}</span>
+          <span className="text-2xs text-content-tertiary tabular-nums">{fmtCount(totalCount)}</span>
         </button>
       </div>
 
@@ -151,7 +153,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
                   {t(`files.category.${kind}`, { defaultValue: node.label })}
                 </span>
                 <span className="text-2xs text-content-tertiary tabular-nums shrink-0">
-                  {node.file_count}
+                  {fmtCount(node.file_count)}
                 </span>
               </button>
               {node.total_bytes > 0 && (

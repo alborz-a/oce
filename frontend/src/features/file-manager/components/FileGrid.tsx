@@ -15,6 +15,7 @@ import { favoriteKey, type FileRow, type FileKind } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -56,13 +57,14 @@ interface FileGridProps {
   searchQuery?: string;
 }
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 /**
  * The tags assigned to one file, shown under its tile.

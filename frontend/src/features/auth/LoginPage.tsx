@@ -20,7 +20,7 @@ import { extractErrorMessageFromBody } from '@/shared/lib/api';
 import { isTauri } from '@/shared/lib/desktop';
 import { HEX_PORTRAIT_ASPECT, HEX_PORTRAIT_CLIP } from '@/shared/lib/honeycomb';
 import { APP_VERSION } from '@/shared/lib/version';
-import { loginFailureKindFromResponse } from './loginError';
+import { loginFailureKindFromResponse, loginRefusalKey } from './loginError';
 import { AuthBackground } from './AuthBackground';
 import {
   shouldAttemptDesktopBootstrap,
@@ -284,7 +284,7 @@ export function LoginPage() {
           );
           return;
         }
-        setError(parsed || t('auth.invalid_credentials', 'Invalid email or password'));
+        setError(t(loginRefusalKey(res.status, res.headers?.get?.('X-Error-Code') ?? null)));
         return;
       }
       const data = await res.json();

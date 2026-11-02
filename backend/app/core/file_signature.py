@@ -165,6 +165,54 @@ def mime_for_signature(detected: str | None) -> str:
     return _SIGNATURE_TO_MIME.get(detected, "application/octet-stream")
 
 
+# [RSC-IRAN] Office files are containers: OOXML/ODF sniff as "zip", legacy
+# Office as "ole". The signature alone stored every .docx/.xlsx as
+# application/zip, so browsers downloaded them as .zip. Refine by extension,
+# but only inside the matching container, so the stored MIME stays safe.
+_CONTAINER_EXT_MIME: Final[dict[str, dict[str, str]]] = {
+    "zip": {
+        "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "docm": "application/vnd.ms-word.document.macroEnabled.12",
+        "xlsm": "application/vnd.ms-excel.sheet.macroEnabled.12",
+        "odt": "application/vnd.oasis.opendocument.text",
+        "ods": "application/vnd.oasis.opendocument.spreadsheet",
+        "odp": "application/vnd.oasis.opendocument.presentation",
+    },
+    "ole": {
+        "doc": "application/msword",
+        "xls": "application/vnd.ms-excel",
+        "ppt": "application/vnd.ms-powerpoint",
+        "msg": "application/vnd.ms-outlook",
+    },
+}
+
+CONTAINER_MIMES: Final[frozenset[str]] = frozenset({"application/zip", "application/x-ole-storage"})
+
+
+def office_mime_for_name(filename: str | None, container: str | None = None) -> str | None:
+    """MIME for an Office file name, or None. ``container`` limits the lookup."""
+    if not filename or "." not in filename:
+        return None
+    ext = filename.rsplit(".", 1)[1].lower()
+    for token, table in _CONTAINER_EXT_MIME.items():
+        if container is not None and token != container:
+            continue
+        if ext in table:
+            return table[ext]
+    return None
+
+
+def mime_for_upload(detected: str | None, filename: str | None) -> str:
+    """Like :func:`mime_for_signature`, refined by extension for Office containers."""
+    if detected in _CONTAINER_EXT_MIME:
+        refined = office_mime_for_name(filename, detected)
+        if refined:
+            return refined
+    return mime_for_signature(detected)
+
+
 class FileSignatureMismatch(ValueError):
     """Raised when an upload's magic bytes don't match the allowed set."""
 

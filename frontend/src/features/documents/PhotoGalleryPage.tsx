@@ -66,6 +66,9 @@ import {
   type PhotoUpdatePayload,
 } from './api';
 import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
+import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
+import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
+const num = (n: number): string | number => (REGION_LOCK ? toPersianDigits(n) : n); // [RSC-IRAN]
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
@@ -366,7 +369,7 @@ function Lightbox({
 
         {/* Counter */}
         <div className="text-center mt-2 text-xs text-white/50">
-          {currentIndex + 1} / {photos.length}
+          {num(currentIndex + 1)} / {num(photos.length)}
         </div>
       </div>
     </div>
@@ -1467,7 +1470,7 @@ export function PhotoGalleryPage() {
         srTitle={t('photos.title', { defaultValue: 'Project Photos' })}
         subtitle={t('photos.subtitle', {
           defaultValue: '{{count}} photos',
-          count: photoList.length,
+          count: num(photoList.length),
         })}
         actions={
           <>
@@ -1539,7 +1542,7 @@ export function PhotoGalleryPage() {
             {selectedIds.size > 0 && (
               <Button variant="danger" size="sm" onClick={handleBatchDelete} loading={batchDeleting} className="shrink-0 whitespace-nowrap">
                 <Trash2 size={14} className="me-1 shrink-0" />
-                <span className="whitespace-nowrap">{t('photos.delete_selected', { defaultValue: 'Delete ({{count}})', count: selectedIds.size })}</span>
+                <span className="whitespace-nowrap">{t('photos.delete_selected', { defaultValue: 'Delete ({{count}})', count: num(selectedIds.size) })}</span>
               </Button>
             )}
             <Button variant="ghost" size="sm" onClick={exitSelectMode} className="shrink-0 whitespace-nowrap">
@@ -1568,7 +1571,7 @@ export function PhotoGalleryPage() {
               truncated gallery they add up to less than this number - the
               notice above says why. */}
           <span className="font-semibold text-content-primary bg-surface-secondary px-2 py-1 rounded-md">
-            {t('photos.total', { defaultValue: 'Total' })}: {photoPage?.total ?? photoList.length}
+            {t('photos.total', { defaultValue: 'Total' })}: {num(photoPage?.total ?? photoList.length)}
           </span>
           <span className="text-border-light select-none">|</span>
           {Object.entries(categoryStats).map(([cat, count]) => (
@@ -1577,7 +1580,7 @@ export function PhotoGalleryPage() {
               className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-2xs font-medium ${CATEGORY_COLORS[cat as PhotoCategory] || 'bg-gray-100 text-gray-600'}`}
             >
               {t(`photos.cat_${cat}`, { defaultValue: cat })}
-              <span className="font-bold">{count}</span>
+              <span className="font-bold">{num(count)}</span>
             </span>
           ))}
         </div>
@@ -1703,7 +1706,7 @@ export function PhotoGalleryPage() {
                   {formatDate(group.date)}
                 </h3>
                 <Badge variant="neutral">
-                  {group.photos.length}
+                  {num(group.photos.length)}
                 </Badge>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 ms-11">

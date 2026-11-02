@@ -29,6 +29,7 @@ import type { FileTreeNode, FileKind } from '../types';
 import { KIND_TONE } from '../kindModule';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICON: Record<FileKind, LucideIcon> = {
   document: FileText,
@@ -58,13 +59,14 @@ const KIND_EMPTY_HINT: Record<FileKind, string> = {
 // Per-kind accent tones (icon chip + share bar) live in `kindModule.ts`
 // so the folder grid and the storage stats strip stay colour-consistent.
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 /** Count nested subfolders/types so the card can surface how the
  *  category is organised without a second API call. */

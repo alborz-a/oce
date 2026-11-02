@@ -127,7 +127,7 @@ describe('LoginPageNext error wiring', () => {
     );
     submitLogin();
 
-    await waitFor(() => expect(screen.getByText('Invalid email or password')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('auth.invalid_credentials')).toBeTruthy());
     expect(screen.queryByText('auth.server_unavailable')).toBeNull();
   });
 

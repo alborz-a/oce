@@ -33,7 +33,7 @@ import { Button, Input, Logo, CountryFlag } from '@/shared/ui';
 import { safeNextPath } from './nextPath';
 import { readRememberChoice, saveRememberChoice, useAuthStore } from '@/stores/useAuthStore';
 import { extractErrorMessageFromBody } from '@/shared/lib/api';
-import { loginFailureKindFromResponse } from './loginError';
+import { loginFailureKindFromResponse, loginRefusalKey } from './loginError';
 import { AuthBackground } from './AuthBackground';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
@@ -160,7 +160,7 @@ export function LoginPageNext() {
           );
           return;
         }
-        setError(parsed || t('auth.invalid_credentials', 'Invalid email or password'));
+        setError(t(loginRefusalKey(res.status, res.headers?.get?.('X-Error-Code') ?? null)));
         return;
       }
       const data = await res.json();

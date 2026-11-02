@@ -673,12 +673,14 @@ class UserService:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password",
+                headers={"X-Error-Code": "invalid_credentials"},
             )
 
         if not verify_password(data.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password",
+                headers={"X-Error-Code": "invalid_credentials"},
             )
 
         if not user.is_active:
@@ -687,6 +689,7 @@ class UserService:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid email or password",
+                headers={"X-Error-Code": "invalid_credentials"},
             )
 
         # Eagerly read the fields the token and event below need, before the

@@ -70,3 +70,21 @@ export function loginFailureKindFromResponse(status: number, detail: string | nu
   if (loginFailureKind(status) === 'unavailable') return 'unavailable';
   return detail ? 'credentials' : 'unavailable';
 }
+
+/**
+ * Pick the translation key for a sign-in refusal our own API answered.
+ *
+ * The backend detail strings are English and stay so for API compatibility.
+ * They must never reach the sign-in banner, so the screen decides by the
+ * stable `X-Error-Code` header first and by status second, and always shows
+ * a translated sentence.
+ *
+ * @param status - The HTTP status of the refused response.
+ * @param code - The `X-Error-Code` header value, or `null` when absent.
+ * @returns An i18n key under `auth.`.
+ */
+export function loginRefusalKey(status: number, code: string | null): string {
+  if (code === 'rate_limited' || status === 429) return 'auth.rate_limited';
+  if (code === 'invalid_credentials' || status === 401) return 'auth.invalid_credentials';
+  return 'auth.login_failed';
+}

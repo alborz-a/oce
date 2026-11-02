@@ -707,7 +707,7 @@ class DocumentService:
             detect as _sig_detect,
         )
         from app.core.file_signature import (
-            mime_for_signature as _mime_for_signature,
+            mime_for_upload as _mime_for_upload,
         )
 
         allowed_signatures = ALLOWED_DOCUMENT_TYPES | ALLOWED_CAD_TYPES
@@ -734,7 +734,7 @@ class DocumentService:
         # uploaded with header ``image/png`` previously round-tripped
         # into the DB and downstream consumers (vector indexer, viewers)
         # would happily trust it.
-        stored_mime = _mime_for_signature(detected_type)
+        stored_mime = _mime_for_upload(detected_type, safe_name)
 
         # Build storage path with UUID prefix to avoid collisions
         file_uuid = uuid.uuid4().hex[:12]
@@ -946,7 +946,7 @@ class DocumentService:
             SIGNATURE_BYTES_REQUIRED,
         )
         from app.core.file_signature import detect as _sig_detect
-        from app.core.file_signature import mime_for_signature as _mime_for_signature
+        from app.core.file_signature import mime_for_upload as _mime_for_upload
 
         allowed = ALLOWED_DOCUMENT_TYPES | ALLOWED_CAD_TYPES
         detected = _sig_detect(content[:SIGNATURE_BYTES_REQUIRED])
@@ -961,7 +961,7 @@ class DocumentService:
                 detail=(f"Uploaded content does not match an allowed format (detected: {detected})."),
             )
 
-        stored_mime = _mime_for_signature(detected)
+        stored_mime = _mime_for_upload(detected, safe_name)
 
         file_uuid = uuid.uuid4().hex[:12]
         storage_name = f"{file_uuid}_{safe_name}"

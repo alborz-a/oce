@@ -660,13 +660,13 @@ export function FileManagerPage() {
     setQuery('');
   }
 
-  // Restricted project users do not add documents here (photos have their own page).
+  // Restricted project users may upload documents; share, rename, delete and
+  // the registers stay hidden for them.
   // Import, export and the recycle bin are for the system admin only.
   const restrictedMode = useAuthStore((st) => st.restrictedMode);
   const isSystemAdmin = useIsSystemAdmin();
 
   function handleOpenUpload(kind: FileKind | null) {
-    if (restrictedMode) return;
     setUploadKind(kind);
     setShowUpload(true);
   }
@@ -759,7 +759,7 @@ export function FileManagerPage() {
     e.preventDefault();
     dragDepthRef.current = 0;
     setPageDragOver(false);
-    if (!restrictedMode && e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer.files.length > 0) {
       void doUpload(e.dataTransfer.files, selectedKind);
     }
   }
@@ -900,7 +900,7 @@ export function FileManagerPage() {
               opens the upload dialog. */}
           <ModuleGuideButton
             content={filesGuide}
-            onCta={restrictedMode ? undefined : () => handleOpenUpload(selectedKind)}
+            onCta={() => handleOpenUpload(selectedKind)}
           />
           {/* W10 — cross-project search */}
           <Link
@@ -937,7 +937,7 @@ export function FileManagerPage() {
               {t('files.approvals.register_title', { defaultValue: 'Approvals register' })}
             </span>
           </Link>)}
-          {!restrictedMode && (<button
+          {(<button
             type="button"
             data-guide="files-upload-button"
             onClick={() => handleOpenUpload(selectedKind)}

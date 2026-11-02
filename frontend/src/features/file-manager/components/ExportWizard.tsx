@@ -10,6 +10,7 @@ import { useToastStore } from '@/stores/useToastStore';
 import { previewExport, downloadBundle } from '../api';
 import type { BundleScope, ExportOptions, ExportPreview } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 interface ExportWizardProps {
   open: boolean;
@@ -20,13 +21,14 @@ interface ExportWizardProps {
 
 const SCOPES: BundleScope[] = ['metadata_only', 'documents', 'bim', 'dwg', 'full'];
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 export function ExportWizard({ open, projectId, projectName, onClose }: ExportWizardProps) {
   const { t } = useTranslation();

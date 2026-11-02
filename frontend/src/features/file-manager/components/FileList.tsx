@@ -14,6 +14,7 @@ import { favoriteKey, type FileRow, type FileKind, type FileFilters } from '../t
 import { fmtFixed } from '@/shared/lib/formatters';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -46,13 +47,14 @@ interface FileListProps {
   searchQuery?: string;
 }
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 /* Render the document version as ``V01`` / ``V12``. ``extra.version`` is the
    integer the documents table stores (1-based). Coerces stringified ints

@@ -13,6 +13,7 @@ import { useToastStore } from '@/stores/useToastStore';
 import { validateImport, commitImport } from '../api';
 import type { ImportMode, ImportPreview, ImportResult } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 interface ImportWizardProps {
   open: boolean;
@@ -24,13 +25,14 @@ interface ProjectListItem {
   name: string;
 }
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 type Step = 'pick' | 'validate' | 'mode' | 'result';
 

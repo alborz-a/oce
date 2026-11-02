@@ -11,6 +11,7 @@ import { mintEmailLink } from '../api';
 import { copyToClipboard } from '../lib/tauri';
 import type { EmailLinkResponse, FileRow } from '../types';
 import { fmtFixed, getIntlLocale } from '@/shared/lib/formatters';
+import { localizeSize } from '../fmt'; // [RSC-IRAN]
 
 interface EmailDialogProps {
   open: boolean;
@@ -26,13 +27,14 @@ const TTL_PRESETS: { hours: number; labelKey: string; defaultLabel: string }[] =
   { hours: 14 * 24, labelKey: 'files.email.ttl_14d', defaultLabel: '14 days' },
 ];
 
-function fmtBytes(bytes: number): string {
+function fmtBytesRaw(bytes: number): string {
   if (!bytes) return '0 B';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${fmtFixed(bytes / 1024, 1)} KB`;
   if (bytes < 1024 * 1024 * 1024) return `${fmtFixed(bytes / (1024 * 1024), 1)} MB`;
   return `${fmtFixed(bytes / (1024 * 1024 * 1024), 2)} GB`;
 }
+const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
   const { t } = useTranslation();

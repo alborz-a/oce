@@ -12,6 +12,7 @@ import type { FilterSnapshot } from '@/features/file-saved-views';
 import { TagFilterFacet } from '@/features/file-tags/TagFilterFacet';
 import { SearchModeToggle } from '@/features/file-search/SearchModeToggle';
 import type { SearchMode } from '@/features/file-search/types';
+import { fmtCount } from '../fmt'; // [RSC-IRAN]
 
 type SortKey = NonNullable<FileFilters['sort']>;
 export type ViewMode = 'grid' | 'list';
@@ -187,7 +188,7 @@ export function FileActionsBar({
       )}
 
       <span className="text-2xs text-content-tertiary tabular-nums">
-        {totalCount} {t('files.count_files', { defaultValue: 'files' })}
+        {fmtCount(totalCount)} {t('files.count_files', { defaultValue: 'files' })}
       </span>
 
       {onExtensionChange && (

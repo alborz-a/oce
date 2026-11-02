@@ -315,6 +315,7 @@ async def demo_login(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
+            headers={"X-Error-Code": "invalid_credentials"},
         )
 
     client_ip = client_identifier(request)
@@ -323,7 +324,7 @@ async def demo_login(
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many login attempts. Please wait a minute and try again.",
-            headers={"Retry-After": "60"},
+            headers={"Retry-After": "60", "X-Error-Code": "rate_limited"},
         )
 
     return await service.demo_login(email)
@@ -422,7 +423,7 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many login attempts. Please wait a minute and try again.",
-            headers={"Retry-After": "60"},
+            headers={"Retry-After": "60", "X-Error-Code": "rate_limited"},
         )
     return await service.login(data)
 
