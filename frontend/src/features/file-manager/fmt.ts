@@ -19,6 +19,6 @@ export function fmtCount(n: number): string {
 export function localizeSize(text: string): string {
   if (!REGION_LOCK) return text;
   const m = text.match(/^(.*?)\s*(TB|GB|MB|KB|B)$/);
-  const out = m ? `${m[1]} ${FA_UNITS[m[2]]}` : text;
+  const out = m ? `${m[1]} ${FA_UNITS[m[2] ?? ''] ?? m[2]}` : text;
   return toPersianDigits(out.replace('.', '٫'));
 }

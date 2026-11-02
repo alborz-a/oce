@@ -11726,7 +11726,6 @@ const resource = {
     "files.type_pill.all": "همه",
     "files.type_pill.image": "تصاویر",
     "files.type_pill.office": "آفیس",
-    "files.count_files": "فایل",
     "files.tree.empty": "هنوز فایلی وجود ندارد.",
     "files.tree.title": "دسته‌ها",
     "files.tree.total": "جمع کل",
