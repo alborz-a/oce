@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
-import { getIntlLocale, formatDateWithPreference } from '../lib/formatters';
+import { getIntlLocale, formatDateWithPreference, localizeDigits } from '../lib/formatters';
 import { getDateFnsLocale } from '../lib/dateFnsLocale';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 
@@ -118,7 +118,7 @@ export function DateDisplay({ value, format = 'date', className }: DateDisplayPr
 
   return (
     <time dateTime={dateObj.toISOString()} className={className}>
-      {formatted}
+      {localizeDigits(formatted)}
     </time>
   );
 }
