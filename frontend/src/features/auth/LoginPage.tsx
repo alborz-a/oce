@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
-  Eye, EyeOff, Mail, Lock, Globe, ChevronDown, X, Users, Pencil,
+  Eye, EyeOff, Mail, Lock, Globe, ChevronDown, X, Pencil,
   ShieldCheck, Zap, Brain, Info,
   FileSpreadsheet, CalendarClock, TrendingUp, Boxes, Database,
   BarChart3, Upload, FileCheck,
