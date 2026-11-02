@@ -76,6 +76,17 @@ async def unified_search_endpoint(
 
         # Restricted staff only search what they can open (tasks, documents).
         types = restrict_search_types(_normalize_types(types))
+        if not types:
+            # Nothing the caller may search was requested: empty means empty,
+            # never "all collections".
+            return UnifiedSearchResponse(
+                query=q,
+                types=[],
+                project_id=project_id,
+                total=0,
+                hits=[],
+                facets={},
+            )
     return await unified_search_service(
         query=q,
         user_id=_user_id,
