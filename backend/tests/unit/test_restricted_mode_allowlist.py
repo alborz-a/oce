@@ -27,6 +27,8 @@ D = "/api/v1/"
         ("GET", f"{D}search/"),
         ("GET", f"{D}search/status/"),
         ("GET", f"{D}search/types/"),
+        ("GET", f"{D}users/{P}/avatar"),
+        ("GET", f"{D}users/{P}/avatar/"),
     ],
 )
 def test_staff_allowed(method, path):
@@ -44,6 +46,8 @@ def test_staff_allowed(method, path):
         ("POST", f"{D}documents/sheets/split-pdf/"),
         ("GET", f"{D}boq/"),
         ("GET", f"{D}users/"),
+        ("PUT", f"{D}users/{P}/avatar"),
+        ("DELETE", f"{D}users/{P}/avatar"),
     ],
 )
 def test_staff_denied(method, path):
