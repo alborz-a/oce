@@ -104,6 +104,11 @@ function FileGridTagsRow({
   );
 }
 
+const isCoarsePointer = (): boolean =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(pointer: coarse)').matches;
+
 export function FileGrid({
   items,
   selectedIds,
@@ -285,6 +290,10 @@ export function FileGrid({
               tabIndex={idx === focusIndex ? 0 : -1}
               onClick={(e) => {
                 setFocusIndex(idx);
+                if (isCoarsePointer()) {
+                  onOpen(row);
+                  return;
+                }
                 onSelect(row.id, e.metaKey || e.ctrlKey, e.shiftKey);
               }}
               onDoubleClick={() => onOpen(row)}

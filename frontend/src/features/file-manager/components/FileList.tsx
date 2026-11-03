@@ -111,6 +111,11 @@ function FileListTagsCell({
 
 type SortKey = NonNullable<FileFilters['sort']>;
 
+const isCoarsePointer = (): boolean =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(pointer: coarse)').matches;
+
 export function FileList({
   items,
   selectedIds,
@@ -281,6 +286,10 @@ export function FileList({
                   )}
                   onClick={(e) => {
                     setFocusIndex(idx);
+                    if (isCoarsePointer()) {
+                      onOpen(row);
+                      return;
+                    }
                     onSelect(row.id, e.metaKey || e.ctrlKey, e.shiftKey);
                   }}
                   onDoubleClick={() => onOpen(row)}
