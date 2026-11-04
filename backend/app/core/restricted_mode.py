@@ -52,6 +52,10 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, r"^documents/?$"),
     _rule(_R, rf"^documents/{_ID}(/(download|references))?/?$"),
     _rule(_R, r"^documents/file-types-by-project/?$"),
+    # file side panel: activity timeline and tags of one file. Read only;
+    # the handlers check project membership via ``verify_project_access``.
+    _rule(_R, rf"^documents/{_ID}/activity/?$"),
+    _rule(_R, r"^file-tags/by-file/?$"),
     _rule(_R, r"^documents/photos(/.*)?$"),
     # document upload (needs documents.create; membership + folder grants checked in the handler). No delete.
     _rule(frozenset({"POST"}), r"^documents/upload/?$"),
