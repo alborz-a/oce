@@ -30,6 +30,8 @@ import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import { UploadDialog } from '@/features/file-manager/components/UploadDialog';
 import type { FileRow } from '@/features/file-manager/types';
+import { MediaError, PhotoLoading } from '@/features/file-manager/components/MediaLoadStates';
+import { downloadProtectedFile } from '@/features/file-manager/api';
 import { formatBytes as fmtBytes } from '@/shared/lib/formatters';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -148,6 +150,14 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
   }, [lightboxIndex, closeLightbox, stepLightbox]);
+
+  // Lets index.css hide the install prompt, which would cover the photo.
+  const lightboxOpen = lightboxIndex !== null;
+  useEffect(() => {
+    if (!lightboxOpen) return undefined;
+    document.documentElement.setAttribute('data-media-lightbox', '');
+    return () => document.documentElement.removeAttribute('data-media-lightbox');
+  }, [lightboxOpen]);
 
   // ── No active project ────────────────────────────────────────────────────
   if (!projectId) {
@@ -422,25 +432,23 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           >
             {activePhoto.download_url ? (
               <AuthImage
+                // Re-mount per photo so stepping fetches the new file's bytes.
+                key={activePhoto.id}
                 src={activePhoto.download_url}
                 alt={activePhoto.name}
                 className="max-w-full max-h-[80vh] object-contain rounded shadow-2xl"
                 data-testid="photos-tab-lightbox-image"
-                placeholder={
-                  <div className="flex h-64 w-64 items-center justify-center rounded bg-white/10 text-white">
-                    <ImageIcon size={40} strokeWidth={1.25} className="animate-pulse" />
-                  </div>
-                }
+                placeholder={<PhotoLoading thumbnailUrl={activePhoto.thumbnail_url ?? null} />}
                 fallback={
-                  <div className="flex h-64 w-64 items-center justify-center rounded bg-white/10 text-white">
-                    <ImageIcon size={40} strokeWidth={1.25} />
-                  </div>
+                  <MediaError
+                    onDownload={() => {
+                      void downloadProtectedFile(activePhoto.download_url ?? '', activePhoto.name);
+                    }}
+                  />
                 }
               />
             ) : (
-              <div className="flex h-64 w-64 items-center justify-center rounded bg-white/10 text-white">
-                <ImageIcon size={40} strokeWidth={1.25} />
-              </div>
+              <MediaError />
             )}
             <div className="mt-3 text-center text-white">
               <div className="text-sm font-medium truncate max-w-[80vw]">
