@@ -133,7 +133,7 @@ export function FileActionsBar({
 
   return (
     <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-border-light bg-surface-elevated">
-      <div className="relative flex-1 min-w-[200px] max-w-md">
+      <div className="relative flex-1 min-w-0 basis-full sm:basis-auto sm:min-w-[200px] max-w-md">
         <Search
           size={14}
           className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
@@ -192,7 +192,7 @@ export function FileActionsBar({
       </span>
 
       {onExtensionChange && (
-        <div className="inline-flex items-center gap-1">
+        <div className="inline-flex flex-wrap items-center gap-1 max-w-full">
           {TYPE_PILLS.filter((p) => {
             if (!p.group) return true;
             if (extension && p.group.includes(extension)) return true;
@@ -219,7 +219,7 @@ export function FileActionsBar({
         </div>
       )}
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 max-w-full">
         {onFavoritesOnlyChange && (
           <button
             type="button"
