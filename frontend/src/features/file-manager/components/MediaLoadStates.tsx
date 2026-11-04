@@ -30,7 +30,7 @@ export function PhotoLoading({ thumbnailUrl }: { thumbnailUrl: string | null }) 
   );
 }
 
-export function MediaError({ onDownload }: { onDownload: () => void }) {
+export function MediaError({ onDownload }: { onDownload?: () => void }) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center gap-3 px-6 text-center">
@@ -39,14 +39,16 @@ export function MediaError({ onDownload }: { onDownload: () => void }) {
           defaultValue: 'This file could not be displayed here.',
         })}
       </p>
-      <button
-        type="button"
-        onClick={onDownload}
-        className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
-      >
-        <Download size={13} />
-        {t('files.actions.download', { defaultValue: 'Download' })}
-      </button>
+      {onDownload && (
+        <button
+          type="button"
+          onClick={onDownload}
+          className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
+        >
+          <Download size={13} />
+          {t('files.actions.download', { defaultValue: 'Download' })}
+        </button>
+      )}
     </div>
   );
 }

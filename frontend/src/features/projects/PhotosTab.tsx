@@ -448,7 +448,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 }
               />
             ) : (
-              <MediaError onDownload={() => undefined} />
+              <MediaError />
             )}
             <div className="mt-3 text-center text-white">
               <div className="text-sm font-medium truncate max-w-[80vw]">
