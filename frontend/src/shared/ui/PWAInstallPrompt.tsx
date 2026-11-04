@@ -202,7 +202,7 @@ export function PWAInstallPrompt() {
           <p className="text-sm font-semibold text-content-primary">
             {t('pwa.install_prompt_title', { defaultValue: 'Install the app' })}
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-content-secondary">
+          <p className="mt-1 text-xs leading-relaxed text-content-secondary max-sm:hidden">
             {t('pwa.ios_hint_body', {
               defaultValue:
                 'Tap the Share icon in Safari, then choose "Add to Home Screen" to install the app.',
@@ -247,7 +247,7 @@ export function PWAInstallPrompt() {
         <p className="text-sm font-semibold text-content-primary">
           {t('pwa.install_prompt_title', { defaultValue: 'Install the app' })}
         </p>
-        <p className="mt-1 text-xs leading-relaxed text-content-secondary">
+        <p className="mt-1 text-xs leading-relaxed text-content-secondary max-sm:hidden">
           {t('pwa.install_prompt_body', {
             defaultValue:
               'Add the app to your device for a faster launch, offline app shell and a native-feel field experience.',
