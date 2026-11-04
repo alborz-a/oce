@@ -173,6 +173,16 @@ export function PWAInstallPrompt() {
     setHidden(true);
   }, []);
 
+  // While the prompt shows, flag <html> so phone layouts pad the page bottom
+  // (see .oe-install-prompt-pad in index.css) and the prompt never covers the
+  // end of a list.
+  const promptVisible = !hidden && (iosHintVisible || deferredPrompt !== null);
+  useEffect(() => {
+    if (!promptVisible) return undefined;
+    document.documentElement.setAttribute('data-install-prompt', '');
+    return () => document.documentElement.removeAttribute('data-install-prompt');
+  }, [promptVisible]);
+
   if (hidden) return null;
 
   // iOS hint variant — no programmatic install, just an instruction.
@@ -183,7 +193,7 @@ export function PWAInstallPrompt() {
         aria-live="polite"
         aria-label={t('pwa.install_prompt_title', { defaultValue: 'Install the app' })}
         data-testid="pwa-install-prompt-ios"
-        className="oe-dock-aware fixed bottom-4 end-4 z-[60] flex max-w-sm items-start gap-3 rounded-xl border border-border-light bg-surface-elevated p-3 shadow-lg backdrop-blur-sm"
+        className="oe-dock-aware oe-install-prompt fixed bottom-4 end-4 z-[60] flex max-w-sm items-start gap-3 rounded-xl border border-border-light bg-surface-elevated p-3 shadow-lg backdrop-blur-sm"
       >
         <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
           <Share size={16} />
@@ -228,7 +238,7 @@ export function PWAInstallPrompt() {
       aria-live="polite"
       aria-label={t('pwa.install_prompt_title', { defaultValue: 'Install the app' })}
       data-testid="pwa-install-prompt"
-      className="oe-dock-aware fixed bottom-4 end-4 z-[60] flex max-w-sm items-start gap-3 rounded-xl border border-border-light bg-surface-elevated p-3 shadow-lg backdrop-blur-sm"
+      className="oe-dock-aware oe-install-prompt fixed bottom-4 end-4 z-[60] flex max-w-sm items-start gap-3 rounded-xl border border-border-light bg-surface-elevated p-3 shadow-lg backdrop-blur-sm"
     >
       <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-oe-blue/10 text-oe-blue">
         <Download size={16} />
