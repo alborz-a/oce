@@ -306,6 +306,7 @@ export function MediaLightbox({
             // re-fetches the new file's bytes instead of showing the prior one.
             key={current.id}
             src={downloadUrl}
+            fetchPriority="high"
             alt={current.name}
             data-testid="media-lightbox-image"
             className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"

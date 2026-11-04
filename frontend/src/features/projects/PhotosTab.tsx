@@ -87,6 +87,36 @@ function sortRows(rows: FileRow[], sort: SortKey): FileRow[] {
   }
 }
 
+/** Mounts its children (a thumbnail fetch) only once the tile is near the
+ *  viewport, and not while a viewer is open, so a 500-photo grid does not
+ *  queue 500 requests ahead of the full-size photo. Stays mounted once armed. */
+function LazyThumb({
+  paused,
+  children,
+}: {
+  paused: boolean;
+  children: React.ReactNode;
+}): React.ReactElement {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    if (near || paused || !ref.current) return undefined;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setNear(true);
+      },
+      { rootMargin: '300px' },
+    );
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [near, paused]);
+  return (
+    <div ref={ref} className="absolute inset-0">
+      {near ? children : null}
+    </div>
+  );
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export interface PhotosTabProps {
@@ -327,8 +357,10 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               >
                 <div className="relative aspect-square w-full bg-surface-tertiary">
                   {row.thumbnail_url ? (
+                    <LazyThumb paused={lightboxOpen}>
                     <AuthImage
                       src={row.thumbnail_url}
+                      fetchPriority="low"
                       alt={row.name}
                       loading="lazy"
                       className="absolute inset-0 h-full w-full object-cover"
@@ -343,6 +375,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                         </div>
                       }
                     />
+                    </LazyThumb>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-content-tertiary">
                       <ImageIcon size={32} strokeWidth={1.5} />
@@ -435,6 +468,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 // Re-mount per photo so stepping fetches the new file's bytes.
                 key={activePhoto.id}
                 src={activePhoto.download_url}
+                fetchPriority="high"
                 alt={activePhoto.name}
                 className="max-w-full max-h-[80vh] object-contain rounded shadow-2xl"
                 data-testid="photos-tab-lightbox-image"
