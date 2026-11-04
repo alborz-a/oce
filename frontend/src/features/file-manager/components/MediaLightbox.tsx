@@ -35,6 +35,8 @@ import { isVideoRow, type MediaRowLike } from '../kindModule';
 export interface MediaLightboxItem extends MediaRowLike {
   id: string;
   name: string;
+  /** Small preview, shown blurred while the full photo downloads. */
+  thumbnail_url?: string | null;
 }
 
 export interface MediaLightboxProps {
@@ -306,12 +308,37 @@ export function MediaLightbox({
             alt={current.name}
             data-testid="media-lightbox-image"
             className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-            placeholder={
-              <Loader2 size={32} className="animate-spin text-white/80" />
-            }
+            placeholder={<PhotoLoading thumbnailUrl={current.thumbnail_url ?? null} />}
             fallback={<MediaError onDownload={handleDownload} />}
           />
         )}
+      </div>
+    </div>
+  );
+}
+
+/** Blurred thumbnail (when known) + spinner, so the stage is never an empty
+ *  frame while a cold photo takes several seconds to arrive. */
+function PhotoLoading({ thumbnailUrl }: { thumbnailUrl: string | null }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      data-testid="media-lightbox-loading"
+      className="relative flex h-[60vh] w-[90vw] max-w-3xl items-center justify-center overflow-hidden rounded-lg bg-white/10"
+    >
+      {thumbnailUrl && (
+        <AuthImage
+          src={thumbnailUrl}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
+        />
+      )}
+      <div className="relative flex flex-col items-center gap-2 text-white/90">
+        <Loader2 size={32} className="animate-spin" />
+        <span className="text-xs">
+          {t('common.loading', { defaultValue: 'Loading...' })}
+        </span>
       </div>
     </div>
   );
