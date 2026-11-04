@@ -123,9 +123,12 @@ export function MediaLightbox({
     if (!open) return undefined;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    // Lets index.css hide the install prompt, which would cover the photo.
+    document.documentElement.setAttribute('data-media-lightbox', '');
     dialogRef.current?.focus();
     return () => {
       document.body.style.overflow = prevOverflow;
+      document.documentElement.removeAttribute('data-media-lightbox');
     };
   }, [open]);
 
