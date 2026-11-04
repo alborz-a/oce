@@ -120,4 +120,21 @@ describe('AuthImage', () => {
     await waitFor(() => expect(second.result.current.url).toBe('blob:test/1'));
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
+
+  it('passes the fetch priority to the request', async () => {
+    render(<AuthImage src="/api/v1/documents/photos/7/file/" alt="big" fetchPriority="high" />);
+    await screen.findByAltText('big');
+    expect((fetchMock.mock.calls[0]![1] as { priority?: string }).priority).toBe('high');
+  });
+
+  it('does not fetch a 404 url a second time', async () => {
+    const src = '/api/v1/documents/photos/8/thumb/';
+    fetchMock.mockImplementation(async () => new Response('no', { status: 404 }));
+    const first = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(first.result.current.failed).toBe(true));
+    first.unmount();
+    const second = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(second.result.current.failed).toBe(true));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
 });

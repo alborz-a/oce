@@ -16,7 +16,15 @@ export interface AuthImageProps
   placeholder?: ReactNode;
   /** Rendered when the image cannot be loaded (401, 404, network, decode). */
   fallback?: ReactNode;
+  /**
+   * Network priority of the protected fetch. Give the full-size photo in a
+   * viewer ``high`` and grid thumbnails ``low``, so the photo is not queued
+   * behind dozens of thumbnails on the browser's per-host connection limit.
+   */
+  fetchPriority?: FetchPriority;
 }
+
+export type FetchPriority = 'high' | 'low' | 'auto';
 
 /**
  * Whether a URL is one of our own bearer-protected API endpoints.
@@ -47,20 +55,26 @@ interface CacheEntry {
  */
 const cache = new Map<string, CacheEntry>();
 
-async function fetchObjectUrl(src: string): Promise<string> {
+/** URLs the server answered 404 for. Not fetched again, so a grid of missing
+ *  thumbnails does not hammer the API on every re-mount. */
+const missing = new Set<string>();
+
+async function fetchObjectUrl(src: string, priority: FetchPriority): Promise<string> {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = { Accept: 'image/*' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(src, { headers });
+  if (missing.has(src)) throw new Error('HTTP 404');
+  const res = await fetch(src, { headers, priority } as RequestInit);
+  if (res.status === 404) missing.add(src);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return URL.createObjectURL(await res.blob());
 }
 
-function acquire(src: string): CacheEntry {
+function acquire(src: string, priority: FetchPriority): CacheEntry {
   let entry = cache.get(src);
   if (!entry) {
     const fresh: CacheEntry = { promise: Promise.resolve(''), objectUrl: null, refs: 0 };
-    fresh.promise = fetchObjectUrl(src).then(
+    fresh.promise = fetchObjectUrl(src, priority).then(
       (url) => {
         fresh.objectUrl = url;
         return url;
@@ -97,6 +111,7 @@ export function resetAuthImageCache() {
     if (entry.objectUrl) URL.revokeObjectURL(entry.objectUrl);
   }
   cache.clear();
+  missing.clear();
 }
 
 export interface AuthedObjectUrl {
@@ -116,7 +131,10 @@ export interface AuthedObjectUrl {
  * this fetches with the token and returns an object URL; every other URL is
  * returned unchanged. The token never goes into the URL.
  */
-export function useAuthedObjectUrl(src: string | null | undefined): AuthedObjectUrl {
+export function useAuthedObjectUrl(
+  src: string | null | undefined,
+  priority: FetchPriority = 'auto',
+): AuthedObjectUrl {
   const needsAuth = isAuthAssetUrl(src);
   const [state, setState] = useState<AuthedObjectUrl>(() => {
     if (!src) return { url: null, failed: false };
@@ -135,7 +153,7 @@ export function useAuthedObjectUrl(src: string | null | undefined): AuthedObject
       return undefined;
     }
     let live = true;
-    const entry = acquire(src);
+    const entry = acquire(src, priority);
     setState({ url: entry.objectUrl, failed: false });
     entry.promise.then(
       (url) => {
@@ -149,7 +167,7 @@ export function useAuthedObjectUrl(src: string | null | undefined): AuthedObject
       live = false;
       release(src, entry);
     };
-  }, [src, needsAuth]);
+  }, [src, needsAuth, priority]);
 
   return state;
 }
@@ -167,10 +185,11 @@ export function AuthImage({
   src,
   placeholder = null,
   fallback = null,
+  fetchPriority = 'auto',
   onError,
   ...imgProps
 }: AuthImageProps) {
-  const { url, failed } = useAuthedObjectUrl(src);
+  const { url, failed } = useAuthedObjectUrl(src, fetchPriority);
   const [broken, setBroken] = useState(false);
 
   useEffect(() => {
