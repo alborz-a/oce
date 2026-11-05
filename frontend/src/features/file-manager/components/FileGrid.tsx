@@ -13,6 +13,7 @@ import { SnippetHighlight } from '@/features/file-search/SnippetHighlight';
 import { CDEBadge } from './CDEBadge';
 import { favoriteKey, type FileRow, type FileKind } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
@@ -103,11 +104,6 @@ function FileGridTagsRow({
     </div>
   );
 }
-
-const isCoarsePointer = (): boolean =>
-  typeof window !== 'undefined' &&
-  typeof window.matchMedia === 'function' &&
-  window.matchMedia('(pointer: coarse)').matches;
 
 export function FileGrid({
   items,
@@ -288,9 +284,10 @@ export function FileGrid({
                 tileRefs.current[idx] = el;
               }}
               tabIndex={idx === focusIndex ? 0 : -1}
+              onPointerDown={notePointerType}
               onClick={(e) => {
                 setFocusIndex(idx);
-                if (isCoarsePointer()) {
+                if (isTouchTap()) {
                   onOpen(row);
                   return;
                 }
