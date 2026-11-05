@@ -623,12 +623,9 @@ export function formatFileSize(bytes: number): string {
   if (!isFa) {
     return unit === 0 ? `${bytes} ${enUnits[0]}` : `${fmtFixed(value, 1)} ${enUnits[unit]}`;
   }
-  const num = Number.isFinite(value)
-    ? new Intl.NumberFormat(getNumberLocale(), {
-        minimumFractionDigits: unit === 0 ? 0 : 1,
-        maximumFractionDigits: unit === 0 ? 0 : 1,
-      }).format(value)
-    : String(value);
+  // "." decimal, no trailing ".0" (2 GB reads ۲ گیگابایت, never ۲٫۰ or ۲/۰).
+  const rounded = Number.isFinite(value) ? String(Math.round(value * 10) / 10) : String(value);
+  const num = rounded.replace(/[0-9]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)]!);
   return `\u2068${num} ${faUnits[unit]}\u2069`;
 }
 
