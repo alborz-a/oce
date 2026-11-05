@@ -253,8 +253,8 @@ describe('images & videos open in a viewer/player, NOT PDF Takeoff (ITEM 10)', (
     expect(isLightboxRow(mediaRow({ download_url: null }))).toBe(false);
   });
 
-  it('isLightboxRow excludes the photo kind (it has its own Site Photos viewer)', () => {
-    expect(isLightboxRow(mediaRow({ kind: 'photo' }))).toBe(false);
+  it('isLightboxRow includes the photo kind (opens in place on phones too)', () => {
+    expect(isLightboxRow(mediaRow({ kind: 'photo' }))).toBe(true);
   });
 
   it('isLightboxRow is false for a PDF (that has its own inline reader path)', () => {

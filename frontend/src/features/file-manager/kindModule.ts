@@ -609,13 +609,13 @@ export function isVideoRow(row: MediaRowLike): boolean {
  * to PDF Takeoff (#284 follow-up, ITEM 10).
  *
  * A row qualifies when it is an image or video AND has a download URL to fetch
- * the bytes from. The ``photo`` kind is intentionally excluded here even
- * though it is an image: it already has a dedicated Site Photos viewer as its
- * primary module, so it is not a takeoff mis-route and keeps its own flow.
+ * the bytes from. The ``photo`` kind is included: project photos (imported
+ * chat photos too) must open in place on every device, not depend on the
+ * separate Site Photos page.
  */
 export function isLightboxRow(row: MediaRowLike): boolean {
   if (!row.download_url) return false;
-  if (row.kind !== 'document') return false;
+  if (row.kind !== 'document' && row.kind !== 'photo') return false;
   return isImageRow(row) || isVideoRow(row);
 }
 
