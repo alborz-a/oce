@@ -15085,6 +15085,8 @@ const resource = {
     "tasks.filter_all": "همه",
     "tasks.mark_complete": "تکمیل",
     "tasks.my_tasks": "وظایف من",
+    "tasks.filters": "فیلترها",
+    "tasks.more_actions": "اقدامات بیشتر",
     "tasks.new_task": "وظیفه جدید",
     "tasks.no_results": "وظیفه‌ای مطابق نیست",
     "tasks.no_results_hint": "جستجو یا فیلترهای خود را تغییر دهید.",

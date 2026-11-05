@@ -1896,7 +1896,7 @@ export function TasksPage() {
             }
           />
         ) : (
-          <div className="flex gap-4 overflow-x-auto pb-3" role="list" aria-label={t('tasks.kanban_board', { defaultValue: 'Task board' })}>
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory sm:snap-none pb-3" role="list" aria-label={t('tasks.kanban_board', { defaultValue: 'Task board' })}>
             {allStatuses.map((status) => {
               const colItems = grouped.get(status) ?? [];
               const isDropTarget = draggedTaskId != null && dropTargetStatus === status;
@@ -1914,7 +1914,7 @@ export function TasksPage() {
                 <div
                   key={status}
                   className={clsx(
-                    'flex flex-col min-w-[240px] flex-1 transition-all duration-150',
+                    'flex flex-col min-w-[78%] snap-start sm:min-w-[240px] flex-1 transition-all duration-150',
                     isColumnDragging && 'opacity-50',
                     isColumnDropTarget && 'border-s-2 border-oe-blue',
                   )}
