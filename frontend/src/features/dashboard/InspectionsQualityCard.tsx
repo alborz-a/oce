@@ -29,6 +29,7 @@ import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { fetchInspections, type Inspection } from '@/features/inspections/api';
 import { KpiStrip } from './KpiStrip';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { fmtPct } from '@/features/file-manager/fmt';
 
 interface InspectionStats {
   total: number;
@@ -116,7 +117,7 @@ export function InspectionsQualityCard() {
           stats={[
             {
               label: t('dashboard.inspections_pass_rate', { defaultValue: 'Pass rate' }),
-              value: hasEvaluated ? `${stats.passRate}%` : '-',
+              value: hasEvaluated ? fmtPct(stats.passRate) : '-',
               tone: hasEvaluated ? rateColor : 'text-content-tertiary',
             },
             {

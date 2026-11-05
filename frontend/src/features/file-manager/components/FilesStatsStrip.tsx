@@ -14,7 +14,7 @@ import { Database, FileText, HardDrive, Layers } from 'lucide-react';
 import type { FileKind, FileTreeNode, StorageLocations } from '../types';
 import { ALL_KINDS, KIND_COLORS } from '../kindModule';
 import { fmtFixed } from '@/shared/lib/formatters';
-import { localizeSize, fmtCount, fmtPct } from '../fmt'; // [RSC-IRAN]
+import { localizeSize, fmtCount, fmtPct, fmtOf } from '../fmt'; // [RSC-IRAN]
 
 function fmtBytesRaw(bytes: number): string {
   if (bytes === 0 || !Number.isFinite(bytes)) return '0 B';
@@ -77,7 +77,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
         <Metric
           icon={<Layers size={14} />}
           label={t('files.stats_categories', { defaultValue: 'Categories' })}
-          value={`${fmtCount(stats.populated)} / ${fmtCount(ALL_KINDS.length)}`}
+          value={<bdi>{fmtOf(stats.populated, ALL_KINDS.length)}</bdi>}
         />
         <Metric
           icon={<Database size={14} />}

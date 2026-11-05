@@ -17,12 +17,27 @@ export function fmtCount(n: number): string {
   return toPersianDigits(String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '٬'));
 }
 
-/** Localize an English size string such as "1.5 GB" (digits and unit). */
+/**
+ * Number text for Persian readers: Persian digits, "." as the decimal
+ * separator and no trailing ".0" (2.0 reads "۲", 2.5 reads "۲.۵").
+ */
+export function faDecimal(text: string): string {
+  const norm = text.replace(/[٫,/]/g, '.').replace(/\.0+(?!\d)/g, '');
+  return toPersianDigits(norm);
+}
+
+/** Localize an English or Persian-digit size string such as "1.5 GB". */
 export function localizeSize(text: string): string {
   if (!REGION_LOCK) return text;
   const m = text.match(/^(.*?)\s*(TB|GB|MB|KB|B)$/);
-  const out = m ? `${m[1]} ${FA_UNITS[m[2] ?? ''] ?? m[2]}` : text;
-  return toPersianDigits(out.replace('.', '٫'));
+  if (!m) return faDecimal(text);
+  return `\u2068${faDecimal(m[1] ?? '')} ${FA_UNITS[m[2] ?? ''] ?? m[2]}\u2069`;
+}
+
+/** "۲ از ۸" counter, bidi-isolated so the digits never swap sides. */
+export function fmtOf(part: number, total: number): string {
+  if (!REGION_LOCK) return `${part} / ${total}`;
+  return `\u2068${fmtCount(part)} از ${fmtCount(total)}\u2069`;
 }
 
 /** Percent text ("۵۰٪" under the Iran region lock) with Persian digits. */

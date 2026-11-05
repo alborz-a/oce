@@ -31,6 +31,7 @@ import { AuthImage } from '@/shared/ui';
 import { downloadProtectedFile, mintEmailLink } from '../api';
 import { MediaError, PhotoLoading } from './MediaLoadStates';
 import { isVideoRow, type MediaRowLike } from '../kindModule';
+import { fmtOf } from '../fmt';
 
 /** One viewable media file. A trimmed FileRow is assignable to this. */
 export interface MediaLightboxItem extends MediaRowLike {
@@ -217,7 +218,7 @@ export function MediaLightbox({
           {current.name}
           {canPage && (
             <span className="ms-2 text-xs font-normal text-white/70 tabular-nums">
-              {safeIndex + 1} / {items.length}
+              {fmtOf(safeIndex + 1, items.length)}
             </span>
           )}
         </span>

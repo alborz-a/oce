@@ -43,6 +43,7 @@ import {
 import { Card, CardContent, Button, Skeleton, Badge } from '@/shared/ui';
 import { useDashboardRollupContext } from '../context/DashboardRollupContext';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { fmtPct } from '@/features/file-manager/fmt';
 
 /* ── Types ────────────────────────────────────────────────────────────── */
 
@@ -193,13 +194,13 @@ export function BOQSummaryWidget({ projects }: { projects?: ProjectRef[] }) {
           <div className="text-2xs uppercase tracking-wider text-content-tertiary mb-1">
             {t('dashboard.boq_missing_qty', { defaultValue: 'Missing qty' })}
           </div>
-          <div className="text-xl font-semibold tabular-nums">{pctMissingQty}%</div>
+          <div className="text-xl font-semibold tabular-nums">{fmtPct(pctMissingQty)}</div>
         </div>
         <div>
           <div className="text-2xs uppercase tracking-wider text-content-tertiary mb-1">
             {t('dashboard.boq_zero_price', { defaultValue: 'Zero priced' })}
           </div>
-          <div className="text-xl font-semibold tabular-nums">{pctZeroPrice}%</div>
+          <div className="text-xl font-semibold tabular-nums">{fmtPct(pctZeroPrice)}</div>
         </div>
       </div>
     </WidgetCard>
@@ -610,7 +611,7 @@ export function ClashHealthWidget(_props: { projects?: ProjectRef[] } = {}) {
           <div className="text-2xs uppercase tracking-wider text-content-tertiary mb-1">
             {t('dashboard.clash_resolved', { defaultValue: '% resolved' })}
           </div>
-          <div className="text-xl font-semibold tabular-nums">{payload.pct_resolved}%</div>
+          <div className="text-xl font-semibold tabular-nums">{fmtPct(payload.pct_resolved)}</div>
         </div>
       </div>
     </WidgetCard>
