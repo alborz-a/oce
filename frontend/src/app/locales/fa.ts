@@ -11742,6 +11742,7 @@ const resource = {
     "files.tree.title": "دسته‌ها",
     "files.tree.total": "مجموع",
     "files.upload": "بارگذاری فایل",
+    "files.upload_short": "آپلود",
     "files.upload_browse": "انتخاب فایل",
     "files.upload_drag": "فایل‌ها را بکشید و اینجا رها کنید",
     "files.upload_drop_here": "برای بارگذاری، فایل‌ها را اینجا رها کنید",
