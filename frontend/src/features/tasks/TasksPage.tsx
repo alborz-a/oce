@@ -27,6 +27,9 @@ import {
   Pencil,
   Trash2,
   GripVertical,
+  MoreHorizontal,
+  SlidersHorizontal,
+  ChevronDown,
 } from 'lucide-react';
 import { Button, Card, Badge, EmptyState, Breadcrumb, ConfirmDialog, RecoveryCard, ViewInBIMButton, ModuleGuideButton } from '@/shared/ui';
 import { PageHeader } from '@/shared/ui/PageHeader';
@@ -64,7 +67,7 @@ import {
 } from './api';
 import { tasksGuide } from './tasksGuide';
 import { VoiceEntry, getField } from '@/features/voice';
-import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
+import { InsightsPanel, useModuleInsights } from '@/features/insights';
 import { buildTasksInsights } from './tasksInsights';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 // [RSC-IRAN] Jalali: type="date" → JalaliDateInput (codemod tools/iran/codemod_date_input.mjs)
@@ -595,7 +598,7 @@ const TaskCard = React.memo(function TaskCard({
       aria-grabbed={isDragging ?? false}
       aria-label={task.title}
       className={clsx(
-        'px-2.5 py-2 mb-1.5 hover:shadow-md transition-all group cursor-grab active:cursor-grabbing',
+        'px-3.5 py-3 mb-2.5 hover:shadow-md transition-all group cursor-grab active:cursor-grabbing',
         'hover:border-border hover:-translate-y-px',
         isDragging && 'opacity-40 scale-[0.97] shadow-none',
         isOverdue && 'bg-red-50/40 dark:bg-red-950/15',
@@ -617,7 +620,7 @@ const TaskCard = React.memo(function TaskCard({
         <div className="flex-1 min-w-0">
           <h4
             className={clsx(
-              'text-xs font-semibold line-clamp-2 leading-snug',
+              'text-sm font-medium line-clamp-2 leading-snug',
               task.status === 'completed'
                 ? 'text-content-tertiary line-through'
                 : isOverdue
@@ -628,7 +631,7 @@ const TaskCard = React.memo(function TaskCard({
             {REGION_LOCK ? toPersianDigits(task.title) : task.title}
           </h4>
         </div>
-        <Badge variant={pb.variant} size="sm" className="shrink-0 text-[9px] px-1 py-0">
+        <Badge variant={pb.variant} size="sm" className="shrink-0 text-[10px] px-1.5 py-0">
           {t(`tasks.priority_${task.priority}`, {
             defaultValue: task.priority.charAt(0).toUpperCase() + task.priority.slice(1),
           })}
@@ -695,7 +698,7 @@ const TaskCard = React.memo(function TaskCard({
       )}
 
       {/* Bottom row: assignee + due date + actions */}
-      <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-border-light/60">
+      <div className="flex items-center justify-between mt-2.5 min-h-6">
         <div className="flex items-center gap-2 min-w-0">
           {/* Assignee — prefer the resolved user name, fall back to the
               free-text name stored in metadata.assignee_name so typed names
@@ -716,7 +719,7 @@ const TaskCard = React.memo(function TaskCard({
                 <div className="h-4 w-4 rounded-full bg-oe-blue/10 text-oe-blue flex items-center justify-center text-[8px] font-bold shrink-0">
                   {display.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-[10px] text-content-tertiary truncate max-w-[70px]">
+                <span className="text-xs text-content-tertiary truncate max-w-[90px]">
                   {display}
                 </span>
               </div>
@@ -726,7 +729,7 @@ const TaskCard = React.memo(function TaskCard({
           {task.due_date && (
             <div
               className={clsx(
-                'flex items-center gap-0.5 text-[10px]',
+                'flex items-center gap-1 text-xs',
                 isOverdue ? 'text-semantic-error font-medium' : 'text-content-quaternary',
               )}
             >
@@ -737,11 +740,11 @@ const TaskCard = React.memo(function TaskCard({
         </div>
 
         {/* Actions — visible on hover */}
-        <div className="flex items-center gap-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100 [@media(hover:none)]:opacity-100">
           {task.status !== 'completed' ? (
             <>
-              <Button variant="ghost" size="sm" onClick={() => onComplete(task.id)} className="!p-0.5 text-green-600 hover:text-green-700 h-auto" title={t('tasks.mark_complete', { defaultValue: 'Complete' })} aria-label={t('tasks.mark_complete', { defaultValue: 'Complete' })}>
-                <CheckCircle2 size={10} />
+              <Button variant="ghost" size="sm" onClick={() => onComplete(task.id)} className="!p-1.5 text-green-600 hover:text-green-700 h-auto" title={t('tasks.mark_complete', { defaultValue: 'Complete' })} aria-label={t('tasks.mark_complete', { defaultValue: 'Complete' })}>
+                <CheckCircle2 size={14} />
               </Button>
               {/* Only offer transitions the backend state machine accepts
                   (see service._TASK_STATUS_TRANSITIONS). Offering illegal
@@ -753,7 +756,7 @@ const TaskCard = React.memo(function TaskCard({
                 onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
                 onClick={(e) => e.stopPropagation()}
                 aria-label={t('tasks.change_status', { defaultValue: 'Change status' })}
-                className="text-[9px] py-0 px-0.5 rounded border border-border-light bg-surface-secondary text-content-tertiary focus:outline-none focus:ring-1 focus:ring-oe-blue h-4"
+                className="text-xs py-0 px-1 rounded-md border border-border-light bg-surface-secondary text-content-tertiary focus:outline-none focus:ring-1 focus:ring-oe-blue h-6"
               >
                 {STATUS_OPTIONS_FOR(task.status).map((s) => (
                   <option key={s} value={s}>
@@ -774,13 +777,13 @@ const TaskCard = React.memo(function TaskCard({
             <CheckCircle2 size={10} className="text-green-500" />
           )}
           {task.status !== 'completed' && (
-            <Button variant="ghost" size="sm" onClick={() => onEdit(task)} className="!p-0.5 text-content-quaternary hover:text-oe-blue h-auto" title={t('common.edit', { defaultValue: 'Edit' })} aria-label={t('common.edit', { defaultValue: 'Edit' })}>
-              <Pencil size={10} />
+            <Button variant="ghost" size="sm" onClick={() => onEdit(task)} className="!p-1.5 text-content-quaternary hover:text-oe-blue h-auto" title={t('common.edit', { defaultValue: 'Edit' })} aria-label={t('common.edit', { defaultValue: 'Edit' })}>
+              <Pencil size={14} />
             </Button>
           )}
           {!useAuthStore.getState().restrictedMode && (
-          <Button variant="ghost" size="sm" onClick={() => onDelete(task.id)} className="!p-0.5 text-content-quaternary hover:text-red-500 h-auto" title={t('common.delete', { defaultValue: 'Delete' })} aria-label={t('common.delete', { defaultValue: 'Delete' })}>
-            <Trash2 size={10} />
+          <Button variant="ghost" size="sm" onClick={() => onDelete(task.id)} className="!p-1.5 text-content-quaternary hover:text-red-500 h-auto" title={t('common.delete', { defaultValue: 'Delete' })} aria-label={t('common.delete', { defaultValue: 'Delete' })}>
+            <Trash2 size={14} />
           </Button>
           )}
         </div>
@@ -824,6 +827,9 @@ export function TasksPage() {
   const [importResult, setImportResult] = useState<{ imported: number; skipped: number; errors: { row: number; error: string; data: Record<string, string> }[]; total_rows: number } | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
   const [typeFilter, setTypeFilter] = useState<TaskType | ''>('');
   const [myTasksOnly, setMyTasksOnly] = useState(false);
 
@@ -990,6 +996,21 @@ export function TasksPage() {
     !showAddModal && !showImportModal,
   );
 
+  // Close the header "More" menu on outside click or Escape.
+  useEffect(() => {
+    if (!showMoreMenu) return undefined;
+    const onDown = (e: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) setShowMoreMenu(false);
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowMoreMenu(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [showMoreMenu]);
+
   // Escape key handler for import modal
   useEffect(() => {
     if (!showImportModal) return;
@@ -1083,7 +1104,7 @@ export function TasksPage() {
   // project has none the panel draws nothing rather than inventing rows to fill
   // it. Declared among the top-level hooks, above the single return below, so
   // hook order stays stable on every render.
-  const insights = useModuleInsights('tasks', { defaultOpen: true });
+  const insights = useModuleInsights('tasks', { defaultOpen: false });
   const { datasets: insightDatasets, builtins: insightBuiltins } = useMemo(
     () => buildTasksInsights(tasks, '', t),
     [tasks, t],
@@ -1450,7 +1471,7 @@ export function TasksPage() {
   };
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[
@@ -1471,60 +1492,85 @@ export function TasksPage() {
         })}
         actions={
           <>
-            {isSystemAdmin && <InsightsToggleButton open={insights.open} onClick={insights.toggle} />}
             <ModuleGuideButton
               content={tasksGuide}
               onCta={() => setShowAddModal(true)}
             />
             {isSystemAdmin && (
-            <>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={
-                exportMut.isPending ? (
-                  <Loader2 size={14} className="animate-spin" />
-                ) : (
-                  <Download size={14} />
-                )
-              }
-              onClick={() => exportMut.mutate()}
-              disabled={!projectId || exportMut.isPending}
-            >
-              {t('tasks.export', { defaultValue: 'Export' })}
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              icon={<Upload size={14} />}
-              onClick={() => {
-                setShowImportModal(true);
-                setImportFile(null);
-                setImportResult(null);
-                setImportError(null);
-              }}
-              disabled={!projectId}
-            >
-              {t('tasks.import', { defaultValue: 'Import' })}
-            </Button>
-            </>
+              <VoiceEntry
+                projectId={projectId}
+                target="task"
+                compact
+                triggerLabel={t('voice.trigger_task', { defaultValue: 'Voice task' })}
+                onConfirm={async (d) => {
+                  await createMut.mutateAsync({
+                    project_id: projectId,
+                    title: getField(d.fields, 'title'),
+                    description: getField(d.fields, 'description') || undefined,
+                    task_type: 'task',
+                    priority: (getField(d.fields, 'priority') || 'normal') as TaskPriority,
+                    due_date: getField(d.fields, 'due_date') || undefined,
+                  });
+                }}
+              />
             )}
+            {/* Secondary actions live behind one menu so the header keeps a
+                single primary action (New Task). */}
             {isSystemAdmin && (
-            <VoiceEntry
-              projectId={projectId}
-              target="task"
-              triggerLabel={t('voice.trigger_task', { defaultValue: 'Voice task' })}
-              onConfirm={async (d) => {
-                await createMut.mutateAsync({
-                  project_id: projectId,
-                  title: getField(d.fields, 'title'),
-                  description: getField(d.fields, 'description') || undefined,
-                  task_type: 'task',
-                  priority: (getField(d.fields, 'priority') || 'normal') as TaskPriority,
-                  due_date: getField(d.fields, 'due_date') || undefined,
-                });
-              }}
-            />
+              <div className="relative" ref={moreMenuRef}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowMoreMenu((v) => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={showMoreMenu}
+                  aria-label={t('tasks.more_actions', { defaultValue: 'More actions' })}
+                  title={t('tasks.more_actions', { defaultValue: 'More actions' })}
+                  icon={<MoreHorizontal size={16} />}
+                />
+                {showMoreMenu && (
+                  <div
+                    role="menu"
+                    className="absolute end-0 top-full z-30 mt-2 w-52 rounded-xl border border-border bg-surface-elevated p-1.5 shadow-lg animate-fade-in"
+                  >
+                    <button
+                      role="menuitem"
+                      type="button"
+                      onClick={() => { insights.toggle(); setShowMoreMenu(false); }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-content-secondary hover:bg-surface-secondary"
+                    >
+                      <ChevronDown size={15} className={clsx('transition-transform', insights.open && 'rotate-180')} />
+                      {t('insights.toggle', { defaultValue: 'Insights' })}
+                    </button>
+                    <button
+                      role="menuitem"
+                      type="button"
+                      disabled={!projectId || exportMut.isPending}
+                      onClick={() => { exportMut.mutate(); setShowMoreMenu(false); }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-content-secondary hover:bg-surface-secondary disabled:opacity-50"
+                    >
+                      {exportMut.isPending ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
+                      {t('tasks.export', { defaultValue: 'Export' })}
+                    </button>
+                    <button
+                      role="menuitem"
+                      type="button"
+                      disabled={!projectId}
+                      onClick={() => {
+                        setShowMoreMenu(false);
+                        setShowImportModal(true);
+                        setImportFile(null);
+                        setImportResult(null);
+                        setImportError(null);
+                      }}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-content-secondary hover:bg-surface-secondary disabled:opacity-50"
+                    >
+                      <Upload size={15} />
+                      {t('tasks.import', { defaultValue: 'Import' })}
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
             {!useAuthStore.getState().restrictedMode && (
               <Button
@@ -1557,7 +1603,17 @@ export function TasksPage() {
       {/* Cross-module navigation — connects the planning value chain.
           Rendered BELOW the header so the canonical breadcrumb > header > info
           order is preserved (audit S4). */}
-      <PlanningCrossLinks active="tasks" />
+      {isSystemAdmin && (
+        <details className="group/links">
+          <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 text-xs text-content-tertiary hover:text-content-secondary [&::-webkit-details-marker]:hidden">
+            <ChevronDown size={14} className="transition-transform group-open/links:rotate-180" />
+            {t('planning.section_label', { defaultValue: 'Planning & Control' })}
+          </summary>
+          <div className="mt-3">
+            <PlanningCrossLinks active="tasks" />
+          </div>
+        </details>
+      )}
 
       {/* How Tasks connects to the rest of the platform */}
       <DismissibleInfo
@@ -1601,163 +1657,187 @@ export function TasksPage() {
 
       {projectId || myTasksOnly ? (
       <>
-      {/* Type filter tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto pb-1">
-        <button
-          onClick={() => setTypeFilter('')}
-          className={clsx(
-            'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
-            typeFilter === ''
-              ? 'bg-oe-blue-subtle text-oe-blue-text'
-              : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
-          )}
-        >
-          {t('tasks.filter_all', { defaultValue: 'All' })}
-        </button>
-        {BUILTIN_TASK_TYPES.map((tt) => (
-          <button
-            key={tt}
-            onClick={() => setTypeFilter(tt)}
-            className={clsx(
-              'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
-              typeFilter === tt
-                ? BUILTIN_TYPE_COLOR[tt]
-                : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
-            )}
-          >
-            {t(`tasks.type_${tt}`, {
-              defaultValue: tt.charAt(0).toUpperCase() + tt.slice(1),
-            })}
-          </button>
-        ))}
-        {/* Custom category tabs */}
-        {customCategories.map((cat) => (
-          <div key={cat.name} className="relative group flex items-center">
-            <button
-              onClick={() => setTypeFilter(cat.name)}
-              className={clsx(
-                'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
-                typeFilter === cat.name
-                  ? CUSTOM_CATEGORY_COLORS[cat.colorIdx % CUSTOM_CATEGORY_COLORS.length]?.bg ?? ''
-                  : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
-              )}
-            >
-              {cat.label}
-            </button>
-            <button
-              onClick={() => handleRemoveCategory(cat.name)}
-              className="hidden group-hover:flex items-center justify-center w-4 h-4 rounded-full bg-surface-tertiary text-content-tertiary hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors -ms-1"
-              title={t('tasks.remove_category', { defaultValue: 'Remove category' })}
-              aria-label={t('tasks.remove_category_named', { defaultValue: 'Remove {{name}} category', name: cat.label })}
-            >
-              <X size={10} />
-            </button>
-          </div>
-        ))}
-
-        {/* Add category button + popover (system admin only) */}
-        {isSystemAdmin && (
-        <div className="relative">
-          <button
-            onClick={() => {
-              setShowAddCategory((prev) => !prev);
-              setTimeout(() => addCategoryInputRef.current?.focus(), 50);
-            }}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary transition-colors"
-            title={t('tasks.add_category', { defaultValue: 'Add category' })}
-          >
-            <Plus size={16} />
-          </button>
-          {showAddCategory && (
-            <div className="absolute start-0 top-full mt-1 z-20 w-64 rounded-xl border border-border bg-surface-elevated shadow-lg p-3 animate-fade-in">
-              <p className="text-xs font-semibold text-content-primary mb-2">
-                {t('tasks.new_category', { defaultValue: 'New Category' })}
-              </p>
-              <input
-                ref={addCategoryInputRef}
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder={t('tasks.category_name_placeholder', { defaultValue: 'e.g. Safety, QA Review...' })}
-                className={inputCls + ' !h-8 !text-xs mb-2'}
-                maxLength={50}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddCategory();
-                  if (e.key === 'Escape') setShowAddCategory(false);
-                }}
-              />
-              {/* Color picker */}
-              <div className="flex items-center gap-1 mb-2">
-                <span className="text-2xs text-content-tertiary me-1">
-                  {t('tasks.category_color', { defaultValue: 'Color:' })}
+      {/* Toolbar: search + one Filters button; type tabs and My Tasks are
+          secondary and live in the collapsible panel below. */}
+      {(() => {
+        const activeFilters = (typeFilter ? 1 : 0) + (myTasksOnly ? 1 : 0);
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="relative max-w-md flex-1">
+                <Search
+                  size={16}
+                  className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
+                />
+                <input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('tasks.search_placeholder', {
+                    defaultValue: 'Search tasks...',
+                  })}
+                  className={inputCls + ' ps-9'}
+                />
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShowFilters((v) => !v)}
+                aria-expanded={showFilters}
+                icon={<SlidersHorizontal size={14} />}
+              >
+                <span className="inline-flex items-center gap-1.5">
+                  {t('tasks.filters', { defaultValue: 'Filters' })}
+                  {activeFilters > 0 && (
+                    <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-oe-blue px-1 text-[10px] font-semibold text-white">
+                      {REGION_LOCK ? toPersianDigits(activeFilters) : activeFilters}
+                    </span>
+                  )}
                 </span>
-                {CUSTOM_CATEGORY_COLORS.map((c, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setNewCategoryColorIdx(idx)}
-                    className={clsx(
-                      'w-5 h-5 rounded-full border-2 transition-all',
-                      newCategoryColorIdx === idx
-                        ? 'border-content-primary scale-110'
-                        : 'border-transparent hover:scale-105',
-                    )}
-                    style={{ backgroundColor: c.hex }}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center justify-end gap-2">
-                <button
-                  onClick={() => setShowAddCategory(false)}
-                  className="text-xs text-content-tertiary hover:text-content-secondary"
-                >
-                  {t('common.cancel', { defaultValue: 'Cancel' })}
-                </button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={handleAddCategory}
-                  disabled={!newCategoryName.trim()}
-                >
-                  {t('common.add', { defaultValue: 'Add' })}
-                </Button>
-              </div>
+              </Button>
             </div>
-          )}
-        </div>
-        )}
-      </div>
+            {showFilters && (
+              <div className="space-y-4 rounded-xl border border-border-light bg-surface-secondary/40 p-4 animate-fade-in">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  onClick={() => setTypeFilter('')}
+                  className={clsx(
+                    'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
+                    typeFilter === ''
+                      ? 'bg-oe-blue-subtle text-oe-blue-text'
+                      : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
+                  )}
+                >
+                  {t('tasks.filter_all', { defaultValue: 'All' })}
+                </button>
+                {BUILTIN_TASK_TYPES.map((tt) => (
+                  <button
+                    key={tt}
+                    onClick={() => setTypeFilter(tt)}
+                    className={clsx(
+                      'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
+                      typeFilter === tt
+                        ? BUILTIN_TYPE_COLOR[tt]
+                        : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
+                    )}
+                  >
+                    {t(`tasks.type_${tt}`, {
+                      defaultValue: tt.charAt(0).toUpperCase() + tt.slice(1),
+                    })}
+                  </button>
+                ))}
+                {/* Custom category tabs */}
+                {customCategories.map((cat) => (
+                  <div key={cat.name} className="relative group flex items-center">
+                    <button
+                      onClick={() => setTypeFilter(cat.name)}
+                      className={clsx(
+                        'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap',
+                        typeFilter === cat.name
+                          ? CUSTOM_CATEGORY_COLORS[cat.colorIdx % CUSTOM_CATEGORY_COLORS.length]?.bg ?? ''
+                          : 'text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary',
+                      )}
+                    >
+                      {cat.label}
+                    </button>
+                    <button
+                      onClick={() => handleRemoveCategory(cat.name)}
+                      className="hidden group-hover:flex items-center justify-center w-4 h-4 rounded-full bg-surface-tertiary text-content-tertiary hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors -ms-1"
+                      title={t('tasks.remove_category', { defaultValue: 'Remove category' })}
+                      aria-label={t('tasks.remove_category_named', { defaultValue: 'Remove {{name}} category', name: cat.label })}
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ))}
 
-      {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 max-w-sm">
-          <Search
-            size={16}
-            className="absolute start-3 top-1/2 -translate-y-1/2 text-content-tertiary"
-          />
-          <input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t('tasks.search_placeholder', {
-              defaultValue: 'Search tasks...',
-            })}
-            className={inputCls + ' ps-9'}
-          />
-        </div>
+                {/* Add category button + popover (system admin only) */}
+                {isSystemAdmin && (
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowAddCategory((prev) => !prev);
+                      setTimeout(() => addCategoryInputRef.current?.focus(), 50);
+                    }}
+                    className="flex items-center justify-center w-8 h-8 rounded-lg text-content-tertiary hover:text-content-secondary hover:bg-surface-secondary transition-colors"
+                    title={t('tasks.add_category', { defaultValue: 'Add category' })}
+                  >
+                    <Plus size={16} />
+                  </button>
+                  {showAddCategory && (
+                    <div className="absolute start-0 top-full mt-1 z-20 w-64 rounded-xl border border-border bg-surface-elevated shadow-lg p-3 animate-fade-in">
+                      <p className="text-xs font-semibold text-content-primary mb-2">
+                        {t('tasks.new_category', { defaultValue: 'New Category' })}
+                      </p>
+                      <input
+                        ref={addCategoryInputRef}
+                        value={newCategoryName}
+                        onChange={(e) => setNewCategoryName(e.target.value)}
+                        placeholder={t('tasks.category_name_placeholder', { defaultValue: 'e.g. Safety, QA Review...' })}
+                        className={inputCls + ' !h-8 !text-xs mb-2'}
+                        maxLength={50}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleAddCategory();
+                          if (e.key === 'Escape') setShowAddCategory(false);
+                        }}
+                      />
+                      {/* Color picker */}
+                      <div className="flex items-center gap-1 mb-2">
+                        <span className="text-2xs text-content-tertiary me-1">
+                          {t('tasks.category_color', { defaultValue: 'Color:' })}
+                        </span>
+                        {CUSTOM_CATEGORY_COLORS.map((c, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setNewCategoryColorIdx(idx)}
+                            className={clsx(
+                              'w-5 h-5 rounded-full border-2 transition-all',
+                              newCategoryColorIdx === idx
+                                ? 'border-content-primary scale-110'
+                                : 'border-transparent hover:scale-105',
+                            )}
+                            style={{ backgroundColor: c.hex }}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => setShowAddCategory(false)}
+                          className="text-xs text-content-tertiary hover:text-content-secondary"
+                        >
+                          {t('common.cancel', { defaultValue: 'Cancel' })}
+                        </button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={handleAddCategory}
+                          disabled={!newCategoryName.trim()}
+                        >
+                          {t('common.add', { defaultValue: 'Add' })}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                )}
+              </div>
 
-        {/* My Tasks toggle */}
-        <label className="flex items-center gap-2 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={myTasksOnly}
-            onChange={() => setMyTasksOnly((prev) => !prev)}
-            className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue"
-          />
-          <span className="text-sm text-content-secondary">
-            {t('tasks.my_tasks', { defaultValue: 'My Tasks' })}
-          </span>
-        </label>
-      </div>
+                <label className="flex cursor-pointer select-none items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={myTasksOnly}
+                    onChange={() => setMyTasksOnly((prev) => !prev)}
+                    className="h-4 w-4 rounded border-border text-oe-blue focus:ring-oe-blue"
+                  />
+                  <span className="text-sm text-content-secondary">
+                    {t('tasks.my_tasks', { defaultValue: 'My Tasks' })}
+                  </span>
+                </label>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Board / Columns */}
       <div onDragEnd={() => { handleDragEnd(); handleColumnReorderEnd(); }}>
@@ -1816,7 +1896,7 @@ export function TasksPage() {
             }
           />
         ) : (
-          <div className="flex gap-3 overflow-x-auto pb-2" role="list" aria-label={t('tasks.kanban_board', { defaultValue: 'Task board' })}>
+          <div className="flex gap-4 overflow-x-auto pb-3" role="list" aria-label={t('tasks.kanban_board', { defaultValue: 'Task board' })}>
             {allStatuses.map((status) => {
               const colItems = grouped.get(status) ?? [];
               const isDropTarget = draggedTaskId != null && dropTargetStatus === status;
@@ -1869,7 +1949,7 @@ export function TasksPage() {
                     draggable={!isBuiltin}
                     onDragStart={(e) => handleColumnReorderDragStart(e, status)}
                     className={clsx(
-                      'rounded-md px-2.5 py-1.5 mb-2 flex items-center justify-between select-none',
+                      'rounded-md px-3 py-2 mb-3 flex items-center justify-between select-none',
                       !isBuiltin && 'cursor-grab active:cursor-grabbing',
                       headerCls,
                     )}
