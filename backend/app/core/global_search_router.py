@@ -13,12 +13,13 @@ are now distinct so that class of bug can't slip past code review.
 """
 
 import logging
+import uuid
 from typing import Any
 
 from fastapi import APIRouter, Query
 
 from app.core.global_search import global_search
-from app.dependencies import CurrentUserId, SessionDep
+from app.dependencies import CurrentUserId, SessionDep, accessible_project_ids, verify_project_access
 
 router = APIRouter(prefix="/api/v1/global-search", tags=["Search"])
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ logger = logging.getLogger(__name__)
 @router.get("", response_model=list[dict[str, Any]])
 async def search(
     session: SessionDep,
-    _user_id: CurrentUserId,
+    user_id: CurrentUserId,
     q: str = Query(default="", description="Search query string"),
     project_id: str | None = Query(default=None, description="Limit search to a specific project"),
     limit: int = Query(default=50, ge=1, le=500, description="Maximum results to return"),
@@ -40,4 +41,24 @@ async def search(
     """
     if not q.strip():
         return []
-    return await global_search(session, query=q, project_id=project_id, limit=limit)
+    allowed: set[Any] | None = None
+    if project_id:
+        try:
+            pid = uuid.UUID(project_id)
+        except ValueError:
+            return []
+        await verify_project_access(pid, user_id, session)
+    # Only projects the caller owns or is a member of (``None`` = admin,
+    # unrestricted). A project-scoped search keeps the set so per-folder
+    # document grants still apply.
+    allowed = await accessible_project_ids(session, user_id, live_only=True)
+    if project_id and allowed is not None:
+        allowed = {pid}
+    return await global_search(
+        session,
+        query=q,
+        project_id=project_id,
+        limit=limit,
+        allowed_project_ids=allowed,
+        user_id=user_id,
+    )

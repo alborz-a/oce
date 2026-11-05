@@ -29,6 +29,8 @@ async def global_search(
     query: str,
     project_id: str | None = None,
     limit: int = 20,
+    allowed_project_ids: set[Any] | None = None,
+    user_id: str | None = None,
 ) -> list[dict[str, Any]]:
     """Search across all modules using ILIKE text matching.
 
@@ -36,6 +38,11 @@ async def global_search(
         module, type, id, title, subtitle, url, score
 
     Results are sorted by relevance score descending, then limited.
+    ``allowed_project_ids`` is the caller's accessible project set (``None`` =
+    unrestricted admin). When set, project-owned rows outside it are never
+    returned, and project-less collections (contacts, cost items) are skipped.
+    ``user_id`` enables per-folder document grants for non-admins.
+
     Gracefully degrades: if a table does not exist yet, the search
     for that entity is skipped silently.
     """
@@ -57,6 +64,10 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(Position.boq_id.in_(select(_boq_id_for_project(project_id))))
+        elif allowed_project_ids is not None:
+            from app.modules.boq.models import BOQ
+
+            stmt = stmt.where(Position.boq_id.in_(select(BOQ.id).where(BOQ.project_id.in_(allowed_project_ids))))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:
@@ -77,7 +88,10 @@ async def global_search(
         logger.debug("global_search: BOQ positions search skipped", exc_info=True)
 
     # --- Contacts ---
+    # Not project-owned: only the unrestricted caller may search them.
     try:
+        if allowed_project_ids is not None:
+            raise LookupError('contacts are not project-scoped')
         # ``contact_display_name`` is the one place that knows how to name a
         # contact, and it lives in a module while this is core. Imported here
         # rather than at module scope because that is the same lazy, fail-soft
@@ -131,8 +145,25 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(Document.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(Document.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
+        if allowed_project_ids is not None and user_id:
+            from app.modules.documents.folder_permissions_service import document_readable_by
+
+            _scope_cache: dict[tuple[str, str | None], bool] = {}
+            rows = [
+                r
+                for r in rows
+                if await document_readable_by(
+                    session,
+                    user_id=user_id,
+                    project_id=r.project_id,
+                    category=r.category,
+                    cache=_scope_cache,
+                )
+            ]
         for row in rows:
             score = _score(query, row.name, row.description)
             results.append(
@@ -162,6 +193,8 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(RFI.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(RFI.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:
@@ -197,6 +230,8 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(Task.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(Task.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:
@@ -217,6 +252,8 @@ async def global_search(
 
     # --- Cost Items ---
     try:
+        if allowed_project_ids is not None:
+            raise LookupError('cost items are not project-scoped')
         from app.modules.costs.models import CostItem
 
         stmt = (
@@ -259,6 +296,8 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(Meeting.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(Meeting.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:
@@ -294,6 +333,8 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(QualityInspection.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(QualityInspection.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:
@@ -329,6 +370,8 @@ async def global_search(
         )
         if project_id:
             stmt = stmt.where(NCR.project_id == project_id)
+        elif allowed_project_ids is not None:
+            stmt = stmt.where(NCR.project_id.in_(allowed_project_ids))
         stmt = stmt.limit(limit)
         rows = (await session.execute(stmt)).scalars().all()
         for row in rows:

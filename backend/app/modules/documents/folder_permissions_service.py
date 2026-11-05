@@ -433,3 +433,38 @@ def readable_document_scopes(
         if not is_restricted or (kind, path) in grants or wildcard_granted:
             readable.add(path)
     return readable
+
+
+async def document_readable_by(
+    session: AsyncSession,
+    *,
+    user_id: str | uuid.UUID,
+    project_id: str | uuid.UUID,
+    category: str | None,
+    cache: dict[tuple[str, str | None], bool] | None = None,
+) -> bool:
+    """True when ``user_id`` may read a document of ``category`` in the project.
+
+    Same rule as the documents list endpoint (folder grants, admin bypass),
+    exposed so search can drop hits from folders the member has no grant on.
+    ``cache`` memoises per ``(project, folder scope)`` across one search.
+    """
+    kind, path = kind_and_path_for_document(category)
+    key = (str(project_id), path)
+    if cache is not None and key in cache:
+        return cache[key]
+    try:
+        role = await folder_access_for(
+            session,
+            project_id=uuid.UUID(str(project_id)),
+            user_id=uuid.UUID(str(user_id)),
+            scope_kind=kind,
+            scope_path=path,
+        )
+        ok = role is not None
+    except Exception:
+        # Fail closed: never offer a hit we could not authorise.
+        ok = False
+    if cache is not None:
+        cache[key] = ok
+    return ok

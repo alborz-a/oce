@@ -973,6 +973,55 @@ def _filter_vector_hits_by_access(
     return out
 
 
+async def _drop_unreadable_documents(
+    session: AsyncSession,
+    user_id: str | None,
+    vector_rankings: list[list[VectorHit]],
+    sql_rankings: list[list[VectorHit]],
+) -> tuple[list[list[VectorHit]], list[list[VectorHit]]]:
+    """Remove ``oe_documents`` hits from folders the caller has no grant on.
+
+    Same rule as the documents list endpoint (per-folder grants, admin bypass)
+    so search cannot show a document the file manager hides. Fails closed.
+    """
+    uid = _coerce_uuid(user_id)
+    if uid is None:
+        return vector_rankings, sql_rankings
+    wanted = {h.id for r in (*vector_rankings, *sql_rankings) for h in r if h.collection == "oe_documents"}
+    if not wanted:
+        return vector_rankings, sql_rankings
+
+    from app.modules.documents.folder_permissions_service import document_readable_by
+    from app.modules.documents.models import Document
+    from app.modules.users.repository import UserRepository
+
+    try:
+        user = await UserRepository(session).get_by_id(uid)
+        if user is not None and getattr(user, "role", "") == "admin":
+            return vector_rankings, sql_rankings
+        doc_ids = {d for d in (_coerce_uuid(i) for i in wanted) if d is not None}
+        rows = (await session.execute(select(Document).where(Document.id.in_(doc_ids)))).scalars().all()
+        cache: dict[tuple[str, str | None], bool] = {}
+        readable = {
+            str(d.id)
+            for d in rows
+            if await document_readable_by(
+                session, user_id=uid, project_id=d.project_id, category=d.category, cache=cache
+            )
+        }
+    except Exception:
+        logger.exception("Document folder-grant filter failed; dropping document hits")
+        readable = set()
+
+    def keep(h: VectorHit) -> bool:
+        return h.collection != "oe_documents" or h.id in readable
+
+    return (
+        [[h for h in r if keep(h)] for r in vector_rankings],
+        [[h for h in r if keep(h)] for r in sql_rankings],
+    )
+
+
 async def unified_search_service(
     query: str,
     *,
@@ -1043,6 +1092,12 @@ async def unified_search_service(
                 logger.debug("_sql_search_collection(%s) failed: %s", collection, exc)
                 hits = []
             sql_rankings.append(hits)
+
+        # Folder grants: a project member without a grant on a document's
+        # folder must not see that document in results either.
+        vector_rankings, sql_rankings = await _drop_unreadable_documents(
+            session, user_id, list(vector_rankings), sql_rankings
+        )
 
     # Apply the same access fence to the vector track. For a single
     # authorised project_id the vector layer already filtered on the
