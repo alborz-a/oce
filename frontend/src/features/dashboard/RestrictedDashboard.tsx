@@ -12,7 +12,7 @@ import {
   Building2,
   CheckCircle2,
   X,
-  ChevronLeft,
+  ChevronRight,
   Image as ImageIcon,
 } from 'lucide-react';
 import { Card, Badge, Skeleton, EmptyState, AuthImage } from '@/shared/ui';
@@ -165,7 +165,7 @@ export function RestrictedDashboard() {
             className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
           >
             <span>مشاهده همه پروژه‌ها</span>
-            <ChevronLeft size={14} className="rtl:rotate-0 rotate-180" />
+            <ChevronRight size={14} />
           </Link>
         </div>
 
@@ -218,25 +218,28 @@ export function RestrictedDashboard() {
                   <div className="flex items-center gap-2">
                     <Link
                       to={`/projects/${project.id}?tab=photos`}
+                      title="تصاویر کارگاه"
+                      aria-label="تصاویر کارگاه"
                       className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
                     >
-                      <Camera size={12} />
-                      <span>تصاویر کارگاه</span>
+                      <Camera size={14} />
                     </Link>
                     <Link
                       to={`/projects/${project.id}/tasks`}
+                      title="وظایف"
+                      aria-label="وظایف"
                       className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
                     >
-                      <CheckSquare size={12} />
-                      <span>وظایف</span>
+                      <CheckSquare size={14} />
                     </Link>
                   </div>
                   <Link
                     to={`/projects/${project.id}?tab=photos`}
                     className="text-content-tertiary group-hover:text-oe-blue transition-colors"
                     title="مشاهده پروژه"
+                    aria-label="مشاهده پروژه"
                   >
-                    <ChevronLeft size={16} className="rtl:rotate-0 rotate-180" />
+                    <ChevronRight size={16} />
                   </Link>
                 </div>
               </Card>
@@ -262,7 +265,7 @@ export function RestrictedDashboard() {
             className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
           >
             <span>مشاهده همه وظایف</span>
-            <ChevronLeft size={14} className="rtl:rotate-0 rotate-180" />
+            <ChevronRight size={14} />
           </Link>
         </div>
 
@@ -342,7 +345,7 @@ export function RestrictedDashboard() {
             className="inline-flex items-center gap-1 text-xs font-medium text-oe-blue hover:underline"
           >
             <span>مشاهده همه تصاویر و اسناد</span>
-            <ChevronLeft size={14} className="rtl:rotate-0 rotate-180" />
+            <ChevronRight size={14} />
           </Link>
         </div>
 
@@ -439,7 +442,7 @@ export function RestrictedDashboard() {
                 onClick={() => setSelectedPhoto(null)}
               >
                 <span>مشاهده در گالری پروژه</span>
-                <ChevronLeft size={13} className="rtl:rotate-0 rotate-180" />
+                <ChevronRight size={13} />
               </Link>
             </div>
           </div>

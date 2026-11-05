@@ -944,7 +944,7 @@ export function FileManagerPage() {
             className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-semibold bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors shrink-0"
           >
             <UploadCloud size={14} />
-            {t('files.upload', { defaultValue: 'Upload files' })}
+            {t('files.upload_short', { defaultValue: 'Upload' })}
           </button>)}
         </div>
       </div>

@@ -69,6 +69,7 @@ import {
   Truck,
   Factory,
   BookOpen,
+  NotebookPen,
   Globe,
   Globe2,
   FileSignature,
@@ -635,7 +636,7 @@ export const navGroups: NavGroup[] = [
     defaultOpen: true,
     hideInSimple: true,
     items: [
-      { labelKey: 'nav.daily_diary', to: '/daily-diary', icon: BookOpen },
+      { labelKey: 'nav.daily_diary', to: '/daily-diary', icon: NotebookPen },
       { labelKey: 'nav.field_reports', to: '/field-reports', icon: ClipboardList, advancedOnly: true },
       { labelKey: 'nav.field_time', to: '/field-time', icon: Timer, advancedOnly: true },
     ],
