@@ -57,6 +57,7 @@ export async function fetchFileList(
   if (filters.kinds?.length) params.set('kinds', filters.kinds.join(','));
   if (filters.extension) params.set('extension', filters.extension);
   if (filters.q) params.set('q', filters.q);
+  if (filters.fileId) params.set('file_id', filters.fileId);
   if (filters.sort) params.set('sort', filters.sort);
   if (filters.limit !== undefined) params.set('limit', String(filters.limit));
   if (filters.offset !== undefined) params.set('offset', String(filters.offset));

@@ -13,6 +13,7 @@ import { TagFilterFacet } from '@/features/file-tags/TagFilterFacet';
 import { SearchModeToggle } from '@/features/file-search/SearchModeToggle';
 import type { SearchMode } from '@/features/file-search/types';
 import { fmtCount } from '../fmt'; // [RSC-IRAN]
+import { IconButton } from '@/shared/ui/IconButton';
 
 type SortKey = NonNullable<FileFilters['sort']>;
 export type ViewMode = 'grid' | 'list';
@@ -167,24 +168,16 @@ export function FileActionsBar({
         <SearchModeToggle mode={searchMode} onChange={onSearchModeChange} />
       )}
       {onReindex && searchMode === 'content' && (
-        <button
-          type="button"
-          onClick={onReindex}
-          disabled={reindexing}
-          className="inline-flex items-center gap-1.5 h-7 px-2 rounded-full text-[11px] font-medium text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors disabled:opacity-60"
-          title={t('files.search.reindex_hint', {
+        <IconButton
+          label={t('files.search.reindex_hint', {
             defaultValue: 'Re-scan every file so recent uploads become searchable by their text',
           })}
-        >
-          {reindexing ? (
-            <Loader2 size={11} className="animate-spin" />
-          ) : (
-            <RefreshCw size={11} />
-          )}
-          <span className="hidden md:inline">
-            {t('files.search.reindex', { defaultValue: 'Update search index' })}
-          </span>
-        </button>
+          icon={reindexing ? <Loader2 size={13} className="animate-spin" /> : <RefreshCw size={13} />}
+          variant="ghost"
+          size="sm"
+          onClick={onReindex}
+          disabled={reindexing}
+        />
       )}
 
       <span className="text-2xs text-content-tertiary tabular-nums">
@@ -325,22 +318,17 @@ export function FileActionsBar({
         </div>
 
         {canImportExport && (<>
-        <button
-          type="button"
+        <IconButton
+          label={t('files.actions.import', { defaultValue: 'Import' })}
+          icon={<Upload size={15} />}
           onClick={onImport}
-          className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-medium rounded-lg border border-border-light text-content-secondary hover:bg-surface-secondary"
-        >
-          <Upload size={13} />
-          {t('files.actions.import', { defaultValue: 'Import' })}
-        </button>
-        <button
-          type="button"
+        />
+        <IconButton
+          label={t('files.actions.export', { defaultValue: 'Export' })}
+          icon={<Download size={15} />}
+          variant="primary"
           onClick={onExport}
-          className="inline-flex items-center gap-1.5 h-9 px-3 text-xs font-medium rounded-lg bg-oe-blue text-white hover:bg-oe-blue-hover"
-        >
-          <Download size={13} />
-          {t('files.actions.export', { defaultValue: 'Export' })}
-        </button>
+        />
         </>)}
       </div>
     </div>

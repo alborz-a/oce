@@ -4,7 +4,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Download, Mail, FolderOpen, Copy, X, FileText, Image as ImageIcon, Layout, Box, Pencil, File, PenTool, FileBarChart, Tag, ExternalLink, Activity, Share2, Lock, Send, ClipboardCheck, CheckCircle2, Link as LinkIcon, History, RotateCcw, Loader2, Check, ChevronDown, PlayCircle } from 'lucide-react';
+import { Download, Mail, FolderOpen, Copy, X, FileText, Image as ImageIcon, Layout, Box, Pencil, File, PenTool, FileBarChart, Tag, ExternalLink, Activity, Share2, Lock, Send, ClipboardCheck, CheckCircle2, Link as LinkIcon, History, RotateCcw, Loader2, Check, ChevronDown, PlayCircle, Maximize2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -17,6 +17,7 @@ import { TruncationNotice } from '@/shared/ui/TruncationNotice';
 import type { FileRow, FileKind } from '../types';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { AuthImage } from '@/shared/ui';
+import { IconButton } from '@/shared/ui/IconButton';
 import { downloadProtectedFile, fetchProtectedObjectUrl } from '../api';
 import { isTauri, openInOSFinder, copyToClipboard } from '../lib/tauri';
 import { modulesForKind, primaryModule, isImageRow, isVideoRow, isLightboxRow } from '../kindModule';
@@ -277,14 +278,22 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
         <span className="text-xs font-semibold text-content-primary truncate">
           {t('files.preview.title', { defaultValue: 'File details' })}
         </span>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={t('common.close', { defaultValue: 'Close' })}
-          className="flex h-6 w-6 items-center justify-center rounded text-content-tertiary hover:bg-surface-secondary hover:text-content-primary"
-        >
-          <X size={14} />
-        </button>
+        <div className="flex items-center gap-1">
+          <IconButton
+            label={t('files.detail.open_page', { defaultValue: 'Open details page' })}
+            icon={<Maximize2 size={14} />}
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate(`/files/detail/${file.project_id}/${file.id}`)}
+          />
+          <IconButton
+            label={t('common.close', { defaultValue: 'Close' })}
+            icon={<X size={14} />}
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+          />
+        </div>
       </div>
 
       <div className="p-4 space-y-4">
@@ -448,15 +457,13 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           )}
 
           {row.download_url && (
-            <button
-              type="button"
+            <IconButton
+              label={t('files.actions.download', { defaultValue: 'Download' })}
+              icon={downloading ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
               onClick={handleDownload}
               disabled={downloading}
-              className="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border border-border-light text-content-primary hover:bg-surface-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {downloading ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
-              {t('files.actions.download', { defaultValue: 'Download' })}
-            </button>
+              className="self-start"
+            />
           )}
           {/* W1 — version history. Renders <V## · Current> chip + dropdown
               with a "Make current" action for every superseded row. */}
