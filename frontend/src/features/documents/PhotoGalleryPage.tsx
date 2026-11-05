@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Trash2,
   Pencil,
+  Maximize2,
   MapPin,
   Calendar,
   Tag,
@@ -67,6 +68,7 @@ import {
 } from './api';
 import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
+import { IconButton } from '@/shared/ui/IconButton';
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 const num = (n: number): string | number => (REGION_LOCK ? toPersianDigits(n) : n); // [RSC-IRAN]
 
@@ -146,6 +148,7 @@ function Lightbox({
   onDelete,
   onRaise,
   onOpenDayDiary,
+  onOpenDetails,
 }: {
   photos: PhotoItem[];
   currentIndex: number;
@@ -157,6 +160,8 @@ function Lightbox({
   onRaise: (photo: PhotoItem, target: 'punch' | 'ncr' | 'safety') => void;
   /** Open the daily diary on the photo's capture day (CONN-68). */
   onOpenDayDiary: (photo: PhotoItem) => void;
+  /** Open the full detail page for this photo. */
+  onOpenDetails: (photo: PhotoItem) => void;
 }) {
   const { t } = useTranslation();
   const photo = photos[currentIndex];
@@ -291,6 +296,14 @@ function Lightbox({
               )}
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => onOpenDetails(photo)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors"
+                aria-label={t('files.detail.open_page', { defaultValue: 'Open details page' })}
+                title={t('files.detail.open_page', { defaultValue: 'Open details page' })}
+              >
+                <Maximize2 size={16} />
+              </button>
               <button
                 onClick={() => onEdit(photo)}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors"
@@ -1475,25 +1488,19 @@ export function PhotoGalleryPage() {
         actions={
           <>
             {photoList.length > 0 && !selectMode && (
-              <Button
-                variant="secondary"
-                size="sm"
+              <IconButton
+                label={t('photos.select', { defaultValue: 'Select' })}
+                icon={<CheckSquare size={16} />}
                 onClick={() => setSelectMode(true)}
-                className="shrink-0 whitespace-nowrap"
-              >
-                <CheckSquare size={14} className="me-1.5 shrink-0" />
-                <span className="whitespace-nowrap">{t('photos.select', { defaultValue: 'Select' })}</span>
-              </Button>
+              />
             )}
-            <Button
+            <IconButton
+              label={t('photos.upload_photos', { defaultValue: 'Upload Photos' })}
+              icon={<Upload size={16} />}
+              variant="primary"
               onClick={() => setShowUpload(!showUpload)}
-              size="sm"
               disabled={!projectId}
-              className="shrink-0 whitespace-nowrap"
-            >
-              <Upload size={14} className="me-1.5 shrink-0" />
-              <span className="whitespace-nowrap">{t('photos.upload_photos', { defaultValue: 'Upload Photos' })}</span>
-            </Button>
+            />
           </>
         }
       />
@@ -1758,6 +1765,7 @@ export function PhotoGalleryPage() {
           onDelete={(photo) => { setLightboxIndex(null); setDeleteTarget(photo); }}
           onRaise={(photo, target) => { setLightboxIndex(null); handleRaiseFromPhoto(photo, target); }}
           onOpenDayDiary={(photo) => { setLightboxIndex(null); handleOpenDayDiary(photo); }}
+          onOpenDetails={(photo) => navigate(`/files/detail/${photo.project_id}/${photo.id}`)}
         />
       )}
 

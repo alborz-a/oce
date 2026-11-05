@@ -322,6 +322,9 @@ const ProjectIntelligencePage = lazy(() =>
 const FileManagerPage = lazy(() =>
   import('@/features/file-manager/FileManagerPage').then((m) => ({ default: m.FileManagerPage }))
 );
+const FileDetailPage = lazy(() =>
+  import('@/features/file-manager/FileDetailPage').then((m) => ({ default: m.FileDetailPage }))
+);
 const SheetsIndexPage = lazy(() =>
   import('@/features/file-manager/SheetsIndexPage').then((m) => ({ default: m.SheetsIndexPage }))
 );
@@ -1341,6 +1344,7 @@ export default function App() {
         <Route path="/files/search" element={<P title="Search across projects"><GlobalSearchPage /></P>} />
         <Route path="/files/transmittals" element={<P title="Transmittals"><TransmittalLogPage /></P>} />
         <Route path="/files/approvals" element={<P title="Approvals register"><FileApprovalsRegisterPage /></P>} />
+        <Route path="/files/detail/:projectId/:fileId" element={<P title="File details"><FileDetailPage /></P>} />
         <Route path="/files" element={<P title="Documents"><FileManagerPage /></P>} />
         <Route path="/projects/:projectId/files" element={<P title="Documents"><FileManagerPage /></P>} />
         {/* Drawing-sheet index. The page takes :projectId when it is there
