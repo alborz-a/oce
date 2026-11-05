@@ -24,6 +24,7 @@ import { costModelApi } from '@/features/costmodel/api';
 import { KpiStrip } from './KpiStrip';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
+import { fmtPct } from '@/features/file-manager/fmt';
 
 function money(value: number, currency?: string): string {
   if (!Number.isFinite(value)) return '-';
@@ -90,7 +91,7 @@ export function LabourCostWidget() {
             },
             {
               label: t('dashboard.labour_used', { defaultValue: 'Used' }),
-              value: planned > 0 ? `${usedPct}%` : '-',
+              value: planned > 0 ? fmtPct(usedPct) : '-',
               tone: over ? 'text-rose-600' : 'text-content-secondary',
             },
           ]}

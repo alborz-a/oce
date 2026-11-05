@@ -14,6 +14,7 @@
 import { useTranslation } from 'react-i18next';
 import { CheckCircle2, FolderOpen, Loader2 } from 'lucide-react';
 import clsx from 'clsx';
+import { fmtPct } from '../fmt';
 
 interface InitialLoadProgressProps {
   storageDone: boolean;
@@ -101,7 +102,7 @@ export function InitialLoadProgress({
               total: steps.length,
             })}
           </span>
-          <span>{pct}%</span>
+          <span>{fmtPct(pct)}</span>
         </div>
 
         {/* Step list */}
