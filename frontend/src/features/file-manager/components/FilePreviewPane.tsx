@@ -182,7 +182,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
 
   if (!row) {
     return (
-      <aside className="w-80 shrink-0 border-s border-border-light bg-surface-secondary/40 flex items-center justify-center">
+      <aside className="hidden lg:flex w-80 shrink-0 border-s border-border-light bg-surface-secondary/40 flex items-center justify-center">
         <p className="text-xs text-content-tertiary px-4 text-center">
           {t('files.preview.empty', {
             defaultValue: 'Select a file to see details.',
@@ -272,7 +272,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
   );
 
   return (
-    <aside className="w-80 shrink-0 border-s border-border-light bg-surface-elevated overflow-y-auto">
+    <aside className="w-80 shrink-0 max-lg:fixed max-lg:inset-y-0 max-lg:end-0 max-lg:z-40 max-lg:w-[min(20rem,100vw)] max-lg:shadow-2xl border-s border-border-light bg-surface-elevated overflow-y-auto">
       <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-2.5 border-b border-border-light bg-surface-elevated">
         <span className="text-xs font-semibold text-content-primary truncate">
           {t('files.preview.title', { defaultValue: 'File details' })}
