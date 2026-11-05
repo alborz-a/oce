@@ -68,7 +68,6 @@ import {
   Timer,
   Truck,
   Factory,
-  BookOpen,
   NotebookPen,
   Globe,
   Globe2,
