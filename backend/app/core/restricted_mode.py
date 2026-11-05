@@ -91,7 +91,16 @@ def is_restricted_user(user: Any) -> bool:
     if os.environ.get("OCE_RESTRICTED_PROJECT_MODE_ALL", "").strip().lower() in ("1", "true", "yes"):
         return True
     meta = getattr(user, "metadata_", None) or {}
-    return meta.get("restricted_project_mode") is True
+    flag = meta.get("restricted_project_mode")
+    if flag is True:
+        return True
+    if flag is False:
+        # Explicit opt-out set by an admin for a power user.
+        return False
+    # Deny by default: an account nobody flagged (new staff, self-registered,
+    # imported) must not get the full platform menu and pages. Only managers
+    # (and admins, handled above) are unrestricted unless flagged otherwise.
+    return getattr(user, "role", "") != "manager"
 
 
 def is_path_allowed(method: str, path: str) -> bool:
