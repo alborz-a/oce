@@ -62,6 +62,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # narrows collections with ``restrict_search_types``.
     _rule(_R, r"^search/?$"),
     _rule(_R, r"^search/(status|types)/?$"),
+    # semantic-search encoder state: the search modal reads it to show a hint. Read only.
+    _rule(_R, r"^ai-estimator/embedding-model/status/?$"),
     # own notifications (the shell polls unread-count)
     _rule(_ANY, r"^notifications(/.*)?$"),
     # shell: enabled-module list (read only)
