@@ -4,7 +4,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, X, ChevronDown, LayoutGrid, List, Download, Upload, Star, Loader2, RefreshCw } from 'lucide-react';
+import {
+  Search, X, ChevronDown, LayoutGrid, List, Download, Upload, Star, Loader2, RefreshCw,
+  Layers, FileText, Image as ImageIcon, Ruler, Building2, FileSpreadsheet,
+  type LucideIcon,
+} from 'lucide-react';
 import clsx from 'clsx';
 import type { FileFilters } from '../types';
 import { SaveViewButton } from '@/features/file-saved-views';
@@ -60,13 +64,15 @@ interface FileActionsBarProps {
 
 /* Always-visible type pills — the high-traffic AECO formats. Each maps to one
    `?extension=` value passed to the backend. */
-const TYPE_PILLS: { key: string; label: string; ext?: string; group?: string[] }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'pdf', label: 'PDF', ext: 'pdf', group: ['pdf'] },
-  { key: 'image', label: 'Images', ext: 'jpg', group: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'tif', 'tiff', 'bmp'] },
-  { key: 'cad', label: 'CAD', ext: 'dwg', group: ['dwg', 'dxf', 'dwf'] },
-  { key: 'bim', label: 'BIM', ext: 'ifc', group: ['ifc', 'rvt', 'rfa', 'nwd', 'nwc'] },
-  { key: 'office', label: 'Office', ext: 'xlsx', group: ['xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'csv'] },
+/* `iconOnly` pills show the icon alone (title + aria-label carry the name).
+   Ambiguous ones keep visible text next to the icon. */
+const TYPE_PILLS: { key: string; label: string; icon: LucideIcon; iconOnly?: boolean; ext?: string; group?: string[] }[] = [
+  { key: 'all', label: 'All', icon: Layers },
+  { key: 'pdf', label: 'PDF', icon: FileText, iconOnly: true, ext: 'pdf', group: ['pdf'] },
+  { key: 'image', label: 'Images', icon: ImageIcon, iconOnly: true, ext: 'jpg', group: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'tif', 'tiff', 'bmp'] },
+  { key: 'cad', label: 'CAD', icon: Ruler, ext: 'dwg', group: ['dwg', 'dxf', 'dwf'] },
+  { key: 'bim', label: 'BIM', icon: Building2, ext: 'ifc', group: ['ifc', 'rvt', 'rfa', 'nwd', 'nwc'] },
+  { key: 'office', label: 'Office', icon: FileSpreadsheet, ext: 'xlsx', group: ['xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'csv'] },
 ];
 
 export function FileActionsBar({
@@ -192,20 +198,25 @@ export function FileActionsBar({
             return !!availableExts && p.group.some((x) => availableExts.has(x));
           }).map((p) => {
             const active = p.ext ? extension === p.ext : !extension;
+            const pillLabel = t(`files.type_pill.${p.key}`, { defaultValue: p.label });
+            const PillIcon = p.icon;
             return (
               <button
                 key={p.key}
                 type="button"
                 onClick={() => onExtensionChange(p.ext)}
+                title={pillLabel}
+                aria-label={pillLabel}
                 className={clsx(
-                  'inline-flex h-7 items-center rounded-full px-2.5 text-[11px] font-medium transition-colors',
+                  'inline-flex h-7 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium transition-colors',
                   active
                     ? 'bg-oe-blue text-white'
                     : 'border border-border-light text-content-secondary hover:bg-surface-secondary',
                 )}
                 aria-pressed={active}
               >
-                {t(`files.type_pill.${p.key}`, { defaultValue: p.label })}
+                <PillIcon size={12} strokeWidth={2} aria-hidden />
+                {!p.iconOnly && pillLabel}
               </button>
             );
           })}
