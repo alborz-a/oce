@@ -64,6 +64,7 @@ import {
   type DefectSeverity,
   type PhotoFilters,
   groupPhotosByDay,
+  groupPhotosByTopic,
   type PhotoUpdatePayload,
 } from './api';
 import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
@@ -94,7 +95,7 @@ const SEVERITY_COLORS: Record<DefectSeverity, string> = {
   high: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
 };
 
-type ViewMode = 'grid' | 'timeline';
+type ViewMode = 'grid' | 'timeline' | 'topics';
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -1202,11 +1203,12 @@ export function PhotoGalleryPage() {
     // A page of photos, newest first. Grouped into days below, not by the
     // server - see ``groupPhotosByDay``.
     queryFn: (): Promise<Page<PhotoItem>> => fetchPhotoTimeline(projectId!),
-    enabled: !!projectId && viewMode === 'timeline',
+    enabled: !!projectId && (viewMode === 'timeline' || viewMode === 'topics'),
   });
 
   const photoList = photoPage?.items ?? [];
   const isLoading = viewMode === 'grid' ? photosLoading : timelineLoading;
+  const showTimelineSource = viewMode === 'timeline' || viewMode === 'topics';
 
   // Flattened, date-ordered photo list backing the timeline view. The
   // lightbox must page through THESE photos when timeline is active —
@@ -1224,7 +1226,9 @@ export function PhotoGalleryPage() {
     () => groupPhotosByDay(timelinePhotos),
     [timelinePhotos],
   );
-  const lightboxPhotos = viewMode === 'timeline' ? timelinePhotos : photoList;
+  // Topic view: groups by Mizito chat topic (metadata.topic), see ``groupPhotosByTopic``.
+  const topicGroups = useMemo(() => groupPhotosByTopic(timelinePhotos), [timelinePhotos]);
+  const lightboxPhotos = showTimelineSource ? timelinePhotos : photoList;
 
   // Deep-link: `?photo={id}` (set by /files → "Open in Site Photos")
   // opens the lightbox on that photo as soon as the gallery loads. We
@@ -1566,7 +1570,7 @@ export function PhotoGalleryPage() {
       {viewMode === 'grid' && photoPage && !selectMode && (
         <TruncationNotice page={photoPage} />
       )}
-      {viewMode === 'timeline' && timelinePage && !selectMode && (
+      {showTimelineSource && timelinePage && !selectMode && (
         <TruncationNotice page={timelinePage} />
       )}
 
@@ -1650,6 +1654,19 @@ export function PhotoGalleryPage() {
               <Clock size={14} />
               {t('photos.timeline', { defaultValue: 'Timeline' })}
             </button>
+            <button
+              onClick={() => setViewMode('topics')}
+              className={`flex items-center gap-1.5 h-10 px-3 text-xs font-medium transition-colors ${
+                viewMode === 'topics'
+                  ? 'bg-oe-blue-subtle text-oe-blue-text'
+                  : 'text-content-secondary hover:bg-surface-secondary'
+              }`}
+              aria-label={t('photos.topics_view', { defaultValue: 'Group by topic' })}
+              title={t('photos.topics_view', { defaultValue: 'Group by topic' })}
+            >
+              <Tag size={14} />
+              {t('photos.topics', { defaultValue: 'Topics' })}
+            </button>
           </div>
         </div>
       </Card>
@@ -1698,6 +1715,44 @@ export function PhotoGalleryPage() {
               onToggleSelect={() => toggleSelect(photo.id)}
               onAcceptSuggestion={handleAcceptSuggestion}
             />
+          ))}
+        </div>
+      ) : viewMode === 'topics' ? (
+        /* Topic view: one header per Mizito chat topic */
+        <div className="space-y-8">
+          {topicGroups.map((group) => (
+            <div key={group.key}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
+                  {group.title ? (
+                    <Tag size={14} className="text-content-tertiary" />
+                  ) : (
+                    <Calendar size={14} className="text-content-tertiary" />
+                  )}
+                </div>
+                <h3 className="min-w-0 text-sm font-semibold text-content-primary line-clamp-2 break-words" dir="auto">
+                  {group.title ?? t('photos.topic_none', { defaultValue: 'No topic' })}
+                </h3>
+                <span className="shrink-0 text-xs text-content-tertiary">{formatDate(group.date)}</span>
+                <Badge variant="neutral">{num(group.photos.length)}</Badge>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 ms-11">
+                {group.photos.map((photo) => {
+                  const globalIdx = timelinePhotos.findIndex((p) => p.id === photo.id);
+                  return (
+                    <PhotoCard
+                      key={photo.id}
+                      photo={photo}
+                      onClick={() => setLightboxIndex(globalIdx >= 0 ? globalIdx : 0)}
+                      selectMode={selectMode}
+                      selected={selectedIds.has(photo.id)}
+                      onToggleSelect={() => toggleSelect(photo.id)}
+                      onAcceptSuggestion={handleAcceptSuggestion}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           ))}
         </div>
       ) : (
