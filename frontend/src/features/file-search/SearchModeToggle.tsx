@@ -83,6 +83,7 @@ function ModeButton({ id, active, onClick, icon, label }: ModeButtonProps) {
       aria-controls={`files-search-mode-panel-${id}`}
       tabIndex={active ? 0 : -1}
       onClick={onClick}
+      title={label}
       className={clsx(
         'inline-flex items-center gap-1 h-6 px-2 rounded-full text-[11px] font-medium transition-colors',
         active
