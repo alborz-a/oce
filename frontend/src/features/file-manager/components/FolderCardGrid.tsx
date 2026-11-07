@@ -29,7 +29,7 @@ import type { FileTreeNode, FileKind } from '../types';
 import { KIND_TONE } from '../kindModule';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
-import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { localizeSize, fmtPct } from '../fmt'; // [RSC-IRAN]
 
 const KIND_ICON: Record<FileKind, LucideIcon> = {
   document: FileText,
@@ -349,7 +349,7 @@ function FolderCard({
             />
           </div>
           <span className="text-2xs text-content-quaternary tabular-nums shrink-0 group-hover:hidden">
-            {sharePct}%
+            {fmtPct(sharePct)}
           </span>
           <span className="hidden group-hover:inline-flex items-center gap-0.5 text-2xs font-medium text-oe-blue shrink-0">
             {t('files.folder.open', { defaultValue: 'Open' })}
