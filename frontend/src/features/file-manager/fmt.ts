@@ -22,7 +22,9 @@ export function fmtCount(n: number): string {
  * separator and no trailing ".0" (2.0 reads "۲", 2.5 reads "۲.۵").
  */
 export function faDecimal(text: string): string {
-  const norm = text.replace(/[٫,/]/g, '.').replace(/\.0+(?!\d)/g, '');
+  // Normalize Persian digits to ASCII first so the trailing-zero strip also sees "۲٫۰".
+  const ascii = text.replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+  const norm = ascii.replace(/[٫,/]/g, '.').replace(/\.0+(?!\d)/g, '');
   return toPersianDigits(norm);
 }
 
