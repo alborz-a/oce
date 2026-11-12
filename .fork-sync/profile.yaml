@@ -52,6 +52,7 @@ guard:
     - "**/*.min.js"
     - "**/*.min.css"
     - "**/*.map"
+    - ".fork-sync/**"
 sync:
   step_unit: release-tag
   max_files_per_step_warn: 200
