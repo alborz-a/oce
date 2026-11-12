@@ -15,6 +15,8 @@ ARABIC_SCRIPT_RE = re.compile(
 LETTER_RE = re.compile(r"[^\W\d_]", re.UNICODE)
 
 LOCALE_FORMATS = ("yaml", "json", "ts-object")
+# Source (upstream, English) file name for each target (Farsi) locale file name.
+LOCALE_SOURCE_NAMES = {"fa-ir.yaml": "en-us.yaml", "fa.json": "en.json", "fa.ts": "en.ts"}
 PROFILE_BASE_MODES = ("merge-base", "explicit-tag")
 LEDGER_CATEGORIES = (
     "translation",
@@ -31,6 +33,7 @@ INVARIANT_TYPES = (
     "file_absent",
     "lines_present",
     "lines_absent",
+    "file_lines",
     "regex_present",
     "regex_absent",
     "locale_keys",
@@ -56,6 +59,13 @@ DEFAULT_IGNORE = [
     "**/*.min.css",
     "**/*.map",
     "**/generated/**",
+    # Dev tooling has no product effect.
+    "**/.vscode/**",
+    "**/.claude/**",
+    "**/.github/**",
+    "**/.gitea/**",
+    # Other locales. Profile locales (fa-ir) are still checked, see ledger.collect_specs.
+    "**/translations/*.yaml",
 ]
 DEFAULT_FAIL_ON = [
     "translation",
@@ -179,6 +189,8 @@ def load_profile(path):
         _require(unit, "path", where, str)
         _require(unit, "ledger", where, str)
         unit.setdefault("upstream_url", None)
+        unit.setdefault("upstream_remote", None)
+        unit.setdefault("upstream_branch", None)
     raw["units"] = units
 
     locales = raw.get("locales") or []

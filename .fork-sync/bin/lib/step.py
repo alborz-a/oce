@@ -81,7 +81,7 @@ def _write(wt, path, data):
 
 def apply_step(repo, wt, base, ours, target, profile):
     """Apply base->target onto ours inside wt. Returns report dict (no commit)."""
-    report = {"applied": [], "conflicts": [], "deleted": [], "warnings": [], "locale": []}
+    report = {"applied": [], "conflicts": [], "deleted": [], "warnings": [], "locale": [], "new_keys": {}}
     changes = parse_name_status(
         C.run_git(["diff", "--name-status", "-M", base, target], cwd=repo)
     )
@@ -90,6 +90,11 @@ def apply_step(repo, wt, base, ours, target, profile):
         for status, old, new in changes:
             base_bytes = C.show_file(base, old, repo)
             theirs_bytes = None if status == "D" else C.show_file(target, new, repo)
+            if status != "D" and theirs_bytes is None:
+                # Submodule pointer (gitlink): no blob to write. Unit steps own these.
+                report.setdefault("skipped", []).append(
+                    {"path": new, "reason": "no blob at target (submodule pointer)"})
+                continue
             ours_bytes = C.show_file(ours, new, repo)
             locale_fmt = _locale_format(profile, new)
             if status == "D":
@@ -110,6 +115,7 @@ def apply_step(repo, wt, base, ours, target, profile):
                 )
                 _write(wt, new, out.encode("utf-8"))
                 report["locale"].append({"path": new, "new_keys": len(new_keys), "warnings": warns})
+                report["new_keys"][new] = new_keys
                 report["applied"].append(new)
                 continue
             if ours_bytes is None or ours_bytes == base_bytes:
@@ -210,6 +216,8 @@ def run(args):
             "applied": body.get("applied", []),
             "deleted": body.get("deleted", []),
             "locale": body.get("locale", []),
+            "new_keys_count": sum(len(v) for v in body.get("new_keys", {}).values()),
+            "new_keys_file": os.path.join(os.path.dirname(os.path.abspath(args.report)), "new-keys.json"),
             "warnings": body.get("warnings", []),
             "guard": guard,
             "committed": committed,
@@ -219,6 +227,8 @@ def run(args):
         return 2
     with open(args.report, "w", encoding="utf-8") as fh:
         json.dump(report, fh, ensure_ascii=False, indent=2)
+    with open(report["new_keys_file"], "w", encoding="utf-8") as fh:
+        json.dump({"target": args.target, "files": body.get("new_keys", {})}, fh, ensure_ascii=False, indent=2)
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:

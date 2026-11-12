@@ -118,7 +118,8 @@ def collect_specs(repo, base, ours, profile=None, paths=None):
         status = status_raw[:1]
         if not path or (paths is not None and path not in paths):
             continue
-        if _ignored(path, profile):
+        # Profile locale files are always checked, even when an ignore glob matches.
+        if _ignored(path, profile) and _locale_spec(path, profile) is None:
             continue
         if status == "D":
             specs.append((path, "removed-feature", {"type": "file_absent", "path": path}, status))
@@ -150,17 +151,14 @@ def collect_specs(repo, base, ours, profile=None, paths=None):
         added, deleted = _diff_lines(repo, base, ours, path)
         category = categorize(path, added + deleted, status)
         ours_norm = set(_norm(line) for line in text.splitlines())
-        if status == "A":
-            specs.append((path, category, {"type": "file_exists", "path": path}, status))
         present = [t for t in distinctive(added) if t in ours_norm]
-        if present:
-            inv = {"type": "lines_present", "path": path, "lines": present, "min_fraction": 1.0}
+        gone = [t for t in distinctive(deleted) if t not in ours_norm] if status == "M" else []
+        if present or gone:
+            # file_lines already fails when the file is missing, so no separate file_exists.
+            inv = {"type": "file_lines", "path": path, "lines": present, "absent": gone}
             specs.append((path, category, inv, status))
-        if status == "M":
-            gone = [t for t in distinctive(deleted) if t not in ours_norm]
-            if gone:
-                inv = {"type": "lines_absent", "path": path, "lines": gone}
-                specs.append((path, category, inv, status))
+        elif status == "A":
+            specs.append((path, category, {"type": "file_exists", "path": path}, status))
     return specs
 
 

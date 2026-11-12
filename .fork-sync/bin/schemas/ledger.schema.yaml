@@ -1,0 +1,27 @@
+# forksync ledger schema (documented key list). Checked by lib/common.load_ledger.
+version: 1                            # (required) must be 1
+generated_from:                       # written by ledger-gen
+  base: str                           # ref used as base
+  ours: str                           # ref used as ours
+  at: str                             # ISO time (--at overrides for stable output)
+entries:                              # (required) list, may be empty
+  - id: L0001                         # (required) unique, stable across regenerations
+    glob: str                         # (required) repo-relative path or glob
+    category: translation | rtl | iran-lock | branding | access | removed-feature | bugfix | fork-only   # (required)
+    intent: str                       # human text; auto entries carry "auto: <status> <path> (<category>)"
+    auto: true | false                # default true; false = owner-verified, never rewritten by ledger-gen/learn
+    weaken_reason: str                # set by learn when an auto invariant was weakened with --allow-weaken
+    invariant:                        # (required)
+      type: <one of the types below>  # (required)
+      # file_exists     {path}
+      # file_absent     {path}
+      # lines_present   {path, lines: [str], min_fraction: 1.0}
+      # lines_absent    {path, lines: [str]}
+      # regex_present   {path, pattern}
+      # regex_absent    {path, pattern}
+      # locale_keys     {path, format, min_keys, require_farsi_fraction, forbid_equal_to_source}
+      #                 forbid_equal_to_source is recorded but NOT enforced (no source file read)
+      # locale_key_values {path, format, keys: {key: value}}
+      # json_path_equals  {path, pointer, value}
+      # css_rule_present  {path, selector_contains, property}
+      # hash_equals     {path, sha256}

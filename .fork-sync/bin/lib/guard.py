@@ -76,6 +76,20 @@ def evaluate(entry, tree):
     return out
 
 
+OFFENDER_LIMIT = 10
+
+
+def _offenders(parsed, short, low_farsi):
+    """Name the keys behind a locale_keys FAIL: keys with no Farsi, plus the shortfall in key count."""
+    parts = []
+    if short:
+        parts.append("key count short (missing keys not named: no source file in invariant)")
+    if low_farsi:
+        english = ["%s (english)" % k for k, v in sorted(parsed.items()) if not C.has_farsi(v)]
+        parts.append("%d key(s) without farsi: %s" % (len(english), ", ".join(english[:OFFENDER_LIMIT]) or "none"))
+    return "; " + "; ".join(parts) if parts else ""
+
+
 def _evaluate_kind(rid, kind, inv, path, tree):
     data = _read_bytes(tree, path)
     exists = data is not None
@@ -98,6 +112,16 @@ def _evaluate_kind(rid, kind, inv, path, tree):
         if missing:
             detail += "; missing e.g. " + " | ".join(m[:SNIPPET] for m in missing)
         return C.result(rid, ok, detail)
+    if kind == "file_lines":
+        have = _norm_lines(text)
+        wanted = [x for x in (" ".join(y.split()) for y in inv.get("lines", [])) if x]
+        back = [x for x in (" ".join(y.split()) for y in inv.get("absent", [])) if x and x in have]
+        missing = [x for x in wanted if x not in have]
+        ok = not missing and not back
+        detail = "%d/%d lines present, %d absent lines back" % (len(wanted) - len(missing), len(wanted), len(back))
+        if missing:
+            detail += "; missing e.g. " + missing[0][:SNIPPET]
+        return C.result(rid, ok, detail)
     if kind == "lines_absent":
         have = _norm_lines(text)
         back = [" ".join(x.split()) for x in inv["lines"]]
@@ -119,6 +143,8 @@ def _evaluate_kind(rid, kind, inv, path, tree):
         need_frac = inv.get("require_farsi_fraction", 0.0)
         ok = len(values) >= need_keys and frac + 1e-9 >= need_frac
         detail = "keys %d (min %d), farsi %.4f (min %.4f)" % (len(values), need_keys, frac, need_frac)
+        if not ok:
+            detail += _offenders(parsed, len(values) < need_keys, frac + 1e-9 < need_frac)
         return C.result(rid, ok, detail)
     if kind == "locale_key_values":
         parsed = C.parse_locale(text, inv.get("format", "yaml"))
