@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Trash2,
   Pencil,
+  Maximize2,
   MapPin,
   Calendar,
   Tag,
@@ -63,10 +64,12 @@ import {
   type DefectSeverity,
   type PhotoFilters,
   groupPhotosByDay,
+  groupPhotosByTopic,
   type PhotoUpdatePayload,
 } from './api';
 import { getIntlLocale, fmtFixed } from '@/shared/lib/formatters';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
+import { IconButton } from '@/shared/ui/IconButton';
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 const num = (n: number): string | number => (REGION_LOCK ? toPersianDigits(n) : n); // [RSC-IRAN]
 
@@ -92,7 +95,7 @@ const SEVERITY_COLORS: Record<DefectSeverity, string> = {
   high: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
 };
 
-type ViewMode = 'grid' | 'timeline';
+type ViewMode = 'grid' | 'timeline' | 'topics';
 
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
@@ -146,6 +149,7 @@ function Lightbox({
   onDelete,
   onRaise,
   onOpenDayDiary,
+  onOpenDetails,
 }: {
   photos: PhotoItem[];
   currentIndex: number;
@@ -157,6 +161,8 @@ function Lightbox({
   onRaise: (photo: PhotoItem, target: 'punch' | 'ncr' | 'safety') => void;
   /** Open the daily diary on the photo's capture day (CONN-68). */
   onOpenDayDiary: (photo: PhotoItem) => void;
+  /** Open the full detail page for this photo. */
+  onOpenDetails: (photo: PhotoItem) => void;
 }) {
   const { t } = useTranslation();
   const photo = photos[currentIndex];
@@ -291,6 +297,14 @@ function Lightbox({
               )}
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => onOpenDetails(photo)}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors"
+                aria-label={t('files.detail.open_page', { defaultValue: 'Open details page' })}
+                title={t('files.detail.open_page', { defaultValue: 'Open details page' })}
+              >
+                <Maximize2 size={16} />
+              </button>
               <button
                 onClick={() => onEdit(photo)}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-white/70 hover:bg-white/15 hover:text-white transition-colors"
@@ -1189,11 +1203,12 @@ export function PhotoGalleryPage() {
     // A page of photos, newest first. Grouped into days below, not by the
     // server - see ``groupPhotosByDay``.
     queryFn: (): Promise<Page<PhotoItem>> => fetchPhotoTimeline(projectId!),
-    enabled: !!projectId && viewMode === 'timeline',
+    enabled: !!projectId && (viewMode === 'timeline' || viewMode === 'topics'),
   });
 
   const photoList = photoPage?.items ?? [];
   const isLoading = viewMode === 'grid' ? photosLoading : timelineLoading;
+  const showTimelineSource = viewMode === 'timeline' || viewMode === 'topics';
 
   // Flattened, date-ordered photo list backing the timeline view. The
   // lightbox must page through THESE photos when timeline is active —
@@ -1211,7 +1226,9 @@ export function PhotoGalleryPage() {
     () => groupPhotosByDay(timelinePhotos),
     [timelinePhotos],
   );
-  const lightboxPhotos = viewMode === 'timeline' ? timelinePhotos : photoList;
+  // Topic view: groups by Mizito chat topic (metadata.topic), see ``groupPhotosByTopic``.
+  const topicGroups = useMemo(() => groupPhotosByTopic(timelinePhotos), [timelinePhotos]);
+  const lightboxPhotos = showTimelineSource ? timelinePhotos : photoList;
 
   // Deep-link: `?photo={id}` (set by /files → "Open in Site Photos")
   // opens the lightbox on that photo as soon as the gallery loads. We
@@ -1475,25 +1492,19 @@ export function PhotoGalleryPage() {
         actions={
           <>
             {photoList.length > 0 && !selectMode && (
-              <Button
-                variant="secondary"
-                size="sm"
+              <IconButton
+                label={t('photos.select', { defaultValue: 'Select' })}
+                icon={<CheckSquare size={16} />}
                 onClick={() => setSelectMode(true)}
-                className="shrink-0 whitespace-nowrap"
-              >
-                <CheckSquare size={14} className="me-1.5 shrink-0" />
-                <span className="whitespace-nowrap">{t('photos.select', { defaultValue: 'Select' })}</span>
-              </Button>
+              />
             )}
-            <Button
+            <IconButton
+              label={t('photos.upload_photos', { defaultValue: 'Upload Photos' })}
+              icon={<Upload size={16} />}
+              variant="primary"
               onClick={() => setShowUpload(!showUpload)}
-              size="sm"
               disabled={!projectId}
-              className="shrink-0 whitespace-nowrap"
-            >
-              <Upload size={14} className="me-1.5 shrink-0" />
-              <span className="whitespace-nowrap">{t('photos.upload_photos', { defaultValue: 'Upload Photos' })}</span>
-            </Button>
+            />
           </>
         }
       />
@@ -1559,7 +1570,7 @@ export function PhotoGalleryPage() {
       {viewMode === 'grid' && photoPage && !selectMode && (
         <TruncationNotice page={photoPage} />
       )}
-      {viewMode === 'timeline' && timelinePage && !selectMode && (
+      {showTimelineSource && timelinePage && !selectMode && (
         <TruncationNotice page={timelinePage} />
       )}
 
@@ -1643,6 +1654,19 @@ export function PhotoGalleryPage() {
               <Clock size={14} />
               {t('photos.timeline', { defaultValue: 'Timeline' })}
             </button>
+            <button
+              onClick={() => setViewMode('topics')}
+              className={`flex items-center gap-1.5 h-10 px-3 text-xs font-medium transition-colors ${
+                viewMode === 'topics'
+                  ? 'bg-oe-blue-subtle text-oe-blue-text'
+                  : 'text-content-secondary hover:bg-surface-secondary'
+              }`}
+              aria-label={t('photos.topics_view', { defaultValue: 'Group by topic' })}
+              title={t('photos.topics_view', { defaultValue: 'Group by topic' })}
+            >
+              <Tag size={14} />
+              {t('photos.topics', { defaultValue: 'Topics' })}
+            </button>
           </div>
         </div>
       </Card>
@@ -1691,6 +1715,44 @@ export function PhotoGalleryPage() {
               onToggleSelect={() => toggleSelect(photo.id)}
               onAcceptSuggestion={handleAcceptSuggestion}
             />
+          ))}
+        </div>
+      ) : viewMode === 'topics' ? (
+        /* Topic view: one header per Mizito chat topic */
+        <div className="space-y-8">
+          {topicGroups.map((group) => (
+            <div key={group.key}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-secondary">
+                  {group.title ? (
+                    <Tag size={14} className="text-content-tertiary" />
+                  ) : (
+                    <Calendar size={14} className="text-content-tertiary" />
+                  )}
+                </div>
+                <h3 className="min-w-0 text-sm font-semibold text-content-primary line-clamp-2 break-words" dir="auto">
+                  {group.title ?? t('photos.topic_none', { defaultValue: 'No topic' })}
+                </h3>
+                <span className="shrink-0 text-xs text-content-tertiary">{formatDate(group.date)}</span>
+                <Badge variant="neutral">{num(group.photos.length)}</Badge>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 ms-11">
+                {group.photos.map((photo) => {
+                  const globalIdx = timelinePhotos.findIndex((p) => p.id === photo.id);
+                  return (
+                    <PhotoCard
+                      key={photo.id}
+                      photo={photo}
+                      onClick={() => setLightboxIndex(globalIdx >= 0 ? globalIdx : 0)}
+                      selectMode={selectMode}
+                      selected={selectedIds.has(photo.id)}
+                      onToggleSelect={() => toggleSelect(photo.id)}
+                      onAcceptSuggestion={handleAcceptSuggestion}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           ))}
         </div>
       ) : (
@@ -1758,6 +1820,7 @@ export function PhotoGalleryPage() {
           onDelete={(photo) => { setLightboxIndex(null); setDeleteTarget(photo); }}
           onRaise={(photo, target) => { setLightboxIndex(null); handleRaiseFromPhoto(photo, target); }}
           onOpenDayDiary={(photo) => { setLightboxIndex(null); handleOpenDayDiary(photo); }}
+          onOpenDetails={(photo) => navigate(`/files/detail/${photo.project_id}/${photo.id}`)}
         />
       )}
 

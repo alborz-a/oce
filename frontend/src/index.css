@@ -1849,3 +1849,15 @@ html[data-ai-dock-resizing] * {
     transition: none;
   }
 }
+
+/* Phone: the install prompt is fixed to the bottom. It drops its body text
+   there (about 5rem tall), and the page is padded while it shows so it never
+   covers the end of a list. Hidden while a photo is open in the lightbox. */
+@media (max-width: 639px) {
+  html[data-install-prompt] #root {
+    padding-bottom: 7rem;
+  }
+}
+html[data-media-lightbox] .oe-install-prompt {
+  display: none;
+}

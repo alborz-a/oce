@@ -68,6 +68,57 @@ export function groupPhotosByDay(photos: PhotoItem[]): PhotoTimelineGroup[] {
     .map(([date, dayPhotos]) => ({ date, photos: dayPhotos }));
 }
 
+/** Topic a Mizito chat photo belongs to: the nearest text message of the
+ *  same chat, stamped into `metadata.topic` by the backfill / importer. */
+export interface PhotoTopic {
+  /** Stable batch id shared by every photo of one consecutive photo batch. */
+  id: string;
+  /** Text of the nearest text message (before the batch, else after). */
+  text: string;
+}
+
+/** Read `metadata.topic` of a photo; null when absent or malformed. */
+export function getPhotoTopic(photo: PhotoItem): PhotoTopic | null {
+  const raw = photo.metadata?.['topic'];
+  if (!raw || typeof raw !== 'object') return null;
+  const rec = raw as Record<string, unknown>;
+  const id = rec['id'];
+  const text = rec['text'];
+  if (typeof id !== 'string' || !id || typeof text !== 'string' || !text.trim()) return null;
+  return { id, text: text.trim() };
+}
+
+/** One header's worth of photos in the topic view. */
+export interface PhotoTopicGroup {
+  /** Topic batch id, or `day:YYYY-MM-DD` for photos without a topic. */
+  key: string;
+  /** Topic text; null for the per-day "no topic" groups. */
+  title: string | null;
+  /** `YYYY-MM-DD` of the first photo of the group (capture day). */
+  date: string;
+  photos: PhotoItem[];
+}
+
+/**
+ * Group a photo page by topic, in the order the groups first appear.
+ *
+ * Photos sharing `metadata.topic.id` land in one group. Photos with no topic
+ * fall into one untitled group per capture day, so manual uploads keep the
+ * day grouping of the timeline. Input order is kept inside every group.
+ */
+export function groupPhotosByTopic(photos: PhotoItem[]): PhotoTopicGroup[] {
+  const groups = new Map<string, PhotoTopicGroup>();
+  for (const photo of photos) {
+    const day = (photo.taken_at ?? photo.created_at ?? '').slice(0, 10);
+    const topic = getPhotoTopic(photo);
+    const key = topic ? `topic:${topic.id}` : `day:${day}`;
+    const hit = groups.get(key);
+    if (hit) hit.photos.push(photo);
+    else groups.set(key, { key, title: topic ? topic.text : null, date: day, photos: [photo] });
+  }
+  return [...groups.values()];
+}
+
 export type DefectSeverity = 'low' | 'medium' | 'high';
 
 /** AI / heuristic category suggestion stored in a photo's `metadata` on

@@ -761,6 +761,7 @@ async def list_project_files(
     kinds: Sequence[str] | None = None,
     extension: str | None = None,
     query: str | None = None,
+    file_id: str | None = None,
     limit: int = 100,
     offset: int = 0,
     sort: str = "modified",
@@ -820,6 +821,8 @@ async def list_project_files(
     rows = _link_takeoff_documents(rows)
 
     # Filters
+    if file_id:
+        rows = [r for r in rows if str(r.id) == file_id]
     if extension:
         ext = extension.lstrip(".").lower()
         rows = [r for r in rows if (r.extension or "").lower() == ext]

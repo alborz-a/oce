@@ -138,10 +138,14 @@ export function ProfilePage() {
     }
 
     try {
-      await apiPost('/v1/users/auth/change-password', {
-        current_password: currentPassword,
-        new_password: newPassword,
-      });
+      const tokens = await apiPost<{ access_token: string; refresh_token: string }>(
+        '/v1/users/me/change-password/',
+        { current_password: currentPassword, new_password: newPassword },
+      );
+      // Server rotates the token pair on password change; keep the session alive.
+      const remember = localStorage.getItem('oe_remember') === '1';
+      const email = useAuthStore.getState().userEmail ?? undefined;
+      useAuthStore.getState().setTokens(tokens.access_token, tokens.refresh_token, remember, email);
       setPasswordSuccess(true);
       setCurrentPassword('');
       setNewPassword('');

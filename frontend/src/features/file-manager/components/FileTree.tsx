@@ -70,7 +70,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
     : [];
 
   return (
-    <aside className="w-60 shrink-0 border-e border-border-light bg-surface-secondary/40 overflow-y-auto">
+    <aside className="hidden md:block w-60 shrink-0 border-e border-border-light bg-surface-secondary/40 overflow-y-auto">
       {totalBytes > 0 && (
         <div className="px-3 pt-3 pb-3 border-b border-border-light">
           <div className="flex items-center gap-1.5 mb-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary">

@@ -29,12 +29,16 @@ import {
 
 import { AuthImage } from '@/shared/ui';
 import { downloadProtectedFile, mintEmailLink } from '../api';
+import { MediaError, PhotoLoading } from './MediaLoadStates';
 import { isVideoRow, type MediaRowLike } from '../kindModule';
+import { fmtOf } from '../fmt';
 
 /** One viewable media file. A trimmed FileRow is assignable to this. */
 export interface MediaLightboxItem extends MediaRowLike {
   id: string;
   name: string;
+  /** Small preview, shown blurred while the full photo downloads. */
+  thumbnail_url?: string | null;
 }
 
 export interface MediaLightboxProps {
@@ -123,9 +127,12 @@ export function MediaLightbox({
     if (!open) return undefined;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    // Lets index.css hide the install prompt, which would cover the photo.
+    document.documentElement.setAttribute('data-media-lightbox', '');
     dialogRef.current?.focus();
     return () => {
       document.body.style.overflow = prevOverflow;
+      document.documentElement.removeAttribute('data-media-lightbox');
     };
   }, [open]);
 
@@ -211,7 +218,7 @@ export function MediaLightbox({
           {current.name}
           {canPage && (
             <span className="ms-2 text-xs font-normal text-white/70 tabular-nums">
-              {safeIndex + 1} / {items.length}
+              {fmtOf(safeIndex + 1, items.length)}
             </span>
           )}
         </span>
@@ -300,37 +307,15 @@ export function MediaLightbox({
             // re-fetches the new file's bytes instead of showing the prior one.
             key={current.id}
             src={downloadUrl}
+            fetchPriority="high"
             alt={current.name}
             data-testid="media-lightbox-image"
             className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-            placeholder={
-              <Loader2 size={32} className="animate-spin text-white/80" />
-            }
+            placeholder={<PhotoLoading thumbnailUrl={current.thumbnail_url ?? null} />}
             fallback={<MediaError onDownload={handleDownload} />}
           />
         )}
       </div>
-    </div>
-  );
-}
-
-function MediaError({ onDownload }: { onDownload: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 px-6 text-center">
-      <p className="text-sm text-white/80">
-        {t('files.preview.media_failed', {
-          defaultValue: 'This file could not be displayed here.',
-        })}
-      </p>
-      <button
-        type="button"
-        onClick={onDownload}
-        className="inline-flex items-center gap-1.5 rounded-md border border-white/30 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10"
-      >
-        <Download size={13} />
-        {t('files.actions.download', { defaultValue: 'Download' })}
-      </button>
     </div>
   );
 }

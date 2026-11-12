@@ -52,6 +52,10 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, r"^documents/?$"),
     _rule(_R, rf"^documents/{_ID}(/(download|references))?/?$"),
     _rule(_R, r"^documents/file-types-by-project/?$"),
+    # file side panel: activity timeline and tags of one file. Read only;
+    # the handlers check project membership via ``verify_project_access``.
+    _rule(_R, rf"^documents/{_ID}/activity/?$"),
+    _rule(_R, r"^file-tags/by-file/?$"),
     _rule(_R, r"^documents/photos(/.*)?$"),
     # document upload (needs documents.create; membership + folder grants checked in the handler). No delete.
     _rule(frozenset({"POST"}), r"^documents/upload/?$"),
@@ -62,6 +66,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # narrows collections with ``restrict_search_types``.
     _rule(_R, r"^search/?$"),
     _rule(_R, r"^search/(status|types)/?$"),
+    # semantic-search encoder state: the search modal reads it to show a hint. Read only.
+    _rule(_R, r"^ai-estimator/embedding-model/status/?$"),
     # own notifications (the shell polls unread-count)
     _rule(_ANY, r"^notifications(/.*)?$"),
     # shell: enabled-module list (read only)
@@ -87,7 +93,16 @@ def is_restricted_user(user: Any) -> bool:
     if os.environ.get("OCE_RESTRICTED_PROJECT_MODE_ALL", "").strip().lower() in ("1", "true", "yes"):
         return True
     meta = getattr(user, "metadata_", None) or {}
-    return meta.get("restricted_project_mode") is True
+    flag = meta.get("restricted_project_mode")
+    if flag is True:
+        return True
+    if flag is False:
+        # Explicit opt-out set by an admin for a power user.
+        return False
+    # Deny by default: an account nobody flagged (new staff, self-registered,
+    # imported) must not get the full platform menu and pages. Only managers
+    # (and admins, handled above) are unrestricted unless flagged otherwise.
+    return getattr(user, "role", "") != "manager"
 
 
 def is_path_allowed(method: str, path: str) -> bool:

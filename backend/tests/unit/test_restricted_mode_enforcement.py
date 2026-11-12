@@ -83,7 +83,8 @@ def test_admin_never_restricted(monkeypatch):
 
 def test_non_restricted_unchanged(monkeypatch):
     monkeypatch.delenv("OCE_RESTRICTED_PROJECT_MODE_ALL", raising=False)
-    assert not is_restricted_user(_u())
+    assert is_restricted_user(_u())  # deny by default
+    assert not is_restricted_user(_u(role="manager"))
     assert not is_restricted_user(_u(meta={"restricted_project_mode": False}))
     assert is_restricted_user(_u(meta={"restricted_project_mode": True}))
 

@@ -12,13 +12,40 @@ const FA_UNITS: Record<string, string> = {
 
 /** Persian digits for a count when the Iran region lock is on. */
 export function fmtCount(n: number): string {
-  return REGION_LOCK ? toPersianDigits(n) : String(n);
+  if (!REGION_LOCK) return String(n);
+  // Group thousands on the ASCII digits first, then swap to Persian digits.
+  return toPersianDigits(String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '٬'));
 }
 
-/** Localize an English size string such as "1.5 GB" (digits and unit). */
+/**
+ * Number text for Persian readers: Persian digits, "." as the decimal
+ * separator and no trailing ".0" (2.0 reads "۲", 2.5 reads "۲.۵").
+ */
+export function faDecimal(text: string): string {
+  // Normalize Persian digits to ASCII first so the trailing-zero strip also sees "۲٫۰".
+  const ascii = text.replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+  const norm = ascii.replace(/[٫,/]/g, '.').replace(/\.0+(?!\d)/g, '');
+  return toPersianDigits(norm);
+}
+
+/** Localize an English or Persian-digit size string such as "1.5 GB". */
 export function localizeSize(text: string): string {
   if (!REGION_LOCK) return text;
   const m = text.match(/^(.*?)\s*(TB|GB|MB|KB|B)$/);
-  const out = m ? `${m[1]} ${FA_UNITS[m[2] ?? ''] ?? m[2]}` : text;
-  return toPersianDigits(out.replace('.', '٫'));
+  if (!m) return faDecimal(text);
+  return `\u2068${faDecimal(m[1] ?? '')} ${FA_UNITS[m[2] ?? ''] ?? m[2]}\u2069`;
+}
+
+/** "۲ از ۸" counter, bidi-isolated so the digits never swap sides. */
+export function fmtOf(part: number, total: number): string {
+  if (!REGION_LOCK) return `${part} / ${total}`;
+  return `\u2068${fmtCount(part)} از ${fmtCount(total)}\u2069`;
+}
+
+/** Percent text ("۵۰٪" under the Iran region lock) with Persian digits. */
+export function fmtPct(value: number, decimals = 0): string {
+  const n = Number.isFinite(value) ? value : 0;
+  const fixed = n.toFixed(decimals);
+  if (!REGION_LOCK) return `${fixed}%`;
+  return `${toPersianDigits(fixed.replace('.', '٫'))}٪`;
 }

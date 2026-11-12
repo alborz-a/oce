@@ -115,7 +115,7 @@ export function InsightsPanel({
             <h2 className="flex items-center gap-2 text-sm font-semibold text-content-primary">
               {title ?? t('insights.toggle', { defaultValue: 'Insights' })}
             </h2>
-            <p className="truncate text-xs text-content-tertiary">
+            <p className="text-xs leading-relaxed text-content-tertiary">
               {subtitle ??
                 t('insights.subtitle', {
                   defaultValue: 'Live charts from this module. Build your own and hide the panel any time.',

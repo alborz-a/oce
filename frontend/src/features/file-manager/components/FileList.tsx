@@ -12,6 +12,7 @@ import { SnippetHighlight } from '@/features/file-search/SnippetHighlight';
 import { CDEBadge } from './CDEBadge';
 import { favoriteKey, type FileRow, type FileKind, type FileFilters } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
@@ -110,11 +111,6 @@ function FileListTagsCell({
 
 
 type SortKey = NonNullable<FileFilters['sort']>;
-
-const isCoarsePointer = (): boolean =>
-  typeof window !== 'undefined' &&
-  typeof window.matchMedia === 'function' &&
-  window.matchMedia('(pointer: coarse)').matches;
 
 export function FileList({
   items,
@@ -284,9 +280,10 @@ export function FileList({
                       ? 'bg-oe-blue/10'
                       : 'hover:bg-surface-secondary/60',
                   )}
+                  onPointerDown={notePointerType}
                   onClick={(e) => {
                     setFocusIndex(idx);
-                    if (isCoarsePointer()) {
+                    if (isTouchTap()) {
                       onOpen(row);
                       return;
                     }

@@ -13,9 +13,8 @@ import { useTranslation } from 'react-i18next';
 import { Database, FileText, HardDrive, Layers } from 'lucide-react';
 import type { FileKind, FileTreeNode, StorageLocations } from '../types';
 import { ALL_KINDS, KIND_COLORS } from '../kindModule';
-import { fmtPercent, fmtFixed } from '@/shared/lib/formatters';
-import { getNumberLocale } from '@/stores/usePreferencesStore';
-import { localizeSize, fmtCount } from '../fmt'; // [RSC-IRAN]
+import { fmtFixed } from '@/shared/lib/formatters';
+import { localizeSize, fmtCount, fmtPct, fmtOf } from '../fmt'; // [RSC-IRAN]
 
 function fmtBytesRaw(bytes: number): string {
   if (bytes === 0 || !Number.isFinite(bytes)) return '0 B';
@@ -24,6 +23,7 @@ function fmtBytesRaw(bytes: number): string {
   const v = bytes / Math.pow(1024, i);
   return `${fmtFixed(v, v >= 100 || i === 0 ? 0 : 1)} ${units[i] ?? 'TB'}`;
 }
+const localizeCount = (n: number): string => fmtCount(Math.round(n)); // [RSC-IRAN]
 const fmtBytes = (bytes: number): string => localizeSize(fmtBytesRaw(bytes)); // [RSC-IRAN]
 
 interface FilesStatsStripProps {
@@ -43,13 +43,13 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
       .filter((n) => n.total_bytes > 0)
       .map((n) => ({
         kind: n.id as FileKind,
-        label: n.label,
+        label: t(`files.category.${n.id}`, { defaultValue: n.label }),
         bytes: n.total_bytes,
         pct: totalBytes > 0 ? (n.total_bytes / totalBytes) * 100 : 0,
       }))
       .sort((a, b) => b.bytes - a.bytes);
     return { totalFiles, totalBytes, populated, segments };
-  }, [tree]);
+  }, [tree, t]);
 
   if (!stats || stats.totalFiles === 0) return null;
 
@@ -67,7 +67,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
         <Metric
           icon={<FileText size={14} />}
           label={t('files.stats_total', { defaultValue: 'Total files' })}
-          value={stats.totalFiles.toLocaleString(getNumberLocale())}
+          value={localizeCount(stats.totalFiles)}
         />
         <Metric
           icon={<HardDrive size={14} />}
@@ -77,7 +77,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
         <Metric
           icon={<Layers size={14} />}
           label={t('files.stats_categories', { defaultValue: 'Categories' })}
-          value={`${fmtCount(stats.populated)} / ${fmtCount(ALL_KINDS.length)}`}
+          value={<bdi>{fmtOf(stats.populated, ALL_KINDS.length)}</bdi>}
         />
         <Metric
           icon={<Database size={14} />}
@@ -90,7 +90,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
       {stats.segments.length > 0 && (
         <div className="px-4 pb-3">
           <div className="flex items-center justify-between gap-2 mb-1.5">
-            <div className="text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+            <div className="text-2xs font-medium text-content-tertiary tracking-wider">
               {t('files.stats_breakdown', { defaultValue: 'Storage by category' })}
             </div>
             <div className="text-2xs text-content-quaternary tabular-nums">
@@ -107,7 +107,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
                 key={seg.kind}
                 className={`${KIND_COLORS[seg.kind] ?? 'bg-content-tertiary'} transition-[width] duration-500`}
                 style={{ width: `${seg.pct}%` }}
-                title={`${seg.label}: ${fmtBytes(seg.bytes)} (${fmtPercent(seg.pct)})`}
+                title={`${seg.label}: ${fmtBytes(seg.bytes)} (${fmtPct(seg.pct, 1)})`}
               />
             ))}
           </div>
@@ -121,7 +121,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
                   className={`h-2 w-2 rounded-full ${KIND_COLORS[seg.kind] ?? 'bg-content-tertiary'}`}
                 />
                 <span>{seg.label}</span>
-                <span className="text-content-quaternary tabular-nums">{fmtPercent(seg.pct, 0)}</span>
+                <span className="text-content-quaternary tabular-nums">{fmtPct(seg.pct, 0)}</span>
               </span>
             ))}
           </div>
@@ -142,11 +142,11 @@ function Metric({
 }) {
   return (
     <div className="rounded-xl border border-border-light bg-surface-elevated/90 p-3 shadow-xs transition-shadow duration-normal ease-oe hover:shadow-sm">
-      <div className="flex items-center gap-1.5 text-2xs font-medium text-content-tertiary uppercase tracking-wider">
+      <div className="flex items-start gap-1.5 text-2xs font-medium text-content-tertiary tracking-wider">
         {icon}
-        <span className="truncate">{label}</span>
+        <span className="min-w-0 break-words">{label}</span>
       </div>
-      <div className="mt-1 text-sm font-semibold text-content-primary tabular-nums truncate">
+      <div className="mt-1 text-sm font-semibold text-content-primary tabular-nums break-words">
         {value}
       </div>
     </div>

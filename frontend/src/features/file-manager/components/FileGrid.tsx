@@ -13,6 +13,7 @@ import { SnippetHighlight } from '@/features/file-search/SnippetHighlight';
 import { CDEBadge } from './CDEBadge';
 import { favoriteKey, type FileRow, type FileKind } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
@@ -103,11 +104,6 @@ function FileGridTagsRow({
     </div>
   );
 }
-
-const isCoarsePointer = (): boolean =>
-  typeof window !== 'undefined' &&
-  typeof window.matchMedia === 'function' &&
-  window.matchMedia('(pointer: coarse)').matches;
 
 export function FileGrid({
   items,
@@ -288,9 +284,10 @@ export function FileGrid({
                 tileRefs.current[idx] = el;
               }}
               tabIndex={idx === focusIndex ? 0 : -1}
+              onPointerDown={notePointerType}
               onClick={(e) => {
                 setFocusIndex(idx);
-                if (isCoarsePointer()) {
+                if (isTouchTap()) {
                   onOpen(row);
                   return;
                 }
@@ -300,13 +297,13 @@ export function FileGrid({
               onKeyDown={(e) => handleTileKeyDown(e, idx, row)}
               className="flex flex-col text-start w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
             >
-              <div className={clsx('relative aspect-[4/3] flex items-center justify-center', tint)}>
+              <div className={clsx('relative aspect-square w-full shrink-0 overflow-hidden flex items-center justify-center', tint)}>
                 {row.thumbnail_url ? (
                   <AuthImage
                     src={row.thumbnail_url}
                     alt=""
                     loading="lazy"
-                    className="w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                     placeholder={<Icon size={32} strokeWidth={1.5} />}
                     fallback={<Icon size={32} strokeWidth={1.5} />}
                   />

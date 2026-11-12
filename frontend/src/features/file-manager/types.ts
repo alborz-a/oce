@@ -214,6 +214,8 @@ export interface FileFilters {
   kinds?: readonly FileKind[];
   extension?: string;
   q?: string;
+  /** Only the row with this id; the detail page uses it to load one file. */
+  fileId?: string;
   sort?: 'modified' | 'name' | 'size' | 'kind';
   limit?: number;
   offset?: number;

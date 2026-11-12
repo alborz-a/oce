@@ -78,6 +78,7 @@ import {
 import { useDashboardRollup } from './hooks/useDashboardRollup';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
+import { fmtPct } from '@/features/file-manager/fmt';
 
 // Static Tailwind class strings (dynamic `lg:col-span-${n}` would be purged).
 const DASH_SPAN_CLASS: Record<number, string> = {
@@ -3353,7 +3354,7 @@ function AnalyticsSection({ projects }: { projects: ProjectSummary[] }) {
           {stats.projectValues.filter((pv) => pv.value > 0).slice(0, 10).map((pv, i) => {
             const barWidth = maxValue > 0 ? (pv.value / maxValue) * 100 : 0;
             const formattedValue = fmtCompact(pv.value, pv.currency);
-            const shareLabel = `${Math.round(barWidth)}%`;
+            const shareLabel = fmtPct(Math.round(barWidth));
             return (
               <div key={`${pv.name}-${i}`}>
                 <div className="flex items-baseline justify-between gap-3 mb-1">
