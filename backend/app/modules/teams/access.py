@@ -87,6 +87,36 @@ async def is_project_member(
         return False
 
 
+async def is_project_manager(
+    session: AsyncSession,
+    project_id: uuid.UUID,
+    user_id: uuid.UUID,
+) -> bool:
+    """Return ``True`` if *user_id* holds team role ``project_manager`` on *project_id*.
+
+    Fails CLOSED: any exception is logged and reported as *not a project manager*.
+    """
+    from app.modules.teams.models import Team, TeamMembership
+
+    try:
+        row = (
+            await session.execute(
+                select(TeamMembership.id)
+                .join(Team, Team.id == TeamMembership.team_id)
+                .where(
+                    Team.project_id == project_id,
+                    TeamMembership.user_id == user_id,
+                    TeamMembership.role == "project_manager",
+                )
+                .limit(1)
+            )
+        ).scalar_one_or_none()
+        return row is not None
+    except Exception:  # noqa: BLE001
+        logger.exception("is_project_manager check failed; failing closed")
+        return False
+
+
 def member_project_ids_subquery(user_id: uuid.UUID, *, live_only: bool = False):
     """Return a SQLAlchemy scalar subquery of project_ids where *user_id* is a member.
 

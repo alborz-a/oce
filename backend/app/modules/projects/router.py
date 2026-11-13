@@ -140,6 +140,56 @@ async def _verify_project_owner(
     return project
 
 
+async def _verify_project_member_manager(
+    service: ProjectService,
+    project_id: uuid.UUID,
+    user_id: str,
+    session: AsyncSession,
+    payload: dict | None = None,
+) -> object:
+    """Owner/admin, or a team ``project_manager`` of this project, may manage members.
+
+    Used ONLY by the add / bulk-add / remove member endpoints. Owner and admin
+    pass through ``_verify_project_owner`` unchanged. Otherwise the caller is
+    allowed when they hold the ``project_manager`` team role on this project.
+    Any other caller gets the original 403.
+    """
+    from app.modules.teams.access import is_project_manager
+
+    try:
+        return await _verify_project_owner(service, project_id, user_id, payload)
+    except HTTPException as exc:
+        if exc.status_code != status.HTTP_403_FORBIDDEN:
+            raise
+        denied = exc
+
+    try:
+        uid = uuid.UUID(str(user_id))
+    except (ValueError, TypeError):
+        raise denied
+
+    if await is_project_manager(session, project_id, uid):
+        return await service.get_project(project_id)
+    raise denied
+
+
+def _is_project_owner_or_admin(project: object, user_id: str, payload: dict | None) -> bool:
+    if payload and payload.get("role") == "admin":
+        return True
+    return str(project.owner_id) == user_id  # type: ignore[attr-defined]
+
+
+def _assert_member_role_grantable(project: object, user_id: str, payload: dict | None, role: str) -> None:
+    """Only the project owner or a system admin may hand out an ELEVATED team role."""
+    from app.modules.teams.schemas import ELEVATED_TEAM_ROLES
+
+    if role in ELEVATED_TEAM_ROLES and not _is_project_owner_or_admin(project, user_id, payload):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the project owner can assign this role",
+        )
+
+
 async def _verify_project_access(
     service: ProjectService,
     project_id: uuid.UUID,
@@ -607,7 +657,8 @@ async def add_project_member_endpoint(
     service: ProjectService = Depends(_get_service),
 ) -> ProjectMemberResponse:
     """Add a member to the project."""
-    await _verify_project_owner(service, project_id, user_id, payload)
+    project = await _verify_project_member_manager(service, project_id, user_id, session, payload)
+    _assert_member_role_grantable(project, user_id, payload, data.role)
     from app.modules.projects.member_service import add_project_member
 
     return await add_project_member(session, project_id, data)
@@ -644,7 +695,9 @@ async def bulk_add_project_members_endpoint(
     When the gate blocks, the whole batch is rejected (409) so the invite is all
     or nothing - no half-open CDE.
     """
-    await _verify_project_owner(service, project_id, user_id, payload)
+    project = await _verify_project_member_manager(service, project_id, user_id, session, payload)
+    for member in data.members:
+        _assert_member_role_grantable(project, user_id, payload, member.role)
 
     # Gate the mass invite on CDE readiness (lazy import to avoid a load-time
     # cycle between the projects and cde modules).
@@ -688,7 +741,12 @@ async def remove_project_member_endpoint(
     service: ProjectService = Depends(_get_service),
 ) -> None:
     """Remove a member from the project."""
-    await _verify_project_owner(service, project_id, user_id, payload)
+    project = await _verify_project_member_manager(service, project_id, user_id, session, payload)
+    if str(project.owner_id) == str(member_user_id) and not _is_project_owner_or_admin(project, user_id, payload):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the project owner can remove the project owner",
+        )
     from app.modules.projects.member_service import remove_project_member
 
     await remove_project_member(session, project_id, member_user_id)
