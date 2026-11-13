@@ -196,12 +196,16 @@ async def _verify_project_access(
     user_id: str,
     session: AsyncSession,
     payload: dict | None = None,
+    *,
+    manager_read: bool = False,
 ) -> object:
     """Load a project and verify the current user has read access.
 
     Grants access to: admins, the project owner, and any team member
     added via add_project_member (i.e. a TeamMembership row exists).
     Used for read operations (get, dashboard, list members, etc.).
+    With ``manager_read=True`` a global manager also passes; pass it ONLY
+    from GET handlers.
 
     Raises 404 (not 403) on denial to keep "missing" and "denied"
     indistinguishable - same IDOR policy as verify_project_access.
@@ -214,8 +218,8 @@ async def _verify_project_access(
     if payload and payload.get("role") == "admin":
         return project
 
-    # Global manager read bypass - read-only guard, so managers see every project.
-    if payload and payload.get("role") == "manager":
+    # Global manager read bypass - opt-in per read-only (GET) endpoint.
+    if manager_read and payload and payload.get("role") == "manager":
         return project
 
     # Owner has full access
@@ -339,7 +343,7 @@ async def get_project(
     service: ProjectService = Depends(_get_service),
 ) -> ProjectResponse:
     """Get project by ID. Accessible by owner, admin, or project team member."""
-    project = await _verify_project_access(service, project_id, user_id, session, payload)
+    project = await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     return ProjectResponse.model_validate(project)
 
 
@@ -469,7 +473,7 @@ async def project_status_history(
     timeline follows the same IDOR policy as the other project GET
     sub-resources.
     """
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     rows = await service.list_status_history(project_id)
     return [ProjectStatusHistoryResponse.model_validate(r) for r in rows]
 
@@ -631,7 +635,7 @@ async def list_project_members_endpoint(
     service: ProjectService = Depends(_get_service),
 ) -> list[ProjectMemberResponse]:
     """List members of a project. Accessible by owner, admin, or any team member."""
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     from app.modules.projects.member_service import list_project_members
 
     from app.core.hidden_users import viewer_is_admin
@@ -1214,7 +1218,7 @@ async def project_dashboard(
     from app.core.sql_numeric import numeric_value
 
     # Verify read access - owner, admin, or team member
-    project = await _verify_project_access(service, project_id, user_id, session, payload)
+    project = await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
 
     # ── Helper: safe query wrapper ──────────────────────────────
     async def _safe(coro, default=None):  # noqa: ANN001, ANN202
@@ -2040,7 +2044,7 @@ async def project_activity(
     from sqlalchemy import func, literal_column, union_all
 
     # Verify read access - owner, admin, or team member
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
 
     activity_queries = []
     try:
@@ -2853,7 +2857,7 @@ async def file_manager_tree(
     in the right pane after a search.
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     return await fm_file_tree(
         session,
         str(project_id),
@@ -2903,7 +2907,7 @@ async def file_manager_list(
     ask for and nothing on screen would say so.
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     wanted: list[str] | None = None
     if kinds:
         wanted = [k.strip() for k in kinds.split(",") if k.strip()]
@@ -2948,7 +2952,7 @@ async def file_manager_locations(
     their attachments live.
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
-    project = await _verify_project_access(service, project_id, user_id, session, payload)
+    project = await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     return fm_resolve_locations(
         str(project_id),
         getattr(project, "name", ""),
@@ -3487,7 +3491,7 @@ async def get_project_profile(
     # A read: any project member may see the profile, not only the owner.
     # The owner check here answered a member with 403 while the project
     # itself opened for them, and the writes below keep the owner check.
-    await _verify_project_access(service, project_id, user_id, service.session, payload)
+    await _verify_project_access(service, project_id, user_id, service.session, payload, manager_read=True)
     result = await profile_service.get_profile(service.session, project_id)
     if result is None:
         # Auto-retrofit a default profile (same as /profile/focus-mode and
@@ -3585,7 +3589,7 @@ async def list_project_modules(
     service: ProjectService = Depends(_get_service),
 ) -> list[ProjectModuleRead]:
     # Read access, same as the profile it is derived from.
-    await _verify_project_access(service, project_id, user_id, service.session, payload)
+    await _verify_project_access(service, project_id, user_id, service.session, payload, manager_read=True)
     result = await profile_service.get_profile(service.session, project_id)
     if result is None:
         result = await profile_service.ensure_default_profile(
@@ -3625,7 +3629,7 @@ async def get_module_presence(
     project - owner, member or admin (via :func:`_verify_project_access`).
     The probe itself runs against the request session - no extra connection.
     """
-    await _verify_project_access(service, project_id, user_id, session, payload)
+    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
     presence = await probe_project_modules(session, project_id)
     # ``probe_project_modules`` returns sidebar slugs (incl. "5d");
     # ``model_validate`` resolves the ``5d`` → ``five_d`` alias.

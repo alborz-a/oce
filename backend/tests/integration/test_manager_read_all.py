@@ -198,3 +198,30 @@ async def test_viewer_non_member_still_404_on_project(http_client, scenario):
     pid = scenario["project_id"]
     resp = await http_client.get(f"/api/v1/projects/{pid}", headers=scenario["v_headers"])
     assert resp.status_code == 404, f"viewer must get 404 (IDOR defence), got {resp.status_code}"
+
+
+@pytest.mark.asyncio
+async def test_manager_cannot_backup_or_restore_non_member_project(http_client, scenario):
+    """Writes stay denied on the two POST handlers that call the guard.
+
+    ``POST /projects/{id}/backup/`` and ``POST /projects/{id}/backup/restore/``
+    use ``_verify_project_access`` WITHOUT ``manager_read``, so a global
+    manager who is not a member must get 404 or 403, never 2xx.
+    """
+    pid = scenario["project_id"]
+
+    # A (owner/admin) produces a real backup body, so the restore request
+    # reaches the access check instead of failing body validation.
+    backup_resp = await http_client.post(f"/api/v1/projects/{pid}/backup/", headers=scenario["a_headers"])
+    assert backup_resp.status_code == 200, f"owner backup failed: {backup_resp.text}"
+    backup_body = backup_resp.json()["backup"]
+
+    m_backup = await http_client.post(f"/api/v1/projects/{pid}/backup/", headers=scenario["m_headers"])
+    assert m_backup.status_code in (403, 404), f"manager backup must be denied, got {m_backup.status_code}: {m_backup.text}"
+
+    m_restore = await http_client.post(
+        f"/api/v1/projects/{pid}/backup/restore/",
+        json={"backup": backup_body},
+        headers=scenario["m_headers"],
+    )
+    assert m_restore.status_code in (403, 404), f"manager restore must be denied, got {m_restore.status_code}: {m_restore.text}"
