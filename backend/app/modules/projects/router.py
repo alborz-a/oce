@@ -214,6 +214,10 @@ async def _verify_project_access(
     if payload and payload.get("role") == "admin":
         return project
 
+    # Global manager read bypass - read-only guard, so managers see every project.
+    if payload and payload.get("role") == "manager":
+        return project
+
     # Owner has full access
     if str(project.owner_id) == user_id:
         return project
@@ -296,7 +300,9 @@ async def list_projects(
     filters to that exact status. Omitting ``status`` keeps the default
     behaviour: archived projects are excluded.
     """
-    is_admin = payload.get("role") == "admin"
+    # Global managers list every project too (read-only); owners and members
+    # are still the only filter for everyone else.
+    is_admin = payload.get("role") in ("admin", "manager")
     # ``all`` is a view sentinel, not a real status value - translate it into
     # "no status filter + include archived" so the listing spans every state.
     if status == "all":

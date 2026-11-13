@@ -276,8 +276,12 @@ async def folder_access_for(
     user_id: uuid.UUID,
     scope_kind: str,
     scope_path: str | None,
+    manager_read: bool = False,
 ) -> str | None:
     """High-level "what role does this user effectively have here?"
+
+    With ``manager_read=True`` a global ``manager`` gets ``"viewer"`` on every
+    folder (read-only); pass it ONLY from read-only handlers.
 
     Returns:
         * ``"owner"`` when the user is the project owner (full bypass).
@@ -309,9 +313,10 @@ async def folder_access_for(
         admin_user = None
     if admin_user is not None and getattr(admin_user, "role", "") == "admin":
         return "owner"
-
     if await is_project_owner(session, project_id, user_id_norm):
         return "owner"
+    if manager_read and admin_user is not None and getattr(admin_user, "role", "") == "manager":
+        return "viewer"
 
     if not await is_project_member(session, project_id, user_id_norm):
         return None

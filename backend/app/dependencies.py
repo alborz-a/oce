@@ -866,6 +866,8 @@ async def verify_project_access(
     project_id: _uuid.UUID,
     user_id: str,
     session: AsyncSession,
+    *,
+    manager_read: bool = False,
 ) -> None:
     """Verify user owns or has admin / team-member access to the project.
 
@@ -873,7 +875,8 @@ async def verify_project_access(
     leaking the existence of UUIDs the caller is not allowed to see (IDOR
     defence - same policy as all downstream modules that call this helper).
     Team membership (added via add_project_member) grants the same read/write
-    access as ownership within the caller's RBAC role.
+    access as ownership within the caller's RBAC role. With ``manager_read=True``
+    a global ``manager`` also passes, so pass it ONLY in read-only handlers.
     """
     from app.modules.projects.repository import ProjectRepository
     from app.modules.teams.access import is_project_member
@@ -891,7 +894,8 @@ async def verify_project_access(
     try:
         user_repo = UserRepository(session)
         user = await user_repo.get_by_id(_uuid.UUID(str(user_id)))
-        if user is not None and getattr(user, "role", "") == "admin":
+        role = getattr(user, "role", "") if user is not None else ""
+        if role == "admin" or (manager_read and role == "manager"):
             return
     except Exception:
         logger.exception("Admin-role lookup failed during project access check")
@@ -922,12 +926,14 @@ async def accessible_project_ids(
     user_id: str | None,
     *,
     live_only: bool = False,
+    manager_read: bool = False,
 ) -> set[_uuid.UUID] | None:
     """Set of project IDs the caller may access, or ``None`` for admins.
 
     The set-level companion to :func:`verify_project_access`, using the exact
     same access rule: a non-admin may reach a project they OWN or are a
-    team-member of; an admin may reach all. ``None`` is a sentinel meaning "do
+    team-member of; an admin may reach all. With ``manager_read=True`` a global
+    ``manager`` is treated exactly like an admin (read-only callers only). ``None`` is a sentinel meaning "do
     not filter" (admin / unrestricted) so a caller can branch:
 
         ids = await accessible_project_ids(session, user_id)
@@ -964,7 +970,8 @@ async def accessible_project_ids(
     # Admin bypass - no filter, mirroring verify_project_access.
     try:
         user = await UserRepository(session).get_by_id(uid)
-        if user is not None and getattr(user, "role", "") == "admin":
+        role = getattr(user, "role", "") if user is not None else ""
+        if role == "admin" or (manager_read and role == "manager"):
             if not live_only:
                 return None
             live = (await session.execute(select(Project.id).where(Project.status != "archived"))).scalars().all()
