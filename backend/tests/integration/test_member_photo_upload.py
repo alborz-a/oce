@@ -224,3 +224,20 @@ async def test_viewer_member_cannot_upload_generic_document(http_client, scenari
         headers=scenario["b_headers"],
     )
     assert resp.status_code == 403, resp.text
+
+
+@pytest.mark.asyncio
+async def test_viewer_non_member_cannot_patch_caption(http_client, scenario):
+    """(f) C, a viewer with no membership, gets 404 when editing a photo caption (IDOR-safe)."""
+    up = await _upload_photo(
+        http_client, scenario["project_id"], scenario["a_headers"], "Owned by project"
+    )
+    assert up.status_code == 201, up.text
+    photo_id = up.json()["id"]
+
+    resp = await http_client.patch(
+        f"/api/v1/documents/photos/{photo_id}",
+        json={"caption": "Intruder edit"},
+        headers=scenario["c_headers"],
+    )
+    assert resp.status_code == 404, resp.text
