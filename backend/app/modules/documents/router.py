@@ -623,7 +623,7 @@ async def upload_photo(
     taken_at: str | None = Form(default=None),
     file: UploadFile = File(...),
     user_id: CurrentUserId = "",  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("documents.create")),
+    _perm: None = Depends(RequirePermission("documents.photo_create")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
     """Upload a photo with metadata to a project."""
@@ -1038,7 +1038,7 @@ async def update_photo(
     data: PhotoUpdate,
     session: SessionDep,
     user_id: CurrentUserId = None,  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("documents.update")),
+    _perm: None = Depends(RequirePermission("documents.photo_update")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
     """Update photo metadata (caption, tags, category).

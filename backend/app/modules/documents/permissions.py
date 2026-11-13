@@ -14,6 +14,9 @@ def register_document_permissions() -> None:
             "documents.read": Role.VIEWER,
             "documents.update": Role.EDITOR,
             "documents.delete": Role.MANAGER,
+            # Project members add photos and edit captions; project access is checked per project.
+            "documents.photo_create": Role.VIEWER,
+            "documents.photo_update": Role.VIEWER,
             # Register files that already sit in object storage (importers, migrations). Admin only.
             "documents.admin_import": Role.ADMIN,
         },
