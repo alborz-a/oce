@@ -24,7 +24,7 @@ def register_daily_diary_permissions() -> None:
             # (revision_history) so the broken signature stays traceable.
             "daily_diary.unlock": Role.MANAGER,
             "daily_diary.archive": Role.MANAGER,
-            "daily_diary.upload_photo": Role.EDITOR,
+            "daily_diary.upload_photo": Role.VIEWER,
             "daily_diary.attach_drone": Role.EDITOR,
             "daily_diary.attach_reality_capture": Role.EDITOR,
             "daily_diary.fetch_weather": Role.EDITOR,

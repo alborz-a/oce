@@ -115,11 +115,14 @@ async def _verify_project_membership_or_404(
     project_id: uuid.UUID,
     user_id: str,
     session,  # type: ignore[no-untyped-def]
+    *,
+    manager_read: bool = False,
 ) -> None:
     """Raise 404 unless the caller can see ``project_id`` at all.
 
     Allowed callers:
         * admins (matches ``verify_project_access`` admin bypass)
+        * global managers, only when ``manager_read=True`` (read-only callers)
         * project owner
         * any member of the project's default team
 
@@ -136,7 +139,8 @@ async def _verify_project_membership_or_404(
     except Exception:
         user = None
 
-    if user is not None and getattr(user, "role", "") == "admin":
+    role = getattr(user, "role", "") if user is not None else ""
+    if role == "admin" or (manager_read and role == "manager"):
         # Make sure the project actually exists for admins too - leaking
         # "yes this id exists" on a non-existent project is undesirable.
         from app.modules.projects.repository import ProjectRepository
@@ -449,7 +453,7 @@ async def list_documents(
     applied the limit. That is older than this envelope and is not fixed
     here; ``total`` at least makes it visible.
     """
-    await _verify_project_membership_or_404(project_id, user_id, session)
+    await _verify_project_membership_or_404(project_id, user_id, session, manager_read=True)
 
     # Owners and admins bypass folder filtering entirely.
     from app.modules.documents.folder_permissions_service import (
@@ -471,7 +475,7 @@ async def list_documents(
         from app.modules.users.repository import UserRepository
 
         user = await UserRepository(session).get_by_id(user_uuid)
-        if user is None or getattr(user, "role", "") != "admin":
+        if user is None or getattr(user, "role", "") not in ("admin", "manager"):
             filtered = True
             grants = await effective_permissions_for(
                 session,
@@ -623,7 +627,7 @@ async def upload_photo(
     taken_at: str | None = Form(default=None),
     file: UploadFile = File(...),
     user_id: CurrentUserId = "",  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("documents.create")),
+    _perm: None = Depends(RequirePermission("documents.photo_create")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
     """Upload a photo with metadata to a project."""
@@ -683,7 +687,7 @@ async def list_photos(
     filters by category and search only - so this is recorded rather than
     worked around; the fix is a tag filter the database can run.
     """
-    await verify_project_access(project_id, user_id, session)
+    await verify_project_access(project_id, user_id, session, manager_read=True)
     parsed_date_from: datetime | None = None
     parsed_date_to: datetime | None = None
     if date_from:
@@ -753,7 +757,7 @@ async def get_timeline(
     of ``taken_at`` falling back to ``created_at``, so it moves to the client
     without changing what any day contains.
     """
-    await verify_project_access(project_id, user_id, session)
+    await verify_project_access(project_id, user_id, session, manager_read=True)
     photos, total = await service.get_gallery(project_id, limit=GALLERY_LIMIT)
     return PhotoListResponse(
         items=[_photo_to_response(p) for p in photos],
@@ -832,7 +836,7 @@ async def get_photo(
     ``serve_photo_file`` / ``get_sheet``.
     """
     photo = await service.get_photo(photo_id)
-    await verify_project_access(photo.project_id, user_id, session)
+    await verify_project_access(photo.project_id, user_id, session, manager_read=True)
     return _photo_to_response(photo)
 
 
@@ -917,7 +921,7 @@ async def serve_photo_file(
 ) -> FileResponse:
     """Serve the actual photo file."""
     photo = await service.get_photo(photo_id)
-    await verify_project_access(photo.project_id, user_id, session)
+    await verify_project_access(photo.project_id, user_id, session, manager_read=True)
     if object_store.is_object_path(photo.file_path):
         return await object_store.stream_response(  # type: ignore[return-value]
             photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), None
@@ -980,7 +984,7 @@ async def serve_photo_thumbnail(
     grid functional rather than showing broken-image tiles.
     """
     photo = await service.get_photo(photo_id)
-    await verify_project_access(photo.project_id, user_id, session)
+    await verify_project_access(photo.project_id, user_id, session, manager_read=True)
 
     thumb_base = Path(PHOTO_THUMB_BASE).resolve()
     photo_base = Path(PHOTO_BASE).resolve()
@@ -1038,7 +1042,7 @@ async def update_photo(
     data: PhotoUpdate,
     session: SessionDep,
     user_id: CurrentUserId = None,  # type: ignore[assignment]
-    _perm: None = Depends(RequirePermission("documents.update")),
+    _perm: None = Depends(RequirePermission("documents.photo_update")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
     """Update photo metadata (caption, tags, category).
@@ -1890,7 +1894,7 @@ async def get_document(
     enumeration symmetric with ``verify_project_access``.
     """
     doc = await service.get_document(document_id)
-    await _verify_project_membership_or_404(doc.project_id, user_id, session)
+    await _verify_project_membership_or_404(doc.project_id, user_id, session, manager_read=True)
 
     from app.modules.documents.folder_permissions_service import (
         folder_access_for,
@@ -1905,6 +1909,7 @@ async def get_document(
         user_id=uuid.UUID(str(user_id)),
         scope_kind=kind,
         scope_path=path,
+        manager_read=True,
     )
     require_read(role)
     return _doc_to_response(doc)
