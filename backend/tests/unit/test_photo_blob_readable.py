@@ -75,3 +75,43 @@ async def test_blob_pool_sheds_load_when_full(monkeypatch):
     with pytest.raises(HTTPException) as exc:
         await r._blob_io(lambda: None)
     assert exc.value.status_code == 503
+
+
+async def test_blob_file_response_small_file_is_read_in_pool(tmp_path):
+    from app.modules.documents import router as r
+
+    f = tmp_path / "a.jpg"
+    f.write_bytes(b"jpegbytes")
+    resp = await r._blob_file_response(f, media_type="image/jpeg", filename="a.jpg", headers={"Cache-Control": "x"})
+    assert resp.body == b"jpegbytes"
+    assert resp.media_type == "image/jpeg"
+    assert resp.headers["content-disposition"].startswith("attachment")
+    assert resp.headers["cache-control"] == "x"
+
+
+async def test_blob_file_response_big_file_falls_back_to_file_response(tmp_path, monkeypatch):
+    from fastapi.responses import FileResponse
+
+    from app.modules.documents import router as r
+
+    f = tmp_path / "big.jpg"
+    f.write_bytes(b"x" * 10)
+    monkeypatch.setattr(r, "_BLOB_INLINE_MAX_BYTES", 5)
+    resp = await r._blob_file_response(f, media_type="image/jpeg", filename="big.jpg")
+    assert isinstance(resp, FileResponse)
+
+
+async def test_blob_file_response_stalled_stat_is_503(tmp_path, monkeypatch):
+    import threading
+
+    from app.modules.documents import router as r
+
+    gate = threading.Event()
+    monkeypatch.setattr(r, "_BLOB_IO_TIMEOUT_S", 0.2)
+    monkeypatch.setattr(r.os, "stat", lambda *_a, **_k: gate.wait(5))
+    try:
+        with pytest.raises(HTTPException) as exc:
+            await r._blob_file_response(tmp_path / "x.jpg", media_type="image/jpeg")
+        assert exc.value.status_code == 503
+    finally:
+        gate.set()

@@ -23,6 +23,7 @@ Endpoints:
 import asyncio
 import logging
 import mimetypes
+import os
 import uuid
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
@@ -903,6 +904,40 @@ def _photo_media_type(file_path: str | None) -> str:
     return _PHOTO_MEDIA_TYPES.get(Path(file_path or "").suffix.lower(), "image/jpeg")
 
 
+_BLOB_INLINE_MAX_BYTES = 32 * 1024 * 1024
+
+
+async def _blob_file_response(
+    path: Path,
+    *,
+    media_type: str,
+    filename: str | None = None,
+    headers: dict[str, str] | None = None,
+) -> Response:
+    """Photo bytes through the blob pool, so a stuck mount never parks a request thread forever.
+
+    ``FileResponse`` stats and reads in the shared request threadpool with no bound. The stat and,
+    for files up to 32 MB (every photo and thumbnail), the whole read run here instead, with the
+    same timeout and load shedding as the probe. Anything bigger falls back to ``FileResponse``
+    with the stat already taken.
+    """
+    st = await _blob_io(os.stat, str(path))
+    if st.st_size > _BLOB_INLINE_MAX_BYTES:
+        return FileResponse(
+            path=str(path),
+            stat_result=st,
+            filename=filename,
+            media_type=media_type,
+            headers=headers,
+            content_disposition_type="attachment",
+        )
+    data = await _blob_io(path.read_bytes)
+    out = dict(headers or {})
+    if filename:
+        out["Content-Disposition"] = object_store._content_disposition(filename, True)
+    return Response(content=data, media_type=media_type, headers=out)
+
+
 def _ensure_blob_readable(path: Path) -> None:
     """503 when the blob exists but cannot be read (read-only bucket mount: Errno 5).
 
@@ -1052,12 +1087,7 @@ async def serve_photo_file(
     media_type = media_types.get(ext, "image/jpeg")
 
     safe_dl_name = _sanitize_filename(photo.filename or f"photo{ext}")
-    return FileResponse(
-        path=str(file_path),
-        filename=safe_dl_name,
-        media_type=media_type,
-        content_disposition_type="attachment",
-    )
+    return await _blob_file_response(file_path, media_type=media_type, filename=safe_dl_name)
 
 
 # ── Serve photo thumbnail ──────────────────────────────────────────────
@@ -1090,10 +1120,8 @@ async def serve_photo_thumbnail(
     # path problem as the full-file route). Thumbs live under photos/thumbs.
     thumb_path = await _blob_io(_resolve_photo_blob, getattr(photo, "thumbnail_path", None), thumb_base, ("photos", "thumbs"))
     if thumb_path is not None:
-        return FileResponse(
-            path=str(thumb_path),
-            media_type="image/jpeg",
-            headers={"Cache-Control": "public, max-age=86400"},
+        return await _blob_file_response(
+            thumb_path, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=86400"}
         )
 
     # Fallback: serve the full file so the gallery never breaks, re-homed too.
@@ -1133,10 +1161,8 @@ async def serve_photo_thumbnail(
         ".tif": "image/tiff",
     }
     media_type = media_types.get(ext, "image/jpeg")
-    return FileResponse(
-        path=str(file_path),
-        media_type=media_type,
-        headers={"Cache-Control": "public, max-age=3600"},
+    return await _blob_file_response(
+        file_path, media_type=media_type, headers={"Cache-Control": "public, max-age=3600"}
     )
 
 
