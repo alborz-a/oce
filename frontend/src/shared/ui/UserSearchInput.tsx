@@ -28,6 +28,8 @@ export interface UserSearchInputProps {
   onChange: (userId: string, displayName: string) => void;
   placeholder?: string;
   className?: string;
+  /** Use the project's member-candidates list (works for project managers without users.list). */
+  projectId?: string;
 }
 
 export function UserSearchInput({
@@ -36,6 +38,7 @@ export function UserSearchInput({
   onChange,
   placeholder,
   className,
+  projectId,
 }: UserSearchInputProps) {
   const { t } = useTranslation();
   const [query, setQuery] = useState(displayValue || '');
@@ -44,10 +47,13 @@ export function UserSearchInput({
 
   const canListUsers = useHasPermission('users.list');
   const { data: users = [] } = useQuery({
-    queryKey: ['users-search'],
-    queryFn: () => apiGet<UserResult[]>('/v1/users/?limit=100&is_active=true'),
+    queryKey: projectId ? ['users-search', 'project', projectId] : ['users-search'],
+    queryFn: () =>
+      projectId
+        ? apiGet<UserResult[]>(`/v1/projects/${projectId}/member-candidates/`)
+        : apiGet<UserResult[]>('/v1/users/?limit=100&is_active=true'),
     staleTime: 60_000,
-    enabled: canListUsers,
+    enabled: canListUsers || !!projectId,
   });
 
   // Close dropdown on outside click

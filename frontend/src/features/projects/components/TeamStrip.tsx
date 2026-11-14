@@ -203,6 +203,8 @@ interface AddMemberModalProps {
   onSubmit: (userId: string, role: string) => void;
   isSubmitting: boolean;
   errorMessage?: string;
+  projectId: string;
+  canGrantElevated: boolean;
 }
 
 function AddMemberModal({
@@ -210,6 +212,8 @@ function AddMemberModal({
   onSubmit,
   isSubmitting,
   errorMessage,
+  projectId,
+  canGrantElevated,
 }: AddMemberModalProps) {
   const { t } = useTranslation();
   const [userId, setUserId] = useState<string>('');
@@ -262,6 +266,7 @@ function AddMemberModal({
               {t('projects.team.user_label', { defaultValue: 'User' })}
             </label>
             <UserSearchInput
+              projectId={projectId}
               value={userId}
               displayValue={displayName}
               onChange={(id, name) => {
@@ -283,7 +288,7 @@ function AddMemberModal({
               onChange={(e) => setRole(e.target.value)}
               className="h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
             >
-              {ROLE_CHOICES.map((r) => (
+              {ROLE_CHOICES.filter((r) => canGrantElevated || r !== 'project_manager').map((r) => (
                 <option key={r} value={r}>
                   {t(`projects.team.role.${r}`, {
                     defaultValue:
@@ -335,13 +340,16 @@ export interface TeamStripProps {
   projectId: string;
   /** When false, hide the add / remove controls (read-only mode for viewers). */
   canManage?: boolean;
+  /** Signed-in user id. A team project_manager of this project also gets the manage controls. */
+  currentUserId?: string;
   /** Optional pre-fetched members — bypasses the network query in tests. */
   initialMembers?: ProjectMember[];
 }
 
 export function TeamStrip({
   projectId,
-  canManage = true,
+  canManage: canManageProp = true,
+  currentUserId,
   initialMembers,
 }: TeamStripProps) {
   const { t } = useTranslation();
@@ -392,6 +400,11 @@ export function TeamStrip({
   });
 
   const members = useVisibleMembers(allMembers);
+  const isProjectManager =
+    !!currentUserId && allMembers.some((m) => m.user_id === currentUserId && m.role === 'project_manager');
+  const canManage = canManageProp || isProjectManager;
+  // Only the owner or an admin may hand out the project_manager role (the backend enforces it too).
+  const canGrantElevated = canManageProp;
 
   const visible = useMemo(
     () => members.slice(0, MAX_VISIBLE_AVATARS),
@@ -500,6 +513,8 @@ export function TeamStrip({
           }}
           isSubmitting={addMutation.isPending}
           errorMessage={addError}
+          projectId={projectId}
+          canGrantElevated={canGrantElevated}
           onSubmit={(userId, role) => addMutation.mutate({ userId, role })}
         />
       )}

@@ -39,6 +39,7 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, rf"^projects/{_ID}/members/?$"),
     # project managers add / bulk-add / remove members. The handler allows only the owner, admin
     # or a team ``project_manager`` of this project and blocks granting owner / project_manager.
+    _rule(_R, rf"^projects/{_ID}/member-candidates/?$"),
     _rule(frozenset({"POST"}), rf"^projects/{_ID}/members(/bulk)?/?$"),
     _rule(frozenset({"DELETE"}), rf"^projects/{_ID}/members/{_ID}/?$"),
     # project file manager (documents + photos list, tree, storage locations). Read only;
