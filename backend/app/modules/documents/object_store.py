@@ -92,3 +92,85 @@ async def stream_response(
     out.update(headers or {})
     mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
     return StreamingResponse(backend.open_stream(key), media_type=mt, headers=out)
+
+
+# ── Mizito chat photos: read straight from the bucket ──────────────────────
+#
+# Imported Mizito photos keep ``file_path = /data/photos/mizito/<bucket key under mizito/>``. That
+# folder is an rclone FUSE mount of the same bucket, and a lookup in a cold chat folder waits for the
+# bucket's LIST (~100 s). GetObject/HeadObject by key needs no listing, so serve through S3 first
+# and leave the mount as the fallback.
+
+MIZITO_LOCAL_PREFIX = "/data/photos/mizito/"
+MIZITO_KEY_PREFIX = "mizito"
+_MIZITO_S3_TIMEOUT_S = 20.0
+_mizito_backend: object | None = None
+
+
+def mizito_logical_key(file_path: str | None) -> str | None:
+    """Key under ``mizito/`` for a Mizito photo path, or None for any other path or an unsafe one."""
+    if not file_path or not str(file_path).startswith(MIZITO_LOCAL_PREFIX):
+        return None
+    rest = str(file_path)[len(MIZITO_LOCAL_PREFIX) :]
+    if not rest or rest.startswith("/") or "\\" in rest or ".." in rest.split("/"):
+        return None
+    return rest
+
+
+def _mizito_s3():
+    """Lazy S3 backend rooted at ``mizito/``; None when the S3 credentials are not configured."""
+    global _mizito_backend
+    if _mizito_backend is None:
+        from app.config import get_settings
+        from app.core.storage import S3StorageBackend
+
+        cfg = get_settings()
+        if not (cfg.s3_access_key and cfg.s3_secret_key and cfg.s3_bucket):
+            return None
+        _mizito_backend = S3StorageBackend(
+            endpoint=cfg.s3_endpoint,
+            access_key=cfg.s3_access_key,
+            secret_key=cfg.s3_secret_key,
+            bucket=cfg.s3_bucket,
+            region=cfg.s3_region,
+            key_prefix=MIZITO_KEY_PREFIX,
+        )
+    return _mizito_backend
+
+
+async def mizito_stream_response(
+    file_path: str | None,
+    filename: str,
+    media_type: str | None,
+    *,
+    attachment: bool = True,
+    headers: dict[str, str] | None = None,
+) -> StreamingResponse | None:
+    """Stream a Mizito photo from the bucket, or None to fall back to the mount.
+
+    A missing object answers 404 (the bucket is the source of truth). Any other failure (credentials,
+    network, timeout) returns None so the FUSE path still gets its chance. Keys and credentials are
+    never logged.
+    """
+    import asyncio
+
+    key = mizito_logical_key(file_path)
+    if key is None:
+        return None
+    try:
+        backend = _mizito_s3()
+        if backend is None:
+            return None
+        size = await asyncio.wait_for(backend.size(key), timeout=_MIZITO_S3_TIMEOUT_S)
+    except FileNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found in storage") from None
+    except Exception as exc:  # noqa: BLE001 - fall back to the mount, never fail the request here
+        logger.warning("mizito s3 head failed, falling back to mount: %s", type(exc).__name__)
+        return None
+    out = {
+        "Content-Length": str(size),
+        "Content-Disposition": _content_disposition(filename or "download", attachment),
+    }
+    out.update(headers or {})
+    mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
+    return StreamingResponse(backend.open_stream(key), media_type=mt, headers=out)
