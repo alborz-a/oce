@@ -68,7 +68,7 @@ export function groupPhotosByDay(photos: PhotoItem[]): PhotoTimelineGroup[] {
     .map(([date, dayPhotos]) => ({ date, photos: dayPhotos }));
 }
 
-/** Topic a Mizito chat photo belongs to: the nearest text message of the
+/** Topic an imported chat photo belongs to: the nearest text message of the
  *  same chat, stamped into `metadata.topic` by the backfill / importer. */
 export interface PhotoTopic {
   /** Stable batch id shared by every photo of one consecutive photo batch. */

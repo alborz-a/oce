@@ -247,7 +247,7 @@ async def _collect_photos(
     out: list[FileRow] = []
     for r in rows:
         path = r.file_path
-        # [RSC-IRAN] Photos imported from Mizito live on the read-only rclone
+        # [RSC-IRAN] Imported photos live on the read-only rclone
         # bucket mount. One os.stat there is one S3 HEAD when the attr cache is
         # cold, so a 1,700-photo project took minutes and the /files list timed
         # out in the browser (empty list, "0 files"). Use the stored size only.

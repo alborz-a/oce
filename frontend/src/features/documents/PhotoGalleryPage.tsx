@@ -1226,7 +1226,7 @@ export function PhotoGalleryPage() {
     () => groupPhotosByDay(timelinePhotos),
     [timelinePhotos],
   );
-  // Topic view: groups by Mizito chat topic (metadata.topic), see ``groupPhotosByTopic``.
+  // Topic view: groups by chat topic (metadata.topic), see ``groupPhotosByTopic``.
   const topicGroups = useMemo(() => groupPhotosByTopic(timelinePhotos), [timelinePhotos]);
   const lightboxPhotos = showTimelineSource ? timelinePhotos : photoList;
 
@@ -1718,7 +1718,7 @@ export function PhotoGalleryPage() {
           ))}
         </div>
       ) : viewMode === 'topics' ? (
-        /* Topic view: one header per Mizito chat topic */
+        /* Topic view: one header per chat topic */
         <div className="space-y-8">
           {topicGroups.map((group) => (
             <div key={group.key}>

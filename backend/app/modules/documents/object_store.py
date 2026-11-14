@@ -94,51 +94,51 @@ async def stream_response(
     return StreamingResponse(backend.open_stream(key), media_type=mt, headers=out)
 
 
-# ── Mizito chat photos: read straight from the bucket ──────────────────────
+# ── Imported photos: read straight from the bucket ──────────────────────
 #
-# Imported Mizito photos keep ``file_path = /data/photos/mizito/<bucket key under mizito/>``. That
+# Imported photos keep ``file_path = /data/photos/mizito/<bucket key under mizito/>``. That
 # folder is an rclone FUSE mount of the same bucket, and a lookup in a cold chat folder waits for the
 # bucket's LIST (~100 s). GetObject/HeadObject by key needs no listing, so serve through S3 first
 # and leave the mount as the fallback.
 
-MIZITO_LOCAL_PREFIX = "/data/photos/mizito/"
-MIZITO_KEY_PREFIX = "mizito"
-_MIZITO_S3_TIMEOUT_S = 20.0
-_mizito_backend: object | None = None
+IMPORTED_LOCAL_PREFIX = "/data/photos/mizito/"
+IMPORTED_KEY_PREFIX = "mizito"
+_IMPORTED_S3_TIMEOUT_S = 20.0
+_imported_backend: object | None = None
 
 
-def mizito_logical_key(file_path: str | None) -> str | None:
-    """Key under ``mizito/`` for a Mizito photo path, or None for any other path or an unsafe one."""
-    if not file_path or not str(file_path).startswith(MIZITO_LOCAL_PREFIX):
+def imported_logical_key(file_path: str | None) -> str | None:
+    """Key under ``mizito/`` (the import key prefix) for an imported photo path, or None for any other path or an unsafe one."""
+    if not file_path or not str(file_path).startswith(IMPORTED_LOCAL_PREFIX):
         return None
-    rest = str(file_path)[len(MIZITO_LOCAL_PREFIX) :]
+    rest = str(file_path)[len(IMPORTED_LOCAL_PREFIX) :]
     if not rest or rest.startswith("/") or "\\" in rest or ".." in rest.split("/"):
         return None
     return rest
 
 
-def _mizito_s3():
-    """Lazy S3 backend rooted at ``mizito/``; None when the S3 credentials are not configured."""
-    global _mizito_backend
-    if _mizito_backend is None:
+def _imported_s3():
+    """Lazy S3 backend rooted at ``mizito/`` (the import key prefix); None when the S3 credentials are not configured."""
+    global _imported_backend
+    if _imported_backend is None:
         from app.config import get_settings
         from app.core.storage import S3StorageBackend
 
         cfg = get_settings()
         if not (cfg.s3_access_key and cfg.s3_secret_key and cfg.s3_bucket):
             return None
-        _mizito_backend = S3StorageBackend(
+        _imported_backend = S3StorageBackend(
             endpoint=cfg.s3_endpoint,
             access_key=cfg.s3_access_key,
             secret_key=cfg.s3_secret_key,
             bucket=cfg.s3_bucket,
             region=cfg.s3_region,
-            key_prefix=MIZITO_KEY_PREFIX,
+            key_prefix=IMPORTED_KEY_PREFIX,
         )
-    return _mizito_backend
+    return _imported_backend
 
 
-async def mizito_stream_response(
+async def imported_stream_response(
     file_path: str | None,
     filename: str,
     media_type: str | None,
@@ -146,7 +146,7 @@ async def mizito_stream_response(
     attachment: bool = True,
     headers: dict[str, str] | None = None,
 ) -> StreamingResponse | None:
-    """Stream a Mizito photo from the bucket, or None to fall back to the mount.
+    """Stream an imported photo from the bucket, or None to fall back to the mount.
 
     A missing object answers 404 (the bucket is the source of truth). Any other failure (credentials,
     network, timeout) returns None so the FUSE path still gets its chance. Keys and credentials are
@@ -154,18 +154,18 @@ async def mizito_stream_response(
     """
     import asyncio
 
-    key = mizito_logical_key(file_path)
+    key = imported_logical_key(file_path)
     if key is None:
         return None
     try:
-        backend = _mizito_s3()
+        backend = _imported_s3()
         if backend is None:
             return None
-        size = await asyncio.wait_for(backend.size(key), timeout=_MIZITO_S3_TIMEOUT_S)
+        size = await asyncio.wait_for(backend.size(key), timeout=_IMPORTED_S3_TIMEOUT_S)
     except FileNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found in storage") from None
     except Exception as exc:  # noqa: BLE001 - fall back to the mount, never fail the request here
-        logger.warning("mizito s3 head failed, falling back to mount: %s", type(exc).__name__)
+        logger.warning("imported-photo s3 head failed, falling back to mount: %s", type(exc).__name__)
         return None
     out = {
         "Content-Length": str(size),
@@ -174,3 +174,87 @@ async def mizito_stream_response(
     out.update(headers or {})
     mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
     return StreamingResponse(backend.open_stream(key), media_type=mt, headers=out)
+
+
+# ── Presigned photo URLs: the browser loads straight from the bucket ────
+#
+# The API and the bucket are in the same data centre, so proxying every picture through the API only
+# adds a hop. After the normal permission check the photo routes hand out a short-lived presigned GET
+# URL instead. The URL is a credential: never log it.
+
+PRESIGN_TTL_S = 600
+_THUMB_KEY_DIR = "_thumbs"
+_THUMB_SOURCE_MAX_BYTES = 40 * 1024 * 1024
+
+
+def _photo_backend_and_key(file_path: str | None):
+    """(S3 backend, logical key) for an imported or ``s3:`` photo path, else (None, None)."""
+    key = imported_logical_key(file_path)
+    if key is not None:
+        return _imported_s3(), key
+    if file_path and is_object_path(file_path):
+        return get_storage_backend(), key_of(file_path)
+    return None, None
+
+
+async def photo_presigned_url(file_path: str | None, filename: str, media_type: str | None) -> str | None:
+    """Presigned inline GET URL for a bucket-backed photo, or None when the proxy must serve it.
+
+    A missing object answers 404. Any other failure returns None so the proxy path still gets a try.
+    """
+    import asyncio
+
+    backend, key = _photo_backend_and_key(file_path)
+    if backend is None or key is None:
+        return None
+    try:
+        await asyncio.wait_for(backend.size(key), timeout=_IMPORTED_S3_TIMEOUT_S)
+    except FileNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="File not found in storage") from None
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("photo presign head failed, using proxy: %s", type(exc).__name__)
+        return None
+    mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
+    return backend.url_for(
+        key,
+        expires_in=PRESIGN_TTL_S,
+        response_content_type=mt,
+        response_content_disposition=_content_disposition(filename or "photo", False),
+    )
+
+
+async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | None) -> str | None:
+    """Presigned URL of the photo's thumbnail in the bucket, made and stored there on first use.
+
+    None when the photo is not bucket-backed or the thumbnail cannot be made (the caller then
+    presigns the full photo, or proxies).
+    """
+    import asyncio
+    import tempfile
+    from pathlib import Path
+
+    backend, key = _photo_backend_and_key(file_path)
+    if backend is None or key is None:
+        return None
+    thumb_key = f"{_THUMB_KEY_DIR}/{photo_id}.jpg"
+    try:
+        if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
+            if await asyncio.wait_for(backend.size(key), timeout=_IMPORTED_S3_TIMEOUT_S) > _THUMB_SOURCE_MAX_BYTES:
+                return None
+            from app.modules.documents.service import _generate_photo_thumbnail
+
+            source = await asyncio.wait_for(backend.get(key), timeout=60.0)
+
+            def _make() -> bytes | None:
+                with tempfile.TemporaryDirectory() as tmp:
+                    dest = Path(tmp) / "t.jpg"
+                    return dest.read_bytes() if _generate_photo_thumbnail(source, dest) else None
+
+            data = await asyncio.to_thread(_make)
+            if data is None:
+                return None
+            await asyncio.wait_for(backend.put(thumb_key, data, content_type="image/jpeg"), timeout=60.0)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)
+        return None
+    return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")

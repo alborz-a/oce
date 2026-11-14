@@ -18,12 +18,18 @@ import { AuthImage, isAuthAssetUrl, resetAuthImageCache, useAuthedObjectUrl } fr
 const TOKEN = 'test-token';
 const fetchMock = vi.fn();
 let objectUrls = 0;
+/** Calls that fetch the picture itself, not the ``-url/`` lookup that precedes it for photos. */
+const imageCalls = () => fetchMock.mock.calls.filter((c) => !String(c[0]).endsWith('-url/'));
 
 beforeEach(() => {
   resetAuthImageCache();
   objectUrls = 0;
   fetchMock.mockReset();
-  fetchMock.mockImplementation(async () => new Response(new Blob(['png'], { type: 'image/png' }), { status: 200 }));
+  fetchMock.mockImplementation(async (url: string) =>
+    String(url).endsWith('-url/')
+      ? new Response(JSON.stringify({ url: null }), { status: 200 })
+      : new Response(new Blob(['png'], { type: 'image/png' }), { status: 200 }),
+  );
   vi.stubGlobal('fetch', fetchMock);
   URL.createObjectURL = vi.fn(() => `blob:test/${++objectUrls}`);
   URL.revokeObjectURL = vi.fn();
@@ -94,7 +100,7 @@ describe('AuthImage', () => {
 
     await screen.findByAltText('a');
     await screen.findByAltText('b');
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(imageCalls()).toHaveLength(1);
   });
 
   it('keeps the blob while one reader remains and revokes it after the last', async () => {
@@ -111,30 +117,53 @@ describe('AuthImage', () => {
 
   it('retries after a failure instead of caching it', async () => {
     const src = '/api/v1/documents/photos/5/thumb/';
-    fetchMock.mockImplementationOnce(async () => new Response('no', { status: 500 }));
+    let failNext = true;
+    fetchMock.mockImplementation(async (url: string) => {
+      if (String(url).endsWith('-url/')) return new Response(JSON.stringify({ url: null }), { status: 200 });
+      if (failNext) {
+        failNext = false;
+        return new Response('no', { status: 500 });
+      }
+      return new Response(new Blob(['png'], { type: 'image/png' }), { status: 200 });
+    });
     const first = renderHook(() => useAuthedObjectUrl(src));
     await waitFor(() => expect(first.result.current.failed).toBe(true));
     first.unmount();
 
     const second = renderHook(() => useAuthedObjectUrl(src));
     await waitFor(() => expect(second.result.current.url).toBe('blob:test/1'));
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(imageCalls()).toHaveLength(2);
   });
 
   it('passes the fetch priority to the request', async () => {
     render(<AuthImage src="/api/v1/documents/photos/7/file/" alt="big" fetchPriority="high" />);
     await screen.findByAltText('big');
-    expect((fetchMock.mock.calls[0]![1] as { priority?: string }).priority).toBe('high');
+    expect((imageCalls()[0]![1] as { priority?: string }).priority).toBe('high');
   });
 
   it('does not fetch a 404 url a second time', async () => {
     const src = '/api/v1/documents/photos/8/thumb/';
-    fetchMock.mockImplementation(async () => new Response('no', { status: 404 }));
+    fetchMock.mockImplementation(async (url: string) =>
+      String(url).endsWith('-url/')
+        ? new Response(JSON.stringify({ url: null }), { status: 200 })
+        : new Response('no', { status: 404 }),
+    );
     const first = renderHook(() => useAuthedObjectUrl(src));
     await waitFor(() => expect(first.result.current.failed).toBe(true));
     first.unmount();
     const second = renderHook(() => useAuthedObjectUrl(src));
     await waitFor(() => expect(second.result.current.failed).toBe(true));
+    expect(imageCalls()).toHaveLength(1);
+  });
+
+  it('shows a photo straight from the presigned storage URL, no blob and no second fetch', async () => {
+    const direct = 'https://c.parspack.net/b/k.jpg?X-Amz-Signature=s';
+    fetchMock.mockImplementation(async () => new Response(JSON.stringify({ url: direct }), { status: 200 }));
+    render(<AuthImage src="/api/v1/documents/photos/9/thumb/" alt="s3" />);
+    const img = await screen.findByAltText('s3');
+    expect(img.getAttribute('src')).toBe(direct);
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(String(fetchMock.mock.calls[0]![0])).toBe('/api/v1/documents/photos/9/thumb-url/');
+    expect(URL.createObjectURL).not.toHaveBeenCalled();
   });
 });
