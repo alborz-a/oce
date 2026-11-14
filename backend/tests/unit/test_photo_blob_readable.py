@@ -37,3 +37,41 @@ def test_resolve_blob_io_error_is_503(tmp_path, monkeypatch):
     with pytest.raises(HTTPException) as exc:
         r._resolve_photo_blob(str(tmp_path / "other" / "photos" / "x.jpg"), base, ("photos",))
     assert exc.value.status_code == 503
+
+
+@pytest.mark.asyncio
+async def test_hung_blob_call_is_503_and_loop_stays_responsive(monkeypatch):
+    import asyncio
+    import threading
+
+    from app.modules.documents import router as r
+
+    release = threading.Event()
+    monkeypatch.setattr(r, "_BLOB_IO_TIMEOUT_S", 0.2)
+    try:
+        ticks = 0
+
+        async def ticker():
+            nonlocal ticks
+            while True:
+                ticks += 1
+                await asyncio.sleep(0.02)
+
+        t = asyncio.create_task(ticker())
+        with pytest.raises(HTTPException) as exc:
+            await r._blob_io(lambda: release.wait(5))
+        t.cancel()
+        assert exc.value.status_code == 503
+        assert ticks > 3  # the event loop kept running while the call hung
+    finally:
+        release.set()
+
+
+@pytest.mark.asyncio
+async def test_blob_pool_sheds_load_when_full(monkeypatch):
+    from app.modules.documents import router as r
+
+    monkeypatch.setattr(r, "_blob_inflight", r._BLOB_IO_MAX_INFLIGHT)
+    with pytest.raises(HTTPException) as exc:
+        await r._blob_io(lambda: None)
+    assert exc.value.status_code == 503

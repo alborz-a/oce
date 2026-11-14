@@ -20,11 +20,15 @@ Endpoints:
     DELETE /photos/{id}             - Delete photo + file
 """
 
+import asyncio
 import logging
 import mimetypes
 import uuid
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, Response, UploadFile, status
 from fastapi.responses import FileResponse
@@ -840,6 +844,45 @@ async def get_photo(
     return _photo_to_response(photo)
 
 
+# Blob I/O on the read-only Mizito bucket mount can hang (clock skew, bucket
+# stall): a blocked FUSE read in an async handler froze the whole portal. Run
+# the blocking filesystem calls on a small dedicated pool, bound the wait, and
+# shed load once the pool is full of stuck calls, so a sick mount only breaks
+# photos (503) and never the event loop or the shared request threadpool.
+_BLOB_IO_TIMEOUT_S = 8.0
+_BLOB_IO_MAX_INFLIGHT = 32
+_blob_pool = ThreadPoolExecutor(max_workers=8, thread_name_prefix="blob-io")
+_blob_inflight = 0
+
+
+def _blob_unavailable() -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail="Photo storage is temporarily unavailable",
+        headers={"Retry-After": "30"},
+    )
+
+
+async def _blob_io(fn: Callable[..., Any], *args: Any) -> Any:
+    """Run blocking blob I/O off the event loop with a timeout; 503 on stall."""
+    global _blob_inflight
+    if _blob_inflight >= _BLOB_IO_MAX_INFLIGHT:
+        raise _blob_unavailable()
+    loop = asyncio.get_running_loop()
+    _blob_inflight += 1
+    fut = loop.run_in_executor(_blob_pool, fn, *args)
+
+    def _done(_f: object) -> None:
+        global _blob_inflight
+        _blob_inflight -= 1
+
+    fut.add_done_callback(_done)
+    try:
+        return await asyncio.wait_for(asyncio.shield(fut), timeout=_BLOB_IO_TIMEOUT_S)
+    except TimeoutError:
+        raise _blob_unavailable() from None
+
+
 def _ensure_blob_readable(path: Path) -> None:
     """503 when the blob exists but cannot be read (read-only bucket mount: Errno 5).
 
@@ -959,7 +1002,7 @@ async def serve_photo_file(
     # previously uploaded photos silently 404 while new ones work. The helper
     # enforces safe-root containment and rejects symlinks, so this stays as
     # locked down as the previous explicit checks.
-    file_path = _resolve_photo_blob(photo.file_path, photo_base, ("photos",))
+    file_path = await _blob_io(_resolve_photo_blob, photo.file_path, photo_base, ("photos",))
     if file_path is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -967,7 +1010,7 @@ async def serve_photo_file(
         )
 
     # Determine media type from extension
-    _ensure_blob_readable(file_path)
+    await _blob_io(_ensure_blob_readable, file_path)
     ext = file_path.suffix.lower()
     media_types = {
         ".jpg": "image/jpeg",
@@ -1018,7 +1061,7 @@ async def serve_photo_thumbnail(
 
     # Re-home the thumbnail against the current data dir (same stale-absolute
     # path problem as the full-file route). Thumbs live under photos/thumbs.
-    thumb_path = _resolve_photo_blob(getattr(photo, "thumbnail_path", None), thumb_base, ("photos", "thumbs"))
+    thumb_path = await _blob_io(_resolve_photo_blob, getattr(photo, "thumbnail_path", None), thumb_base, ("photos", "thumbs"))
     if thumb_path is not None:
         return FileResponse(
             path=str(thumb_path),
@@ -1035,13 +1078,13 @@ async def serve_photo_thumbnail(
             attachment=False,
             headers={"Cache-Control": "public, max-age=3600"},
         )
-    file_path = _resolve_photo_blob(photo.file_path, photo_base, ("photos",))
+    file_path = await _blob_io(_resolve_photo_blob, photo.file_path, photo_base, ("photos",))
     if file_path is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Photo file not found on disk",
         )
-    _ensure_blob_readable(file_path)
+    await _blob_io(_ensure_blob_readable, file_path)
     ext = file_path.suffix.lower()
     media_types = {
         ".jpg": "image/jpeg",
