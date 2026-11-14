@@ -25,7 +25,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { useFileList } from '@/features/file-manager/hooks';
+import { apiPatch } from '@/shared/lib/api';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useToastStore } from '@/stores/useToastStore';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import { UploadDialog } from '@/features/file-manager/components/UploadDialog';
@@ -133,6 +137,14 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const [sort, setSort] = useState<SortKey>('newest');
   const [uploadOpen, setUploadOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const queryClient = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+  const userRole = useAuthStore((s) => s.userRole);
+  // Global managers read every project but never write (the backend refuses), so no edit control.
+  const canEditCaption = userRole !== 'manager';
+  const [editingCaption, setEditingCaption] = useState(false);
+  const [captionDraft, setCaptionDraft] = useState('');
+  const [savingCaption, setSavingCaption] = useState(false);
 
   // Pull every photo for this project. Backend already filters by kind,
   // so we don't need to refilter client-side — but we do want to sort &
@@ -154,6 +166,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   }, []);
 
   const closeLightbox = useCallback(() => {
+    setEditingCaption(false);
     setLightboxIndex(null);
   }, []);
 
@@ -161,12 +174,34 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
     (delta: number) => {
       setLightboxIndex((current) => {
         if (current === null) return current;
+        setEditingCaption(false);
         const next = current + delta;
         if (next < 0 || next >= filtered.length) return current;
         return next;
       });
     },
     [filtered.length],
+  );
+
+  const saveCaption = useCallback(
+    async (photoId: string) => {
+      setSavingCaption(true);
+      try {
+        await apiPatch(`/v1/documents/photos/${photoId}`, { caption: captionDraft.trim() });
+        await queryClient.invalidateQueries();
+        setEditingCaption(false);
+        addToast({ type: 'success', title: t('projects.photos.caption_saved', { defaultValue: 'Description saved' }) });
+      } catch (err) {
+        addToast({
+          type: 'error',
+          title: t('projects.photos.caption_failed', { defaultValue: 'Could not save the description' }),
+          message: err instanceof Error ? err.message : undefined,
+        });
+      } finally {
+        setSavingCaption(false);
+      }
+    },
+    [captionDraft, queryClient, addToast, t],
   );
 
   // Keyboard handler for the lightbox.
@@ -385,9 +420,10 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 <div className="p-2 space-y-0.5">
                   <div
                     className="text-xs font-medium text-content-primary truncate"
-                    title={row.name}
+                    title={row.caption ? `${row.caption} (${row.name})` : row.name}
+                    data-testid="photos-tab-tile-title"
                   >
-                    {row.name}
+                    {row.caption || row.name}
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-content-tertiary">
                     <span>{fmtDate(captured, locale)}</span>
@@ -488,6 +524,57 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               <div className="text-sm font-medium truncate max-w-[80vw]">
                 {activePhoto.name}
               </div>
+              {editingCaption ? (
+                <div className="mt-2 flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
+                  <input
+                    type="text"
+                    data-testid="photos-tab-caption-input"
+                    value={captionDraft}
+                    maxLength={500}
+                    autoFocus
+                    onChange={(e) => setCaptionDraft(e.target.value)}
+                    onKeyDown={(e) => e.nativeEvent.stopPropagation()}
+                    className="h-8 w-72 max-w-[60vw] rounded-lg border border-white/30 bg-white/10 px-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/40"
+                  />
+                  <button
+                    type="button"
+                    data-testid="photos-tab-caption-save"
+                    disabled={savingCaption}
+                    onClick={() => void saveCaption(activePhoto.id)}
+                    className="h-8 rounded-lg bg-oe-blue px-3 text-xs text-white disabled:opacity-60"
+                  >
+                    {t('common.save', { defaultValue: 'Save' })}
+                  </button>
+                  <button
+                    type="button"
+                    data-testid="photos-tab-caption-cancel"
+                    onClick={() => setEditingCaption(false)}
+                    className="h-8 rounded-lg border border-white/30 px-3 text-xs text-white"
+                  >
+                    {t('common.cancel', { defaultValue: 'Cancel' })}
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-1 flex items-center justify-center gap-2 text-sm text-white/90">
+                  <span data-testid="photos-tab-caption-text" className="max-w-[70vw] break-words">
+                    {activePhoto.caption || ''}
+                  </span>
+                  {canEditCaption && (
+                    <button
+                      type="button"
+                      data-testid="photos-tab-caption-edit"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCaptionDraft(activePhoto.caption ?? '');
+                        setEditingCaption(true);
+                      }}
+                      className="rounded-lg border border-white/30 px-2 py-0.5 text-xs text-white hover:bg-white/10"
+                    >
+                      {t('projects.photos.edit_caption', { defaultValue: 'Edit description' })}
+                    </button>
+                  )}
+                </div>
+              )}
               <div className="text-xs text-white/70 mt-0.5">
                 {fmtDate(pickCapturedAt(activePhoto), locale)}
                 {' · '}

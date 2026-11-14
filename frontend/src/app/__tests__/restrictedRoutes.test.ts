@@ -3,7 +3,7 @@ import { isRestrictedRouteAllowed as ok } from '../restrictedRoutes';
 
 describe('isRestrictedRouteAllowed', () => {
   it('allows project, tasks, photos, documents', () => {
-    for (const p of ['/projects', '/projects/abc', '/projects/abc/tasks', '/projects/abc/files', '/projects/abc?tab=photos', '/photos', '/tasks', '/photos?x=1', '/files', '/projects/abc/', '/', '/dashboard', '/notifications', '/profile']) {
+    for (const p of ['/projects', '/projects/abc', '/projects/abc/tasks', '/projects/abc/files', '/files/detail/p1/f1', '/projects/abc?tab=photos', '/photos', '/tasks', '/photos?x=1', '/files', '/projects/abc/', '/', '/dashboard', '/notifications', '/profile']) {
       expect(ok(p)).toBe(true);
     }
   });
