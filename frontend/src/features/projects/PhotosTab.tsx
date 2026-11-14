@@ -270,6 +270,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 'Upload site photos to keep visual records alongside the project.',
             })}
             action={
+              !canEditCaption ? undefined : (
               <Button
                 variant="primary"
                 size="md"
@@ -279,6 +280,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               >
                 {t('projects.photos.upload_cta', { defaultValue: 'Upload photos' })}
               </Button>
+              )
             }
           />
         </div>
@@ -338,6 +340,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
           </option>
         </select>
+        {canEditCaption && (
         <Button
           variant="primary"
           size="sm"
@@ -347,6 +350,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
         >
           {t('projects.photos.upload_cta', { defaultValue: 'Upload photos' })}
         </Button>
+        )}
       </div>
 
       {/* Result count */}
