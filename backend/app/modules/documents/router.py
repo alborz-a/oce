@@ -867,6 +867,7 @@ async def _blob_io(fn: Callable[..., Any], *args: Any) -> Any:
     """Run blocking blob I/O off the event loop with a timeout; 503 on stall."""
     global _blob_inflight
     if _blob_inflight >= _BLOB_IO_MAX_INFLIGHT:
+        logger.warning("blob_io shed: %d calls in flight, none finished", _blob_inflight)
         raise _blob_unavailable()
     loop = asyncio.get_running_loop()
     _blob_inflight += 1
@@ -880,6 +881,7 @@ async def _blob_io(fn: Callable[..., Any], *args: Any) -> Any:
     try:
         return await asyncio.wait_for(asyncio.shield(fut), timeout=_BLOB_IO_TIMEOUT_S)
     except TimeoutError:
+        logger.warning("blob_io timeout: %s > %.0fs, %d in flight", getattr(fn, "__name__", fn), _BLOB_IO_TIMEOUT_S, _blob_inflight)
         raise _blob_unavailable() from None
 
 
@@ -892,7 +894,8 @@ def _ensure_blob_readable(path: Path) -> None:
     try:
         with open(path, "rb") as fh:
             fh.read(1)
-    except OSError:
+    except OSError as exc:
+        logger.warning("photo blob unreadable: %s (%r)", path, exc)
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Photo storage is temporarily unavailable",
@@ -963,8 +966,9 @@ def _resolve_photo_blob(
             continue
         try:
             found = candidate.is_file() and not candidate.is_symlink()
-        except OSError:
+        except OSError as exc:
             # Read-only bucket mount answering Errno 5: storage trouble, not a missing photo.
+            logger.warning("photo blob stat failed: %s (%r)", candidate, exc)
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Photo storage is temporarily unavailable",
