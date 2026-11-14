@@ -567,6 +567,9 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const userRole = useAuthStore((s) => s.userRole);
   const restrictedMode = useAuthStore((s) => s.restrictedMode);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  // Until /users/me/ answers, role and restricted mode are guesses. Paint a
+  // skeleton rather than the full module list a restricted user must never see.
+  const profilePending = useAuthStore((s) => s.isAuthenticated && !s.profileResolved);
 
   // Backend module enabled-state. The System Modules tab disables/enables
   // server-side plugins; without this, a backend-disabled module's sidebar
@@ -1351,7 +1354,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         )}
        
       >
-        {restrictedMode ? (
+        {profilePending ? (
+          <ul className="space-y-2 px-1 pt-1" data-testid="sidebar-skeleton" aria-busy="true">
+            {Array.from({ length: 6 }, (_, i) => (
+              <li key={i} className="h-8 animate-pulse rounded-lg bg-surface-secondary" />
+            ))}
+          </ul>
+        ) : restrictedMode ? (
           <ul className="space-y-1">
             {RESTRICTED_NAV_ITEMS.map((item, i) => (
               <li
