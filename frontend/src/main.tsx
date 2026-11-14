@@ -8,6 +8,7 @@ import { notifyQueryError } from '@/shared/lib/queryErrorToast';
 import { initialLocaleReady } from './app/i18n';
 import { applyStoredUiScale } from '@/shared/lib/uiScale';
 import { retireStaleCaches } from './pwa/retireStaleCaches';
+import { initServiceWorkerUpdates } from './pwa/swUpdate';
 import './index.css';
 
 // Desktop only: put the saved text size back on the webview as early as
@@ -115,6 +116,7 @@ window.addEventListener('vite:preloadError', () => {
 // name; dropping the old cache lets those visitors see the real images
 // without a hard reload. Fire and forget, it never throws.
 void retireStaleCaches();
+initServiceWorkerUpdates();
 
 // The public demo is served under /demo (Caddy strips the prefix before it
 // reaches the backend, but the browser URL keeps it), so react-router needs a
