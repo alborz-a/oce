@@ -17,3 +17,23 @@ def test_unreadable_blob_is_503(tmp_path):
     with pytest.raises(HTTPException) as exc:
         _ensure_blob_readable(tmp_path)
     assert exc.value.status_code == 503
+
+
+def test_resolve_blob_io_error_is_503(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from app.modules.documents import router as r
+
+    base = tmp_path / "photos"
+    base.mkdir()
+    real_is_file = Path.is_file
+
+    def boom(self):
+        if self.name == "x.jpg":
+            raise OSError(5, "Input/output error")
+        return real_is_file(self)
+
+    monkeypatch.setattr(Path, "is_file", boom)
+    with pytest.raises(HTTPException) as exc:
+        r._resolve_photo_blob(str(tmp_path / "other" / "photos" / "x.jpg"), base, ("photos",))
+    assert exc.value.status_code == 503
