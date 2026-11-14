@@ -2194,6 +2194,16 @@ export function ProjectDetailPage() {
       <div data-testid="team-strip-host">
         <TeamStrip
           projectId={projectId!}
+          currentUserId={(() => {
+            const token = useAuthStore.getState().accessToken;
+            try {
+              const payload = (token?.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
+              const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+              return (JSON.parse(atob(padded)) as { sub?: string }).sub;
+            } catch {
+              return undefined;
+            }
+          })()}
           canManage={(() => {
             const token = useAuthStore.getState().accessToken;
             if (!token) return false;

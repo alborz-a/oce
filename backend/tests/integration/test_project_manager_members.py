@@ -224,3 +224,22 @@ async def test_project_manager_of_x_cannot_add_members_to_y(pm_client: AsyncClie
         json={"user_id": seeded_ids["invitee_id"], "role": "viewer"},
     )
     assert resp.status_code == 403, resp.text
+
+
+@pytest.mark.asyncio
+async def test_project_manager_can_list_member_candidates(pm_client: AsyncClient, seeded_ids: dict[str, str]):
+    """The add-member picker list is open to the project_manager and holds only id/email/full_name."""
+    pid = seeded_ids["project_id"]
+    resp = await pm_client.get(f"/api/v1/projects/{pid}/member-candidates/")
+    assert resp.status_code == 200, resp.text
+    rows = resp.json()
+    assert seeded_ids["invitee_id"] in {r["id"] for r in rows}
+    assert all(set(r) == {"id", "email", "full_name"} for r in rows)
+
+
+@pytest.mark.asyncio
+async def test_plain_member_cannot_list_member_candidates(member_client: AsyncClient, seeded_ids: dict[str, str]):
+    """A plain member never gets the user list -> 403."""
+    pid = seeded_ids["project_id"]
+    resp = await member_client.get(f"/api/v1/projects/{pid}/member-candidates/")
+    assert resp.status_code == 403, resp.text

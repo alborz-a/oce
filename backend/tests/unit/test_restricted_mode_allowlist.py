@@ -33,6 +33,7 @@ D = "/api/v1/"
         ("GET", f"{D}ai-estimator/embedding-model/status/"),
         ("GET", f"{D}users/{P}/avatar"),
         ("GET", f"{D}users/{P}/avatar/"),
+        ("GET", f"{D}projects/{P}/member-candidates/"),
         ("POST", f"{D}projects/{P}/members/"),
         ("POST", f"{D}projects/{P}/members/bulk"),
         ("DELETE", f"{D}projects/{P}/members/{P}/"),

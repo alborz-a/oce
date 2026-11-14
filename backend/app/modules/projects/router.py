@@ -644,6 +644,43 @@ async def list_project_members_endpoint(
     return present_members(await list_project_members(session, project_id), viewer_is_admin(payload))
 
 
+@router.get(
+    "/{project_id}/member-candidates/",
+    summary="Users that can be added to this project",
+    description="Active users (id, email, full name) for the add-member picker. Owner, admin "
+    "or a team project_manager of this project only. Backs the picker for project managers, "
+    "who cannot list all users.",
+)
+@router.get("/{project_id}/member-candidates", include_in_schema=False)
+async def list_member_candidates_endpoint(
+    project_id: uuid.UUID,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    session: SessionDep,
+    service: ProjectService = Depends(_get_service),
+) -> list[dict]:
+    """Minimal user list for the add-member picker (no roles, no other fields)."""
+    await _verify_project_member_manager(service, project_id, user_id, session, payload)
+    from sqlalchemy import select
+
+    from app.core.hidden_users import is_hidden_system_user
+    from app.modules.users.models import User
+
+    rows = (
+        await session.execute(
+            select(User.id, User.email, User.full_name)
+            .where(User.is_active.is_(True), User.deleted_at.is_(None))
+            .order_by(User.full_name, User.email)
+            .limit(500)
+        )
+    ).all()
+    return [
+        {"id": str(r.id), "email": r.email, "full_name": r.full_name}
+        for r in rows
+        if not is_hidden_system_user(r.email, r.full_name)
+    ]
+
+
 @router.post(
     "/{project_id}/members/",
     response_model=ProjectMemberResponse,
