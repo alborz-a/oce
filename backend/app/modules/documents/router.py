@@ -918,7 +918,16 @@ def _resolve_photo_blob(
             candidate.relative_to(base)
         except (OSError, ValueError):
             continue
-        if candidate.is_file() and not candidate.is_symlink():
+        try:
+            found = candidate.is_file() and not candidate.is_symlink()
+        except OSError:
+            # Read-only bucket mount answering Errno 5: storage trouble, not a missing photo.
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Photo storage is temporarily unavailable",
+                headers={"Retry-After": "30"},
+            ) from None
+        if found:
             return candidate
     return None
 
