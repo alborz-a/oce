@@ -36,6 +36,7 @@ export function UploadDialog({
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [caption, setCaption] = useState('');
   // The upload routine is shared with the page-level drag-and-drop drop zone
   // (see ``useFileUpload``) so both surfaces hit the exact same pipeline.
   const { doUpload, uploading } = useFileUpload(projectId);
@@ -44,8 +45,9 @@ export function UploadDialog({
   const handleFiles = (files: FileList | File[]) => {
     void doUpload(files, defaultKind, () => {
       if (fileInputRef.current) fileInputRef.current.value = '';
+      setCaption('');
       onClose();
-    });
+    }, { caption });
   };
 
   // Lock background scroll when modal is open.
@@ -96,6 +98,25 @@ export function UploadDialog({
         </div>
 
         <div className="p-5">
+          {defaultKind === 'photo' && (
+            <div className="mb-3">
+              <label
+                htmlFor="upload-photo-caption"
+                className="mb-1 block text-xs font-medium text-content-secondary"
+              >
+                {t('files.photo_caption', { defaultValue: 'Description (optional)' })}
+              </label>
+              <textarea
+                id="upload-photo-caption"
+                data-testid="upload-photo-caption"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                rows={2}
+                maxLength={500}
+                className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+              />
+            </div>
+          )}
           <input
             ref={fileInputRef}
             type="file"
