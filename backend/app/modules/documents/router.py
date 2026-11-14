@@ -840,6 +840,23 @@ async def get_photo(
     return _photo_to_response(photo)
 
 
+def _ensure_blob_readable(path: Path) -> None:
+    """503 when the blob exists but cannot be read (read-only bucket mount: Errno 5).
+
+    FileResponse opens the file after the headers are sent, so an I/O error there
+    surfaces as an unhandled 500 and a broken response. Probe one byte first.
+    """
+    try:
+        with open(path, "rb") as fh:
+            fh.read(1)
+    except OSError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Photo storage is temporarily unavailable",
+            headers={"Retry-After": "30"},
+        ) from None
+
+
 def _resolve_photo_blob(
     stored_path: str | None,
     active_base: Path,
@@ -941,6 +958,7 @@ async def serve_photo_file(
         )
 
     # Determine media type from extension
+    _ensure_blob_readable(file_path)
     ext = file_path.suffix.lower()
     media_types = {
         ".jpg": "image/jpeg",
@@ -1014,6 +1032,7 @@ async def serve_photo_thumbnail(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Photo file not found on disk",
         )
+    _ensure_blob_readable(file_path)
     ext = file_path.suffix.lower()
     media_types = {
         ".jpg": "image/jpeg",

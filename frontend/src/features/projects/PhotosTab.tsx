@@ -28,7 +28,7 @@ import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFileList } from '@/features/file-manager/hooks';
 import { apiPatch } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useCanWritePhotos } from '@/features/file-manager/useCanWritePhotos';
 import { useToastStore } from '@/stores/useToastStore';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
@@ -139,9 +139,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const userRole = useAuthStore((s) => s.userRole);
-  // Global managers read every project but never write (the backend refuses), so no edit control.
-  const canEditCaption = userRole !== 'manager';
+  // Global managers write only where they are team members (the backend refuses otherwise).
+  const canEditCaption = useCanWritePhotos(projectId);
   const [editingCaption, setEditingCaption] = useState(false);
   const [captionDraft, setCaptionDraft] = useState('');
   const [savingCaption, setSavingCaption] = useState(false);
