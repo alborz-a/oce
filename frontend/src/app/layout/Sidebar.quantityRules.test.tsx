@@ -84,7 +84,7 @@ beforeEach(() => {
       ? Promise.resolve({ completed: true, company_type: null })
       : Promise.resolve([]),
   );
-  useAuthStore.setState({ isAuthenticated: true, userRole: 'editor', userId: 'user-a', accessToken: null });
+  useAuthStore.setState({ isAuthenticated: true, profileResolved: true, userRole: 'editor', userId: 'user-a', accessToken: null });
   useModuleStore.setState({ enabledModules: {}, hiddenGroups: [] });
   useSidebarCollapseStore.getState().setIconified(false);
 });

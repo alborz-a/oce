@@ -52,13 +52,13 @@ import { useAuthStore } from '@/stores/useAuthStore';
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
-  useAuthStore.setState({ restrictedMode: false });
+  useAuthStore.setState({ restrictedMode: false, profileResolved: false });
 });
 
 describe('Sidebar for restricted staff', () => {
   it('offers only the five allowed destinations', () => {
     api.apiGet.mockResolvedValue([]);
-    useAuthStore.setState({ isAuthenticated: true, restrictedMode: true, userRole: 'viewer' });
+    useAuthStore.setState({ isAuthenticated: true, profileResolved: true, restrictedMode: true, userRole: 'viewer' });
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     const { container } = render(
       <QueryClientProvider client={client}>
@@ -78,5 +78,21 @@ describe('Sidebar for restricted staff', () => {
     }
     // Module list is an admin-shell call; restricted users must not make it.
     expect(api.apiGet).not.toHaveBeenCalledWith('/v1/modules/');
+  });
+
+  it('paints a skeleton, not modules, until the profile has loaded', () => {
+    api.apiGet.mockResolvedValue([]);
+    useAuthStore.setState({ isAuthenticated: true, profileResolved: false, restrictedMode: false, userRole: 'viewer' });
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { container, getByTestId } = render(
+      <QueryClientProvider client={client}>
+        <MemoryRouter initialEntries={['/dashboard']}>
+          <Sidebar />
+        </MemoryRouter>
+      </QueryClientProvider>,
+    );
+    expect(getByTestId('sidebar-skeleton')).toBeTruthy();
+    const nav = container.querySelector('nav');
+    expect(nav?.querySelectorAll('a[href]').length).toBe(0);
   });
 });

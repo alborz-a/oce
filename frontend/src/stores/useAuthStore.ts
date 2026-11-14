@@ -101,6 +101,12 @@ interface AuthState {
   /** Restricted project-user mode, from `/v1/users/me/` (`restricted_mode`). */
   restrictedMode: boolean;
   /**
+   * True once `/v1/users/me/` has answered for this session. Until then
+   * `userRole` and `restrictedMode` are guesses (a JWT claim and `false`), so
+   * the sidebar must not paint modules the account may not use.
+   */
+  profileResolved: boolean;
+  /**
    * Record a sign-in. Every open tab of this browser adopts it; a tab signed
    * in as someone else reloads.
    */
@@ -307,6 +313,7 @@ export function createAuthStore(env: AuthTabEnv) {
         userFullName: null,
         userRole: null,
         restrictedMode: false,
+        profileResolved: false,
       });
     };
 
@@ -464,6 +471,7 @@ export function createAuthStore(env: AuthTabEnv) {
       userEmail: null,
       userId: null,
       restrictedMode: false,
+      profileResolved: false,
       userFullName: null,
       userRole: null,
 
@@ -617,7 +625,7 @@ export function createAuthStore(env: AuthTabEnv) {
           if (typeof data.role === 'string') {
             set({ userRole: data.role });
           }
-          set({ restrictedMode: data.restricted_mode === true });
+          set({ restrictedMode: data.restricted_mode === true, profileResolved: true });
           // The server's email is the account's own. Some sign-ins hand
           // setTokens no email (SSO, desktop bootstrap), which left userEmail
           // null and kept the previous account's address in storage, so a

@@ -270,7 +270,24 @@ export default defineConfig({
         // imported module" on /takeoff. Including ``.mjs`` precaches the
         // worker with its real headers and removes the runtime-cache
         // intermediary altogether.
-        globPatterns: ['**/*.{js,mjs,css,html,svg,woff2,ico}'],
+        //
+        // RSD-0.38: precache the app shell only. The full glob listed ~690
+        // files / 35 MB, so a new service worker took minutes to install and
+        // a browser stayed on the previous release meanwhile. The shell is the
+        // entry chunk, its CSS, react/query/preload vendors and the static
+        // icons: enough to paint and sign in. Every other (hashed, lazy) chunk,
+        // font and the pdf worker load on demand and are kept by the
+        // runtime-caching lanes below, so a revisit is still served locally.
+        globPatterns: [
+          'index.html',
+          'registerSW.js',
+          'manifest.webmanifest',
+          'assets/index-*.{js,css}',
+          'assets/vendor-react-*.js',
+          'assets/vendor-query-*.js',
+          'assets/vendor-preload-*.js',
+          '*.{svg,ico,png}',
+        ],
         // Skip huge prerendered marketing assets (handled by the static
         // host) and stats.html (visualizer output).
         //

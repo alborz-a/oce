@@ -190,7 +190,7 @@ const TODAYS_SIMPLE = [
 beforeEach(() => {
   localStorage.clear();
   api.apiGet.mockReset();
-  useAuthStore.setState({ isAuthenticated: true, userRole: 'editor', userId: USER_A, accessToken: null });
+  useAuthStore.setState({ isAuthenticated: true, profileResolved: true, userRole: 'editor', userId: USER_A, accessToken: null });
   // Every module on, so the rows below depend on the mode and the profile only.
   useModuleStore.setState({ enabledModules: {}, hiddenGroups: [] });
   // The store reads localStorage once at import, so the mode is set on it.
