@@ -849,7 +849,9 @@ async def get_photo(
 # the blocking filesystem calls on a small dedicated pool, bound the wait, and
 # shed load once the pool is full of stuck calls, so a sick mount only breaks
 # photos (503) and never the event loop or the shared request threadpool.
-_BLOB_IO_TIMEOUT_S = 8.0
+# A cold directory on the bucket mount lists in ~50 s (rclone dir cache empty) and every
+# lookup in it waits for that listing, so the bound sits just under nginx's 60 s read timeout.
+_BLOB_IO_TIMEOUT_S = 55.0
 _BLOB_IO_MAX_INFLIGHT = 32
 _blob_pool = ThreadPoolExecutor(max_workers=8, thread_name_prefix="blob-io")
 _blob_inflight = 0
