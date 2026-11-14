@@ -8,7 +8,7 @@ import { AuthImage } from '@/shared/ui';
 import { IconButton } from '@/shared/ui/IconButton';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useToastStore } from '@/stores/useToastStore';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useCanWritePhotos } from './useCanWritePhotos';
 import { apiPatch } from '@/shared/lib/api';
 import { downloadProtectedFile, fetchFileList } from './api';
 import { localizeSize } from './fmt';
@@ -58,16 +58,8 @@ export function FileDetailPage() {
   });
   const row: FileRow | undefined = data?.items[0];
 
-  // Global managers read everything but never write; the backend refuses them, so hide the control.
-  const canEditCaption = (() => {
-    try {
-      const part = (useAuthStore.getState().accessToken?.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
-      const role = (JSON.parse(atob(part + '='.repeat((4 - (part.length % 4)) % 4))) as { role?: string }).role;
-      return role !== 'manager';
-    } catch {
-      return true;
-    }
-  })();
+  // Global managers write only where they are team members (the backend refuses otherwise).
+  const canEditCaption = useCanWritePhotos(projectId);
 
   async function saveCaption() {
     if (!row) return;

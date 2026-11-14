@@ -79,8 +79,27 @@ async def _set_role(email: str, role: str) -> None:
         await s.commit()
 
 
+async def _opt_out_of_restricted_mode(email: str) -> None:
+    """Mark the account unrestricted so these tests exercise project-membership checks.
+
+    Deny-by-default restricted mode (RSD-0.26) 403s a plain viewer on dashboard and BOQ
+    routes before membership is looked at. Restricted-mode behaviour has its own suite
+    (``tests/unit/test_restricted_mode*``); here B and C must be judged by membership only.
+    """
+    from sqlalchemy import update
+
+    from app.database import async_session_factory
+    from app.modules.users.models import User
+
+    async with async_session_factory() as s:
+        await s.execute(
+            update(User).where(User.email == email.lower()).values(metadata_={"restricted_project_mode": False})
+        )
+        await s.commit()
+
+
 async def _register_and_login(
-    client: AsyncClient, suffix: str, *, role: str | None = None
+    client: AsyncClient, suffix: str, *, role: str | None = None, unrestricted: bool = False
 ) -> tuple[str, dict[str, str]]:
     """Register a fresh user, activate, login. Returns (user_id, auth_headers).
 
@@ -104,6 +123,8 @@ async def _register_and_login(
     await _activate_user(email)
     if role is not None:
         await _set_role(email, role)
+    if unrestricted:
+        await _opt_out_of_restricted_mode(email)
 
     login = await client.post(
         "/api/v1/users/auth/login",
@@ -130,8 +151,8 @@ async def scenario(http_client):
     nothing at all.
     """
     a_id, a_headers = await _register_and_login(http_client, "A", role="admin")
-    b_id, b_headers = await _register_and_login(http_client, "B")
-    _, c_headers = await _register_and_login(http_client, "C")
+    b_id, b_headers = await _register_and_login(http_client, "B", unrestricted=True)
+    _, c_headers = await _register_and_login(http_client, "C", unrestricted=True)
 
     # A creates a project
     proj_resp = await http_client.post(
