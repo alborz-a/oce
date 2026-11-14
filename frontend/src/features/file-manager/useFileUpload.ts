@@ -40,7 +40,12 @@ function categoryForKind(kind: FileKind | null): string {
 export interface UseFileUploadResult {
   /** Upload the given files into the pipeline for ``kind``. ``onDone`` runs
    *  once the batch has been queued (not once each transfer finishes). */
-  doUpload: (files: FileList | File[], kind: FileKind | null, onDone?: () => void) => Promise<void>;
+  doUpload: (
+    files: FileList | File[],
+    kind: FileKind | null,
+    onDone?: () => void,
+    options?: { caption?: string },
+  ) => Promise<void>;
   uploading: boolean;
 }
 
@@ -73,7 +78,7 @@ export function useFileUpload(projectId: string | null | undefined): UseFileUplo
   );
 
   const doUpload = useCallback(
-    async (files: FileList | File[], kind: FileKind | null, onDone?: () => void) => {
+    async (files: FileList | File[], kind: FileKind | null, onDone?: () => void, options?: { caption?: string }) => {
       if (!projectId) {
         addToast({
           type: 'error',
@@ -177,6 +182,8 @@ export function useFileUpload(projectId: string | null | undefined): UseFileUplo
           try {
             const formData = new FormData();
             formData.append('file', file);
+            const photoCaption = options?.caption?.trim();
+            if (kind === 'photo' && photoCaption) formData.append('caption', photoCaption);
 
             const headers: Record<string, string> = { 'X-DDC-Client': 'OE/1.0' };
             if (token) headers['Authorization'] = `Bearer ${token}`;

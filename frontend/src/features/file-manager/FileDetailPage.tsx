@@ -2,12 +2,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, Copy, Download, Expand, FileQuestion, FileText, Loader2 } from 'lucide-react';
 import { AuthImage } from '@/shared/ui';
 import { IconButton } from '@/shared/ui/IconButton';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useToastStore } from '@/stores/useToastStore';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { apiPatch } from '@/shared/lib/api';
 import { downloadProtectedFile, fetchFileList } from './api';
 import { localizeSize } from './fmt';
 import { isImageRow, isLightboxRow } from './kindModule';
@@ -43,6 +45,10 @@ export function FileDetailPage() {
   const { projectId, fileId } = useParams<{ projectId: string; fileId: string }>();
   const [downloading, setDownloading] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const [editingCaption, setEditingCaption] = useState(false);
+  const [captionDraft, setCaptionDraft] = useState('');
+  const [savingCaption, setSavingCaption] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['file-detail', projectId, fileId],
@@ -51,6 +57,36 @@ export function FileDetailPage() {
     staleTime: 30_000,
   });
   const row: FileRow | undefined = data?.items[0];
+
+  // Global managers read everything but never write; the backend refuses them, so hide the control.
+  const canEditCaption = (() => {
+    try {
+      const part = (useAuthStore.getState().accessToken?.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
+      const role = (JSON.parse(atob(part + '='.repeat((4 - (part.length % 4)) % 4))) as { role?: string }).role;
+      return role !== 'manager';
+    } catch {
+      return true;
+    }
+  })();
+
+  async function saveCaption() {
+    if (!row) return;
+    setSavingCaption(true);
+    try {
+      await apiPatch(`/v1/documents/photos/${row.id}`, { caption: captionDraft.trim() });
+      await queryClient.invalidateQueries({ queryKey: ['file-detail', projectId, fileId] });
+      setEditingCaption(false);
+      addToast({ type: 'success', title: t('files.detail.caption_saved', { defaultValue: 'Description saved' }) });
+    } catch (err) {
+      addToast({
+        type: 'error',
+        title: t('files.detail.caption_failed', { defaultValue: 'Could not save the description' }),
+        message: err instanceof Error ? err.message : undefined,
+      });
+    } finally {
+      setSavingCaption(false);
+    }
+  }
 
   function goBack() {
     if (window.history.length > 1) navigate(-1);
@@ -172,8 +208,57 @@ export function FileDetailPage() {
 
         <dl className="h-fit rounded-xl border border-border-light bg-surface-primary px-4 py-2">
           <Fact label={t('files.detail.name', { defaultValue: 'File name' })}>{row.name}</Fact>
-          {row.caption && (
-            <Fact label={t('files.detail.caption', { defaultValue: 'Description' })}>{row.caption}</Fact>
+          {(row.caption || (row.kind === 'photo' && canEditCaption)) && (
+            <Fact label={t('files.detail.caption', { defaultValue: 'Description' })}>
+              {editingCaption ? (
+                <div className="flex flex-col gap-2">
+                  <textarea
+                    data-testid="photo-caption-input"
+                    value={captionDraft}
+                    onChange={(e) => setCaptionDraft(e.target.value)}
+                    rows={3}
+                    maxLength={500}
+                    className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      data-testid="photo-caption-save"
+                      disabled={savingCaption}
+                      onClick={() => void saveCaption()}
+                      className="rounded-lg bg-oe-blue px-3 py-1 text-xs text-white disabled:opacity-60"
+                    >
+                      {t('common.save', { defaultValue: 'Save' })}
+                    </button>
+                    <button
+                      type="button"
+                      data-testid="photo-caption-cancel"
+                      onClick={() => setEditingCaption(false)}
+                      className="rounded-lg border border-border px-3 py-1 text-xs"
+                    >
+                      {t('common.cancel', { defaultValue: 'Cancel' })}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <span className="flex items-start gap-2">
+                  <span className="min-w-0 flex-1">{row.caption || '—'}</span>
+                  {row.kind === 'photo' && canEditCaption && (
+                    <button
+                      type="button"
+                      data-testid="photo-caption-edit"
+                      onClick={() => {
+                        setCaptionDraft(row.caption ?? '');
+                        setEditingCaption(true);
+                      }}
+                      className="shrink-0 text-xs text-oe-blue hover:underline"
+                    >
+                      {t('common.edit', { defaultValue: 'Edit' })}
+                    </button>
+                  )}
+                </span>
+              )}
+            </Fact>
           )}
           <Fact label={t('files.detail.type', { defaultValue: 'Type' })}>
             {(row.extension ?? row.mime_type ?? '').toUpperCase() || '—'}
