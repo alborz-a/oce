@@ -33,6 +33,9 @@ D = "/api/v1/"
         ("GET", f"{D}ai-estimator/embedding-model/status/"),
         ("GET", f"{D}users/{P}/avatar"),
         ("GET", f"{D}users/{P}/avatar/"),
+        ("POST", f"{D}projects/{P}/members/"),
+        ("POST", f"{D}projects/{P}/members/bulk"),
+        ("DELETE", f"{D}projects/{P}/members/{P}/"),
     ],
 )
 def test_staff_allowed(method, path):
@@ -57,6 +60,9 @@ def test_staff_allowed(method, path):
         ("GET", f"{D}users/"),
         ("PUT", f"{D}users/{P}/avatar"),
         ("DELETE", f"{D}users/{P}/avatar"),
+        ("DELETE", f"{D}projects/{P}/"),
+        ("PATCH", f"{D}projects/{P}/members/{P}/"),
+        ("PUT", f"{D}projects/{P}/members/"),
     ],
 )
 def test_staff_denied(method, path):
