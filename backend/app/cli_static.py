@@ -129,6 +129,9 @@ for _suffix, _mime in (
 # read the HTML as a budget and reported positions found in it. Whatever a screen
 # offers for download belongs in this set, and
 # ``test_shipped_exchange_samples_are_importable`` is what keeps the two in step.
+_REVALIDATE_ROOT_FILES: frozenset[str] = frozenset({"sw.js", "registerSW.js", "index.html", "manifest.webmanifest"})
+
+
 SERVED_ROOT_EXTENSIONS: frozenset[str] = frozenset(
     {
         ".ico",
@@ -375,6 +378,10 @@ def mount_frontend(app: FastAPI) -> None:
         if relative:
             candidate = frontend_dir / relative
             if candidate.is_file() and candidate.suffix in _root_static_extensions:
+                # The service worker and its loader must be revalidated on every check, or a
+                # browser keeps the old precache (and the old version) after a deploy.
+                if relative in _REVALIDATE_ROOT_FILES or relative.startswith("workbox-"):
+                    return FileResponse(str(candidate), headers={"Cache-Control": "no-cache"})
                 return FileResponse(str(candidate))
 
             # A request that asks for a FILE and does not get one is a 404, and
