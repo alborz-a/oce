@@ -845,7 +845,7 @@ async def get_photo(
     return _photo_to_response(photo)
 
 
-# Blob I/O on the read-only Mizito bucket mount can hang (clock skew, bucket
+# Blob I/O on the read-only bucket mount of imported photos can hang (clock skew, bucket
 # stall): a blocked FUSE read in an async handler froze the whole portal. Run
 # the blocking filesystem calls on a small dedicated pool, bound the wait, and
 # shed load once the pool is full of stuck calls, so a sick mount only breaks
@@ -1052,7 +1052,7 @@ async def serve_photo_file(
         return await object_store.stream_response(  # type: ignore[return-value]
             photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), None
         )
-    mz = await object_store.mizito_stream_response(
+    mz = await object_store.imported_stream_response(
         photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
     )
     if mz is not None:
@@ -1088,6 +1088,58 @@ async def serve_photo_file(
 
     safe_dl_name = _sanitize_filename(photo.filename or f"photo{ext}")
     return await _blob_file_response(file_path, media_type=media_type, filename=safe_dl_name)
+
+
+# ── Presigned photo URLs ───────────────────────────────────────────────
+
+
+class PhotoUrlResponse(BaseModel):
+    """Short-lived direct URL, or ``url = None`` when the photo has to come through the API."""
+
+    url: str | None = None
+    expires_in: int = object_store.PRESIGN_TTL_S
+
+
+@router.get(
+    "/photos/{photo_id}/file-url/",
+    response_model=PhotoUrlResponse,
+    dependencies=[Depends(RequirePermission("documents.read"))],
+)
+async def photo_file_url(
+    photo_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    service: PhotoService = Depends(_get_photo_service),
+) -> PhotoUrlResponse:
+    """Presigned URL of the full photo, after the same project check as ``/file/``."""
+    photo = await service.get_photo(photo_id)
+    await verify_project_access(photo.project_id, user_id, session, manager_read=True)
+    url = await object_store.photo_presigned_url(
+        photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
+    )
+    return PhotoUrlResponse(url=url)
+
+
+@router.get(
+    "/photos/{photo_id}/thumb-url/",
+    response_model=PhotoUrlResponse,
+    dependencies=[Depends(RequirePermission("documents.read"))],
+)
+async def photo_thumb_url(
+    photo_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    service: PhotoService = Depends(_get_photo_service),
+) -> PhotoUrlResponse:
+    """Presigned URL of the thumbnail (made in the bucket on first use), else of the full photo."""
+    photo = await service.get_photo(photo_id)
+    await verify_project_access(photo.project_id, user_id, session, manager_read=True)
+    url = await object_store.photo_thumb_presigned_url(photo.id, photo.file_path)
+    if url is None:
+        url = await object_store.photo_presigned_url(
+            photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
+        )
+    return PhotoUrlResponse(url=url)
 
 
 # ── Serve photo thumbnail ──────────────────────────────────────────────
@@ -1133,7 +1185,7 @@ async def serve_photo_thumbnail(
             attachment=False,
             headers={"Cache-Control": "public, max-age=3600"},
         )
-    mz = await object_store.mizito_stream_response(
+    mz = await object_store.imported_stream_response(
         photo.file_path,
         _sanitize_filename(photo.filename or "photo.jpg"),
         _photo_media_type(photo.file_path),

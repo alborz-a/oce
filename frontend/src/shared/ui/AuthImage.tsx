@@ -59,10 +59,35 @@ const cache = new Map<string, CacheEntry>();
  *  thumbnails does not hammer the API on every re-mount. */
 const missing = new Set<string>();
 
+/** Photo routes that can answer with a short-lived direct storage URL (``…/file/`` → ``…/file-url/``). */
+const PHOTO_DIRECT = /^((?:https?:\/\/[^/]+)?\/api\/v1\/documents\/photos\/[^/]+)\/(file|thumb)\/$/;
+
+/**
+ * Ask the API for a presigned storage URL. The permission check happens there; the image then loads
+ * straight from the bucket with no bearer token and no download through our server. Null means the
+ * photo is not bucket-backed (or the call failed) and the caller proxies it as before.
+ */
+async function fetchDirectUrl(src: string, headers: Record<string, string>): Promise<string | null> {
+  const m = PHOTO_DIRECT.exec(src);
+  if (!m) return null;
+  try {
+    const res = await fetch(`${m[1]}/${m[2]}-url/`, { headers: { ...headers, Accept: 'application/json' } });
+    if (res.status === 404) missing.add(src);
+    if (!res.ok) return null;
+    const body = (await res.json()) as { url?: string | null };
+    return typeof body.url === 'string' && body.url.startsWith('https://') ? body.url : null;
+  } catch {
+    return null;
+  }
+}
+
 async function fetchObjectUrl(src: string, priority: FetchPriority): Promise<string> {
   const token = useAuthStore.getState().accessToken;
   const headers: Record<string, string> = { Accept: 'image/*' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (missing.has(src)) throw new Error('HTTP 404');
+  const direct = await fetchDirectUrl(src, headers);
+  if (direct) return direct;
   if (missing.has(src)) throw new Error('HTTP 404');
   const res = await fetch(src, { headers, priority } as RequestInit);
   if (res.status === 404) missing.add(src);
@@ -98,17 +123,17 @@ function release(src: string, entry: CacheEntry) {
   if (entry.refs > 0) return;
   if (cache.get(src) === entry) cache.delete(src);
   if (entry.objectUrl) {
-    URL.revokeObjectURL(entry.objectUrl);
+    if (entry.objectUrl.startsWith('blob:')) URL.revokeObjectURL(entry.objectUrl);
   } else {
     // Still downloading: free the blob as soon as it arrives.
-    entry.promise.then((url) => URL.revokeObjectURL(url)).catch(() => {});
+    entry.promise.then((url) => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); }).catch(() => {});
   }
 }
 
 /** Drops every cached blob. For tests. */
 export function resetAuthImageCache() {
   for (const entry of cache.values()) {
-    if (entry.objectUrl) URL.revokeObjectURL(entry.objectUrl);
+    if (entry.objectUrl?.startsWith('blob:')) URL.revokeObjectURL(entry.objectUrl);
   }
   cache.clear();
   missing.clear();

@@ -1,4 +1,4 @@
-"""System accounts that only a system admin should see (the Mizito import account)."""
+"""System accounts that only a system admin should see (the photo import account)."""
 
 from __future__ import annotations
 

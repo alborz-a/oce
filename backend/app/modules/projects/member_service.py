@@ -70,7 +70,7 @@ async def _load_project(session: AsyncSession, project_id: uuid.UUID) -> Project
 def present_members(members: list[ProjectMemberResponse], viewer_is_admin: bool) -> list[ProjectMemberResponse]:
     """Shape the member list for display.
 
-    Non-admins never see the Mizito import account. The project owner shown is the
+    Non-admins never see the import account. The project owner shown is the
     project manager when one exists (the import account owns every project row only
     because the API has no ownership transfer). Admins get the list unchanged.
     """

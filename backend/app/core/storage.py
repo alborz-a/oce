@@ -389,7 +389,14 @@ class StorageBackend(ABC):
         )
         yield payload
 
-    def url_for(self, key: str, *, expires_in: int = 3600) -> str | None:
+    def url_for(
+        self,
+        key: str,
+        *,
+        expires_in: int = 3600,
+        response_content_type: str | None = None,
+        response_content_disposition: str | None = None,
+    ) -> str | None:
         """Return a presigned download URL for ``key``.
 
         The local backend returns ``None`` - callers then fall back to
@@ -397,7 +404,7 @@ class StorageBackend(ABC):
         The S3 backend returns a short-lived presigned ``GET`` URL which
         callers can ``RedirectResponse`` to.
         """
-        _ = (key, expires_in)
+        _ = (key, expires_in, response_content_type, response_content_disposition)
         return None
 
     def local_path(self, key: str) -> Path | None:
@@ -766,7 +773,14 @@ class LocalStorageBackend(StorageBackend):
         finally:
             await asyncio.to_thread(handle.close)  # type: ignore[attr-defined]
 
-    def url_for(self, key: str, *, expires_in: int = 3600) -> str | None:
+    def url_for(
+        self,
+        key: str,
+        *,
+        expires_in: int = 3600,
+        response_content_type: str | None = None,
+        response_content_disposition: str | None = None,
+    ) -> str | None:
         # Local backend cannot presign - caller must stream through the route.
         return None
 
@@ -1096,10 +1110,11 @@ class S3StorageBackend(StorageBackend):
 
     # -- public API -----------------------------------------------------
 
-    async def put(self, key: str, content: bytes) -> None:
+    async def put(self, key: str, content: bytes, content_type: str | None = None) -> None:
         normalised = self._full_key(key)
+        extra = {"ContentType": content_type} if content_type else {}
         async with self._client_ctx() as client:  # type: ignore[attr-defined]
-            await client.put_object(Bucket=self._bucket, Key=normalised, Body=content)
+            await client.put_object(Bucket=self._bucket, Key=normalised, Body=content, **extra)
 
     async def put_stream(self, key: str, src_path: Path) -> None:
         """Upload ``src_path`` to ``key`` via aioboto3's ``upload_fileobj``.
@@ -1252,7 +1267,14 @@ class S3StorageBackend(StorageBackend):
                         break
                     yield chunk
 
-    def url_for(self, key: str, *, expires_in: int = 3600) -> str | None:
+    def url_for(
+        self,
+        key: str,
+        *,
+        expires_in: int = 3600,
+        response_content_type: str | None = None,
+        response_content_disposition: str | None = None,
+    ) -> str | None:
         """Return a presigned download URL (synchronous - uses botocore).
 
         ``aioboto3`` presigning is sync-safe because it just signs
@@ -1278,9 +1300,14 @@ class S3StorageBackend(StorageBackend):
             region_name=self._region or None,
             config=cfg,
         )
+        params: dict[str, str] = {"Bucket": self._bucket, "Key": normalised}
+        if response_content_type:
+            params["ResponseContentType"] = response_content_type
+        if response_content_disposition:
+            params["ResponseContentDisposition"] = response_content_disposition
         return client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": self._bucket, "Key": normalised},
+            Params=params,
             ExpiresIn=int(expires_in),
         )
 
