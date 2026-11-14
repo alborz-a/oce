@@ -887,6 +887,22 @@ async def _blob_io(fn: Callable[..., Any], *args: Any) -> Any:
         raise _blob_unavailable() from None
 
 
+_PHOTO_MEDIA_TYPES = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".heic": "image/heic",
+    ".heif": "image/heif",
+    ".tiff": "image/tiff",
+    ".tif": "image/tiff",
+}
+
+
+def _photo_media_type(file_path: str | None) -> str:
+    return _PHOTO_MEDIA_TYPES.get(Path(file_path or "").suffix.lower(), "image/jpeg")
+
+
 def _ensure_blob_readable(path: Path) -> None:
     """503 when the blob exists but cannot be read (read-only bucket mount: Errno 5).
 
@@ -1001,6 +1017,11 @@ async def serve_photo_file(
         return await object_store.stream_response(  # type: ignore[return-value]
             photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), None
         )
+    mz = await object_store.mizito_stream_response(
+        photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
+    )
+    if mz is not None:
+        return mz  # type: ignore[return-value]
     photo_base = Path(PHOTO_BASE).resolve()
 
     # Re-home the blob against the current data dir: a photo whose absolute
@@ -1084,6 +1105,15 @@ async def serve_photo_thumbnail(
             attachment=False,
             headers={"Cache-Control": "public, max-age=3600"},
         )
+    mz = await object_store.mizito_stream_response(
+        photo.file_path,
+        _sanitize_filename(photo.filename or "photo.jpg"),
+        _photo_media_type(photo.file_path),
+        attachment=False,
+        headers={"Cache-Control": "public, max-age=3600"},
+    )
+    if mz is not None:
+        return mz  # type: ignore[return-value]
     file_path = await _blob_io(_resolve_photo_blob, photo.file_path, photo_base, ("photos",))
     if file_path is None:
         raise HTTPException(
