@@ -82,6 +82,7 @@ from app.modules.projects.member_schemas import (
     ProjectMemberResponse,
 )
 from app.modules.projects.module_presence import probe_project_modules
+from app.core.project_roles import get_project_caps, get_project_role, require_project_cap
 from app.modules.projects.schemas import (
     ComplianceRulePacksUpdate,
     FocusModePatch,
@@ -144,6 +145,28 @@ async def _verify_project_owner(
             detail="You do not have access to this project",
         )
     return project
+
+
+async def _verify_project_updater(
+    service: ProjectService,
+    project_id: uuid.UUID,
+    user_id: str,
+    session: AsyncSession,
+    payload: dict | None = None,
+) -> object:
+    """Verify caller has project.update capability or is admin/owner [RSC-IRAN]."""
+    project = await service.get_project(project_id)
+    if payload and payload.get("role") == "admin":
+        return project
+    if str(project.owner_id) == user_id:
+        return project
+    caps = await get_project_caps(session, user_id, project_id)
+    if "project.update" in caps:
+        return project
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="project_capability_required:project.update",
+    )
 
 
 async def _verify_project_member_manager(
@@ -350,7 +373,12 @@ async def get_project(
 ) -> ProjectResponse:
     """Get project by ID. Accessible by owner, admin, or project team member."""
     project = await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
-    return ProjectResponse.model_validate(project)
+    resp = ProjectResponse.model_validate(project)
+    role = await get_project_role(session, user_id, project_id)
+    caps = await get_project_caps(session, user_id, project_id)
+    resp.my_project_role = role or ""
+    resp.my_caps = sorted(caps)
+    return resp
 
 
 # ── Update ────────────────────────────────────────────────────────────────
@@ -361,19 +389,26 @@ async def get_project(
     response_model=ProjectResponse,
     summary="Update project",
     description="Partially update project fields (name, description, region, currency, etc.). "
-    "Only provided fields are modified. Verifies ownership.",
+    "Only provided fields are modified. Verifies project.update capability.",
+    dependencies=[Depends(require_project_cap("project.update"))],
 )
 async def update_project(
     project_id: uuid.UUID,
     data: ProjectUpdate,
     user_id: CurrentUserId,
     payload: CurrentUserPayload,
+    session: SessionDep,
     service: ProjectService = Depends(_get_service),
 ) -> ProjectResponse:
-    """Update project fields. Verifies ownership."""
-    await _verify_project_owner(service, project_id, user_id, payload)
+    """Update project fields. Verifies project.update capability [RSC-IRAN]."""
+    await _verify_project_updater(service, project_id, user_id, session, payload)
     project = await service.update_project(project_id, data, changed_by=user_id)
-    return ProjectResponse.model_validate(project)
+    resp = ProjectResponse.model_validate(project)
+    role = await get_project_role(session, user_id, project_id)
+    caps = await get_project_caps(session, user_id, project_id)
+    resp.my_project_role = role or ""
+    resp.my_caps = sorted(caps)
+    return resp
 
 
 # ── Delete (archive) ─────────────────────────────────────────────────────
@@ -656,8 +691,9 @@ async def list_project_members_endpoint(
     description="Active users (id, email, full name) for the add-member picker. Owner, admin "
     "or a team project_manager of this project only. Backs the picker for project managers, "
     "who cannot list all users.",
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
-@router.get("/{project_id}/member-candidates", include_in_schema=False)
+@router.get("/{project_id}/member-candidates", include_in_schema=False, dependencies=[Depends(require_project_cap("members.manage"))])
 async def list_member_candidates_endpoint(
     project_id: uuid.UUID,
     user_id: CurrentUserId,
@@ -694,12 +730,14 @@ async def list_member_candidates_endpoint(
     summary="Add a project member",
     description="Add an existing user to the project. 409 if the user is "
     "already a member; 404 if the user doesn't exist.",
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 @router.post(
     "/{project_id}/members",
     response_model=ProjectMemberResponse,
     status_code=201,
     include_in_schema=False,
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 async def add_project_member_endpoint(
     project_id: uuid.UUID,
@@ -726,12 +764,14 @@ async def add_project_member_endpoint(
     "CDE go-live gate: when the gate is enabled the project's common data "
     "environment must have reached the required readiness level, otherwise the "
     "invite is rejected with 409 so nobody is invited onto an unconfigured CDE.",
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 @router.post(
     "/{project_id}/members/bulk",
     response_model=BulkAddProjectMembersResponse,
     status_code=201,
     include_in_schema=False,
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 async def bulk_add_project_members_endpoint(
     project_id: uuid.UUID,
@@ -779,11 +819,13 @@ async def bulk_add_project_members_endpoint(
     summary="Remove a project member",
     description="Remove a user from the project. Cannot remove the project "
     "owner - use the ownership transfer flow for that.",
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 @router.delete(
     "/{project_id}/members/{member_user_id}",
     status_code=204,
     include_in_schema=False,
+    dependencies=[Depends(require_project_cap("members.manage"))],
 )
 async def remove_project_member_endpoint(
     project_id: uuid.UUID,

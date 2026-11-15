@@ -203,9 +203,9 @@ def require_project_cap(cap: str):
 
     async def _dependency(
         request: Request,
+        user_id: CurrentUserId,
+        payload: CurrentUserPayload,
         session: AsyncSession = Depends(get_session),
-        user_id: CurrentUserId = Depends(get_current_user_id),
-        payload: CurrentUserPayload = Depends(get_current_user_payload),
     ) -> None:
         # Admin bypass
         if payload and payload.get("role") == "admin":

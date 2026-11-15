@@ -49,6 +49,7 @@ from app.dependencies import (
 )
 from app.modules.documents import object_store
 from app.modules.projects.file_manager_redact import viewer_is_system_admin
+from app.core.project_roles import get_project_caps
 from app.modules.documents.schemas import (
     DocumentActivityListResponse,
     DocumentActivityResponse,
@@ -360,13 +361,14 @@ async def register_photo_object(
 @router.post("/upload/", response_model=DocumentResponse, status_code=201)
 async def upload_document(
     session: SessionDep,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     project_id: uuid.UUID = Query(...),
     category: str = Query(default="other"),
     revision_code: str | None = Query(default=None, max_length=20),
     drawing_number: str | None = Query(default=None, max_length=100),
     file: UploadFile = File(...),
     content_length: int | None = Header(default=None),
-    user_id: CurrentUserId = "",  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("documents.create")),
     service: DocumentService = Depends(_get_service),
 ) -> DocumentResponse:
@@ -383,6 +385,14 @@ async def upload_document(
         folder_access_for,
         kind_and_path_for_document,
     )
+
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "file.upload" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.upload",
+            )
 
     kind, path = kind_and_path_for_document(category)
     role = await folder_access_for(
@@ -672,6 +682,8 @@ async def _photo_out_list(session: SessionDep, user_id: str | None, photos: list
 @router.post("/photos/upload/", response_model=PhotoResponse, status_code=201)
 async def upload_photo(
     session: SessionDep,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     project_id: uuid.UUID = Query(...),
     category: str = Form(default="site"),
     caption: str | None = Form(default=None),
@@ -680,11 +692,10 @@ async def upload_photo(
     tags: str | None = Form(default=None),
     taken_at: str | None = Form(default=None),
     file: UploadFile = File(...),
-    user_id: CurrentUserId = "",  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("documents.photo_create")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
-    """Upload a photo with metadata to a project."""
+    """Upload a photo with metadata to a project [RSC-IRAN]."""
     await verify_project_access(project_id, user_id, session)
     # Every photo needs a description (owner order 2026-11-15).
     if caption is None or not caption.strip():
@@ -693,6 +704,13 @@ async def upload_photo(
             detail="توضیح عکس الزامی است",
         )
     caption = caption.strip()
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "file.upload" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.upload",
+            )
     # Parse tags from comma-separated string
     parsed_tags: list[str] = []
     if tags:
@@ -1282,7 +1300,8 @@ async def update_photo(
     photo_id: uuid.UUID,
     data: PhotoUpdate,
     session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("documents.photo_update")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
@@ -1297,6 +1316,13 @@ async def update_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, photo.project_id)
+        if "file.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.modify",
+            )
     # E3: only the uploader, a project manager of this project, or the system
     # admin may change a photo's description (the UI shows the button to the same set).
     if not await _can_edit_photo_description(photo, user_id, session):
@@ -1332,7 +1358,8 @@ async def _can_edit_photo_description(photo: object, user_id: str | None, sessio
 async def delete_photo(
     photo_id: uuid.UUID,
     session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("documents.delete")),
     service: PhotoService = Depends(_get_photo_service),
 ) -> None:
@@ -1344,6 +1371,13 @@ async def delete_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, photo.project_id)
+        if "file.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.modify",
+            )
     await service.delete_photo(photo_id)
 
 
@@ -2367,6 +2401,13 @@ async def update_document(
     """
     existing = await service.get_document(document_id)
     await verify_project_access(existing.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, existing.project_id)
+        if "file.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.modify",
+            )
     doc = await service.update_document(
         document_id,
         data,
@@ -2511,10 +2552,11 @@ async def delete_document(
     document_id: uuid.UUID,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("documents.delete")),
     service: DocumentService = Depends(_get_service),
 ) -> None:
-    """Delete a document, honoring folder permissions.
+    """Delete a document, honoring folder permissions [RSC-IRAN].
 
     Non-owner members are 404'd when:
         * the folder is restricted and they have no grant, OR
@@ -2526,6 +2568,13 @@ async def delete_document(
     """
     existing = await service.get_document(document_id)
     await _verify_project_membership_or_404(existing.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, existing.project_id)
+        if "file.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:file.modify",
+            )
 
     from app.modules.documents.folder_permissions_service import (
         can_write,
