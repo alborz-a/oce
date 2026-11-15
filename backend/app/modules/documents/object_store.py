@@ -257,4 +257,9 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
     except Exception as exc:  # noqa: BLE001
         logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)
         return None
-    return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")
+    return backend.url_for(
+        thumb_key,
+        expires_in=PRESIGN_TTL_S,
+        response_content_type="image/jpeg",
+        response_content_disposition=_content_disposition(f"{photo_id}.jpg", False),
+    )

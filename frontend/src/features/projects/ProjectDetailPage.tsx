@@ -176,6 +176,16 @@ export function isPositionUnpriced(
  */
 const SECTION_UNITS = new Set(['', 'section']);
 
+// RSD-0.47 D2/D3/D4: owner hid these for every user. photo-strip is the second photo UI
+// (the Photos tab keeps the single photo UI with upload and description).
+const PROJECT_WIDGETS_HIDDEN_FOR_ALL = new Set([
+  'quality-ncr',
+  'compliance-summary',
+  'recent-files',
+  'activity-feed',
+  'photo-strip',
+]);
+
 export function isSection(pos: Pick<PositionSummary, 'unit' | 'quantity' | 'unit_rate'>): boolean {
   const unit = (pos.unit ?? '').trim().toLowerCase();
   return SECTION_UNITS.has(unit) && toNum(pos.quantity) === 0 && toNum(pos.unit_rate) === 0;
@@ -1465,6 +1475,7 @@ export function ProjectDetailPage() {
   // its "view all" link points to (computed per render, nothing persisted).
   const isWidgetHidden = useCallback(
     (id: string) =>
+      PROJECT_WIDGETS_HIDDEN_FOR_ALL.has(id) ||
       layoutHidden.includes(id) ||
       !isProjectWidgetAvailable(id, canOpenRoute, isSystemAdmin),
     [layoutHidden, canOpenRoute, isSystemAdmin],
@@ -1885,7 +1896,7 @@ export function ProjectDetailPage() {
         className={clsx(
           'grid gap-3 items-stretch',
           !isWidgetHidden('project-info') && !isWidgetHidden('health-bar')
-            ? 'grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]'
+            ? 'grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,18rem)]'
             : 'grid-cols-1',
         )}
       >

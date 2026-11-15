@@ -115,6 +115,7 @@ async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> 
                 role=membership.role,
                 is_owner=(user.id == project.owner_id),
                 created_at=membership.created_at,
+                avatar_url=user.avatar_url,
             )
         )
         seen.add(user.id)
@@ -187,6 +188,7 @@ async def add_project_member(
         role=membership.role,
         is_owner=(user.id == project.owner_id),
         created_at=membership.created_at,
+        avatar_url=user.avatar_url,
     )
 
 

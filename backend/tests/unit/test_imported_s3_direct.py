@@ -140,3 +140,11 @@ async def test_thumb_failure_returns_none(monkeypatch):
     monkeypatch.setattr("app.modules.documents.service._generate_photo_thumbnail", lambda s, d: False)
     assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is None
     assert be.put_calls == []
+
+
+async def test_thumb_presign_is_inline_not_attachment(monkeypatch):
+    be = _PresignBackend(thumb_exists=True)
+    monkeypatch.setattr(os_, "_imported_s3", lambda: be)
+    assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is not None
+    assert be.url_kwargs["response_content_disposition"].startswith("inline;")
+    assert be.url_kwargs["response_content_type"] == "image/jpeg"
