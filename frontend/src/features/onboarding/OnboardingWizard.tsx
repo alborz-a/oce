@@ -4676,6 +4676,14 @@ export function OnboardingWizard() {
     }
   }, [alreadyCompleted, navigate]);
 
+  // [RSC-IRAN] Step 5.7: Onboarding wizard never opens for restricted users
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  useEffect(() => {
+    if (restrictedMode) {
+      navigate('/projects', { replace: true });
+    }
+  }, [restrictedMode, navigate]);
+
   // Track whether user chose "Quick Start" (skip profile + modules, go to data)
   const [quickStart, setQuickStart] = useState(false);
   // Track whether module config step should be shown
@@ -4817,7 +4825,8 @@ export function OnboardingWizard() {
   // redirects to the app. Returning null (instead of the wizard) is what
   // actually stops the "Welcome to Royal Stars Portal" modal from
   // flashing on top of /settings & friends. (ONBOARD-MODAL)
-  if (alreadyCompleted) {
+  // [RSC-IRAN] Step 5.7: Never render wizard for restricted users
+  if (alreadyCompleted || restrictedMode) {
     return null;
   }
 
