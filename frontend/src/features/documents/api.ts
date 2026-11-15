@@ -11,7 +11,21 @@ import { useAuthStore } from '@/stores/useAuthStore';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
-export type PhotoCategory = 'site' | 'progress' | 'defect' | 'delivery' | 'safety' | 'aerial' | 'other';
+// [RSC-IRAN] Step 6.4: Nine canonical photo categories + legacy aliases
+export type PhotoCategory =
+  | 'site_progress'
+  | 'before_work'
+  | 'after_work'
+  | 'defect'
+  | 'materials'
+  | 'safety'
+  | 'drawing_doc'
+  | 'site_visit'
+  | 'other'
+  | 'site'
+  | 'progress'
+  | 'delivery'
+  | 'aerial';
 
 export interface PhotoItem {
   id: string;

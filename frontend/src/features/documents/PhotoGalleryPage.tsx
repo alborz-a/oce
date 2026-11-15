@@ -1,3 +1,4 @@
+import { useProjectCaps } from '@/shared/hooks/useProjectCaps'; // [RSC-IRAN] Step 5.5
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 /**
@@ -75,19 +76,44 @@ const num = (n: number): string | number => (REGION_LOCK ? toPersianDigits(n) : 
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
+// [RSC-IRAN] Step 6.4: Nine canonical photo categories
 const PHOTO_CATEGORIES: PhotoCategory[] = [
-  'site', 'progress', 'defect', 'delivery', 'safety', 'aerial', 'other',
+  'site_progress',
+  'before_work',
+  'after_work',
+  'defect',
+  'materials',
+  'safety',
+  'drawing_doc',
+  'site_visit',
+  'other',
 ];
 
-const CATEGORY_COLORS: Record<PhotoCategory, string> = {
+const CATEGORY_COLORS: Record<string, string> = {
+  site_progress: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+  before_work: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300',
+  after_work: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
+  defect: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+  materials: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
+  safety: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
+  drawing_doc: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
+  site_visit: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
+  other: 'bg-gray-100 text-gray-700 dark:bg-gray-800/60 dark:text-gray-300',
+  // legacy aliases
   site: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
   progress: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
-  defect: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
   delivery: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  safety: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
   aerial: 'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-300',
-  other: 'bg-gray-100 text-gray-700 dark:bg-gray-800/60 dark:text-gray-300',
 };
+
+// [RSC-IRAN] Step 6.4: Localized category label helper, normalizing legacy site -> site_progress
+function getCategoryLabel(
+  t: (key: string, opts?: { defaultValue?: string }) => string,
+  cat: string,
+): string {
+  const normalized = cat === 'site' ? 'site_progress' : cat;
+  return t(`photos.type.${normalized}`, { defaultValue: t(`photos.cat_${cat}`, { defaultValue: cat }) });
+}
 
 const SEVERITY_COLORS: Record<DefectSeverity, string> = {
   low: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300',
