@@ -277,6 +277,8 @@ async def _collect_photos(
                     "gps_lat": r.gps_lat,
                     "gps_lon": r.gps_lon,
                     "thumbnail_path": r.thumbnail_path,
+                    # Uploader id: lets the UI show "Edit description" to the uploader (RSD-0.46 E3).
+                    "created_by": r.created_by,
                 },
             ),
         )

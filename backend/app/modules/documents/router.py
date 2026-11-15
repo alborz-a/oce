@@ -48,6 +48,7 @@ from app.dependencies import (
     verify_project_access,
 )
 from app.modules.documents import object_store
+from app.modules.projects.file_manager_redact import viewer_is_system_admin
 from app.modules.documents.schemas import (
     DocumentActivityListResponse,
     DocumentActivityResponse,
@@ -206,7 +207,17 @@ async def get_summary(
     """Aggregated document stats for a project."""
     await verify_project_access(project_id, user_id, session)
     data = await service.get_summary(project_id)
-    return DocumentSummary(**data)
+    summary = DocumentSummary(**data)
+    # B1/B2: storage totals and per-upload sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        summary = summary.model_copy(
+            update={
+                "total_size_bytes": 0,
+                "total_size_mb": 0.0,
+                "recent_uploads": [r.model_copy(update={"size": 0}) for r in summary.recent_uploads],
+            }
+        )
+    return summary
 
 
 # ── Register objects already in storage (admin import) ───────────────────────
@@ -515,8 +526,12 @@ async def list_documents(
                 visible.append(doc)
         docs = visible
 
+    items = [_doc_to_response(d) for d in docs]
+    # B2: file sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        items = [item.model_copy(update={"file_size": 0}) for item in items]
     return DocumentListResponse(
-        items=[_doc_to_response(d) for d in docs],
+        items=items,
         total=total,
         offset=offset,
         limit=limit,
@@ -615,6 +630,40 @@ def _photo_to_response(photo: object) -> PhotoResponse:
         updated_at=photo.updated_at,  # type: ignore[attr-defined]
         has_thumbnail=bool(getattr(photo, "thumbnail_path", None)),
     )
+
+
+# B2: keys a photo's metadata blob can carry that name a size or a storage
+# location. Non-admins get the blob without them.
+_PHOTO_META_HIDDEN_KEYS = frozenset(
+    {"size", "size_bytes", "file_size", "storage", "file_path", "path", "mount", "bucket", "s3_key"}
+)
+
+
+def _strip_photo_storage_meta(metadata: dict[str, Any]) -> dict[str, Any]:
+    return {
+        k: v
+        for k, v in metadata.items()
+        if k not in _PHOTO_META_HIDDEN_KEYS and not k.endswith(("_path", "_key", "_root", "_bytes", "_size"))
+    }
+
+
+async def _photo_out(session: SessionDep, user_id: str | None, photo: object) -> PhotoResponse:
+    """One photo response, with storage keys in metadata removed for non-admins."""
+    response = _photo_to_response(photo)
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return response
+    return response.model_copy(update={"metadata": _strip_photo_storage_meta(response.metadata)})
+
+
+async def _photo_out_list(session: SessionDep, user_id: str | None, photos: list[object]) -> list[PhotoResponse]:
+    admin = await viewer_is_system_admin(session, str(user_id) if user_id else None)
+    out: list[PhotoResponse] = []
+    for photo in photos:
+        response = _photo_to_response(photo)
+        if not admin:
+            response = response.model_copy(update={"metadata": _strip_photo_storage_meta(response.metadata)})
+        out.append(response)
+    return out
 
 
 # ── Upload photo ────────────────────────────────────────────────────────
@@ -724,7 +773,7 @@ async def list_photos(
         search=search,
     )
     return PhotoListResponse(
-        items=[_photo_to_response(p) for p in photos],
+        items=await _photo_out_list(session, user_id, photos),
         total=total,
         offset=offset,
         limit=limit,
@@ -772,7 +821,7 @@ async def get_timeline(
     await verify_project_access(project_id, user_id, session, manager_read=True)
     photos, total = await service.get_gallery(project_id, limit=GALLERY_LIMIT)
     return PhotoListResponse(
-        items=[_photo_to_response(p) for p in photos],
+        items=await _photo_out_list(session, user_id, photos),
         total=total,
         offset=0,
         limit=GALLERY_LIMIT,
@@ -849,7 +898,7 @@ async def get_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
-    return _photo_to_response(photo)
+    return await _photo_out(session, user_id, photo)
 
 
 # Blob I/O on the read-only bucket mount of imported photos can hang (clock skew, bucket
@@ -1248,8 +1297,32 @@ async def update_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    # E3: only the uploader, a project manager of this project, or the system
+    # admin may change a photo's description (the UI shows the button to the same set).
+    if not await _can_edit_photo_description(photo, user_id, session):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the uploader, a project manager or an admin can edit this description",
+        )
     photo = await service.update_photo(photo_id, data)
-    return _photo_to_response(photo)
+    return await _photo_out(session, user_id, photo)
+
+
+async def _can_edit_photo_description(photo: object, user_id: str | None, session: SessionDep) -> bool:
+    """Uploader, project manager of the photo's project, or system admin."""
+    if not user_id:
+        return False
+    if await viewer_is_system_admin(session, str(user_id)):
+        return True
+    if str(getattr(photo, "created_by", "") or "") == str(user_id):
+        return True
+    from app.modules.teams.access import is_project_manager
+
+    try:
+        uid = uuid.UUID(str(user_id))
+    except (ValueError, TypeError):
+        return False
+    return await is_project_manager(session, photo.project_id, uid)  # type: ignore[attr-defined]
 
 
 # ── Delete photo ────────────────────────────────────────────────────────
@@ -2104,7 +2177,11 @@ async def get_document(
         manager_read=True,
     )
     require_read(role)
-    return _doc_to_response(doc)
+    response = _doc_to_response(doc)
+    # B2: file sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        response = response.model_copy(update={"file_size": 0})
+    return response
 
 
 # ── Download ─────────────────────────────────────────────────────────────────

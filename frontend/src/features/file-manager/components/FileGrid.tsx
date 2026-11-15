@@ -17,6 +17,7 @@ import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -117,6 +118,8 @@ export function FileGrid({
   searchQuery,
 }: FileGridProps) {
   const { t } = useTranslation();
+  // B2: file sizes are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
 
   // ── Keyboard roving navigation ──────────────────────────────────────
   // Exactly one tile carries ``tabIndex={0}`` (the roving item); the rest
@@ -355,7 +358,7 @@ export function FileGrid({
                   )
                 ) : (
                   <div className="mt-1 flex items-center justify-between text-[10px] text-content-tertiary tabular-nums">
-                    <span>{fmtBytes(row.size_bytes)}</span>
+                    {row.kind !== 'photo' && isSystemAdmin ? <span>{fmtBytes(row.size_bytes)}</span> : <span />}
                     {row.modified_at && (
                       <DateDisplay value={row.modified_at} format="relative" className="ms-2 shrink-0" />
                     )}

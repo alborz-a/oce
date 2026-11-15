@@ -60,6 +60,12 @@ from app.modules.projects.file_manager_schemas import (
     ImportResult,
     StorageLocations,
 )
+from app.modules.projects.file_manager_redact import (
+    redact_file_rows,
+    redact_locations,
+    redact_tree,
+    viewer_is_system_admin,
+)
 from app.modules.projects.file_manager_service import (
     file_tree as fm_file_tree,
 )
@@ -2895,13 +2901,17 @@ async def file_manager_tree(
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
     await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
-    return await fm_file_tree(
+    nodes = await fm_file_tree(
         session,
         str(project_id),
         user_id=str(user_id) if user_id else None,
         query=q,
         extension=extension,
     )
+    # B1/B2: byte totals and physical paths are admin-only.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return nodes
+    return redact_tree(nodes)
 
 
 @router.get(
@@ -2954,7 +2964,7 @@ async def file_manager_list(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Unknown file kind(s): {', '.join(unknown)}",
             )
-    return await fm_list_files(
+    listing = await fm_list_files(
         session,
         str(project_id),
         user_id=str(user_id) if user_id else None,
@@ -2967,6 +2977,10 @@ async def file_manager_list(
         offset=offset,
         sort=sort,
     )
+    # B1/B2: file sizes and on-disk paths are admin-only.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return listing
+    return listing.model_copy(update={"items": redact_file_rows(listing.items)})
 
 
 @router.get(
@@ -2990,11 +3004,15 @@ async def file_manager_locations(
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
     project = await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
-    return fm_resolve_locations(
+    locations = fm_resolve_locations(
         str(project_id),
         getattr(project, "name", ""),
         settings=settings,
     )
+    # B2: the real storage roots and DB path are admin-only.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return locations
+    return redact_locations(locations)
 
 
 # ── Bundle export / import (Issue #109) ───────────────────────────────────

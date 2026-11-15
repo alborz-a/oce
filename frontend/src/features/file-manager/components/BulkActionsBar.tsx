@@ -29,7 +29,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { Trash2, X, Loader2, Tag, Send, Download, Star, ChevronDown, ListChecks } from 'lucide-react';
+import { Trash2, X, Loader2, Tag, Download, Star, ChevronDown, ListChecks } from 'lucide-react';
 import clsx from 'clsx';
 import { useToastStore } from '@/stores/useToastStore';
 import { fileManagerKeys } from '../hooks';
@@ -48,7 +48,6 @@ import { useRestoreFromTrash } from '@/features/file-trash/hooks';
 import { showUndoDeleteToast } from '@/features/file-trash/UndoDeleteToast';
 import type { TrashKind } from '@/features/file-trash/types';
 import { BulkTagDrawer } from '@/features/file-tags/BulkTagDrawer';
-import { NewTransmittalWizard } from '@/features/file-transmittals/NewTransmittalWizard';
 import { BulkDeleteReferencesWarning } from '@/features/documents/DocumentDeleteWarning';
 
 interface BulkActionsBarProps {
@@ -320,7 +319,6 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
   const addToast = useToastStore((s) => s.addToast);
   const [confirming, setConfirming] = useState(false);
   const [tagDrawerOpen, setTagDrawerOpen] = useState(false);
-  const [transmittalOpen, setTransmittalOpen] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [cdeMenuOpen, setCdeMenuOpen] = useState(false);
   const cdeMenuRef = useRef<HTMLDivElement>(null);
@@ -657,17 +655,6 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
           {t('files.tags.bulk.button', { defaultValue: 'Tag selected' })}
         </button>)}
 
-        {/* W7 — Send transmittal for the selection. */}
-        <button
-          type="button"
-          onClick={() => setTransmittalOpen(true)}
-          disabled={selectedRows.length === 0}
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium border border-border-light text-content-secondary hover:bg-surface-secondary disabled:opacity-50"
-        >
-          <Send size={13} />
-          {t('files.transmittals.send_action', { defaultValue: 'Send transmittal' })}
-        </button>
-
         {confirming ? (
           <div className="flex items-center gap-2 animate-fade-in">
             <span className="text-2xs text-semantic-error font-medium">
@@ -733,17 +720,6 @@ export function BulkActionsBar({ selectedRows, projectId, onClear }: BulkActions
         selectedRows={selectedRows.map((r) => ({ id: r.id, kind: r.kind }))}
       />
 
-      {/* W7 — transmittal wizard pre-populated with selection. */}
-      <NewTransmittalWizard
-        open={transmittalOpen}
-        onClose={() => setTransmittalOpen(false)}
-        projectId={projectId}
-        preselectedItems={selectedRows.map((row) => ({
-          file_kind: row.kind,
-          file_id: row.id,
-          canonical_name_snapshot: row.name,
-        }))}
-      />
     </div>
   );
 }

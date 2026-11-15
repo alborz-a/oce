@@ -41,6 +41,7 @@ import { ApprovalDrawer } from '@/features/file-approvals/ApprovalDrawer';
 import { useApprovals } from '@/features/file-approvals/hooks';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -168,6 +169,8 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
   // follow-up). Sourced from the JWT so no extra request is needed.
   const accessToken = useAuthStore((s) => s.accessToken);
   const currentUserId = decodeUserIdFromToken(accessToken);
+  // B1/B2: sizes, storage roots and paths are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
 
   // Find any active approval workflow for the current file so the
   // "Approval status" entry shows up only when relevant.
@@ -317,7 +320,23 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           className="mb-1"
         />
         <div className="flex items-center justify-center overflow-hidden bg-surface-secondary/60 rounded-lg aspect-[4/3]">
-          {isPdf(row) && row.download_url ? (
+          {row.kind === 'photo' && row.thumbnail_url ? (
+            // C2: the panel shows the photo's presigned thumbnail (AuthImage fetches
+            // the bucket URL), never the full-size original. A click opens the lightbox.
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-lg"
+              title={t('files.actions.view_file', { defaultValue: 'View' })}
+            >
+              <AuthImage
+                src={row.thumbnail_url}
+                alt=""
+                className="h-full w-full object-contain rounded-lg"
+                fallback={<Icon size={48} strokeWidth={1.5} className="text-content-tertiary" />}
+              />
+            </button>
+          ) : isPdf(row) && row.download_url ? (
             pdfPreviewUrl ? (
               <iframe
                 src={`${pdfPreviewUrl}#toolbar=0&navpanes=0&view=FitH`}
@@ -378,13 +397,21 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           )}
         </div>
 
+        {/* C3: a photo shows the field-report tag here instead of name, type and size. */}
+        {row.kind === 'photo' ? (
+          <div>
+            <p className="text-sm font-semibold text-content-primary">
+              {t('files.photo.field_report_tag', { defaultValue: 'برچسب گزارش‌های میدانی' })}
+            </p>
+          </div>
+        ) : (
         <div>
           <h3 className="text-sm font-semibold text-content-primary break-words" title={row.name}>
             {row.name}
           </h3>
           <p className="mt-0.5 text-2xs text-content-tertiary">
-            {fmtBytes(row.size_bytes)}
-            {sizeIsConvertedArtifact && (
+            {isSystemAdmin && fmtBytes(row.size_bytes)}
+            {isSystemAdmin && sizeIsConvertedArtifact && (
               <span
                 className="ms-1.5 text-content-quaternary"
                 title={t('files.detail.size_converted_artifact_hint', {
@@ -400,6 +427,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             {row.mime_type && <span className="ms-2">{row.mime_type}</span>}
           </p>
         </div>
+        )}
 
         <div className="flex flex-col gap-1.5">
           {/* Primary action - a PDF document reads inline here (#284); other
@@ -413,7 +441,9 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             title={t(primary.descriptionI18nKey, { defaultValue: primary.description })}
           >
             <PrimaryIcon size={13} strokeWidth={2.25} />
-            {primary.inlinePreview
+            {row.kind === 'photo'
+              ? t('files.actions.show_in_photos', { defaultValue: 'نمایش در عکس‌ها' })
+              : primary.inlinePreview
               ? t('files.actions.view_file', { defaultValue: 'View' })
               : primary.mediaPreview
                 ? // "View" for an image, "Play" for a video (the target label).
@@ -456,7 +486,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             </div>
           )}
 
-          {row.download_url && (
+          {row.download_url && row.kind !== 'photo' && (
             <IconButton
               label={t('files.actions.download', { defaultValue: 'Download' })}
               icon={downloading ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
@@ -467,12 +497,14 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           )}
           {/* W1 — version history. Renders <V## · Current> chip + dropdown
               with a "Make current" action for every superseded row. */}
+          {row.kind !== 'photo' && (
           <div className="flex items-center justify-between gap-2 px-1 py-1 border-y border-border-light/60">
             <span className="text-[10px] uppercase tracking-wider text-content-tertiary font-medium">
               {t('files.versions.section_label', { defaultValue: 'Versions' })}
             </span>
             <VersionDropdown fileId={row.id} kind={row.kind} />
           </div>
+          )}
           {/* Document lifecycle (CDE) status. Set WIP / Shared / Published /
               Archived inline via PATCH /v1/documents/{id}. Only documents are
               backed by that table, so the control is gated to that kind. */}
@@ -492,6 +524,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               />
             </div>
           )}
+          {row.kind !== 'photo' && (<>
           <button
             type="button"
             onClick={() => onEmail(row)}
@@ -537,6 +570,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             <LinkIcon size={13} />
             {t('files.references.link_action', { defaultValue: 'Link to entity' })}
           </button>
+          </>)}
           {onShare && row.kind === 'document' && (
             <button
               type="button"
@@ -551,6 +585,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           {/* Activity drawer trigger — visible for any file kind, but
               the drawer itself gracefully renders an empty / 404 state
               for non-document backings. */}
+          {row.kind !== 'photo' && (
           <button
             type="button"
             onClick={() => setActivityOpen(true)}
@@ -561,6 +596,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             <Activity size={13} />
             {t('files.activity.open', { defaultValue: 'View activity history' })}
           </button>
+          )}
           {onManageAccess && (
             <button
               type="button"
@@ -572,7 +608,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               {t('files.permissions.manage', { defaultValue: 'Manage access' })}
             </button>
           )}
-          {isTauri && row.physical_path && (
+          {isSystemAdmin && isTauri && row.physical_path && (
             <button
               type="button"
               onClick={() => openInOSFinder(row.physical_path)}
@@ -603,22 +639,26 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               <DateDisplay value={row.modified_at} format="datetime" />
             </Row>
           )}
-          <Row label={t('files.detail.storage', { defaultValue: 'Storage' })}>
-            <span className="uppercase tracking-wide text-2xs">{row.storage_backend}</span>
-          </Row>
-          <Row label={t('files.detail.path', { defaultValue: 'Path' })}>
-            <button
-              type="button"
-              onClick={handleCopyPath}
-              className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-start break-all"
-              title={t('files.actions.copy_path', { defaultValue: 'Copy path' })}
-            >
-              <Copy size={10} className="shrink-0" />
-              {pathCopied
-                ? t('files.toast.copied', { defaultValue: 'Copied' })
-                : row.physical_path}
-            </button>
-          </Row>
+          {isSystemAdmin && (
+            <Row label={t('files.detail.storage', { defaultValue: 'Storage' })}>
+              <span className="uppercase tracking-wide text-2xs">{row.storage_backend}</span>
+            </Row>
+          )}
+          {isSystemAdmin && (
+            <Row label={t('files.detail.path', { defaultValue: 'Path' })}>
+              <button
+                type="button"
+                onClick={handleCopyPath}
+                className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-start break-all"
+                title={t('files.actions.copy_path', { defaultValue: 'Copy path' })}
+              >
+                <Copy size={10} className="shrink-0" />
+                {pathCopied
+                  ? t('files.toast.copied', { defaultValue: 'Copied' })
+                  : row.physical_path}
+              </button>
+            </Row>
+          )}
         </dl>
 
         {extras.length > 0 && (
@@ -646,11 +686,11 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             it entirely rather than firing a guaranteed-404 query.
             The compact in-pane strip stays for at-a-glance scanning;
             the full timeline lives in the slide-over drawer below. */}
-        <ActivityLogSection documentId={row.id} kind={row.kind} />
+        {row.kind !== 'photo' && <ActivityLogSection documentId={row.id} kind={row.kind} />}
 
         {/* W9 — "Referenced in" panel. Lists all RFIs / tasks / change
-            orders / etc. that link to this file. */}
-        <ReferencedInPanel
+            orders / etc. that link to this file. Not shown for photos (C6, G1). */}
+        {row.kind !== 'photo' && <ReferencedInPanel
           projectId={row.project_id}
           fileKind={row.kind}
           fileId={row.id}
@@ -670,24 +710,24 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             navigate(`${base}/${ref.target_id}`);
           }}
           className="mt-3"
-        />
+        />}
 
         {/* W6 — Threaded comments on this file. Lazily fires its own
             query so the strip stays cheap until the pane is open. */}
-        <CommentThread
+        {row.kind !== 'photo' && <CommentThread
           projectId={row.project_id}
           fileKind={row.kind}
           fileId={row.id}
           currentUserId={currentUserId}
           className="mt-3"
-        />
+        />}
 
         {/* W1 — chronological version history with per-row download +
             restore buttons. Sits next to the Activity / Referenced-in /
             Comments sections so the preview pane reads as a single
             scroll surface ("tabs" in the same flat-section vocabulary
             the rest of the pane already uses). */}
-        <VersionHistorySection fileId={row.id} kind={row.kind} />
+        {row.kind !== 'photo' && <VersionHistorySection fileId={row.id} kind={row.kind} />}
       </div>
 
       {/* Full audit timeline as a end-edge slide-over. Mounted at the
