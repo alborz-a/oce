@@ -370,7 +370,8 @@ export default defineConfig({
             // Regional codes carry a hyphen and a country, so the code half
             // has to allow one or this lane silently skips en-US and the
             // four Spanish and Portuguese variants.
-            urlPattern: ({ url }) => /\/assets\/i18n-[a-z]{2,3}(?:-[A-Z]{2})?-.*\.js$/.test(url.pathname),
+            urlPattern: ({ url, sameOrigin }) =>
+              sameOrigin && /\/assets\/i18n-[a-z]{2,3}(?:-[A-Z]{2})?-.*\.js$/.test(url.pathname),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'oce-i18n-locales',
@@ -386,7 +387,12 @@ export default defineConfig({
             // used as the offline fallback for idempotent GETs.  Other
             // verbs bypass the SW (no ``method`` match here means GET
             // by default).
-            urlPattern: ({ url, request }) => {
+            urlPattern: ({ url, request, sameOrigin }) => {
+              // Same origin only. A cross-origin URL (presigned S3 bucket
+              // host) that happens to carry an /api/v1/ path must not be
+              // cached: Cache.put on a cross-origin/opaque body fails with
+              // "Cache.put() encountered a network error" (G3).
+              if (!sameOrigin) return false;
               if (request.method !== 'GET') return false;
               // A bidder link's token is its credential; never keep it, or
               // the bill behind it, in a cache on a shared device.
