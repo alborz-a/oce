@@ -15,7 +15,13 @@ from collections.abc import Iterable
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.modules.projects.file_manager_schemas import FileRow, FileTreeNode, StorageLocations
+from app.modules.projects.file_manager_schemas import (
+    EmailLinkResponse,
+    ExportPreview,
+    FileRow,
+    FileTreeNode,
+    StorageLocations,
+)
 
 # Keys in ``FileRow.extra`` that carry a server-side storage path.
 _PATH_EXTRA_KEYS = frozenset({"thumbnail_path", "storage_path", "file_path", "physical_path"})
@@ -90,3 +96,13 @@ def redact_locations(loc: StorageLocations) -> StorageLocations:
             "storage_backend": None,
         }
     )
+
+
+def redact_export_preview(preview: ExportPreview) -> ExportPreview:
+    """Blank the bundle size estimate for a non-admin (the export wizard shows it)."""
+    return preview.model_copy(update={"estimated_size_bytes": 0})
+
+
+def redact_email_link(link: EmailLinkResponse) -> EmailLinkResponse:
+    """Blank the file size in a minted email link for a non-admin."""
+    return link.model_copy(update={"size_bytes": 0})

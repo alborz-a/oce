@@ -341,9 +341,12 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           <option value="oldest">
             {t('projects.photos.sort_oldest', { defaultValue: 'Oldest first' })}
           </option>
-          <option value="largest">
-            {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
-          </option>
+          {/* B2: ordering by size reveals file sizes, so the option is admin-only. */}
+          {isSystemAdmin && (
+            <option value="largest">
+              {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
+            </option>
+          )}
         </select>
         {canEditCaption && (
         <Button

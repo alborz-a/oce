@@ -61,6 +61,8 @@ from app.modules.projects.file_manager_schemas import (
     StorageLocations,
 )
 from app.modules.projects.file_manager_redact import (
+    redact_email_link,
+    redact_export_preview,
     redact_file_rows,
     redact_locations,
     redact_tree,
@@ -3085,7 +3087,11 @@ async def post_export_preview(
     at without crafting a JSON body.
     """
     await _verify_project_owner(service, project_id, user_id, payload)
-    return await fm_preview_bundle(session, str(project_id), options)
+    preview = await fm_preview_bundle(session, str(project_id), options)
+    # B1/B2: the bundle size estimate is admin-only.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return preview
+    return redact_export_preview(preview)
 
 
 @router.get(
@@ -3108,7 +3114,11 @@ async def get_export_preview(
     or hitting it from curl returns a useful 200 instead of 405.
     """
     await _verify_project_owner(service, project_id, user_id, payload)
-    return await fm_preview_bundle(session, str(project_id), ExportOptions())
+    preview = await fm_preview_bundle(session, str(project_id), ExportOptions())
+    # B1/B2: the bundle size estimate is admin-only.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return preview
+    return redact_export_preview(preview)
 
 
 @router.post(
@@ -3413,13 +3423,17 @@ async def post_email_link(
         except OSError:
             size_bytes = 0
 
-    return EmailLinkResponse(
+    link = EmailLinkResponse(
         url=f"/api/v1/projects/files/share/{token}",
         expires_at=datetime.fromtimestamp(expiry, tz=UTC),
         file_id=str(file_id),
         file_name=str(name),
         size_bytes=size_bytes,
     )
+    # B1/B2: the file size is admin-only; the link itself is unchanged.
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return link
+    return redact_email_link(link)
 
 
 @router.get(
