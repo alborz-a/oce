@@ -1338,9 +1338,10 @@ async def update_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    is_uploader = str(getattr(photo, "created_by", "") or "") == str(user_id)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, photo.project_id)
-        if "file.modify" not in caps:
+        if "file.modify" not in caps and not (is_uploader and "file.upload" in caps):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:file.modify",
@@ -1393,9 +1394,10 @@ async def delete_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    is_uploader = str(getattr(photo, "created_by", "") or "") == str(user_id)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, photo.project_id)
-        if "file.modify" not in caps:
+        if "file.modify" not in caps and not (is_uploader and "file.upload" in caps):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:file.modify",

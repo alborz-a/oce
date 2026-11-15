@@ -126,3 +126,101 @@ async def test_missing_user_may_not_edit_description(session: AsyncSession, monk
     uploader = await _user(session, "editor")
     photo = await _photo(session, owner, uploader)
     assert await _can_edit_photo_description(photo, None, session) is False
+
+
+@pytest.mark.tenant_isolation
+@pytest.mark.asyncio
+async def test_db_patch_update_photo_permissions(session: AsyncSession) -> None:
+    """E3: real DB PATCH route handler enforces uploader/PM/admin without requiring file.modify."""
+    from fastapi import HTTPException
+    from app.modules.documents.router import update_photo
+    from app.modules.documents.schemas import PhotoUpdate
+    from app.modules.documents.service import PhotoService
+    from app.modules.teams.models import Team, TeamMembership
+
+    owner = await _user(session, "editor")
+    uploader = await _user(session, "viewer")
+    other_member = await _user(session, "viewer")
+    pm_user = await _user(session, "viewer")
+    viewer_user = await _user(session, "viewer")
+    outsider = await _user(session, "viewer")
+
+    photo = await _photo(session, owner, uploader)
+    team = Team(project_id=photo.project_id, name=f"Team-{uuid.uuid4().hex[:6]}")
+    session.add(team)
+    await session.flush()
+
+    session.add_all(
+        [
+            TeamMembership(team_id=team.id, user_id=uploader.id, role="member"),
+            TeamMembership(team_id=team.id, user_id=other_member.id, role="member"),
+            TeamMembership(team_id=team.id, user_id=pm_user.id, role="project_manager"),
+            TeamMembership(team_id=team.id, user_id=viewer_user.id, role="viewer"),
+        ]
+    )
+    await session.flush()
+
+    svc = PhotoService(session)
+
+    # Uploader (project role 'member') can PATCH their own photo's caption.
+    res = await update_photo(
+        photo_id=photo.id,
+        data=PhotoUpdate(caption="Updated by uploader"),
+        session=session,
+        user_id=str(uploader.id),
+        payload={"sub": str(uploader.id), "role": "viewer"},
+        _perm=None,
+        service=svc,
+    )
+    assert res.caption == "Updated by uploader"
+
+    # Another plain member in the same project cannot PATCH the uploader's photo.
+    with pytest.raises(HTTPException) as exc_other:
+        await update_photo(
+            photo_id=photo.id,
+            data=PhotoUpdate(caption="Hijacked"),
+            session=session,
+            user_id=str(other_member.id),
+            payload={"sub": str(other_member.id), "role": "viewer"},
+            _perm=None,
+            service=svc,
+        )
+    assert exc_other.value.status_code == 403
+
+    # Project viewer cannot PATCH the photo.
+    with pytest.raises(HTTPException) as exc_viewer:
+        await update_photo(
+            photo_id=photo.id,
+            data=PhotoUpdate(caption="Viewer edit"),
+            session=session,
+            user_id=str(viewer_user.id),
+            payload={"sub": str(viewer_user.id), "role": "viewer"},
+            _perm=None,
+            service=svc,
+        )
+    assert exc_viewer.value.status_code == 403
+
+    # Project manager of the project can PATCH any photo's caption.
+    pm_res = await update_photo(
+        photo_id=photo.id,
+        data=PhotoUpdate(caption="Updated by PM"),
+        session=session,
+        user_id=str(pm_user.id),
+        payload={"sub": str(pm_user.id), "role": "viewer"},
+        _perm=None,
+        service=svc,
+    )
+    assert pm_res.caption == "Updated by PM"
+
+    # Outsider gets 404 (IDOR-safe project membership check).
+    with pytest.raises(HTTPException) as exc_out:
+        await update_photo(
+            photo_id=photo.id,
+            data=PhotoUpdate(caption="Outsider edit"),
+            session=session,
+            user_id=str(outsider.id),
+            payload={"sub": str(outsider.id), "role": "viewer"},
+            _perm=None,
+            service=svc,
+        )
+    assert exc_out.value.status_code == 404
