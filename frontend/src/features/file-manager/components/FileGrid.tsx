@@ -355,7 +355,7 @@ export function FileGrid({
                   )
                 ) : (
                   <div className="mt-1 flex items-center justify-between text-[10px] text-content-tertiary tabular-nums">
-                    <span>{fmtBytes(row.size_bytes)}</span>
+                    {row.kind !== 'photo' ? <span>{fmtBytes(row.size_bytes)}</span> : <span />}
                     {row.modified_at && (
                       <DateDisplay value={row.modified_at} format="relative" className="ms-2 shrink-0" />
                     )}

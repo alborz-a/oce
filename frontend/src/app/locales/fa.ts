@@ -11549,6 +11549,7 @@ const resource = {
     "files.detail.type": "نوع",
     "files.detail.size": "حجم",
     "files.actions.open_in": "باز کردن در {{module}}",
+    "files.actions.show_in_photos": "نمایش در عکس‌ها",
     "files.actions.open_in_os": "باز کردن با برنامه سیستم",
     "files.actions.open_in_short": "باز کردن در {{module}}",
     "files.actions.share": "اشتراک‌گذاری",

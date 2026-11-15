@@ -413,7 +413,9 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             title={t(primary.descriptionI18nKey, { defaultValue: primary.description })}
           >
             <PrimaryIcon size={13} strokeWidth={2.25} />
-            {primary.inlinePreview
+            {row.kind === 'photo'
+              ? t('files.actions.show_in_photos', { defaultValue: 'نمایش در عکس‌ها' })
+              : primary.inlinePreview
               ? t('files.actions.view_file', { defaultValue: 'View' })
               : primary.mediaPreview
                 ? // "View" for an image, "Play" for a video (the target label).
@@ -456,7 +458,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             </div>
           )}
 
-          {row.download_url && (
+          {row.download_url && row.kind !== 'photo' && (
             <IconButton
               label={t('files.actions.download', { defaultValue: 'Download' })}
               icon={downloading ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
@@ -467,12 +469,14 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           )}
           {/* W1 — version history. Renders <V## · Current> chip + dropdown
               with a "Make current" action for every superseded row. */}
+          {row.kind !== 'photo' && (
           <div className="flex items-center justify-between gap-2 px-1 py-1 border-y border-border-light/60">
             <span className="text-[10px] uppercase tracking-wider text-content-tertiary font-medium">
               {t('files.versions.section_label', { defaultValue: 'Versions' })}
             </span>
             <VersionDropdown fileId={row.id} kind={row.kind} />
           </div>
+          )}
           {/* Document lifecycle (CDE) status. Set WIP / Shared / Published /
               Archived inline via PATCH /v1/documents/{id}. Only documents are
               backed by that table, so the control is gated to that kind. */}
@@ -492,6 +496,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               />
             </div>
           )}
+          {row.kind !== 'photo' && (<>
           <button
             type="button"
             onClick={() => onEmail(row)}
@@ -537,6 +542,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             <LinkIcon size={13} />
             {t('files.references.link_action', { defaultValue: 'Link to entity' })}
           </button>
+          </>)}
           {onShare && row.kind === 'document' && (
             <button
               type="button"
@@ -551,6 +557,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           {/* Activity drawer trigger — visible for any file kind, but
               the drawer itself gracefully renders an empty / 404 state
               for non-document backings. */}
+          {row.kind !== 'photo' && (
           <button
             type="button"
             onClick={() => setActivityOpen(true)}
@@ -561,6 +568,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             <Activity size={13} />
             {t('files.activity.open', { defaultValue: 'View activity history' })}
           </button>
+          )}
           {onManageAccess && (
             <button
               type="button"
@@ -646,11 +654,11 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             it entirely rather than firing a guaranteed-404 query.
             The compact in-pane strip stays for at-a-glance scanning;
             the full timeline lives in the slide-over drawer below. */}
-        <ActivityLogSection documentId={row.id} kind={row.kind} />
+        {row.kind !== 'photo' && <ActivityLogSection documentId={row.id} kind={row.kind} />}
 
         {/* W9 — "Referenced in" panel. Lists all RFIs / tasks / change
-            orders / etc. that link to this file. */}
-        <ReferencedInPanel
+            orders / etc. that link to this file. Not shown for photos (C6, G1). */}
+        {row.kind !== 'photo' && <ReferencedInPanel
           projectId={row.project_id}
           fileKind={row.kind}
           fileId={row.id}
@@ -670,24 +678,24 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             navigate(`${base}/${ref.target_id}`);
           }}
           className="mt-3"
-        />
+        />}
 
         {/* W6 — Threaded comments on this file. Lazily fires its own
             query so the strip stays cheap until the pane is open. */}
-        <CommentThread
+        {row.kind !== 'photo' && <CommentThread
           projectId={row.project_id}
           fileKind={row.kind}
           fileId={row.id}
           currentUserId={currentUserId}
           className="mt-3"
-        />
+        />}
 
         {/* W1 — chronological version history with per-row download +
             restore buttons. Sits next to the Activity / Referenced-in /
             Comments sections so the preview pane reads as a single
             scroll surface ("tabs" in the same flat-section vocabulary
             the rest of the pane already uses). */}
-        <VersionHistorySection fileId={row.id} kind={row.kind} />
+        {row.kind !== 'photo' && <VersionHistorySection fileId={row.id} kind={row.kind} />}
       </div>
 
       {/* Full audit timeline as a end-edge slide-over. Mounted at the
