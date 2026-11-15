@@ -215,11 +215,12 @@ async def photo_presigned_url(file_path: str | None, filename: str, media_type: 
         logger.warning("photo presign head failed, using proxy: %s", type(exc).__name__)
         return None
     mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
+    # No ResponseContentDisposition: the bucket gateway adds its own, and a second one makes Chrome
+    # block the image (ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION). Same as the thumb presign.
     return backend.url_for(
         key,
         expires_in=PRESIGN_TTL_S,
         response_content_type=mt,
-        response_content_disposition=_content_disposition(filename or "photo", False),
     )
 
 
