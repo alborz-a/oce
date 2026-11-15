@@ -388,6 +388,11 @@ async def upload_document(
 
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, project_id)
+        if "module.files" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.files",
+            )
         if "file.upload" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -727,10 +732,15 @@ async def upload_photo(
     category = category_raw
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, project_id)
-        if "file.upload" not in caps:
+        if "module.photos" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="project_capability_required:file.upload",
+                detail="project_capability_required:module.photos",
+            )
+        if "photo.upload" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:photo.upload",
             )
     # Parse tags from comma-separated string
     parsed_tags: list[str] = []
@@ -775,6 +785,7 @@ async def list_photos(
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=500),
     user_id: CurrentUserId = None,  # type: ignore[assignment]
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoListResponse:
     """List photos for a project with optional filters.
@@ -789,6 +800,13 @@ async def list_photos(
     worked around; the fix is a tag filter the database can run.
     """
     await verify_project_access(project_id, user_id, session, manager_read=True)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "module.photos" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.photos",
+            )
     parsed_date_from: datetime | None = None
     parsed_date_to: datetime | None = None
     if date_from:
@@ -845,6 +863,7 @@ async def get_timeline(
     session: SessionDep,
     project_id: uuid.UUID = Query(...),
     user_id: CurrentUserId = None,  # type: ignore[assignment]
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoListResponse:
     """Read the project's photos for the timeline view, newest first.
@@ -859,6 +878,13 @@ async def get_timeline(
     without changing what any day contains.
     """
     await verify_project_access(project_id, user_id, session, manager_read=True)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "module.photos" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.photos",
+            )
     photos, total = await service.get_gallery(project_id, limit=GALLERY_LIMIT)
     return PhotoListResponse(
         items=await _photo_out_list(session, user_id, photos),
@@ -928,6 +954,7 @@ async def get_photo(
     photo_id: uuid.UUID,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload,
     service: PhotoService = Depends(_get_photo_service),
 ) -> PhotoResponse:
     """Get a single photo's metadata.
@@ -938,6 +965,13 @@ async def get_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, photo.project_id)
+        if "module.photos" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.photos",
+            )
     return await _photo_out(session, user_id, photo)
 
 
@@ -1340,10 +1374,15 @@ async def update_photo(
     await verify_project_access(photo.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, photo.project_id)
-        if "file.modify" not in caps:
+        if "module.photos" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="project_capability_required:file.modify",
+                detail="project_capability_required:module.photos",
+            )
+        if "photo.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:photo.modify",
             )
     # E3: only the uploader, a project manager of this project, or the system
     # admin may change a photo's description (the UI shows the button to the same set).
@@ -1395,10 +1434,15 @@ async def delete_photo(
     await verify_project_access(photo.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, photo.project_id)
-        if "file.modify" not in caps:
+        if "module.photos" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="project_capability_required:file.modify",
+                detail="project_capability_required:module.photos",
+            )
+        if "photo.modify" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:photo.modify",
             )
     await service.delete_photo(photo_id)
 

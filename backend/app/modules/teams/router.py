@@ -72,6 +72,7 @@ from app.modules.teams.schemas import (
     EntityVisibilityResponse,
     EntityVisibilityState,
     MembershipResponse,
+    ProjectRoleModulesResponse,
     RestrictedEntityRow,
     SetEntityVisibilityRequest,
     TeamCreate,
@@ -80,6 +81,7 @@ from app.modules.teams.schemas import (
     TeamUpdate,
     TeamVisibilityGrantRequest,
     UpdateMemberRoleRequest,
+    UpdateRoleModulesRequest,
     entity_type_catalogue,
 )
 from app.modules.teams.service import TeamService
@@ -138,6 +140,35 @@ async def list_entity_types(user_id: CurrentUserId) -> list[EntityTypeResponse]:
     if not user_id:
         raise HTTPException(status_code=401, detail="Authentication required")
     return entity_type_catalogue()
+
+
+# ── Per-role module toggles (rsd-rsc#98) ─────────────────────────────────
+
+
+@router.get("/role-modules", response_model=ProjectRoleModulesResponse)
+@router.get("/role-modules/", response_model=ProjectRoleModulesResponse, include_in_schema=False)
+async def get_role_modules(
+    user_id: CurrentUserId,
+    project_id: uuid.UUID = Query(...),
+    service: TeamService = Depends(_get_service),
+) -> ProjectRoleModulesResponse:
+    """Return enabled/disabled module toggles per role for a project (admin only)."""
+    return await service.get_role_modules(project_id, actor_id=user_id)
+
+
+@router.put("/role-modules", response_model=ProjectRoleModulesResponse)
+@router.put("/role-modules/", response_model=ProjectRoleModulesResponse, include_in_schema=False)
+async def update_role_modules(
+    data: UpdateRoleModulesRequest,
+    user_id: CurrentUserId,
+    service: TeamService = Depends(_get_service),
+) -> ProjectRoleModulesResponse:
+    """Update per-role module toggles for a project (admin only)."""
+    return await service.update_role_modules(
+        data.project_id,
+        {str(role): {str(mod): bool(enabled) for mod, enabled in mods.items()} for role, mods in data.roles.items()},
+        actor_id=user_id,
+    )
 
 
 # ── Teams ────────────────────────────────────────────────────────────────

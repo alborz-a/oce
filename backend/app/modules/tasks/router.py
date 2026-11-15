@@ -261,6 +261,11 @@ async def create_task(
     await verify_project_access(data.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, data.project_id)
+        if "module.tasks" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.tasks",
+            )
         if "task.manage" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -884,6 +889,11 @@ async def get_task(
     await verify_project_access(task.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, task.project_id)
+        if "module.tasks" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.tasks",
+            )
         if "project.read" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -907,6 +917,11 @@ async def update_task(
     await verify_project_access(existing.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, existing.project_id)
+        if "module.tasks" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.tasks",
+            )
         if "task.manage" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -930,6 +945,11 @@ async def delete_task(
     await verify_project_access(existing.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, existing.project_id)
+        if "module.tasks" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.tasks",
+            )
         if "task.manage" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -953,6 +973,11 @@ async def complete_task(
     await verify_project_access(existing.project_id, user_id, session)
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, existing.project_id)
+        if "module.tasks" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.tasks",
+            )
         if "task.work" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
