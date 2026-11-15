@@ -12,6 +12,7 @@ import { copyToClipboard } from '../lib/tauri';
 import type { EmailLinkResponse, FileRow } from '../types';
 import { fmtFixed, getIntlLocale } from '@/shared/lib/formatters';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 interface EmailDialogProps {
   open: boolean;
@@ -56,6 +57,8 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
     }
   }, [open]);
 
+  const isSystemAdmin = useIsSystemAdmin();
+
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -99,7 +102,7 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
     defaultValue: 'File: {{name}}',
     name: row.name,
   });
-  const sampleBody = link
+  const fullSampleBody = link
     ? t('files.email.sample_body', {
         defaultValue:
           'Hi,\n\nHere is the file you asked about - {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
@@ -109,6 +112,11 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
         url: link.url,
       })
     : '';
+  // B2: the file size is admin-only, so non-admin copies drop the " (size)" part.
+  const sampleBody =
+    link && !isSystemAdmin
+      ? fullSampleBody.replace(` (${fmtBytes(link.size_bytes)})`, '')
+      : fullSampleBody;
   const mailto = link
     ? `mailto:?subject=${encodeURIComponent(sampleSubject)}&body=${encodeURIComponent(sampleBody)}`
     : '';
