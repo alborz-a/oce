@@ -46,6 +46,7 @@ def test_file_rows_lose_size_and_paths_for_non_admin() -> None:
         assert row.size_bytes == 0
         assert row.physical_path == ""
         assert row.relative_path == ""
+        assert row.storage_backend is None  # B1: backend name is an admin-only detail
         assert "thumbnail_path" not in row.extra
         assert row.extra.get("gps_lat") == 52.5  # non-path extras survive
 
@@ -63,6 +64,8 @@ def test_file_list_json_has_no_size_or_path_for_non_admin() -> None:
     payload = listing.model_copy(update={"items": redact_file_rows(listing.items)}).model_dump_json()
     assert SECRET_ROOT not in payload
     assert "2945678" not in payload
+    assert '"storage_backend":"local"' not in payload
+    assert '"storage_backend": "local"' not in payload
 
 
 def test_photo_metadata_storage_keys_removed_for_non_admin() -> None:
@@ -98,6 +101,8 @@ def test_tree_totals_and_paths_are_blanked_recursively() -> None:
     assert out[0].physical_path is None
     assert out[0].children[0].total_bytes == 0
     assert out[0].children[0].physical_path is None
+    assert out[0].storage_backend is None
+    assert out[0].children[0].storage_backend is None
     assert SECRET_ROOT not in json.dumps([n.model_dump() for n in out], default=str)
 
 
@@ -111,11 +116,14 @@ def test_locations_drop_every_disk_root_for_non_admin() -> None:
         photos_root=f"{SECRET_ROOT}/photos",
         extras={"takeoff_root": f"{SECRET_ROOT}/takeoff"},
         notes=["mixed roots"],
+        storage_backend="s3",
     )
     out = redact_locations(loc)
     dumped = out.model_dump_json()
     assert SECRET_ROOT not in dumped
     assert "secret-disk" not in dumped
+    assert '"s3"' not in dumped
     assert out.project_name == "Tower"  # identity survives
     assert out.extras == {}
     assert out.notes == []
+    assert out.storage_backend is None

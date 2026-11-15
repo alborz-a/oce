@@ -36,7 +36,7 @@ export interface FileRow {
   modified_at: string | null;
   physical_path: string;
   relative_path: string;
-  storage_backend: StorageBackend;
+  storage_backend: StorageBackend | null;
   download_url: string | null;
   preview_url: string | null;
   thumbnail_url: string | null;
@@ -52,7 +52,7 @@ export interface FileTreeNode {
   file_count: number;
   total_bytes: number;
   physical_path: string | null;
-  storage_backend: StorageBackend;
+  storage_backend: StorageBackend | null;
   children: FileTreeNode[];
 }
 
@@ -61,7 +61,7 @@ export interface StorageLocations {
   project_name: string;
   storage_uses_default: boolean;
   storage_path_override: string | null;
-  storage_backend: StorageBackend;
+  storage_backend: StorageBackend | null;
   db_path: string | null;
   uploads_root: string | null;
   photos_root: string | null;

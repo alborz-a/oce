@@ -142,9 +142,11 @@ async def test_thumb_failure_returns_none(monkeypatch):
     assert be.put_calls == []
 
 
-async def test_thumb_presign_is_inline_not_attachment(monkeypatch):
+async def test_thumb_presign_passes_no_content_disposition(monkeypatch):
+    # The bucket gateway adds its own Content-Disposition. Passing ResponseContentDisposition too
+    # sends two headers, and Chrome blocks the image (ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION).
     be = _PresignBackend(thumb_exists=True)
     monkeypatch.setattr(os_, "_imported_s3", lambda: be)
     assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is not None
-    assert be.url_kwargs["response_content_disposition"].startswith("inline;")
+    assert "response_content_disposition" not in be.url_kwargs
     assert be.url_kwargs["response_content_type"] == "image/jpeg"
