@@ -11547,6 +11547,7 @@ const resource = {
     "files.detail.name": "نام پرونده",
     "files.detail.caption": "توضیح",
     "files.detail.caption_edit": "ویرایش توضیحات",
+    "projects.photos.edit_caption": "ویرایش توضیحات",
     "files.photo.field_report_tag": "برچسب گزارش‌های میدانی",
     "files.detail.type": "نوع",
     "files.detail.size": "حجم",

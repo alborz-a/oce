@@ -28,7 +28,8 @@ import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFileList } from '@/features/file-manager/hooks';
 import { apiPatch } from '@/shared/lib/api';
-import { useCanWritePhotos } from '@/features/file-manager/useCanWritePhotos';
+import { useCanEditPhotoCaption } from '@/features/file-manager/useCanWritePhotos';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { useToastStore } from '@/stores/useToastStore';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
@@ -139,8 +140,6 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  // Global managers write only where they are team members (the backend refuses otherwise).
-  const canEditCaption = useCanWritePhotos(projectId);
   const [editingCaption, setEditingCaption] = useState(false);
   const [captionDraft, setCaptionDraft] = useState('');
   const [savingCaption, setSavingCaption] = useState(false);
@@ -224,6 +223,12 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   }, [lightboxOpen]);
 
   // ── No active project ────────────────────────────────────────────────────
+  // E3: admin, the photo's uploader, or a project manager may edit the description.
+  const lightboxUploaderId =
+    lightboxIndex !== null ? (filtered[lightboxIndex]?.extra?.created_by as string | undefined) : undefined;
+  const canEditCaption = useCanEditPhotoCaption(projectId, lightboxUploaderId);
+  const isSystemAdmin = useIsSystemAdmin();
+
   if (!projectId) {
     return (
       <div data-testid="photos-tab-no-project" className="py-10">
@@ -430,7 +435,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-content-tertiary">
                     <span>{fmtDate(captured, locale)}</span>
-                    <span className="tabular-nums">{fmtBytes(row.size_bytes ?? 0)}</span>
+                    {/* B2: file sizes are admin-only. */}
+                    {isSystemAdmin && <span className="tabular-nums">{fmtBytes(row.size_bytes ?? 0)}</span>}
                   </div>
                 </div>
               </button>
@@ -524,9 +530,6 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
               <MediaError />
             )}
             <div className="mt-3 text-center text-white">
-              <div className="text-sm font-medium truncate max-w-[80vw]">
-                {activePhoto.name}
-              </div>
               {editingCaption ? (
                 <div className="mt-2 flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                   <input
@@ -573,15 +576,13 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                       }}
                       className="rounded-lg border border-white/30 px-2 py-0.5 text-xs text-white hover:bg-white/10"
                     >
-                      {t('projects.photos.edit_caption', { defaultValue: 'Edit description' })}
+                      {t('projects.photos.edit_caption', { defaultValue: 'ویرایش توضیحات' })}
                     </button>
                   )}
                 </div>
               )}
               <div className="text-xs text-white/70 mt-0.5">
                 {fmtDate(pickCapturedAt(activePhoto), locale)}
-                {' · '}
-                {fmtBytes(activePhoto.size_bytes ?? 0)}
                 {' · '}
                 {t('projects.photos.position_label', {
                   defaultValue: '{{current}} / {{total}}',

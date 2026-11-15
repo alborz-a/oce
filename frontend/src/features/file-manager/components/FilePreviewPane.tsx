@@ -322,13 +322,20 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
         <div className="flex items-center justify-center overflow-hidden bg-surface-secondary/60 rounded-lg aspect-[4/3]">
           {row.kind === 'photo' && row.thumbnail_url ? (
             // C2: the panel shows the photo's presigned thumbnail (AuthImage fetches
-            // the bucket URL), never the full-size original.
-            <AuthImage
-              src={row.thumbnail_url}
-              alt=""
-              className="max-h-full max-w-full object-contain rounded-lg"
-              fallback={<Icon size={48} strokeWidth={1.5} className="text-content-tertiary" />}
-            />
+            // the bucket URL), never the full-size original. A click opens the lightbox.
+            <button
+              type="button"
+              onClick={() => setLightboxOpen(true)}
+              className="h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40 rounded-lg"
+              title={t('files.actions.view_file', { defaultValue: 'View' })}
+            >
+              <AuthImage
+                src={row.thumbnail_url}
+                alt=""
+                className="h-full w-full object-contain rounded-lg"
+                fallback={<Icon size={48} strokeWidth={1.5} className="text-content-tertiary" />}
+              />
+            </button>
           ) : isPdf(row) && row.download_url ? (
             pdfPreviewUrl ? (
               <iframe

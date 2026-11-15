@@ -50,11 +50,33 @@ def test_file_rows_lose_size_and_paths_for_non_admin() -> None:
         assert row.extra.get("gps_lat") == 52.5  # non-path extras survive
 
 
+def test_uploader_id_survives_redaction_for_edit_button() -> None:
+    """E3: the UI reads ``extra.created_by`` to show the uploader's edit button."""
+    row = _row("photo")
+    row = row.model_copy(update={"extra": {**row.extra, "created_by": "33333333-3333-3333-3333-333333333333"}})
+    out = redact_file_rows([row])
+    assert out[0].extra.get("created_by") == "33333333-3333-3333-3333-333333333333"
+
+
 def test_file_list_json_has_no_size_or_path_for_non_admin() -> None:
     listing = FileListResponse(project_id=PROJECT_ID, items=[_row()], total=1, limit=50, offset=0)
     payload = listing.model_copy(update={"items": redact_file_rows(listing.items)}).model_dump_json()
     assert SECRET_ROOT not in payload
     assert "2945678" not in payload
+
+
+def test_photo_metadata_storage_keys_removed_for_non_admin() -> None:
+    from app.modules.documents.router import _strip_photo_storage_meta
+
+    meta = {
+        "storage": "bucket-mount",
+        "size_bytes": 123,
+        "source_path": "/mnt/rclone/x.jpg",
+        "s3_key": "photos/a.jpg",
+        "exif_make": "Canon",
+        "seed": True,
+    }
+    assert _strip_photo_storage_meta(meta) == {"exif_make": "Canon", "seed": True}
 
 
 def test_tree_totals_and_paths_are_blanked_recursively() -> None:

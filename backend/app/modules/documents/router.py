@@ -632,6 +632,40 @@ def _photo_to_response(photo: object) -> PhotoResponse:
     )
 
 
+# B2: keys a photo's metadata blob can carry that name a size or a storage
+# location. Non-admins get the blob without them.
+_PHOTO_META_HIDDEN_KEYS = frozenset(
+    {"size", "size_bytes", "file_size", "storage", "file_path", "path", "mount", "bucket", "s3_key"}
+)
+
+
+def _strip_photo_storage_meta(metadata: dict[str, Any]) -> dict[str, Any]:
+    return {
+        k: v
+        for k, v in metadata.items()
+        if k not in _PHOTO_META_HIDDEN_KEYS and not k.endswith(("_path", "_key", "_root", "_bytes", "_size"))
+    }
+
+
+async def _photo_out(session: SessionDep, user_id: str | None, photo: object) -> PhotoResponse:
+    """One photo response, with storage keys in metadata removed for non-admins."""
+    response = _photo_to_response(photo)
+    if await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        return response
+    return response.model_copy(update={"metadata": _strip_photo_storage_meta(response.metadata)})
+
+
+async def _photo_out_list(session: SessionDep, user_id: str | None, photos: list[object]) -> list[PhotoResponse]:
+    admin = await viewer_is_system_admin(session, str(user_id) if user_id else None)
+    out: list[PhotoResponse] = []
+    for photo in photos:
+        response = _photo_to_response(photo)
+        if not admin:
+            response = response.model_copy(update={"metadata": _strip_photo_storage_meta(response.metadata)})
+        out.append(response)
+    return out
+
+
 # ── Upload photo ────────────────────────────────────────────────────────
 
 
@@ -739,7 +773,7 @@ async def list_photos(
         search=search,
     )
     return PhotoListResponse(
-        items=[_photo_to_response(p) for p in photos],
+        items=await _photo_out_list(session, user_id, photos),
         total=total,
         offset=offset,
         limit=limit,
@@ -787,7 +821,7 @@ async def get_timeline(
     await verify_project_access(project_id, user_id, session, manager_read=True)
     photos, total = await service.get_gallery(project_id, limit=GALLERY_LIMIT)
     return PhotoListResponse(
-        items=[_photo_to_response(p) for p in photos],
+        items=await _photo_out_list(session, user_id, photos),
         total=total,
         offset=0,
         limit=GALLERY_LIMIT,
@@ -864,7 +898,7 @@ async def get_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
-    return _photo_to_response(photo)
+    return await _photo_out(session, user_id, photo)
 
 
 # Blob I/O on the read-only bucket mount of imported photos can hang (clock skew, bucket
@@ -1271,7 +1305,7 @@ async def update_photo(
             detail="Only the uploader, a project manager or an admin can edit this description",
         )
     photo = await service.update_photo(photo_id, data)
-    return _photo_to_response(photo)
+    return await _photo_out(session, user_id, photo)
 
 
 async def _can_edit_photo_description(photo: object, user_id: str | None, session: SessionDep) -> bool:
