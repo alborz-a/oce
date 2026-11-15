@@ -25,7 +25,14 @@ vi.mock('@/features/file-manager/components/UploadDialog', () => ({
 }));
 
 import { useFileList } from '@/features/file-manager/hooks';
+import * as apiModule from '@/shared/lib/api';
 import { PhotosTab } from '../PhotosTab';
+
+function makeJwt(payload: Record<string, unknown>): string {
+  const b64 = (obj: Record<string, unknown>) =>
+    btoa(JSON.stringify(obj)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return `${b64({ alg: 'HS256', typ: 'JWT' })}.${b64(payload)}.sig`;
+}
 
 const fakePhotos = [
   {
@@ -291,5 +298,75 @@ describe('PhotosTab', () => {
     });
     expect(Array.from(select.options).map((o) => o.value)).toEqual(['newest', 'oldest']);
     expect(getTileOrder()).toEqual(['photos-tab-tile-new-tiny', 'photos-tab-tile-old-huge']);
+  });
+
+  it('shows upload CTA for member and lets uploader edit and save caption on own photo only (E3)', async () => {
+    const token = makeJwt({ sub: 'uploader-1', role: 'viewer' });
+    useAuthStore.setState({
+      userRole: 'viewer',
+      userId: 'uploader-1',
+      accessToken: token,
+      restrictedMode: true,
+    });
+    const apiGetSpy = vi.spyOn(apiModule, 'apiGet').mockResolvedValue([
+      { user_id: 'uploader-1', role: 'member' },
+    ] as never);
+    const apiPatchSpy = vi.spyOn(apiModule, 'apiPatch').mockResolvedValue({} as never);
+
+    const uploaderPhotos = [
+      {
+        ...fakePhotos[0],
+        id: 'own-photo',
+        name: 'own_site.jpg',
+        caption: 'First caption',
+        modified_at: '2026-05-03T10:00:00Z',
+        extra: { created_by: 'uploader-1' },
+      },
+      {
+        ...fakePhotos[1],
+        id: 'other-photo',
+        name: 'other_site.jpg',
+        caption: 'Other caption',
+        modified_at: '2026-05-02T10:00:00Z',
+        extra: { created_by: 'someone-else' },
+      },
+    ];
+    (useFileList as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: { project_id: 'proj-1', items: uploaderPhotos, total: 2, limit: 500, offset: 0 },
+      isLoading: false,
+    });
+
+    renderWithProviders(<PhotosTab projectId="proj-1" />);
+
+    // Member upload CTA stays visible before any lightbox is opened.
+    expect(screen.getByTestId('photos-tab-upload')).toBeInTheDocument();
+
+    // Open own photo: Edit Description button is visible and PATCHes the new caption.
+    fireEvent.click(screen.getByTestId('photos-tab-tile-own-photo'));
+    await waitFor(() => {
+      expect(screen.getByTestId('photos-tab-caption-edit')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId('photos-tab-caption-edit'));
+    const input = screen.getByTestId('photos-tab-caption-input') as HTMLInputElement;
+    expect(input.value).toBe('First caption');
+    fireEvent.change(input, { target: { value: 'Updated by uploader' } });
+    fireEvent.click(screen.getByTestId('photos-tab-caption-save'));
+
+    await waitFor(() => {
+      expect(apiPatchSpy).toHaveBeenCalledWith('/v1/documents/photos/own-photo', {
+        caption: 'Updated by uploader',
+      });
+    });
+
+    // Step to another user's photo: Edit Description button must not appear for plain member.
+    fireEvent.click(screen.getByTestId('photos-tab-lightbox-next'));
+    await waitFor(() => {
+      expect(screen.getByTestId('photos-tab-caption-text')).toHaveTextContent('Other caption');
+    });
+    expect(screen.queryByTestId('photos-tab-caption-edit')).not.toBeInTheDocument();
+
+    apiGetSpy.mockRestore();
+    apiPatchSpy.mockRestore();
   });
 });

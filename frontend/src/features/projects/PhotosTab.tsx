@@ -29,7 +29,7 @@ import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFileList } from '@/features/file-manager/hooks';
 import { apiPatch } from '@/shared/lib/api';
-import { useCanEditPhotoCaption } from '@/features/file-manager/useCanWritePhotos';
+import { useCanEditPhotoCaption, useCanWritePhotos } from '@/features/file-manager/useCanWritePhotos';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { useToastStore } from '@/stores/useToastStore';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
@@ -241,9 +241,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
 
   // ── No active project ────────────────────────────────────────────────────
   // E3: admin, the photo's uploader, or a project manager may edit the description.
+  // Upload CTA depends on project write capability (not whether a photo is open in lightbox).
   const lightboxUploaderId =
     lightboxIndex !== null ? (filtered[lightboxIndex]?.extra?.created_by as string | undefined) : undefined;
   const canEditCaption = useCanEditPhotoCaption(projectId, lightboxUploaderId);
+  const canUploadPhotos = useCanWritePhotos(projectId);
 
   if (!projectId) {
     return (
@@ -290,7 +292,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 'Upload site photos to keep visual records alongside the project.',
             })}
             action={
-              !canEditCaption ? undefined : (
+              !canUploadPhotos ? undefined : (
               <Button
                 variant="primary"
                 size="md"
@@ -363,7 +365,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             </option>
           )}
         </select>
-        {canEditCaption && (
+        {canUploadPhotos && (
         <Button
           variant="primary"
           size="sm"
