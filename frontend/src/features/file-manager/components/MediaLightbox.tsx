@@ -18,6 +18,7 @@
 // and the arrows hide themselves.
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import {
   ChevronLeft,
@@ -195,7 +196,7 @@ export function MediaLightbox({
 
   if (!open || !current || !downloadUrl) return null;
 
-  return (
+  const overlay = (
     <div
       ref={dialogRef}
       tabIndex={-1}
@@ -315,4 +316,6 @@ export function MediaLightbox({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(overlay, document.body) : overlay;
 }
