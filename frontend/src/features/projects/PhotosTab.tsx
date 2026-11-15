@@ -16,6 +16,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { createPortal } from 'react-dom';
 import {
   Image as ImageIcon,
   Upload,
@@ -340,9 +341,12 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           <option value="oldest">
             {t('projects.photos.sort_oldest', { defaultValue: 'Oldest first' })}
           </option>
-          <option value="largest">
-            {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
-          </option>
+          {/* B2: ordering by size reveals file sizes, so the option is admin-only. */}
+          {isSystemAdmin && (
+            <option value="largest">
+              {t('projects.photos.sort_largest', { defaultValue: 'Largest first' })}
+            </option>
+          )}
         </select>
         {canEditCaption && (
         <Button
@@ -446,7 +450,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
       )}
 
       {/* Lightbox */}
-      {activePhoto && (
+      {activePhoto && createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -454,7 +458,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             defaultValue: 'Photo viewer',
           })}
           data-testid="photos-tab-lightbox"
-          className="fixed inset-0 z-50 flex h-[100dvh] w-screen items-center justify-center bg-black/85 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm"
           onClick={closeLightbox}
         >
           {/* Close */}
@@ -593,7 +597,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       <UploadDialog
         open={uploadOpen}

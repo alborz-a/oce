@@ -14,6 +14,7 @@ import { validateImport, commitImport } from '../api';
 import type { ImportMode, ImportPreview, ImportResult } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 interface ImportWizardProps {
   open: boolean;
@@ -51,6 +52,7 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
   const [committing, setCommitting] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const isSystemAdmin = useIsSystemAdmin();
 
   // Project list — only fetched while the modal is open and the user is on
   // a step where they need to pick a target project.
@@ -228,15 +230,20 @@ export function ImportWizard({ open, onClose }: ImportWizardProps) {
                   label={t('files.import.stat_scope', { defaultValue: 'Scope' })}
                   value={preview.manifest.scope}
                 />
-                <Stat
-                  label={t('files.import.stat_size', { defaultValue: 'Bundle size' })}
-                  value={fmtBytes(preview.bundle_size_bytes)}
-                />
+                {/* B2: bundle and attachment sizes are admin-only; others see counts. */}
+                {isSystemAdmin && (
+                  <Stat
+                    label={t('files.import.stat_size', { defaultValue: 'Bundle size' })}
+                    value={fmtBytes(preview.bundle_size_bytes)}
+                  />
+                )}
                 <Stat
                   label={t('files.import.stat_attachments', { defaultValue: 'Attachments' })}
                   value={
                     preview.has_attachments
-                      ? `${preview.manifest.attachment_count} (${fmtBytes(preview.manifest.attachment_total_bytes)})`
+                      ? isSystemAdmin
+                        ? `${preview.manifest.attachment_count} (${fmtBytes(preview.manifest.attachment_total_bytes)})`
+                        : String(preview.manifest.attachment_count)
                       : t('files.import.no_attachments', { defaultValue: 'None' })
                   }
                 />

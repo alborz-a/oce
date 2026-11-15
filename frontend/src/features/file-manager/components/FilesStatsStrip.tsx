@@ -14,6 +14,7 @@ import { Database, FileText, HardDrive, Layers } from 'lucide-react';
 import type { FileKind, FileTreeNode, StorageLocations } from '../types';
 import { ALL_KINDS, KIND_COLORS } from '../kindModule';
 import { fmtFixed } from '@/shared/lib/formatters';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { localizeSize, fmtCount, fmtPct, fmtOf } from '../fmt'; // [RSC-IRAN]
 
 function fmtBytesRaw(bytes: number): string {
@@ -33,6 +34,8 @@ interface FilesStatsStripProps {
 
 export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
   const { t } = useTranslation();
+  // B1/B2: total bytes and the per-category bytes split are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
 
   const stats = useMemo(() => {
     if (!tree || tree.length === 0) return null;
@@ -69,11 +72,13 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
           label={t('files.stats_total', { defaultValue: 'Total files' })}
           value={localizeCount(stats.totalFiles)}
         />
-        <Metric
-          icon={<HardDrive size={14} />}
-          label={t('files.stats_size', { defaultValue: 'Total size' })}
-          value={fmtBytes(stats.totalBytes)}
-        />
+        {isSystemAdmin && (
+          <Metric
+            icon={<HardDrive size={14} />}
+            label={t('files.stats_size', { defaultValue: 'Total size' })}
+            value={fmtBytes(stats.totalBytes)}
+          />
+        )}
         <Metric
           icon={<Layers size={14} />}
           label={t('files.stats_categories', { defaultValue: 'Categories' })}
@@ -87,7 +92,7 @@ export function FilesStatsStrip({ tree, locations }: FilesStatsStripProps) {
       </div>
 
       {/* Storage breakdown bar — only render when at least one segment has bytes */}
-      {stats.segments.length > 0 && (
+      {isSystemAdmin && stats.segments.length > 0 && (
         <div className="px-4 pb-3">
           <div className="flex items-center justify-between gap-2 mb-1.5">
             <div className="text-2xs font-medium text-content-tertiary tracking-wider">

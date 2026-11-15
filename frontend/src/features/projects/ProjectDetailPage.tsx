@@ -1019,6 +1019,8 @@ function ImportDialog({
 }) {
   const { t } = useTranslation();
   const addToast = useToastStore((s) => s.addToast);
+  // B2: the picked file's size line is admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
 
@@ -1129,7 +1131,7 @@ function ImportDialog({
                       {selectedFile.name}
                     </p>
                     <p className="text-xs text-content-tertiary">
-                      {fmtFixed(selectedFile.size / 1024, 1)} KB
+                      {isSystemAdmin && `${fmtFixed(selectedFile.size / 1024, 1)} KB`}
                     </p>
                   </div>
                   {!mutation.isPending && (

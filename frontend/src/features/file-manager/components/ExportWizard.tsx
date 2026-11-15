@@ -11,6 +11,7 @@ import { previewExport, downloadBundle } from '../api';
 import type { BundleScope, ExportOptions, ExportPreview } from '../types';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 interface ExportWizardProps {
   open: boolean;
@@ -40,6 +41,7 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
   const [previewLoading, setPreviewLoading] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSystemAdmin = useIsSystemAdmin();
 
   // Reset whenever the modal closes so reopening starts fresh.
   useEffect(() => {
@@ -89,7 +91,8 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
       addToast({
         type: 'success',
         title: t('files.export.success_title', { defaultValue: 'Bundle downloaded' }),
-        message: `${result.filename} (${fmtBytes(result.sizeBytes)})`,
+        // B2: the file size is admin-only, so the toast shows only the name for others.
+        message: isSystemAdmin ? `${result.filename} (${fmtBytes(result.sizeBytes)})` : result.filename,
       });
       onClose();
     } catch (e) {
@@ -201,10 +204,13 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
                   label={t('files.export.stat_attachments', { defaultValue: 'Attachments' })}
                   value={String(preview.attachment_count)}
                 />
-                <Stat
-                  label={t('files.export.stat_size', { defaultValue: 'Estimated size' })}
-                  value={fmtBytes(preview.estimated_size_bytes)}
-                />
+                {/* B2: the bundle size is admin-only. */}
+                {isSystemAdmin && (
+                  <Stat
+                    label={t('files.export.stat_size', { defaultValue: 'Estimated size' })}
+                    value={fmtBytes(preview.estimated_size_bytes)}
+                  />
+                )}
                 <Stat
                   label={t('files.export.stat_format', { defaultValue: 'Format' })}
                   value={`${preview.bundle_format} ${preview.bundle_format_version}`}
@@ -237,7 +243,7 @@ export function ExportWizard({ open, projectId, projectName, onClose }: ExportWi
                 </div>
               </div>
 
-              {preview.estimated_size_bytes > 200 * 1024 * 1024 && (
+              {isSystemAdmin && preview.estimated_size_bytes > 200 * 1024 * 1024 && (
                 <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 text-xs">
                   <AlertTriangle size={14} className="shrink-0 mt-0.5" />
                   <p>

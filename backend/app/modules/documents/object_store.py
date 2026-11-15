@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 import mimetypes
 import uuid
+from contextlib import asynccontextmanager
 from urllib.parse import quote
 
 from fastapi import HTTPException, status
@@ -215,12 +216,57 @@ async def photo_presigned_url(file_path: str | None, filename: str, media_type: 
         logger.warning("photo presign head failed, using proxy: %s", type(exc).__name__)
         return None
     mt = media_type or mimetypes.guess_type(filename or "")[0] or "application/octet-stream"
+    # No ResponseContentDisposition: the bucket gateway adds its own, and a second one makes Chrome
+    # block the image (ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION). Same as the thumb presign.
     return backend.url_for(
         key,
         expires_in=PRESIGN_TTL_S,
         response_content_type=mt,
-        response_content_disposition=_content_disposition(filename or "photo", False),
     )
+
+
+# One lock per thumb key: concurrent first views of a photo build its thumbnail once.
+# Each value is [lock, callers]; the entry is removed when the last caller leaves.
+_THUMB_BUILD_LOCKS: dict[str, list] = {}
+
+
+@asynccontextmanager
+async def _thumb_build_lock(thumb_key: str):
+    import asyncio
+
+    entry = _THUMB_BUILD_LOCKS.setdefault(thumb_key, [asyncio.Lock(), 0])
+    entry[1] += 1
+    try:
+        async with entry[0]:
+            yield
+    finally:
+        entry[1] -= 1
+        if entry[1] == 0:
+            del _THUMB_BUILD_LOCKS[thumb_key]
+
+
+async def _store_thumb(backend, key: str, thumb_key: str) -> bool:
+    """Make the thumbnail of ``key`` and put it at ``thumb_key``. False when it cannot be made."""
+    import asyncio
+    import tempfile
+    from pathlib import Path
+
+    if await asyncio.wait_for(backend.size(key), timeout=_IMPORTED_S3_TIMEOUT_S) > _THUMB_SOURCE_MAX_BYTES:
+        return False
+    from app.modules.documents.service import _generate_photo_thumbnail
+
+    source = await asyncio.wait_for(backend.get(key), timeout=60.0)
+
+    def _make() -> bytes | None:
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp) / "t.jpg"
+            return dest.read_bytes() if _generate_photo_thumbnail(source, dest) else None
+
+    data = await asyncio.to_thread(_make)
+    if data is None:
+        return False
+    await asyncio.wait_for(backend.put(thumb_key, data, content_type="image/jpeg"), timeout=60.0)
+    return True
 
 
 async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | None) -> str | None:
@@ -230,8 +276,6 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
     presigns the full photo, or proxies).
     """
     import asyncio
-    import tempfile
-    from pathlib import Path
 
     backend, key = _photo_backend_and_key(file_path)
     if backend is None or key is None:
@@ -239,27 +283,12 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
     thumb_key = f"{_THUMB_KEY_DIR}/{photo_id}.jpg"
     try:
         if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
-            if await asyncio.wait_for(backend.size(key), timeout=_IMPORTED_S3_TIMEOUT_S) > _THUMB_SOURCE_MAX_BYTES:
-                return None
-            from app.modules.documents.service import _generate_photo_thumbnail
-
-            source = await asyncio.wait_for(backend.get(key), timeout=60.0)
-
-            def _make() -> bytes | None:
-                with tempfile.TemporaryDirectory() as tmp:
-                    dest = Path(tmp) / "t.jpg"
-                    return dest.read_bytes() if _generate_photo_thumbnail(source, dest) else None
-
-            data = await asyncio.to_thread(_make)
-            if data is None:
-                return None
-            await asyncio.wait_for(backend.put(thumb_key, data, content_type="image/jpeg"), timeout=60.0)
+            async with _thumb_build_lock(thumb_key):
+                # Re-check under the lock: a concurrent caller may have stored the thumb already.
+                if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
+                    if not await _store_thumb(backend, key, thumb_key):
+                        return None
     except Exception as exc:  # noqa: BLE001
         logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)
         return None
-    return backend.url_for(
-        thumb_key,
-        expires_in=PRESIGN_TTL_S,
-        response_content_type="image/jpeg",
-        response_content_disposition=_content_disposition(f"{photo_id}.jpg", False),
-    )
+    return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")
