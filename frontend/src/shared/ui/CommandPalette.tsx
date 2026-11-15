@@ -43,6 +43,8 @@ import { apiGet } from '@/shared/lib/api';
 import { useModuleStore } from '@/stores/useModuleStore';
 import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
 import { navGroups } from '@/app/layout/navCatalog';
+import { routeBackendOff } from '@/app/layout/routeBackendModules';
+import { useBackendModuleOff } from '@/shared/hooks/useBackendModuleOff';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -316,6 +318,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   // Same permission inputs the sidebar reads (Sidebar.tsx passesRowGates).
   const restrictedMode = useAuthStore((s) => s.restrictedMode);
   const userRole = useAuthStore((s) => s.userRole);
+  const isBackendOff = useBackendModuleOff(!restrictedMode);
 
   // Build results
   const results = useMemo(() => {
@@ -325,6 +328,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     const canSeeRoute = (path: string): boolean => {
       const bare = path.split(/[?#]/)[0]!;
       if (restrictedMode && !isRestrictedRouteAllowed(bare)) return false;
+      if (routeBackendOff(bare, isBackendOff)) return false;
       return userRole === 'admin' || !ADMIN_ONLY_ROUTES.has(bare);
     };
     const visibleBoqs = boqs.filter((b) => canSeeRoute(`/boq/${b.id}`));
@@ -487,7 +491,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     }
 
     return groups;
-  }, [query, projects, boqs, globalResults, t, isModuleEnabled, restrictedMode, userRole]);
+  }, [query, projects, boqs, globalResults, t, isModuleEnabled, restrictedMode, userRole, isBackendOff]);
 
   // Flat list for keyboard navigation
   const flatResults = useMemo(() => results.flatMap((g) => g.items), [results]);

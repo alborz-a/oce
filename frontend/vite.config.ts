@@ -388,10 +388,9 @@ export default defineConfig({
             // verbs bypass the SW (no ``method`` match here means GET
             // by default).
             urlPattern: ({ url, request, sameOrigin }) => {
-              // Same origin only. A cross-origin URL (presigned S3 bucket
-              // host) that happens to carry an /api/v1/ path must not be
-              // cached: Cache.put on a cross-origin/opaque body fails with
-              // "Cache.put() encountered a network error" (G3).
+              // Defensive: cross-origin is never runtime-cached (presigned
+              // bucket URLs). Not the cause of the G3 errors by itself; see
+              // the PR body for the open question on this lane.
               if (!sameOrigin) return false;
               if (request.method !== 'GET') return false;
               // A bidder link's token is its credential; never keep it, or

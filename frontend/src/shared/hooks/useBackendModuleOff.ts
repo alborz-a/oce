@@ -23,10 +23,12 @@ interface BackendModuleState {
   is_core: boolean;
 }
 
-export function useBackendModuleOff(): (name: string) => boolean {
+export function useBackendModuleOff(enabled = true): (name: string) => boolean {
   const { data } = useQuery({
     queryKey: ['system-modules'],
     queryFn: () => apiGet<BackendModuleState[]>('/v1/modules/'),
+    // Restricted members get no catalogue request (the endpoint is not theirs).
+    enabled,
     staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
   });
