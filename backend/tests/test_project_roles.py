@@ -257,3 +257,35 @@ async def test_require_project_cap_dependency():
     # 4. Admin bypass -> allowed unconditionally
     admin_payload = {"sub": user_id, "role": "admin"}
     await dep(request, session=session, user_id=user_id, payload=admin_payload)
+
+
+def test_photo_categories_whitelist_and_legacy_site():
+    """Step 6.4: Only nine categories allowed; legacy 'site' normalizes to 'site_progress'."""
+    from app.modules.documents.schemas import PHOTO_CATEGORIES, PhotoUpdate
+    from pydantic import ValidationError
+
+    expected_categories = (
+        "site_progress",
+        "before_work",
+        "after_work",
+        "defect",
+        "materials",
+        "safety",
+        "drawing_doc",
+        "site_visit",
+        "other",
+    )
+    assert PHOTO_CATEGORIES == expected_categories
+
+    # legacy "site" maps to "site_progress"
+    u = PhotoUpdate(category="site")
+    assert u.category == "site_progress"
+
+    # all valid 9 categories pass
+    for cat in expected_categories:
+        u_valid = PhotoUpdate(category=cat)
+        assert u_valid.category == cat
+
+    # invalid category rejected with ValidationError
+    with pytest.raises(ValidationError):
+        PhotoUpdate(category="invalid_category_xyz")

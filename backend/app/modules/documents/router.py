@@ -633,7 +633,7 @@ def _photo_to_response(photo: object) -> PhotoResponse:
         gps_lon=photo.gps_lon,  # type: ignore[attr-defined]
         tags=getattr(photo, "tags", []),  # type: ignore[attr-defined]
         taken_at=photo.taken_at,  # type: ignore[attr-defined]
-        category=photo.category,  # type: ignore[attr-defined]
+        category="site_progress" if getattr(photo, "category", "") == "site" else getattr(photo, "category", "site_progress"),  # type: ignore[attr-defined] [RSC-IRAN]
         metadata=getattr(photo, "metadata_", {}),  # type: ignore[attr-defined]
         created_by=photo.created_by,  # type: ignore[attr-defined]
         created_at=photo.created_at,  # type: ignore[attr-defined]
@@ -685,7 +685,7 @@ async def upload_photo(
     user_id: CurrentUserId,
     payload: CurrentUserPayload,
     project_id: uuid.UUID = Query(...),
-    category: str = Form(default="site"),
+    category: str = Form(default="site_progress"),
     caption: str | None = Form(default=None),
     gps_lat: float | None = Form(default=None),
     gps_lon: float | None = Form(default=None),
@@ -704,6 +704,27 @@ async def upload_photo(
             detail="توضیح عکس الزامی است",
         )
     caption = caption.strip()
+    # [RSC-IRAN] Step 6.4: Validate 9 categories; legacy "site" -> "site_progress"
+    category_raw = (category or "").strip()
+    if category_raw == "site":
+        category_raw = "site_progress"
+    valid_categories = {
+        "site_progress",
+        "before_work",
+        "after_work",
+        "defect",
+        "materials",
+        "safety",
+        "drawing_doc",
+        "site_visit",
+        "other",
+    }
+    if category_raw not in valid_categories:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Invalid photo category: {category!r}",
+        )
+    category = category_raw
     if payload and payload.get("role") != "admin":
         caps = await get_project_caps(session, user_id, project_id)
         if "file.upload" not in caps:
