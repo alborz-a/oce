@@ -13,9 +13,11 @@ import uuid
 from typing import Any
 
 from fastapi import Depends, HTTPException, Request, status
-from sqlalchemy import select
+from sqlalchemy import JSON, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Mapped, mapped_column
 
+from app.database import Base
 from app.dependencies import (
     CurrentUserId,
     CurrentUserPayload,
@@ -64,6 +66,38 @@ LEGACY: dict[str, str] = {
     "owner": "project_manager",
     "estimator": "member",
 }
+
+# Per-module switches (RSD-0.50 H1). Every project role starts with every module
+# on, so default behaviour is unchanged. An admin can switch a module off for one
+# role; the module cap is then removed from that role's effective caps and every
+# handler guarded by require_project_cap("module.<name>") answers 403.
+MODULES: tuple[str, ...] = ("photos", "files", "tasks", "reports")
+MODULE_CAP: dict[str, str] = {m: f"module.{m}" for m in MODULES}
+ASSIGNABLE_ROLES: tuple[str, ...] = ("member", "project_manager", "viewer")
+
+CAPS = {role: caps | frozenset(MODULE_CAP.values()) for role, caps in CAPS.items()}
+
+
+class ProjectRoleModules(Base):
+    """One row per project role that has at least one module switched off."""
+
+    __tablename__ = "oe_project_role_modules"
+
+    role: Mapped[str] = mapped_column(String(32), primary_key=True)
+    disabled_modules: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
+
+
+async def load_disabled_modules(session: AsyncSession) -> dict[str, frozenset[str]]:
+    """Return {role: disabled module names}. Errors propagate: fail closed."""
+    rows = (await session.execute(select(ProjectRoleModules))).scalars().all()
+    return {r.role: frozenset(m for m in (r.disabled_modules or []) if m in MODULES) for r in rows}
+
+
+async def effective_caps(session: AsyncSession, role: str) -> frozenset[str]:
+    """CAPS for role minus the module caps switched off for that role."""
+    base = CAPS.get(role, frozenset())
+    disabled = (await load_disabled_modules(session)).get(role, frozenset())
+    return base - {MODULE_CAP[m] for m in disabled}
 
 
 async def get_project_role(
@@ -195,7 +229,7 @@ async def get_project_caps(
     role = await get_project_role(session, user, project_id)
     if role is None:
         return frozenset()
-    return CAPS.get(role, frozenset())
+    return await effective_caps(session, role)
 
 
 def require_project_cap(cap: str):
@@ -269,7 +303,7 @@ def require_project_cap(cap: str):
                 detail="Project not found",
             )
 
-        caps = CAPS.get(role, frozenset())
+        caps = await effective_caps(session, role)
         if cap not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

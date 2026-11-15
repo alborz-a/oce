@@ -221,3 +221,41 @@ async def remove_project_member(session: AsyncSession, project_id: uuid.UUID, us
         )
     await session.delete(membership)
     await session.flush()
+
+
+async def update_project_member_role(
+    session: AsyncSession,
+    project_id: uuid.UUID,
+    user_id: uuid.UUID,
+    role: str,
+) -> ProjectMemberResponse:
+    """Change a member's role on the project's default team. 404 when not a member."""
+    project = await _load_project(session, project_id)
+    if project.owner_id == user_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Change the project owner's access through the ownership flow",
+        )
+    team = await _get_or_create_default_team(session, project_id)
+    membership = (
+        await session.execute(
+            select(TeamMembership).where(
+                TeamMembership.team_id == team.id,
+                TeamMembership.user_id == user_id,
+            )
+        )
+    ).scalar_one_or_none()
+    if membership is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User is not a member of this project")
+    membership.role = role
+    await session.flush()
+    user = (await session.execute(select(User).where(User.id == user_id))).scalar_one()
+    return ProjectMemberResponse(
+        user_id=user.id,
+        email=user.email,
+        full_name=user.full_name or "",
+        role=membership.role,
+        is_owner=False,
+        created_at=membership.created_at,
+        avatar_url=user.avatar_url,
+    )

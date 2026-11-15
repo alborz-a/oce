@@ -49,7 +49,7 @@ from app.dependencies import (
 )
 from app.modules.documents import object_store
 from app.modules.projects.file_manager_redact import viewer_is_system_admin
-from app.core.project_roles import get_project_caps
+from app.core.project_roles import get_project_caps, require_project_cap
 from app.modules.documents.schemas import (
     DocumentActivityListResponse,
     DocumentActivityResponse,
@@ -763,7 +763,7 @@ async def upload_photo(
 # ── List photos ─────────────────────────────────────────────────────────
 
 
-@router.get("/photos/", response_model=PhotoListResponse)
+@router.get("/photos/", response_model=PhotoListResponse, dependencies=[Depends(require_project_cap("module.photos"))])
 async def list_photos(
     session: SessionDep,
     project_id: uuid.UUID = Query(...),
@@ -840,7 +840,11 @@ because both surfaces read the same cap.
 """
 
 
-@router.get("/photos/timeline/", response_model=PhotoListResponse)
+@router.get(
+    "/photos/timeline/",
+    response_model=PhotoListResponse,
+    dependencies=[Depends(require_project_cap("module.photos"))],
+)
 async def get_timeline(
     session: SessionDep,
     project_id: uuid.UUID = Query(...),
@@ -1317,7 +1321,11 @@ async def serve_photo_thumbnail(
 # ── Update photo ────────────────────────────────────────────────────────
 
 
-@router.patch("/photos/{photo_id}", response_model=PhotoResponse)
+@router.patch(
+    "/photos/{photo_id}",
+    response_model=PhotoResponse,
+    dependencies=[Depends(require_project_cap("module.photos"))],
+)
 async def update_photo(
     photo_id: uuid.UUID,
     data: PhotoUpdate,
@@ -1376,7 +1384,11 @@ async def _can_edit_photo_description(photo: object, user_id: str | None, sessio
 # ── Delete photo ────────────────────────────────────────────────────────
 
 
-@router.delete("/photos/{photo_id}", status_code=204)
+@router.delete(
+    "/photos/{photo_id}",
+    status_code=204,
+    dependencies=[Depends(require_project_cap("module.photos"))],
+)
 async def delete_photo(
     photo_id: uuid.UUID,
     session: SessionDep,

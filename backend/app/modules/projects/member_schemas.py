@@ -71,3 +71,11 @@ class BulkAddProjectMembersResponse(BaseModel):
     """Result of a mass invite: the members added this call."""
 
     added: list[ProjectMemberResponse] = Field(default_factory=list)
+
+
+class UpdateProjectMemberRoleRequest(BaseModel):
+    """Change one member's project role (RSD-0.50 H1)."""
+
+    model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
+
+    role: str = Field(pattern=r"^(member|project_manager|viewer)$")
