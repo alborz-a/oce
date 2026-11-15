@@ -65,6 +65,7 @@ vi.mock('@/features/file-comments/api', async () => {
 import { FilePreviewPane } from '../FilePreviewPane';
 import { listVersions } from '@/features/file-versions/api';
 import { listThreads } from '@/features/file-comments/api';
+import { useAuthStore } from '@/stores/useAuthStore';
 import type { FileVersionResponse } from '@/features/file-versions/types';
 import type { FileCommentThread } from '@/features/file-comments/types';
 import type { FileRow } from '../../types';
@@ -158,14 +159,14 @@ const ROW: FileRow = {
   extra: {},
 };
 
-function renderPane(): void {
+function renderPane(row: FileRow = ROW): void {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   render(
     <MemoryRouter initialEntries={['/files']}>
       <QueryClientProvider client={client}>
-        <FilePreviewPane row={ROW} onClose={() => {}} onEmail={() => {}} />
+        <FilePreviewPane row={row} onClose={() => {}} onEmail={() => {}} />
       </QueryClientProvider>
     </MemoryRouter>,
   );
@@ -173,6 +174,8 @@ function renderPane(): void {
 
 beforeEach(() => {
   cleanup();
+  vi.clearAllMocks();
+  useAuthStore.setState({ restrictedMode: false });
   vi.mocked(listVersions).mockResolvedValue([]);
   vi.mocked(listThreads).mockResolvedValue({
     file_kind: 'document',
@@ -237,5 +240,19 @@ describe('the file preview pane reaches the Epic C versioning surfaces', () => {
 
     await screen.findByTestId('comment-node-c-1');
     expect(screen.queryByTestId('stale-version-pill')).not.toBeInTheDocument();
+  });
+
+  it('skips file-versions fetch when restrictedMode is active or kind is photo (rsd-rsc#94)', async () => {
+    useAuthStore.setState({ restrictedMode: true });
+    renderPane();
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+    expect(listVersions).not.toHaveBeenCalled();
+
+    cleanup();
+    vi.clearAllMocks();
+    useAuthStore.setState({ restrictedMode: false });
+    renderPane({ ...ROW, kind: 'photo', name: 'site.jpg', mime_type: 'image/jpeg' });
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+    expect(listVersions).not.toHaveBeenCalled();
   });
 });
