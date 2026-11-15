@@ -17,7 +17,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Camera, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import { apiGet } from '@/shared/lib/api';
 import { Card, Button, AuthImage } from '@/shared/ui';
@@ -63,14 +63,6 @@ export function LatestSitePhotosCard() {
   });
 
   const items = useMemo(() => photos ?? [], [photos]);
-
-  // Open the clicked project's photo gallery. The /photos page reads the
-  // active project from the global project-context store, so we set it
-  // first, then navigate - mirroring how other dashboard cards deep-link.
-  const openProjectPhotos = (photo: RecentPhoto) => {
-    setActiveProject(photo.project_id, photo.project_name);
-    navigate('/photos');
-  };
 
   // While the first fetch is in flight, render a quiet skeleton strip so
   // the card never flashes the empty state before data arrives.
@@ -137,10 +129,12 @@ export function LatestSitePhotosCard() {
         ) : (
           <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-12">
             {items.map((photo, index) => (
-              <button
+              <Link
                 key={photo.id}
-                type="button"
-                onClick={() => openProjectPhotos(photo)}
+                to="/photos"
+                // The /photos page reads the active project from the global
+                // project-context store, so set it before the link navigates.
+                onClick={() => setActiveProject(photo.project_id, photo.project_name)}
                 title={t('dashboard.latest_photos_open', {
                   defaultValue: 'Open photos for {{project}}',
                   project: photo.project_name,
@@ -172,7 +166,7 @@ export function LatestSitePhotosCard() {
                     className="text-2xs text-white/80"
                   />
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
         )}

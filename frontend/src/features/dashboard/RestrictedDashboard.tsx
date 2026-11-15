@@ -1,6 +1,5 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import {
@@ -11,7 +10,6 @@ import {
   Clock,
   Building2,
   CheckCircle2,
-  X,
   ChevronRight,
   Image as ImageIcon,
 } from 'lucide-react';
@@ -55,7 +53,6 @@ interface PhotoItem {
 export function RestrictedDashboard() {
   const userFullName = useAuthStore((s) => s.userFullName);
   const userEmail = useAuthStore((s) => s.userEmail);
-  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
 
   // 1. Projects Query
   const { data: projects, isLoading: projectsLoading } = useQuery<ProjectItem[]>({
@@ -194,8 +191,8 @@ export function RestrictedDashboard() {
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <Link
-                      to={`/projects/${project.id}?tab=photos`}
-                      className="font-semibold text-content-primary group-hover:text-oe-blue transition-colors line-clamp-1 text-sm"
+                      to={`/projects/${project.id}`}
+                      className="font-semibold text-content-primary group-hover:text-oe-blue transition-colors line-clamp-1 text-sm after:absolute after:inset-0 after:content-['']"
                     >
                       {toPersianDigits(project.name)}
                     </Link>
@@ -220,7 +217,7 @@ export function RestrictedDashboard() {
                       to={`/projects/${project.id}?tab=photos`}
                       title="تصاویر کارگاه"
                       aria-label="تصاویر کارگاه"
-                      className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
+                      className="relative z-10 inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
                     >
                       <Camera size={14} />
                     </Link>
@@ -228,14 +225,14 @@ export function RestrictedDashboard() {
                       to={`/projects/${project.id}/tasks`}
                       title="وظایف"
                       aria-label="وظایف"
-                      className="inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
+                      className="relative z-10 inline-flex items-center gap-1 rounded-md bg-surface-secondary px-2.5 py-1 text-content-secondary hover:bg-oe-blue/10 hover:text-oe-blue transition-colors font-medium"
                     >
                       <CheckSquare size={14} />
                     </Link>
                   </div>
                   <Link
-                    to={`/projects/${project.id}?tab=photos`}
-                    className="text-content-tertiary group-hover:text-oe-blue transition-colors"
+                    to={`/projects/${project.id}`}
+                    className="relative z-10 text-content-tertiary group-hover:text-oe-blue transition-colors"
                     title="مشاهده پروژه"
                     aria-label="مشاهده پروژه"
                   >
@@ -288,8 +285,9 @@ export function RestrictedDashboard() {
             {tasks.slice(0, 5).map((task) => {
               const isCompleted = task.status === 'completed';
               return (
-                <div
+                <Link
                   key={task.id}
+                  to={task.project_id ? `/projects/${task.project_id}/tasks` : '/tasks'}
                   className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-surface-secondary/40 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -321,7 +319,7 @@ export function RestrictedDashboard() {
                   >
                     {isCompleted ? 'تکمیل‌شده' : task.priority === 'urgent' ? 'فوری' : task.priority === 'high' ? 'مهم' : 'عادی'}
                   </Badge>
-                </div>
+                </Link>
               );
             })}
           </div>
@@ -368,10 +366,10 @@ export function RestrictedDashboard() {
             {photos.slice(0, 8).map((photo) => {
               const thumbUrl = `${API_BASE}/v1/documents/photos/${photo.id}/thumb`;
               return (
-                <div
+                <Link
                   key={photo.id}
-                  onClick={() => setSelectedPhoto(photo)}
-                  className="group relative cursor-pointer overflow-hidden rounded-xl border border-border-light bg-surface-secondary/40 aspect-4/3 shadow-xs hover:border-oe-blue/50 hover:shadow-md transition-all duration-200"
+                  to={`/projects/${photo.project_id}?tab=photos`}
+                  className="group relative block overflow-hidden rounded-xl border border-border-light bg-surface-secondary/40 aspect-4/3 shadow-xs hover:border-oe-blue/50 hover:shadow-md transition-all duration-200"
                 >
                   <AuthImage
                     src={thumbUrl}
@@ -393,61 +391,12 @@ export function RestrictedDashboard() {
                       </span>
                     )}
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         )}
       </section>
-
-      {/* ── Photo Lightbox Modal ────────────────────────────────────────────── */}
-      {selectedPhoto && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 animate-fade-in"
-          onClick={() => setSelectedPhoto(null)}
-        >
-          <div
-            className="relative max-w-4xl w-full max-h-[90vh] bg-surface-elevated rounded-2xl overflow-hidden shadow-2xl flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-border-light">
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold text-content-primary truncate">
-                  {selectedPhoto.description || selectedPhoto.file_name}
-                </h3>
-                {selectedPhoto.project_name && (
-                  <p className="text-2xs text-content-tertiary">پروژه: {selectedPhoto.project_name}</p>
-                )}
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedPhoto(null)}
-                className="h-8 w-8 flex items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <div className="flex-1 bg-black/95 flex items-center justify-center p-2 overflow-hidden min-h-[350px]">
-              <AuthImage
-                src={`${API_BASE}/v1/documents/photos/${selectedPhoto.id}/file`}
-                alt={selectedPhoto.description || selectedPhoto.file_name}
-                className="max-h-[70vh] max-w-full object-contain rounded-lg"
-              />
-            </div>
-            <div className="px-4 py-2.5 border-t border-border-light bg-surface-secondary/40 flex items-center justify-between text-xs text-content-secondary">
-              <span>تاریخ ثبت: {formatJalali(selectedPhoto.captured_at || selectedPhoto.created_at)}</span>
-              <Link
-                to={`/projects/${selectedPhoto.project_id}?tab=photos`}
-                className="inline-flex items-center gap-1 text-oe-blue hover:underline text-2xs font-medium"
-                onClick={() => setSelectedPhoto(null)}
-              >
-                <span>مشاهده در گالری پروژه</span>
-                <ChevronRight size={13} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

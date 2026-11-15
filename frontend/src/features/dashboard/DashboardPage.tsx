@@ -3,7 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { apiGet, apiPost, apiDelete, type Page } from '@/shared/lib/api';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import { APP_VERSION } from '@/shared/lib/version';
@@ -1245,9 +1245,8 @@ function PortfolioOverview() {
      · not set            → portfolio aggregate as a read-only summary;
        clicks route to /projects so the user can pick a project first. */
 
-function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
+export function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   const activeProjectName = useProjectContextStore((s) => s.activeProjectName);
 
@@ -1377,9 +1376,9 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
           const s = toneStyles[it.tone];
           const hasItems = it.value > 0;
           return (
-            <button
+            <Link
               key={it.id}
-              onClick={() => navigate(it.url)}
+              to={it.url}
               className="group flex items-center gap-3 rounded-xl border border-border-light bg-surface-elevated/90 px-3.5 py-3 text-start shadow-xs transition-all duration-normal ease-oe hover:border-oe-blue/40 hover:shadow-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30"
             >
               <span
@@ -1411,7 +1410,7 @@ function TodaySnapshot({ cards }: { cards?: ProjectCardMetrics[] }) {
                 size={14}
                 className="shrink-0 text-content-quaternary opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-oe-blue group-hover:opacity-100 rtl:rotate-180"
               />
-            </button>
+            </Link>
           );
         })}
       </div>
