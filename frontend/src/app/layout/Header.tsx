@@ -1650,6 +1650,7 @@ function ProjectSwitcher() {
   const activeProjectName = useProjectContextStore((s) => s.activeProjectName);
   const setActiveProject = useProjectContextStore((s) => s.setActiveProject);
   const clearProject = useProjectContextStore((s) => s.clearProject);
+  const isSystemAdmin = useIsSystemAdmin();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   // "Show all" toggle — collapsed by default to keep the dropdown tidy
@@ -1946,7 +1947,7 @@ function ProjectSwitcher() {
               </button>
             )}
           </div>
-          {activeProjectId && (
+          {activeProjectId && isSystemAdmin && (
             <div className="border-t border-border-light px-4 py-2.5">
               <button
                 onClick={() => { navigate(`/projects/${activeProjectId}`); setOpen(false); }}
