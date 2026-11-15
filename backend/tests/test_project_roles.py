@@ -289,3 +289,39 @@ def test_photo_categories_whitelist_and_legacy_site():
     # invalid category rejected with ValidationError
     with pytest.raises(ValidationError):
         PhotoUpdate(category="invalid_category_xyz")
+
+
+def test_hidden_users_qa_accounts_and_importer():
+    """Step 2.4: QA accounts and importer are hidden from non-admin staff."""
+    from app.core.hidden_users import (
+        HIDDEN_SYSTEM_EMAILS,
+        HIDDEN_SYSTEM_NAMES,
+        is_hidden_system_user,
+        viewer_is_admin,
+    )
+
+    qa_emails = [
+        "qa.manager@royalstars.co",
+        "qa.member@royalstars.co",
+        "qa.guest@royalstars.co",
+        "qa.allview@royalstars.co",
+    ]
+    for email in qa_emails:
+        assert email in HIDDEN_SYSTEM_EMAILS
+        assert is_hidden_system_user(email, "Some Name")
+
+    for name in ["qa.manager", "qa.member", "qa.guest", "qa.allview"]:
+        assert name in HIDDEN_SYSTEM_NAMES
+        assert is_hidden_system_user("someone@example.com", name)
+
+    # Prefix match
+    assert is_hidden_system_user("qa.custom@test.com", "Custom QA")
+    assert is_hidden_system_user("other@test.com", "qa.custom_user")
+
+    # Regular users not hidden
+    assert not is_hidden_system_user("staff@royalstars.co", "Ali Reza")
+
+    # viewer_is_admin check
+    assert viewer_is_admin({"role": "admin"})
+    assert not viewer_is_admin({"role": "editor"})
+    assert not viewer_is_admin({"role": "viewer"})
