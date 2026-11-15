@@ -621,9 +621,12 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
         </div>
 
         <dl className="space-y-2 text-xs">
-          <Row label={t('files.detail.kind', { defaultValue: 'Kind' })}>
-            {t(`files.category.${row.kind}`, { defaultValue: row.kind })}
-          </Row>
+          {/* C3: photos show only their tag; the type row is for other file kinds */}
+          {row.kind !== 'photo' && (
+            <Row label={t('files.detail.kind', { defaultValue: 'Kind' })}>
+              {t(`files.category.${row.kind}`, { defaultValue: row.kind })}
+            </Row>
+          )}
           {row.category && (
             <Row label={t('files.detail.category', { defaultValue: 'Category' })}>
               {row.category}

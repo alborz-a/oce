@@ -48,6 +48,7 @@ def redact_file_rows(rows: Iterable[FileRow]) -> list[FileRow]:
                 update={
                     "size_bytes": 0,
                     "physical_path": "",
+                    "storage_backend": None,
                     "relative_path": "",
                     "extra": extra,
                 }
@@ -65,6 +66,7 @@ def redact_tree(nodes: Iterable[FileTreeNode]) -> list[FileTreeNode]:
                 update={
                     "total_bytes": 0,
                     "physical_path": None,
+                    "storage_backend": None,
                     "children": redact_tree(node.children),
                 }
             )
@@ -85,5 +87,6 @@ def redact_locations(loc: StorageLocations) -> StorageLocations:
             "dwg_root": None,
             "extras": {},
             "notes": [],
+            "storage_backend": None,
         }
     )
