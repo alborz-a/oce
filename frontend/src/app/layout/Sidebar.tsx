@@ -1081,6 +1081,15 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           opacity: 0.55;
           transform: translateX(0);
         }
+        /* RTL: mirror the arrow. Its own transform rule above beats the
+           global [dir='rtl'] chevron flip and rtl:rotate-180, so flip here. */
+        [dir='rtl'] .oe-sidebar a .oe-hover-arrow {
+          transform: translateX(4px) scaleX(-1);
+        }
+        [dir='rtl'] .oe-sidebar a:hover .oe-hover-arrow,
+        [dir='rtl'] .oe-sidebar a:focus-visible .oe-hover-arrow {
+          transform: translateX(0) scaleX(-1);
+        }
         /* Pin button on items - invisible until item is hovered, then
            fades in from the right. Click does not navigate (handled by
            preventDefault + stopPropagation in the handler). */
@@ -2192,7 +2201,7 @@ function SidebarItem({
               {kbdHint ?? (
                 <ChevronRight
                   size={12}
-                  className="oe-hover-arrow text-content-tertiary rtl:rotate-180"
+                  className="oe-hover-arrow text-content-tertiary"
                 />
               )}
             </span>
