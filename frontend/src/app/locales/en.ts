@@ -7513,6 +7513,7 @@ const resource = {
     "files.email.open_mail_client": "Open email client",
     "files.email.sample_subject": "File: {{name}}",
     "files.email.sample_body": "Hi,\n\nHere is the file you asked about, {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal",
+    "files.email.sample_body_no_size": "Hi,\n\nHere is the file you asked about, {{name}}.\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal",
     "files.actions.share": "Share",
     "files.share.title": "Password-protected share link",
     "files.share.password_label": "Password (optional)",

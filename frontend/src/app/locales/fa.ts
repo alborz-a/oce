@@ -11611,6 +11611,7 @@ const resource = {
     "files.email.open_mail_client": "باز کردن برنامه ایمیل",
     "files.email.paste_into_email": "متن آماده برای ایمیل",
     "files.email.sample_body": "سلام،\n\nاین همان فایلی است که درباره‌اش پرسیدید، {{name}} ({{size}}).\nپیوند دریافت (انقضا {{expires}}):\n{{url}}\n\n- ارسال‌شده از سامانه رویال استارز",
+    "files.email.sample_body_no_size": "سلام،\n\nاین همان فایلی است که درباره‌اش پرسیدید، {{name}}.\nپیوند دریافت (انقضا {{expires}}):\n{{url}}\n\n- ارسال‌شده از سامانه رویال استارز",
     "files.email.sample_subject": "فایل: {{name}}",
     "files.email.title": "ارسال با ایمیل",
     "files.email.ttl": "اعتبار پیوند",
