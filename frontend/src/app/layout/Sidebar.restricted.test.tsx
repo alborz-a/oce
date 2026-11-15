@@ -1,5 +1,4 @@
-// A restricted staff user sees only Projects, Tasks, Photos+Documents,
-// Notifications and their own Profile in the sidebar.
+// [RSC-IRAN] A restricted staff user sees only Projects & Tasks, Photo Gallery, Chat, and Documents in the sidebar.
 
 import type { ReactNode } from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
@@ -56,7 +55,7 @@ afterEach(() => {
 });
 
 describe('Sidebar for restricted staff', () => {
-  it('offers only the five allowed destinations', () => {
+  it('offers only the four allowed destinations', () => {
     api.apiGet.mockResolvedValue([]);
     useAuthStore.setState({ isAuthenticated: true, profileResolved: true, restrictedMode: true, userRole: 'viewer' });
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -70,10 +69,11 @@ describe('Sidebar for restricted staff', () => {
     const hrefs = Array.from(container.querySelectorAll('a[href]'))
       .map((a) => a.getAttribute('href') as string)
       .filter((h) => h.startsWith('/'));
-    for (const want of ['/projects', '/tasks', '/files', '/notifications', '/profile']) {
+    expect(hrefs).toEqual(['/projects', '/photos', '/chat', '/files']);
+    for (const want of ['/projects', '/photos', '/chat', '/files']) {
       expect(hrefs).toContain(want);
     }
-    for (const banned of ['/settings', '/about', '/boq', '/costs', '/finance', '/ai-estimate']) {
+    for (const banned of ['/settings', '/about', '/boq', '/costs', '/finance', '/ai-estimate', '/notifications', '/profile', '/tasks']) {
       expect(hrefs).not.toContain(banned);
     }
     // Module list is an admin-shell call; restricted users must not make it.

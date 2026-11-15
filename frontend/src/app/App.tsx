@@ -1207,7 +1207,7 @@ export default function App() {
           path="/"
           element={
             isAuthenticated
-              ? <Navigate to="/dashboard" replace />
+              ? <Navigate to={restrictedMode ? '/projects' : '/dashboard'} replace /> // [RSC-IRAN] restricted users land on /projects
               : <P title="Dashboard"><DashboardPage /></P>
           }
         />

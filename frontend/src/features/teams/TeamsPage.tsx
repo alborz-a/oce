@@ -62,6 +62,7 @@ import { UserSearchInput } from '@/shared/ui/UserSearchInput';
 import { RequiresProject } from '@/shared/auth/RequiresProject';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useToastStore } from '@/stores/useToastStore';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import {
   ALL_TEAM_ROLES,
   TEAM_KINDS,
@@ -69,6 +70,7 @@ import {
   createTeam,
   deleteTeam,
   getAccessMatrix,
+  getRoleModules,
   listEntityTypes,
   listMembers,
   listRestrictedEntities,
@@ -76,12 +78,15 @@ import {
   removeMember,
   setEntityVisibility,
   updateMemberRole,
+  updateRoleModules,
   updateTeam,
   validateProjectTeams,
+  type RoleModuleKey,
   type Team,
   type TeamKind,
   type TeamRole,
   type TeamsValidationFinding,
+  type ToggleableRole,
 } from './api';
 import { RosterTab } from './RosterTab';
 import { fmtList } from '@/shared/lib/formatters';
@@ -1013,6 +1018,121 @@ function MatrixTab({ projectId }: { projectId: string }) {
   );
 }
 
+const ROLE_MODULE_KEYS: readonly RoleModuleKey[] = ['photos', 'files', 'tasks', 'reports'];
+const TOGGLEABLE_ROLE_KEYS: readonly ToggleableRole[] = ['project_manager', 'member', 'viewer'];
+
+function RoleModulesSection({ projectId }: { projectId: string }) {
+  const { t } = useTranslation();
+  const isSystemAdmin = useIsSystemAdmin();
+  const queryClient = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['teams-role-modules', projectId],
+    queryFn: () => getRoleModules(projectId),
+    enabled: !!projectId && isSystemAdmin,
+    staleTime: 15_000,
+  });
+
+  const mutation = useMutation({
+    mutationFn: ({ role, mod, enabled }: { role: ToggleableRole; mod: RoleModuleKey; enabled: boolean }) =>
+      updateRoleModules(projectId, { [role]: { [mod]: enabled } }),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(['teams-role-modules', projectId], updated);
+      void queryClient.invalidateQueries({ queryKey: ['project-caps', projectId] });
+    },
+    onError: (err: Error) => {
+      addToast({
+        type: 'error',
+        title: t('teams.role_modules.save_failed', 'خطا در ذخیره دسترسی ماژول'),
+        message: err.message,
+      });
+    },
+  });
+
+  if (!isSystemAdmin) return null;
+
+  const moduleLabels: Record<RoleModuleKey, string> = {
+    photos: t('teams.role_modules.mod_photos', 'تصاویر'),
+    files: t('teams.role_modules.mod_files', 'فایل‌ها'),
+    tasks: t('teams.role_modules.mod_tasks', 'وظایف'),
+    reports: t('teams.role_modules.mod_reports', 'گزارش‌ها'),
+  };
+
+  const roleLabels: Record<ToggleableRole, string> = {
+    project_manager: t('teams.role_modules.role_pm', 'مدیر پروژه'),
+    member: t('teams.role_modules.role_member', 'عضو'),
+    viewer: t('teams.role_modules.role_viewer', 'بازدیدکننده'),
+  };
+
+  return (
+    <Card padding="md" className="space-y-3" data-testid="teams-role-modules">
+      <div>
+        <h3 className="text-sm font-semibold text-content-primary">
+          {t('teams.role_modules.title', 'دسترسی ماژول‌ها بر اساس نقش')}
+        </h3>
+        <p className="text-xs text-content-secondary">
+          {t(
+            'teams.role_modules.subtitle',
+            'غیرفعال کردن هر ماژول برای یک نقش، دسترسی مشاهده و ویرایش آن بخش را در این پروژه می‌بندد.',
+          )}
+        </p>
+      </div>
+      {isLoading || !data ? (
+        <p className="text-xs text-content-tertiary">{t('teams.loading', 'در حال بارگذاری…')}</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[28rem] text-sm">
+            <thead>
+              <tr className="border-b border-border text-start text-xs text-content-tertiary">
+                <th className="py-2 pe-3 font-medium">
+                  {t('teams.role_modules.col_role', 'نقش')}
+                </th>
+                {ROLE_MODULE_KEYS.map((mod) => (
+                  <th key={mod} className="py-2 px-3 text-center font-medium">
+                    {moduleLabels[mod]}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border-light">
+              {TOGGLEABLE_ROLE_KEYS.map((role) => (
+                <tr key={role}>
+                  <td className="py-2 pe-3 font-medium text-content-primary">
+                    {roleLabels[role]}
+                  </td>
+                  {ROLE_MODULE_KEYS.map((mod) => {
+                    const checked = data.roles?.[role]?.[mod] ?? true;
+                    return (
+                      <td key={mod} className="py-2 px-3 text-center">
+                        <input
+                          type="checkbox"
+                          data-testid={`role-module-${role}-${mod}`}
+                          aria-label={`${roleLabels[role]} - ${moduleLabels[mod]}`}
+                          checked={checked}
+                          disabled={mutation.isPending}
+                          onChange={(e) =>
+                            mutation.mutate({
+                              role,
+                              mod,
+                              enabled: e.target.checked,
+                            })
+                          }
+                          className="h-4 w-4 rounded border-border accent-oe-blue cursor-pointer"
+                        />
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
+  );
+}
+
 /* ── Page ──────────────────────────────────────────────────────────────── */
 
 export function TeamsPage() {
@@ -1050,6 +1170,7 @@ export function TeamsPage() {
               again stops believing there is one. */}
           <HowTeamVisibilityWorks />
           <ValidationBanner projectId={projectId} />
+          <RoleModulesSection projectId={projectId} />
           <div className="flex gap-1 border-b border-border">
             {tabs.map((item) => (
               <button

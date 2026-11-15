@@ -1,22 +1,23 @@
 /**
- * Route allowlist for restricted project-user mode.
+ * Route allowlist for restricted project-user mode [RSC-IRAN].
  *
  * One list, used by the sidebar (hide rows) and by RestrictedRouteGuard
  * (redirect). Hiding a row is not access control; the backend still checks.
  */
 const ALLOWED: RegExp[] = [
   /^\/$/,
-  /^\/dashboard$/,
+  /^\/login$/,
+  /^\/profile$/,
   /^\/projects$/,
   /^\/projects\/(?!new(?:\/|$))[^/]+$/,
-  /^\/projects\/[^/]+\/(tasks|files)$/,
-  /^\/files\/detail\/[^/]+\/[^/]+$/,
-  /^\/tasks$/,
+  /^\/projects\/[^/]+\/(tasks|files|chat)$/,
   /^\/photos$/,
   /^\/files$/,
+  /^\/files\/detail\/[^/]+\/[^/]+$/,
   /^\/documents$/,
-  /^\/notifications$/,
-  /^\/profile$/,
+  /^\/tasks$/,
+  /^\/chat$/,
+  /^\/chat\/[^/]+$/,
 ];
 
 /** True when `to` (path, optional ?query / #hash) is open to a restricted user. */

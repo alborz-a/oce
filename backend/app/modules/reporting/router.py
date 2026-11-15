@@ -22,11 +22,18 @@ Endpoints:
 import logging
 import uuid
 
-from fastapi import APIRouter, Depends, Header, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
 from fastapi.responses import HTMLResponse, Response
 
 from app.core.content_disposition import attachment_disposition
-from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
+from app.core.project_roles import get_project_caps
+from app.dependencies import (
+    CurrentUserId,
+    CurrentUserPayload,
+    RequirePermission,
+    SessionDep,
+    verify_project_access,
+)
 from app.modules.reporting.report_translations import resolve_report_locale
 from app.modules.reporting.schemas import (
     GeneratedReportResponse,
@@ -47,6 +54,21 @@ def _get_service(session: SessionDep) -> ReportingService:
     return ReportingService(session)
 
 
+async def _require_reports_module(
+    session: SessionDep,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    project_id: uuid.UUID,
+) -> None:
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "module.reports" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.reports",
+            )
+
+
 # ── KPI Snapshot endpoints ────────────────────────────────────────────────
 
 
@@ -55,11 +77,13 @@ async def get_latest_kpi(
     session: SessionDep,
     project_id: uuid.UUID = Query(...),
     user_id: CurrentUserId = None,  # type: ignore[assignment]
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("reporting.read")),
     service: ReportingService = Depends(_get_service),
 ) -> KPISnapshotResponse | None:
     """Get the latest KPI snapshot for a project."""
     await verify_project_access(project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, project_id)
     snapshot = await service.get_latest_kpi(project_id)
     if snapshot is None:
         return None
@@ -73,11 +97,13 @@ async def list_kpi_history(
     user_id: CurrentUserId = None,  # type: ignore[assignment]
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=500),
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("reporting.read")),
     service: ReportingService = Depends(_get_service),
 ) -> list[KPISnapshotResponse]:
     """List KPI snapshots for a project over time."""
     await verify_project_access(project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, project_id)
     snapshots, _ = await service.list_kpi_history(
         project_id,
         offset=offset,
@@ -91,11 +117,13 @@ async def create_kpi_snapshot(
     data: KPISnapshotCreate,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("reporting.create")),
     service: ReportingService = Depends(_get_service),
 ) -> KPISnapshotResponse:
     """Create a new KPI snapshot for a project."""
     await verify_project_access(data.project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, data.project_id)
     snapshot = await service.create_kpi_snapshot(data, user_id=user_id)
     return KPISnapshotResponse.model_validate(snapshot)
 
@@ -321,11 +349,13 @@ async def generate_report(
     data: GenerateReportRequest,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("reporting.create")),
     service: ReportingService = Depends(_get_service),
 ) -> GeneratedReportResponse:
     """Generate a new report for a project."""
     await verify_project_access(data.project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, data.project_id)
     report = await service.generate_report(data, user_id=user_id)
     return GeneratedReportResponse.model_validate(report)
 
@@ -337,10 +367,12 @@ async def list_reports(
     user_id: CurrentUserId = None,  # type: ignore[assignment]
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=50, ge=1, le=100),
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: ReportingService = Depends(_get_service),
 ) -> list[GeneratedReportResponse]:
     """List generated reports for a project."""
     await verify_project_access(project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, project_id)
     reports, _ = await service.list_reports(
         project_id,
         offset=offset,
@@ -367,6 +399,7 @@ async def get_report_content(
         description="Language to render the report in; falls back to Accept-Language, then English",
     ),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: ReportingService = Depends(_get_service),
 ) -> HTMLResponse:
     """Return the rendered HTML body of a generated report.
@@ -394,6 +427,7 @@ async def get_report_content(
     # the caller's access is confirmed.
     report = await service.get_report(report_id)
     await verify_project_access(report.project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, report.project_id)
     resolved = resolve_report_locale(locale, accept_language)
     _, body_html = await service.get_report_content(report_id, locale=resolved)
     return HTMLResponse(content=body_html, status_code=200, headers={"Content-Language": resolved})
@@ -433,6 +467,7 @@ async def download_report(
         description="Language to write the file in; falls back to Accept-Language, then English",
     ),
     accept_language: str | None = Header(default=None, alias="Accept-Language"),
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: ReportingService = Depends(_get_service),
 ) -> Response:
     """Download a generated report as a real PDF / Excel / CSV / HTML file.
@@ -458,6 +493,7 @@ async def download_report(
     """
     report = await service.get_report(report_id)
     await verify_project_access(report.project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, report.project_id)
     resolved = resolve_report_locale(locale, accept_language)
     filename, media_type, blob = await service.export_report_file(report_id, format, locale=resolved)
     return Response(
@@ -525,6 +561,7 @@ async def get_report(
     report_id: uuid.UUID,
     session: SessionDep,
     user_id: CurrentUserId,
+    payload: CurrentUserPayload = None,  # type: ignore[assignment]
     service: ReportingService = Depends(_get_service),
 ) -> GeneratedReportResponse:
     """Get a single generated report.
@@ -540,6 +577,7 @@ async def get_report(
     # to the caller.
     report = await service.get_report(report_id)
     await verify_project_access(report.project_id, user_id, session)
+    await _require_reports_module(session, user_id, payload, report.project_id)
     return GeneratedReportResponse.model_validate(report)
 
 

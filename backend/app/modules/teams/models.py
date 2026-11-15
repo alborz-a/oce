@@ -293,3 +293,38 @@ class RosterMember(Base):
 
     def __repr__(self) -> str:
         return f"<RosterMember {self.display_name} ({self.site_role or 'no role'}) project={self.project_id}>"
+
+
+class ProjectRoleModules(Base):
+    """Per-project, per-role disabled-module overrides (``rsd-rsc#98``).
+
+    Absence of a row means every toggleable module (``photos``, ``files``,
+    ``tasks``, ``reports``) is enabled for ``(project_id, role)``. Storing only
+    ``disabled_modules`` keeps new projects zero-setup and lets capability checks
+    fail closed on database read errors without losing explicit opt-outs.
+    """
+
+    __tablename__ = "oe_teams_role_modules"
+    __table_args__ = (
+        UniqueConstraint(
+            "project_id",
+            "role",
+            name="uq_teams_role_modules_project_role",
+        ),
+    )
+
+    project_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        nullable=False,
+        index=True,
+    )
+    role: Mapped[str] = mapped_column(String(32), nullable=False)
+    disabled_modules: Mapped[list[str]] = mapped_column(  # type: ignore[assignment]
+        JSON,
+        nullable=False,
+        default=list,
+        server_default="[]",
+    )
+
+    def __repr__(self) -> str:
+        return f"<ProjectRoleModules project={self.project_id} role={self.role} disabled={self.disabled_modules}>"
