@@ -37,6 +37,7 @@ export function UploadDialog({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [caption, setCaption] = useState('');
+  const captionMissing = defaultKind === 'photo' && caption.trim() === '';
   // The upload routine is shared with the page-level drag-and-drop drop zone
   // (see ``useFileUpload``) so both surfaces hit the exact same pipeline.
   const { doUpload, uploading } = useFileUpload(projectId);
@@ -104,23 +105,30 @@ export function UploadDialog({
                 htmlFor="upload-photo-caption"
                 className="mb-1 block text-xs font-medium text-content-secondary"
               >
-                {t('files.photo_caption', { defaultValue: 'Description (optional)' })}
+                {t('files.photo_caption', { defaultValue: 'توضیح (الزامی)' })}
               </label>
               <textarea
                 id="upload-photo-caption"
                 data-testid="upload-photo-caption"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
+                placeholder={t('files.photo_caption_placeholder', { defaultValue: 'توضیح عکس را بنویسید' })}
                 rows={2}
                 maxLength={500}
                 className="w-full rounded-lg border border-border bg-surface-primary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
               />
+              {captionMissing && (
+                <p className="text-xs text-red-600 mt-1">
+                  {t('files.photo_caption_required', { defaultValue: 'توضیح عکس الزامی است' })}
+                </p>
+              )}
             </div>
           )}
           <input
             ref={fileInputRef}
             type="file"
             multiple
+            disabled={captionMissing}
             className="hidden"
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
@@ -132,11 +140,13 @@ export function UploadDialog({
           <div
             role="button"
             tabIndex={0}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => {
+              if (!captionMissing) fileInputRef.current?.click();
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                fileInputRef.current?.click();
+                if (!captionMissing) fileInputRef.current?.click();
               }
             }}
             onDragOver={(e) => {
@@ -150,6 +160,7 @@ export function UploadDialog({
             onDrop={(e) => {
               e.preventDefault();
               setDragOver(false);
+              if (captionMissing) return;
               if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
             }}
             className={clsx(
@@ -183,7 +194,7 @@ export function UploadDialog({
             </p>
             <button
               type="button"
-              disabled={uploading}
+              disabled={uploading || captionMissing}
               onClick={(e) => {
                 e.stopPropagation();
                 fileInputRef.current?.click();

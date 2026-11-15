@@ -241,3 +241,23 @@ async def test_viewer_non_member_cannot_patch_caption(http_client, scenario):
         headers=scenario["c_headers"],
     )
     assert resp.status_code == 404, resp.text
+
+
+@pytest.mark.asyncio
+async def test_photo_upload_rejects_blank_caption(http_client, scenario):
+    """A whitespace-only caption is refused with 422 (photos need a description)."""
+    resp = await _upload_photo(
+        http_client, scenario["project_id"], scenario["b_headers"], "   "
+    )
+    assert resp.status_code == 422, resp.text
+
+
+@pytest.mark.asyncio
+async def test_photo_upload_without_caption_returns_422(http_client, scenario):
+    """An upload with no caption field at all is refused with 422."""
+    resp = await http_client.post(
+        f"/api/v1/documents/photos/upload/?project_id={scenario['project_id']}",
+        files={"file": ("member.png", io.BytesIO(PNG_BYTES), "image/png")},
+        headers=scenario["b_headers"],
+    )
+    assert resp.status_code == 422, resp.text

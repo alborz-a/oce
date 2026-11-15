@@ -637,6 +637,13 @@ async def upload_photo(
 ) -> PhotoResponse:
     """Upload a photo with metadata to a project."""
     await verify_project_access(project_id, user_id, session)
+    # Every photo needs a description (owner order 2026-11-15).
+    if caption is None or not caption.strip():
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="توضیح عکس الزامی است",
+        )
+    caption = caption.strip()
     # Parse tags from comma-separated string
     parsed_tags: list[str] = []
     if tags:
