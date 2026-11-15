@@ -226,7 +226,10 @@ export function FileList({
             <th className="px-3 py-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary text-center">
               {t('files.col.version', { defaultValue: 'Ver.' })}
             </th>
-            <Header field="size" label={t('files.col.size', { defaultValue: 'Size' })} align="right" />
+            {/* B2: the size column (and its sort) is admin-only. */}
+            {isSystemAdmin && (
+              <Header field="size" label={t('files.col.size', { defaultValue: 'Size' })} align="right" />
+            )}
             <Header field="modified" label={t('files.col.modified', { defaultValue: 'Modified' })} align="right" />
             <th className="px-3 py-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary">
               {t('files.col.discipline', { defaultValue: 'Discipline' })}
@@ -251,7 +254,7 @@ export function FileList({
             ))
           ) : items.length === 0 ? (
             <tr>
-              <td colSpan={showStar ? 9 : 8} className="px-3 py-12 text-center text-sm text-content-tertiary">
+              <td colSpan={(showStar ? 9 : 8) - (isSystemAdmin ? 0 : 1)} className="px-3 py-12 text-center text-sm text-content-tertiary">
                 {t('files.empty', { defaultValue: 'No files match your filters.' })}
               </td>
             </tr>
@@ -380,11 +383,13 @@ export function FileList({
                       directory listing, so it has no size and no modified date.
                       The placeholder zero would read as an empty file, hence
                       the dash. */}
-                  <td className="px-3 py-2 text-end text-content-secondary tabular-nums text-xs">
-                    {!isSystemAdmin || (typeof row.extra?.snippet === 'string' && row.extra.snippet)
-                      ? '—'
-                      : fmtBytes(row.size_bytes)}
-                  </td>
+                  {isSystemAdmin && (
+                    <td className="px-3 py-2 text-end text-content-secondary tabular-nums text-xs">
+                      {(typeof row.extra?.snippet === 'string' && row.extra.snippet)
+                        ? '—'
+                        : fmtBytes(row.size_bytes)}
+                    </td>
+                  )}
                   <td className="px-3 py-2 text-end text-content-secondary text-xs">
                     {row.modified_at ? <DateDisplay value={row.modified_at} format="relative" /> : '—'}
                   </td>

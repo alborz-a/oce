@@ -756,7 +756,8 @@ async def upload_photo(
         tags=parsed_tags,
         taken_at=parsed_taken_at,
     )
-    return _photo_to_response(photo)
+    # Upload response goes through the same non-admin redaction as GET /photos/{id}.
+    return await _photo_out(session, user_id, photo)
 
 
 # ── List photos ─────────────────────────────────────────────────────────

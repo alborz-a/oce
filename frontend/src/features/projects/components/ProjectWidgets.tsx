@@ -64,6 +64,7 @@ import type {
   ProjectVariationsPayload,
 } from '@/shared/api/dashboardRollup';
 import { fmtFixed, formatBytes } from '@/shared/lib/formatters';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { formatCurrency } from '@/shared/lib/money';
 
 /* ── Rollup provider ──────────────────────────────────────────────────── */
@@ -833,6 +834,8 @@ const fmtBytes = (bytes?: number) => (bytes ? formatBytes(bytes) : '—');
 export function RecentFilesWidget({ projectId }: { projectId: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // B2: per-file sizes are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
   // Deliberately a "latest five" card, not a register: the page it reads is
   // sliced to five below and the card carries a "view all" link, so it is the
   // one shape in this wave that needs no truncation notice.
@@ -873,9 +876,11 @@ export function RecentFilesWidget({ projectId }: { projectId: string }) {
               <span className="flex-1 truncate text-content-primary">
                 {file.name}
               </span>
-              <span className="text-content-tertiary tabular-nums shrink-0">
-                {fmtBytes(file.file_size)}
-              </span>
+              {isSystemAdmin && (
+                <span className="text-content-tertiary tabular-nums shrink-0">
+                  {fmtBytes(file.file_size)}
+                </span>
+              )}
             </li>
           ))}
         </ul>

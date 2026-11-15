@@ -18,6 +18,7 @@ import { SearchModeToggle } from '@/features/file-search/SearchModeToggle';
 import type { SearchMode } from '@/features/file-search/types';
 import { fmtCount } from '../fmt'; // [RSC-IRAN]
 import { IconButton } from '@/shared/ui/IconButton';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 type SortKey = NonNullable<FileFilters['sort']>;
 export type ViewMode = 'grid' | 'list';
@@ -105,6 +106,11 @@ export function FileActionsBar({
   const [draft, setDraft] = useState(query);
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+  // B2: ordering by size reveals file sizes, so the "size" sort is admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
+  const sortKeys: SortKey[] = isSystemAdmin
+    ? ['modified', 'name', 'size', 'kind']
+    : ['modified', 'name', 'kind'];
 
   // Sync external query changes back into the draft (e.g. when user clears).
   useEffect(() => {
@@ -288,7 +294,7 @@ export function FileActionsBar({
               role="listbox"
               className="absolute end-0 top-full mt-1 w-40 rounded-lg border border-border-light bg-surface-elevated shadow-lg z-20 overflow-hidden"
             >
-              {(['modified', 'name', 'size', 'kind'] as SortKey[]).map((k) => (
+              {sortKeys.map((k) => (
                 <button
                   key={k}
                   role="option"
