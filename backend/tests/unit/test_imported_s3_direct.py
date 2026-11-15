@@ -1,5 +1,7 @@
 """Imported photos are read from the bucket by key (no FUSE listing); the mount stays the fallback."""
 
+import asyncio
+
 import pytest
 from fastapi import HTTPException
 
@@ -159,3 +161,46 @@ async def test_thumb_presign_passes_no_content_disposition(monkeypatch):
     assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is not None
     assert "response_content_disposition" not in be.url_kwargs
     assert be.url_kwargs["response_content_type"] == "image/jpeg"
+
+
+class _SingleFlightBackend:
+    def __init__(self):
+        self.stored = set()
+        self.put_calls = 0
+
+    async def exists(self, key):
+        return key in self.stored
+
+    async def size(self, key):
+        return 3
+
+    async def get(self, key):
+        await asyncio.sleep(0)  # let the other callers queue on the thumb lock
+        return b"abc"
+
+    async def put(self, key, data, content_type=None):
+        self.stored.add(key)
+        self.put_calls += 1
+
+    def url_for(self, key, **kwargs):
+        return f"https://bucket.example/{key}"
+
+
+async def test_concurrent_first_views_build_thumb_once(monkeypatch):
+    be = _SingleFlightBackend()
+    monkeypatch.setattr(os_, "_imported_s3", lambda: be)
+    builds = []
+
+    def fake_thumb(source, dest):
+        builds.append(1)
+        dest.write_bytes(b"jpegthumb")
+        return True
+
+    monkeypatch.setattr("app.modules.documents.service._generate_photo_thumbnail", fake_thumb)
+    urls = await asyncio.gather(
+        *(os_.photo_thumb_presigned_url("p9", "/data/photos/mizito/g/a.jpg") for _ in range(5))
+    )
+    assert len(builds) == 1
+    assert be.put_calls == 1
+    assert urls == ["https://bucket.example/_thumbs/p9.jpg"] * 5
+    assert os_._THUMB_BUILD_LOCKS == {}
