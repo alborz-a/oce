@@ -102,21 +102,27 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
     defaultValue: 'File: {{name}}',
     name: row.name,
   });
-  const fullSampleBody = link
-    ? t('files.email.sample_body', {
-        defaultValue:
-          'Hi,\n\nHere is the file you asked about - {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
-        name: row.name,
-        size: fmtBytes(link.size_bytes),
-        expires: new Date(link.expires_at).toLocaleString(getIntlLocale()),
-        url: link.url,
-      })
-    : '';
-  // B2: the file size is admin-only, so non-admin copies drop the " (size)" part.
-  const sampleBody =
-    link && !isSystemAdmin
-      ? fullSampleBody.replace(` (${fmtBytes(link.size_bytes)})`, '')
-      : fullSampleBody;
+  const sampleExpires = link ? new Date(link.expires_at).toLocaleString(getIntlLocale()) : '';
+  // B2: the file size is admin-only. Non-admin copies use a template with no size
+  // slot at all, so no locale can render an empty or stray "(0 B)".
+  const sampleBody = !link
+    ? ''
+    : isSystemAdmin
+      ? t('files.email.sample_body', {
+          defaultValue:
+            'Hi,\n\nHere is the file you asked about - {{name}} ({{size}}).\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
+          name: row.name,
+          size: fmtBytes(link.size_bytes),
+          expires: sampleExpires,
+          url: link.url,
+        })
+      : t('files.email.sample_body_no_size', {
+          defaultValue:
+            'Hi,\n\nHere is the file you asked about - {{name}}.\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
+          name: row.name,
+          expires: sampleExpires,
+          url: link.url,
+        });
   const mailto = link
     ? `mailto:?subject=${encodeURIComponent(sampleSubject)}&body=${encodeURIComponent(sampleBody)}`
     : '';

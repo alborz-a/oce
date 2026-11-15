@@ -111,6 +111,12 @@ export function FileActionsBar({
   const sortKeys: SortKey[] = isSystemAdmin
     ? ['modified', 'name', 'size', 'kind']
     : ['modified', 'name', 'kind'];
+  // A non-admin can still arrive with sort=size (URL ?sort=size or saved view).
+  // Coerce to the default sort so the size order is never applied to them.
+  const effectiveSort: SortKey = !isSystemAdmin && sort === 'size' ? 'modified' : sort;
+  useEffect(() => {
+    if (effectiveSort !== sort) onSortChange(effectiveSort);
+  }, [effectiveSort, sort, onSortChange]);
 
   // Sync external query changes back into the draft (e.g. when user clears).
   useEffect(() => {
@@ -286,7 +292,7 @@ export function FileActionsBar({
             aria-expanded={sortOpen}
             className="flex items-center gap-1.5 h-9 px-3 text-xs font-medium rounded-lg border border-border-light text-content-secondary hover:bg-surface-secondary"
           >
-            {t('files.sort_by', { defaultValue: 'Sort' })}: {sortLabels[sort]}
+            {t('files.sort_by', { defaultValue: 'Sort' })}: {sortLabels[effectiveSort]}
             <ChevronDown size={12} className={clsx('transition-transform', sortOpen && 'rotate-180')} />
           </button>
           {sortOpen && (
@@ -298,14 +304,14 @@ export function FileActionsBar({
                 <button
                   key={k}
                   role="option"
-                  aria-selected={sort === k}
+                  aria-selected={effectiveSort === k}
                   onClick={() => {
                     onSortChange(k);
                     setSortOpen(false);
                   }}
                   className={clsx(
                     'w-full px-3 py-2 text-start text-xs transition-colors',
-                    sort === k
+                    effectiveSort === k
                       ? 'bg-oe-blue/10 text-oe-blue font-medium'
                       : 'text-content-secondary hover:bg-surface-secondary',
                   )}
