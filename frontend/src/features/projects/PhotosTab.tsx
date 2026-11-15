@@ -73,9 +73,16 @@ function fmtDate(iso: string | null, locale = 'en'): string {
 
 type SortKey = 'newest' | 'oldest' | 'largest';
 
-function sortRows(rows: FileRow[], sort: SortKey): FileRow[] {
+function normalizePhotoSort(sort: string | null | undefined, isSystemAdmin: boolean): SortKey {
+  if (sort === 'oldest') return 'oldest';
+  if (sort === 'largest' && isSystemAdmin) return 'largest';
+  return 'newest';
+}
+
+function sortRows(rows: FileRow[], sort: SortKey, isSystemAdmin = false): FileRow[] {
+  const effectiveSort = normalizePhotoSort(sort, isSystemAdmin);
   const copy = rows.slice();
-  switch (sort) {
+  switch (effectiveSort) {
     case 'newest':
       return copy.sort((a, b) => {
         const at = pickCapturedAt(a) ?? '';
@@ -134,9 +141,18 @@ export interface PhotosTabProps {
 export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const { t, i18n } = useTranslation();
   const locale = i18n?.language ?? 'en';
+  const isSystemAdmin = useIsSystemAdmin();
 
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('newest');
+  const effectiveSort = normalizePhotoSort(sort, isSystemAdmin);
+
+  // Clear stale admin-only sort state if the user is not (or ceases to be) an admin.
+  useEffect(() => {
+    if (effectiveSort !== sort) {
+      setSort(effectiveSort);
+    }
+  }, [effectiveSort, sort]);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
@@ -157,8 +173,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
     const matched = q
       ? photos.filter((r) => r.name?.toLowerCase().includes(q))
       : photos;
-    return sortRows(matched, sort);
-  }, [photos, search, sort]);
+    return sortRows(matched, effectiveSort, isSystemAdmin);
+  }, [photos, search, effectiveSort, isSystemAdmin]);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -228,7 +244,6 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const lightboxUploaderId =
     lightboxIndex !== null ? (filtered[lightboxIndex]?.extra?.created_by as string | undefined) : undefined;
   const canEditCaption = useCanEditPhotoCaption(projectId, lightboxUploaderId);
-  const isSystemAdmin = useIsSystemAdmin();
 
   if (!projectId) {
     return (
@@ -329,8 +344,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           />
         </div>
         <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortKey)}
+          value={effectiveSort}
+          onChange={(e) => setSort(normalizePhotoSort(e.target.value, isSystemAdmin))}
           className="h-9 px-3 text-sm rounded-lg bg-surface-secondary/60 border border-border-light text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
           data-testid="photos-tab-sort"
           aria-label={t('projects.photos.sort_aria', { defaultValue: 'Sort photos' })}

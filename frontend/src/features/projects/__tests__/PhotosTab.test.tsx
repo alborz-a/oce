@@ -8,9 +8,10 @@
  *  - lightbox opens on tile click and closes on ESC
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 vi.mock('@/features/file-manager/hooks', () => ({
   useFileList: vi.fn(),
@@ -100,6 +101,7 @@ function renderWithProviders(ui: React.ReactNode) {
 describe('PhotosTab', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    useAuthStore.setState({ userRole: null, userId: null, accessToken: null, restrictedMode: false });
     // Photo thumbnails/originals are served behind JWT auth, so the UI
     // fetches them with a Bearer header and renders an object URL via
     // <AuthImage>. Stub the blob fetch + object-URL plumbing.
@@ -215,5 +217,79 @@ describe('PhotosTab', () => {
     });
     expect(screen.getByTestId('photos-tab-tile-photo-2')).toBeInTheDocument();
     expect(screen.queryByTestId('photos-tab-tile-photo-3')).not.toBeInTheDocument();
+  });
+
+  it('hides size sort for non-admin and blocks or falls back stale size sort to newest (B3)', async () => {
+    useAuthStore.setState({ userRole: 'member' });
+    const sizeVsDatePhotos = [
+      { ...fakePhotos[0], id: 'old-huge', name: 'old_huge.jpg', size_bytes: 9_000_000, modified_at: '2026-05-01T10:00:00Z' },
+      { ...fakePhotos[2], id: 'new-tiny', name: 'new_tiny.png', size_bytes: 1_000, modified_at: '2026-05-03T10:00:00Z' },
+    ];
+    (useFileList as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: { project_id: 'proj-1', items: sizeVsDatePhotos, total: 2, limit: 500, offset: 0 },
+      isLoading: false,
+    });
+
+    renderWithProviders(<PhotosTab projectId="proj-1" />);
+
+    const select = screen.getByTestId('photos-tab-sort') as HTMLSelectElement;
+    expect(Array.from(select.options).map((o) => o.value)).toEqual(['newest', 'oldest']);
+
+    // Default 'newest' puts new-tiny first
+    const getTileOrder = () =>
+      Array.from(
+        screen
+          .getByTestId('photos-tab-grid')
+          .querySelectorAll('[data-testid^="photos-tab-tile-"]:not([data-testid="photos-tab-tile-title"])'),
+      ).map((el) => el.getAttribute('data-testid'));
+    expect(getTileOrder()).toEqual(['photos-tab-tile-new-tiny', 'photos-tab-tile-old-huge']);
+
+    // Switching to oldest reverses order
+    fireEvent.change(select, { target: { value: 'oldest' } });
+    expect(getTileOrder()).toEqual(['photos-tab-tile-old-huge', 'photos-tab-tile-new-tiny']);
+
+    // Programmatic/stale attempt to select 'largest' or 'size' as non-admin falls back to 'newest'
+    fireEvent.change(select, { target: { value: 'largest' } });
+    expect(select.value).toBe('newest');
+    expect(getTileOrder()).toEqual(['photos-tab-tile-new-tiny', 'photos-tab-tile-old-huge']);
+  });
+
+  it('allows size sort for admin and falls back cleanly when role changes to non-admin (B3)', async () => {
+    useAuthStore.setState({ userRole: 'admin' });
+    const sizeVsDatePhotos = [
+      { ...fakePhotos[0], id: 'old-huge', name: 'old_huge.jpg', size_bytes: 9_000_000, modified_at: '2026-05-01T10:00:00Z' },
+      { ...fakePhotos[2], id: 'new-tiny', name: 'new_tiny.png', size_bytes: 1_000, modified_at: '2026-05-03T10:00:00Z' },
+    ];
+    (useFileList as ReturnType<typeof vi.fn>).mockReturnValue({
+      data: { project_id: 'proj-1', items: sizeVsDatePhotos, total: 2, limit: 500, offset: 0 },
+      isLoading: false,
+    });
+
+    renderWithProviders(<PhotosTab projectId="proj-1" />);
+
+    const select = screen.getByTestId('photos-tab-sort') as HTMLSelectElement;
+    expect(Array.from(select.options).map((o) => o.value)).toEqual(['newest', 'oldest', 'largest']);
+
+    const getTileOrder = () =>
+      Array.from(
+        screen
+          .getByTestId('photos-tab-grid')
+          .querySelectorAll('[data-testid^="photos-tab-tile-"]:not([data-testid="photos-tab-tile-title"])'),
+      ).map((el) => el.getAttribute('data-testid'));
+
+    fireEvent.change(select, { target: { value: 'largest' } });
+    expect(select.value).toBe('largest');
+    expect(getTileOrder()).toEqual(['photos-tab-tile-old-huge', 'photos-tab-tile-new-tiny']);
+
+    // Simulate role resolving/changing to non-admin while stale 'largest' is selected
+    act(() => {
+      useAuthStore.setState({ userRole: 'member' });
+    });
+
+    await waitFor(() => {
+      expect(select.value).toBe('newest');
+    });
+    expect(Array.from(select.options).map((o) => o.value)).toEqual(['newest', 'oldest']);
+    expect(getTileOrder()).toEqual(['photos-tab-tile-new-tiny', 'photos-tab-tile-old-huge']);
   });
 });
