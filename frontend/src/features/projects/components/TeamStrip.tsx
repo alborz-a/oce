@@ -24,6 +24,7 @@ import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { UserSearchInput } from '@/shared/ui/UserSearchInput';
+import { AuthImage } from '@/shared/ui/AuthImage';
 import { REGION_LOCK } from '@/app/regionLock';
 import { toPersianDigits } from '@/shared/lib/jalali';
 
@@ -36,6 +37,8 @@ export interface ProjectMember {
   role: string;
   is_owner: boolean;
   created_at?: string | null;
+  /** API path of the profile picture; null when the user has none (initials shown). */
+  avatar_url?: string | null;
 }
 
 /**
@@ -105,7 +108,16 @@ function Avatar({ member, size = 32, className = '' }: AvatarProps) {
       }}
       data-testid="team-strip-avatar"
     >
-      {getInitials(member)}
+      {member.avatar_url ? (
+        <AuthImage
+          src={member.avatar_url}
+          alt=""
+          className="h-full w-full rounded-full object-cover"
+          fallback={getInitials(member)}
+        />
+      ) : (
+        getInitials(member)
+      )}
     </div>
   );
 }

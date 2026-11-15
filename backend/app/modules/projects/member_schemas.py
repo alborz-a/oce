@@ -37,6 +37,8 @@ class ProjectMemberResponse(BaseModel):
     role: str = "member"
     is_owner: bool = False
     created_at: datetime | None = None
+    # API path of the profile picture (users/{id}/avatar), None when the user has no picture.
+    avatar_url: str | None = None
 
 
 class AddProjectMemberRequest(BaseModel):
