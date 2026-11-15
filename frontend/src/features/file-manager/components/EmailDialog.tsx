@@ -118,7 +118,7 @@ export function EmailDialog({ open, row, onClose }: EmailDialogProps) {
         })
       : t('files.email.sample_body_no_size', {
           defaultValue:
-            'Hi,\n\nHere is the file you asked about - {{name}}.\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
+            'Hi,\n\nHere is the file you asked about, {{name}}.\nDownload link (expires {{expires}}):\n{{url}}\n\n- sent from Royal Stars Portal',
           name: row.name,
           expires: sampleExpires,
           url: link.url,
