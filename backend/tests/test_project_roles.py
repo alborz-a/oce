@@ -325,3 +325,157 @@ def test_hidden_users_qa_accounts_and_importer():
     assert viewer_is_admin({"role": "admin"})
     assert not viewer_is_admin({"role": "editor"})
     assert not viewer_is_admin({"role": "viewer"})
+
+
+# ── API Tests per 4.4 row for member, viewer, and non-member (Step 4.7) ─────
+
+
+@pytest.fixture
+def api_test_setup():
+    from fastapi import FastAPI, Query, Depends
+    from app.dependencies import get_current_user_id, get_current_user_payload, get_session
+    from app.core.project_roles import require_project_cap
+    from app.modules.projects.models import Project
+    from app.modules.tasks.models import Task
+    from app.modules.documents.models import ProjectPhoto
+    from app.modules.team_chat.models import ChatRoom
+
+    app = FastAPI()
+    pid = uuid.uuid4()
+    tid = uuid.uuid4()
+    phid = uuid.uuid4()
+    rid = uuid.uuid4()
+    uid = uuid.uuid4()
+
+    # Route definitions for all 9 capabilities per 4.4
+    @app.patch("/api/v1/projects/{project_id}", dependencies=[Depends(require_project_cap("project.update"))])
+    async def r_project_update(project_id: str): return {"cap": "project.update"}
+
+    @app.post("/api/v1/projects/{project_id}/members", dependencies=[Depends(require_project_cap("members.manage"))])
+    async def r_members_manage(project_id: str): return {"cap": "members.manage"}
+
+    @app.post("/api/v1/tasks/", dependencies=[Depends(require_project_cap("task.manage"))])
+    async def r_task_manage(project_id: str = Query(...)): return {"cap": "task.manage"}
+
+    @app.post("/api/v1/tasks/{task_id}/complete/", dependencies=[Depends(require_project_cap("task.work"))])
+    async def r_task_work(task_id: str): return {"cap": "task.work"}
+
+    @app.post("/api/v1/documents/photos/upload/", dependencies=[Depends(require_project_cap("file.upload"))])
+    async def r_file_upload(project_id: str = Query(...)): return {"cap": "file.upload"}
+
+    @app.patch("/api/v1/documents/photos/{photo_id}", dependencies=[Depends(require_project_cap("file.modify"))])
+    async def r_file_modify(photo_id: str): return {"cap": "file.modify"}
+
+    @app.post("/api/v1/team-chat/rooms/{room_id}/messages/", dependencies=[Depends(require_project_cap("chat.write"))])
+    async def r_chat_write(room_id: str): return {"cap": "chat.write"}
+
+    @app.get("/api/v1/projects/{project_id}", dependencies=[Depends(require_project_cap("project.read"))])
+    async def r_project_read(project_id: str): return {"cap": "project.read"}
+
+    @app.get("/api/v1/team-chat/project/{project_id}/", dependencies=[Depends(require_project_cap("chat.read"))])
+    async def r_chat_read(project_id: str): return {"cap": "chat.read"}
+
+    mock_session = AsyncMock()
+    proj = MagicMock(spec=Project)
+    proj.id = pid
+    proj.owner_id = uuid.uuid4()  # not owner
+
+    task = MagicMock(spec=Task)
+    task.id = tid
+    task.project_id = pid
+
+    photo = MagicMock(spec=ProjectPhoto)
+    photo.id = phid
+    photo.project_id = pid
+
+    room = MagicMock(spec=ChatRoom)
+    room.id = rid
+    room.project_id = pid
+
+    def mock_get(model, ident):
+        if ident == pid: return proj
+        if ident == tid: return task
+        if ident == phid: return photo
+        if ident == rid: return room
+        return None
+
+    mock_session.get.side_effect = mock_get
+    exec_mock = MagicMock()
+    mock_session.execute.return_value = exec_mock
+
+    app.dependency_overrides[get_session] = lambda: mock_session
+    app.dependency_overrides[get_current_user_id] = lambda: str(uid)
+
+    routes = {
+        "project.update": ("PATCH", f"/api/v1/projects/{pid}"),
+        "members.manage": ("POST", f"/api/v1/projects/{pid}/members"),
+        "task.manage": ("POST", f"/api/v1/tasks/?project_id={pid}"),
+        "task.work": ("POST", f"/api/v1/tasks/{tid}/complete/"),
+        "file.upload": ("POST", f"/api/v1/documents/photos/upload/?project_id={pid}"),
+        "file.modify": ("PATCH", f"/api/v1/documents/photos/{phid}"),
+        "chat.write": ("POST", f"/api/v1/team-chat/rooms/{rid}/messages/"),
+        "project.read": ("GET", f"/api/v1/projects/{pid}"),
+        "chat.read": ("GET", f"/api/v1/team-chat/project/{pid}/"),
+    }
+
+    return app, routes, exec_mock, uid
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("cap", ALL_CAPS)
+async def test_api_member_capabilities(api_test_setup, cap: str):
+    """Step 4.7: Member gets 200 on allowed capabilities, 403 on disallowed."""
+    from httpx import AsyncClient, ASGITransport
+    from app.dependencies import get_current_user_payload
+
+    app, routes, exec_mock, uid = api_test_setup
+    exec_mock.scalar_one_or_none.return_value = "member"
+    app.dependency_overrides[get_current_user_payload] = lambda: {"sub": str(uid), "role": "editor"}
+
+    method, url = routes[cap]
+    expected_status = 200 if cap in EXPECTED_TABLE["member"] else 403
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        resp = await client.request(method, url)
+        assert resp.status_code == expected_status, f"cap={cap} status={resp.status_code} body={resp.text}"
+        if expected_status == 403:
+            assert f"project_capability_required:{cap}" in resp.json()["detail"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("cap", ALL_CAPS)
+async def test_api_viewer_capabilities(api_test_setup, cap: str):
+    """Step 4.7: Viewer gets 200 on allowed capabilities, 403 on disallowed."""
+    from httpx import AsyncClient, ASGITransport
+    from app.dependencies import get_current_user_payload
+
+    app, routes, exec_mock, uid = api_test_setup
+    exec_mock.scalar_one_or_none.return_value = "viewer"
+    app.dependency_overrides[get_current_user_payload] = lambda: {"sub": str(uid), "role": "editor"}
+
+    method, url = routes[cap]
+    expected_status = 200 if cap in EXPECTED_TABLE["viewer"] else 403
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        resp = await client.request(method, url)
+        assert resp.status_code == expected_status, f"cap={cap} status={resp.status_code} body={resp.text}"
+        if expected_status == 403:
+            assert f"project_capability_required:{cap}" in resp.json()["detail"]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("cap", ALL_CAPS)
+async def test_api_non_member_returns_404(api_test_setup, cap: str):
+    """Step 4.7: Non-member gets 404 Project not found on every capability route."""
+    from httpx import AsyncClient, ASGITransport
+    from app.dependencies import get_current_user_payload
+
+    app, routes, exec_mock, uid = api_test_setup
+    exec_mock.scalar_one_or_none.return_value = None  # No team membership
+    app.dependency_overrides[get_current_user_payload] = lambda: {"sub": str(uid), "role": "editor"}
+
+    method, url = routes[cap]
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        resp = await client.request(method, url)
+        assert resp.status_code == 404, f"cap={cap} status={resp.status_code} body={resp.text}"
+        assert resp.json()["detail"] == "Project not found"
