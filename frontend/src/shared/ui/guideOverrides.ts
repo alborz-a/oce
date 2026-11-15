@@ -3,6 +3,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { apiGet, apiPut, apiDelete } from '@/shared/lib/api';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { isAdminOnlyRoute } from '@/app/adminRoutes';
 import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
 import type { ModuleGuideContent } from './ModuleGuide';
@@ -30,9 +31,11 @@ export interface GuideOverrideRow {
 const BASE = '/v1/guide-overrides';
 
 export function useResolvedGuides() {
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   return useQuery({
     queryKey: ['guide-overrides', 'resolved'],
     queryFn: () => apiGet<Record<string, ResolvedGuide>>(`${BASE}/`),
+    enabled: !restrictedMode,
     staleTime: 5 * 60 * 1000,
   });
 }

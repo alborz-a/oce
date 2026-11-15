@@ -2073,6 +2073,7 @@ export function ProjectDetailPage() {
           Supplementary audit trail of status changes. Collapsed by default
           (it is reference, not a primary control) but always reachable
           regardless of the active tab. */}
+      {!restrictedMode && (
       <Card padding="none">
         <details className="group">
           <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-medium text-content-secondary transition-colors hover:bg-surface-secondary">
@@ -2087,6 +2088,7 @@ export function ProjectDetailPage() {
           </div>
         </details>
       </Card>
+      )}
 
       {/* ── New widgets — grouped pulse sections ───────────────────────
           Cards are bucketed into themed sections (Commercial, Field,
@@ -2103,6 +2105,7 @@ export function ProjectDetailPage() {
           strip, AI insights, recent files) keep their own
           ``useGracefulQuery`` — adding them to the rollup would require
           new backend endpoints. */}
+      {!restrictedMode && (
       <ProjectWidgetsRollupProvider projectId={projectId!}>
         {/* Commercial: requests, change orders, variations. */}
         <WidgetSection
@@ -2192,6 +2195,7 @@ export function ProjectDetailPage() {
           )}
         </WidgetSection>
       </ProjectWidgetsRollupProvider>
+      )}
       {/* ``weather-alerts`` is a thin pointer to ProjectWeather (already
           rendered inside the location panel) — no separate render needed
           here, but the manager still exposes the toggle for future use. */}
