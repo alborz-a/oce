@@ -211,11 +211,8 @@ export function MediaLightbox({
         className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 bg-gradient-to-b from-black/60 to-transparent px-4 py-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <span
-          className="truncate text-sm font-semibold text-white"
-          title={current.name}
-        >
-          {current.name}
+        {/* E2: no file name or size in the preview header; only the position when paging. */}
+        <span className="truncate text-sm font-semibold text-white">
           {canPage && (
             <span className="ms-2 text-xs font-normal text-white/70 tabular-nums">
               {fmtOf(safeIndex + 1, items.length)}

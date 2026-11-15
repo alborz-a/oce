@@ -71,7 +71,8 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
 
   return (
     <aside className="hidden md:block w-60 shrink-0 border-e border-border-light bg-surface-secondary/40 overflow-y-auto">
-      {totalBytes > 0 && (
+      {/* B1: storage usage is admin-only. */}
+      {isSystemAdmin && totalBytes > 0 && (
         <div className="px-3 pt-3 pb-3 border-b border-border-light">
           <div className="flex items-center gap-1.5 mb-2 text-2xs font-medium uppercase tracking-wider text-content-tertiary">
             <HardDrive size={11} strokeWidth={2} />
@@ -156,7 +157,7 @@ export function FileTree({ nodes, selectedId, onSelect, isLoading, projectId }: 
                   {fmtCount(node.file_count)}
                 </span>
               </button>
-              {node.total_bytes > 0 && (
+              {isSystemAdmin && node.total_bytes > 0 && (
                 <div className="ps-8 pe-2 text-[10px] text-content-quaternary tabular-nums">
                   {fmtBytes(node.total_bytes)}
                 </div>

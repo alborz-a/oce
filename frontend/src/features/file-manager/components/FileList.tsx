@@ -16,6 +16,7 @@ import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -126,6 +127,8 @@ export function FileList({
   searchQuery,
 }: FileListProps) {
   const { t } = useTranslation();
+  // B2: file sizes are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
   const showStar = Boolean(onToggleFavorite);
 
   // ── Keyboard roving navigation ──────────────────────────────────────
@@ -378,7 +381,7 @@ export function FileList({
                       The placeholder zero would read as an empty file, hence
                       the dash. */}
                   <td className="px-3 py-2 text-end text-content-secondary tabular-nums text-xs">
-                    {typeof row.extra?.snippet === 'string' && row.extra.snippet
+                    {!isSystemAdmin || (typeof row.extra?.snippet === 'string' && row.extra.snippet)
                       ? '—'
                       : fmtBytes(row.size_bytes)}
                   </td>

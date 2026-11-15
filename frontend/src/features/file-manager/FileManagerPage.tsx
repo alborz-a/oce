@@ -937,10 +937,12 @@ export function FileManagerPage() {
               {t('files.approvals.register_title', { defaultValue: 'Approvals register' })}
             </span>
           </Link>)}
+          {/* A1: the root Upload opens the same photo dialog as the project photos tab
+              (defaultKind 'photo', required description). Document uploads stay on the folder cards. */}
           {(<button
             type="button"
             data-guide="files-upload-button"
-            onClick={() => handleOpenUpload(selectedKind)}
+            onClick={() => handleOpenUpload('photo')}
             className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-semibold bg-oe-blue text-white hover:bg-oe-blue-hover transition-colors shrink-0"
           >
             <UploadCloud size={14} />
@@ -965,7 +967,8 @@ export function FileManagerPage() {
         <main className="flex-1 flex flex-col min-w-0">
           {showFolderGrid ? (
             <div className="flex-1 overflow-auto">
-              <FilesStatsStrip tree={tree} locations={locations} />
+              {/* B1: the storage-usage strip is admin-only. */}
+              {isSystemAdmin && <FilesStatsStrip tree={tree} locations={locations} />}
               <RecentlyViewedStrip projectId={projectId} onOpen={handleOpenRecent} />
               <FolderCardGrid
                 nodes={tree ?? []}

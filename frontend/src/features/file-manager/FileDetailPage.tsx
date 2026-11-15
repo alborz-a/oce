@@ -8,7 +8,8 @@ import { AuthImage } from '@/shared/ui';
 import { IconButton } from '@/shared/ui/IconButton';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { useToastStore } from '@/stores/useToastStore';
-import { useCanWritePhotos } from './useCanWritePhotos';
+import { useCanEditPhotoCaption } from './useCanWritePhotos';
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { apiPatch } from '@/shared/lib/api';
 import { downloadProtectedFile, fetchFileList } from './api';
 import { localizeSize } from './fmt';
@@ -58,8 +59,9 @@ export function FileDetailPage() {
   });
   const row: FileRow | undefined = data?.items[0];
 
-  // Global managers write only where they are team members (the backend refuses otherwise).
-  const canEditCaption = useCanWritePhotos(projectId);
+  // E3: admin, the uploader, or a project manager (the backend PATCH enforces the same rule).
+  const isSystemAdmin = useIsSystemAdmin();
+  const canEditCaption = useCanEditPhotoCaption(projectId, row?.extra?.created_by as string | undefined);
 
   async function saveCaption() {
     if (!row) return;
@@ -245,7 +247,7 @@ export function FileDetailPage() {
                       }}
                       className="shrink-0 text-xs text-oe-blue hover:underline"
                     >
-                      {t('common.edit', { defaultValue: 'Edit' })}
+                      {t('files.detail.caption_edit', { defaultValue: 'ویرایش توضیحات' })}
                     </button>
                   )}
                 </span>
@@ -255,7 +257,9 @@ export function FileDetailPage() {
           <Fact label={t('files.detail.type', { defaultValue: 'Type' })}>
             {(row.extension ?? row.mime_type ?? '').toUpperCase() || '—'}
           </Fact>
-          <Fact label={t('files.detail.size', { defaultValue: 'Size' })}>{sizeText(row.size_bytes)}</Fact>
+          {isSystemAdmin && (
+            <Fact label={t('files.detail.size', { defaultValue: 'Size' })}>{sizeText(row.size_bytes)}</Fact>
+          )}
           <Fact label={t('files.detail.modified', { defaultValue: 'Last change' })}>
             <DateDisplay value={row.modified_at} format="datetime" />
           </Fact>

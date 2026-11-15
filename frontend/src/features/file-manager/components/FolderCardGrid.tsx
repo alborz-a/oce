@@ -30,6 +30,7 @@ import { KIND_TONE } from '../kindModule';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { getNumberLocale } from '@/stores/usePreferencesStore';
 import { localizeSize, fmtPct } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const KIND_ICON: Record<FileKind, LucideIcon> = {
   document: FileText,
@@ -183,6 +184,8 @@ function FolderCard({
   permissionCount = 0,
 }: FolderCardProps) {
   const { t } = useTranslation();
+  // B1: per-category sizes and the share-of-storage bar are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
   const kind = bareKind(node.id);
   const Icon = KIND_ICON[kind] ?? Folder;
   const tone = KIND_TONE[kind] ?? KIND_TONE.document;
@@ -317,9 +320,11 @@ function FolderCard({
           </span>
         </div>
         <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-content-tertiary tabular-nums">
-          <span className="font-medium text-content-secondary">
-            {fmtBytes(node.total_bytes)}
-          </span>
+          {isSystemAdmin && (
+            <span className="font-medium text-content-secondary">
+              {fmtBytes(node.total_bytes)}
+            </span>
+          )}
           {subfolders > 0 && (
             <>
               <span className="text-content-quaternary">·</span>
@@ -335,22 +340,26 @@ function FolderCard({
 
         {/* Footer: share-of-storage micro bar + hover Open affordance */}
         <div className="mt-auto pt-3 flex items-center gap-2">
-          <div
-            className="flex-1 h-1 rounded-full bg-surface-tertiary overflow-hidden"
-            role="img"
-            aria-label={t('files.folder.share', {
-              defaultValue: '{{pct}}% of total storage',
-              pct: sharePct,
-            })}
-          >
+          {isSystemAdmin && (
             <div
-              className={clsx('h-full rounded-full transition-[width] duration-500', tone.bar)}
-              style={{ width: `${Math.max(sharePct, node.total_bytes > 0 ? 2 : 0)}%` }}
-            />
-          </div>
-          <span className="text-2xs text-content-quaternary tabular-nums shrink-0 group-hover:hidden">
-            {fmtPct(sharePct)}
-          </span>
+              className="flex-1 h-1 rounded-full bg-surface-tertiary overflow-hidden"
+              role="img"
+              aria-label={t('files.folder.share', {
+                defaultValue: '{{pct}}% of total storage',
+                pct: sharePct,
+              })}
+            >
+              <div
+                className={clsx('h-full rounded-full transition-[width] duration-500', tone.bar)}
+                style={{ width: `${Math.max(sharePct, node.total_bytes > 0 ? 2 : 0)}%` }}
+              />
+            </div>
+          )}
+          {isSystemAdmin && (
+            <span className="text-2xs text-content-quaternary tabular-nums shrink-0 group-hover:hidden">
+              {fmtPct(sharePct)}
+            </span>
+          )}
           <span className="hidden group-hover:inline-flex items-center gap-0.5 text-2xs font-medium text-oe-blue shrink-0">
             {t('files.folder.open', { defaultValue: 'Open' })}
             <ArrowRight className="rtl:rotate-180"  size={11} />

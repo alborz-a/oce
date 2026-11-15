@@ -41,6 +41,7 @@ import { ApprovalDrawer } from '@/features/file-approvals/ApprovalDrawer';
 import { useApprovals } from '@/features/file-approvals/hooks';
 import { fmtFixed } from '@/shared/lib/formatters';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
+import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
 const KIND_ICON: Record<FileKind, typeof FileText> = {
   document: FileText,
@@ -168,6 +169,8 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
   // follow-up). Sourced from the JWT so no extra request is needed.
   const accessToken = useAuthStore((s) => s.accessToken);
   const currentUserId = decodeUserIdFromToken(accessToken);
+  // B1/B2: sizes, storage roots and paths are admin-only.
+  const isSystemAdmin = useIsSystemAdmin();
 
   // Find any active approval workflow for the current file so the
   // "Approval status" entry shows up only when relevant.
@@ -317,7 +320,16 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           className="mb-1"
         />
         <div className="flex items-center justify-center overflow-hidden bg-surface-secondary/60 rounded-lg aspect-[4/3]">
-          {isPdf(row) && row.download_url ? (
+          {row.kind === 'photo' && row.thumbnail_url ? (
+            // C2: the panel shows the photo's presigned thumbnail (AuthImage fetches
+            // the bucket URL), never the full-size original.
+            <AuthImage
+              src={row.thumbnail_url}
+              alt=""
+              className="max-h-full max-w-full object-contain rounded-lg"
+              fallback={<Icon size={48} strokeWidth={1.5} className="text-content-tertiary" />}
+            />
+          ) : isPdf(row) && row.download_url ? (
             pdfPreviewUrl ? (
               <iframe
                 src={`${pdfPreviewUrl}#toolbar=0&navpanes=0&view=FitH`}
@@ -378,13 +390,21 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
           )}
         </div>
 
+        {/* C3: a photo shows the field-report tag here instead of name, type and size. */}
+        {row.kind === 'photo' ? (
+          <div>
+            <p className="text-sm font-semibold text-content-primary">
+              {t('files.photo.field_report_tag', { defaultValue: 'برچسب گزارش‌های میدانی' })}
+            </p>
+          </div>
+        ) : (
         <div>
           <h3 className="text-sm font-semibold text-content-primary break-words" title={row.name}>
             {row.name}
           </h3>
           <p className="mt-0.5 text-2xs text-content-tertiary">
-            {fmtBytes(row.size_bytes)}
-            {sizeIsConvertedArtifact && (
+            {isSystemAdmin && fmtBytes(row.size_bytes)}
+            {isSystemAdmin && sizeIsConvertedArtifact && (
               <span
                 className="ms-1.5 text-content-quaternary"
                 title={t('files.detail.size_converted_artifact_hint', {
@@ -400,6 +420,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
             {row.mime_type && <span className="ms-2">{row.mime_type}</span>}
           </p>
         </div>
+        )}
 
         <div className="flex flex-col gap-1.5">
           {/* Primary action - a PDF document reads inline here (#284); other
@@ -580,7 +601,7 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               {t('files.permissions.manage', { defaultValue: 'Manage access' })}
             </button>
           )}
-          {isTauri && row.physical_path && (
+          {isSystemAdmin && isTauri && row.physical_path && (
             <button
               type="button"
               onClick={() => openInOSFinder(row.physical_path)}
@@ -611,22 +632,26 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
               <DateDisplay value={row.modified_at} format="datetime" />
             </Row>
           )}
-          <Row label={t('files.detail.storage', { defaultValue: 'Storage' })}>
-            <span className="uppercase tracking-wide text-2xs">{row.storage_backend}</span>
-          </Row>
-          <Row label={t('files.detail.path', { defaultValue: 'Path' })}>
-            <button
-              type="button"
-              onClick={handleCopyPath}
-              className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-start break-all"
-              title={t('files.actions.copy_path', { defaultValue: 'Copy path' })}
-            >
-              <Copy size={10} className="shrink-0" />
-              {pathCopied
-                ? t('files.toast.copied', { defaultValue: 'Copied' })
-                : row.physical_path}
-            </button>
-          </Row>
+          {isSystemAdmin && (
+            <Row label={t('files.detail.storage', { defaultValue: 'Storage' })}>
+              <span className="uppercase tracking-wide text-2xs">{row.storage_backend}</span>
+            </Row>
+          )}
+          {isSystemAdmin && (
+            <Row label={t('files.detail.path', { defaultValue: 'Path' })}>
+              <button
+                type="button"
+                onClick={handleCopyPath}
+                className="inline-flex items-center gap-1 font-mono text-[10px] text-content-secondary hover:text-oe-blue text-start break-all"
+                title={t('files.actions.copy_path', { defaultValue: 'Copy path' })}
+              >
+                <Copy size={10} className="shrink-0" />
+                {pathCopied
+                  ? t('files.toast.copied', { defaultValue: 'Copied' })
+                  : row.physical_path}
+              </button>
+            </Row>
+          )}
         </dl>
 
         {extras.length > 0 && (

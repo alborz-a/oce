@@ -48,6 +48,7 @@ from app.dependencies import (
     verify_project_access,
 )
 from app.modules.documents import object_store
+from app.modules.projects.file_manager_redact import viewer_is_system_admin
 from app.modules.documents.schemas import (
     DocumentActivityListResponse,
     DocumentActivityResponse,
@@ -206,7 +207,17 @@ async def get_summary(
     """Aggregated document stats for a project."""
     await verify_project_access(project_id, user_id, session)
     data = await service.get_summary(project_id)
-    return DocumentSummary(**data)
+    summary = DocumentSummary(**data)
+    # B1/B2: storage totals and per-upload sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        summary = summary.model_copy(
+            update={
+                "total_size_bytes": 0,
+                "total_size_mb": 0.0,
+                "recent_uploads": [r.model_copy(update={"size": 0}) for r in summary.recent_uploads],
+            }
+        )
+    return summary
 
 
 # ── Register objects already in storage (admin import) ───────────────────────
@@ -515,8 +526,12 @@ async def list_documents(
                 visible.append(doc)
         docs = visible
 
+    items = [_doc_to_response(d) for d in docs]
+    # B2: file sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        items = [item.model_copy(update={"file_size": 0}) for item in items]
     return DocumentListResponse(
-        items=[_doc_to_response(d) for d in docs],
+        items=items,
         total=total,
         offset=offset,
         limit=limit,
@@ -1248,8 +1263,32 @@ async def update_photo(
     """
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session)
+    # E3: only the uploader, a project manager of this project, or the system
+    # admin may change a photo's description (the UI shows the button to the same set).
+    if not await _can_edit_photo_description(photo, user_id, session):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the uploader, a project manager or an admin can edit this description",
+        )
     photo = await service.update_photo(photo_id, data)
     return _photo_to_response(photo)
+
+
+async def _can_edit_photo_description(photo: object, user_id: str | None, session: SessionDep) -> bool:
+    """Uploader, project manager of the photo's project, or system admin."""
+    if not user_id:
+        return False
+    if await viewer_is_system_admin(session, str(user_id)):
+        return True
+    if str(getattr(photo, "created_by", "") or "") == str(user_id):
+        return True
+    from app.modules.teams.access import is_project_manager
+
+    try:
+        uid = uuid.UUID(str(user_id))
+    except (ValueError, TypeError):
+        return False
+    return await is_project_manager(session, photo.project_id, uid)  # type: ignore[attr-defined]
 
 
 # ── Delete photo ────────────────────────────────────────────────────────
@@ -2104,7 +2143,11 @@ async def get_document(
         manager_read=True,
     )
     require_read(role)
-    return _doc_to_response(doc)
+    response = _doc_to_response(doc)
+    # B2: file sizes are admin-only.
+    if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+        response = response.model_copy(update={"file_size": 0})
+    return response
 
 
 # ── Download ─────────────────────────────────────────────────────────────────
