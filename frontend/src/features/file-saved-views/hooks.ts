@@ -6,6 +6,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/useAuthStore';
 import {
   createSavedView,
   deleteSavedView,
@@ -29,9 +30,11 @@ export const savedViewKeys = {
 };
 
 export function useSavedViews(projectId: string | null | undefined) {
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   return useQuery<SavedViewListResponse>({
     queryKey: [KEY, projectId ?? null],
     queryFn: () => fetchSavedViews(projectId),
+    enabled: !restrictedMode,
     staleTime: 30_000,
   });
 }

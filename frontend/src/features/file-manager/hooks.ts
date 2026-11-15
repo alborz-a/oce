@@ -141,10 +141,11 @@ export interface UseFavoritesResult {
 export function useFavorites(
   projectId: string | null | undefined,
 ): UseFavoritesResult {
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   const { data = [], isLoading } = useQuery({
     queryKey: [KEY_FAVORITES, projectId],
     queryFn: () => fetchFavorites(projectId as string),
-    enabled: Boolean(projectId),
+    enabled: Boolean(projectId) && !restrictedMode,
     staleTime: 30_000,
   });
 

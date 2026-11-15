@@ -20,6 +20,10 @@ function decodeRoleFromToken(token: string | null): string | null {
   return typeof role === 'string' ? role : null;
 }
 
+function isRestrictedRole(role: string | null): boolean {
+  return (role ?? '').trim().toLowerCase() !== 'admin';
+}
+
 /** The id of the user a token was issued to (the `sub` claim), or `null`. */
 function decodeUserIdFromToken(token: string | null): string | null {
   const sub = decodeTokenPayload(token)?.sub;
@@ -335,6 +339,7 @@ export function createAuthStore(env: AuthTabEnv) {
         session.setItem(KEY_ACCESS, access);
         session.setItem(KEY_REFRESH, refresh);
       }
+      const decodedRole = decodeRoleFromToken(access);
       endHandshake();
       set({
         accessToken: access,
@@ -342,7 +347,12 @@ export function createAuthStore(env: AuthTabEnv) {
         authPending: false,
         userId: decodeUserIdFromToken(access),
         userEmail: email ?? (wasSignedIn ? s.userEmail : env.local().getItem(KEY_EMAIL)),
-        userRole: decodeRoleFromToken(access) ?? s.userRole,
+        userRole: decodedRole ?? s.userRole,
+        restrictedMode: wasSignedIn
+          ? s.restrictedMode
+          : decodedRole !== null
+            ? isRestrictedRole(decodedRole)
+            : true,
         userFullName: wasSignedIn ? s.userFullName : env.local().getItem(KEY_FULL_NAME),
       });
       if (!wasSignedIn) void get().syncRoleFromServer();
@@ -441,11 +451,13 @@ export function createAuthStore(env: AuthTabEnv) {
           local.setItem(KEY_SESSION_HINT, '1');
         }
         const s = get();
+        const decodedRole = decodeRoleFromToken(data.access_token);
         set({
           accessToken: data.access_token,
           isAuthenticated: true,
           userId: decodeUserIdFromToken(data.access_token),
-          userRole: decodeRoleFromToken(data.access_token) ?? s.userRole,
+          userRole: decodedRole ?? s.userRole,
+          restrictedMode: decodedRole !== null ? isRestrictedRole(decodedRole) : s.restrictedMode,
         });
         env.channel?.post({
           type: 'tokens',
@@ -517,6 +529,7 @@ export function createAuthStore(env: AuthTabEnv) {
           local.removeItem(KEY_COMPANY_TYPE);
         }
         endHandshake();
+        const decodedRole = decodeRoleFromToken(access);
         set({
           accessToken: access,
           isAuthenticated: true,
@@ -524,7 +537,8 @@ export function createAuthStore(env: AuthTabEnv) {
           userEmail: email ?? null,
           userId: decodeUserIdFromToken(access),
           userFullName: null,
-          userRole: decodeRoleFromToken(access),
+          userRole: decodedRole,
+          restrictedMode: isRestrictedRole(decodedRole),
         });
         env.channel?.post({ type: 'tokens', access, refresh, remember, email: email ?? null });
         // The name was just cleared and the role is only the token's claim.
@@ -574,6 +588,7 @@ export function createAuthStore(env: AuthTabEnv) {
         // No token of our own, but a tab opened earlier may hold a sign-in that
         // was not remembered: ask before showing the login page.
         const ask = !token && env.channel !== null && local.getItem(KEY_SESSION_HINT) === '1';
+        const decodedRole = decodeRoleFromToken(token);
         set({
           accessToken: token,
           isAuthenticated: Boolean(token),
@@ -585,7 +600,8 @@ export function createAuthStore(env: AuthTabEnv) {
           userFullName: fullName,
           // Pre-populate from JWT so the UI renders immediately; syncRoleFromServer
           // will overwrite with the authoritative DB value shortly after.
-          userRole: decodeRoleFromToken(token),
+          userRole: decodedRole,
+          restrictedMode: token ? isRestrictedRole(decodedRole) : false,
         });
         if (!ask) return;
         endHandshake();

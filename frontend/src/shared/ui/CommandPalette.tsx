@@ -273,7 +273,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
   // Load BOQs for the first few projects when palette opens and projects are loaded
   useEffect(() => {
-    if (!open || !projectsLoaded || boqsLoaded || projects.length === 0) return;
+    if (!open || useAuthStore.getState().restrictedMode || !projectsLoaded || boqsLoaded || projects.length === 0) return;
 
     let cancelled = false;
     const projectSlice = projects.slice(0, 5);
