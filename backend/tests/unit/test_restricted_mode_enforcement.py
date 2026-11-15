@@ -53,14 +53,9 @@ def test_allowed(method, path):
         ("POST", P + "users/"),
         ("GET", P + f"users/{ID}"),
         ("GET", P + "tasks/export/"),
-        ("POST", P + "tasks/"),
-        ("DELETE", P + f"tasks/{ID}"),
         ("POST", P + "tasks/import/file/"),
-        ("DELETE", P + f"documents/photos/{ID}"),
-        ("DELETE", P + f"documents/{ID}"),
         ("POST", P + "projects/"),
         ("DELETE", P + f"projects/{ID}"),
-        ("PATCH", P + f"projects/{ID}"),
         ("GET", P + "projects/dashboard/cards/"),
         ("GET", "/api/other"),
     ],
@@ -84,7 +79,7 @@ def test_admin_never_restricted(monkeypatch):
 def test_non_restricted_unchanged(monkeypatch):
     monkeypatch.delenv("OCE_RESTRICTED_PROJECT_MODE_ALL", raising=False)
     assert is_restricted_user(_u())  # deny by default
-    assert not is_restricted_user(_u(role="manager"))
+    assert is_restricted_user(_u(role="manager"))  # [RSC-IRAN] managers restricted too
     assert not is_restricted_user(_u(meta={"restricted_project_mode": False}))
     assert is_restricted_user(_u(meta={"restricted_project_mode": True}))
 

@@ -689,6 +689,10 @@ class ProjectResponse(BaseModel):
     default_vat_rate: str | None = None
     custom_units: list[str] = Field(default_factory=list)
 
+    # Project capability fields [RSC-IRAN] (Step 4.6)
+    my_project_role: str = ""
+    my_caps: list[str] = Field(default_factory=list)
+
     # BUG-MATH04: defence-in-depth response strip - see BOQResponse for the
     # full rationale. ``ProjectCreate`` rejects HTML in ``name`` outright
     # (loud 422) and only strips dangerous tags from ``description``;
@@ -1450,6 +1454,10 @@ class BackupProjectMetadata(BaseModel):
     fx_rates: list[dict[str, Any]] = Field(default_factory=list)
     default_vat_rate: str | None = None
     custom_units: list[str] = Field(default_factory=list)
+
+    # Project capability fields [RSC-IRAN] (Step 4.6)
+    my_project_role: str = ""
+    my_caps: list[str] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 

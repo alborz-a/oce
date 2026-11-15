@@ -31,7 +31,8 @@ from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, 
 from fastapi.responses import StreamingResponse
 
 from app.core.bulk_ops import BulkAssignRequest, BulkDeleteRequest, BulkStatusRequest
-from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
+from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermission, SessionDep, verify_project_access
+from app.core.project_roles import get_project_caps
 from app.modules.tasks.schemas import (
     TaskBimLinkRequest,
     TaskCompleteRequest,
@@ -252,11 +253,19 @@ async def create_task(
     data: TaskCreate,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("tasks.create")),
     service: TaskService = Depends(_get_service),
 ) -> TaskResponse:
-    """Create a new task."""
+    """Create a new task [RSC-IRAN]."""
     await verify_project_access(data.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, data.project_id)
+        if "task.manage" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:task.manage",
+            )
     task = await service.create_task(data, user_id=user_id)
     return await _to_response_resolved(task, service)
 
@@ -865,13 +874,21 @@ async def batch_assign_tasks(
 async def get_task(
     task_id: uuid.UUID,
     session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("tasks.read")),
     service: TaskService = Depends(_get_service),
 ) -> TaskResponse:
-    """Get a single task. Private tasks are only visible to their creator."""
+    """Get a single task [RSC-IRAN]."""
     task = await service.get_task(task_id, current_user_id=user_id)
     await verify_project_access(task.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, task.project_id)
+        if "project.read" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:project.read",
+            )
     return await _to_response_resolved(task, service)
 
 
@@ -880,13 +897,21 @@ async def update_task(
     task_id: uuid.UUID,
     data: TaskUpdate,
     session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("tasks.update")),
     service: TaskService = Depends(_get_service),
 ) -> TaskResponse:
-    """Update a task."""
+    """Update a task [RSC-IRAN]."""
     existing = await service.get_task(task_id, current_user_id=user_id)
     await verify_project_access(existing.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, existing.project_id)
+        if "task.manage" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:task.manage",
+            )
     task = await service.update_task(task_id, data, current_user_id=user_id)
     return await _to_response_resolved(task, service)
 
@@ -895,13 +920,21 @@ async def update_task(
 async def delete_task(
     task_id: uuid.UUID,
     session: SessionDep,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("tasks.delete")),
     service: TaskService = Depends(_get_service),
 ) -> None:
-    """Delete a task."""
+    """Delete a task [RSC-IRAN]."""
     existing = await service.get_task(task_id, current_user_id=user_id)
     await verify_project_access(existing.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, existing.project_id)
+        if "task.manage" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:task.manage",
+            )
     await service.delete_task(task_id, current_user_id=user_id)
 
 
@@ -909,14 +942,27 @@ async def delete_task(
 async def complete_task(
     task_id: uuid.UUID,
     session: SessionDep,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
     body: TaskCompleteRequest | None = None,
-    user_id: CurrentUserId = None,  # type: ignore[assignment]
     _perm: None = Depends(RequirePermission("tasks.update")),
     service: TaskService = Depends(_get_service),
 ) -> TaskResponse:
-    """Mark a task as completed with optional result text."""
+    """Mark a task as completed with optional result text [RSC-IRAN]."""
     existing = await service.get_task(task_id, current_user_id=user_id)
     await verify_project_access(existing.project_id, user_id, session)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, existing.project_id)
+        if "task.work" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:task.work",
+            )
+        if "task.manage" not in caps and str(getattr(existing, "assignee_id", "")) != str(user_id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Task must be assigned to you to complete it",
+            )
     result = body.result if body else None
     task = await service.complete_task(task_id, result=result, current_user_id=user_id)
     return await _to_response_resolved(task, service)

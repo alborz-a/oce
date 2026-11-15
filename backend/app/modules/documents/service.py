@@ -230,7 +230,7 @@ VALID_CATEGORIES = {
     "other",
 }
 # Same set the edit schema validates against, so the two cannot drift again.
-VALID_PHOTO_CATEGORIES = set(PHOTO_CATEGORIES)
+VALID_PHOTO_CATEGORIES = set(PHOTO_CATEGORIES) | {'site'}
 
 # Reality-capture / drone-survey point-cloud file extensions. A file dropped
 # into the generic documents upload with one of these extensions is auto-
@@ -1648,9 +1648,9 @@ class PhotoService:
                 detail=f"File type '{bad_ext}' is not allowed for security reasons.",
             )
 
-        # Validate category
-        if category not in VALID_PHOTO_CATEGORIES:
-            category = "site"
+        # Validate category [RSC-IRAN] Step 6.4
+        if category == "site" or category not in VALID_PHOTO_CATEGORIES:
+            category = "site_progress"
 
         # Enforce the size cap while streaming (defence in depth; a cap is also
         # expected at the API gateway). A bare ``await file.read()`` here pulls
@@ -1874,7 +1874,7 @@ class PhotoService:
                     file_path=photo_path_str,
                     version=1,
                     uploaded_by=user_id or "",
-                    tags=["photo", category or "site"],
+                    tags=["photo", category or "site_progress"],
                     metadata_={},
                 )
                 self.session.add(doc)

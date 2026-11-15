@@ -27,7 +27,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSock
 from app.config import get_settings
 from app.core.ws_auth import refuse_socket, resolve_socket_token
 from app.database import async_session_factory
-from app.dependencies import CurrentUserId, RequirePermission, SessionDep, decode_access_token
+from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermission, SessionDep, decode_access_token
+from app.core.project_roles import get_project_caps
 from app.modules.team_chat.hub import chat_hub
 from app.modules.team_chat.schemas import (
     ImportRequest,
@@ -62,7 +63,20 @@ async def list_rooms(user_id: CurrentUserId, svc: TeamChatService = Depends(_svc
     response_model=RoomResponse,
     dependencies=[Depends(RequirePermission("team_chat.read"))],
 )
-async def project_room(project_id: uuid.UUID, user_id: CurrentUserId, svc: TeamChatService = Depends(_svc)) -> RoomResponse:
+async def project_room(
+    project_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    payload: CurrentUserPayload,
+    svc: TeamChatService = Depends(_svc),
+) -> RoomResponse:
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "chat.read" not in caps:
+            raise HTTPException(
+                status_code=403,
+                detail="project_capability_required:chat.read",
+            )
     room = await svc.project_room(project_id, uuid.UUID(str(user_id)))
     return RoomResponse(id=room.id, kind=room.kind, name=room.name, project_id=room.project_id)
 
@@ -86,10 +100,21 @@ async def create_room(body: RoomCreate, user_id: CurrentUserId, svc: TeamChatSer
 async def list_messages(
     room_id: uuid.UUID,
     user_id: CurrentUserId,
+    session: SessionDep,
+    payload: CurrentUserPayload,
     before: uuid.UUID | None = Query(default=None),
     limit: int = Query(default=50, ge=1, le=100),
     svc: TeamChatService = Depends(_svc),
 ) -> list[MessageResponse]:
+    if payload and payload.get("role") != "admin":
+        room = await svc.get_room(room_id)
+        if room and room.project_id:
+            caps = await get_project_caps(session, user_id, room.project_id)
+            if "chat.read" not in caps:
+                raise HTTPException(
+                    status_code=403,
+                    detail="project_capability_required:chat.read",
+                )
     rows = await svc.list_messages(room_id, uuid.UUID(str(user_id)), before, limit)
     return [MessageResponse(**r) for r in rows]
 
@@ -101,8 +126,22 @@ async def list_messages(
     dependencies=[Depends(RequirePermission("team_chat.create"))],
 )
 async def post_message(
-    room_id: uuid.UUID, body: MessageCreate, user_id: CurrentUserId, svc: TeamChatService = Depends(_svc)
+    room_id: uuid.UUID,
+    body: MessageCreate,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    payload: CurrentUserPayload,
+    svc: TeamChatService = Depends(_svc),
 ) -> MessageResponse:
+    if payload and payload.get("role") != "admin":
+        room = await svc.get_room(room_id)
+        if room and room.project_id:
+            caps = await get_project_caps(session, user_id, room.project_id)
+            if "chat.write" not in caps:
+                raise HTTPException(
+                    status_code=403,
+                    detail="project_capability_required:chat.write",
+                )
     row = await svc.post_message(
         room_id, uuid.UUID(str(user_id)), body.text, body.reply_to_id, body.document_ids, body.mentions
     )

@@ -897,6 +897,10 @@ async def verify_project_access(
         role = getattr(user, "role", "") if user is not None else ""
         if role == "admin" or (manager_read and role == "manager"):
             return
+        # [RSC-IRAN] Step 4.1: user with all_projects metadata "view" or "manage" passes project access
+        meta = getattr(user, "metadata_", None) or {}
+        if meta.get("all_projects") in ("view", "manage"):
+            return
     except Exception:
         logger.exception("Admin-role lookup failed during project access check")
 

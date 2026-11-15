@@ -63,7 +63,18 @@ class ProjectRepository:
 
         # Non-admins still only ever see projects they own or are a member of,
         # whether or not a pack is active.
+        # [RSC-IRAN] Step 4.1: users with metadata all_projects in ("view", "manage") get all projects
+        has_all_projects = False
         if not is_admin:
+            try:
+                from app.modules.users.models import User
+                u = await self.session.get(User, owner_id)
+                if u and (getattr(u, "metadata_", None) or {}).get("all_projects") in ("view", "manage"):
+                    has_all_projects = True
+            except Exception:
+                pass
+
+        if not is_admin and not has_all_projects:
             base = base.where((Project.owner_id == owner_id) | (Project.id.in_(member_project_ids_subquery(owner_id))))
         if status is not None:
             base = base.where(Project.status == status)

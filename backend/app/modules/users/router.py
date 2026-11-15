@@ -725,6 +725,44 @@ async def get_me(
     )
 
 
+class ProjectCapsResponse(BaseModel):
+    project_id: uuid.UUID
+    my_project_role: str
+    my_caps: list[str]
+
+
+@router.get(
+    "/me/projects/{project_id}/caps",
+    response_model=ProjectCapsResponse,
+    summary="Get caller project role and capabilities [RSC-IRAN]",
+)
+@router.get(
+    "/me/projects/{project_id}/caps/",
+    response_model=ProjectCapsResponse,
+    include_in_schema=False,
+)
+async def get_my_project_caps(
+    project_id: uuid.UUID,
+    user_id: CurrentUserId,
+    session: SessionDep,
+) -> ProjectCapsResponse:
+    """Return caller role and capabilities on a specific project [RSC-IRAN]."""
+    from app.core.project_roles import get_project_caps, get_project_role
+
+    role = await get_project_role(session, user_id, project_id)
+    if role is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Project not found",
+        )
+    caps = await get_project_caps(session, user_id, project_id)
+    return ProjectCapsResponse(
+        project_id=project_id,
+        my_project_role=role,
+        my_caps=sorted(caps),
+    )
+
+
 @router.patch("/me/", response_model=UserResponse)
 async def update_me(
     data: UserUpdate,

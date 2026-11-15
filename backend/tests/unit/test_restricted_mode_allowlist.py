@@ -26,6 +26,10 @@ D = "/api/v1/"
         ("POST", f"{D}documents/photos/upload/"),
         ("POST", f"{D}documents/upload/"),
         ("PATCH", f"{D}documents/photos/{P}"),
+        ("DELETE", f"{D}documents/photos/{P}"),
+        ("PATCH", f"{D}documents/{P}"),
+        ("DELETE", f"{D}documents/{P}"),
+        ("PATCH", f"{D}projects/{P}"),
         ("GET", f"{D}search/"),
         ("GET", f"{D}search/status/"),
         ("GET", f"{D}search/types/"),
@@ -37,6 +41,9 @@ D = "/api/v1/"
         ("POST", f"{D}projects/{P}/members/"),
         ("POST", f"{D}projects/{P}/members/bulk"),
         ("DELETE", f"{D}projects/{P}/members/{P}/"),
+        ("GET", f"{D}team-chat/rooms/"),
+        ("POST", f"{D}team-chat/rooms/{P}/messages/"),
+        ("GET", f"{D}users/me/projects/{P}/caps"),
     ],
 )
 def test_staff_allowed(method, path):
@@ -46,8 +53,6 @@ def test_staff_allowed(method, path):
 @pytest.mark.parametrize(
     "method,path",
     [
-        ("DELETE", f"{D}documents/photos/{P}"),
-        ("DELETE", f"{D}documents/{P}"),
         ("POST", f"{D}projects/{P}/files/"),
         ("DELETE", f"{D}projects/{P}/files/"),
         ("POST", f"{D}search/"),

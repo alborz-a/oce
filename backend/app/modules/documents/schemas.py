@@ -20,16 +20,19 @@ from app.modules.validation.schemas import ValidationResultItem
 # and the two had drifted: a photo could be uploaded as "aerial" and shown with
 # its own badge and filter, but changing any photo to that category came back
 # 422. Both sides read this now, so the next value added reaches both.
+# [RSC-IRAN] Step 6.4: Nine photo categories; legacy "site" accepted and mapped to "site_progress"
 PHOTO_CATEGORIES: tuple[str, ...] = (
-    "site",
-    "progress",
+    "site_progress",
+    "before_work",
+    "after_work",
     "defect",
-    "delivery",
+    "materials",
     "safety",
-    "aerial",
+    "drawing_doc",
+    "site_visit",
     "other",
 )
-_PHOTO_CATEGORY_PATTERN = f"^({'|'.join(PHOTO_CATEGORIES)})$"
+_PHOTO_CATEGORY_PATTERN = "^(" + "|".join(PHOTO_CATEGORIES + ("site",)) + ")$"
 
 # ── Document schemas ─────────────────────────────────────────────────────
 
@@ -171,6 +174,13 @@ class PhotoUpdate(BaseModel):
     caption: str | None = None
     tags: list[str] | None = None
     category: str | None = Field(default=None, pattern=_PHOTO_CATEGORY_PATTERN)
+
+    @field_validator("category", mode="before")
+    @classmethod
+    def normalize_photo_category(cls, v: Any) -> Any:
+        if v == "site":
+            return "site_progress"
+        return v
 
 
 class PhotoResponse(BaseModel):

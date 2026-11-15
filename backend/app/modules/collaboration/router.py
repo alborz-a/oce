@@ -19,6 +19,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from app.dependencies import (
     CurrentUserId,
+    CurrentUserPayload,
     RequirePermission,
     SessionDep,
     verify_project_access,
@@ -349,12 +350,29 @@ async def create_comment(
     data: CommentCreate,
     user_id: CurrentUserId,
     session: SessionDep,
+    payload: CurrentUserPayload,
     _perm: None = Depends(RequirePermission("collaboration.create")),
     service: CollaborationService = Depends(_get_service),
 ) -> CommentResponse:
-    """Create a comment with optional @mentions and viewpoint."""
+    """Create a comment with optional @mentions and viewpoint [RSC-IRAN]."""
     _validate_entity_type(data.entity_type)
     await _verify_entity_access(data.entity_type, data.entity_id, str(user_id), session)
+    if data.entity_type == "task" and payload and payload.get("role") != "admin":
+        from app.modules.tasks.models import Task
+        from app.core.project_roles import get_project_caps
+        task_obj = await session.get(Task, uuid.UUID(str(data.entity_id)))
+        if task_obj is not None:
+            caps = await get_project_caps(session, user_id, task_obj.project_id)
+            if "task.work" not in caps:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="project_capability_required:task.work",
+                )
+            if "task.manage" not in caps and str(getattr(task_obj, "assignee_id", "")) != str(user_id):
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Task must be assigned to you to comment on it",
+                )
     # A comment can carry a nested viewpoint whose entity_type/entity_id are
     # independent free-text fields the service persists verbatim. The standalone
     # POST /viewpoints/ path runs both the allowlist check and the access check

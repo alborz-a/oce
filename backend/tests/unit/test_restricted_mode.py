@@ -10,11 +10,11 @@ def _u(role="editor", meta=None):
 def test_flag_on_user(monkeypatch):
     monkeypatch.delenv("OCE_RESTRICTED_PROJECT_MODE_ALL", raising=False)
     assert is_restricted_mode(_u(meta={"restricted_project_mode": True}))
-    # Deny by default: unflagged editor/viewer is restricted, manager is not.
+    # Deny by default: EVERY non-admin is restricted (global manager too) [RSC-IRAN].
     assert is_restricted_mode(_u(meta=None))
     assert is_restricted_mode(_u(role="viewer", meta={}))
     assert is_restricted_mode(_u(meta={"restricted_project_mode": "x"}))
-    assert not is_restricted_mode(_u(role="manager", meta=None))
+    assert is_restricted_mode(_u(role="manager", meta=None))
     # Explicit opt-out wins for non-admins.
     assert not is_restricted_mode(_u(meta={"restricted_project_mode": False}))
 
