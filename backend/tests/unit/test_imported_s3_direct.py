@@ -100,7 +100,16 @@ async def test_presigned_url_for_imported_photo(monkeypatch):
     assert url == "https://bucket.example/g/a.jpg?sig=x"
     assert be.url_kwargs["expires_in"] == 600
     assert be.url_kwargs["response_content_type"] == "image/jpeg"
-    assert be.url_kwargs["response_content_disposition"].startswith("inline;")
+    assert "response_content_disposition" not in be.url_kwargs
+
+
+async def test_photo_file_presign_passes_no_content_disposition(monkeypatch):
+    # Same bug as the thumb presign: a second Content-Disposition breaks the lightbox image in Chrome.
+    be = _PresignBackend()
+    monkeypatch.setattr(os_, "_imported_s3", lambda: be)
+    assert await os_.photo_presigned_url("/data/photos/mizito/g/a.jpg", "a.jpg", "image/jpeg") is not None
+    assert "response_content_disposition" not in be.url_kwargs
+    assert be.url_kwargs["response_content_type"] == "image/jpeg"
 
 
 async def test_presign_missing_object_is_404(monkeypatch):
