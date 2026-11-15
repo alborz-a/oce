@@ -22,6 +22,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { projectsApi, type ProjectProfileResult } from './api';
 
@@ -187,6 +188,7 @@ export function useActiveProjectProfile(): {
   isLoading: boolean;
 } {
   const projectId = useProjectContextStore((s) => s.activeProjectId);
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
 
   const { data, isLoading } = useQuery<ProjectProfileResult | null>({
     queryKey: ['project-profile', projectId],
@@ -200,7 +202,7 @@ export function useActiveProjectProfile(): {
         return null;
       }
     },
-    enabled: !!projectId,
+    enabled: !!projectId && !restrictedMode,
     staleTime: 60_000,
     retry: false,
   });
@@ -208,7 +210,7 @@ export function useActiveProjectProfile(): {
   return {
     projectId: projectId ?? null,
     profile: data ?? undefined,
-    isLoading: !!projectId && isLoading,
+    isLoading: !!projectId && !restrictedMode && isLoading,
   };
 }
 

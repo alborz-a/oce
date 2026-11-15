@@ -29,7 +29,7 @@ import { Button, EmptyState, Skeleton, AuthImage } from '@/shared/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFileList } from '@/features/file-manager/hooks';
 import { apiPatch } from '@/shared/lib/api';
-import { useCanEditPhotoCaption } from '@/features/file-manager/useCanWritePhotos';
+import { useCanEditPhotoCaption, useCanWritePhotos } from '@/features/file-manager/useCanWritePhotos';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { useToastStore } from '@/stores/useToastStore';
 import { REGION_LOCK } from '@/app/regionLock'; // [RSC-IRAN]
@@ -73,9 +73,16 @@ function fmtDate(iso: string | null, locale = 'en'): string {
 
 type SortKey = 'newest' | 'oldest' | 'largest';
 
-function sortRows(rows: FileRow[], sort: SortKey): FileRow[] {
+function normalizePhotoSort(sort: string | null | undefined, isSystemAdmin: boolean): SortKey {
+  if (sort === 'oldest') return 'oldest';
+  if (sort === 'largest' && isSystemAdmin) return 'largest';
+  return 'newest';
+}
+
+function sortRows(rows: FileRow[], sort: SortKey, isSystemAdmin = false): FileRow[] {
+  const effectiveSort = normalizePhotoSort(sort, isSystemAdmin);
   const copy = rows.slice();
-  switch (sort) {
+  switch (effectiveSort) {
     case 'newest':
       return copy.sort((a, b) => {
         const at = pickCapturedAt(a) ?? '';
@@ -134,9 +141,18 @@ export interface PhotosTabProps {
 export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
   const { t, i18n } = useTranslation();
   const locale = i18n?.language ?? 'en';
+  const isSystemAdmin = useIsSystemAdmin();
 
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('newest');
+  const effectiveSort = normalizePhotoSort(sort, isSystemAdmin);
+
+  // Clear stale admin-only sort state if the user is not (or ceases to be) an admin.
+  useEffect(() => {
+    if (effectiveSort !== sort) {
+      setSort(effectiveSort);
+    }
+  }, [effectiveSort, sort]);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
@@ -157,8 +173,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
     const matched = q
       ? photos.filter((r) => r.name?.toLowerCase().includes(q))
       : photos;
-    return sortRows(matched, sort);
-  }, [photos, search, sort]);
+    return sortRows(matched, effectiveSort, isSystemAdmin);
+  }, [photos, search, effectiveSort, isSystemAdmin]);
 
   const openLightbox = useCallback((index: number) => {
     setLightboxIndex(index);
@@ -225,10 +241,11 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
 
   // ── No active project ────────────────────────────────────────────────────
   // E3: admin, the photo's uploader, or a project manager may edit the description.
+  // Upload CTA depends on project write capability (not whether a photo is open in lightbox).
   const lightboxUploaderId =
     lightboxIndex !== null ? (filtered[lightboxIndex]?.extra?.created_by as string | undefined) : undefined;
   const canEditCaption = useCanEditPhotoCaption(projectId, lightboxUploaderId);
-  const isSystemAdmin = useIsSystemAdmin();
+  const canUploadPhotos = useCanWritePhotos(projectId);
 
   if (!projectId) {
     return (
@@ -275,7 +292,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
                 'Upload site photos to keep visual records alongside the project.',
             })}
             action={
-              !canEditCaption ? undefined : (
+              !canUploadPhotos ? undefined : (
               <Button
                 variant="primary"
                 size="md"
@@ -329,8 +346,8 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
           />
         </div>
         <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as SortKey)}
+          value={effectiveSort}
+          onChange={(e) => setSort(normalizePhotoSort(e.target.value, isSystemAdmin))}
           className="h-9 px-3 text-sm rounded-lg bg-surface-secondary/60 border border-border-light text-content-primary focus:outline-none focus:ring-2 focus:ring-oe-blue focus:border-transparent"
           data-testid="photos-tab-sort"
           aria-label={t('projects.photos.sort_aria', { defaultValue: 'Sort photos' })}
@@ -348,7 +365,7 @@ export function PhotosTab({ projectId }: PhotosTabProps): React.ReactElement {
             </option>
           )}
         </select>
-        {canEditCaption && (
+        {canUploadPhotos && (
         <Button
           variant="primary"
           size="sm"

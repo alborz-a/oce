@@ -204,3 +204,64 @@ async def test_concurrent_first_views_build_thumb_once(monkeypatch):
     assert be.put_calls == 1
     assert urls == ["https://bucket.example/_thumbs/p9.jpg"] * 5
     assert os_._THUMB_BUILD_LOCKS == {}
+
+
+async def test_s3_photo_presigns_omit_content_disposition(monkeypatch):
+    # Direct s3: photos must also omit ResponseContentDisposition so bucket gateways do not emit duplicates.
+    be = _PresignBackend(thumb_exists=True)
+    monkeypatch.setattr(os_, "get_storage_backend", lambda: be)
+
+    full_url = await os_.photo_presigned_url("s3:projects/p1/site/a.jpg", "a.jpg", "image/jpeg")
+    assert full_url == "https://bucket.example/projects/p1/site/a.jpg?sig=x"
+    assert "response_content_disposition" not in be.url_kwargs
+    assert be.url_kwargs["response_content_type"] == "image/jpeg"
+
+    be.url_kwargs = None
+    thumb_url = await os_.photo_thumb_presigned_url("p2", "s3:projects/p1/site/a.jpg")
+    assert thumb_url == "https://bucket.example/_thumbs/p2.jpg?sig=x"
+    assert "response_content_disposition" not in be.url_kwargs
+    assert be.url_kwargs["response_content_type"] == "image/jpeg"
+
+
+def test_s3_backend_url_for_omits_response_content_disposition_when_unset(monkeypatch):
+    import sys
+    import types
+    from app.core.storage import S3StorageBackend
+
+    captured: dict = {}
+
+    class _FakeClient:
+        def generate_presigned_url(self, op, Params, ExpiresIn):
+            captured["op"] = op
+            captured["params"] = dict(Params)
+            captured["expires_in"] = ExpiresIn
+            return "https://bucket.example/presigned"
+
+    fake_aioboto3 = types.ModuleType("aioboto3")
+    fake_boto3 = types.ModuleType("boto3")
+    fake_boto3.client = lambda *a, **kw: _FakeClient()  # type: ignore[attr-defined]
+    fake_botocore = types.ModuleType("botocore")
+    fake_botocore_cfg = types.ModuleType("botocore.config")
+    fake_botocore_cfg.Config = lambda **kw: kw  # type: ignore[attr-defined]
+
+    monkeypatch.setitem(sys.modules, "aioboto3", fake_aioboto3)
+    monkeypatch.setitem(sys.modules, "boto3", fake_boto3)
+    monkeypatch.setitem(sys.modules, "botocore", fake_botocore)
+    monkeypatch.setitem(sys.modules, "botocore.config", fake_botocore_cfg)
+
+    backend = S3StorageBackend(
+        endpoint="https://s3.example.test",
+        access_key="k",
+        secret_key="s",
+        bucket="photos",
+        region="us-east-1",
+    )
+    url = backend.url_for("projects/p1/a.jpg", expires_in=600, response_content_type="image/jpeg")
+    assert url == "https://bucket.example/presigned"
+    assert captured["op"] == "get_object"
+    assert captured["params"] == {
+        "Bucket": "photos",
+        "Key": "projects/p1/a.jpg",
+        "ResponseContentType": "image/jpeg",
+    }
+    assert "ResponseContentDisposition" not in captured["params"]

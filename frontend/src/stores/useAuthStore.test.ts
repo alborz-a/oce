@@ -171,4 +171,26 @@ describe('useAuthStore', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('initial restrictedMode from JWT (G1/G2)', () => {
+    const roleToken = (role: string) =>
+      `header.${btoa(JSON.stringify({ sub: 'u-1', role }))}.signature`;
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('derives restrictedMode=true immediately for non-admin tokens on setTokens and loadFromStorage', () => {
+      vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+      useAuthStore.getState().setTokens(roleToken('viewer'), 'r-1', true, 'v@example.com');
+      expect(useAuthStore.getState().restrictedMode).toBe(true);
+
+      useAuthStore.setState({ restrictedMode: false });
+      useAuthStore.getState().loadFromStorage();
+      expect(useAuthStore.getState().restrictedMode).toBe(true);
+
+      useAuthStore.getState().setTokens(roleToken('admin'), 'r-2', true, 'a@example.com');
+      expect(useAuthStore.getState().restrictedMode).toBe(false);
+    });
+  });
 });
