@@ -31612,7 +31612,6 @@ const resource = {
     "photos.batch_delete_title": "عکس‌ها حذف شوند؟",
     "photos.batch_deleted": "{{count}} عکس حذف شد",
     "photos.batch_meta_hint": "دسته و برچسب‌ها برای همه عکس‌های این بارگذاری اعمال می‌شود - می‌توانید هرکدام را بعداً اصلاح کنید.",
-    "photos.caption_placeholder": "یک توضیح اضافه کنید...",
     "photos.delete_confirm_message": "آیا مطمئنید می‌خواهید «{{name}}» را حذف کنید؟ این کار قابل بازگشت نیست.",
     "photos.delete_confirm_title": "عکس حذف شود؟",
     "photos.delete_failed": "حذف انجام نشد",
@@ -46316,6 +46315,24 @@ const resource = {
     "info_banner.show_to_all": "نمایش برای همه کاربران",
     "info_banner.edit_text": "ویرایش متن",
     "info_banner.text_label": "متن راهنما",
+    // [RSC-IRAN] Shell navigation keys
+    "shell.projects_tasks": "پروژه‌ها و کارها",
+    "shell.gallery": "گالری تصاویر",
+    "shell.chat": "گفتگو",
+    "shell.documents": "مدارک",
+    // [RSC-IRAN] Photos categories & upload keys
+    "photos.type_select": "نوع تصویر",
+    "photos.caption_label": "توضیح تصویر",
+    "photos.caption_placeholder": "مثلاً: بتن‌ریزی سقف طبقه سوم",
+    "photos.type.site_progress": "پیشرفت کار کارگاه",
+    "photos.type.before_work": "قبل از اجرا",
+    "photos.type.after_work": "بعد از اجرا",
+    "photos.type.defect": "نقص و ایراد اجرایی",
+    "photos.type.materials": "مصالح و تجهیزات وارده",
+    "photos.type.safety": "ایمنی کارگاه",
+    "photos.type.drawing_doc": "نقشه و مدرک",
+    "photos.type.site_visit": "بازدید و جلسه",
+    "photos.type.other": "سایر",
   }
 } as { translation: Record<string, string> };
 

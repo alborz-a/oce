@@ -1,14 +1,48 @@
+// [RSC-IRAN] Unit tests for restrictedRoutes allowlist
 import { describe, it, expect } from 'vitest';
 import { isRestrictedRouteAllowed as ok } from '../restrictedRoutes';
 
 describe('isRestrictedRouteAllowed', () => {
-  it('allows project, tasks, photos, documents', () => {
-    for (const p of ['/projects', '/projects/abc', '/projects/abc/tasks', '/projects/abc/files', '/files/detail/p1/f1', '/projects/abc?tab=photos', '/photos', '/tasks', '/photos?x=1', '/files', '/projects/abc/', '/', '/dashboard', '/notifications', '/profile']) {
+  it('allows four shell areas, login and profile', () => {
+    for (const p of [
+      '/',
+      '/login',
+      '/profile',
+      '/projects',
+      '/projects/abc',
+      '/projects/abc/',
+      '/projects/abc?tab=photos',
+      '/projects/abc/tasks',
+      '/projects/abc/files',
+      '/projects/abc/chat',
+      '/photos',
+      '/photos?x=1',
+      '/files',
+      '/files/detail/p1/f1',
+      '/documents',
+      '/tasks',
+      '/chat',
+      '/chat/room1',
+      '/chat/general?filter=all',
+    ]) {
       expect(ok(p)).toBe(true);
     }
   });
-  it('blocks finance, ai, other modules', () => {
-    for (const p of ['/projects/abc/finance', '/projects/new', '/projects/abc/settings', '/ai-estimate', '/chat', '/finance', '/users', '/settings', '/about', '/onboarding']) {
+
+  it('blocks disallowed routes including dashboard, notifications, onboarding, settings', () => {
+    for (const p of [
+      '/dashboard',
+      '/notifications',
+      '/onboarding',
+      '/projects/new',
+      '/projects/abc/finance',
+      '/projects/abc/settings',
+      '/finance',
+      '/ai-estimate',
+      '/users',
+      '/settings',
+      '/about',
+    ]) {
       expect(ok(p)).toBe(false);
     }
   });

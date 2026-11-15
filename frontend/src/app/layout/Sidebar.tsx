@@ -34,44 +34,38 @@ import {
   LayoutGrid,
   GraduationCap,
   FolderKanban,
-  CheckSquare,
   Camera,
-  Bell,
-  User,
+  MessageSquare,
+  FileText,
   type LucideIcon,
 } from 'lucide-react';
 import { LEARN_GROUP_ID, navGroups, type NavGroup, type NavItem } from './navCatalog';
 
+// [RSC-IRAN] Exactly four restricted shell items (Step 5.3)
 const RESTRICTED_NAV_ITEMS: NavItem[] = [
   {
     to: '/projects',
-    labelKey: 'nav.projects',
-    defaultLabel: 'پروژه‌ها',
+    labelKey: 'shell.projects_tasks',
+    defaultLabel: 'پروژه‌ها و کارها',
     icon: FolderKanban,
   },
   {
-    to: '/tasks',
-    labelKey: 'nav.tasks',
-    defaultLabel: 'وظایف',
-    icon: CheckSquare,
-  },
-  {
-    to: '/files',
-    labelKey: 'nav.files',
-    defaultLabel: 'تصاویر و اسناد',
+    to: '/photos',
+    labelKey: 'shell.gallery',
+    defaultLabel: 'گالری تصاویر',
     icon: Camera,
   },
   {
-    to: '/notifications',
-    labelKey: 'nav.notifications',
-    defaultLabel: 'اعلان‌ها',
-    icon: Bell,
+    to: '/chat',
+    labelKey: 'shell.chat',
+    defaultLabel: 'گفتگو',
+    icon: MessageSquare,
   },
   {
-    to: '/profile',
-    labelKey: 'nav.profile',
-    defaultLabel: 'پروفایل کاربری',
-    icon: User,
+    to: '/files',
+    labelKey: 'shell.documents',
+    defaultLabel: 'مدارک',
+    icon: FileText,
   },
 ];
 import { LEARN_ANCHOR_ATTR, anchorRect, flyLearn } from './learnFlight';

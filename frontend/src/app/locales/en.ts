@@ -26831,7 +26831,6 @@ const resource = {
     "photos.next": "Next photo",
     "photos.gps_auto_paren": "(auto, EXIF)",
     "photos.edit_photo": "Edit photo",
-    "photos.caption_placeholder": "Add a description...",
     "photos.field_category_hint": "Site photos are field evidence - the category sets how it is filed.",
     "photos.add_tag": "Add tag...",
     "photos.quick_tag_field": "+ field",
@@ -40755,6 +40754,24 @@ const resource = {
     "schedule.calendar.week_fallback": "The regional working week is unavailable. A standard planning week is used.",
     "schedule.calendar.holidays_missing": "Public holidays are not available for {{years}}. Check the calendar before relying on these dates.",
     "schedule.calendar.holidays_partial": "Public holiday coverage is incomplete for {{years}}. Check the calendar before relying on these dates.",
+    // [RSC-IRAN] Shell navigation keys
+    "shell.projects_tasks": "Projects & Tasks",
+    "shell.gallery": "Photo Gallery",
+    "shell.chat": "Chat",
+    "shell.documents": "Documents",
+    // [RSC-IRAN] Photos categories & upload keys
+    "photos.type_select": "Photo Type",
+    "photos.caption_label": "Photo Caption",
+    "photos.caption_placeholder": "e.g., Concrete pouring for 3rd floor",
+    "photos.type.site_progress": "Site Progress",
+    "photos.type.before_work": "Before Work",
+    "photos.type.after_work": "After Work",
+    "photos.type.defect": "Defect & Issue",
+    "photos.type.materials": "Materials & Equipment",
+    "photos.type.safety": "Site Safety",
+    "photos.type.drawing_doc": "Drawing & Document",
+    "photos.type.site_visit": "Site Visit & Meeting",
+    "photos.type.other": "Other",
   }
 } as { translation: Record<string, string> };
 
