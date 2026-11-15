@@ -210,10 +210,8 @@ export default defineConfig({
     //       chunks under ``assets/i18n-*.js`` so a returning user gets
     //       an instant paint in their last language even when offline,
     //       while the background fetch keeps the chunk fresh.
-    //     - "oce-api"            NetworkFirst for ``/api/v1/*`` GETs
-    //       with a 30s timeout; cache used only as offline fallback for
-    //       idempotent reads.  Mutations (POST/PUT/PATCH/DELETE) bypass
-    //       the cache and surface a network error normally.
+    //     - no "oce-api" lane: ``/api/*`` responses are never runtime-cached
+    //       (G3, Cache.put errors on byte responses).
     //
     // * Navigation fallback points at ``/index.html`` so a refresh from
     //   any deep route while offline still gets the SPA shell back; the
@@ -370,7 +368,8 @@ export default defineConfig({
             // Regional codes carry a hyphen and a country, so the code half
             // has to allow one or this lane silently skips en-US and the
             // four Spanish and Portuguese variants.
-            urlPattern: ({ url }) => /\/assets\/i18n-[a-z]{2,3}(?:-[A-Z]{2})?-.*\.js$/.test(url.pathname),
+            urlPattern: ({ url, sameOrigin }) =>
+              sameOrigin && /\/assets\/i18n-[a-z]{2,3}(?:-[A-Z]{2})?-.*\.js$/.test(url.pathname),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'oce-i18n-locales',
@@ -381,29 +380,11 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          {
-            // API reads — NetworkFirst with 30 s timeout, cache only
-            // used as the offline fallback for idempotent GETs.  Other
-            // verbs bypass the SW (no ``method`` match here means GET
-            // by default).
-            urlPattern: ({ url, request }) => {
-              if (request.method !== 'GET') return false;
-              // A bidder link's token is its credential; never keep it, or
-              // the bill behind it, in a cache on a shared device.
-              if (url.pathname.startsWith('/api/v1/tendering/bid-portal/')) return false;
-              return url.pathname.startsWith('/api/v1/');
-            },
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'oce-api',
-              networkTimeoutSeconds: 30,
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 24 * 60 * 60, // 1 day
-              },
-              cacheableResponse: { statuses: [200] },
-            },
-          },
+          // No runtime lane for /api/*: the service worker never Cache.put
+          // an API response, so byte responses (photos, downloads) are never
+          // cached by the worker and the G3 "Cache.put() encountered a
+          // network error" failures cannot occur. Presigned bucket URLs are
+          // cross-origin and match no lane either.
         ],
       },
     }),

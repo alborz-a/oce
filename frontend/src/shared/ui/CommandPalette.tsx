@@ -41,6 +41,10 @@ import { projectsApi, type Project } from '@/features/projects/api';
 import { boqApi, type BOQ } from '@/features/boq/api';
 import { apiGet } from '@/shared/lib/api';
 import { useModuleStore } from '@/stores/useModuleStore';
+import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
+import { navGroups } from '@/app/layout/navCatalog';
+import { routeBackendOff } from '@/app/layout/routeBackendModules';
+import { useBackendModuleOff } from '@/shared/hooks/useBackendModuleOff';
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
@@ -151,6 +155,11 @@ const PAGE_RESULTS: SearchResult[] = [
   { id: 'action-validate', type: 'page', labelKey: 'command_palette.action_run_validation', description: 'Ctrl+Shift+V', icon: ShieldCheck, path: '/validation' },
   { id: 'action-import-db', type: 'page', labelKey: 'command_palette.action_import_database', icon: Download, path: '/costs/import' },
 ];
+
+/** Routes the sidebar shows only to an admin (`adminOnly` in navCatalog). */
+const ADMIN_ONLY_ROUTES: ReadonlySet<string> = new Set(
+  navGroups.flatMap((g) => g.items).filter((i) => i.adminOnly).map((i) => i.to.split(/[?#]/)[0]!),
+);
 
 /* ── Recent items (stored in localStorage) ─────────────────────────────── */
 
@@ -306,18 +315,32 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   }, [open]);
 
   const { isModuleEnabled } = useModuleStore();
+  // Same permission inputs the sidebar reads (Sidebar.tsx passesRowGates).
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  const userRole = useAuthStore((s) => s.userRole);
+  const isBackendOff = useBackendModuleOff(!restrictedMode);
 
   // Build results
   const results = useMemo(() => {
     const lowerQuery = query.toLowerCase().trim();
     const groups: { title: string; items: SearchResult[] }[] = [];
+    // A route the sidebar would not show to this user is not offered here either.
+    const canSeeRoute = (path: string): boolean => {
+      const bare = path.split(/[?#]/)[0]!;
+      if (restrictedMode && !isRestrictedRouteAllowed(bare)) return false;
+      if (routeBackendOff(bare, isBackendOff)) return false;
+      return userRole === 'admin' || !ADMIN_ONLY_ROUTES.has(bare);
+    };
+    const visibleBoqs = boqs.filter((b) => canSeeRoute(`/boq/${b.id}`));
     // Drop the pages whose module is switched off. Their route is unmounted
     // with the module, so offering them here lands the reader on Not Found.
-    const pages = PAGE_RESULTS.filter((page) => !page.moduleKey || isModuleEnabled(page.moduleKey));
+    const pages = PAGE_RESULTS.filter(
+      (page) => (!page.moduleKey || isModuleEnabled(page.moduleKey)) && canSeeRoute(page.path),
+    );
 
     if (!lowerQuery) {
       // Show recent items when query is empty
-      const recent = loadRecent();
+      const recent = loadRecent().filter((r) => canSeeRoute(r.path));
       if (recent.length > 0) {
         groups.push({
           title: t('command_palette.recent', { defaultValue: 'Recent' }),
@@ -355,10 +378,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       }
 
       // Show recent BOQs (top 5 from API)
-      if (boqs.length > 0) {
+      if (visibleBoqs.length > 0) {
         groups.push({
           title: t('command_palette.boqs', { defaultValue: 'Bills of Quantities' }),
-          items: boqs.slice(0, 5).map(
+          items: visibleBoqs.slice(0, 5).map(
             (b): SearchResult => ({
               id: `boq-${b.id}`,
               type: 'boq',
@@ -414,7 +437,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     }
 
     // Filter BOQs
-    const matchingBoqs = boqs
+    const matchingBoqs = visibleBoqs
       .filter(
         (b) =>
           b.name.toLowerCase().includes(lowerQuery) ||
@@ -468,7 +491,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
     }
 
     return groups;
-  }, [query, projects, boqs, globalResults, t, isModuleEnabled]);
+  }, [query, projects, boqs, globalResults, t, isModuleEnabled, restrictedMode, userRole, isBackendOff]);
 
   // Flat list for keyboard navigation
   const flatResults = useMemo(() => results.flatMap((g) => g.items), [results]);
