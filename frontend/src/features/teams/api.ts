@@ -504,3 +504,37 @@ export async function updateRosterMember(
 export async function removeRosterMember(projectId: string, memberId: string): Promise<void> {
   await apiDelete(`${BASE}/project/${projectId}/roster/${memberId}`);
 }
+
+/* ── Per-role module toggles (rsd-rsc#98) ───────────────────────────────── */
+
+export type RoleModuleKey = 'photos' | 'files' | 'tasks' | 'reports';
+export type ToggleableRole = 'project_manager' | 'member' | 'viewer';
+
+export interface ProjectRoleModulesResponse {
+  project_id: string;
+  modules: RoleModuleKey[];
+  roles: Record<ToggleableRole, Record<RoleModuleKey, boolean>>;
+  disabled_modules: Record<ToggleableRole, RoleModuleKey[]>;
+}
+
+export async function getRoleModules(projectId: string): Promise<ProjectRoleModulesResponse> {
+  return apiGet<ProjectRoleModulesResponse>(
+    `${BASE}/role-modules?project_id=${encodeURIComponent(projectId)}`,
+  );
+}
+
+export async function updateRoleModules(
+  projectId: string,
+  roles: Partial<Record<ToggleableRole, Partial<Record<RoleModuleKey, boolean>>>>,
+): Promise<ProjectRoleModulesResponse> {
+  return apiPut<
+    ProjectRoleModulesResponse,
+    {
+      project_id: string;
+      roles: Partial<Record<ToggleableRole, Partial<Record<RoleModuleKey, boolean>>>>;
+    }
+  >(`${BASE}/role-modules`, {
+    project_id: projectId,
+    roles,
+  });
+}

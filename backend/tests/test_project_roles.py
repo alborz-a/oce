@@ -18,7 +18,7 @@ from app.core.project_roles import (
     require_project_cap,
 )
 
-# 9 canonical capability keys
+# 15 canonical capability keys (9 base + photo + module gates)
 ALL_CAPS = [
     "project.read",
     "project.update",
@@ -27,8 +27,14 @@ ALL_CAPS = [
     "task.work",
     "file.upload",
     "file.modify",
+    "photo.upload",
+    "photo.modify",
     "chat.read",
     "chat.write",
+    "module.photos",
+    "module.files",
+    "module.tasks",
+    "module.reports",
 ]
 
 # Access design table truth matrix: role -> allowed capabilities
@@ -41,19 +47,34 @@ EXPECTED_TABLE: dict[str, set[str]] = {
         "task.work",
         "file.upload",
         "file.modify",
+        "photo.upload",
+        "photo.modify",
         "chat.read",
         "chat.write",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
     "member": {
         "project.read",
         "task.work",
         "file.upload",
+        "photo.upload",
         "chat.read",
         "chat.write",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
     "viewer": {
         "project.read",
         "chat.read",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
 }
 
