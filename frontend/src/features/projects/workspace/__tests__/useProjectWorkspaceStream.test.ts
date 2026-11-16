@@ -495,4 +495,49 @@ describe('useProjectWorkspaceStream hook', () => {
     expect(result.current.error).toBeNull();
     expect(result.current.items.map((i) => i.id)).toEqual(['meeting:mtg-1']);
   });
+
+  it('re-fetches documents when a new message references a document id missing from the loaded snapshot', async () => {
+    mockedApiGet.mockImplementation(async (url: string) => {
+      if (url.includes('/v1/documents/')) return { items: [], total: 0 };
+      return { items: [], entries: [], total: 0 };
+    });
+
+    const firstMessage: ChatMessage = {
+      ...ROOM_MESSAGES[0]!,
+      id: 'msg-missing-1',
+      document_ids: ['doc-unknown-1'],
+    };
+
+    const { result, rerender } = renderHook(
+      (props: { roomMessages: ChatMessage[] }) =>
+        useProjectWorkspaceStream({
+          projectId: 'proj-1',
+          currentUserId: 'u-1',
+          roomMessages: props.roomMessages,
+          tasks: TASKS,
+          members: MEMBERS,
+          filter: DEFAULT_STREAM_FILTERS,
+        }),
+      { initialProps: { roomMessages: [firstMessage] } },
+    );
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    const docCallsCount = (): number =>
+      mockedApiGet.mock.calls.filter((call) => String(call[0]).startsWith('/v1/documents/?')).length;
+    const callsBefore = docCallsCount();
+
+    const newMessage: ChatMessage = {
+      ...ROOM_MESSAGES[0]!,
+      id: 'msg-missing-2',
+      document_ids: ['doc-unknown-2'],
+    };
+    rerender({ roomMessages: [firstMessage, newMessage] });
+
+    await waitFor(() => {
+      expect(docCallsCount()).toBeGreaterThan(callsBefore);
+    });
+  });
 });

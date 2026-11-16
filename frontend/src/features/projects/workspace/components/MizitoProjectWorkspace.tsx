@@ -85,6 +85,8 @@ export function MizitoProjectWorkspace({
       return page.items as unknown as ProjectTaskItem[];
     },
     enabled: !!projectId,
+    refetchInterval: 15_000,
+    refetchOnWindowFocus: true,
   });
 
   const projects: Project[] = useMemo(() => projectsQuery.data ?? [], [projectsQuery.data]);

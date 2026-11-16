@@ -893,6 +893,32 @@ export function useProjectWorkspaceStream({
     void refresh();
   }, [refresh]);
 
+  const lastMissingDocIdsRef = useRef<string>('');
+  useEffect(() => {
+    const knownIds = new Set<string>();
+    for (const photo of sources.photos) {
+      knownIds.add(String(photo.id));
+      if (photo.document_id) knownIds.add(String(photo.document_id));
+    }
+    for (const doc of sources.documents) {
+      knownIds.add(String(doc.id));
+    }
+
+    const missingIds = new Set<string>();
+    for (const msg of roomMessages) {
+      for (const rawId of msg.document_ids ?? []) {
+        const id = String(rawId);
+        if (!knownIds.has(id)) missingIds.add(id);
+      }
+    }
+    if (missingIds.size === 0) return;
+
+    const missingKey = [...missingIds].sort().join(',');
+    if (missingKey === lastMissingDocIdsRef.current) return;
+    lastMissingDocIdsRef.current = missingKey;
+    void refresh();
+  }, [roomMessages, sources, refresh]);
+
   const { allItems, replyCountsByItemId } = useMemo(
     () =>
       buildStreamItems({
