@@ -4,7 +4,7 @@
 
 import re
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -501,3 +501,35 @@ def entity_type_catalogue() -> list[EntityTypeResponse]:
         EntityTypeResponse(key=et.key, label=et.label, module=et.module, enforced=et.key in enforced)
         for et in VISIBILITY_ENTITY_TYPES
     ]
+
+
+# ── Per-role module toggles (rsd-rsc#98) ─────────────────────────────────
+ModuleKey = Literal["photos", "files", "tasks", "reports"]
+ModuleToggleRole = Literal["project_manager", "member", "viewer"]
+
+
+class ProjectRoleModulesResponse(BaseModel):
+    """Per-project per-role module toggle matrix."""
+
+    project_id: UUID
+    modules: list[ModuleKey]
+    roles: dict[ModuleToggleRole, dict[ModuleKey, bool]]
+    disabled_modules: dict[ModuleToggleRole, list[ModuleKey]]
+
+
+class UpdateRoleModulesRequest(BaseModel):
+    """Patch one or more role-module switches on a project."""
+
+    project_id: UUID
+    roles: dict[ModuleToggleRole, dict[ModuleKey, bool]] = Field(min_length=1)
+
+    @field_validator("roles")
+    @classmethod
+    def _validate_non_empty_role_maps(
+        cls,
+        value: dict[ModuleToggleRole, dict[ModuleKey, bool]],
+    ) -> dict[ModuleToggleRole, dict[ModuleKey, bool]]:
+        for role_name, mod_map in value.items():
+            if not mod_map:
+                raise ValueError(f"Role '{role_name}' must specify at least one module toggle")
+        return value

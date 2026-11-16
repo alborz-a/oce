@@ -18,7 +18,7 @@ from app.core.project_roles import (
     require_project_cap,
 )
 
-# 9 canonical capability keys
+# 15 canonical capability keys (9 base + photo + module gates)
 ALL_CAPS = [
     "project.read",
     "project.update",
@@ -27,8 +27,14 @@ ALL_CAPS = [
     "task.work",
     "file.upload",
     "file.modify",
+    "photo.upload",
+    "photo.modify",
     "chat.read",
     "chat.write",
+    "module.photos",
+    "module.files",
+    "module.tasks",
+    "module.reports",
 ]
 
 # Access design table truth matrix: role -> allowed capabilities
@@ -41,19 +47,34 @@ EXPECTED_TABLE: dict[str, set[str]] = {
         "task.work",
         "file.upload",
         "file.modify",
+        "photo.upload",
+        "photo.modify",
         "chat.read",
         "chat.write",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
     "member": {
         "project.read",
         "task.work",
         "file.upload",
+        "photo.upload",
         "chat.read",
         "chat.write",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
     "viewer": {
         "project.read",
         "chat.read",
+        "module.photos",
+        "module.files",
+        "module.tasks",
+        "module.reports",
     },
 }
 
@@ -375,6 +396,24 @@ def api_test_setup():
     @app.get("/api/v1/team-chat/project/{project_id}/", dependencies=[Depends(require_project_cap("chat.read"))])
     async def r_chat_read(project_id: str): return {"cap": "chat.read"}
 
+    @app.get("/api/v1/_caps/photo-upload/", dependencies=[Depends(require_project_cap("photo.upload"))])
+    async def r_photo_upload(project_id: str = Query(...)): return {"cap": "photo.upload"}
+
+    @app.get("/api/v1/_caps/photo-modify/", dependencies=[Depends(require_project_cap("photo.modify"))])
+    async def r_photo_modify(project_id: str = Query(...)): return {"cap": "photo.modify"}
+
+    @app.get("/api/v1/_caps/module-photos/", dependencies=[Depends(require_project_cap("module.photos"))])
+    async def r_module_photos(project_id: str = Query(...)): return {"cap": "module.photos"}
+
+    @app.get("/api/v1/_caps/module-files/", dependencies=[Depends(require_project_cap("module.files"))])
+    async def r_module_files(project_id: str = Query(...)): return {"cap": "module.files"}
+
+    @app.get("/api/v1/_caps/module-tasks/", dependencies=[Depends(require_project_cap("module.tasks"))])
+    async def r_module_tasks(project_id: str = Query(...)): return {"cap": "module.tasks"}
+
+    @app.get("/api/v1/_caps/module-reports/", dependencies=[Depends(require_project_cap("module.reports"))])
+    async def r_module_reports(project_id: str = Query(...)): return {"cap": "module.reports"}
+
     mock_session = AsyncMock()
     proj = MagicMock(spec=Project)
     proj.id = pid
@@ -416,6 +455,12 @@ def api_test_setup():
         "chat.write": ("POST", f"/api/v1/team-chat/rooms/{rid}/messages/"),
         "project.read": ("GET", f"/api/v1/projects/{pid}"),
         "chat.read": ("GET", f"/api/v1/team-chat/project/{pid}/"),
+        "photo.upload": ("GET", f"/api/v1/_caps/photo-upload/?project_id={pid}"),
+        "photo.modify": ("GET", f"/api/v1/_caps/photo-modify/?project_id={pid}"),
+        "module.photos": ("GET", f"/api/v1/_caps/module-photos/?project_id={pid}"),
+        "module.files": ("GET", f"/api/v1/_caps/module-files/?project_id={pid}"),
+        "module.tasks": ("GET", f"/api/v1/_caps/module-tasks/?project_id={pid}"),
+        "module.reports": ("GET", f"/api/v1/_caps/module-reports/?project_id={pid}"),
     }
 
     return app, routes, exec_mock, uid

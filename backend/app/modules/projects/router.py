@@ -2945,6 +2945,13 @@ async def file_manager_tree(
     """
     # IDOR/RBAC: team-readable docs - allow project team members (owner/admin/member), not owner-only
     await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        if "module.files" not in caps and "module.photos" not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="project_capability_required:module.files",
+            )
     nodes = await fm_file_tree(
         session,
         str(project_id),
@@ -3007,6 +3014,15 @@ async def file_manager_list(
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Unknown file kind(s): {', '.join(unknown)}",
+            )
+    if payload and payload.get("role") != "admin":
+        caps = await get_project_caps(session, user_id, project_id)
+        is_photo_only = category == "photo" or wanted == ["photo"]
+        required_cap = "module.photos" if is_photo_only else "module.files"
+        if required_cap not in caps:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"project_capability_required:{required_cap}",
             )
     listing = await fm_list_files(
         session,

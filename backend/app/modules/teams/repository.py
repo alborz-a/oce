@@ -21,7 +21,13 @@ from sqlalchemy.orm.attributes import set_committed_value
 from sqlalchemy.orm.util import identity_key
 from sqlalchemy.sql.elements import ClauseElement
 
-from app.modules.teams.models import EntityVisibility, RosterMember, Team, TeamMembership
+from app.modules.teams.models import (
+    EntityVisibility,
+    ProjectRoleModules,
+    RosterMember,
+    Team,
+    TeamMembership,
+)
 from app.modules.users.models import User
 
 
@@ -570,3 +576,49 @@ class RosterRepository:
             .group_by(RosterMember.team_id)
         )
         return {team_id: int(count) for team_id, count in (await self.session.execute(stmt)).all()}
+
+
+class RoleModulesRepository:
+    """Data access for per-project per-role module toggles."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self.session = session
+
+    async def list_for_project(self, project_id: uuid.UUID) -> list[ProjectRoleModules]:
+        """Return all persisted role-module override rows for ``project_id``."""
+        stmt = select(ProjectRoleModules).where(ProjectRoleModules.project_id == project_id)
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())
+
+    async def get_for_project_role(
+        self,
+        project_id: uuid.UUID,
+        role: str,
+    ) -> ProjectRoleModules | None:
+        """Fetch one ``(project_id, role)`` toggle row if it exists."""
+        stmt = select(ProjectRoleModules).where(
+            ProjectRoleModules.project_id == project_id,
+            ProjectRoleModules.role == role,
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def upsert_role(
+        self,
+        project_id: uuid.UUID,
+        role: str,
+        disabled_modules: list[str],
+    ) -> ProjectRoleModules:
+        """Create or update the ``(project_id, role)`` disabled-module list."""
+        row = await self.get_for_project_role(project_id, role)
+        if row is None:
+            row = ProjectRoleModules(
+                project_id=project_id,
+                role=role,
+                disabled_modules=list(disabled_modules),
+            )
+            self.session.add(row)
+        else:
+            row.disabled_modules = list(disabled_modules)
+        await self.session.flush()
+        return row

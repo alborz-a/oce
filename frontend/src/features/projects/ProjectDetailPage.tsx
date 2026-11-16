@@ -53,6 +53,7 @@ import { DismissibleInfo } from '@/shared/ui/DismissibleInfo';
 import { ProjectLayoutManager } from './ProjectLayoutManager';
 import { isProjectWidgetAvailable } from './projectWidgetRegistry';
 import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
+import { useProjectCaps } from '@/shared/hooks/useProjectCaps';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { MizitoProjectWorkspace } from './workspace/components/MizitoProjectWorkspace';
 import { ProjectStatusBadge, CURATED_PROJECT_STATUSES, useProjectStatusLabel } from './ProjectStatusBadge';
@@ -1442,8 +1443,10 @@ function OceProjectDetailView() {
 
   const [searchParams] = useSearchParams();
   const restrictedMode = useAuthStore((s) => s.restrictedMode);
-  // Restricted project users only get the Photos tab (backend denies the rest).
-  const tabAllowed = (k: string) => !restrictedMode || k === 'photos';
+  const { can: canProjectCap } = useProjectCaps(projectId);
+  // Restricted project users only get the Photos tab when module.photos is enabled.
+  const tabAllowed = (k: string) =>
+    !restrictedMode || (k === 'photos' && canProjectCap('module.photos'));
   const urlTab = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<ProjectTab>(() =>
     urlTab && (PROJECT_TABS as readonly string[]).includes(urlTab) && tabAllowed(urlTab)
@@ -1462,7 +1465,7 @@ function OceProjectDetailView() {
       setActiveTab('photos');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlTab, restrictedMode]);
+  }, [urlTab, restrictedMode, canProjectCap]);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState(INITIAL_PROJECT_EDIT_FORM);
   const [customizing, setCustomizing] = useState(false);

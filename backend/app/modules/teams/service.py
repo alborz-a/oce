@@ -47,6 +47,7 @@ set they have already decided the caller may see.
 import logging
 import uuid
 from dataclasses import dataclass, field
+from typing import cast
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -54,10 +55,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.audit_log import log_activity
 from app.core.demo_privacy import anonymize_email, should_redact
 from app.core.events import event_bus
+from app.core.project_roles import MODULES as TOGGLEABLE_MODULES
+from app.core.project_roles import TOGGLEABLE_ROLES
 from app.modules.teams.entity_types import enforced_entity_type_keys, is_known_entity_type
-from app.modules.teams.models import EntityVisibility, Team, TeamMembership
+from app.modules.teams.models import EntityVisibility, ProjectRoleModules, Team, TeamMembership
 from app.modules.teams.repository import (
     MembershipRepository,
+    RoleModulesRepository,
     RosterRepository,
     TeamRepository,
     VisibilityRepository,
@@ -69,6 +73,9 @@ from app.modules.teams.schemas import (
     AddMemberRequest,
     EntityVisibilityState,
     MembershipResponse,
+    ModuleKey,
+    ModuleToggleRole,
+    ProjectRoleModulesResponse,
     RestrictedEntityRow,
     TeamCreate,
     TeamResponse,
@@ -111,6 +118,7 @@ class TeamService:
         self.membership_repo = MembershipRepository(session)
         self.visibility_repo = VisibilityRepository(session)
         self.roster_repo = RosterRepository(session)
+        self.role_modules_repo = RoleModulesRepository(session)
 
     # ── RBAC helpers ─────────────────────────────────────────────────────
 
@@ -206,22 +214,39 @@ class TeamService:
         we deliberately don't propagate elevation through team-membership to
         avoid infinite-bootstrap of `owner`.
         """
-        from app.modules.projects.repository import ProjectRepository
-        from app.modules.users.repository import UserRepository
+        if await self._is_system_admin(actor_id):
+            return True
 
-        try:
-            user_repo = UserRepository(self.session)
-            user = await user_repo.get_by_id(uuid.UUID(str(actor_id)))
-            if user is not None and getattr(user, "role", "") == "admin":
-                return True
-        except Exception:
-            logger.exception("admin lookup failed during elevated-role check")
+        from app.modules.projects.repository import ProjectRepository
 
         proj_repo = ProjectRepository(self.session)
         project = await proj_repo.get_by_id(project_id)
         if project is None:
             return False
         return str(getattr(project, "owner_id", "")) == str(actor_id)
+
+    async def _is_system_admin(self, actor_id: str | uuid.UUID | None) -> bool:
+        """True iff ``actor_id`` resolves to an active system admin user."""
+        if actor_id is None:
+            return False
+        from app.modules.users.repository import UserRepository
+
+        try:
+            user = await UserRepository(self.session).get_by_id(uuid.UUID(str(actor_id)))
+            return user is not None and getattr(user, "role", "") == "admin"
+        except Exception:
+            logger.exception("admin lookup failed during system-admin check")
+            return False
+
+    async def _assert_system_admin(self, actor_id: str | uuid.UUID | None) -> None:
+        """Gate admin-only configuration operations on system admin role."""
+        if actor_id is None:
+            return
+        if not await self._is_system_admin(actor_id):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only a system admin may configure role module toggles",
+            )
 
     async def resolve_actor(
         self,
@@ -1139,6 +1164,102 @@ class TeamService:
             return None
         owner_id = getattr(project, "owner_id", None)
         return owner_id if isinstance(owner_id, uuid.UUID) else None
+
+    # ── Per-role module toggles (rsd-rsc#98) ─────────────────────────────
+
+    def _build_role_modules_response(
+        self,
+        project_id: uuid.UUID,
+        rows: list[ProjectRoleModules],
+    ) -> ProjectRoleModulesResponse:
+        disabled_by_role: dict[str, set[str]] = {r: set() for r in TOGGLEABLE_ROLES}
+        for row in rows:
+            if row.role in disabled_by_role and isinstance(row.disabled_modules, list):
+                disabled_by_role[row.role] = {m for m in row.disabled_modules if m in TOGGLEABLE_MODULES}
+
+        modules_list = cast(list[ModuleKey], list(TOGGLEABLE_MODULES))
+        roles_map: dict[ModuleToggleRole, dict[ModuleKey, bool]] = {}
+        disabled_map: dict[ModuleToggleRole, list[ModuleKey]] = {}
+        for role_name in TOGGLEABLE_ROLES:
+            role_key = cast(ModuleToggleRole, role_name)
+            disabled_set = disabled_by_role[role_name]
+            roles_map[role_key] = {
+                cast(ModuleKey, mod_name): (mod_name not in disabled_set)
+                for mod_name in TOGGLEABLE_MODULES
+            }
+            disabled_map[role_key] = [
+                cast(ModuleKey, mod_name) for mod_name in TOGGLEABLE_MODULES if mod_name in disabled_set
+            ]
+        return ProjectRoleModulesResponse(
+            project_id=project_id,
+            modules=modules_list,
+            roles=roles_map,
+            disabled_modules=disabled_map,
+        )
+
+    async def get_role_modules(
+        self,
+        project_id: uuid.UUID,
+        *,
+        actor_id: str | uuid.UUID | None = None,
+    ) -> ProjectRoleModulesResponse:
+        """Return per-role module toggles for ``project_id`` (system admin only)."""
+        await self._assert_project_access(project_id, actor_id)
+        await self._assert_system_admin(actor_id)
+        rows = await self.role_modules_repo.list_for_project(project_id)
+        return self._build_role_modules_response(project_id, rows)
+
+    async def update_role_modules(
+        self,
+        project_id: uuid.UUID,
+        updates: dict[str, dict[str, bool]],
+        *,
+        actor_id: str | uuid.UUID | None = None,
+    ) -> ProjectRoleModulesResponse:
+        """Update per-role module toggles on ``project_id`` (system admin only)."""
+        await self._assert_project_access(project_id, actor_id)
+        await self._assert_system_admin(actor_id)
+
+        existing_rows = await self.role_modules_repo.list_for_project(project_id)
+        disabled_by_role: dict[str, set[str]] = {r: set() for r in TOGGLEABLE_ROLES}
+        for row in existing_rows:
+            if row.role in disabled_by_role and isinstance(row.disabled_modules, list):
+                disabled_by_role[row.role] = {m for m in row.disabled_modules if m in TOGGLEABLE_MODULES}
+
+        for role_name, mod_updates in updates.items():
+            if role_name not in disabled_by_role:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                    detail=f"Unsupported role '{role_name}'",
+                )
+            current_disabled = disabled_by_role[role_name]
+            for mod_name, enabled in mod_updates.items():
+                if mod_name not in TOGGLEABLE_MODULES:
+                    raise HTTPException(
+                        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                        detail=f"Unsupported module '{mod_name}'",
+                    )
+                if enabled:
+                    current_disabled.discard(mod_name)
+                else:
+                    current_disabled.add(mod_name)
+            ordered = [m for m in TOGGLEABLE_MODULES if m in current_disabled]
+            await self.role_modules_repo.upsert_role(project_id, role_name, ordered)
+
+        try:
+            await log_activity(
+                self.session,
+                actor_id=actor_id,
+                entity_type="project",
+                entity_id=str(project_id),
+                action="role_modules_updated",
+                metadata={"roles": updates},
+            )
+        except Exception:  # pragma: no cover - best-effort audit
+            logger.exception("audit write failed for role_modules project=%s", project_id)
+
+        refreshed_rows = await self.role_modules_repo.list_for_project(project_id)
+        return self._build_role_modules_response(project_id, refreshed_rows)
 
     # ── Audit + events (best-effort) ─────────────────────────────────────
 
