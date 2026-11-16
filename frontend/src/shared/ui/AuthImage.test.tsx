@@ -13,7 +13,7 @@ import { fireEvent, render, renderHook, screen, waitFor } from '@testing-library
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAuthStore } from '@/stores/useAuthStore';
-import { AuthImage, isAuthAssetUrl, resetAuthImageCache, useAuthedObjectUrl } from './AuthImage';
+import { AuthImage, isAuthAssetUrl, presignTtlMs, resetAuthImageCache, useAuthedObjectUrl } from './AuthImage';
 
 const TOKEN = 'test-token';
 const fetchMock = vi.fn();
@@ -165,5 +165,47 @@ describe('AuthImage', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(String(fetchMock.mock.calls[0]![0])).toBe('/api/v1/documents/photos/9/thumb-url/');
     expect(URL.createObjectURL).not.toHaveBeenCalled();
+  });
+
+  it('calls thumb-url once for two mounts of the same thumb, even after the first unmounted', async () => {
+    const src = '/api/v1/documents/photos/12/thumb/';
+    const direct = 'https://c.parspack.net/b/t.jpg?X-Amz-Expires=3600&X-Amz-Signature=s';
+    fetchMock.mockImplementation(async () => new Response(JSON.stringify({ url: direct }), { status: 200 }));
+    const first = renderHook(() => useAuthedObjectUrl(src));
+    const second = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(first.result.current.url).toBe(direct));
+    await waitFor(() => expect(second.result.current.url).toBe(direct));
+    first.unmount();
+    second.unmount();
+    const third = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(third.result.current.url).toBe(direct));
+    expect(fetchMock.mock.calls.filter((c) => String(c[0]).endsWith('thumb-url/'))).toHaveLength(1);
+  });
+
+  it('does not cache a failed thumb-url call', async () => {
+    const src = '/api/v1/documents/photos/13/thumb/';
+    const direct = 'https://c.parspack.net/b/u.jpg?X-Amz-Expires=3600&X-Amz-Signature=s';
+    let lookups = 0;
+    fetchMock.mockImplementation(async (url: string) => {
+      if (!String(url).endsWith('thumb-url/')) return new Response('no', { status: 500 });
+      lookups += 1;
+      return lookups === 1
+        ? new Response('boom', { status: 500 })
+        : new Response(JSON.stringify({ url: direct }), { status: 200 });
+    });
+    const first = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(first.result.current.failed).toBe(true));
+    first.unmount();
+    const second = renderHook(() => useAuthedObjectUrl(src));
+    await waitFor(() => expect(second.result.current.url).toBe(direct));
+    expect(lookups).toBe(2);
+  });
+
+  it('derives the reuse window from X-Amz-Expires, clamped to 30 s .. 10 min, 2 min when unknown', () => {
+    expect(presignTtlMs('https://x/y?X-Amz-Expires=3600')).toBe(10 * 60_000);
+    expect(presignTtlMs('https://x/y?X-Amz-Expires=20')).toBe(30_000);
+    expect(presignTtlMs('https://x/y?X-Amz-Expires=240')).toBe(120_000);
+    expect(presignTtlMs('https://x/y', 300)).toBe(150_000);
+    expect(presignTtlMs('https://x/y')).toBe(2 * 60_000);
   });
 });
