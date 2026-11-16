@@ -54,6 +54,7 @@ import { ProjectLayoutManager } from './ProjectLayoutManager';
 import { isProjectWidgetAvailable } from './projectWidgetRegistry';
 import { useCanOpenRoute } from '@/shared/lib/canOpenRoute';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
+import { MizitoProjectWorkspace } from './workspace/components/MizitoProjectWorkspace';
 import { ProjectStatusBadge, CURATED_PROJECT_STATUSES, useProjectStatusLabel } from './ProjectStatusBadge';
 import { StatusHistoryTimeline } from './StatusHistoryTimeline';
 import { useProjectDetailLayoutStore } from '@/stores/useProjectDetailLayoutStore';
@@ -1423,7 +1424,7 @@ function ProjectStatusSelect({
   );
 }
 
-export function ProjectDetailPage() {
+function OceProjectDetailView() {
   const { t } = useTranslation();
   const { projectId } = useParams<{ projectId: string }>();
   const navigate = useNavigate();
@@ -3332,5 +3333,59 @@ export function ProjectDetailPage() {
         />
       )}
     </div>
+  );
+}
+
+const OCE_VIEW_STORAGE_KEY = 'oce_project_view_mode';
+
+function readOceViewPreferred(): boolean {
+  try {
+    return window.localStorage.getItem(OCE_VIEW_STORAGE_KEY) === 'oce';
+  } catch {
+    return false;
+  }
+}
+
+function writeOceViewPreferred(oce: boolean): void {
+  try {
+    window.localStorage.setItem(OCE_VIEW_STORAGE_KEY, oce ? 'oce' : 'mizito');
+  } catch {
+    // storage unavailable: preference lasts for this session only
+  }
+}
+
+/**
+ * Default project page = Mizito-style workspace. Admins can flip to the
+ * engineering (OCE) view; everyone else never sees it.
+ */
+export function ProjectDetailPage() {
+  const { projectId } = useParams<{ projectId: string }>();
+  const isSystemAdmin = useIsSystemAdmin();
+  const [oceView, setOceView] = useState<boolean>(readOceViewPreferred);
+
+  const switchView = useCallback((oce: boolean) => {
+    setOceView(oce);
+    writeOceViewPreferred(oce);
+  }, []);
+
+  if (isSystemAdmin && oceView) {
+    return (
+      <>
+        <div dir="rtl" className="flex justify-start px-4 pt-2">
+          <Button variant="secondary" size="sm" onClick={() => switchView(false)}>
+            نمای میزیتو
+          </Button>
+        </div>
+        <OceProjectDetailView />
+      </>
+    );
+  }
+  if (!projectId) return <OceProjectDetailView />;
+  return (
+    <MizitoProjectWorkspace
+      projectId={projectId}
+      canSwitchToEngineering={isSystemAdmin}
+      onSwitchToEngineering={() => switchView(true)}
+    />
   );
 }

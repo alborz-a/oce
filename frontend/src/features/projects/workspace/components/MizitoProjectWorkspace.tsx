@@ -1,0 +1,188 @@
+import { useCallback, useMemo, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { apiGet } from '@/shared/lib/api';
+import { fetchTasks } from '@/features/tasks/api';
+import { projectsApi, type Project } from '@/features/projects/api';
+import { useAuthStore } from '@/stores/useAuthStore';
+import '../workspace.css';
+import { useProjectWorkspaceStats } from '../hooks/useProjectWorkspaceStats';
+import {
+  DEFAULT_STREAM_FILTERS,
+  type ProjectTaskItem,
+  type StreamFilterState,
+  type WorkspaceMember,
+  type WorkspaceTabKey,
+} from '../types';
+import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
+import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
+import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
+import { ProjectGroupTab } from './ProjectGroupTab';
+import { ProjectTasksTab } from './ProjectTasksTab';
+import { ProjectBoardTab } from './ProjectBoardTab';
+import { ProjectCalendarTab } from './ProjectCalendarTab';
+import { ProjectGanttTab } from './ProjectGanttTab';
+
+export interface MizitoProjectWorkspaceProps {
+  projectId: string;
+  canSwitchToEngineering?: boolean;
+  onSwitchToEngineering?: () => void;
+}
+
+export function MizitoProjectWorkspace({
+  projectId,
+  canSwitchToEngineering = false,
+  onSwitchToEngineering,
+}: MizitoProjectWorkspaceProps) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const userId = useAuthStore((s) => s.userId) ?? '';
+  const userFullName = useAuthStore((s) => s.userFullName);
+  const userRole = useAuthStore((s) => s.userRole);
+  const userEmail = useAuthStore((s) => s.userEmail);
+
+  const [activeTab, setActiveTab] = useState<WorkspaceTabKey>('group');
+  const [filters, setFilters] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
+
+  const projectsQuery = useQuery({
+    queryKey: ['projects', 'workspace-switcher'],
+    queryFn: () => projectsApi.list(),
+  });
+  const projectQuery = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: () => projectsApi.get(projectId),
+    enabled: !!projectId,
+  });
+  const membersQuery = useQuery({
+    queryKey: ['project-members', projectId],
+    queryFn: () => apiGet<WorkspaceMember[]>(`/v1/projects/${projectId}/members/`),
+    enabled: !!projectId,
+  });
+  const tasksQuery = useQuery({
+    queryKey: ['project-workspace-tasks', projectId],
+    queryFn: async () => {
+      const page = await fetchTasks({ project_id: projectId });
+      return page.items as unknown as ProjectTaskItem[];
+    },
+    enabled: !!projectId,
+  });
+
+  const projects: Project[] = useMemo(() => projectsQuery.data ?? [], [projectsQuery.data]);
+  const members: WorkspaceMember[] = useMemo(() => membersQuery.data ?? [], [membersQuery.data]);
+  const tasks: ProjectTaskItem[] = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
+  const project: Project | undefined =
+    projectQuery.data ?? projects.find((p) => p.id === projectId);
+
+  const stats = useProjectWorkspaceStats(tasks, userId);
+  const pins = usePinnedProjects(userId, projects);
+
+  const onTasksChanged = useCallback(() => {
+    void queryClient.invalidateQueries({ queryKey: ['project-workspace-tasks', projectId] });
+  }, [queryClient, projectId]);
+
+  const selectProject = useCallback(
+    (id: string) => {
+      setSwitcherOpen(false);
+      navigate(`/projects/${id}`);
+    },
+    [navigate],
+  );
+
+  const canManage = userRole === 'admin' || userRole === 'manager' || userRole === 'project_manager';
+  const currentUser = useMemo(
+    () => ({ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }),
+    [userId, userFullName, userEmail],
+  );
+
+  return (
+    <div className="mizito-workspace-light" dir="rtl" data-testid="mizito-workspace">
+      <ProjectGroupSwitcherSidebar
+        projects={projects}
+        activeProjectId={projectId}
+        onSelectProject={selectProject}
+        currentUserId={userId}
+        members={members}
+        tasks={tasks}
+        mobileOpen={switcherOpen}
+        onMobileClose={() => setSwitcherOpen(false)}
+        pinnedProjectIds={pins.pinnedIds}
+        onTogglePin={pins.togglePin}
+      />
+
+      {project ? (
+        <ProjectRightSummaryPanel
+          project={project}
+          stats={stats}
+          members={members}
+          currentUserId={userId}
+          canManageMembers={canManage}
+          canOpenSettings={canManage}
+          isPinned={pins.pinnedIds.includes(projectId)}
+          onTogglePin={() => pins.togglePin(projectId)}
+          onBack={() => navigate('/projects')}
+          onOpenSettings={() => navigate(`/projects/${projectId}/settings`)}
+          onBoardClick={(key) => {
+            setFocusedBoardKey(key);
+            setActiveTab('board');
+          }}
+          mobileOpen={summaryOpen}
+          onMobileClose={() => setSummaryOpen(false)}
+        />
+      ) : (
+        <aside className="mz-summary-col" aria-busy="true" />
+      )}
+
+      <main className="mz-main-canvas">
+        <MizitoTopTabAndFilterBar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          filters={filters}
+          onFiltersChange={setFilters}
+          canSwitchToEngineering={canSwitchToEngineering}
+          onSwitchToEngineering={onSwitchToEngineering}
+          onOpenMobileSwitcher={() => setSwitcherOpen(true)}
+          onOpenMobileSummary={() => setSummaryOpen(true)}
+        />
+        {activeTab === 'group' && (
+          <ProjectGroupTab
+            projectId={projectId}
+            currentUserId={userId}
+            currentUser={currentUser}
+            tasks={tasks}
+            members={members}
+            onTasksChanged={onTasksChanged}
+            filter={filters}
+            onFilterChange={setFilters}
+            showFilterBar={false}
+          />
+        )}
+        {activeTab === 'tasks' && (
+          <ProjectTasksTab
+            projectId={projectId}
+            tasks={tasks}
+            members={members}
+            onTasksChanged={onTasksChanged}
+          />
+        )}
+        {activeTab === 'board' && (
+          <ProjectBoardTab
+            projectId={projectId}
+            tasks={tasks}
+            members={members}
+            focusedBoardKey={focusedBoardKey}
+            onTasksChanged={onTasksChanged}
+          />
+        )}
+        {activeTab === 'calendar' && (
+          <ProjectCalendarTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+        )}
+        {activeTab === 'gantt' && (
+          <ProjectGanttTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+        )}
+      </main>
+    </div>
+  );
+}
