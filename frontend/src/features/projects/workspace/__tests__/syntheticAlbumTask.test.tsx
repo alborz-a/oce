@@ -78,6 +78,16 @@ describe('isSyntheticAlbumTask', () => {
     expect(isSyntheticAlbumTask({ title: `  ${ALBUM_SPACE}  ` })).toBe(true);
   });
 
+  it('matches the Arabic yeh/kaf spelling (ي, ك) with a date suffix', () => {
+    const arabic = 'تعيين موضوع عكس ها — 1405/07/15';
+    expect(isSyntheticAlbumTask({ title: arabic })).toBe(true);
+  });
+
+  it('matches Arabic yeh/kaf mixed with ZWNJ', () => {
+    const arabic = `تعيين موضوع عكس${ZWNJ}ها — 1405/07/15`;
+    expect(isSyntheticAlbumTask({ title: arabic })).toBe(true);
+  });
+
   it('does not match a real task starting with تعیین موضوع', () => {
     expect(isSyntheticAlbumTask({ title: REAL_TASK })).toBe(false);
   });
