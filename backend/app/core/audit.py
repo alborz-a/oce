@@ -52,6 +52,7 @@ async def audit_log(
     user_id: str | None = None,
     ip_address: str | None = None,
     details: dict | None = None,
+    parent_entity_id: str | None = None,
 ) -> AuditEntry:
     """Write a single audit log entry.
 
@@ -64,6 +65,9 @@ async def audit_log(
         user_id: UUID of the user who performed the action (optional).
         ip_address: Client IP address (optional).
         details: Arbitrary JSON context - old/new values, extra info.
+        parent_entity_id: Umbrella entity (e.g. project id) the activity-log row
+                is rolled up to (optional). Forwarded to ``log_activity``; the
+                legacy audit row is unaffected.
 
     Returns:
         The persisted ``AuditEntry`` instance.
@@ -105,6 +109,7 @@ async def audit_log(
             metadata=details or {},
             module="audit_legacy_shim",
             ip_address=ip_address,
+            parent_entity_id=parent_entity_id,
         )
     except Exception:  # pragma: no cover - defensive, see docstring
         logger.exception(

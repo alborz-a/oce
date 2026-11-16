@@ -65,36 +65,49 @@ async def _user(client: AsyncClient, role: str = "manager") -> tuple[dict[str, s
     return {"Authorization": f"Bearer {login.json()['access_token']}"}, str(user_id)
 
 
-async def _contact(client: AsyncClient, headers: dict[str, str], first_name: str, user_id: str | None = None) -> str:
+async def _contact(client: AsyncClient, owner_id: str, first_name: str, user_id: str | None = None) -> str:
+    # Restricted mode blocks contact creation for non-admin users. An admin creates the
+    # row, then created_by is set to the owner so the tenant check treats it as the owner's contact.
     from sqlalchemy import update
 
     from app.database import async_session_factory
     from app.modules.contacts.models import Contact
 
+    admin, _ = await _user(client, role="admin")
     resp = await client.post(
         "/api/v1/contacts/",
         json={"contact_type": "subcontractor", "first_name": first_name, "company_name": f"{first_name} Ltd"},
-        headers=headers,
+        headers=admin,
     )
     assert resp.status_code in (200, 201), resp.text
     contact_id = resp.json()["id"]
+    values: dict[str, object] = {"created_by": owner_id}
     if user_id is not None:
-        async with async_session_factory() as s:
-            await s.execute(
-                update(Contact).where(Contact.id == uuid.UUID(contact_id)).values(user_id=uuid.UUID(user_id))
-            )
-            await s.commit()
+        values["user_id"] = uuid.UUID(user_id)
+    async with async_session_factory() as s:
+        await s.execute(update(Contact).where(Contact.id == uuid.UUID(contact_id)).values(**values))
+        await s.commit()
     return contact_id
 
 
-async def _project(client: AsyncClient, headers: dict[str, str]) -> str:
+async def _project(client: AsyncClient, manager_id: str) -> str:
+    # Restricted mode blocks project creation for every non-admin user, so an admin
+    # creates the project and adds the manager as project_manager (task.manage is needed for PATCH).
+    admin, _ = await _user(client, role="admin")
     resp = await client.post(
         "/api/v1/projects/",
         json={"name": f"Tasks {uuid.uuid4().hex[:6]}", "description": "assignee", "currency": "EUR"},
-        headers=headers,
+        headers=admin,
     )
     assert resp.status_code == 201, resp.text
-    return resp.json()["id"]
+    project_id = resp.json()["id"]
+    added = await client.post(
+        f"/api/v1/projects/{project_id}/members/",
+        json={"user_id": manager_id, "role": "project_manager"},
+        headers=admin,
+    )
+    assert added.status_code in (200, 201), added.text
+    return project_id
 
 
 async def _task(client: AsyncClient, headers: dict[str, str], project_id: str, **body: object):
@@ -107,10 +120,10 @@ async def _task(client: AsyncClient, headers: dict[str, str], project_id: str, *
 
 @pytest.mark.asyncio
 async def test_a_contact_linked_to_a_user_assigns_that_user(http_client):
-    owner, _owner_id = await _user(http_client)
+    owner, owner_id = await _user(http_client)
     colleague, colleague_id = await _user(http_client, role="editor")
-    project_id = await _project(http_client, owner)
-    contact_id = await _contact(http_client, owner, "Ana", user_id=colleague_id)
+    project_id = await _project(http_client, owner_id)
+    contact_id = await _contact(http_client, owner_id, "Ana", user_id=colleague_id)
 
     created = await _task(http_client, owner, project_id, assignee_contact_id=contact_id)
     assert created.status_code == 201, created.text
@@ -127,8 +140,8 @@ async def test_a_contact_linked_to_a_user_assigns_that_user(http_client):
 @pytest.mark.asyncio
 async def test_a_contact_without_a_user_is_kept_by_name_and_can_be_changed(http_client):
     owner, owner_id = await _user(http_client)
-    project_id = await _project(http_client, owner)
-    plain = await _contact(http_client, owner, "Bruno")
+    project_id = await _project(http_client, owner_id)
+    plain = await _contact(http_client, owner_id, "Bruno")
 
     created = await _task(http_client, owner, project_id, assignee_contact_id=plain)
     assert created.status_code == 201, created.text
@@ -161,10 +174,10 @@ async def test_a_contact_without_a_user_is_kept_by_name_and_can_be_changed(http_
 
 @pytest.mark.asyncio
 async def test_a_foreign_or_missing_contact_is_refused(http_client):
-    owner, _ = await _user(http_client)
-    stranger, _ = await _user(http_client)
-    project_id = await _project(http_client, owner)
-    foreign = await _contact(http_client, stranger, "Carla")
+    owner, owner_id = await _user(http_client)
+    stranger, stranger_id = await _user(http_client)
+    project_id = await _project(http_client, owner_id)
+    foreign = await _contact(http_client, stranger_id, "Carla")
 
     for contact_id in (foreign, str(uuid.uuid4())):
         resp = await _task(http_client, owner, project_id, assignee_contact_id=contact_id)

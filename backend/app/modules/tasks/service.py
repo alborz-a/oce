@@ -41,6 +41,7 @@ async def _safe_audit(
     entity_id: str | None = None,
     user_id: str | None = None,
     details: dict | None = None,
+    parent_entity_id: str | None = None,
 ) -> None:
     """Best-effort audit log - never blocks the caller on failure."""
     try:
@@ -53,6 +54,7 @@ async def _safe_audit(
             entity_id=entity_id,
             user_id=user_id,
             details=details,
+            parent_entity_id=parent_entity_id,
         )
     except Exception:
         _logger_audit.debug("Audit log write skipped for %s %s", action, entity_type)
@@ -140,6 +142,9 @@ class TaskService:
         )
         task = await self.repo.create(task)
 
+        # Project feed row: only for public tasks. A private task must not write a
+        # project-scoped row, otherwise its title would leak to members who cannot see it.
+        feed_project_id = str(data.project_id) if data.project_id and not task.is_private else None
         await _safe_audit(
             self.session,
             action="create",
@@ -148,9 +153,12 @@ class TaskService:
             user_id=user_id,
             details={
                 "title": data.title[:100],
+                "task_title": data.title[:100],
                 "project_id": str(data.project_id),
                 "task_type": data.task_type,
+                "responsible_id": str(responsible_id) if responsible_id else None,
             },
+            parent_entity_id=feed_project_id,
         )
 
         logger.info("Task created: %s (%s) for project %s", task.title[:40], data.task_type, data.project_id)

@@ -39,6 +39,8 @@ class ProjectMemberResponse(BaseModel):
     created_at: datetime | None = None
     # API path of the profile picture (users/{id}/avatar), None when the user has no picture.
     avatar_url: str | None = None
+    # False when the user account is deactivated; the list is not filtered server-side.
+    is_active: bool = True
 
 
 class AddProjectMemberRequest(BaseModel):
