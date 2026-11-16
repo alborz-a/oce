@@ -7,6 +7,7 @@ import { projectsApi, type Project } from '@/features/projects/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import '../workspace.css';
 import { useProjectWorkspaceStats } from '../hooks/useProjectWorkspaceStats';
+import { isSyntheticAlbumTask } from '../syntheticAlbumTask';
 import {
   DEFAULT_STREAM_FILTERS,
   type ProjectTaskItem,
@@ -24,6 +25,7 @@ import { ProjectTasksTab } from './ProjectTasksTab';
 import { ProjectBoardTab } from './ProjectBoardTab';
 import { ProjectCalendarTab } from './ProjectCalendarTab';
 import { ProjectGanttTab } from './ProjectGanttTab';
+import { TaskQuickDetailDialog } from './TaskQuickDetailDialog';
 
 export interface MizitoProjectWorkspaceProps {
   projectId: string;
@@ -63,6 +65,7 @@ export function MizitoProjectWorkspace({
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -91,7 +94,11 @@ export function MizitoProjectWorkspace({
 
   const projects: Project[] = useMemo(() => projectsQuery.data ?? [], [projectsQuery.data]);
   const members: WorkspaceMember[] = useMemo(() => membersQuery.data ?? [], [membersQuery.data]);
-  const tasks: ProjectTaskItem[] = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
+  const allTasks: ProjectTaskItem[] = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
+  const tasks: ProjectTaskItem[] = useMemo(
+    () => allTasks.filter((t) => !isSyntheticAlbumTask(t)),
+    [allTasks],
+  );
   const project: Project | undefined =
     projectQuery.data ?? projects.find((p) => p.id === projectId);
 
@@ -190,6 +197,7 @@ export function MizitoProjectWorkspace({
             tasks={tasks}
             members={members}
             onTasksChanged={onTasksChanged}
+            onSelectTask={setSelectedTask}
           />
         )}
         {activeTab === 'board' && (
@@ -199,15 +207,37 @@ export function MizitoProjectWorkspace({
             members={members}
             focusedBoardKey={focusedBoardKey}
             onTasksChanged={onTasksChanged}
+            onSelectTask={setSelectedTask}
           />
         )}
         {activeTab === 'calendar' && (
-          <ProjectCalendarTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+          <ProjectCalendarTab
+            projectId={projectId}
+            tasks={tasks}
+            projectName={project?.name}
+            onSelectTask={setSelectedTask}
+          />
         )}
         {activeTab === 'gantt' && (
-          <ProjectGanttTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+          <ProjectGanttTab
+            projectId={projectId}
+            tasks={tasks}
+            projectName={project?.name}
+            onSelectTask={setSelectedTask}
+          />
         )}
       </main>
+
+      <TaskQuickDetailDialog
+        projectId={projectId}
+        task={selectedTask}
+        open={selectedTask !== null}
+        members={members}
+        onClose={() => setSelectedTask(null)}
+        onUpdated={() => {
+          onTasksChanged();
+        }}
+      />
     </div>
   );
 }
