@@ -24,6 +24,7 @@ import { ProjectTasksTab } from './ProjectTasksTab';
 import { ProjectBoardTab } from './ProjectBoardTab';
 import { ProjectCalendarTab } from './ProjectCalendarTab';
 import { ProjectGanttTab } from './ProjectGanttTab';
+import { TaskQuickDetailDialog } from './TaskQuickDetailDialog';
 
 export interface MizitoProjectWorkspaceProps {
   projectId: string;
@@ -63,6 +64,7 @@ export function MizitoProjectWorkspace({
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
+  const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -190,6 +192,7 @@ export function MizitoProjectWorkspace({
             tasks={tasks}
             members={members}
             onTasksChanged={onTasksChanged}
+            onSelectTask={setSelectedTask}
           />
         )}
         {activeTab === 'board' && (
@@ -199,15 +202,37 @@ export function MizitoProjectWorkspace({
             members={members}
             focusedBoardKey={focusedBoardKey}
             onTasksChanged={onTasksChanged}
+            onSelectTask={setSelectedTask}
           />
         )}
         {activeTab === 'calendar' && (
-          <ProjectCalendarTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+          <ProjectCalendarTab
+            projectId={projectId}
+            tasks={tasks}
+            projectName={project?.name}
+            onSelectTask={setSelectedTask}
+          />
         )}
         {activeTab === 'gantt' && (
-          <ProjectGanttTab projectId={projectId} tasks={tasks} projectName={project?.name} />
+          <ProjectGanttTab
+            projectId={projectId}
+            tasks={tasks}
+            projectName={project?.name}
+            onSelectTask={setSelectedTask}
+          />
         )}
       </main>
+
+      <TaskQuickDetailDialog
+        projectId={projectId}
+        task={selectedTask}
+        open={selectedTask !== null}
+        members={members}
+        onClose={() => setSelectedTask(null)}
+        onUpdated={() => {
+          onTasksChanged();
+        }}
+      />
     </div>
   );
 }
