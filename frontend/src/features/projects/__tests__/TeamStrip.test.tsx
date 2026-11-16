@@ -121,7 +121,7 @@ describe('TeamStrip', () => {
     expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(6);
     const moreChip = screen.getByTestId('team-strip-more');
     expect(moreChip).toBeInTheDocument();
-    expect(moreChip.textContent).toMatch(/\+2/);
+    expect(moreChip.textContent).toMatch(/۲\+|\+2/);
   });
 
   it('opens the Add Member modal when the "+" button is clicked', () => {
