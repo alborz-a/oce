@@ -34,8 +34,9 @@ describe('fetchAllTasks', () => {
     expect(apiGet).toHaveBeenCalledTimes(3);
     expect(apiGet.mock.calls.map(([url]) => offsetOf(String(url)))).toEqual([0, 500, 1000]);
     expect(result).toHaveLength(1147);
-    expect(String(apiGet.mock.calls[0][0])).toContain('project_id=p-1');
-    expect(String(apiGet.mock.calls[0][0])).toContain('limit=500');
+    const firstUrl = String(apiGet.mock.calls[0]?.[0] ?? '');
+    expect(firstUrl).toContain('project_id=p-1');
+    expect(firstUrl).toContain('limit=500');
   });
 
   it('stops after the first page when total is already reached', async () => {
