@@ -43,6 +43,8 @@ const TASKS: ProjectTaskItem[] = [
     project_id: 'proj-1',
     title: 'آرماتوربندی فونداسیون',
     status: 'in_progress',
+    created_at: '2026-03-01T08:00:00Z',
+    updated_at: '2026-03-01T08:00:00Z',
     metadata: {
       mizito_history: [
         {

@@ -14,7 +14,7 @@ const spies = vi.hoisted(() => ({
 
 vi.mock('@/shared/lib/api', async () => {
   const actual = await vi.importActual<typeof import('@/shared/lib/api')>('@/shared/lib/api');
-  return { ...actual, apiGet: (...args: unknown[]) => spies.apiGet(...args) };
+  return { ...actual, apiGet: (url: unknown) => spies.apiGet(url) };
 });
 
 vi.mock('@/features/file-saved-views/api', async () => {
