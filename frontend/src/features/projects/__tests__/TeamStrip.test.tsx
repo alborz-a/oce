@@ -142,4 +142,21 @@ describe('TeamStrip', () => {
     // Avatars still render in read-only mode.
     expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(2);
   });
+
+  it('follows the live initialMembers prop after an empty first render', () => {
+    const qc = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    const ui = (members: ProjectMember[]) => (
+      <QueryClientProvider client={qc}>
+        <TeamStrip projectId="proj-test-1" canManage initialMembers={members} />
+      </QueryClientProvider>
+    );
+    const { rerender } = render(ui([]));
+    expect(screen.getByTestId('team-strip-empty')).toBeInTheDocument();
+
+    rerender(ui([0, 1, 2].map(makeMember)));
+    expect(screen.queryByTestId('team-strip-empty')).toBeNull();
+    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(3);
+  });
 });
