@@ -4,6 +4,7 @@ import {
   CalendarPlus,
   CheckSquare,
   FileUp,
+  LayoutGrid,
   Paperclip,
   Send,
   Smile,
@@ -152,6 +153,9 @@ function buildQuotedEntityFromItem(item: StreamItem): StreamQuotedEntity | null 
   };
 }
 
+const MOBILE_MENU_ITEM_CLASS =
+  'flex w-full items-center gap-2 rounded px-2 py-1.5 text-start text-[12px] text-[#374151] hover:bg-[#f5f6f8] disabled:opacity-50';
+
 export function ProjectStreamComposer({
   projectId,
   currentUser,
@@ -173,6 +177,8 @@ export function ProjectStreamComposer({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const taskDialogRef = useRef<HTMLDialogElement>(null);
   const minutesDialogRef = useRef<HTMLDialogElement>(null);
+  const emojiTriggerRef = useRef<HTMLButtonElement>(null);
+  const mentionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [text, setText] = useState('');
   const [mentions, setMentions] = useState<string[]>([]);
@@ -182,6 +188,7 @@ export function ProjectStreamComposer({
   const [dragActive, setDragActive] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [fallbackPopover, setFallbackPopover] = useState<'mention' | 'emoji' | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Quick Task Dialog state
   const [taskModalOpen, setTaskModalOpen] = useState(false);
@@ -465,7 +472,7 @@ export function ProjectStreamComposer({
 
           <div className="relative flex shrink-0 items-center gap-0.5">
             {/* Quick Task & Minutes pills (.project-buttons) */}
-            <div className="project-buttons hidden sm:inline-flex me-1">
+            <div className="project-buttons hidden md:inline-flex me-1">
               <button
                 type="button"
                 onClick={() => setTaskModalOpen(true)}
@@ -482,10 +489,99 @@ export function ProjectStreamComposer({
               </button>
             </div>
 
+            {/* Mobile (< md): one 9-dot menu holding the secondary composer buttons */}
+            <div className="relative md:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((v) => !v)}
+                aria-label="دکمه‌های بیشتر"
+                aria-expanded={mobileMenuOpen}
+                data-testid="composer-mobile-menu-btn"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
+              >
+                <LayoutGrid size={16} />
+              </button>
+              {mobileMenuOpen && (
+                <div
+                  role="menu"
+                  data-testid="composer-mobile-menu"
+                  className="absolute bottom-9 end-0 z-20 flex w-44 flex-col gap-0.5 rounded-lg border border-[#e5e7eb] bg-white p-1.5 shadow-lg"
+                >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-testid="composer-menu-emoji"
+                    className={MOBILE_MENU_ITEM_CLASS}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      emojiTriggerRef.current?.click();
+                    }}
+                  >
+                    <Smile size={14} className="shrink-0" />
+                    <span>افزودن ایموجی</span>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-testid="composer-menu-mention"
+                    className={MOBILE_MENU_ITEM_CLASS}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      mentionTriggerRef.current?.click();
+                    }}
+                  >
+                    <AtSign size={14} className="shrink-0" />
+                    <span>منشن همکار یا وظیفه</span>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-testid="composer-menu-attach"
+                    disabled={uploading}
+                    className={MOBILE_MENU_ITEM_CLASS}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    <Paperclip size={14} className="shrink-0" />
+                    <span>پیوست عکس یا فایل</span>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-testid="composer-menu-task"
+                    className={MOBILE_MENU_ITEM_CLASS}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setTaskModalOpen(true);
+                    }}
+                  >
+                    <CheckSquare size={14} className="shrink-0" />
+                    <span>+ وظیفه</span>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    data-testid="composer-menu-minutes"
+                    className={MOBILE_MENU_ITEM_CLASS}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setMinutesModalOpen(true);
+                    }}
+                  >
+                    <CalendarPlus size={14} className="shrink-0" />
+                    <span>+ صورتجلسه</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Emoji popover trigger */}
             <button
               type="button"
               ref={(el) => {
+                emojiTriggerRef.current = el;
                 if (el) el.setAttribute('popovertarget', emojiPopoverId);
               }}
               onClick={() => {
@@ -495,7 +591,7 @@ export function ProjectStreamComposer({
               }}
               aria-label="افزودن ایموجی"
               data-testid="composer-emoji-btn"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
+              className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
             >
               <Smile size={16} />
             </button>
@@ -527,6 +623,7 @@ export function ProjectStreamComposer({
             <button
               type="button"
               ref={(el) => {
+                mentionTriggerRef.current = el;
                 if (el) el.setAttribute('popovertarget', mentionPopoverId);
               }}
               onClick={() => {
@@ -536,7 +633,7 @@ export function ProjectStreamComposer({
               }}
               aria-label="منشن همکار یا وظیفه"
               data-testid="composer-mention-btn"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
+              className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
             >
               <AtSign size={16} />
             </button>
@@ -598,7 +695,7 @@ export function ProjectStreamComposer({
               disabled={uploading}
               aria-label="پیوست عکس یا فایل"
               data-testid="composer-attach-btn"
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab] disabled:opacity-50"
+              className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab] disabled:opacity-50"
             >
               {uploading ? <FileUp size={16} /> : <Paperclip size={16} />}
             </button>
@@ -612,7 +709,7 @@ export function ProjectStreamComposer({
               data-testid="composer-send-btn"
               className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#3078ab] text-white hover:brightness-95 disabled:bg-[#d5d8dc] disabled:text-[#909090]"
             >
-              <Send size={14} />
+              <Send size={14} className="rtl:-scale-x-100" />
             </button>
           </div>
         </div>
