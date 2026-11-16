@@ -32,7 +32,7 @@ from fastapi.responses import StreamingResponse
 
 from app.core.bulk_ops import BulkAssignRequest, BulkDeleteRequest, BulkStatusRequest
 from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermission, SessionDep, verify_project_access
-from app.core.project_roles import get_project_caps
+from app.core.project_roles import get_project_caps, is_project_member
 from app.modules.tasks.models import is_task_assignee
 from app.modules.tasks.schemas import (
     TaskBimLinkRequest,
@@ -267,11 +267,18 @@ async def create_task(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:module.tasks",
             )
-        if "task.manage" not in caps:
+        if "task.create" not in caps:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="project_capability_required:task.manage",
+                detail="project_capability_required:task.create",
             )
+        # Members without task.manage may assign only to project members.
+        if data.responsible_id and "task.manage" not in caps:
+            if not await is_project_member(session, data.project_id, data.responsible_id):
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="assignee_not_project_member",
+                )
     task = await service.create_task(data, user_id=user_id)
     return await _to_response_resolved(task, service)
 

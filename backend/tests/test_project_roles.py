@@ -15,6 +15,7 @@ from app.core.project_roles import (
     LEGACY,
     get_project_caps,
     get_project_role,
+    is_project_member,
     require_project_cap,
 )
 
@@ -23,6 +24,7 @@ ALL_CAPS = [
     "project.read",
     "project.update",
     "members.manage",
+    "task.create",
     "task.manage",
     "task.work",
     "file.upload",
@@ -43,6 +45,7 @@ EXPECTED_TABLE: dict[str, set[str]] = {
         "project.read",
         "project.update",
         "members.manage",
+        "task.create",
         "task.manage",
         "task.work",
         "file.upload",
@@ -58,6 +61,7 @@ EXPECTED_TABLE: dict[str, set[str]] = {
     },
     "member": {
         "project.read",
+        "task.create",
         "task.work",
         "file.upload",
         "photo.upload",
@@ -375,8 +379,11 @@ def api_test_setup():
     @app.post("/api/v1/projects/{project_id}/members", dependencies=[Depends(require_project_cap("members.manage"))])
     async def r_members_manage(project_id: str): return {"cap": "members.manage"}
 
-    @app.post("/api/v1/tasks/", dependencies=[Depends(require_project_cap("task.manage"))])
-    async def r_task_manage(project_id: str = Query(...)): return {"cap": "task.manage"}
+    @app.post("/api/v1/tasks/", dependencies=[Depends(require_project_cap("task.create"))])
+    async def r_task_create(project_id: str = Query(...)): return {"cap": "task.create"}
+
+    @app.patch("/api/v1/tasks/{task_id}", dependencies=[Depends(require_project_cap("task.manage"))])
+    async def r_task_manage(task_id: str): return {"cap": "task.manage"}
 
     @app.post("/api/v1/tasks/{task_id}/complete/", dependencies=[Depends(require_project_cap("task.work"))])
     async def r_task_work(task_id: str): return {"cap": "task.work"}
@@ -448,7 +455,8 @@ def api_test_setup():
     routes = {
         "project.update": ("PATCH", f"/api/v1/projects/{pid}"),
         "members.manage": ("POST", f"/api/v1/projects/{pid}/members"),
-        "task.manage": ("POST", f"/api/v1/tasks/?project_id={pid}"),
+        "task.create": ("POST", f"/api/v1/tasks/?project_id={pid}"),
+        "task.manage": ("PATCH", f"/api/v1/tasks/{tid}"),
         "task.work": ("POST", f"/api/v1/tasks/{tid}/complete/"),
         "file.upload": ("POST", f"/api/v1/documents/photos/upload/?project_id={pid}"),
         "file.modify": ("PATCH", f"/api/v1/documents/photos/{phid}"),
@@ -524,3 +532,124 @@ async def test_api_non_member_returns_404(api_test_setup, cap: str):
         resp = await client.request(method, url)
         assert resp.status_code == 404, f"cap={cap} status={resp.status_code} body={resp.text}"
         assert resp.json()["detail"] == "Project not found"
+
+
+# --- task.create: members create tasks; assignee must be a project member ---
+
+
+def test_member_has_task_create_but_not_task_manage():
+    assert "task.create" in CAPS["member"]
+    assert "task.manage" not in CAPS["member"]
+
+
+def test_viewer_has_neither_task_create_nor_task_manage():
+    assert "task.create" not in CAPS["viewer"]
+    assert "task.manage" not in CAPS["viewer"]
+
+
+def test_task_create_removed_with_tasks_module():
+    from app.core.project_roles import _strip_disabled_modules
+
+    stripped = _strip_disabled_modules(CAPS["member"], frozenset({"tasks"}))
+    assert "task.create" not in stripped
+    assert "task.work" not in stripped
+
+
+def _membership_session(project, membership_row):
+    session = AsyncMock()
+    session.get.return_value = project
+    result = MagicMock()
+    result.scalar_one_or_none.return_value = membership_row
+    session.execute.return_value = result
+    return session
+
+
+@pytest.mark.asyncio
+async def test_is_project_member_owner_and_team_member_true():
+    owner = uuid.uuid4()
+    proj = _project(owner_id=owner)
+    assert await is_project_member(_membership_session(proj, None), proj.id, owner) is True
+
+    member = uuid.uuid4()
+    assert await is_project_member(_membership_session(proj, member), proj.id, member) is True
+
+
+@pytest.mark.asyncio
+async def test_is_project_member_outsider_and_missing_project_false():
+    proj = _project()
+    outsider = uuid.uuid4()
+    assert await is_project_member(_membership_session(proj, None), proj.id, outsider) is False
+    assert await is_project_member(_membership_session(None, None), uuid.uuid4(), outsider) is False
+
+
+async def _create_task_as(monkeypatch, caps, is_member, responsible_id, payload_role="editor"):
+    """Call tasks create_task directly with patched project helpers."""
+    import app.modules.tasks.router as tr
+    from app.modules.tasks.schemas import TaskCreate
+
+    project_id = uuid.uuid4()
+    actor = uuid.uuid4()
+    member_mock = AsyncMock(return_value=is_member)
+    service = AsyncMock()
+    monkeypatch.setattr(tr, "verify_project_access", AsyncMock(return_value=None))
+    monkeypatch.setattr(tr, "get_project_caps", AsyncMock(return_value=frozenset(caps)))
+    monkeypatch.setattr(tr, "is_project_member", member_mock)
+    monkeypatch.setattr(tr, "_to_response_resolved", AsyncMock(return_value="ok"))
+    data = TaskCreate(
+        project_id=project_id,
+        task_type="task",
+        title="t",
+        responsible_id=str(responsible_id) if responsible_id else None,
+    )
+    result = await tr.create_task(
+        data,
+        user_id=actor,
+        session=AsyncMock(),
+        payload={"sub": str(actor), "role": payload_role},
+        _perm=None,
+        service=service,
+    )
+    return result, service, member_mock
+
+
+@pytest.mark.asyncio
+async def test_member_assigns_project_member_ok(monkeypatch):
+    _, service, member_mock = await _create_task_as(
+        monkeypatch, CAPS["member"], is_member=True, responsible_id=uuid.uuid4()
+    )
+    service.create_task.assert_awaited_once()
+    member_mock.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_member_assigns_outsider_422(monkeypatch):
+    with pytest.raises(HTTPException) as exc:
+        await _create_task_as(monkeypatch, CAPS["member"], is_member=False, responsible_id=uuid.uuid4())
+    assert exc.value.status_code == 422
+    assert exc.value.detail == "assignee_not_project_member"
+
+
+@pytest.mark.asyncio
+async def test_manager_assigns_outsider_bypass(monkeypatch):
+    _, service, member_mock = await _create_task_as(
+        monkeypatch, CAPS["project_manager"], is_member=False, responsible_id=uuid.uuid4()
+    )
+    service.create_task.assert_awaited_once()
+    member_mock.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_global_admin_assigns_outsider_bypass(monkeypatch):
+    _, service, member_mock = await _create_task_as(
+        monkeypatch, frozenset(), is_member=False, responsible_id=uuid.uuid4(), payload_role="admin"
+    )
+    service.create_task.assert_awaited_once()
+    member_mock.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_viewer_create_403_task_create(monkeypatch):
+    with pytest.raises(HTTPException) as exc:
+        await _create_task_as(monkeypatch, CAPS["viewer"], is_member=True, responsible_id=None)
+    assert exc.value.status_code == 403
+    assert exc.value.detail == "project_capability_required:task.create"

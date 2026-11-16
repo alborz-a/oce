@@ -35,7 +35,7 @@ TOGGLEABLE_ROLES: tuple[str, ...] = ("project_manager", "member", "viewer")
 MODULE_CAP_EXACT: dict[str, frozenset[str]] = {
     "photos": frozenset({"module.photos", "photo.upload", "photo.modify"}),
     "files": frozenset({"module.files", "file.upload", "file.modify"}),
-    "tasks": frozenset({"module.tasks", "task.manage", "task.work"}),
+    "tasks": frozenset({"module.tasks", "task.create", "task.manage", "task.work"}),
     "reports": frozenset({"module.reports"}),
 }
 
@@ -53,6 +53,7 @@ CAPS: dict[str, frozenset[str]] = {
             "project.read",
             "project.update",
             "members.manage",
+            "task.create",
             "task.manage",
             "task.work",
             "file.upload",
@@ -70,6 +71,7 @@ CAPS: dict[str, frozenset[str]] = {
     "member": frozenset(
         {
             "project.read",
+            "task.create",
             "task.work",
             "file.upload",
             "photo.upload",
@@ -309,6 +311,40 @@ async def get_project_role(
     """
     user_uuid, global_role, meta = await _resolve_user_context(session, user)
     return await _get_project_role_resolved(session, user_uuid, global_role, meta, project_id)
+
+
+async def is_project_member(
+    session: AsyncSession,
+    project_id: uuid.UUID | str,
+    user_id: uuid.UUID | str,
+) -> bool:
+    """True when user owns the project or holds a TeamMembership row on it.
+
+    Uses the same Team.project_id lookup as ``_get_project_role_resolved``.
+    Global admin status is not checked here; callers decide that.
+    """
+    from app.modules.projects.models import Project
+    from app.modules.teams.models import Team, TeamMembership
+
+    try:
+        proj_uuid = uuid.UUID(str(project_id))
+        user_uuid = uuid.UUID(str(user_id))
+    except (ValueError, TypeError):
+        return False
+
+    project = await session.get(Project, proj_uuid)
+    if project is None:
+        return False
+    if str(getattr(project, "owner_id", "")) == str(user_uuid):
+        return True
+
+    stmt = (
+        select(TeamMembership.user_id)
+        .join(Team, Team.id == TeamMembership.team_id)
+        .where(Team.project_id == proj_uuid, TeamMembership.user_id == user_uuid)
+        .limit(1)
+    )
+    return (await session.execute(stmt)).scalar_one_or_none() is not None
 
 
 async def get_project_caps(
