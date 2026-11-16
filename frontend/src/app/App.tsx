@@ -1,8 +1,16 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { Suspense, lazy, useState, useCallback, useEffect, useLayoutEffect, useContext, createContext } from 'react';
-import { Routes, Route, Navigate, Outlet, useLocation, useMatch, useParams } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet, useLocation, useMatch, useParams, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from './layout';
+import { fetchProjectList } from '@/shared/lib/projectList';
+import {
+  pickLandingProject,
+  readLastActiveProjectId,
+  saveLastActiveProjectId,
+  type LandingProjectSummary,
+} from '@/features/projects/workspace/resolveLandingProjectRoute';
 import { DashboardPage } from '@/features/dashboard';
 import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, AuthedHome } from '@/features/auth';
 import { ProjectsPage, CreateProjectPage, ProjectDetailPage, ProjectSettingsPage } from '@/features/projects';
@@ -1005,6 +1013,37 @@ function useDocumentDirection() {
   }, [i18n]);
 }
 
+function WorkspaceHomeRedirect() {
+  const { data: projects, isLoading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => fetchProjectList<LandingProjectSummary[]>(),
+    staleTime: 60_000,
+    retry: 1,
+  });
+
+  const target = Array.isArray(projects)
+    ? pickLandingProject(projects, readLastActiveProjectId())
+    : null;
+
+  useEffect(() => {
+    if (target) {
+      saveLastActiveProjectId(target.id, target.name ?? '');
+    }
+  }, [target]);
+
+  if (isLoading) return <PageLoadingInline />;
+  return <Navigate to={target ? `/projects/${target.id}` : '/projects'} replace />;
+}
+
+function DashboardRoute() {
+  const [searchParams] = useSearchParams();
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  if (!restrictedMode && searchParams.get('engineering') === '1') {
+    return <P title="Dashboard"><DashboardPage /></P>;
+  }
+  return <WorkspaceHomeRedirect />;
+}
+
 export default function App() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const restrictedMode = useAuthStore((s) => s.restrictedMode);
@@ -1207,7 +1246,7 @@ export default function App() {
           path="/"
           element={
             isAuthenticated
-              ? <Navigate to="/dashboard" replace />
+              ? <WorkspaceHomeRedirect />
               : <P title="Dashboard"><DashboardPage /></P>
           }
         />
@@ -1645,7 +1684,7 @@ export default function App() {
         {/* `/dashboard` renders DashboardPage directly. The earlier alias
             redirected to `/`, but BUG-215 made `/` redirect authed users to
             `/projects`, leaving DashboardPage unreachable. */}
-        <Route path="/dashboard" element={<P title="Dashboard"><DashboardPage /></P>} />
+        <Route path="/dashboard" element={<DashboardRoute />} />
         <Route path="/change-orders" element={<Navigate to="/changeorders" replace />} />
         <Route path="/punch-list" element={<Navigate to="/punchlist" replace />} />
         {/* Variations (FIDIC/JCT VOs) — distinct from generic change-orders;

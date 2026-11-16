@@ -12,6 +12,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { apiGet } from '@/shared/lib/api';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export interface PartnerPackBranding {
   primary_color: string;
@@ -66,9 +67,11 @@ export interface InstalledPacksResponse {
 }
 
 export function usePartnerPack() {
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
   return useQuery<PartnerPackResponse>({
     queryKey: ['partner-pack', 'current'],
     queryFn: () => apiGet<PartnerPackResponse>('/v1/partner-pack/current'),
+    enabled: !restrictedMode,
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
     refetchOnWindowFocus: false,

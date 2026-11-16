@@ -28,6 +28,8 @@ import {
   type FirstRunStatus,
 } from './desktopBootstrap';
 import { safeNextPath } from './nextPath';
+import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
+import { resolveLandingProjectRoute } from '@/features/projects/workspace/resolveLandingProjectRoute';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -217,9 +219,14 @@ export function LoginPage() {
         // Persist through the existing auth store path with remember=true so the
         // desktop owner stays signed in across launches.
         setTokens(data.access_token, data.refresh_token, true, data.user?.email);
-        navigate(status.onboarding_completed === true ? '/dashboard' : '/onboarding', {
-          replace: true,
-        });
+        await useAuthStore.getState().syncRoleFromServer();
+        const isRestricted = useAuthStore.getState().restrictedMode;
+        if (!isRestricted && status.onboarding_completed !== true) {
+          navigate('/onboarding', { replace: true });
+        } else {
+          const landing = await resolveLandingProjectRoute();
+          navigate(landing, { replace: true });
+        }
       } catch {
         // Silent fallback to the manual login form.
         if (!cancelled) setBootstrapping(false);
@@ -290,7 +297,20 @@ export function LoginPage() {
       const data = await res.json();
       saveRememberChoice(rememberMe);
       setTokens(data.access_token, data.refresh_token, rememberMe, email);
-      navigate(nextPath, { replace: true });
+      await useAuthStore.getState().syncRoleFromServer();
+      const isRestricted = useAuthStore.getState().restrictedMode;
+      if (
+        nextPath &&
+        nextPath !== '/' &&
+        nextPath !== '/dashboard' &&
+        nextPath !== '/onboarding' &&
+        (!isRestricted || isRestrictedRouteAllowed(nextPath))
+      ) {
+        navigate(nextPath, { replace: true });
+      } else {
+        const landing = await resolveLandingProjectRoute();
+        navigate(landing, { replace: true });
+      }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
     } finally {
@@ -343,7 +363,20 @@ export function LoginPage() {
       }
       const data = await res.json();
       setTokens(data.access_token, data.refresh_token, false, demoEmail);
-      navigate(nextPath, { replace: true });
+      await useAuthStore.getState().syncRoleFromServer();
+      const isRestricted = useAuthStore.getState().restrictedMode;
+      if (
+        nextPath &&
+        nextPath !== '/' &&
+        nextPath !== '/dashboard' &&
+        nextPath !== '/onboarding' &&
+        (!isRestricted || isRestrictedRouteAllowed(nextPath))
+      ) {
+        navigate(nextPath, { replace: true });
+      } else {
+        const landing = await resolveLandingProjectRoute();
+        navigate(landing, { replace: true });
+      }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
     } finally {
