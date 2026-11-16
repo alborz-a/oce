@@ -166,6 +166,29 @@ describe('Project Workspace Foundation Components', () => {
     expect(onBoardClick).toHaveBeenCalledWith('سرداران 2');
   });
 
+  it('ProjectRightSummaryPanel shows a letters entry next to the online-meeting button and calls onOpenLetters', () => {
+    const project = makeProject({ id: 'p-letters', name: 'پروژه نامه' });
+    const stats = computeProjectWorkspaceStats([], 'u-1', { todayIso: '2026-11-16' });
+    const onOpenLetters = vi.fn();
+
+    renderWithQuery(
+      <ProjectRightSummaryPanel
+        project={project}
+        stats={stats}
+        members={[]}
+        currentUserId="u-1"
+        onStartOnlineMeeting={vi.fn()}
+        onOpenLetters={onOpenLetters}
+      />,
+    );
+
+    const lettersBtn = screen.getByTestId('letters-inbox-button');
+    expect(lettersBtn).toHaveTextContent('نامه‌ها');
+    expect(lettersBtn.parentElement).toBe(screen.getByTestId('online-meeting-button').parentElement);
+    fireEvent.click(lettersBtn);
+    expect(onOpenLetters).toHaveBeenCalledTimes(1);
+  });
+
   it('MizitoTopTabAndFilterBar renders 5 tabs, stream filters only on group tab, and admin switch', () => {
     const onTabChange = vi.fn();
     const onFiltersChange = vi.fn();
