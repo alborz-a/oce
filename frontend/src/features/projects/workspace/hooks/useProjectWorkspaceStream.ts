@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiGet } from '@/shared/lib/api';
+import { isHiddenSystemUser } from '@/shared/lib/hiddenUsers';
 import type { ChatMessage } from '@/modules/team-chat/types';
 import type {
   ProjectDocumentItem,
@@ -231,6 +232,28 @@ function resolveItemDateKey(iso: string): string {
   return `${y}-${m}-${day}`;
 }
 
+// Importer-written text starts with «real name» — <jalali date> <body>.
+const REPORTER_HEADER_RE =
+  /^«([^»]+)»\s*—\s*(?:[۰-۹0-9]{4}\/[۰-۹0-9]{1,2}\/[۰-۹0-9]{1,2}(?:\s+[۰-۹0-9]{1,2}:[۰-۹0-9]{2})?\s*)?/;
+
+/**
+ * Replace the hidden importer name ("Mizito Importer") or an empty name with the
+ * real reporter name from the text header, and strip that header from the body.
+ * Only when the header matches; any other name is returned unchanged.
+ */
+export function resolveReporter(
+  resolvedName: string,
+  text: string,
+  fallbackName = 'همکار',
+): { name: string; body: string } {
+  const trimmed = resolvedName.trim();
+  const hidden = !trimmed || isHiddenSystemUser({ full_name: trimmed });
+  if (!hidden) return { name: resolvedName, body: text };
+  const match = REPORTER_HEADER_RE.exec(text);
+  if (!match) return { name: fallbackName, body: text };
+  return { name: match[1].trim(), body: text.slice(match[0].length) };
+}
+
 export function isVideoStreamItem(item: StreamItem): boolean {
   const chatMeta = item.rawChatMessage?.metadata;
   if (chatMeta) {
@@ -341,11 +364,15 @@ export function buildStreamItems({
 
     const authorId = msg.author_id ? String(msg.author_id) : null;
     const metaAuthor = typeof msg.metadata?.author_name === 'string' ? msg.metadata.author_name : '';
-    const authorName =
+    const reporter = resolveReporter(
       msg.author_name?.trim() ||
-      (authorId ? memberNameById.get(authorId) : undefined) ||
-      metaAuthor.trim() ||
-      'کاربر';
+        (authorId ? memberNameById.get(authorId) : undefined) ||
+        metaAuthor.trim() ||
+        '',
+      msg.text,
+      'کاربر',
+    );
+    const authorName = reporter.name;
     const isCurrentUser = Boolean(currentUserId && authorId === currentUserId);
     const reactions = parseReactions(msg.metadata?.reactions);
     const quotedEntity = parseQuotedEntity(msg.metadata?.quoted_entity);
@@ -387,7 +414,7 @@ export function buildStreamItems({
         authorId,
         authorName,
         isCurrentUser,
-        text: msg.text,
+        text: reporter.body,
         quotedEntity,
         reactions,
         rawChatMessage: msg,
@@ -405,7 +432,7 @@ export function buildStreamItems({
           authorId,
           authorName,
           isCurrentUser,
-          text: msg.text,
+          text: reporter.body,
           quotedEntity: idx === 0 ? quotedEntity : undefined,
           reactions: idx === 0 ? reactions : undefined,
           rawChatMessage: msg,
@@ -420,7 +447,7 @@ export function buildStreamItems({
           authorId,
           authorName,
           isCurrentUser,
-          text: msg.text,
+          text: reporter.body,
           rawChatMessage: msg,
           rawPhotos: attachedPhotos,
         });
@@ -435,7 +462,7 @@ export function buildStreamItems({
       authorId,
       authorName,
       isCurrentUser,
-      text: msg.text,
+      text: reporter.body,
       quotedEntity,
       reactions,
       rawChatMessage: msg,
@@ -526,10 +553,13 @@ export function buildStreamItems({
     const metaTitle = typeof c.metadata?.task_title === 'string' ? c.metadata.task_title : '';
     const taskTitle = task?.title || metaTitle || 'وظیفه';
     const authorId = c.author_id ? String(c.author_id) : null;
-    const actorName =
+    const reporter = resolveReporter(
       c.author_name?.trim() ||
-      (authorId ? memberNameById.get(authorId) : undefined) ||
-      'همکار';
+        (authorId ? memberNameById.get(authorId) : undefined) ||
+        '',
+      c.text,
+    );
+    const actorName = reporter.name;
     items.push({
       id: `comment:${c.id}`,
       kind: 'task_activity',
@@ -537,14 +567,14 @@ export function buildStreamItems({
       authorId,
       authorName: actorName,
       isCurrentUser: Boolean(currentUserId && authorId === currentUserId),
-      text: c.text,
+      text: reporter.body,
       reactions: parseReactions(c.metadata?.reactions),
       rawTaskActivity: {
         taskId,
         taskTitle,
         actorName,
         actionText: 'را گزارش کرد',
-        reportText: c.text,
+        reportText: reporter.body,
         commentId: String(c.id),
         isReport: true,
       },
