@@ -179,10 +179,10 @@ export function ProjectStreamComposer({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const taskDialogRef = useRef<HTMLDialogElement>(null);
   const minutesDialogRef = useRef<HTMLDialogElement>(null);
-  const emojiTriggerRef = useRef<HTMLButtonElement>(null);
-  const mentionTriggerRef = useRef<HTMLButtonElement>(null);
-  const emojiPopoverRef = useRef<HTMLDivElement>(null);
-  const mentionPopoverRef = useRef<HTMLDivElement>(null);
+  const emojiTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const mentionTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const emojiPopoverRef = useRef<HTMLDivElement | null>(null);
+  const mentionPopoverRef = useRef<HTMLDivElement | null>(null);
 
   const [text, setText] = useState('');
   const [mentions, setMentions] = useState<string[]>([]);
