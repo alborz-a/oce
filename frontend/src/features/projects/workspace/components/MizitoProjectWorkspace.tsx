@@ -18,6 +18,7 @@ import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSw
 import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
 import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
 import { ProjectGroupTab } from './ProjectGroupTab';
+import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
 import { ProjectTasksTab } from './ProjectTasksTab';
 import { ProjectBoardTab } from './ProjectBoardTab';
 import { ProjectCalendarTab } from './ProjectCalendarTab';
@@ -124,6 +125,7 @@ export function MizitoProjectWorkspace({
           onTogglePin={() => pins.togglePin(projectId)}
           onBack={() => navigate('/projects')}
           onOpenSettings={() => navigate(`/projects/${projectId}/settings`)}
+          onStartOnlineMeeting={() => navigate(`/projects/${projectId}/meetings`)}
           onBoardClick={(key) => {
             setFocusedBoardKey(key);
             setActiveTab('board');
@@ -141,6 +143,11 @@ export function MizitoProjectWorkspace({
           onTabChange={setActiveTab}
           filters={filters}
           onFiltersChange={setFilters}
+          filterSlot={
+            activeTab === 'group' ? (
+              <ProjectStreamFilterBar filter={filters} onChange={setFilters} members={members} />
+            ) : undefined
+          }
           canSwitchToEngineering={canSwitchToEngineering}
           onSwitchToEngineering={onSwitchToEngineering}
           onOpenMobileSwitcher={() => setSwitcherOpen(true)}
