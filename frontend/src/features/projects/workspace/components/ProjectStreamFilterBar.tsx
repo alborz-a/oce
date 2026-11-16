@@ -13,6 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { isoToJalali, toPersianDigits } from '@/shared/lib/jalali';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -340,8 +341,7 @@ export function ProjectStreamFilterBar({
             <div className="space-y-2 text-[11.5px]">
               <label className="block">
                 <span className="mb-0.5 block text-[#6b7280]">از تاریخ:</span>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={filter.dateFrom ?? ''}
                   onChange={(e) =>
                     onChange({ ...filter, dateFrom: e.target.value || null })
@@ -357,8 +357,7 @@ export function ProjectStreamFilterBar({
 
               <label className="block">
                 <span className="mb-0.5 block text-[#6b7280]">تا تاریخ:</span>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={filter.dateTo ?? ''}
                   onChange={(e) =>
                     onChange({ ...filter, dateTo: e.target.value || null })

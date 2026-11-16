@@ -24,6 +24,7 @@ import {
 } from '../hooks/useProjectWorkspaceStats';
 import type { ProjectTaskChecklistItem, ProjectTaskItem } from '../types';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 
 export interface TaskQuickDetailDialogProps {
   projectId: string;
@@ -466,9 +467,8 @@ export function TaskQuickDetailDialog({
                 >
                   مهلت {dueDate ? `(${formatJalali(dueDate, 'short')})` : ''}
                 </label>
-                <input
+                <JalaliDateInput
                   id="task-detail-due"
-                  type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
                   className="h-8 w-full rounded-md border border-[#e5e7eb] px-2 text-[12px]"

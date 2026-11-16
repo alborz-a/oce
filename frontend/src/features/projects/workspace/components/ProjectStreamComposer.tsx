@@ -16,6 +16,7 @@ import { createTask, updateTask } from '@/features/tasks/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import type { ProjectTaskItem, StreamItem, StreamQuotedEntity } from '../types';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
@@ -764,8 +765,7 @@ export function ProjectStreamComposer({
                 </option>
               ))}
             </select>
-            <input
-              type="date"
+            <JalaliDateInput
               value={taskDueDate}
               onChange={(e) => setTaskDueDate(e.target.value)}
               aria-label="تاریخ سررسید"
@@ -863,8 +863,7 @@ export function ProjectStreamComposer({
               <option value="commercial">مالی و بازرگانی</option>
               <option value="closeout">تحویل</option>
             </select>
-            <input
-              type="date"
+            <JalaliDateInput
               value={meetingDate}
               onChange={(e) => setMeetingDate(e.target.value)}
               aria-label="تاریخ جلسه"
