@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { ChevronUp, Loader2, MessageSquare } from 'lucide-react';
 import { dateToJalali, PERSIAN_MONTH_NAMES, toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../types';
@@ -71,6 +71,36 @@ export function formatJalaliDateLabel(iso: string, nowDate: Date = new Date()): 
   return base;
 }
 
+/** Distance from the top (px) at which older history loads automatically. */
+export const AUTO_LOAD_TOP_PX = 120;
+
+/**
+ * scrollTop that keeps the same visible content in place after older rows are prepended:
+ * the height gained above the viewport is added to the previous scrollTop.
+ */
+export function scrollTopAfterPrepend(
+  prevScrollTop: number,
+  prevScrollHeight: number,
+  nextScrollHeight: number,
+): number {
+  return prevScrollTop + (nextScrollHeight - prevScrollHeight);
+}
+
+/** Auto-load only when older history exists, a handler is wired, nothing is in flight and the reader is near the top. */
+export function shouldAutoLoadOlder(input: {
+  scrollTop: number;
+  hasMore: boolean;
+  loadingMore: boolean;
+  hasHandler: boolean;
+}): boolean {
+  return (
+    input.hasMore &&
+    input.hasHandler &&
+    !input.loadingMore &&
+    input.scrollTop <= AUTO_LOAD_TOP_PX
+  );
+}
+
 export function ProjectStreamList({
   projectId,
   items,
@@ -94,6 +124,61 @@ export function ProjectStreamList({
   const prevLastIdRef = useRef<string | null>(null);
   // True while the reader sits at the bottom; late-loading images then keep the feed pinned to the latest.
   const stickRef = useRef(true);
+  // One older-history request in flight at a time (manual button and auto-load share it).
+  const olderInFlightRef = useRef(false);
+  // Scroll geometry captured right before an older-history request, restored after prepend.
+  const prependSnapRef = useRef<{ top: number; height: number } | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const canLoadOlder = hasMore && Boolean(onLoadMore);
+
+  const triggerLoadOlder = useCallback(() => {
+    if (!onLoadMore || !hasMore || loadingMore || olderInFlightRef.current) return;
+    olderInFlightRef.current = true;
+    const el = scrollRef.current;
+    prependSnapRef.current = el ? { top: el.scrollTop, height: el.scrollHeight } : null;
+    onLoadMore();
+  }, [onLoadMore, hasMore, loadingMore]);
+
+  useEffect(() => {
+    if (!loadingMore) olderInFlightRef.current = false;
+  }, [loadingMore]);
+
+  // Keep the reader's position when older rows are prepended above the viewport.
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    const snap = prependSnapRef.current;
+    if (!el || !snap || loadingMore) return;
+    prependSnapRef.current = null;
+    if (el.scrollHeight > snap.height) {
+      el.scrollTop = scrollTopAfterPrepend(snap.top, snap.height, el.scrollHeight);
+    }
+  }, [items, loadingMore]);
+
+  // Auto-load when the sentinel above the first item enters the top zone of the scroll container.
+  useEffect(() => {
+    const root = scrollRef.current;
+    const sentinel = sentinelRef.current;
+    if (!root || !sentinel || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        if (
+          shouldAutoLoadOlder({
+            scrollTop: root.scrollTop,
+            hasMore,
+            loadingMore,
+            hasHandler: Boolean(onLoadMore),
+          })
+        ) {
+          triggerLoadOlder();
+        }
+      },
+      { root, rootMargin: `${AUTO_LOAD_TOP_PX}px 0px 0px 0px` },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, onLoadMore, triggerLoadOlder, canLoadOlder]);
 
   const itemsById = useMemo(() => {
     const map = new Map<string, StreamItem>();
@@ -156,11 +241,13 @@ export function ProjectStreamList({
       className="mz-scroll-area flex-1 px-4 py-4 sm:px-6"
       data-testid="project-stream-list"
     >
-      {hasMore && onLoadMore && (
+      {canLoadOlder && <div ref={sentinelRef} aria-hidden="true" data-testid="stream-older-sentinel" className="h-px" />}
+
+      {canLoadOlder && (
         <div className="mb-3 flex justify-center">
           <button
             type="button"
-            onClick={onLoadMore}
+            onClick={triggerLoadOlder}
             disabled={loadingMore}
             className="inline-flex items-center gap-1.5 rounded-full border border-[#e0e0e0] bg-[#f5f6f8] px-4 py-1 text-[12px] font-medium text-[#3078ab] transition-colors hover:bg-[#e8f2fa] disabled:opacity-50"
           >
