@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiGet } from '@/shared/lib/api';
-import { fetchTasks } from '@/features/tasks/api';
+import { fetchAllTasks } from '@/features/tasks/api';
 import { projectsApi, type Project } from '@/features/projects/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import '../workspace.css';
@@ -81,8 +81,8 @@ export function MizitoProjectWorkspace({
   const tasksQuery = useQuery({
     queryKey: ['project-workspace-tasks', projectId],
     queryFn: async () => {
-      const page = await fetchTasks({ project_id: projectId });
-      return page.items as unknown as ProjectTaskItem[];
+      const items = await fetchAllTasks({ project_id: projectId });
+      return items as unknown as ProjectTaskItem[];
     },
     enabled: !!projectId,
     refetchInterval: 15_000,

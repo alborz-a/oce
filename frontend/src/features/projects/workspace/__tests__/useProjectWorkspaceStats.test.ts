@@ -209,4 +209,20 @@ describe('useProjectWorkspaceStats / computeProjectWorkspaceStats', () => {
     expect(getTaskEffectiveWeight(compatible)).toBe(3);
     expect(classifyTaskWorkState(compatible, TODAY)).toBe('in_progress');
   });
+
+  it('counts a task created by the current user but assigned to someone else in others, not mine', () => {
+    const tasks: ProjectTaskItem[] = [
+      makeTask({
+        id: 't-created-by-me',
+        status: 'open',
+        created_by: 'u-me',
+        responsible_id: 'u-other',
+      }),
+    ];
+
+    const stats = computeProjectWorkspaceStats(tasks, 'u-me', { todayIso: TODAY });
+
+    expect(stats.mine.remainingCount).toBe(0);
+    expect(stats.others.remainingCount).toBe(1);
+  });
 });

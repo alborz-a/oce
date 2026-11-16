@@ -74,6 +74,10 @@ export interface TaskFilters {
   /** Filter by assignee UUID. Maps to the backend `responsible_id`
    *  query param. */
   responsible_id?: string;
+  /** Page size. Backend default 50, max 500. */
+  limit?: number;
+  /** Page offset. */
+  offset?: number;
 }
 
 export interface CreateTaskPayload {
@@ -124,12 +128,36 @@ export async function fetchTasks(filters?: TaskFilters): Promise<Page<Task>> {
   if (filters?.task_type) params.set('type', filters.task_type);
   if (filters?.status) params.set('status', filters.status);
   if (filters?.responsible_id) params.set('responsible_id', filters.responsible_id);
+  if (filters?.limit !== undefined) params.set('limit', String(filters.limit));
+  if (filters?.offset !== undefined) params.set('offset', String(filters.offset));
   const qs = params.toString();
   /* Unconditional `?`. check_page_envelope_consumers.py binds a URL literal
      to the call it stands next to and its pattern stops at the first
      whitespace, so the conditional suffix this used to carry hid the route
      from it entirely. An empty query after a `?` parses as no query. */
   return apiGet<Page<Task>>(`/v1/tasks/?${qs}`);
+}
+
+/**
+ * Fetch every task matching `filters` by paging through `fetchTasks`.
+ * Stops when all `total` rows are read, a page comes back empty, or
+ * `maxPages` is reached.
+ */
+export async function fetchAllTasks(
+  filters: TaskFilters,
+  pageSize = 500,
+  maxPages = 20,
+): Promise<Task[]> {
+  const all: Task[] = [];
+  let offset = 0;
+  for (let page = 0; page < maxPages; page += 1) {
+    const res = await fetchTasks({ ...filters, limit: pageSize, offset });
+    const items = res.items ?? [];
+    all.push(...items);
+    offset += items.length;
+    if (items.length === 0 || offset >= res.total) break;
+  }
+  return all;
 }
 
 /**

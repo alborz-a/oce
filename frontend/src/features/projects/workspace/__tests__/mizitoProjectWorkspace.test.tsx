@@ -14,6 +14,7 @@ vi.mock('@/shared/lib/api', () => ({
 }));
 vi.mock('@/features/tasks/api', () => ({
   fetchTasks: vi.fn().mockResolvedValue({ items: [], total: 0, offset: 0, limit: 50 }),
+  fetchAllTasks: vi.fn().mockResolvedValue([]),
 }));
 vi.mock('@/features/projects/api', () => ({
   projectsApi: {
