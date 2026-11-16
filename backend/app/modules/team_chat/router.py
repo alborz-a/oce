@@ -166,6 +166,15 @@ async def edit_message(
     return MessageResponse(**await svc.edit_message(message_id, uuid.UUID(str(user_id)), body.text))
 
 
+@router.delete(
+    "/messages/{message_id}",
+    status_code=204,
+    dependencies=[Depends(RequirePermission("team_chat.update"))],
+)
+async def delete_message(message_id: uuid.UUID, user_id: CurrentUserId, svc: TeamChatService = Depends(_svc)) -> None:
+    await svc.delete_message(message_id, uuid.UUID(str(user_id)))
+
+
 @router.post(
     "/messages/{message_id}/reactions/",
     response_model=MessageResponse,

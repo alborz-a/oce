@@ -30,6 +30,7 @@ export type ChatEvent =
   | { event: 'pong' }
   | { event: 'message.created'; message: ChatMessage }
   | { event: 'message.edited'; message: ChatMessage }
+  | { event: 'message.deleted'; message_id: string }
   | { event: 'room.read'; room_id: string };
 
 export interface ProjectDocument {

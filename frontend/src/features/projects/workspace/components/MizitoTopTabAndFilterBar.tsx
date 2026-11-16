@@ -46,14 +46,15 @@ interface TabDef {
   key: WorkspaceTabKey;
   label: string;
   Icon: typeof MessageSquare;
+  color: string;
 }
 
 const WORKSPACE_TABS: readonly TabDef[] = [
-  { key: 'group', label: 'گروه پروژه', Icon: MessageSquare },
-  { key: 'tasks', label: 'وظایف پروژه', Icon: CheckCircle2 },
-  { key: 'board', label: 'بورد پروژه', Icon: Columns3 },
-  { key: 'calendar', label: 'تقویم پروژه', Icon: Calendar },
-  { key: 'gantt', label: 'گانت پروژه', Icon: GanttChart },
+  { key: 'group', color: '#4b9fff', label: 'گروه پروژه', Icon: MessageSquare },
+  { key: 'tasks', color: '#546e7a', label: 'وظایف پروژه', Icon: CheckCircle2 },
+  { key: 'board', color: '#5c6bc0', label: 'بورد پروژه', Icon: Columns3 },
+  { key: 'calendar', color: '#6ab04c', label: 'تقویم پروژه', Icon: Calendar },
+  { key: 'gantt', color: '#3078ab', label: 'گانت پروژه', Icon: GanttChart },
 ];
 
 interface KindIconDef {
@@ -133,7 +134,7 @@ export function MizitoTopTabAndFilterBar({
           aria-label="بخش‌های فضای کار پروژه"
           className="flex items-center gap-0.5"
         >
-          {WORKSPACE_TABS.map(({ key, label, Icon }) => {
+          {WORKSPACE_TABS.map(({ key, label, Icon, color }) => {
             const isActive = activeTab === key;
             return (
               <button
@@ -145,7 +146,7 @@ export function MizitoTopTabAndFilterBar({
                 onClick={() => onTabChange(key)}
                 className={isActive ? 'submenu_tab submenu_tab--active' : 'submenu_tab'}
               >
-                <Icon size={16} aria-hidden="true" className="shrink-0" />
+                <Icon size={16} aria-hidden="true" className="shrink-0" style={{ color }} />
                 <span>{label}</span>
               </button>
             );

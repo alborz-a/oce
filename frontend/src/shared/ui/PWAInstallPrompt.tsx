@@ -27,6 +27,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download, X, Share } from 'lucide-react';
+import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 
 /* ── localStorage keys & timing ──────────────────────────────────────── */
 
@@ -99,6 +100,7 @@ export function PWAInstallPrompt() {
   const [iosHintVisible, setIosHintVisible] = useState(false);
   const [installing, setInstalling] = useState(false);
   const [hidden, setHidden] = useState(true);
+  const workspaceActive = useWorkspaceChromeStore((st) => st.active);
 
   // Listen for the install prompt event (Chromium / Firefox).
   useEffect(() => {
@@ -183,7 +185,7 @@ export function PWAInstallPrompt() {
     return () => document.documentElement.removeAttribute('data-install-prompt');
   }, [promptVisible]);
 
-  if (hidden) return null;
+  if (hidden || workspaceActive) return null;
 
   // iOS hint variant — no programmatic install, just an instruction.
   if (iosHintVisible) {

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiGet } from '@/shared/lib/api';
@@ -17,6 +17,7 @@ import {
 import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
 import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
 import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
+import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
 import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
 import { ProjectTasksTab } from './ProjectTasksTab';
@@ -41,6 +42,21 @@ export function MizitoProjectWorkspace({
   const userFullName = useAuthStore((s) => s.userFullName);
   const userRole = useAuthStore((s) => s.userRole);
   const userEmail = useAuthStore((s) => s.userEmail);
+
+  const setChromeActive = useWorkspaceChromeStore((st) => st.setActive);
+  useEffect(() => {
+    // Hide the OCE sidebar/header and force light tokens (dialogs and popovers render outside the root).
+    const root = document.documentElement;
+    const hadDark = root.classList.contains('dark');
+    root.classList.remove('dark');
+    root.classList.add('mizito-light-root');
+    setChromeActive(true);
+    return () => {
+      root.classList.remove('mizito-light-root');
+      if (hadDark) root.classList.add('dark');
+      setChromeActive(false);
+    };
+  }, [setChromeActive]);
 
   const [activeTab, setActiveTab] = useState<WorkspaceTabKey>('group');
   const [filters, setFilters] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);

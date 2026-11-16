@@ -19,6 +19,8 @@ export interface ProjectStreamListProps {
   onReply: (item: StreamItem) => void;
   onReact: (item: StreamItem, emoji: string) => void;
   onEdit?: (item: StreamItem, nextText: string) => void;
+  onDelete?: (item: StreamItem) => void;
+  canDeleteAny?: boolean;
   onOpenTask?: (taskId: string) => void;
   onOpenPhoto?: (photos: ProjectPhotoItem[], index: number) => void;
   replyCountsByItemId?: Record<string, number>;
@@ -80,6 +82,8 @@ export function ProjectStreamList({
   onReply,
   onReact,
   onEdit,
+  onDelete,
+  canDeleteAny,
   onOpenTask,
   onOpenPhoto,
   replyCountsByItemId,
@@ -88,6 +92,8 @@ export function ProjectStreamList({
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef(0);
   const prevLastIdRef = useRef<string | null>(null);
+  // True while the reader sits at the bottom; late-loading images then keep the feed pinned to the latest.
+  const stickRef = useRef(true);
 
   const itemsById = useMemo(() => {
     const map = new Map<string, StreamItem>();
@@ -121,6 +127,7 @@ export function ProjectStreamList({
       lastId !== prevLastIdRef.current;
 
     if (initialLoad || (appendedAtEnd && lastItem?.isCurrentUser)) {
+      stickRef.current = true;
       el.scrollTop = el.scrollHeight;
     } else if (appendedAtEnd) {
       const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
@@ -138,6 +145,14 @@ export function ProjectStreamList({
   return (
     <div
       ref={scrollRef}
+      onScroll={(e) => {
+        const t = e.currentTarget;
+        stickRef.current = t.scrollHeight - t.scrollTop - t.clientHeight < 180;
+      }}
+      onLoadCapture={(e) => {
+        const t = scrollRef.current;
+        if (t && stickRef.current && e.target instanceof HTMLImageElement) t.scrollTop = t.scrollHeight;
+      }}
       className="mz-scroll-area flex-1 px-4 py-4 sm:px-6"
       data-testid="project-stream-list"
     >
@@ -214,6 +229,8 @@ export function ProjectStreamList({
                     onReply={onReply}
                     onReact={onReact}
                     onEdit={onEdit}
+                    onDelete={onDelete}
+                    canDeleteAny={canDeleteAny}
                     onOpenTask={onOpenTask}
                     currentUserId={currentUserId}
                   />

@@ -430,7 +430,7 @@ export function ProjectBoardTab({
               }`}
             >
               {/* Column Header + 2-segment progress bar + inline add trigger */}
-              <div className="shrink-0 border-b border-[#f0f2f5] p-2.5">
+              <div className="shrink-0 rounded-t-lg border-b border-[#f0f2f5] border-t-[3px] border-t-[#04c39a] bg-[#e8f6f3] p-2.5">
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h3 className="truncate text-[12.5px] font-bold text-[#1f2937]">
                     {toPersianDigits(colName)} ({toPersianDigits(totalCount)})
@@ -550,8 +550,8 @@ export function ProjectBoardTab({
                         data-testid={`board-card-${task.id}`}
                         className={`rounded-lg border p-2.5 shadow-xs transition-colors ${
                           isDelayed
-                            ? 'border-[#d9534f]/60 bg-[#fffafa]'
-                            : 'border-[#e5e7eb] bg-white hover:border-[#3078ab]/50'
+                            ? 'border-[#d9534f]/60 border-s-[3px] border-s-[#d9534f] bg-[#fffafa]'
+                            : 'border-[#e5e7eb] border-s-[3px] border-s-[#04c39a] bg-white hover:border-[#3078ab]/50'
                         }`}
                       >
                         {/* Top row: check + title + avatar */}

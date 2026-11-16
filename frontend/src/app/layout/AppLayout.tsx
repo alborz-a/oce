@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Sidebar, FloatingRecentButton } from './Sidebar';
 import { Header, resolvePageTitleKey } from './Header';
+import { MizitoGlobalTopBar } from '@/features/projects/workspace/components/MizitoGlobalTopBar';
+import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { DesktopToolbar } from './DesktopToolbar';
 import { FeedbackDialog } from '@/shared/ui';
 import { FloatingQueuePanel } from './FloatingQueuePanel';
@@ -43,6 +45,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   const isRTL = useIsRTL();
   const isSystemAdmin = useIsSystemAdmin();
   const location = useLocation();
+  const workspaceActive = useWorkspaceChromeStore((st) => st.active);
   const backdropVariant = backdropVariantForPath(location.pathname);
   const { t, i18n } = useTranslation();
 
@@ -151,7 +154,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           'oe-sidebar fixed inset-y-0 z-50 transition-transform duration-normal ease-oe',
           // LTR: attach to left edge; RTL: CSS overrides to right edge
           'start-0',
-          'lg:translate-x-0',
+          workspaceActive ? '' : 'lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -162,17 +165,21 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           Consistent padding (px-4 sm:px-7) across all modules.
           Full-bleed pages (BIM viewer, DWG takeoff, AI chat) negate it
           via `-mx-4 sm:-mx-7` on their root div. */}
-      <div className="lg:ps-sidebar">
+      <div className={workspaceActive ? undefined : 'lg:ps-sidebar'}>
         {/* Desktop-only browser-style chrome (Back/Forward/Reload/Home,
             address field, open-in-browser, favorites). Renders null in the
             normal web build. Sits above the Header so it reads as window
             chrome. */}
         <DesktopToolbar />
-        <Header
-          title={title}
-          onMenuClick={openSidebar}
-        />
-        <main className="px-4 pt-6 pb-4 sm:px-7">
+        {workspaceActive ? (
+          <MizitoGlobalTopBar onMenuClick={openSidebar} />
+        ) : (
+          <Header
+            title={title}
+            onMenuClick={openSidebar}
+          />
+        )}
+        <main className={workspaceActive ? undefined : 'px-4 pt-6 pb-4 sm:px-7'}>
           {children}
         </main>
       </div>

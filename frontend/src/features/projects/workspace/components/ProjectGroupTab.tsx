@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { getPhotoFileUrl, getPhotoThumbUrl } from '@/features/documents/api';
 import {
   MediaLightbox,
@@ -137,6 +138,15 @@ export function ProjectGroupTab({
     [room],
   );
 
+  const isAdminRole = useAuthStore((s) => s.userRole) === 'admin';
+  const handleDelete = useCallback(
+    (item: StreamItem) => {
+      if (!item.rawChatMessage) return;
+      void room.deleteMessage(item.rawChatMessage.id);
+    },
+    [room],
+  );
+
   const handleOpenTask = useCallback(
     (taskId: string) => {
       const found = tasks.find((t) => t.id === taskId);
@@ -187,6 +197,8 @@ export function ProjectGroupTab({
         onReply={(item) => setReplyTo(item)}
         onReact={handleReact}
         onEdit={handleEdit}
+        onDelete={handleDelete}
+        canDeleteAny={isAdminRole}
         onOpenTask={handleOpenTask}
         onOpenPhoto={handleOpenPhoto}
         replyCountsByItemId={stream.replyCountsByItemId}

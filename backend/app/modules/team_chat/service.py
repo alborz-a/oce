@@ -362,6 +362,21 @@ class TeamChatService:
         await chat_hub.broadcast(msg.room_id, {"event": "message.edited", "message": _jsonable(data)})
         return data
 
+    async def delete_message(self, message_id: uuid.UUID, user_id: uuid.UUID) -> None:
+        """Hard-delete a message. The author may delete their own; an admin may delete any."""
+        msg = await self.get_message(message_id)
+        await self.require_access(msg.room_id, user_id)
+        if msg.author_id != user_id and not await self._is_admin(user_id):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only the author or an admin can delete")
+        room_id = msg.room_id
+        # Replies keep their text; only the dangling pointer is cleared.
+        replies = (await self.session.execute(select(ChatMessage).where(ChatMessage.reply_to_id == message_id))).scalars()
+        for r in replies:
+            r.reply_to_id = None
+        await self.session.delete(msg)
+        await self.session.flush()
+        await chat_hub.broadcast(room_id, {"event": "message.deleted", "message_id": str(message_id)})
+
     async def toggle_reaction(self, message_id: uuid.UUID, user_id: uuid.UUID, emoji: str) -> dict[str, Any]:
         clean_emoji = (emoji or "").strip()
         if not clean_emoji:

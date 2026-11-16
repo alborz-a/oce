@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { apiGet, apiPatch, apiPost } from '@/shared/lib/api';
+import { apiDelete, apiGet, apiPatch, apiPost } from '@/shared/lib/api';
 import { useChatSocket, type SocketStatus } from '@/modules/team-chat/useChatSocket';
 import type { ChatEvent, ChatMessage, ChatRoom } from '@/modules/team-chat/types';
 import type { StreamQuotedEntity, StreamReactionMap } from '../types';
@@ -35,6 +35,7 @@ export interface UseProjectWorkspaceRoomResult {
   markRead: () => Promise<void>;
   sendMessage: (input: SendWorkspaceMessageInput) => Promise<ChatMessage | null>;
   editMessage: (messageId: string, text: string) => Promise<ChatMessage | null>;
+  deleteMessage: (messageId: string) => Promise<void>;
   toggleReaction: (
     messageId: string,
     emoji: string,
@@ -223,6 +224,8 @@ export function useProjectWorkspaceRoom(
         ) {
           void markReadForRoom(currentRoomId);
         }
+      } else if (event.event === 'message.deleted') {
+        setMessages((cur) => cur.filter((m) => m.id !== event.message_id));
       } else if (event.event === 'room.read' && event.room_id === currentRoomId) {
         setRoom((cur) => (cur ? { ...cur, unread: 0 } : cur));
       }
@@ -329,6 +332,11 @@ export function useProjectWorkspaceRoom(
     [],
   );
 
+  const deleteMessage = useCallback(async (messageId: string): Promise<void> => {
+    await apiDelete(`/v1/team-chat/messages/${messageId}`);
+    setMessages((cur) => cur.filter((m) => m.id !== messageId));
+  }, []);
+
   const toggleReaction = useCallback(
     async (
       messageId: string,
@@ -391,6 +399,7 @@ export function useProjectWorkspaceRoom(
     markRead,
     sendMessage,
     editMessage,
+    deleteMessage,
     toggleReaction,
   };
 }

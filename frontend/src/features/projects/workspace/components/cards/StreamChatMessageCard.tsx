@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Pencil, Reply, SmilePlus, X } from 'lucide-react';
+import { Check, Pencil, Reply, SmilePlus, Trash2, X } from 'lucide-react';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
 
@@ -30,6 +30,7 @@ export interface StreamCardFooterBarProps {
   replyCount?: number;
   currentUserId?: string | null;
   onEditClick?: () => void;
+  onDeleteClick?: () => void;
   showCommentLabel?: boolean;
   align?: 'start' | 'end' | 'center';
 }
@@ -41,6 +42,7 @@ export function StreamCardFooterBar({
   replyCount = 0,
   currentUserId,
   onEditClick,
+  onDeleteClick,
   showCommentLabel = false,
   align = 'start',
 }: StreamCardFooterBarProps) {
@@ -119,6 +121,19 @@ export function StreamCardFooterBar({
           </button>
         )}
 
+        {onDeleteClick && (
+          <button
+            type="button"
+            onClick={onDeleteClick}
+            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-[#d9534f] transition-colors hover:bg-black/5"
+            aria-label="حذف"
+            data-testid="stream-chat-delete"
+          >
+            <Trash2 size={11} />
+            <span>حذف</span>
+          </button>
+        )}
+
         {pickerOpen && (
           <div
             role="menu"
@@ -152,6 +167,8 @@ export interface StreamChatMessageCardProps {
   onReply: (item: StreamItem) => void;
   onReact: (item: StreamItem, emoji: string) => void;
   onEdit?: (item: StreamItem, nextText: string) => void;
+  onDelete?: (item: StreamItem) => void;
+  canDeleteAny?: boolean;
   onOpenTask?: (taskId: string) => void;
   currentUserId?: string | null;
 }
@@ -162,6 +179,8 @@ export function StreamChatMessageCard({
   onReply,
   onReact,
   onEdit,
+  onDelete,
+  canDeleteAny = false,
   onOpenTask,
   currentUserId,
 }: StreamChatMessageCardProps) {
@@ -325,6 +344,13 @@ export function StreamChatMessageCard({
                 ? () => {
                     setDraft(item.text ?? '');
                     setEditing(true);
+                  }
+                : undefined
+            }
+            onDeleteClick={
+              onDelete && (item.isCurrentUser || canDeleteAny) && !editing
+                ? () => {
+                    if (window.confirm('این پیام حذف شود؟')) onDelete(item);
                   }
                 : undefined
             }
