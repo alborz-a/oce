@@ -174,7 +174,12 @@ export function FilePreviewPane({ row, onClose, onEmail, onShare, onManageAccess
 
   // Find any active approval workflow for the current file so the
   // "Approval status" entry shows up only when relevant.
-  const { data: projectWorkflows = [] } = useApprovals(row?.project_id);
+  // Restricted users get 403 from /file-approvals; a missing project id
+  // disables the query (rsd-rsc#94).
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  const { data: projectWorkflows = [] } = useApprovals(
+    restrictedMode ? undefined : row?.project_id,
+  );
   const activeWorkflow = row
     ? projectWorkflows.find(
         (w) =>

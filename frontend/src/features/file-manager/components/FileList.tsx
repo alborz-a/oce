@@ -15,6 +15,7 @@ import { fmtFixed } from '@/shared/lib/formatters';
 import { isTouchTap, notePointerType } from '../lib/touchTap';
 import { TagPill } from '@/features/file-tags/TagPill';
 import { useTagsByFile } from '@/features/file-tags/hooks';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { localizeSize } from '../fmt'; // [RSC-IRAN]
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 
@@ -94,7 +95,9 @@ function FileListTagsCell({
   kind: FileKind;
   fileId: string;
 }) {
-  const { data: tags } = useTagsByFile(projectId, kind, fileId);
+  // Restricted users get 403 from /file-tags; a null project id disables it.
+  const restrictedMode = useAuthStore((s) => s.restrictedMode);
+  const { data: tags } = useTagsByFile(restrictedMode ? null : projectId, kind, fileId);
   if (!tags || tags.length === 0) return null;
   return (
     <div className="mt-0.5 ms-6 flex flex-wrap gap-0.5">

@@ -255,4 +255,26 @@ describe('the file preview pane reaches the Epic C versioning surfaces', () => {
     await waitFor(() => expect(listThreads).toHaveBeenCalled());
     expect(listVersions).not.toHaveBeenCalled();
   });
+
+  it('sends no file-approvals or file-tags request in restricted mode, and still requests approvals in normal mode (rsd-rsc#94)', async () => {
+    const { apiGet } = await import('@/shared/lib/api');
+    const restrictedUrls = (): string[] =>
+      vi.mocked(apiGet).mock.calls.map(([url]) => String(url));
+
+    useAuthStore.setState({ restrictedMode: true });
+    renderPane();
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+    expect(
+      restrictedUrls().filter((u) => u.includes('file-approvals') || u.includes('file-tags')),
+    ).toEqual([]);
+
+    cleanup();
+    vi.clearAllMocks();
+    useAuthStore.setState({ restrictedMode: false });
+    renderPane();
+    await waitFor(() => expect(listThreads).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(restrictedUrls().some((u) => u.includes('file-approvals'))).toBe(true),
+    );
+  });
 });
