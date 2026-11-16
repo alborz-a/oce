@@ -919,6 +919,26 @@ export function useProjectWorkspaceStream({
     void refresh();
   }, [roomMessages, sources, refresh]);
 
+  // New task created (composer invalidation or tasks poll) -> re-fetch timeline once
+  // so the audit row for the create action shows in the feed. First mount is skipped
+  // because refresh() on mount already loads the timeline.
+  const knownTaskIdsRef = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const ids = new Set(tasks.map((t) => String(t.id)));
+    const prev = knownTaskIdsRef.current;
+    knownTaskIdsRef.current = ids;
+    if (!prev) return;
+    let hasNewId = false;
+    for (const id of ids) {
+      if (!prev.has(id)) {
+        hasNewId = true;
+        break;
+      }
+    }
+    if (!hasNewId) return;
+    void refresh();
+  }, [tasks, refresh]);
+
   const { allItems, replyCountsByItemId } = useMemo(
     () =>
       buildStreamItems({

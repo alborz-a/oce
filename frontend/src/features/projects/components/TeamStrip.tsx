@@ -39,6 +39,8 @@ export interface ProjectMember {
   created_at?: string | null;
   /** API path of the profile picture; null when the user has none (initials shown). */
   avatar_url?: string | null;
+  /** false when the account is deactivated; undefined treated as active. */
+  is_active?: boolean;
 }
 
 /**

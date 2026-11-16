@@ -13,6 +13,7 @@ import { uploadDocument } from '@/features/documents/api';
 import { createMeeting, type MeetingType } from '@/features/meetings/api';
 import { createTask, updateTask } from '@/features/tasks/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
+import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import type { ProjectTaskItem, StreamItem, StreamQuotedEntity } from '../types';
@@ -682,9 +683,9 @@ export function ProjectStreamComposer({
               className="h-8 w-full rounded-md border border-[#e5e7eb] bg-white px-2 text-[12px]"
             >
               <option value="">مسئول انجام (اختیاری)</option>
-              {members.map((m) => (
+              {assignableMembers(members).map((m) => (
                 <option key={m.user_id} value={m.user_id}>
-                  {m.full_name || m.email}
+                  {memberLabel(m)}
                 </option>
               ))}
             </select>

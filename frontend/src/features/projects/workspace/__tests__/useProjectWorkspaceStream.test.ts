@@ -540,4 +540,37 @@ describe('useProjectWorkspaceStream hook', () => {
       expect(docCallsCount()).toBeGreaterThan(callsBefore);
     });
   });
+
+  it('re-fetches the project timeline when a new task id appears in tasks', async () => {
+    mockedApiGet.mockImplementation(async () => ({ items: [], entries: [], total: 0 }));
+
+    const newTask: ProjectTaskItem = { ...TASKS[0]!, id: 'task-created-now' };
+
+    const { result, rerender } = renderHook(
+      (props: { tasks: ProjectTaskItem[] }) =>
+        useProjectWorkspaceStream({
+          projectId: 'proj-1',
+          currentUserId: 'u-1',
+          roomMessages: ROOM_MESSAGES,
+          tasks: props.tasks,
+          members: MEMBERS,
+          filter: DEFAULT_STREAM_FILTERS,
+        }),
+      { initialProps: { tasks: TASKS } },
+    );
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    const timelineCallsCount = (): number =>
+      mockedApiGet.mock.calls.filter((call) => String(call[0]).startsWith('/v1/timeline/projects/')).length;
+    const callsBefore = timelineCallsCount();
+
+    rerender({ tasks: [...TASKS, newTask] });
+
+    await waitFor(() => {
+      expect(timelineCallsCount()).toBeGreaterThan(callsBefore);
+    });
+  });
 });

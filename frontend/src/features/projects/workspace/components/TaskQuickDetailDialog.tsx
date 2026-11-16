@@ -17,6 +17,7 @@ import {
 } from '@/features/tasks/api';
 import { apiGet, apiPost } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
+import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
 import {
   getTaskEffectiveProgress,
   getTaskEffectiveWeight,
@@ -490,9 +491,9 @@ export function TaskQuickDetailDialog({
                   className="h-8 w-full rounded-md border border-[#e5e7eb] bg-white px-2 text-[12px]"
                 >
                   <option value="">تعیین نشده</option>
-                  {members.map((m) => (
+                  {assignableMembers(members).map((m) => (
                     <option key={m.user_id} value={m.user_id}>
-                      {m.full_name || m.email}
+                      {memberLabel(m)}
                     </option>
                   ))}
                 </select>
