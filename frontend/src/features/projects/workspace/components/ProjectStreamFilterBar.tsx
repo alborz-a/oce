@@ -19,6 +19,7 @@ import {
   type StreamFilterState,
   type WorkspaceMember,
 } from '../types';
+import { useAnchoredPopover } from '../hooks/useAnchoredPopover';
 
 export type ProjectMemberSummary = Pick<WorkspaceMember, 'user_id' | 'full_name'> &
   Partial<WorkspaceMember>;
@@ -66,6 +67,10 @@ export function ProjectStreamFilterBar({
   const senderPopoverId = useId();
   const datePopoverId = useId();
   const [fallbackPanel, setFallbackPanel] = useState<'sender' | 'date' | null>(null);
+  const senderTriggerRef = useRef<HTMLButtonElement>(null);
+  const dateTriggerRef = useRef<HTMLButtonElement>(null);
+  useAnchoredPopover(senderTriggerRef, senderPopoverRef, fallbackPanel === 'sender');
+  useAnchoredPopover(dateTriggerRef, datePopoverRef, fallbackPanel === 'date');
 
   const hasActiveFilter =
     filter.search.trim().length > 0 ||
@@ -168,6 +173,7 @@ export function ProjectStreamFilterBar({
         {/* 2. Sender picker popover */}
         <div className="relative">
           <button
+            ref={senderTriggerRef}
             type="button"
             {...({ popovertarget: senderPopoverId } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             onClick={() => {
@@ -266,6 +272,7 @@ export function ProjectStreamFilterBar({
         {/* 3. Jalali/Gregorian date range popover */}
         <div className="relative">
           <button
+            ref={dateTriggerRef}
             type="button"
             {...({ popovertarget: datePopoverId } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             onClick={() => {

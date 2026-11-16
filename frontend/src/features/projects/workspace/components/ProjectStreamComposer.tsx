@@ -20,6 +20,7 @@ import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import type { ProjectTaskItem, StreamItem, StreamQuotedEntity } from '../types';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
+import { useAnchoredPopover } from '../hooks/useAnchoredPopover';
 
 export interface ComposerSendPayload {
   text: string;
@@ -180,6 +181,8 @@ export function ProjectStreamComposer({
   const minutesDialogRef = useRef<HTMLDialogElement>(null);
   const emojiTriggerRef = useRef<HTMLButtonElement>(null);
   const mentionTriggerRef = useRef<HTMLButtonElement>(null);
+  const emojiPopoverRef = useRef<HTMLDivElement>(null);
+  const mentionPopoverRef = useRef<HTMLDivElement>(null);
 
   const [text, setText] = useState('');
   const [mentions, setMentions] = useState<string[]>([]);
@@ -189,6 +192,8 @@ export function ProjectStreamComposer({
   const [dragActive, setDragActive] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [fallbackPopover, setFallbackPopover] = useState<'mention' | 'emoji' | null>(null);
+  useAnchoredPopover(emojiTriggerRef, emojiPopoverRef, fallbackPopover === 'emoji');
+  useAnchoredPopover(mentionTriggerRef, mentionPopoverRef, fallbackPopover === 'mention');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Quick Task Dialog state
@@ -600,6 +605,7 @@ export function ProjectStreamComposer({
             <div
               id={emojiPopoverId}
               ref={(el) => {
+                emojiPopoverRef.current = el;
                 if (el) el.setAttribute('popover', 'auto');
               }}
               className={`rounded-lg border border-[#e5e7eb] bg-white p-2 shadow-lg ${
@@ -642,6 +648,7 @@ export function ProjectStreamComposer({
             <div
               id={mentionPopoverId}
               ref={(el) => {
+                mentionPopoverRef.current = el;
                 if (el) el.setAttribute('popover', 'auto');
               }}
               data-testid="composer-mention-popover"
