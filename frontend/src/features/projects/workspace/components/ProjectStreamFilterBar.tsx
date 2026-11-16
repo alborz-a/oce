@@ -13,11 +13,13 @@ import {
   X,
 } from 'lucide-react';
 import { isoToJalali, toPersianDigits } from '@/shared/lib/jalali';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
   type WorkspaceMember,
 } from '../types';
+import { useAnchoredPopover } from '../hooks/useAnchoredPopover';
 
 export type ProjectMemberSummary = Pick<WorkspaceMember, 'user_id' | 'full_name'> &
   Partial<WorkspaceMember>;
@@ -65,6 +67,10 @@ export function ProjectStreamFilterBar({
   const senderPopoverId = useId();
   const datePopoverId = useId();
   const [fallbackPanel, setFallbackPanel] = useState<'sender' | 'date' | null>(null);
+  const senderTriggerRef = useRef<HTMLButtonElement>(null);
+  const dateTriggerRef = useRef<HTMLButtonElement>(null);
+  useAnchoredPopover(senderTriggerRef, senderPopoverRef, fallbackPanel === 'sender');
+  useAnchoredPopover(dateTriggerRef, datePopoverRef, fallbackPanel === 'date');
 
   const hasActiveFilter =
     filter.search.trim().length > 0 ||
@@ -167,6 +173,7 @@ export function ProjectStreamFilterBar({
         {/* 2. Sender picker popover */}
         <div className="relative">
           <button
+            ref={senderTriggerRef}
             type="button"
             {...({ popovertarget: senderPopoverId } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             onClick={() => {
@@ -265,6 +272,7 @@ export function ProjectStreamFilterBar({
         {/* 3. Jalali/Gregorian date range popover */}
         <div className="relative">
           <button
+            ref={dateTriggerRef}
             type="button"
             {...({ popovertarget: datePopoverId } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             onClick={() => {
@@ -340,8 +348,7 @@ export function ProjectStreamFilterBar({
             <div className="space-y-2 text-[11.5px]">
               <label className="block">
                 <span className="mb-0.5 block text-[#6b7280]">از تاریخ:</span>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={filter.dateFrom ?? ''}
                   onChange={(e) =>
                     onChange({ ...filter, dateFrom: e.target.value || null })
@@ -357,8 +364,7 @@ export function ProjectStreamFilterBar({
 
               <label className="block">
                 <span className="mb-0.5 block text-[#6b7280]">تا تاریخ:</span>
-                <input
-                  type="date"
+                <JalaliDateInput
                   value={filter.dateTo ?? ''}
                   onChange={(e) =>
                     onChange({ ...filter, dateTo: e.target.value || null })

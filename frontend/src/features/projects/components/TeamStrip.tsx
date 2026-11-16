@@ -372,14 +372,17 @@ export function TeamStrip({
   const [addOpen, setAddOpen] = useState(false);
   const [addError, setAddError] = useState<string | undefined>();
 
-  const { data: allMembers = [], isLoading } = useQuery<ProjectMember[]>({
+  const membersQuery = useQuery<ProjectMember[]>({
     queryKey: ['project-members', projectId],
     queryFn: () =>
       apiGet<ProjectMember[]>(`/v1/projects/${projectId}/members/`),
     enabled: !!projectId && initialMembers === undefined,
-    initialData: initialMembers,
     staleTime: 30_000,
   });
+  // Live prop wins: initialData is read only at mount, so a parent that
+  // passes members while its own query is still pending would freeze the strip.
+  const allMembers: ProjectMember[] = initialMembers ?? membersQuery.data ?? [];
+  const isLoading = initialMembers === undefined && membersQuery.isLoading;
 
   const addMutation = useMutation({
     mutationFn: ({ userId, role }: { userId: string; role: string }) =>

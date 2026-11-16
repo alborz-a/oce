@@ -313,7 +313,7 @@
 }
 
 .mizito-workspace-light .project-buttons {
-  display: inline-flex;
+  /* display is set by Tailwind (hidden md:inline-flex) so the pills hide below md */
   align-items: center;
   gap: 6px;
 }

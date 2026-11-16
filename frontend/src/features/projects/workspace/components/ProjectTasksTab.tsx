@@ -20,6 +20,7 @@ import { apiGet } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
+import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import {
   classifyTaskWorkState,
   isTopicConversationTask,
@@ -747,9 +748,8 @@ export function ProjectTasksTab({
               >
                 تاریخ سررسید
               </label>
-              <input
+              <JalaliDateInput
                 id="new-task-due"
-                type="date"
                 value={newDueDate}
                 onChange={(e) => setNewDueDate(e.target.value)}
                 className="h-8 w-full rounded-md border border-[#e5e7eb] px-2 text-[12px]"

@@ -151,6 +151,7 @@ export function MizitoProjectWorkspace({
           onBack={() => navigate('/projects')}
           onOpenSettings={() => navigate(`/projects/${projectId}/settings`)}
           onStartOnlineMeeting={() => navigate(`/projects/${projectId}/meetings`)}
+          onOpenLetters={() => navigate(`/projects/${projectId}/correspondence`)}
           onBoardClick={(key) => {
             setFocusedBoardKey(key);
             setActiveTab('board');

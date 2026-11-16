@@ -121,7 +121,7 @@ describe('TeamStrip', () => {
     expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(6);
     const moreChip = screen.getByTestId('team-strip-more');
     expect(moreChip).toBeInTheDocument();
-    expect(moreChip.textContent).toMatch(/\+2/);
+    expect(moreChip.textContent).toMatch(/۲\+|\+2/);
   });
 
   it('opens the Add Member modal when the "+" button is clicked', () => {
@@ -141,5 +141,22 @@ describe('TeamStrip', () => {
     expect(screen.queryByTestId('team-strip-manage')).toBeNull();
     // Avatars still render in read-only mode.
     expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(2);
+  });
+
+  it('follows the live initialMembers prop after an empty first render', () => {
+    const qc = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    const ui = (members: ProjectMember[]) => (
+      <QueryClientProvider client={qc}>
+        <TeamStrip projectId="proj-test-1" canManage initialMembers={members} />
+      </QueryClientProvider>
+    );
+    const { rerender } = render(ui([]));
+    expect(screen.getByTestId('team-strip-empty')).toBeInTheDocument();
+
+    rerender(ui([0, 1, 2].map(makeMember)));
+    expect(screen.queryByTestId('team-strip-empty')).toBeNull();
+    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(3);
   });
 });

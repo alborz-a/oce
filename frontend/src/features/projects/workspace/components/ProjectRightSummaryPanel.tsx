@@ -3,6 +3,7 @@ import {
   CheckCheck,
   ChevronLeft,
   ChevronRight,
+  Mail,
   Settings,
   Star,
   Video,
@@ -26,6 +27,7 @@ export interface ProjectRightSummaryPanelProps {
   onBack?: () => void;
   onOpenSettings?: () => void;
   onStartOnlineMeeting?: () => void;
+  onOpenLetters?: () => void;
   onBoardClick?: (boardKey: string) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
@@ -231,6 +233,7 @@ export function ProjectRightSummaryPanel({
   onBack,
   onOpenSettings,
   onStartOnlineMeeting,
+  onOpenLetters,
   onBoardClick,
   collapsed = false,
   onToggleCollapse,
@@ -386,6 +389,17 @@ export function ProjectRightSummaryPanel({
               <Video size={14} aria-hidden="true" />
               <span>جلسه آنلاین</span>
             </button>
+            {onOpenLetters && (
+              <button
+                type="button"
+                onClick={onOpenLetters}
+                className="mz-online-meeting-btn"
+                data-testid="letters-inbox-button"
+              >
+                <Mail size={14} aria-hidden="true" />
+                <span>نامه‌ها</span>
+              </button>
+            )}
           </div>
         </section>
 

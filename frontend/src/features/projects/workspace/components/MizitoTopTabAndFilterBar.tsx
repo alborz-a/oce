@@ -132,7 +132,7 @@ export function MizitoTopTabAndFilterBar({
         <nav
           role="tablist"
           aria-label="بخش‌های فضای کار پروژه"
-          className="flex items-center gap-0.5"
+          className="flex min-w-0 max-w-full items-center gap-0.5 overflow-x-auto"
         >
           {WORKSPACE_TABS.map(({ key, label, Icon, color }) => {
             const isActive = activeTab === key;
