@@ -58,6 +58,13 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(frozenset({"POST"}), rf"^tasks/{_ID}/complete/?$"),
     # comments (entity access is checked per entity in the handler)
     _rule(_R | {"POST"}, r"^collaboration/comments/?$"),
+    _rule(frozenset({"PATCH", "DELETE"}), rf"^collaboration/comments/{_ID}/?$"),
+    # meetings (every handler enforces verify_project_access)
+    _rule(_R | {"POST", "PATCH", "DELETE"}, r"^meetings(/.*)?$"),
+    # timeline (project timeline feed enforces verify_project_access)
+    _rule(_R, rf"^timeline/projects/{_ID}/?$"),
+    # schedule (read-only views enforce verify_project_access)
+    _rule(_R, r"^schedule(/.*)?$"),
     # documents / photos: read
     _rule(_R, r"^documents/?$"),
     _rule(_R, rf"^documents/{_ID}(/(download|references))?/?$"),

@@ -19,6 +19,7 @@ class RoomResponse(BaseModel):
     project_id: uuid.UUID | None = None
     unread: int = 0
     last_message_at: datetime | None = None
+    last_read_at: datetime | None = None
     member_ids: list[uuid.UUID] = Field(default_factory=list)
 
 
@@ -33,10 +34,15 @@ class MessageCreate(BaseModel):
     reply_to_id: uuid.UUID | None = None
     document_ids: list[uuid.UUID] = Field(default_factory=list)
     mentions: list[uuid.UUID] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class MessageEdit(BaseModel):
     text: str = Field(min_length=1, max_length=MAX_TEXT)
+
+
+class ReactionToggle(BaseModel):
+    emoji: str = Field(min_length=1, max_length=32)
 
 
 class MessageResponse(BaseModel):

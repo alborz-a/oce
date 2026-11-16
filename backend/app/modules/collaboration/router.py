@@ -89,6 +89,39 @@ def _get_service(session: SessionDep) -> CollaborationService:
     return CollaborationService(session)
 
 
+async def _attach_author_names(
+    session: SessionDep,
+    items: list[CommentResponse],
+) -> list[CommentResponse]:
+    """Populate ``author_name`` on comments and nested replies in one User query."""
+    if not items:
+        return items
+    flat: list[CommentResponse] = []
+    stack = list(items)
+    while stack:
+        node = stack.pop()
+        flat.append(node)
+        if node.replies:
+            stack.extend(node.replies)
+
+    author_ids = {node.author_id for node in flat if node.author_id is not None}
+    names: dict[uuid.UUID, str] = {}
+    if author_ids:
+        from sqlalchemy import select
+        from app.modules.users.models import User
+
+        rows = (
+            await session.execute(select(User.id, User.full_name, User.email).where(User.id.in_(author_ids)))
+        ).all()
+        for uid, full_name, email in rows:
+            names[uid] = (full_name or "").strip() or (email or "").split("@")[0]
+
+    for node in flat:
+        fallback = str((node.metadata or {}).get("author_name") or "")
+        node.author_name = names.get(node.author_id) or fallback
+    return items
+
+
 def _validate_entity_type(entity_type: str) -> None:
     """Reject entity_type values that are not in the allowlist.
 
@@ -324,23 +357,39 @@ async def list_comments(
     user_id: CurrentUserId,
     session: SessionDep,
     entity_type: str = Query(..., min_length=1, max_length=100),
-    entity_id: str = Query(..., min_length=1, max_length=36),
+    entity_id: str | None = Query(default=None, min_length=1, max_length=36),
+    project_id: uuid.UUID | None = Query(default=None),
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=500),
     _perm: None = Depends(RequirePermission("collaboration.read")),
     service: CollaborationService = Depends(_get_service),
 ) -> CommentListResponse:
-    """List top-level comments for an entity (replies loaded as nested)."""
+    """List top-level comments for an entity or all tasks in a project."""
     _validate_entity_type(entity_type)
-    await _verify_entity_access(entity_type, entity_id, str(user_id), session)
-    comments, total = await service.list_comments(
-        entity_type,
-        entity_id,
-        offset=offset,
-        limit=limit,
-    )
+    if entity_id is not None:
+        await _verify_entity_access(entity_type, entity_id, str(user_id), session)
+        comments, total = await service.list_comments(
+            entity_type,
+            entity_id,
+            offset=offset,
+            limit=limit,
+        )
+    elif entity_type == "task" and project_id is not None:
+        await verify_project_access(project_id, str(user_id), session)
+        comments, total = await service.list_task_comments_for_project(
+            project_id,
+            current_user_id=str(user_id),
+            offset=offset,
+            limit=limit,
+        )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Either entity_id or (entity_type='task' and project_id) is required",
+        )
+    items = await _attach_author_names(session, [CommentResponse.model_validate(c) for c in comments])
     return CommentListResponse(
-        items=[CommentResponse.model_validate(c) for c in comments],
+        items=items,
         total=total,
     )
 
@@ -358,7 +407,7 @@ async def create_comment(
     _validate_entity_type(data.entity_type)
     await _verify_entity_access(data.entity_type, data.entity_id, str(user_id), session)
     if data.entity_type == "task" and payload and payload.get("role") != "admin":
-        from app.modules.tasks.models import Task
+        from app.modules.tasks.models import Task, is_task_assignee
         from app.core.project_roles import get_project_caps
         task_obj = await session.get(Task, uuid.UUID(str(data.entity_id)))
         if task_obj is not None:
@@ -368,7 +417,7 @@ async def create_comment(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="project_capability_required:task.work",
                 )
-            if "task.manage" not in caps and str(getattr(task_obj, "assignee_id", "")) != str(user_id):
+            if "task.manage" not in caps and not is_task_assignee(task_obj, user_id):
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
                     detail="Task must be assigned to you to comment on it",
@@ -403,7 +452,9 @@ async def create_comment(
         project_id = None
     try:
         comment = await service.create_comment(data, uuid.UUID(user_id), project_id=project_id)
-        return CommentResponse.model_validate(comment)
+        resp = CommentResponse.model_validate(comment)
+        await _attach_author_names(session, [resp])
+        return resp
     except HTTPException:
         raise
     except Exception:
@@ -416,22 +467,30 @@ async def update_comment(
     comment_id: uuid.UUID,
     data: CommentUpdate,
     user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("collaboration.update")),
     service: CollaborationService = Depends(_get_service),
 ) -> CommentResponse:
-    """Edit a comment's text (author only - enforced by service)."""
+    """Edit a comment's text (author with entity access only)."""
+    existing = await service.get_comment(comment_id)
+    await _verify_entity_access(existing.entity_type, existing.entity_id, str(user_id), session)
     comment = await service.update_comment(comment_id, data, uuid.UUID(user_id))
-    return CommentResponse.model_validate(comment)
+    resp = CommentResponse.model_validate(comment)
+    await _attach_author_names(session, [resp])
+    return resp
 
 
 @router.delete("/comments/{comment_id}", status_code=204)
 async def delete_comment(
     comment_id: uuid.UUID,
     user_id: CurrentUserId,
+    session: SessionDep,
     _perm: None = Depends(RequirePermission("collaboration.delete")),
     service: CollaborationService = Depends(_get_service),
 ) -> None:
-    """Soft-delete a comment (author only - enforced by service)."""
+    """Soft-delete a comment (author with entity access only)."""
+    existing = await service.get_comment(comment_id)
+    await _verify_entity_access(existing.entity_type, existing.entity_id, str(user_id), session)
     await service.delete_comment(comment_id, uuid.UUID(user_id))
 
 
@@ -449,7 +508,7 @@ async def get_thread(
     root = await service.get_comment(comment_id)
     await _verify_entity_access(root.entity_type, root.entity_id, str(user_id), session)
     thread = await service.get_thread(comment_id)
-    return [CommentResponse.model_validate(c) for c in thread]
+    return await _attach_author_names(session, [CommentResponse.model_validate(c) for c in thread])
 
 
 # ── Viewpoints ───────────────────────────────────────────────────────────

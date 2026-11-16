@@ -9,13 +9,14 @@ No business logic - pure data access.
 import uuid
 from datetime import datetime
 
-from sqlalchemy import func, select, update
+from sqlalchemy import String, cast, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import set_committed_value
 from sqlalchemy.orm.util import identity_key
 
 from app.modules.collaboration.models import Comment, CommentMention, Viewpoint
+from app.modules.tasks.models import Task
 
 
 class CommentRepository:
@@ -67,6 +68,23 @@ class CommentRepository:
         )
         return list((await self.session.execute(stmt)).scalars().all())
 
+    def _paginate_threaded_comments(
+        self,
+        all_comments: list[Comment],
+        *,
+        offset: int = 0,
+        limit: int = 100,
+        include_deleted: bool = False,
+    ) -> tuple[list[Comment], int]:
+        """Pin reply trees in memory and paginate top-level comments."""
+        self._pin_reply_tree(all_comments)
+        top_level = [c for c in all_comments if c.parent_comment_id is None]
+        if not include_deleted:
+            top_level = [c for c in top_level if not c.is_deleted]
+        top_level.sort(key=lambda c: c.created_at)
+        total = len(top_level)
+        return top_level[offset : offset + limit], total
+
     async def list_for_entity(
         self,
         entity_type: str,
@@ -86,14 +104,52 @@ class CommentRepository:
         ``include_deleted`` is set - matching the previous behaviour.
         """
         all_comments = await self._load_entity_comments(entity_type, entity_id)
-        self._pin_reply_tree(all_comments)
+        return self._paginate_threaded_comments(
+            all_comments,
+            offset=offset,
+            limit=limit,
+            include_deleted=include_deleted,
+        )
 
-        top_level = [c for c in all_comments if c.parent_comment_id is None]
-        if not include_deleted:
-            top_level = [c for c in top_level if not c.is_deleted]
-        top_level.sort(key=lambda c: c.created_at)
-        total = len(top_level)
-        return top_level[offset : offset + limit], total
+    async def list_for_task_project(
+        self,
+        project_id: uuid.UUID,
+        *,
+        current_user_id: str | None = None,
+        offset: int = 0,
+        limit: int = 100,
+        include_deleted: bool = False,
+    ) -> tuple[list[Comment], int]:
+        """List top-level comments across all visible tasks in a project in one JOIN query."""
+        stmt = (
+            select(Comment)
+            .join(Task, cast(Task.id, String) == Comment.entity_id)
+            .where(
+                Comment.entity_type == "task",
+                Task.project_id == project_id,
+            )
+            .options(
+                selectinload(Comment.mentions),
+                selectinload(Comment.viewpoints),
+            )
+        )
+        if current_user_id is not None:
+            stmt = stmt.where(
+                or_(
+                    Task.is_private == False,  # noqa: E712
+                    Task.created_by == current_user_id,
+                )
+            )
+        else:
+            stmt = stmt.where(Task.is_private == False)  # noqa: E712
+
+        all_comments = list((await self.session.execute(stmt)).scalars().all())
+        return self._paginate_threaded_comments(
+            all_comments,
+            offset=offset,
+            limit=limit,
+            include_deleted=include_deleted,
+        )
 
     async def get_with_reply_tree(self, comment_id: uuid.UUID) -> Comment | None:
         """Get one comment with its reply tree pinned for safe serialization."""

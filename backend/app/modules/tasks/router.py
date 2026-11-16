@@ -33,6 +33,7 @@ from fastapi.responses import StreamingResponse
 from app.core.bulk_ops import BulkAssignRequest, BulkDeleteRequest, BulkStatusRequest
 from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermission, SessionDep, verify_project_access
 from app.core.project_roles import get_project_caps
+from app.modules.tasks.models import is_task_assignee
 from app.modules.tasks.schemas import (
     TaskBimLinkRequest,
     TaskCompleteRequest,
@@ -136,7 +137,7 @@ async def list_tasks(
     project_id: uuid.UUID = Query(...),
     user_id: CurrentUserId = None,  # type: ignore[assignment]
     offset: int = Query(default=0, ge=0),
-    limit: int = Query(default=50, ge=1, le=100),
+    limit: int = Query(default=50, ge=1, le=500),
     type_filter: str | None = Query(default=None, alias="type"),
     status_filter: str | None = Query(default=None, alias="status"),
     priority: str | None = Query(default=None),
@@ -228,7 +229,7 @@ async def list_tasks(
 async def my_tasks(
     user_id: CurrentUserId,
     offset: int = Query(default=0, ge=0),
-    limit: int = Query(default=50, ge=1, le=100),
+    limit: int = Query(default=50, ge=1, le=500),
     status_filter: str | None = Query(default=None, alias="status"),
     service: TaskService = Depends(_get_service),
 ) -> TaskListResponse:
@@ -958,7 +959,7 @@ async def complete_task(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:task.work",
             )
-        if "task.manage" not in caps and str(getattr(existing, "assignee_id", "")) != str(user_id):
+        if "task.manage" not in caps and not is_task_assignee(existing, user_id):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Task must be assigned to you to complete it",

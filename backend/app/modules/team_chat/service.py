@@ -11,6 +11,7 @@ from typing import Any
 from fastapi import HTTPException, status
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm.attributes import flag_modified
 
 from app.dependencies import accessible_project_ids, verify_project_access
 from app.modules.team_chat.hub import chat_hub
@@ -104,6 +105,39 @@ class TeamChatService:
             await self.session.flush()
         return m
 
+    async def _room_unread_and_last(
+        self,
+        room_id: uuid.UUID,
+        user_id: uuid.UUID,
+        last_read_at: datetime | None,
+    ) -> tuple[int, datetime | None]:
+        conds = [ChatMessage.room_id == room_id, or_(ChatMessage.author_id.is_(None), ChatMessage.author_id != user_id)]
+        if last_read_at is not None:
+            conds.append(ChatMessage.created_at > last_read_at)
+        unread = (await self.session.execute(select(func.count(ChatMessage.id)).where(and_(*conds)))).scalar() or 0
+        last = (
+            await self.session.execute(select(func.max(ChatMessage.created_at)).where(ChatMessage.room_id == room_id))
+        ).scalar()
+        return int(unread), last
+
+    async def project_room_info(self, project_id: uuid.UUID, user_id: uuid.UUID) -> dict[str, Any]:
+        room = await self.project_room(project_id, user_id)
+        last_read_at = (
+            await self.session.execute(
+                select(ChatMember.last_read_at).where(ChatMember.room_id == room.id, ChatMember.user_id == user_id)
+            )
+        ).scalar()
+        unread, last = await self._room_unread_and_last(room.id, user_id, last_read_at)
+        return {
+            "id": room.id,
+            "kind": room.kind,
+            "name": room.name,
+            "project_id": room.project_id,
+            "unread": unread,
+            "last_message_at": last,
+            "last_read_at": last_read_at,
+        }
+
     async def project_room(self, project_id: uuid.UUID, user_id: uuid.UUID) -> ChatRoom:
         await verify_project_access(project_id, str(user_id), self.session)
         return await self._get_or_create_project_room(project_id, user_id)
@@ -183,18 +217,15 @@ class TeamChatService:
                 ]
         names = await self._names({u for v in dm_other.values() for u in v})
         for r in rooms:
-            conds = [ChatMessage.room_id == r.id, or_(ChatMessage.author_id.is_(None), ChatMessage.author_id != user_id)]
-            if reads.get(r.id) is not None:
-                conds.append(ChatMessage.created_at > reads[r.id])
-            unread = (await self.session.execute(select(func.count(ChatMessage.id)).where(and_(*conds)))).scalar() or 0
-            last = (
-                await self.session.execute(select(func.max(ChatMessage.created_at)).where(ChatMessage.room_id == r.id))
-            ).scalar()
+            last_read_at = reads.get(r.id)
+            unread, last = await self._room_unread_and_last(r.id, user_id, last_read_at)
             name = r.name
             if r.kind == "dm":
                 name = "، ".join(names.get(u, "") for u in dm_other.get(r.id, [])) or r.name
-            out.append({"id": r.id, "kind": r.kind, "name": name, "project_id": r.project_id, "unread": int(unread),
-                        "last_message_at": last})
+            out.append({
+                "id": r.id, "kind": r.kind, "name": name, "project_id": r.project_id,
+                "unread": unread, "last_message_at": last, "last_read_at": last_read_at,
+            })
         return out
 
     # ── messages ───────────────────────────────────────────────────────
@@ -249,8 +280,16 @@ class TeamChatService:
         if any(p not in allowed for p in found.values()):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Document is not in this room's project")
 
-    async def post_message(self, room_id: uuid.UUID, user_id: uuid.UUID, text: str, reply_to_id: uuid.UUID | None,
-                           document_ids: list[uuid.UUID], mentions: list[uuid.UUID]) -> dict[str, Any]:
+    async def post_message(
+        self,
+        room_id: uuid.UUID,
+        user_id: uuid.UUID,
+        text: str,
+        reply_to_id: uuid.UUID | None,
+        document_ids: list[uuid.UUID],
+        mentions: list[uuid.UUID],
+        metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         room = await self.require_access(room_id, user_id)
         text = (text or "").strip()
         if not text and not document_ids:
@@ -262,8 +301,14 @@ class TeamChatService:
             if ref is None or ref.room_id != room_id:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Reply target not in this room")
         await self._check_documents(room, document_ids, any_project=False)
-        msg = ChatMessage(room_id=room_id, author_id=user_id, text=text, reply_to_id=reply_to_id,
-                          document_ids=[str(d) for d in document_ids])
+        msg = ChatMessage(
+            room_id=room_id,
+            author_id=user_id,
+            text=text,
+            reply_to_id=reply_to_id,
+            document_ids=[str(d) for d in document_ids],
+            metadata_=dict(metadata) if isinstance(metadata, dict) else {},
+        )
         self.session.add(msg)
         await self.session.flush()
         member = await self._ensure_member(room_id, user_id)
@@ -299,15 +344,50 @@ class TeamChatService:
         except Exception:  # noqa: BLE001 - never fail a message because of a notification
             logger.exception("team_chat: notification failed")
 
-    async def edit_message(self, message_id: uuid.UUID, user_id: uuid.UUID, text: str) -> dict[str, Any]:
+    async def get_message(self, message_id: uuid.UUID) -> ChatMessage:
         msg = await self.session.get(ChatMessage, message_id)
         if msg is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Message not found")
+        return msg
+
+    async def edit_message(self, message_id: uuid.UUID, user_id: uuid.UUID, text: str) -> dict[str, Any]:
+        msg = await self.get_message(message_id)
         await self.require_access(msg.room_id, user_id)
         if msg.author_id != user_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only the author can edit")
         msg.text = text.strip()
         msg.edited_at = datetime.now(UTC)
+        await self.session.flush()
+        data = (await self._serialize([msg]))[0]
+        await chat_hub.broadcast(msg.room_id, {"event": "message.edited", "message": _jsonable(data)})
+        return data
+
+    async def toggle_reaction(self, message_id: uuid.UUID, user_id: uuid.UUID, emoji: str) -> dict[str, Any]:
+        clean_emoji = (emoji or "").strip()
+        if not clean_emoji:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty emoji")
+        msg = await self.get_message(message_id)
+        await self.require_access(msg.room_id, user_id)
+        meta = dict(msg.metadata_ or {})
+        raw_reactions = meta.get("reactions")
+        reactions: dict[str, list[str]] = (
+            {str(k): [str(u) for u in v] for k, v in raw_reactions.items() if isinstance(v, list)}
+            if isinstance(raw_reactions, dict)
+            else {}
+        )
+        uid = str(user_id)
+        users = reactions.get(clean_emoji, [])
+        if uid in users:
+            users = [u for u in users if u != uid]
+        else:
+            users.append(uid)
+        if users:
+            reactions[clean_emoji] = users
+        else:
+            reactions.pop(clean_emoji, None)
+        meta["reactions"] = reactions
+        msg.metadata_ = meta
+        flag_modified(msg, "metadata_")
         await self.session.flush()
         data = (await self._serialize([msg]))[0]
         await chat_hub.broadcast(msg.room_id, {"event": "message.edited", "message": _jsonable(data)})

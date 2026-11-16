@@ -36,6 +36,7 @@ from app.modules.team_chat.schemas import (
     MessageCreate,
     MessageEdit,
     MessageResponse,
+    ReactionToggle,
     RoomCreate,
     RoomResponse,
 )
@@ -77,8 +78,8 @@ async def project_room(
                 status_code=403,
                 detail="project_capability_required:chat.read",
             )
-    room = await svc.project_room(project_id, uuid.UUID(str(user_id)))
-    return RoomResponse(id=room.id, kind=room.kind, name=room.name, project_id=room.project_id)
+    info = await svc.project_room_info(project_id, uuid.UUID(str(user_id)))
+    return RoomResponse(**info)
 
 
 @router.post(
@@ -143,7 +144,13 @@ async def post_message(
                     detail="project_capability_required:chat.write",
                 )
     row = await svc.post_message(
-        room_id, uuid.UUID(str(user_id)), body.text, body.reply_to_id, body.document_ids, body.mentions
+        room_id,
+        uuid.UUID(str(user_id)),
+        body.text,
+        body.reply_to_id,
+        body.document_ids,
+        body.mentions,
+        metadata=body.metadata,
     )
     return MessageResponse(**row)
 
@@ -157,6 +164,32 @@ async def edit_message(
     message_id: uuid.UUID, body: MessageEdit, user_id: CurrentUserId, svc: TeamChatService = Depends(_svc)
 ) -> MessageResponse:
     return MessageResponse(**await svc.edit_message(message_id, uuid.UUID(str(user_id)), body.text))
+
+
+@router.post(
+    "/messages/{message_id}/reactions/",
+    response_model=MessageResponse,
+    dependencies=[Depends(RequirePermission("team_chat.read"))],
+)
+async def toggle_reaction(
+    message_id: uuid.UUID,
+    body: ReactionToggle,
+    user_id: CurrentUserId,
+    session: SessionDep,
+    payload: CurrentUserPayload,
+    svc: TeamChatService = Depends(_svc),
+) -> MessageResponse:
+    uid = uuid.UUID(str(user_id))
+    msg = await svc.get_message(message_id)
+    room = await svc.require_access(msg.room_id, uid)
+    if payload and payload.get("role") != "admin" and room.project_id:
+        caps = await get_project_caps(session, user_id, room.project_id)
+        if "chat.write" not in caps:
+            raise HTTPException(
+                status_code=403,
+                detail="project_capability_required:chat.write",
+            )
+    return MessageResponse(**await svc.toggle_reaction(message_id, uid, body.emoji))
 
 
 @router.post("/rooms/{room_id}/read/", status_code=204, dependencies=[Depends(RequirePermission("team_chat.read"))])

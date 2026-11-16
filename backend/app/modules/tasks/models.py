@@ -91,3 +91,15 @@ class Task(Base):
 
     def __repr__(self) -> str:
         return f"<Task {self.title[:40]} ({self.task_type}/{self.status})>"
+
+
+def is_task_assignee(task_obj: object, user_id: object) -> bool:
+    """Return True when ``user_id`` is ``responsible_id`` or in ``persons_involved``."""
+    uid = str(user_id or "")
+    if not uid:
+        return False
+    responsible = str(getattr(task_obj, "responsible_id", "") or "")
+    if responsible == uid:
+        return True
+    involved = getattr(task_obj, "persons_involved", None) or []
+    return uid in [str(x) for x in involved]

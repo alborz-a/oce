@@ -101,6 +101,7 @@ class CommentResponse(BaseModel):
     entity_type: str
     entity_id: str
     author_id: UUID
+    author_name: str = ""
     text: str
     comment_type: str
     parent_comment_id: UUID | None = None

@@ -179,6 +179,22 @@ class CollaborationService:
             limit=limit,
         )
 
+    async def list_task_comments_for_project(
+        self,
+        project_id: uuid.UUID,
+        *,
+        current_user_id: str | None = None,
+        offset: int = 0,
+        limit: int = 100,
+    ) -> tuple[list[Comment], int]:
+        """List top-level comments across all visible tasks in a project."""
+        return await self.comment_repo.list_for_task_project(
+            project_id,
+            current_user_id=current_user_id,
+            offset=offset,
+            limit=limit,
+        )
+
     async def get_thread(self, comment_id: uuid.UUID) -> list[Comment]:
         """Get the full thread starting from a comment."""
         thread = await self.comment_repo.get_thread(comment_id)
