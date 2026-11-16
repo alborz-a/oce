@@ -251,7 +251,7 @@ export function resolveReporter(
   if (!hidden) return { name: resolvedName, body: text };
   const match = REPORTER_HEADER_RE.exec(text);
   if (!match) return { name: fallbackName, body: text };
-  return { name: match[1].trim(), body: text.slice(match[0].length) };
+  return { name: (match[1] ?? '').trim(), body: text.slice(match[0].length) };
 }
 
 export function isVideoStreamItem(item: StreamItem): boolean {
