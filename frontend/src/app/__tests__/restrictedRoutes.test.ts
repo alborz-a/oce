@@ -9,6 +9,8 @@ describe('isRestrictedRouteAllowed', () => {
       '/projects/abc/tasks',
       '/projects/abc/files',
       '/projects/abc/chat',
+      '/projects/abc/correspondence',
+      '/projects/abc/correspondence/',
       '/projects/abc/chat/room-1',
       '/projects/abc/meetings',
       '/projects/abc/schedule',
