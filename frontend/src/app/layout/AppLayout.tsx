@@ -154,7 +154,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           'oe-sidebar fixed inset-y-0 z-50 transition-transform duration-normal ease-oe',
           // LTR: attach to left edge; RTL: CSS overrides to right edge
           'start-0',
-          workspaceActive ? '' : 'lg:translate-x-0',
+          workspaceActive ? (sidebarOpen ? '' : 'hidden') : 'lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -203,7 +203,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
       <GlobalCatalogueInstallIndicator />
 
       {/* Floating Recent button — bottom-right corner */}
-      <FloatingRecentButton />
+      {!workspaceActive && <FloatingRecentButton />}
 
       {/* AI assistant — the round button and the dock it opens (Alt+A
           toggles it too). The dock pushes the page aside on wide screens
@@ -211,7 +211,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           stay out of /chat, which is the full-page version of the same
           assistant. Mounted at the layout level so the conversation
           survives navigation. */}
-      {isSystemAdmin && <FloatingChatButton />}
+      {isSystemAdmin && !workspaceActive && <FloatingChatButton />}
       {isSystemAdmin && <FloatingChatPanel />}
 
       {/* Occasional, non-blocking ask for a rating or review. Mounted here
@@ -222,7 +222,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           once per signed-in session (App.tsx `AppShell`), and every piece of
           state the card needs lives in useReviewPromptStore anyway, not in
           the component. */}
-      <ReviewPromptCard />
+      {!workspaceActive && <ReviewPromptCard />}
 
       {/* Global onboarding tour (ProductTour) mounts once at App.tsx
           top level — moving it out of here was the fix for
