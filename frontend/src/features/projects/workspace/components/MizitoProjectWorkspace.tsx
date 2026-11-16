@@ -7,6 +7,7 @@ import { projectsApi, type Project } from '@/features/projects/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import '../workspace.css';
 import { useProjectWorkspaceStats } from '../hooks/useProjectWorkspaceStats';
+import { isSyntheticAlbumTask } from '../syntheticAlbumTask';
 import {
   DEFAULT_STREAM_FILTERS,
   type ProjectTaskItem,
@@ -93,7 +94,11 @@ export function MizitoProjectWorkspace({
 
   const projects: Project[] = useMemo(() => projectsQuery.data ?? [], [projectsQuery.data]);
   const members: WorkspaceMember[] = useMemo(() => membersQuery.data ?? [], [membersQuery.data]);
-  const tasks: ProjectTaskItem[] = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
+  const allTasks: ProjectTaskItem[] = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
+  const tasks: ProjectTaskItem[] = useMemo(
+    () => allTasks.filter((t) => !isSyntheticAlbumTask(t)),
+    [allTasks],
+  );
   const project: Project | undefined =
     projectQuery.data ?? projects.find((p) => p.id === projectId);
 
