@@ -63,6 +63,38 @@ const missing = new Set<string>();
 const PHOTO_DIRECT = /^((?:https?:\/\/[^/]+)?\/api\/v1\/documents\/photos\/[^/]+)\/(file|thumb)\/$/;
 
 /**
+ * Presigned storage URLs per ``-url/`` endpoint, kept until shortly before they expire. Without this every
+ * mount of a grid tile called ``thumb-url`` again (two round trips per tile). Entries carry the bearer token
+ * they were issued for, so a logout or a user switch never reuses another user's URL. Failures are not kept.
+ */
+interface PresignedEntry {
+  url: string;
+  expiresAt: number;
+  auth: string;
+}
+const presigned = new Map<string, PresignedEntry>();
+/** Same-endpoint requests in flight share one promise. */
+const presignInFlight = new Map<string, Promise<string | null>>();
+
+const PRESIGN_DEFAULT_MS = 2 * 60_000;
+const PRESIGN_MIN_MS = 30_000;
+const PRESIGN_MAX_MS = 10 * 60_000;
+
+/** How long a presigned URL may be reused: half its lifetime, clamped to 30 s .. 10 min; 2 min if unknown. */
+export function presignTtlMs(url: string, expiresInSeconds?: number): number {
+  let seconds = typeof expiresInSeconds === 'number' ? expiresInSeconds : NaN;
+  if (!(seconds > 0)) {
+    try {
+      seconds = Number(new URL(url).searchParams.get('X-Amz-Expires'));
+    } catch {
+      seconds = NaN;
+    }
+  }
+  if (!(seconds > 0)) return PRESIGN_DEFAULT_MS;
+  return Math.min(PRESIGN_MAX_MS, Math.max(PRESIGN_MIN_MS, (seconds * 1000) / 2));
+}
+
+/**
  * Ask the API for a presigned storage URL. The permission check happens there; the image then loads
  * straight from the bucket with no bearer token and no download through our server. Null means the
  * photo is not bucket-backed (or the call failed) and the caller proxies it as before.
@@ -70,15 +102,31 @@ const PHOTO_DIRECT = /^((?:https?:\/\/[^/]+)?\/api\/v1\/documents\/photos\/[^/]+
 async function fetchDirectUrl(src: string, headers: Record<string, string>): Promise<string | null> {
   const m = PHOTO_DIRECT.exec(src);
   if (!m) return null;
-  try {
-    const res = await fetch(`${m[1]}/${m[2]}-url/`, { headers: { ...headers, Accept: 'application/json' } });
-    if (res.status === 404) missing.add(src);
-    if (!res.ok) return null;
-    const body = (await res.json()) as { url?: string | null };
-    return typeof body.url === 'string' && body.url.startsWith('https://') ? body.url : null;
-  } catch {
-    return null;
-  }
+  const endpoint = `${m[1]}/${m[2]}-url/`;
+  const auth = headers['Authorization'] ?? '';
+  const hit = presigned.get(endpoint);
+  if (hit && hit.auth === auth && Date.now() < hit.expiresAt) return hit.url;
+  const flightKey = `${auth}\n${endpoint}`;
+  const pending = presignInFlight.get(flightKey);
+  if (pending) return pending;
+  const request = (async (): Promise<string | null> => {
+    try {
+      const res = await fetch(endpoint, { headers: { ...headers, Accept: 'application/json' } });
+      if (res.status === 404) missing.add(src);
+      if (!res.ok) return null;
+      const body = (await res.json()) as { url?: string | null; expires?: number };
+      if (typeof body.url !== 'string' || !body.url.startsWith('https://')) return null;
+      const expiresAt = Date.now() + presignTtlMs(body.url, body.expires);
+      presigned.set(endpoint, { url: body.url, expiresAt, auth });
+      return body.url;
+    } catch {
+      return null;
+    } finally {
+      presignInFlight.delete(flightKey);
+    }
+  })();
+  presignInFlight.set(flightKey, request);
+  return request;
 }
 
 async function fetchObjectUrl(src: string, priority: FetchPriority): Promise<string> {
@@ -137,6 +185,8 @@ export function resetAuthImageCache() {
   }
   cache.clear();
   missing.clear();
+  presigned.clear();
+  presignInFlight.clear();
 }
 
 export interface AuthedObjectUrl {
