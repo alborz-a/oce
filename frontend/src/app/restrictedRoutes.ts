@@ -9,7 +9,7 @@ const ALLOWED: RegExp[] = [
   /^\/dashboard$/,
   /^\/projects$/,
   /^\/projects\/(?!new(?:\/|$))[^/]+$/,
-  /^\/projects\/[^/]+\/(?:tasks|files|chat|meetings|schedule|timeline)(?:\/.*)?$/,
+  /^\/projects\/[^/]+\/(?:tasks|files|chat|meetings|schedule|timeline|correspondence)(?:\/.*)?$/,
   /^\/files\/detail\/[^/]+\/[^/]+$/,
   /^\/tasks$/,
   /^\/photos$/,

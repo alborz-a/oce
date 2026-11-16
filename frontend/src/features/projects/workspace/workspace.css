@@ -209,6 +209,17 @@
   min-inline-size: 0;
 }
 
+.mizito-workspace-light .mz-top-tabbar > div:first-child {
+  flex: 1 1 0%;
+  min-inline-size: 0;
+  overflow-x: auto;
+}
+
+.mizito-workspace-light .mz-top-tabbar > div:first-child > nav[role='tablist'] {
+  min-inline-size: 0;
+  overflow-x: auto;
+}
+
 .mizito-workspace-light .submenu_tab {
   position: relative;
   display: inline-flex;
