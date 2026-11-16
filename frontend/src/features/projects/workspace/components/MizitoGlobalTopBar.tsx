@@ -2,6 +2,7 @@ import { Bell, Bookmark, HelpCircle, Menu, MessageSquare, Search, Settings } fro
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
+import { Logo } from '@/shared/ui';
 
 export interface MizitoGlobalTopBarProps {
   onMenuClick: () => void;
@@ -31,8 +32,12 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
       <button type="button" onClick={onMenuClick} aria-label="منو" className={iconBtn}>
         <Menu size={20} />
       </button>
-      <span className="text-[17px] font-bold">{company || 'OCE'}</span>
+      <span className="hidden text-[17px] font-bold md:block">{company || 'OCE'}</span>
       <span className="hidden text-[12.5px] text-white/80 md:inline">{company ? '' : FALLBACK_BRAND}</span>
+      <span className="flex min-w-0 items-center gap-2 md:hidden" data-testid="mizito-mobile-brand">
+        <Logo size="xs" />
+        <span className="truncate whitespace-nowrap text-[15px] font-bold">رویال استارز</span>
+      </span>
 
       <button
         type="button"
