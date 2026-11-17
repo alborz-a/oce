@@ -44,6 +44,8 @@ D = "/api/v1/"
         ("GET", f"{D}team-chat/rooms/"),
         ("POST", f"{D}team-chat/rooms/{P}/messages/"),
         ("GET", f"{D}users/me/projects/{P}/caps"),
+        ("GET", f"{D}correspondence/?project_id={P}&limit=100"),
+        ("GET", f"{D}correspondence/{P}"),
     ],
 )
 def test_staff_allowed(method, path):
@@ -69,6 +71,9 @@ def test_staff_allowed(method, path):
         ("DELETE", f"{D}projects/{P}/"),
         ("PATCH", f"{D}projects/{P}/members/{P}/"),
         ("PUT", f"{D}projects/{P}/members/"),
+        ("POST", f"{D}correspondence/"),
+        ("PATCH", f"{D}correspondence/{P}"),
+        ("DELETE", f"{D}correspondence/{P}"),
     ],
 )
 def test_staff_denied(method, path):

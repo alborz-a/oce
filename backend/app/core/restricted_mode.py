@@ -48,6 +48,9 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(frozenset({"DELETE"}), rf"^projects/{_ID}/members/{_ID}/?$"),
     # project file manager (documents + photos list, tree, storage locations). Read only.
     _rule(_R, rf"^projects/{_ID}/files(/(tree|locations))?/?$"),
+    # correspondence: read only. Every GET handler enforces verify_project_access
+    # except the shared general project (MZ-GENERAL), which all staff may read.
+    _rule(_R, r"^correspondence(/.*)?$"),
     # tasks: read, create, update, delete, complete.
     _rule(_R, r"^tasks/?$"),
     _rule(_R, r"^tasks/(my-tasks|stats)/?$"),
