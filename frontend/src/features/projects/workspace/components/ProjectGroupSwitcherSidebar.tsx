@@ -280,7 +280,7 @@ export function ProjectGroupSwitcherSidebar({
               placeholder="جستجوی پروژه یا گروه..."
               aria-label="جستجوی پروژه یا گروه"
               data-testid="switcher-search-input"
-              className="h-8 w-full rounded-md border border-[#e5e7eb] bg-[#f5f6f8] ps-8 pe-7 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:border-[#3078ab] focus:bg-white focus:outline-none"
+              className="h-8 w-full rounded-md border border-[#e5e7eb] bg-[#f5f6f8] ps-8 pe-7 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:border-mz-project focus:bg-white focus:outline-none"
             />
             {isSearching && (
               <button
@@ -344,7 +344,7 @@ export function ProjectGroupSwitcherSidebar({
                             key={project.id}
                             className={`group flex items-center gap-1 rounded-md px-1 py-0.5 transition-colors ${
                               isActive
-                                ? 'bg-[#e8f2fa] text-[#3078ab]'
+                                ? 'bg-[#e8f2fa] text-mz-project'
                                 : 'text-[#374151] hover:bg-[#f5f6f8]'
                             }`}
                           >
@@ -356,7 +356,7 @@ export function ProjectGroupSwitcherSidebar({
                               }}
                               aria-current={isActive ? 'page' : undefined}
                               data-testid={`switcher-project-${project.id}`}
-                              className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-start focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3078ab]"
+                              className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-start focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project"
                             >
                               <span
                                 aria-hidden="true"
@@ -367,7 +367,7 @@ export function ProjectGroupSwitcherSidebar({
                               </span>
                               <span
                                 className={`min-w-0 flex-1 truncate text-[12px] ${
-                                  isActive ? 'font-semibold text-[#3078ab]' : 'font-medium'
+                                  isActive ? 'font-semibold text-mz-project' : 'font-medium'
                                 }`}
                               >
                                 {toPersianDigits(project.name)}
@@ -384,7 +384,7 @@ export function ProjectGroupSwitcherSidebar({
                                   : `پین کردن ${project.name}`
                               }
                               data-testid={`switcher-pin-${project.id}`}
-                              className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded transition-opacity focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3078ab] ${
+                              className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded transition-opacity focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project ${
                                 isPinned
                                   ? 'text-[#f59e0b] opacity-100'
                                   : 'text-[#9ca3af] opacity-0 group-hover:opacity-100 hover:text-[#f59e0b]'
@@ -478,7 +478,7 @@ export function ProjectGroupSwitcherSidebar({
                         <div className="flex items-center gap-1 text-[12px] font-medium text-[#1f2937]">
                           <span className="truncate">{displayName}</span>
                           {isMe && (
-                            <span className="shrink-0 text-[10.5px] text-[#3078ab]">(من)</span>
+                            <span className="shrink-0 text-[10.5px] text-mz-project">(من)</span>
                           )}
                         </div>
                         {currentTask ? (

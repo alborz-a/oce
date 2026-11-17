@@ -7,6 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Mizito namespace (mz-*): values live in workspace.css under
+        // .mz-shell (hex vars + `-ch` RGB triplets). Same function-form as oe.
+        // Add a token by adding its name here and its vars in workspace.css.
+        mz: Object.fromEntries(
+          ['appbar', 'primary', 'primary-hover', 'indigo-dark', 'text', 'muted', 'border', 'bg-subtle', 'project', 'task', 'inbox', 'purple', 'pink', 'chat'].map((k) => [
+            k,
+            ({ opacityValue }) =>
+              opacityValue === undefined
+                ? `var(--mz-${k})`
+                : `rgb(var(--mz-${k}-ch) / ${opacityValue})`,
+          ]),
+        ),
         // Function-form colors: a plain `bg-oe-blue` keeps resolving through
         // var(--oe-blue) (runtime-themable, unchanged), while alpha modifiers
         // (`bg-oe-blue/10`, `border-oe-blue/30`) compose from the channel
@@ -109,6 +121,7 @@ export default {
         },
       },
       fontFamily: {
+        mz: ['Shabnam', 'var(--oe-font-sans)', 'Tahoma', 'Arial', 'sans-serif'],
         sans: ['var(--oe-font-sans)'],
         mono: ['var(--oe-font-mono)'],
       },

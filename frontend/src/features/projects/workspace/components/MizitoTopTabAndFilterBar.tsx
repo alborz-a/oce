@@ -102,7 +102,7 @@ export function MizitoTopTabAndFilterBar({
 
   return (
     <header
-      className="mz-top-tabbar"
+      className="mz-top-tabbar mz-shell font-mz"
       data-testid="mizito-top-tabbar"
     >
       {/* Start (Right in RTL): responsive toggles + 5 primary Mizito tabs */}
@@ -177,7 +177,7 @@ export function MizitoTopTabAndFilterBar({
                   placeholder="فیلتر پیام‌ها"
                   aria-label="فیلتر پیام‌ها"
                   data-testid="stream-filter-search"
-                  className="h-7 w-36 rounded-full border border-[#e5e7eb] bg-[#f5f6f8] ps-7 pe-3 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:w-44 focus:border-[#3078ab] focus:bg-white focus:outline-none transition-all"
+                  className="h-7 w-36 rounded-full border border-[#e5e7eb] bg-[#f5f6f8] ps-7 pe-3 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:w-44 focus:border-mz-project focus:bg-white focus:outline-none transition-all"
                 />
               </search>
 
@@ -193,7 +193,7 @@ export function MizitoTopTabAndFilterBar({
                     );
                     input?.focus();
                   }}
-                  className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#3078ab]"
+                  className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project"
                 >
                   <Search size={15} />
                 </button>
@@ -206,8 +206,8 @@ export function MizitoTopTabAndFilterBar({
                   onClick={onSenderFilterClick}
                   className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
                     filters.senderId !== null
-                      ? 'bg-[#e8f2fa] text-[#3078ab]'
-                      : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#3078ab]'
+                      ? 'bg-[#e8f2fa] text-mz-project'
+                      : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                   }`}
                 >
                   <User size={15} />
@@ -221,8 +221,8 @@ export function MizitoTopTabAndFilterBar({
                   onClick={onDateFilterClick}
                   className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
                     filters.dateFrom !== null || filters.dateTo !== null
-                      ? 'bg-[#e8f2fa] text-[#3078ab]'
-                      : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#3078ab]'
+                      ? 'bg-[#e8f2fa] text-mz-project'
+                      : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                   }`}
                 >
                   <CalendarDays size={15} />
@@ -241,8 +241,8 @@ export function MizitoTopTabAndFilterBar({
                       onClick={() => toggleKind(kind)}
                       className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
                         active
-                          ? 'bg-[#e8f2fa] text-[#3078ab]'
-                          : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#3078ab]'
+                          ? 'bg-[#e8f2fa] text-mz-project'
+                          : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                       }`}
                     >
                       <Icon size={15} />
@@ -271,7 +271,7 @@ export function MizitoTopTabAndFilterBar({
             type="button"
             onClick={onSwitchToEngineering}
             data-testid="switch-to-engineering-view"
-            className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 text-[11.5px] font-medium text-[#2b4162] hover:border-[#3078ab] hover:bg-[#e8f2fa] hover:text-[#3078ab] transition-colors whitespace-nowrap"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 text-[11.5px] font-medium text-[#2b4162] hover:border-mz-project hover:bg-[#e8f2fa] hover:text-mz-project transition-colors whitespace-nowrap"
           >
             <Compass size={13} aria-hidden="true" />
             <span>ورود به حالت مهندسی</span>
