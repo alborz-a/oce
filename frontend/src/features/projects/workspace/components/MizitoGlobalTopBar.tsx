@@ -1,4 +1,5 @@
-import { Bell, Bookmark, HelpCircle, Menu, MessageSquare, Search, Settings } from 'lucide-react';
+import { Bell, HelpCircle, Menu, Search, Settings } from 'lucide-react';
+import { MzIcon } from './MzIcon';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
@@ -53,10 +54,10 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
           <Bell size={17} />
         </button>
         <button type="button" onClick={() => navigate('/tasks')} aria-label="وظایف" className={iconBtn}>
-          <Bookmark size={17} />
+          <MzIcon name="bookmark" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/projects')} aria-label="گفتگو" className={iconBtn}>
-          <MessageSquare size={17} />
+          <MzIcon name="chat" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/settings')} aria-label="تنظیمات" className={iconBtn}>
           <Settings size={17} />
@@ -68,7 +69,7 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
           type="button"
           onClick={() => navigate('/profile')}
           aria-label="پروفایل"
-          className="ms-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/25 text-[13px] font-bold"
+          className="ms-1 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#e0e3e8] text-[13px] font-bold text-[#37474f] shadow-[0_1px_3px_rgba(0,0,0,.28)]"
         >
           {(fullName ?? '؟').trim().charAt(0)}
         </button>

@@ -1,5 +1,6 @@
 import { useState, type KeyboardEvent } from 'react';
-import { Check, Pencil, Reply, SmilePlus, Trash2, X } from 'lucide-react';
+import { Check, Pencil, SmilePlus, Trash2, X } from 'lucide-react';
+import { MzIcon } from '../MzIcon';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
 import { useOpenDmForColleague } from '../../context/WorkspaceDmContext';
@@ -83,7 +84,7 @@ export function StreamCardFooterBar({
           className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-[#6b7280] transition-colors hover:bg-black/5 hover:text-[#3078ab]"
           aria-label="پاسخ"
         >
-          <Reply size={12} />
+          <MzIcon name="reply" size={12} />
           <span>پاسخ</span>
         </button>
 

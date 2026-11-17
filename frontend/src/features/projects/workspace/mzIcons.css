@@ -1,0 +1,30 @@
+/* Material Icons ligature font for the Mizito workspace. Kept out of workspace.css on purpose. */
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/material-icons.woff2') format('woff2');
+}
+
+.mz-icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
+  font-variant-ligatures: discretionary-ligatures;
+  display: inline-block;
+  vertical-align: middle;
+  user-select: none;
+}
+
+.mz-icon.icon-flip-horizontal {
+  transform: scaleX(-1);
+}

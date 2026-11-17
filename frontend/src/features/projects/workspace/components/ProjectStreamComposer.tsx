@@ -436,11 +436,11 @@ export function ProjectStreamComposer({
 
       {/* Main composer row */}
       <div className="flex items-center gap-2">
-        <div className="h-8 w-8 shrink-0 rounded-full bg-[#e5e7eb] text-[#4b5563]">
+        <div className="h-7 w-7 shrink-0 rounded-full bg-[#cfd8dc] text-[#455a64] shadow-[0_1px_2px_rgba(0,0,0,.18)]">
           <UserAvatar
             url={currentUser?.avatar_url}
             alt={currentUser?.full_name || currentUser?.email || 'کاربر'}
-            className="h-8 w-8 rounded-full object-cover"
+            className="h-7 w-7 rounded-full object-cover"
           />
         </div>
 

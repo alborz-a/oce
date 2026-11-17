@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { CheckCheck, Image as ImageIcon, Share2 } from 'lucide-react';
+import { CheckCheck, Share2 } from 'lucide-react';
+import { MzIcon } from '../MzIcon';
 import { AuthImage } from '@/shared/ui';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../../types';
@@ -106,12 +107,12 @@ export function StreamPhotoBubbleCard({
                     className="mz-media-block aspect-[4/3] w-[260px] max-w-full rounded-[6px] object-cover shadow-md"
                     placeholder={
                       <div className="flex h-40 w-full items-center justify-center bg-[#f2f4f7] text-[#909090]">
-                        <ImageIcon size={24} />
+                        <MzIcon name="image" size={24} />
                       </div>
                     }
                     fallback={
                       <div className="flex h-36 w-full flex-col items-center justify-center gap-1 bg-[#f5f6f8] text-[11px] text-[#909090]">
-                        <ImageIcon size={22} />
+                        <MzIcon name="image" size={22} />
                         <span>پیش‌نمایش در دسترس نیست</span>
                       </div>
                     }
