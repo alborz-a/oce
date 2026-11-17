@@ -7,11 +7,13 @@ import {
   Video,
   X,
 } from 'lucide-react';
+import { useState } from 'react';
 import type { Project } from '@/features/projects/api';
 import { TeamStrip } from '@/features/projects/components/TeamStrip';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { AuthImage } from '@/shared/ui/AuthImage';
 import type { ProjectSummaryStats, StatusBreakdown, WorkspaceMember } from '../types';
+import { ProjectSettingsModal } from './ProjectSettingsModal';
 
 export interface ProjectRightSummaryPanelProps {
   project: Project;
@@ -226,6 +228,7 @@ export function ProjectRightSummaryPanel({
   onMobileClose,
   className = '',
 }: ProjectRightSummaryPanelProps) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const avatarUrl =
     typeof project.metadata?.avatar_url === 'string' && project.metadata.avatar_url.trim()
       ? project.metadata.avatar_url.trim()
@@ -336,6 +339,7 @@ export function ProjectRightSummaryPanel({
                 currentUserId={currentUserId ?? undefined}
                 initialMembers={members}
                 variant="summary"
+                onEditClick={() => setSettingsOpen(true)}
               />
             </div>
           </div>
@@ -406,6 +410,12 @@ export function ProjectRightSummaryPanel({
           testId="summary-donut-others"
         />
       </div>
+      <ProjectSettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        projectId={project.id}
+        projectName={project.name}
+      />
     </aside>
   );
 }
