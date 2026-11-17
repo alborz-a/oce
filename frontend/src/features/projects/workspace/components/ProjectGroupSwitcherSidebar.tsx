@@ -129,22 +129,6 @@ export function usePinnedProjects(
   return { pinnedIds, togglePin };
 }
 
-function monogramForProject(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return 'پ';
-  if (words.length === 1) return words[0]!.slice(0, 2);
-  return `${words[0]![0] ?? ''}${words[1]![0] ?? ''}`;
-}
-
-function swatchForProject(id: string): string {
-  const palette = ['#3078ab', '#6ab04c', '#ba68c8', '#00b4d8', '#ff8c7e', '#4b9fff'];
-  let hash = 0;
-  for (let i = 0; i < id.length; i += 1) {
-    hash = (hash * 31 + id.charCodeAt(i)) | 0;
-  }
-  return palette[Math.abs(hash) % palette.length] ?? '#3078ab';
-}
-
 export interface ProjectGroupSwitcherSidebarProps {
   projects: Project[];
   activeProjectId: string;
@@ -160,18 +144,6 @@ export interface ProjectGroupSwitcherSidebarProps {
   className?: string;
 }
 
-interface SectionConfig {
-  key: ProjectSwitcherCategory;
-  title: string;
-  defaultOpen: boolean;
-}
-
-const SECTIONS: readonly SectionConfig[] = [
-  { key: 'pinned', title: 'پین‌شده‌ها', defaultOpen: true },
-  { key: 'active', title: 'پروژه‌های فعال', defaultOpen: true },
-  { key: 'admin_general', title: 'گروه‌های اداری و عمومی', defaultOpen: true },
-  { key: 'archived', title: 'بایگانی‌شده', defaultOpen: false },
-];
 
 export function ProjectGroupSwitcherSidebar({
   currentUserId,
