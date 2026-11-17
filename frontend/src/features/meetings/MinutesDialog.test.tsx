@@ -19,7 +19,7 @@
 // field is disabled and the issue itself persisted, so an export that wrote
 // anyway would be a pointless round trip against a row nobody can change.
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -170,6 +170,57 @@ describe('<MinutesDialog> Export PDF', () => {
     fireEvent.click(exportButton());
 
     await waitFor(() => expect(calls).toEqual(['pdf']));
+    expect(updateMock).not.toHaveBeenCalled();
+  });
+});
+
+function printButton(): HTMLButtonElement {
+  return screen.getByRole('button', { name: /چاپ/ }) as HTMLButtonElement;
+}
+
+describe('<MinutesDialog> Print', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('opens the window on click, loads the PDF into it and prints once loaded', async () => {
+    fetchMock.mockResolvedValue(minutes());
+    const win = {
+      location: { href: '' },
+      focus: vi.fn(),
+      print: vi.fn(),
+      close: vi.fn(),
+      onload: null as null | (() => void),
+    };
+    const openMock = vi.fn(() => win);
+    vi.stubGlobal('open', openMock);
+    URL.createObjectURL = vi.fn(() => 'blob:minutes-pdf');
+    renderDialog();
+
+    await waitFor(() => expect(printButton()).toBeTruthy());
+    fireEvent.click(printButton());
+
+    // Window opened synchronously in the click, before the fetch starts.
+    expect(openMock).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(win.location.href).toBe('blob:minutes-pdf'));
+    expect(calls).toEqual(['save', 'pdf']);
+
+    expect(win.print).not.toHaveBeenCalled();
+    win.onload?.();
+    expect(win.print).toHaveBeenCalledTimes(1);
+    expect(win.close).not.toHaveBeenCalled();
+  });
+
+  it('does not fetch when the popup is blocked', async () => {
+    fetchMock.mockResolvedValue(minutes());
+    vi.stubGlobal('open', vi.fn(() => null));
+    renderDialog();
+
+    await waitFor(() => expect(printButton()).toBeTruthy());
+    fireEvent.click(printButton());
+
+    expect(calls).toEqual([]);
     expect(updateMock).not.toHaveBeenCalled();
   });
 });
