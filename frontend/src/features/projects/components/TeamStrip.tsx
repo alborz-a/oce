@@ -451,6 +451,8 @@ export interface TeamStripProps {
    * no add / manage buttons; a single pencil button opens the member manage modal.
    */
   variant?: 'compact' | 'summary';
+  /** Summary pencil handler. When set, the pencil calls it instead of opening the member modal. */
+  onEditClick?: () => void;
 }
 
 export function TeamStrip({
@@ -459,6 +461,7 @@ export function TeamStrip({
   currentUserId,
   initialMembers,
   variant = 'compact',
+  onEditClick,
 }: TeamStripProps) {
   const isSummary = variant === 'summary';
   const { t } = useTranslation();
@@ -631,7 +634,7 @@ export function TeamStrip({
         {isSummary && canManage && (
           <button
             type="button"
-            onClick={() => setListOpen(true)}
+            onClick={() => (onEditClick ? onEditClick() : setListOpen(true))}
             className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-mz-value hover:bg-mz-bg-subtle"
             data-testid="team-strip-edit"
             aria-label={t('projects.team.edit_members', { defaultValue: 'تنظیمات پروژه' })}
