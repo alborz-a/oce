@@ -1,10 +1,22 @@
 import { useState } from 'react';
-import { Image as ImageIcon } from 'lucide-react';
+import { CheckCheck, Image as ImageIcon, Share2 } from 'lucide-react';
 import { AuthImage } from '@/shared/ui';
-import { MediaLightbox, type MediaLightboxItem } from '@/features/file-manager/components/MediaLightbox';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../../types';
+import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
 import { formatStreamTime, getInitials, StreamCardFooterBar } from './StreamChatMessageCard';
+
+async function sharePhotoLink(url: string): Promise<void> {
+  try {
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      await navigator.share({ url });
+      return;
+    }
+    await navigator.clipboard?.writeText(url);
+  } catch {
+    // User cancelled share or clipboard blocked: nothing else to do.
+  }
+}
 
 export interface StreamPhotoBubbleCardProps {
   item: StreamItem;
@@ -58,18 +70,11 @@ export function StreamPhotoBubbleCard({
     setLightboxIdx(index);
   };
 
-  const lightboxItems: MediaLightboxItem[] =
-    lightboxIdx !== null
-      ? photos.map((p) => ({
-          id: p.id,
-          name: p.caption || p.filename || 'تصویر پروژه',
-          extension: p.filename?.split('.').pop() ?? 'jpg',
-          mime_type: 'image/jpeg',
-          download_url: getFullFileUrl(p),
-          thumbnail_url: getThumbUrl(p),
-          kind: 'photo',
-        }))
-      : [];
+  const lightboxPhotos = photos.map((p) => ({
+    id: p.id,
+    url: getFullFileUrl(p),
+    name: p.caption || p.filename || 'تصویر پروژه',
+  }));
 
   return (
     <article
@@ -92,7 +97,7 @@ export function StreamPhotoBubbleCard({
                   key={photo.id}
                   type="button"
                   onClick={() => handlePhotoClick(idx)}
-                  className="relative block w-full overflow-hidden rounded-[6px] bg-[#f2f4f7] text-start focus:outline-none focus:ring-2 focus:ring-[#3078ab]"
+                  className="group/tile relative block w-full overflow-hidden rounded-[6px] bg-[#f2f4f7] text-start focus:outline-none focus:ring-2 focus:ring-[#3078ab]"
                   aria-label={photo.caption || photo.filename || 'مشاهده تصویر'}
                 >
                   <AuthImage
@@ -111,6 +116,16 @@ export function StreamPhotoBubbleCard({
                       </div>
                     }
                   />
+                  <span
+                    title="اشتراک‌گذاری لینک تصویر"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void sharePhotoLink(getFullFileUrl(photo));
+                    }}
+                    className="absolute end-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover/tile:opacity-100 focus-visible:opacity-100"
+                  >
+                    <Share2 size={14} />
+                  </span>
                   {isOverflowTile && (
                     <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-base font-bold text-white">
                       +{toPersianDigits(extraCount)}
@@ -130,10 +145,19 @@ export function StreamPhotoBubbleCard({
               ) : (
                 <span />
               )}
-              {timeText && <span className="mz-time-muted shrink-0">{timeText}</span>}
+              {timeText && !item.isCurrentUser && (
+                <span className="mz-time-muted shrink-0">{timeText}</span>
+              )}
             </div>
           )}
         </div>
+
+        {item.isCurrentUser && timeText && (
+          <div className="mt-1 flex items-center gap-1 px-1 text-[11px] text-black/50">
+            <span className="mz-time-muted">{timeText}</span>
+            <CheckCheck size={14} className="text-[#3078ab]" aria-label="دیده شده" />
+          </div>
+        )}
 
         <StreamCardFooterBar
           item={item}
@@ -155,10 +179,9 @@ export function StreamPhotoBubbleCard({
         </div>
       )}
 
-      {!onOpenPhoto && lightboxIdx !== null && lightboxItems.length > 0 && (
-        <MediaLightbox
-          open
-          items={lightboxItems}
+      {!onOpenPhoto && lightboxIdx !== null && lightboxPhotos.length > 0 && (
+        <ChatPhotoLightbox
+          photos={lightboxPhotos}
           index={lightboxIdx}
           onClose={() => setLightboxIdx(null)}
           onIndexChange={setLightboxIdx}

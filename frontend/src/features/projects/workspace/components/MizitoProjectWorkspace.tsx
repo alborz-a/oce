@@ -148,7 +148,7 @@ export function MizitoProjectWorkspace({
 
   return (
     <WorkspaceDmContext.Provider value={dmValue}>
-    <div className="mizito-workspace-light" dir="rtl" data-testid="mizito-workspace">
+    <div className="mizito-workspace-light mz-shell font-mz" dir="rtl" data-testid="mizito-workspace">
       <ProjectGroupSwitcherSidebar
         projects={projects}
         activeProjectId={projectId}
