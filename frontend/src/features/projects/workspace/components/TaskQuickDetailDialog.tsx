@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
+  Bell,
   Check,
   CheckSquare,
   MessageSquarePlus,
@@ -8,6 +9,7 @@ import {
   Printer,
   Send,
   Square,
+  Tag,
   Trash2,
   X,
 } from 'lucide-react';
@@ -31,6 +33,21 @@ import {
 import type { ProjectTaskChecklistItem, ProjectTaskItem } from '../types';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
+import { useFloatingPosition } from '@/shared/ui/floatingPosition';
+import {
+  DEFAULT_REMINDER_HOUR,
+  TASK_LABEL_CHIP_CLASSES,
+  TASK_LABEL_COLORS,
+  TASK_LABEL_SWATCH_CLASSES,
+  collectProjectLabels,
+  computeReminderIso,
+  createTaskLabel,
+  parseRemindAt,
+  parseTaskLabels,
+  reminderIsoFromDate,
+  type TaskLabel,
+  type TaskLabelColor,
+} from '../lib/taskLabelsAndReminder';
 
 export interface TaskQuickDetailDialogProps {
   projectId: string;
@@ -65,6 +82,28 @@ function checklistDone(item: ProjectTaskChecklistItem): boolean {
   return Boolean(item.completed ?? item.done);
 }
 
+type ReminderRowKey = 'today' | 'tomorrow' | 'dayAfter';
+
+const REMINDER_ROWS: ReadonlyArray<{ key: ReminderRowKey; label: string; offset: number }> = [
+  { key: 'today', label: 'امروز', offset: 0 },
+  { key: 'tomorrow', label: 'فردا', offset: 1 },
+  { key: 'dayAfter', label: 'پس‌فردا', offset: 2 },
+];
+
+const HOUR_OPTIONS = Array.from({ length: 24 }, (_, h) => h);
+
+const HIDDEN_POPOVER_STYLE = { position: 'fixed', top: 0, left: 0, visibility: 'hidden' } as const;
+
+function hourLabel(hour: number): string {
+  return toPersianDigits(`${String(hour).padStart(2, '0')}:00`);
+}
+
+function formatReminderLabel(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return `${formatJalali(d, 'short')} ${hourLabel(d.getHours())}`;
+}
+
 export function TaskQuickDetailDialog({
   projectId: _projectId,
   task,
@@ -87,6 +126,27 @@ export function TaskQuickDetailDialog({
   const [boardName, setBoardName] = useState<string>('برای انجام');
   const [checklist, setChecklist] = useState<Array<{ id: string | null; text: string; completed: boolean }>>([]);
   const [newCheckItem, setNewCheckItem] = useState('');
+  const [labels, setLabels] = useState<TaskLabel[]>([]);
+  const [remindAt, setRemindAt] = useState<string | null>(null);
+  const [labelOpen, setLabelOpen] = useState(false);
+  const [labelFilter, setLabelFilter] = useState('');
+  const [creatingLabel, setCreatingLabel] = useState(false);
+  const [newLabelName, setNewLabelName] = useState('');
+  const [newLabelColor, setNewLabelColor] = useState<TaskLabelColor>('blue');
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [reminderHours, setReminderHours] = useState<Record<ReminderRowKey, number>>({
+    today: DEFAULT_REMINDER_HOUR,
+    tomorrow: DEFAULT_REMINDER_HOUR,
+    dayAfter: DEFAULT_REMINDER_HOUR,
+  });
+  const [customReminderDate, setCustomReminderDate] = useState('');
+  const [customReminderHour, setCustomReminderHour] = useState<number>(DEFAULT_REMINDER_HOUR);
+  const labelTriggerRef = useRef<HTMLButtonElement>(null);
+  const labelPopRef = useRef<HTMLDivElement>(null);
+  const reminderTriggerRef = useRef<HTMLButtonElement>(null);
+  const reminderPopRef = useRef<HTMLDivElement>(null);
+  const labelPopStyle = useFloatingPosition(labelOpen, labelTriggerRef, labelPopRef, 'bottom');
+  const reminderPopStyle = useFloatingPosition(reminderOpen, reminderTriggerRef, reminderPopRef, 'bottom');
 
   const [comments, setComments] = useState<TaskCommentItem[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
@@ -98,6 +158,39 @@ export function TaskQuickDetailDialog({
   const [deleting, setDeleting] = useState(false);
   const queryClient = useQueryClient();
   const { confirm, ...confirmProps } = useConfirm();
+
+  // Chosen labels first so their color wins over the cached copy of the same label.
+  const availableLabels = collectProjectLabels([
+    { metadata: { labels } },
+    ...(queryClient.getQueryData<ProjectTaskItem[]>(['project-workspace-tasks', _projectId]) ?? []),
+  ]);
+  const labelFilterKey = labelFilter.trim().toLowerCase();
+  const shownLabels = availableLabels.filter(
+    (l) => !labelFilterKey || l.name.toLowerCase().includes(labelFilterKey),
+  );
+
+  const isLabelChosen = (id: string) => labels.some((l) => l.id === id);
+
+  const toggleLabel = (label: TaskLabel) => {
+    setLabels((prev) =>
+      prev.some((l) => l.id === label.id)
+        ? prev.filter((l) => l.id !== label.id)
+        : [...prev, label],
+    );
+  };
+
+  const handleCreateLabel = () => {
+    const created = createTaskLabel(newLabelName, newLabelColor);
+    if (!created) return;
+    setLabels((prev) => (prev.some((l) => l.id === created.id) ? prev : [...prev, created]));
+    setNewLabelName('');
+    setCreatingLabel(false);
+  };
+
+  const applyReminder = (iso: string | null) => {
+    setRemindAt(iso);
+    setReminderOpen(false);
+  };
 
   const membersById = useMemo(() => {
     const map = new Map<string, string>();
@@ -128,6 +221,8 @@ export function TaskQuickDetailDialog({
     setWeight(getTaskEffectiveWeight(task));
     setDueDate(task.due_date ? task.due_date.slice(0, 10) : '');
     setResponsibleId(task.responsible_id ?? '');
+    setLabels(parseTaskLabels(task.metadata?.labels));
+    setRemindAt(parseRemindAt(task.metadata?.remind_at));
     setBoardName(
       typeof task.metadata?.mizito_board === 'string' && task.metadata.mizito_board.trim()
         ? task.metadata.mizito_board.trim()
@@ -318,6 +413,8 @@ export function TaskQuickDetailDialog({
           mizito_board: boardName.trim() || 'برای انجام',
           weight: cleanWeight,
           progress: cleanProgress,
+          labels,
+          remind_at: remindAt,
         },
       });
       onUpdated?.();
@@ -456,6 +553,245 @@ export function TaskQuickDetailDialog({
                 data-testid="task-detail-title-input"
                 className="h-9 w-full rounded-md border border-[#e5e7eb] px-3 text-[13px] font-medium text-[#1f2937] focus:border-[#3078ab] focus:outline-none"
               />
+            </div>
+
+            <div className="space-y-2" data-testid="task-detail-meta-toolbar">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  ref={labelTriggerRef}
+                  type="button"
+                  onClick={() => setLabelOpen((v) => !v)}
+                  aria-expanded={labelOpen}
+                  data-testid="task-detail-labels-trigger"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#374151] hover:bg-[#f3f4f6]"
+                >
+                  <Tag size={14} />
+                  برچسب
+                </button>
+                <button
+                  ref={reminderTriggerRef}
+                  type="button"
+                  onClick={() => setReminderOpen((v) => !v)}
+                  aria-expanded={reminderOpen}
+                  data-testid="task-detail-reminder-trigger"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#374151] hover:bg-[#f3f4f6]"
+                >
+                  <Bell size={14} />
+                  یادآوری
+                </button>
+              </div>
+
+              {(labels.length > 0 || remindAt) && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {labels.map((l) => (
+                    <span
+                      key={l.id}
+                      data-testid="task-detail-label-chip"
+                      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${TASK_LABEL_CHIP_CLASSES[l.color]}`}
+                    >
+                      {l.name}
+                    </span>
+                  ))}
+                  {remindAt && (
+                    <span
+                      data-testid="task-detail-reminder-chip"
+                      className="inline-flex items-center gap-1 rounded-full border border-[#e5e7eb] px-2 py-0.5 text-[11px] text-[#374151]"
+                    >
+                      <Bell size={11} />
+                      {formatReminderLabel(remindAt)}
+                      <button
+                        type="button"
+                        onClick={() => setRemindAt(null)}
+                        aria-label="حذف یادآوری"
+                        className="inline-flex h-4 w-4 items-center justify-center rounded hover:bg-[#e5e7eb]"
+                      >
+                        <X size={11} />
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {labelOpen && (
+                <div
+                  ref={labelPopRef}
+                  role="dialog"
+                  aria-label="برچسب‌ها"
+                  data-testid="task-detail-labels-popover"
+                  style={labelPopStyle ?? HIDDEN_POPOVER_STYLE}
+                  className="w-64 rounded-lg border border-[#e5e7eb] bg-white p-2 text-[12px] shadow-lg"
+                >
+                  <input
+                    type="text"
+                    value={labelFilter}
+                    onChange={(e) => setLabelFilter(e.target.value)}
+                    placeholder="فیلتر برچسب"
+                    aria-label="فیلتر برچسب"
+                    className="h-8 w-full rounded-md border border-[#e5e7eb] px-2 text-[12px] focus:border-[#3078ab] focus:outline-none"
+                  />
+                  <ul className="mt-2 max-h-56 space-y-0.5 overflow-y-auto">
+                    {shownLabels.map((l) => (
+                      <li key={l.id}>
+                        <label className="flex cursor-pointer items-center gap-2 rounded-md px-1.5 py-1 hover:bg-[#f3f4f6]">
+                          <input
+                            type="checkbox"
+                            checked={isLabelChosen(l.id)}
+                            onChange={() => toggleLabel(l)}
+                          />
+                          <span
+                            className={`inline-flex rounded-full border px-2 py-0.5 text-[11px] font-medium ${TASK_LABEL_CHIP_CLASSES[l.color]}`}
+                          >
+                            {l.name}
+                          </span>
+                        </label>
+                      </li>
+                    ))}
+                    {shownLabels.length === 0 && (
+                      <li className="px-1.5 py-1 text-[#6b7280]">برچسبی یافت نشد</li>
+                    )}
+                  </ul>
+                  <div className="mt-2 border-t border-[#e5e7eb] pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setCreatingLabel((v) => !v)}
+                      className="text-[12px] font-medium text-[#3078ab]"
+                    >
+                      + ایجاد برچسب جدید
+                    </button>
+                    {creatingLabel && (
+                      <div className="mt-2 space-y-2">
+                        <input
+                          type="text"
+                          value={newLabelName}
+                          onChange={(e) => setNewLabelName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleCreateLabel();
+                            }
+                          }}
+                          placeholder="نام برچسب"
+                          aria-label="نام برچسب جدید"
+                          className="h-8 w-full rounded-md border border-[#e5e7eb] px-2 text-[12px] focus:border-[#3078ab] focus:outline-none"
+                        />
+                        <div className="flex items-center gap-1.5">
+                          {TASK_LABEL_COLORS.map((c) => (
+                            <button
+                              key={c}
+                              type="button"
+                              onClick={() => setNewLabelColor(c)}
+                              aria-label={`رنگ ${c}`}
+                              aria-pressed={newLabelColor === c}
+                              className={`h-5 w-5 rounded-full ${TASK_LABEL_SWATCH_CLASSES[c]} ${newLabelColor === c ? 'ring-2 ring-[#3078ab] ring-offset-1' : ''}`}
+                            />
+                          ))}
+                          <button
+                            type="button"
+                            onClick={handleCreateLabel}
+                            className="ms-auto rounded-md bg-[#3078ab] px-2.5 py-1 text-[12px] text-white"
+                          >
+                            ایجاد
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {reminderOpen && (
+                <div
+                  ref={reminderPopRef}
+                  role="dialog"
+                  aria-label="یادآوری"
+                  data-testid="task-detail-reminder-popover"
+                  style={reminderPopStyle ?? HIDDEN_POPOVER_STYLE}
+                  className="w-72 rounded-lg border border-[#e5e7eb] bg-white p-3 text-[12px] shadow-lg"
+                >
+                  <ul className="space-y-2">
+                    {REMINDER_ROWS.map((row) => (
+                      <li key={row.key} className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-[#1f2937]">{row.label}</span>
+                        <div className="flex items-center gap-1.5">
+                          <select
+                            aria-label={`ساعت ${row.label}`}
+                            value={reminderHours[row.key]}
+                            onChange={(e) =>
+                              setReminderHours((prev) => ({ ...prev, [row.key]: Number(e.target.value) }))
+                            }
+                            className="h-7 rounded-md border border-[#e5e7eb] bg-white px-1 text-[12px]"
+                          >
+                            {HOUR_OPTIONS.map((h) => (
+                              <option key={h} value={h}>
+                                {hourLabel(h)}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => applyReminder(computeReminderIso(row.offset, reminderHours[row.key]))}
+                            className="h-7 rounded-md border border-[#e5e7eb] px-2 hover:bg-[#f3f4f6]"
+                          >
+                            تنظیم
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 space-y-2 border-t border-[#e5e7eb] pt-3">
+                    <p className="font-medium text-[#1f2937]">انتخاب تاریخ و زمان</p>
+                    <div className="flex items-center gap-1.5">
+                      <JalaliDateInput
+                        id="task-detail-reminder-date"
+                        value={customReminderDate}
+                        onChange={(e) => setCustomReminderDate(e.target.value)}
+                        className="h-8 flex-1 rounded-md border border-[#e5e7eb] px-2 text-[12px]"
+                      />
+                      <select
+                        aria-label="ساعت یادآوری"
+                        value={customReminderHour}
+                        onChange={(e) => setCustomReminderHour(Number(e.target.value))}
+                        className="h-8 rounded-md border border-[#e5e7eb] bg-white px-1 text-[12px]"
+                      >
+                        {HOUR_OPTIONS.map((h) => (
+                          <option key={h} value={h}>
+                            {hourLabel(h)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!customReminderDate}
+                      onClick={() => {
+                        const iso = reminderIsoFromDate(customReminderDate, customReminderHour);
+                        if (iso) applyReminder(iso);
+                      }}
+                      className="h-8 w-full rounded-md bg-[#3078ab] text-[12px] text-white disabled:opacity-40"
+                    >
+                      تنظیم یادآوری
+                    </button>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between border-t border-[#e5e7eb] pt-3">
+                    <button
+                      type="button"
+                      onClick={() => applyReminder(null)}
+                      disabled={!remindAt}
+                      data-testid="task-detail-reminder-clear"
+                      className="text-[12px] text-[#b91c1c] disabled:opacity-40"
+                    >
+                      پاک کردن یادآوری
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReminderOpen(false)}
+                      className="text-[12px] text-[#6b7280]"
+                    >
+                      بستن
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>
