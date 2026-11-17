@@ -21,7 +21,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
-import { Plus, X, Trash2, UserPlus } from 'lucide-react';
+import { Pencil, Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { listTeams, updateMemberRole, type Team, type TeamRole } from '@/features/teams/api';
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog';
@@ -446,6 +446,11 @@ export interface TeamStripProps {
   currentUserId?: string;
   /** Optional pre-fetched members — bypasses the network query in tests. */
   initialMembers?: ProjectMember[];
+  /**
+   * `summary` (Mizito project panel): every member avatar wraps in a grid, no +N chip,
+   * no add / manage buttons; a single pencil button opens the member manage modal.
+   */
+  variant?: 'compact' | 'summary';
 }
 
 export function TeamStrip({
@@ -453,7 +458,9 @@ export function TeamStrip({
   canManage: canManageProp = true,
   currentUserId,
   initialMembers,
+  variant = 'compact',
 }: TeamStripProps) {
+  const isSummary = variant === 'summary';
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
@@ -551,10 +558,10 @@ export function TeamStrip({
   const canGrantElevated = canManageProp;
 
   const visible = useMemo(
-    () => members.slice(0, MAX_VISIBLE_AVATARS),
-    [members],
+    () => (isSummary ? members : members.slice(0, MAX_VISIBLE_AVATARS)),
+    [members, isSummary],
   );
-  const overflowCount = Math.max(0, members.length - MAX_VISIBLE_AVATARS);
+  const overflowCount = isSummary ? 0 : Math.max(0, members.length - MAX_VISIBLE_AVATARS);
 
   // Empty + loading rendering paths kept compact so the strip never grows
   // taller than the tab bar that follows it.
@@ -563,13 +570,13 @@ export function TeamStrip({
   return (
     <>
       <div
-        className="flex items-center gap-2"
+        className={isSummary ? 'flex w-full flex-wrap items-center gap-1' : 'flex items-center gap-2'}
         data-testid="team-strip"
         aria-label={t('projects.team.strip_label', {
           defaultValue: 'Project team',
         })}
       >
-        <div className="flex -space-x-2">
+        <div className={isSummary ? 'flex flex-wrap gap-1' : 'flex -space-x-2'}>
           {isLoading && members.length === 0 ? (
             <div
               className="h-8 w-8 rounded-full bg-surface-secondary animate-pulse"
@@ -589,6 +596,7 @@ export function TeamStrip({
               <Avatar
                 key={m.user_id}
                 member={m}
+                size={isSummary ? 28 : 32}
                 onClick={
                   currentUserId && m.user_id !== currentUserId
                     ? () => void openDm(m.user_id)
@@ -620,7 +628,19 @@ export function TeamStrip({
         )}
         {/* Render the manage shortcut even when the strip is empty so the
             owner can always invite the first member. */}
-        {canManage && (
+        {isSummary && canManage && (
+          <button
+            type="button"
+            onClick={() => setListOpen(true)}
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-mz-value hover:bg-mz-bg-subtle"
+            data-testid="team-strip-edit"
+            aria-label={t('projects.team.edit_members', { defaultValue: 'تنظیمات پروژه' })}
+            title={t('projects.team.edit_members', { defaultValue: 'تنظیمات پروژه' })}
+          >
+            <Pencil size={20} aria-hidden="true" />
+          </button>
+        )}
+        {canManage && !isSummary && (
           <>
             <button
               type="button"

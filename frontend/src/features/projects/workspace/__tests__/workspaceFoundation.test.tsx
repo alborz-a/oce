@@ -140,7 +140,6 @@ describe('Project Workspace Foundation Components', () => {
       todayIso: '2026-11-16',
     });
 
-    const onBoardClick = vi.fn();
     const onStartOnlineMeeting = vi.fn();
 
     renderWithQuery(
@@ -149,7 +148,6 @@ describe('Project Workspace Foundation Components', () => {
         stats={doneStats}
         members={members}
         currentUserId="u-1"
-        onBoardClick={onBoardClick}
         onStartOnlineMeeting={onStartOnlineMeeting}
       />,
     );
@@ -160,31 +158,11 @@ describe('Project Workspace Foundation Components', () => {
     fireEvent.click(screen.getByTestId('online-meeting-button'));
     expect(onStartOnlineMeeting).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(screen.getByTestId('summary-board-row-سرداران 2'));
-    expect(onBoardClick).toHaveBeenCalledWith('سرداران 2');
-  });
-
-  it('ProjectRightSummaryPanel shows a letters entry next to the online-meeting button and calls onOpenLetters', () => {
-    const project = makeProject({ id: 'p-letters', name: 'پروژه نامه' });
-    const stats = computeProjectWorkspaceStats([], 'u-1', { todayIso: '2026-11-16' });
-    const onOpenLetters = vi.fn();
-
-    renderWithQuery(
-      <ProjectRightSummaryPanel
-        project={project}
-        stats={stats}
-        members={[]}
-        currentUserId="u-1"
-        onStartOnlineMeeting={vi.fn()}
-        onOpenLetters={onOpenLetters}
-      />,
-    );
-
-    const lettersBtn = screen.getByTestId('letters-inbox-button');
-    expect(lettersBtn).toHaveTextContent('نامه‌ها');
-    expect(lettersBtn.parentElement).toBe(screen.getByTestId('online-meeting-button').parentElement);
-    fireEvent.click(lettersBtn);
-    expect(onOpenLetters).toHaveBeenCalledTimes(1);
+    // Mizito panel: no board progress card, no letters button.
+    expect(screen.queryByTestId('summary-board-progress')).toBeNull();
+    expect(screen.queryByTestId('letters-inbox-button')).toBeNull();
+    expect(screen.queryByTestId('summary-pin-button')).toBeNull();
+    expect(screen.queryByTestId('summary-settings-button')).toBeNull();
   });
 
   it('MizitoTopTabAndFilterBar renders 5 tabs, stream filters only on group tab, and admin switch', () => {

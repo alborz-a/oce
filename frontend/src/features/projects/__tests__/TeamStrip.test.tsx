@@ -191,4 +191,22 @@ describe('TeamStrip', () => {
     expect(screen.queryByTestId('team-strip-empty')).toBeNull();
     expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(3);
   });
+
+  it('summary variant shows every avatar with no +N chip, no add or manage buttons; pencil opens the manage modal', () => {
+    const members = Array.from({ length: 8 }, (_, i) => makeMember(i));
+    const qc = new QueryClient({
+      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={qc}>
+        <TeamStrip projectId="proj-test-1" canManage initialMembers={members} variant="summary" />
+      </QueryClientProvider>,
+    );
+    expect(screen.getAllByTestId('team-strip-avatar')).toHaveLength(8);
+    expect(screen.queryByTestId('team-strip-more')).toBeNull();
+    expect(screen.queryByTestId('team-strip-add-button')).toBeNull();
+    expect(screen.queryByTestId('team-strip-manage')).toBeNull();
+    fireEvent.click(screen.getByTestId('team-strip-edit'));
+    expect(screen.getAllByTestId('team-strip-remove-btn').length).toBeGreaterThan(0);
+  });
 });
