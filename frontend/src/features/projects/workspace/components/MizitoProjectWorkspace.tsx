@@ -20,6 +20,9 @@ import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
 import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
+import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
+import { WorkspaceDmContext, type WorkspaceDmValue } from '../context/WorkspaceDmContext';
+import type { ChatRoom } from '@/modules/team-chat/types';
 import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
 import { ProjectTasksTab } from './ProjectTasksTab';
 import { ProjectBoardTab } from './ProjectBoardTab';
@@ -66,6 +69,11 @@ export function MizitoProjectWorkspace({
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
+  const [activeDm, setActiveDm] = useState<{
+    room: ChatRoom;
+    peerName: string;
+    peerAvatarUrl: string | null;
+  } | null>(null);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -117,6 +125,21 @@ export function MizitoProjectWorkspace({
     [navigate],
   );
 
+  const handleDmRoomOpened = useCallback(
+    (room: ChatRoom, otherUserId: string) => {
+      const peer = members.find((m) => m.user_id === otherUserId);
+      setActiveDm({
+        room,
+        peerName: peer?.full_name || peer?.email || 'همکار',
+        peerAvatarUrl: peer?.avatar_url ?? null,
+      });
+      setSwitcherOpen(false);
+    },
+    [members],
+  );
+  const openColleagueDm = useOpenColleagueDm(userId, handleDmRoomOpened);
+  const dmValue: WorkspaceDmValue = useMemo(() => ({ openDm: openColleagueDm }), [openColleagueDm]);
+
   const canManage = userRole === 'admin' || userRole === 'manager' || userRole === 'project_manager';
   const currentUser = useMemo(
     () => ({ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }),
@@ -124,6 +147,7 @@ export function MizitoProjectWorkspace({
   );
 
   return (
+    <WorkspaceDmContext.Provider value={dmValue}>
     <div className="mizito-workspace-light" dir="rtl" data-testid="mizito-workspace">
       <ProjectGroupSwitcherSidebar
         projects={projects}
@@ -190,6 +214,8 @@ export function MizitoProjectWorkspace({
             filter={filters}
             onFilterChange={setFilters}
             showFilterBar={false}
+            dm={activeDm}
+            onCloseDm={() => setActiveDm(null)}
           />
         )}
         {activeTab === 'tasks' && (
@@ -241,5 +267,6 @@ export function MizitoProjectWorkspace({
         }}
       />
     </div>
+    </WorkspaceDmContext.Provider>
   );
 }

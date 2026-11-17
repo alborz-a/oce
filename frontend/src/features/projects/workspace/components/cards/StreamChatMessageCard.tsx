@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { Check, Pencil, Reply, SmilePlus, Trash2, X } from 'lucide-react';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
+import { useOpenDmForColleague } from '../../context/WorkspaceDmContext';
 
 export const QUICK_REACTIONS = ['👍', '❤️', '🎉', '👏', '👀', '✅'] as const;
 
@@ -186,6 +187,22 @@ export function StreamChatMessageCard({
 }: StreamChatMessageCardProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(item.text ?? '');
+  const openDm = useOpenDmForColleague(currentUserId);
+  const senderId = item.authorId && item.authorId !== currentUserId ? item.authorId : null;
+  const senderClickProps = senderId
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        'aria-label': `گفتگوی مستقیم با ${item.authorName}`,
+        onClick: () => void openDm(senderId),
+        onKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            void openDm(senderId);
+          }
+        },
+      }
+    : {};
   const timeText = formatStreamTime(item.createdAt);
   const isEdited = Boolean(item.rawChatMessage?.edited_at);
 
@@ -216,7 +233,13 @@ export function StreamChatMessageCard({
       {!item.isCurrentUser && (
         <div className="flex max-w-[min(78%,640px)] flex-col items-end">
           {item.authorName && (
-            <span className="chat-item-sender-name mb-1 px-1">{item.authorName}</span>
+            <span
+              className={`chat-item-sender-name mb-1 px-1 ${senderId ? 'cursor-pointer hover:underline' : ''}`}
+              data-testid={`stream-sender-${item.id}`}
+              {...senderClickProps}
+            >
+              {item.authorName}
+            </span>
           )}
           <div className="chat-item-body px-3.5 py-2 shadow-[0_1px_1px_rgba(0,0,0,0.04)]">
             {(quoteAuthor || quoteText) && (
@@ -261,8 +284,9 @@ export function StreamChatMessageCard({
 
       {!item.isCurrentUser && (
         <div
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#3078ab]/15 text-[11px] font-semibold text-[#3078ab]"
-          aria-hidden="true"
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#3078ab]/15 text-[11px] font-semibold text-[#3078ab] ${senderId ? 'cursor-pointer' : ''}`}
+          data-testid={`stream-avatar-${item.id}`}
+          {...(senderId ? senderClickProps : { 'aria-hidden': true })}
         >
           {getInitials(item.authorName)}
         </div>

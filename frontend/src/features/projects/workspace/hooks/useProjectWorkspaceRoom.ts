@@ -88,7 +88,12 @@ function toggleEmojiInReactions(
 export function useProjectWorkspaceRoom(
   projectId: string | null | undefined,
   enabled = true,
+  roomOverride: WorkspaceChatRoom | null = null,
 ): UseProjectWorkspaceRoomResult {
+  // When set (direct chat opened from the workspace), this room replaces the project room.
+  const overrideRef = useRef<WorkspaceChatRoom | null>(roomOverride);
+  overrideRef.current = roomOverride;
+  const overrideRoomId = roomOverride?.id ?? null;
   const [room, setRoom] = useState<WorkspaceChatRoom | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -161,7 +166,9 @@ export function useProjectWorkspaceRoom(
     void (async () => {
       try {
         const [projectRoom, allRooms] = await Promise.all([
-          apiGet<WorkspaceChatRoom>(`/v1/team-chat/rooms/project/${projectId}/`),
+          overrideRef.current
+            ? Promise.resolve(overrideRef.current)
+            : apiGet<WorkspaceChatRoom>(`/v1/team-chat/rooms/project/${projectId}/`),
           apiGet<WorkspaceChatRoom[]>('/v1/team-chat/rooms/').catch(
             () => [] as WorkspaceChatRoom[],
           ),
@@ -206,7 +213,7 @@ export function useProjectWorkspaceRoom(
     return () => {
       cancelled = true;
     };
-  }, [projectId, enabled, markReadForRoom]);
+  }, [projectId, enabled, markReadForRoom, overrideRoomId]);
 
   const onSocketEvent = useCallback(
     (event: ChatEvent) => {

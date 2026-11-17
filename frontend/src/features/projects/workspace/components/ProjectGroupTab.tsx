@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { getPhotoFileUrl, getPhotoThumbUrl } from '@/features/documents/api';
 import {
   MediaLightbox,
   type MediaLightboxItem,
 } from '@/features/file-manager/components/MediaLightbox';
+import type { ChatRoom } from '@/modules/team-chat/types';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { useProjectWorkspaceRoom } from '../hooks/useProjectWorkspaceRoom';
 import { useProjectWorkspaceStream } from '../hooks/useProjectWorkspaceStream';
 import {
@@ -27,6 +30,8 @@ import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
 import { ProjectStreamList } from './ProjectStreamList';
 import { TaskQuickDetailDialog } from './TaskQuickDetailDialog';
 
+const EMPTY_TASKS: ProjectTaskItem[] = [];
+
 export interface ProjectGroupTabProps {
   projectId: string;
   currentUserId: string;
@@ -43,6 +48,9 @@ export interface ProjectGroupTabProps {
   filter?: StreamFilterState;
   onFilterChange?: (next: StreamFilterState) => void;
   showFilterBar?: boolean;
+  /** Direct chat with a colleague shown in place of the project room. */
+  dm?: { room: ChatRoom; peerName: string; peerAvatarUrl?: string | null } | null;
+  onCloseDm?: () => void;
 }
 
 export function ProjectGroupTab({
@@ -55,6 +63,8 @@ export function ProjectGroupTab({
   filter: controlledFilter,
   onFilterChange,
   showFilterBar = true,
+  dm = null,
+  onCloseDm,
 }: ProjectGroupTabProps) {
   const [localFilter, setLocalFilter] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);
   const filter = controlledFilter ?? localFilter;
@@ -67,14 +77,16 @@ export function ProjectGroupTab({
     index: number;
   } | null>(null);
 
-  const room = useProjectWorkspaceRoom(projectId);
+  const room = useProjectWorkspaceRoom(projectId, true, dm?.room ?? null);
+  const isDm = dm !== null;
   const stream = useProjectWorkspaceStream({
     projectId,
     currentUserId,
     roomMessages: room.messages,
-    tasks,
+    tasks: isDm ? EMPTY_TASKS : tasks,
     members,
     filter,
+    chatOnly: isDm,
   });
 
   // Reset reply/dialogs when switching projects
@@ -176,6 +188,35 @@ export function ProjectGroupTab({
       className="flex min-h-0 flex-1 flex-col bg-white"
       data-testid="project-group-tab"
     >
+      {dm && (
+        <div
+          className="flex shrink-0 items-center gap-3 border-b border-[#e5e7eb] bg-white px-4 py-2.5"
+          data-testid="workspace-dm-header"
+          dir="rtl"
+        >
+          <button
+            type="button"
+            onClick={onCloseDm}
+            aria-label="بازگشت به گفتگوی پروژه"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#4b5563] hover:bg-[#f5f6f8]"
+            data-testid="workspace-dm-back"
+          >
+            <ArrowRight size={16} aria-hidden="true" />
+          </button>
+          <UserAvatar
+            url={dm.peerAvatarUrl}
+            alt={dm.peerName}
+            className="h-8 w-8 shrink-0 rounded-full object-cover"
+          />
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-semibold text-[#1f2937]" data-testid="workspace-dm-title">
+              {dm.peerName}
+            </div>
+            <div className="text-[11px] text-[#909090]">گفتگوی مستقیم</div>
+          </div>
+        </div>
+      )}
+
       {showFilterBar && (
         <ProjectStreamFilterBar
           filter={filter}
