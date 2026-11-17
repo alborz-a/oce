@@ -48,6 +48,7 @@ import {
   type TaskLabel,
   type TaskLabelColor,
 } from '../lib/taskLabelsAndReminder';
+import { displayName } from '../lib/importerAuthor';
 
 export interface TaskQuickDetailDialogProps {
   projectId: string;
@@ -1103,7 +1104,7 @@ export function TaskQuickDetailDialog({
                   >
                     <div className="mb-0.5 flex items-center justify-between text-[10.5px] text-[#909090]">
                       <span className="font-semibold text-[#4b5563]">
-                        {c.author_name || (c.author_id ? membersById.get(c.author_id) : '') || 'همکار'}
+                        {displayName(c.author_name || (c.author_id ? membersById.get(c.author_id) : '') || 'همکار', c.author_id)}
                       </span>
                       <span>{formatJalali(c.created_at, 'short')}</span>
                     </div>

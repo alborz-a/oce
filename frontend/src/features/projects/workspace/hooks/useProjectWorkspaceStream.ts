@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiGet } from '@/shared/lib/api';
 import { isHiddenSystemUser } from '@/shared/lib/hiddenUsers';
-import { IMPORTER_FALLBACK_NAME, isImporter, parseImporterPrefix } from '../lib/importerAuthor';
+import { IMPORTER_FALLBACK_NAME, displayName, isImporter, parseImporterPrefix } from '../lib/importerAuthor';
+import { parseRawFileTags } from '../lib/rawFileTag';
 import type { ChatMessage } from '@/modules/team-chat/types';
 import type {
   ProjectDocumentItem,
@@ -373,6 +374,9 @@ export function buildStreamItems({
       isImporter(authorId) ? IMPORTER_FALLBACK_NAME : 'کاربر',
     );
     const authorName = reporter.name;
+    // Unresolved raw `[فایل: …]` tags are stripped from the text; chat rows get them as chips below.
+    const rawFileParse = parseRawFileTags(reporter.body);
+    const msgBody = rawFileParse.text;
     const isCurrentUser = Boolean(currentUserId && authorId === currentUserId);
     const reactions = parseReactions(msg.metadata?.reactions);
     const quotedEntity = parseQuotedEntity(msg.metadata?.quoted_entity);
@@ -414,7 +418,7 @@ export function buildStreamItems({
         authorId,
         authorName,
         isCurrentUser,
-        text: reporter.body,
+        text: msgBody,
         quotedEntity,
         reactions,
         rawChatMessage: msg,
@@ -432,7 +436,7 @@ export function buildStreamItems({
           authorId,
           authorName,
           isCurrentUser,
-          text: reporter.body,
+          text: msgBody,
           quotedEntity: idx === 0 ? quotedEntity : undefined,
           reactions: idx === 0 ? reactions : undefined,
           rawChatMessage: msg,
@@ -447,7 +451,7 @@ export function buildStreamItems({
           authorId,
           authorName,
           isCurrentUser,
-          text: reporter.body,
+          text: msgBody,
           rawChatMessage: msg,
           rawPhotos: attachedPhotos,
         });
@@ -462,10 +466,11 @@ export function buildStreamItems({
       authorId,
       authorName,
       isCurrentUser,
-      text: reporter.body,
+      text: msgBody,
       quotedEntity,
       reactions,
       rawChatMessage: msg,
+      rawFiles: rawFileParse.files.length > 0 ? rawFileParse.files : undefined,
     });
   }
 
@@ -611,10 +616,12 @@ export function buildStreamItems({
     const taskTitle = task?.title || metaTitle || 'وظیفه';
     const actorId = entry.actor_id ? String(entry.actor_id) : null;
     const metaActor = typeof entry.metadata?.actor_name === 'string' ? entry.metadata.actor_name : '';
-    const actorName =
+    const actorName = displayName(
       metaActor.trim() ||
-      (actorId ? memberNameById.get(actorId) : undefined) ||
-      'همکار';
+        (actorId ? memberNameById.get(actorId) : undefined) ||
+        'همکار',
+      actorId,
+    );
     const actionText = formatActionText(entry.action, entry.from_status, entry.to_status);
 
     seenActivitySignatures.add(`${taskId}|${entry.created_at.slice(0, 16)}|${actorName}|${actionText}`);
@@ -648,11 +655,13 @@ export function buildStreamItems({
         '';
       if (!createdAt) return;
       const actorId = typeof rec.actor_id === 'string' ? rec.actor_id : null;
-      const actorName =
+      const actorName = displayName(
         (typeof rec.actor_name === 'string' && rec.actor_name.trim()) ||
-        (typeof rec.user_name === 'string' && rec.user_name.trim()) ||
-        (actorId ? memberNameById.get(actorId) : undefined) ||
-        'همکار';
+          (typeof rec.user_name === 'string' && rec.user_name.trim()) ||
+          (actorId ? memberNameById.get(actorId) : undefined) ||
+          'همکار',
+        actorId,
+      );
       const rawAction =
         (typeof rec.action_text === 'string' && rec.action_text.trim()) ||
         (typeof rec.description === 'string' && rec.description.trim()) ||
