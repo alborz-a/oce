@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Check, Pencil, Reply, SmilePlus, Trash2, X } from 'lucide-react';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
+import { extractImageUrls, isBareImageUrlMessage } from '../../lib/chatPhotoUrls';
 
 export const QUICK_REACTIONS = ['👍', '❤️', '🎉', '👏', '👀', '✅'] as const;
 
@@ -173,6 +174,44 @@ export interface StreamChatMessageCardProps {
   currentUserId?: string | null;
 }
 
+/** Photo frame for an image URL found in message text; falls back to the plain link if the image fails. */
+function ImageUrlFrame({ url }: { url: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="break-all text-[12px] text-[#3078ab] underline"
+      >
+        {url}
+      </a>
+    );
+  }
+  return (
+    <img
+      src={url}
+      alt=""
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className="block aspect-[4/3] w-[260px] max-w-full rounded-[6px] bg-[#f2f4f7] object-cover shadow-md"
+    />
+  );
+}
+
+function ImageUrlFrames({ text }: { text: string | null | undefined }) {
+  const urls = extractImageUrls(text);
+  if (urls.length === 0) return null;
+  return (
+    <div className="mb-1.5 space-y-1.5">
+      {urls.map((url) => (
+        <ImageUrlFrame key={url} url={url} />
+      ))}
+    </div>
+  );
+}
+
 export function StreamChatMessageCard({
   item,
   replyTarget,
@@ -237,9 +276,12 @@ export function StreamChatMessageCard({
               </div>
             )}
 
-            <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
-              {item.text ?? ''}
-            </p>
+            <ImageUrlFrames text={item.text} />
+            {!isBareImageUrlMessage(item.text) && (
+              <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
+                {item.text ?? ''}
+              </p>
+            )}
 
             <div className="mt-1 flex items-center justify-end gap-1.5">
               {isEdited && (
@@ -321,9 +363,14 @@ export function StreamChatMessageCard({
                 </div>
               </div>
             ) : (
-              <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
-                {item.text ?? ''}
-              </p>
+              <>
+                <ImageUrlFrames text={item.text} />
+                {!isBareImageUrlMessage(item.text) && (
+                  <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
+                    {item.text ?? ''}
+                  </p>
+                )}
+              </>
             )}
 
             <div className="mt-1 flex items-center justify-end gap-1.5">

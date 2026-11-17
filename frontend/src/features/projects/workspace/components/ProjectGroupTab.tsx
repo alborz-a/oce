@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { getPhotoFileUrl, getPhotoThumbUrl } from '@/features/documents/api';
-import {
-  MediaLightbox,
-  type MediaLightboxItem,
-} from '@/features/file-manager/components/MediaLightbox';
+import { getPhotoFileUrl } from '@/features/documents/api';
+import { collectLightboxPhotos, type LightboxPhotoRef } from '../lib/chatPhotoUrls';
+import { ChatPhotoLightbox } from './ChatPhotoLightbox';
 import { useProjectWorkspaceRoom } from '../hooks/useProjectWorkspaceRoom';
 import { useProjectWorkspaceStream } from '../hooks/useProjectWorkspaceStream';
 import {
@@ -62,10 +60,7 @@ export function ProjectGroupTab({
 
   const [replyTo, setReplyTo] = useState<StreamItem | null>(null);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
-  const [lightboxState, setLightboxState] = useState<{
-    items: MediaLightboxItem[];
-    index: number;
-  } | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const room = useProjectWorkspaceRoom(projectId);
   const stream = useProjectWorkspaceStream({
@@ -81,7 +76,7 @@ export function ProjectGroupTab({
   useEffect(() => {
     setReplyTo(null);
     setSelectedTask(null);
-    setLightboxState(null);
+    setLightboxIndex(null);
   }, [projectId]);
 
   // Mark room read when messages load or new messages arrive
@@ -157,19 +152,30 @@ export function ProjectGroupTab({
     [tasks],
   );
 
-  const handleOpenPhoto = useCallback((photos: ProjectPhotoItem[], index: number) => {
-    if (photos.length === 0) return;
-    const items: MediaLightboxItem[] = photos.map((p) => ({
-      id: p.id,
-      kind: 'photo',
-      name: p.caption || p.filename || 'تصویر پروژه',
-      extension: p.filename?.split('.').pop()?.toLowerCase() ?? 'jpg',
-      mime_type: 'image/jpeg',
-      download_url: p.download_url || getPhotoFileUrl(p.id),
-      thumbnail_url: p.thumbnail_url || getPhotoThumbUrl(p.id),
-    }));
-    setLightboxState({ items, index });
-  }, []);
+  // All photos in the stream, in order, so the lightbox can step prev/next across messages.
+  const lightboxPhotos = useMemo<LightboxPhotoRef[]>(
+    () =>
+      collectLightboxPhotos(
+        stream.items.flatMap((it) =>
+          (it.rawPhotos ?? []).map((p) => ({
+            id: p.id,
+            url: p.download_url || getPhotoFileUrl(p.id),
+            name: p.caption || p.filename || 'تصویر پروژه',
+          })),
+        ),
+      ),
+    [stream.items],
+  );
+
+  const handleOpenPhoto = useCallback(
+    (photos: ProjectPhotoItem[], index: number) => {
+      const clickedId = photos[index]?.id;
+      if (!clickedId) return;
+      const at = lightboxPhotos.findIndex((r) => r.id === clickedId);
+      if (at >= 0) setLightboxIndex(at);
+    },
+    [lightboxPhotos],
+  );
 
   return (
     <div
@@ -232,15 +238,12 @@ export function ProjectGroupTab({
         }}
       />
 
-      {lightboxState && (
-        <MediaLightbox
-          open
-          items={lightboxState.items}
-          index={lightboxState.index}
-          onClose={() => setLightboxState(null)}
-          onIndexChange={(nextIndex) =>
-            setLightboxState((prev) => (prev ? { ...prev, index: nextIndex } : null))
-          }
+      {lightboxIndex !== null && lightboxPhotos.length > 0 && (
+        <ChatPhotoLightbox
+          photos={lightboxPhotos}
+          index={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onIndexChange={setLightboxIndex}
         />
       )}
     </div>
