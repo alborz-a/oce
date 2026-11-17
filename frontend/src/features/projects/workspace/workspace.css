@@ -220,6 +220,28 @@
   overflow-x: auto;
 }
 
+/* Mobile (<768px): the right action group is shrink-0 and wider than the row
+   at 390px, so the tabs row (flex-basis 0%) got 0px and its tabs sat off-screen.
+   Give the tabs row its own full-width line; the action group wraps below it. */
+@media (max-width: 767.98px) {
+  .mizito-workspace-light .mz-top-tabbar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 6px;
+    padding-block: 6px;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar > div:first-child {
+    flex: 0 0 100%;
+    inline-size: 100%;
+    max-inline-size: 100%;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar > div:first-child > nav[role='tablist'] {
+    inline-size: 100%;
+  }
+}
+
 .mizito-workspace-light .submenu_tab {
   position: relative;
   display: inline-flex;
