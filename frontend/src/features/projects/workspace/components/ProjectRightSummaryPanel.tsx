@@ -3,8 +3,6 @@ import {
   CheckCheck,
   ChevronLeft,
   ChevronRight,
-  Mail,
-  Settings,
   Star,
   Video,
   X,
@@ -37,18 +35,11 @@ export interface ProjectRightSummaryPanelProps {
 }
 
 const STATUS_COLORS = {
-  done: '#00b4d8',
-  inProgress: '#80cbc4',
-  delayed: '#d9534f',
-  remaining: '#d5d8dc',
+  done: '#27b6ba',
+  inProgress: '#ffb024',
+  delayed: '#e95e51',
+  remaining: '#b0b4bb',
 } as const;
-
-function projectInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return 'پ';
-  if (parts.length === 1) return parts[0]!.slice(0, 2);
-  return `${parts[0]![0] ?? ''}${parts[1]![0] ?? ''}`;
-}
 
 interface Segment {
   key: 'done' | 'inProgress' | 'delayed' | 'remaining';
@@ -179,8 +170,8 @@ function StatusDonutWidget({
 
         {/* Donut SVG on end (left in RTL) */}
         <svg
-          width="74"
-          height="74"
+          width="80"
+          height="80"
           viewBox="0 0 76 76"
           aria-hidden="true"
           className="shrink-0"
@@ -227,14 +218,8 @@ export function ProjectRightSummaryPanel({
   members,
   currentUserId,
   canManageMembers = false,
-  canOpenSettings = false,
-  isPinned = false,
-  onTogglePin,
   onBack,
-  onOpenSettings,
   onStartOnlineMeeting,
-  onOpenLetters,
-  onBoardClick,
   collapsed = false,
   onToggleCollapse,
   mobileOpen = false,
@@ -289,54 +274,29 @@ export function ProjectRightSummaryPanel({
           </button>
         )}
 
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-mz-project text-[11px] font-bold text-white">
-          {avatarUrl ? (
+        {avatarUrl && (
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-mz-project">
             <AuthImage
               src={avatarUrl}
               alt={project.name}
-              className="h-8 w-8 rounded-full object-cover"
-              fallback={<span>{projectInitials(project.name)}</span>}
+              className="h-7 w-7 rounded-full object-cover"
             />
-          ) : (
-            <span>{projectInitials(project.name)}</span>
-          )}
-        </div>
+          </div>
+        )}
 
         <h2
-          className="min-w-0 flex-1 truncate text-[13.5px] font-bold text-[#1f2937]"
+          className="flex min-w-0 flex-1 items-center gap-1 truncate text-[13.5px] font-bold text-[#1f2937]"
           title={project.name}
         >
-          {toPersianDigits(project.name)}
+          <span className="min-w-0 truncate">{toPersianDigits(project.name)}</span>
+          <Star
+            size={13}
+            fill="currentColor"
+            aria-hidden="true"
+            data-testid="summary-star-badge"
+            className="shrink-0 text-mz-star"
+          />
         </h2>
-
-        {onTogglePin && (
-          <button
-            type="button"
-            onClick={onTogglePin}
-            aria-pressed={isPinned}
-            aria-label={isPinned ? 'برداشتن پین پروژه' : 'پین کردن پروژه'}
-            data-testid="summary-pin-button"
-            className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md transition-colors ${
-              isPinned
-                ? 'text-[#f59e0b] hover:bg-[#fef3c7]/60'
-                : 'text-[#9ca3af] hover:bg-[#f2f4f7] hover:text-[#f59e0b]'
-            }`}
-          >
-            <Star size={15} fill={isPinned ? 'currentColor' : 'none'} />
-          </button>
-        )}
-
-        {canOpenSettings && onOpenSettings && (
-          <button
-            type="button"
-            onClick={onOpenSettings}
-            aria-label="تنظیمات پروژه و اعضا"
-            data-testid="summary-settings-button"
-            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project"
-          >
-            <Settings size={15} />
-          </button>
-        )}
 
         {onToggleCollapse && (
           <button
@@ -367,14 +327,15 @@ export function ProjectRightSummaryPanel({
       <div className="mz-scroll-area flex-1 pb-4">
         {/* 2. Members + Online Meeting */}
         <section className="border-b border-[#f0f2f5] px-3 py-3" aria-label="اعضا و جلسه آنلاین">
-          <div className="flex items-center gap-2">
-            <span className="shrink-0 text-[12px] font-medium text-[#4b5563]">اعضا:</span>
-            <div className="min-w-0 flex-1 overflow-x-auto py-0.5">
+          <div className="flex items-start gap-2">
+            <span className="shrink-0 pt-1 text-[12px] font-medium text-[#4b5563]">اعضا:</span>
+            <div className="min-w-0 flex-1">
               <TeamStrip
                 projectId={project.id}
                 canManage={canManageMembers}
                 currentUserId={currentUserId ?? undefined}
                 initialMembers={members}
+                variant="summary"
               />
             </div>
           </div>
@@ -389,17 +350,6 @@ export function ProjectRightSummaryPanel({
               <Video size={14} aria-hidden="true" />
               <span>جلسه آنلاین</span>
             </button>
-            {onOpenLetters && (
-              <button
-                type="button"
-                onClick={onOpenLetters}
-                className="mz-online-meeting-btn"
-                data-testid="letters-inbox-button"
-              >
-                <Mail size={14} aria-hidden="true" />
-                <span>نامه‌ها</span>
-              </button>
-            )}
           </div>
         </section>
 
@@ -434,7 +384,7 @@ export function ProjectRightSummaryPanel({
                 {overallSegments.map((seg) => (
                   <div key={seg.key} className="min-w-0">
                     <div className="truncate text-[10.5px] text-[#5b5e66]">{seg.label}</div>
-                    <div className="mt-0.5 text-[11.5px] font-semibold text-[#1f2937] tabular-nums">
+                    <div className="mt-0.5 text-[11.5px] font-bold text-mz-value tabular-nums">
                       {toPersianDigits(seg.pct)}٪
                     </div>
                   </div>
@@ -455,81 +405,6 @@ export function ProjectRightSummaryPanel({
           breakdown={stats.others}
           testId="summary-donut-others"
         />
-
-        {/* 5. Board Progress Card */}
-        <section className="px-3 pt-3" aria-label="وضعیت پیشرفت بورد پروژه">
-          <div className="mz-board-progress-card" data-testid="summary-board-progress">
-            <h3 className="mb-2.5 text-center text-[12px] font-semibold text-[#374151]">
-              وضعیت پیشرفت بورد پروژه
-            </h3>
-
-            {stats.boards.length === 0 ? (
-              <p className="py-2 text-center text-[11px] text-[#909090]">
-                هنوز ستونی برای این پروژه ثبت نشده است
-              </p>
-            ) : (
-              <ul className="space-y-2">
-                {stats.boards.map((board) => {
-                  const boardSegments: Segment[] = [
-                    {
-                      key: 'done',
-                      label: 'انجام شده',
-                      pct: board.donePct,
-                      color: STATUS_COLORS.done,
-                      lightText: true,
-                    },
-                    {
-                      key: 'inProgress',
-                      label: 'دارای پیشرفت',
-                      pct: board.inProgressPct,
-                      color: STATUS_COLORS.inProgress,
-                      lightText: false,
-                    },
-                    {
-                      key: 'delayed',
-                      label: 'دارای تاخیر',
-                      pct: board.delayedPct,
-                      color: STATUS_COLORS.delayed,
-                      lightText: true,
-                    },
-                    {
-                      key: 'remaining',
-                      label: 'باقیمانده',
-                      pct: board.remainingPct,
-                      color: STATUS_COLORS.remaining,
-                      lightText: false,
-                    },
-                  ];
-
-                  return (
-                    <li key={board.key}>
-                      <button
-                        type="button"
-                        onClick={() => onBoardClick?.(board.key)}
-                        data-testid={`summary-board-row-${board.key}`}
-                        className="w-full rounded-md px-1.5 py-1 text-center transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project"
-                      >
-                        <div className="mb-1 flex items-center justify-between gap-2 px-0.5">
-                          <span className="truncate text-[11.5px] font-medium text-[#374151]">
-                            {toPersianDigits(board.label)}
-                          </span>
-                          <span className="shrink-0 text-[10.5px] text-[#6b7280] tabular-nums">
-                            {toPersianDigits(board.doneCount)}/{toPersianDigits(board.totalCount)}
-                          </span>
-                        </div>
-                        <SegmentedProgressBar
-                          segments={boardSegments}
-                          height={13}
-                          minLabelPct={14}
-                        />
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        </section>
       </div>
     </aside>
   );
