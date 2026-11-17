@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useLayoutEffect, type RefObject } from 'react';
+import { computeFloatingPosition, type FloatingSide } from '@/shared/ui/floatingPosition';
 
 const GAP_PX = 4;
 const VIEWPORT_MARGIN_PX = 8;
+const FALLBACK_POPUP_HEIGHT_PX = 320;
 
 type ToggleLikeEvent = Event & { newState?: string };
 
@@ -12,30 +14,42 @@ type ToggleLikeEvent = Event & { newState?: string };
  * - Native popovers are re-placed on `beforetoggle` / `toggle` when they open,
  *   because the top layer otherwise ignores the trigger position.
  * - `fallbackOpen` covers browsers without the Popover API (state-controlled panel).
- * - Placement is `position: fixed` with the popover's inline-end edge (left in RTL)
- *   aligned to the trigger's inline-end edge, clamped inside the viewport with an
- *   8px margin.
+ * - Placement is `position: fixed`, on the `preferred` side of the trigger (flips to the
+ *   other side when there is no room), left edge aligned to the trigger, clamped inside
+ *   the viewport with an 8px margin. Placement logic: `shared/ui/floatingPosition`.
  */
 export function useAnchoredPopover(
   triggerRef: RefObject<HTMLElement | null>,
   popoverRef: RefObject<HTMLElement | null>,
   fallbackOpen = false,
+  preferred: FloatingSide = 'bottom',
 ): void {
   const place = useCallback(() => {
     const trigger = triggerRef.current;
     const pop = popoverRef.current;
     if (!trigger || !pop) return;
     const rect = trigger.getBoundingClientRect();
-    const popWidth = pop.getBoundingClientRect().width || pop.offsetWidth;
-    const maxLeft = window.innerWidth - popWidth - VIEWPORT_MARGIN_PX;
-    const left = Math.max(VIEWPORT_MARGIN_PX, Math.min(rect.left, maxLeft));
+    const popRect = pop.getBoundingClientRect();
+    // Native popovers are display:none until open, so height is 0 on beforetoggle;
+    // the toggle event re-places with the real size.
+    const { top, left } = computeFloatingPosition({
+      trigger: { top: rect.top, bottom: rect.bottom, left: rect.left, right: rect.right, width: rect.width, height: rect.height },
+      popup: {
+        width: popRect.width || pop.offsetWidth,
+        height: popRect.height || pop.offsetHeight || FALLBACK_POPUP_HEIGHT_PX,
+      },
+      viewport: { width: window.innerWidth, height: window.innerHeight },
+      preferred,
+      gap: GAP_PX,
+      margin: VIEWPORT_MARGIN_PX,
+    });
     pop.style.position = 'fixed';
     pop.style.inset = 'auto';
     pop.style.margin = '0';
-    pop.style.top = `${rect.bottom + GAP_PX}px`;
+    pop.style.top = `${top}px`;
     pop.style.left = `${left}px`;
     pop.style.right = 'auto';
-  }, [triggerRef, popoverRef]);
+  }, [triggerRef, popoverRef, preferred]);
 
   useEffect(() => {
     const pop = popoverRef.current;
