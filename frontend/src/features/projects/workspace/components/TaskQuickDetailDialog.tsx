@@ -3,7 +3,9 @@ import {
   Check,
   CheckSquare,
   MessageSquarePlus,
+  MoreHorizontal,
   Plus,
+  Printer,
   Send,
   Square,
   Trash2,
@@ -11,11 +13,15 @@ import {
 } from 'lucide-react';
 import {
   completeTask,
+  deleteTask,
   updateTask,
   type TaskPriority,
   type TaskStatus,
 } from '@/features/tasks/api';
 import { apiGet, apiPost } from '@/shared/lib/api';
+import { useConfirm } from '@/shared/hooks/useConfirm';
+import { ConfirmDialog } from '@/shared/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
 import {
@@ -88,6 +94,10 @@ export function TaskQuickDetailDialog({
   const [saving, setSaving] = useState(false);
   const [postingReport, setPostingReport] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const queryClient = useQueryClient();
+  const { confirm, ...confirmProps } = useConfirm();
 
   const membersById = useMemo(() => {
     const map = new Map<string, string>();
@@ -227,6 +237,59 @@ export function TaskQuickDetailDialog({
     }
   }, [onClose]);
 
+  const handlePrint = () => {
+    setShowActionsMenu(false);
+    const escape = (value: string) =>
+      value.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch] ?? ch);
+    const responsible = (members ?? []).find((m) => m.user_id === responsibleId);
+    const win = window.open('', '_blank', 'width=800,height=900');
+    if (!win) {
+      setErrorMsg('پنجره چاپ باز نشد. مرورگر را بررسی کنید.');
+      return;
+    }
+    const checklistHtml = checklist
+      .filter((c) => c.text.trim().length > 0)
+      .map((c) => `<li>${c.completed ? '☑' : '☐'} ${escape(c.text.trim())}</li>`)
+      .join('');
+    win.document.title = escape(title.trim() || 'وظیفه');
+    win.document.body.setAttribute('dir', 'rtl');
+    win.document.body.innerHTML = `
+      <h1>${escape(title.trim())}</h1>
+      <p><strong>وضعیت:</strong> ${escape(status)}</p>
+      <p><strong>اولویت:</strong> ${escape(priority)}</p>
+      <p><strong>مسئول:</strong> ${escape(responsible ? memberLabel(responsible) : '—')}</p>
+      <p><strong>مهلت:</strong> ${escape(dueDate || '—')}</p>
+      <p><strong>توضیحات:</strong> ${escape(description.trim() || '—')}</p>
+      <h2>چک‌لیست</h2>
+      <ul>${checklistHtml || '<li>—</li>'}</ul>`;
+    win.focus();
+    win.print();
+  };
+
+  const handleDelete = async () => {
+    setShowActionsMenu(false);
+    if (!task || deleting) return;
+    const ok = await confirm({
+      title: 'حذف وظیفه؟',
+      message: 'این وظیفه حذف می‌شود و قابل بازگشت نیست.',
+      confirmLabel: 'حذف',
+      variant: 'danger',
+    });
+    if (!ok) return;
+    setDeleting(true);
+    setErrorMsg(null);
+    try {
+      await deleteTask(task.id);
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      onUpdated?.();
+      requestClose();
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : 'خطا در حذف وظیفه');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const handleAddChecklistItem = () => {
     const clean = newCheckItem.trim();
     if (!clean) return;
@@ -317,15 +380,61 @@ export function TaskQuickDetailDialog({
         <h2 id={headingId} className="text-[14px] font-bold text-[#1f2937]">
           جزئیات و گزارش وظیفه
         </h2>
-        <button
-          type="button"
-          onClick={requestClose}
-          aria-label="بستن پنجره جزئیات"
-          data-testid="task-detail-close-button"
-          className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#1f2937]"
-        >
-          <X size={16} />
-        </button>
+        <div className="flex items-center gap-1">
+          {task && (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowActionsMenu((v) => !v)}
+                aria-haspopup="menu"
+                aria-expanded={showActionsMenu}
+                aria-label="گزینه‌های وظیفه"
+                data-testid="task-detail-actions-button"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#1f2937]"
+              >
+                <MoreHorizontal size={16} />
+              </button>
+              {showActionsMenu && (
+                <div
+                  role="menu"
+                  data-testid="task-detail-actions-menu"
+                  className="absolute end-0 top-full z-30 mt-2 w-44 rounded-xl border border-[#e5e7eb] bg-white p-1.5 shadow-lg"
+                >
+                  <button
+                    role="menuitem"
+                    type="button"
+                    onClick={handlePrint}
+                    data-testid="task-detail-print-item"
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] text-[#374151] hover:bg-[#f5f6f8]"
+                  >
+                    <Printer size={15} />
+                    چاپ
+                  </button>
+                  <button
+                    role="menuitem"
+                    type="button"
+                    onClick={() => void handleDelete()}
+                    disabled={deleting}
+                    data-testid="task-detail-delete-item"
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] text-[#b91c1c] hover:bg-[#fef2f2] disabled:opacity-50"
+                  >
+                    <Trash2 size={15} />
+                    حذف
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={requestClose}
+            aria-label="بستن پنجره جزئیات"
+            data-testid="task-detail-close-button"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#1f2937]"
+          >
+            <X size={16} />
+          </button>
+        </div>
       </div>
 
       {task && (
@@ -664,6 +773,7 @@ export function TaskQuickDetailDialog({
           </section>
         </div>
       )}
+      <ConfirmDialog {...confirmProps} />
     </dialog>
   );
 }
