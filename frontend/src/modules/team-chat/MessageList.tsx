@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
+import { displayName } from '@/features/projects/workspace/lib/importerAuthor';
 import type { ChatMessage } from './types';
 
 export function formatStamp(iso: string): string {
@@ -62,7 +63,7 @@ export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, docu
           <div key={m.id} className="rounded-lg bg-surface-secondary p-2" data-message-id={m.id}>
             <div className="flex items-baseline gap-2 text-xs text-content-tertiary">
               <span className="font-semibold text-content-secondary" dir="auto">
-                {m.author_name}
+                {displayName(m.author_name, m.author_id)}
               </span>
               <span>{formatStamp(m.created_at)}</span>
               {m.edited_at && <span>{t('team_chat.edited', { defaultValue: 'ویرایش‌شده' })}</span>}

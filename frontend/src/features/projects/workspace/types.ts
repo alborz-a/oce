@@ -1,5 +1,6 @@
 import type { ChatMessage } from '@/modules/team-chat/types';
 import type { ProjectMember } from '@/features/projects/components/TeamStrip';
+import type { RawFileChip } from './lib/rawFileTag';
 
 export type WorkspaceTabKey = 'group' | 'tasks' | 'board' | 'calendar' | 'gantt';
 
@@ -82,6 +83,8 @@ export interface StreamItem {
   rawChatMessage?: ChatMessage;
   rawPhotos?: ProjectPhotoItem[];
   rawDocument?: ProjectDocumentItem;
+  /** Unresolved `[فایل: name]` tags from chat text, rendered as file chips. */
+  rawFiles?: RawFileChip[];
   rawTaskActivity?: {
     taskId: string;
     taskTitle: string;

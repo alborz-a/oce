@@ -5,6 +5,25 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
 import { useOpenDmForColleague } from '../../context/WorkspaceDmContext';
 import { extractImageUrls, isBareImageUrlMessage } from '../../lib/chatPhotoUrls';
+import type { RawFileChip } from '../../lib/rawFileTag';
+
+/** File chips for unresolved `[فایل: …]` chat tags. Display only: no link, no click. */
+function RawFileChips({ files }: { files?: RawFileChip[] }) {
+  if (!files || files.length === 0) return null;
+  return (
+    <div className="mb-1 flex flex-col gap-1">
+      {files.map((file, idx) => (
+        <div
+          key={`${file.name}-${idx}`}
+          className="flex max-w-full items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-[13px] text-black/85"
+        >
+          <MzIcon name={file.icon} size={18} />
+          <span className="min-w-0 truncate">{file.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export const QUICK_REACTIONS = ['👍', '❤️', '🎉', '👏', '👀', '✅'] as const;
 
@@ -300,6 +319,7 @@ export function StreamChatMessageCard({
               </div>
             )}
 
+            <RawFileChips files={item.rawFiles} />
             <ImageUrlFrames text={item.text} />
             {!isBareImageUrlMessage(item.text) && (
               <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
@@ -389,6 +409,7 @@ export function StreamChatMessageCard({
               </div>
             ) : (
               <>
+                <RawFileChips files={item.rawFiles} />
                 <ImageUrlFrames text={item.text} />
                 {!isBareImageUrlMessage(item.text) && (
                   <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">

@@ -22,6 +22,21 @@ export function isImporter(userOrId: IdLike | { user_id?: IdLike; id?: IdLike } 
   return id != null && String(id).trim().toLowerCase() === IMPORTER_USER_ID;
 }
 
+/** Hidden account name of the importer; never shown in the UI. */
+const IMPORTER_DISPLAY_NAME = 'mizito importer';
+
+/**
+ * Name to show for a user. The importer (by id, or by its hidden account name in
+ * any letter case) becomes IMPORTER_FALLBACK_NAME; any other name is trimmed.
+ */
+export function displayName(name: string | null | undefined, id?: IdLike): string {
+  const trimmed = (name ?? '').trim();
+  if (isImporter(id) || trimmed.toLowerCase() === IMPORTER_DISPLAY_NAME) {
+    return IMPORTER_FALLBACK_NAME;
+  }
+  return trimmed;
+}
+
 // «name» + optional " — 1404/06/31 17:50" tail. The trailing \s* is consumed
 // so the rest starts at the body.
 const IMPORTER_PREFIX_RE =

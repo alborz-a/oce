@@ -3,6 +3,8 @@ import {
   IMPORTER_USER_ID,
   isImporter,
   parseImporterPrefix,
+  displayName,
+  IMPORTER_FALLBACK_NAME,
 } from '../lib/importerAuthor';
 
 describe('isImporter', () => {
@@ -57,5 +59,23 @@ describe('parseImporterPrefix', () => {
       senderName: null,
       rest: '«   » — متن',
     });
+  });
+});
+
+describe('displayName', () => {
+  it('maps the importer id to the fallback name', () => {
+    expect(displayName('همکار', IMPORTER_USER_ID)).toBe(IMPORTER_FALLBACK_NAME);
+    expect(displayName('', IMPORTER_USER_ID.toUpperCase())).toBe(IMPORTER_FALLBACK_NAME);
+  });
+
+  it('maps the hidden importer account name in any case', () => {
+    expect(displayName('Mizito Importer')).toBe(IMPORTER_FALLBACK_NAME);
+    expect(displayName('  mizito IMPORTER ')).toBe(IMPORTER_FALLBACK_NAME);
+  });
+
+  it('returns other names trimmed and leaves empty names empty', () => {
+    expect(displayName('  حسین عمران  ', '00000000-0000-0000-0000-000000000000')).toBe('حسین عمران');
+    expect(displayName(null)).toBe('');
+    expect(displayName(undefined, null)).toBe('');
   });
 });
