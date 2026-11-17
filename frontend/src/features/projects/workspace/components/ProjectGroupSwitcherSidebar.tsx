@@ -6,7 +6,7 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
-import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
+import { useOpenDmForColleague } from '../context/WorkspaceDmContext';
 import type { ProjectSwitcherCategory, ProjectTaskItem, WorkspaceMember } from '../types';
 
 const DEFAULT_PINNED_PROJECT_NAME = 'پیگیری اداری';
@@ -188,7 +188,7 @@ export function ProjectGroupSwitcherSidebar({
 }: ProjectGroupSwitcherSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const localPins = usePinnedProjects(currentUserId, projects);
-  const openDm = useOpenColleagueDm(currentUserId);
+  const openDm = useOpenDmForColleague(currentUserId);
   const effectivePinnedIds = pinnedProjectIds ?? localPins.pinnedIds;
   const effectiveTogglePin = onTogglePin ?? localPins.togglePin;
 

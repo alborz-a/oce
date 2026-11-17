@@ -24,6 +24,8 @@ export interface UseProjectWorkspaceStreamOptions {
   tasks: ProjectTaskItem[];
   members: ProjectMemberSummary[];
   filter: StreamFilterState;
+  /** Direct chat mode: skip project-wide sources (comments, photos, docs, meetings). */
+  chatOnly?: boolean;
 }
 
 export interface StreamCommentApiItem {
@@ -840,6 +842,7 @@ export function useProjectWorkspaceStream({
   tasks,
   members,
   filter,
+  chatOnly = false,
 }: UseProjectWorkspaceStreamOptions) {
   const [sources, setSources] = useState<RawFetchedSources>(EMPTY_SOURCES);
   const [loading, setLoading] = useState<boolean>(false);
@@ -856,7 +859,7 @@ export function useProjectWorkspaceStream({
 
   const refresh = useCallback(async (): Promise<void> => {
     const seq = ++requestSeqRef.current;
-    if (!projectId) {
+    if (!projectId || chatOnly) {
       if (mountedRef.current) {
         setSources(EMPTY_SOURCES);
         setLoading(false);
@@ -917,7 +920,7 @@ export function useProjectWorkspaceStream({
 
     setSources(nextSources);
     setLoading(false);
-  }, [projectId]);
+  }, [projectId, chatOnly]);
 
   useEffect(() => {
     void refresh();

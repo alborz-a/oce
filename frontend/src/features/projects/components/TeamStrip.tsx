@@ -30,7 +30,7 @@ import { UserSearchInput } from '@/shared/ui/UserSearchInput';
 import { AuthImage } from '@/shared/ui/AuthImage';
 import { REGION_LOCK } from '@/app/regionLock';
 import { toPersianDigits } from '@/shared/lib/jalali';
-import { useOpenColleagueDm } from '@/features/projects/workspace/hooks/useOpenColleagueDm';
+import { useOpenDmForColleague } from '@/features/projects/workspace/context/WorkspaceDmContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -156,6 +156,8 @@ interface MemberListModalProps {
   onRoleChange: (userId: string, role: string) => void;
   canChangeRole: boolean;
   canGrantElevated: boolean;
+  currentUserId?: string | null;
+  onOpenDm?: (userId: string) => void;
 }
 
 function MemberListModal({
@@ -166,6 +168,8 @@ function MemberListModal({
   onRoleChange,
   canChangeRole,
   canGrantElevated,
+  currentUserId,
+  onOpenDm,
 }: MemberListModalProps) {
   const { t } = useTranslation();
   return (
@@ -203,8 +207,39 @@ function MemberListModal({
               className="flex items-center gap-3 px-4 py-2.5"
               data-testid="team-strip-member-row"
             >
-              <Avatar member={m} size={32} />
-              <div className="flex-1 min-w-0">
+              <Avatar
+                member={m}
+                size={32}
+                onClick={
+                  onOpenDm && currentUserId && m.user_id !== currentUserId
+                    ? () => onOpenDm(m.user_id)
+                    : undefined
+                }
+              />
+              <div
+                className={`flex-1 min-w-0 ${
+                  onOpenDm && currentUserId && m.user_id !== currentUserId
+                    ? 'cursor-pointer'
+                    : ''
+                }`}
+                role={onOpenDm && currentUserId && m.user_id !== currentUserId ? 'button' : undefined}
+                tabIndex={onOpenDm && currentUserId && m.user_id !== currentUserId ? 0 : undefined}
+                onClick={
+                  onOpenDm && currentUserId && m.user_id !== currentUserId
+                    ? () => onOpenDm(m.user_id)
+                    : undefined
+                }
+                onKeyDown={
+                  onOpenDm && currentUserId && m.user_id !== currentUserId
+                    ? (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onOpenDm(m.user_id);
+                        }
+                      }
+                    : undefined
+                }
+              >
                 <div className="text-sm font-medium text-content-primary truncate">
                   {m.full_name || m.email}
                 </div>
@@ -422,7 +457,7 @@ export function TeamStrip({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
-  const openDm = useOpenColleagueDm(currentUserId);
+  const openDm = useOpenDmForColleague(currentUserId);
   const [pendingRemoveId, setPendingRemoveId] = useState<string | null>(null);
   const [listOpen, setListOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
@@ -624,6 +659,8 @@ export function TeamStrip({
           onRemove={(userId) => setPendingRemoveId(userId)}
           canChangeRole={canManage && !!defaultTeamId}
           canGrantElevated={canGrantElevated}
+          currentUserId={currentUserId}
+          onOpenDm={(userId) => void openDm(userId)}
           onRoleChange={(userId, role) => roleMutation.mutate({ userId, role })}
         />
       )}
