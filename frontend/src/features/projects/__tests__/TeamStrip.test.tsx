@@ -14,9 +14,16 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TeamStrip, type ProjectMember, getInitials } from '../components/TeamStrip';
+import { apiDelete } from '@/shared/lib/api';
+import { listTeams, updateMemberRole } from '@/features/teams/api';
+
+vi.mock('@/features/teams/api', () => ({
+  listTeams: vi.fn(),
+  updateMemberRole: vi.fn(),
+}));
 
 // Avoid hitting the network — the TeamStrip's useQuery is short-circuited
 // when `initialMembers` is passed via props (see component source).
@@ -133,6 +140,31 @@ describe('TeamStrip', () => {
     expect(screen.getByTestId('team-strip-add-modal')).toBeInTheDocument();
     expect(screen.getByTestId('mock-user-search')).toBeInTheDocument();
     expect(screen.getByTestId('team-strip-add-submit')).toBeInTheDocument();
+  });
+
+  it('asks for confirmation before removing a member', () => {
+    renderStrip([makeMember(0), makeMember(1)]);
+    fireEvent.click(screen.getByTestId('team-strip-manage'));
+    fireEvent.click(screen.getByTestId('team-strip-remove-btn'));
+    // Confirm dialog opens; DELETE not sent yet.
+    expect(apiDelete).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
+    expect(apiDelete).toHaveBeenCalledWith('/v1/projects/proj-test-1/members/user-1/');
+  });
+
+  it('changes a member role through the default team', async () => {
+    vi.mocked(listTeams).mockResolvedValue([
+      { id: 'team-default', is_default: true } as never,
+    ]);
+    renderStrip([makeMember(0), makeMember(1)]);
+    fireEvent.click(screen.getByTestId('team-strip-manage'));
+    await waitFor(() =>
+      expect(screen.getAllByTestId('team-strip-role-select-row')).toHaveLength(1),
+    );
+    fireEvent.change(screen.getByTestId('team-strip-role-select-row'), {
+      target: { value: 'viewer' },
+    });
+    expect(updateMemberRole).toHaveBeenCalledWith('team-default', 'user-1', 'viewer');
   });
 
   it('hides the add controls when canManage is false', () => {

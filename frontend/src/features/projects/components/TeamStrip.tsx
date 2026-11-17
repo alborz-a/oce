@@ -23,6 +23,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
+import { listTeams, updateMemberRole, type Team, type TeamRole } from '@/features/teams/api';
+import { ConfirmDialog } from '@/shared/ui/ConfirmDialog';
+import { useToastStore } from '@/stores/useToastStore';
 import { UserSearchInput } from '@/shared/ui/UserSearchInput';
 import { AuthImage } from '@/shared/ui/AuthImage';
 import { REGION_LOCK } from '@/app/regionLock';
@@ -150,6 +153,9 @@ interface MemberListModalProps {
   onClose: () => void;
   onRemove: (userId: string) => void;
   canRemove: boolean;
+  onRoleChange: (userId: string, role: string) => void;
+  canChangeRole: boolean;
+  canGrantElevated: boolean;
 }
 
 function MemberListModal({
@@ -157,6 +163,9 @@ function MemberListModal({
   onClose,
   onRemove,
   canRemove,
+  onRoleChange,
+  canChangeRole,
+  canGrantElevated,
 }: MemberListModalProps) {
   const { t } = useTranslation();
   return (
@@ -209,6 +218,31 @@ function MemberListModal({
                   ) : null}
                 </div>
               </div>
+              {canChangeRole && !m.is_owner && (
+                <select
+                  value={m.role}
+                  onChange={(e) => onRoleChange(m.user_id, e.target.value)}
+                  aria-label={t('projects.team.role_label', { defaultValue: 'Role' })}
+                  className="h-8 rounded-lg border border-border bg-surface-primary px-2 text-xs focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue"
+                  data-testid="team-strip-role-select-row"
+                >
+                  {Array.from(
+                    new Set([
+                      ...ROLE_CHOICES.filter((r) => canGrantElevated || r !== 'project_manager'),
+                      m.role,
+                    ]),
+                  ).map((r) => (
+                    <option key={r} value={r}>
+                      {t(`projects.team.role.${r}`, {
+                        defaultValue:
+                          r === 'project_manager'
+                            ? 'Project manager'
+                            : r.charAt(0).toUpperCase() + r.slice(1),
+                      })}
+                    </option>
+                  ))}
+                </select>
+              )}
               {canRemove && !m.is_owner && (
                 <button
                   onClick={() => onRemove(m.user_id)}
@@ -387,7 +421,9 @@ export function TeamStrip({
 }: TeamStripProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const addToast = useToastStore((s) => s.addToast);
   const openDm = useOpenColleagueDm(currentUserId);
+  const [pendingRemoveId, setPendingRemoveId] = useState<string | null>(null);
   const [listOpen, setListOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [addError, setAddError] = useState<string | undefined>();
@@ -432,6 +468,42 @@ export function TeamStrip({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['project-members', projectId],
+      });
+    },
+    onError: (err: unknown) => {
+      addToast({
+        type: 'error',
+        title: t('projects.team.remove_failed', { defaultValue: 'Failed to remove member' }),
+        message: err instanceof Error ? err.message : '',
+      });
+    },
+  });
+
+  // Default team = the team that backs the project member list (see member_service.list_project_members).
+  // Role changes go through the teams PATCH route, which needs this team id.
+  const teamsQuery = useQuery<Team[]>({
+    queryKey: ['project-teams', projectId],
+    queryFn: () => listTeams(projectId),
+    enabled: !!projectId && canManageProp,
+    staleTime: 30_000,
+  });
+  const defaultTeamId = teamsQuery.data?.find((tm) => tm.is_default)?.id;
+
+  const roleMutation = useMutation({
+    mutationFn: ({ userId, role }: { userId: string; role: string }) => {
+      if (!defaultTeamId) throw new Error('Default team not found');
+      return updateMemberRole(defaultTeamId, userId, role as TeamRole);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['project-members', projectId],
+      });
+    },
+    onError: (err: unknown) => {
+      addToast({
+        type: 'error',
+        title: t('projects.team.role_change_failed', { defaultValue: 'Failed to change role' }),
+        message: err instanceof Error ? err.message : '',
       });
     },
   });
@@ -549,9 +621,31 @@ export function TeamStrip({
           members={members}
           onClose={() => setListOpen(false)}
           canRemove={canManage}
-          onRemove={(userId) => removeMutation.mutate(userId)}
+          onRemove={(userId) => setPendingRemoveId(userId)}
+          canChangeRole={canManage && !!defaultTeamId}
+          canGrantElevated={canGrantElevated}
+          onRoleChange={(userId, role) => roleMutation.mutate({ userId, role })}
         />
       )}
+      <ConfirmDialog
+        open={pendingRemoveId !== null}
+        loading={removeMutation.isPending}
+        variant="danger"
+        title={t('projects.team.remove_confirm_title', { defaultValue: 'Remove member?' })}
+        message={t('projects.team.remove_confirm_message', {
+          defaultValue: 'This person will lose access to the project.',
+        })}
+        confirmLabel={t('projects.team.remove_confirm_action', { defaultValue: 'Remove' })}
+        onCancel={() => {
+          if (!removeMutation.isPending) setPendingRemoveId(null);
+        }}
+        onConfirm={() => {
+          if (!pendingRemoveId) return;
+          removeMutation.mutate(pendingRemoveId, {
+            onSettled: () => setPendingRemoveId(null),
+          });
+        }}
+      />
       {addOpen && (
         <AddMemberModal
           onClose={() => {
