@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChevronDown, Search, Star, Users, X } from 'lucide-react';
+import { Users, X } from 'lucide-react';
 import type { Project } from '@/features/projects/api';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { toPersianDigits } from '@/shared/lib/jalali';
@@ -7,6 +7,7 @@ import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import { useOpenDmForColleague } from '../context/WorkspaceDmContext';
+import { MizitoNav } from './MizitoNav';
 import type { ProjectSwitcherCategory, ProjectTaskItem, WorkspaceMember } from '../types';
 
 const DEFAULT_PINNED_PROJECT_NAME = 'پیگیری اداری';
@@ -128,22 +129,6 @@ export function usePinnedProjects(
   return { pinnedIds, togglePin };
 }
 
-function monogramForProject(name: string): string {
-  const words = name.trim().split(/\s+/).filter(Boolean);
-  if (words.length === 0) return 'پ';
-  if (words.length === 1) return words[0]!.slice(0, 2);
-  return `${words[0]![0] ?? ''}${words[1]![0] ?? ''}`;
-}
-
-function swatchForProject(id: string): string {
-  const palette = ['#3078ab', '#6ab04c', '#ba68c8', '#00b4d8', '#ff8c7e', '#4b9fff'];
-  let hash = 0;
-  for (let i = 0; i < id.length; i += 1) {
-    hash = (hash * 31 + id.charCodeAt(i)) | 0;
-  }
-  return palette[Math.abs(hash) % palette.length] ?? '#3078ab';
-}
-
 export interface ProjectGroupSwitcherSidebarProps {
   projects: Project[];
   activeProjectId: string;
@@ -159,63 +144,17 @@ export interface ProjectGroupSwitcherSidebarProps {
   className?: string;
 }
 
-interface SectionConfig {
-  key: ProjectSwitcherCategory;
-  title: string;
-  defaultOpen: boolean;
-}
-
-const SECTIONS: readonly SectionConfig[] = [
-  { key: 'pinned', title: 'پین‌شده‌ها', defaultOpen: true },
-  { key: 'active', title: 'پروژه‌های فعال', defaultOpen: true },
-  { key: 'admin_general', title: 'گروه‌های اداری و عمومی', defaultOpen: true },
-  { key: 'archived', title: 'بایگانی‌شده', defaultOpen: false },
-];
 
 export function ProjectGroupSwitcherSidebar({
-  projects,
-  activeProjectId,
-  onSelectProject,
   currentUserId,
   members = [],
   tasks = [],
   teammateTaskMap,
   mobileOpen = false,
   onMobileClose,
-  pinnedProjectIds,
-  onTogglePin,
   className = '',
 }: ProjectGroupSwitcherSidebarProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const localPins = usePinnedProjects(currentUserId, projects);
   const openDm = useOpenDmForColleague(currentUserId);
-  const effectivePinnedIds = pinnedProjectIds ?? localPins.pinnedIds;
-  const effectiveTogglePin = onTogglePin ?? localPins.togglePin;
-
-  const pinnedSet = useMemo(() => new Set(effectivePinnedIds), [effectivePinnedIds]);
-
-  const filteredProjects = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return projects;
-    return projects.filter((p) => {
-      const nameMatch = (p.name ?? '').toLowerCase().includes(q);
-      const codeMatch = (p.project_type ?? '').toLowerCase().includes(q);
-      return nameMatch || codeMatch;
-    });
-  }, [projects, searchQuery]);
-
-  const grouped = useMemo(() => {
-    const map: Record<ProjectSwitcherCategory, Project[]> = {
-      pinned: [],
-      active: [],
-      admin_general: [],
-      archived: [],
-    };
-    for (const p of filteredProjects) {
-      map[classifyProjectGroup(p, pinnedSet)].push(p);
-    }
-    return map;
-  }, [filteredProjects, pinnedSet]);
 
   const visibleMembers = useVisibleMembers(members);
   const presenceUsers = useGlobalPresenceStore((s) => s.users);
@@ -234,8 +173,6 @@ export function ProjectGroupSwitcherSidebar({
     }
     return map;
   }, [tasks]);
-
-  const isSearching = searchQuery.trim().length > 0;
 
   return (
     <>
@@ -265,148 +202,7 @@ export function ProjectGroupSwitcherSidebar({
           </button>
         </div>
 
-        {/* Native <search> landmark */}
-        <search className="border-b border-[#e5e7eb] px-2.5 py-2">
-          <div className="relative flex items-center">
-            <Search
-              size={14}
-              aria-hidden="true"
-              className="pointer-events-none absolute start-2.5 text-[#909090]"
-            />
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="جستجوی پروژه یا گروه..."
-              aria-label="جستجوی پروژه یا گروه"
-              data-testid="switcher-search-input"
-              className="h-8 w-full rounded-md border border-[#e5e7eb] bg-[#f5f6f8] ps-8 pe-7 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:border-mz-project focus:bg-white focus:outline-none"
-            />
-            {isSearching && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                aria-label="پاک کردن جستجو"
-                className="absolute end-1.5 inline-flex h-5 w-5 items-center justify-center rounded text-[#909090] hover:text-[#1f2937]"
-              >
-                <X size={12} />
-              </button>
-            )}
-          </div>
-        </search>
-
-        {/* Scrollable project/group sections */}
-        <div className="mz-scroll-area flex-1 px-1.5 py-2 space-y-1.5">
-          {filteredProjects.length === 0 ? (
-            <p className="px-2 py-4 text-center text-[12px] text-[#909090]">
-              پروژه یا گروهی یافت نشد
-            </p>
-          ) : (
-            SECTIONS.map((section) => {
-              const items = grouped[section.key];
-              if (items.length === 0 && section.key !== 'pinned') return null;
-              if (items.length === 0 && section.key === 'pinned' && isSearching) return null;
-
-              const openAttr = isSearching ? items.length > 0 : section.defaultOpen;
-
-              return (
-                <details
-                  key={section.key}
-                  className="mz-group-details"
-                  open={openAttr}
-                  data-testid={`switcher-section-${section.key}`}
-                >
-                  <summary className="flex items-center justify-between rounded px-2 py-1 text-[11.5px] font-semibold text-[#5b5e66] hover:bg-[#f5f6f8]">
-                    <span className="flex items-center gap-1.5">
-                      <ChevronDown
-                        size={13}
-                        aria-hidden="true"
-                        className="mz-chevron-indicator text-[#909090]"
-                      />
-                      <span>{section.title}</span>
-                    </span>
-                    <span className="rounded-full bg-[#f2f4f7] px-1.5 py-0.5 text-[10.5px] font-medium text-[#6b7280] tabular-nums">
-                      {toPersianDigits(items.length)}
-                    </span>
-                  </summary>
-
-                  {items.length === 0 ? (
-                    <p className="px-3 py-1.5 text-[11px] text-[#909090]">
-                      موردی پین نشده است
-                    </p>
-                  ) : (
-                    <ul className="mt-0.5 space-y-0.5">
-                      {items.map((project) => {
-                        const isActive = project.id === activeProjectId;
-                        const isPinned = pinnedSet.has(project.id);
-                        return (
-                          <li
-                            key={project.id}
-                            className={`group flex items-center gap-1 rounded-md px-1 py-0.5 transition-colors ${
-                              isActive
-                                ? 'bg-[#e8f2fa] text-mz-project'
-                                : 'text-[#374151] hover:bg-[#f5f6f8]'
-                            }`}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => {
-                                onSelectProject(project.id);
-                                onMobileClose?.();
-                              }}
-                              aria-current={isActive ? 'page' : undefined}
-                              data-testid={`switcher-project-${project.id}`}
-                              className="flex min-w-0 flex-1 items-center gap-2 rounded px-1 py-1 text-start focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project"
-                            >
-                              <span
-                                aria-hidden="true"
-                                className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9.5px] font-bold text-white"
-                                style={{ backgroundColor: swatchForProject(project.id) }}
-                              >
-                                {monogramForProject(project.name)}
-                              </span>
-                              <span
-                                className={`min-w-0 flex-1 truncate text-[12px] ${
-                                  isActive ? 'font-semibold text-mz-project' : 'font-medium'
-                                }`}
-                              >
-                                {toPersianDigits(project.name)}
-                              </span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => effectiveTogglePin(project.id)}
-                              aria-pressed={isPinned}
-                              aria-label={
-                                isPinned
-                                  ? `برداشتن پین ${project.name}`
-                                  : `پین کردن ${project.name}`
-                              }
-                              data-testid={`switcher-pin-${project.id}`}
-                              className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded transition-opacity focus:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project ${
-                                isPinned
-                                  ? 'text-[#f59e0b] opacity-100'
-                                  : 'text-[#9ca3af] opacity-0 group-hover:opacity-100 hover:text-[#f59e0b]'
-                              }`}
-                            >
-                              <Star
-                                size={13}
-                                fill={isPinned ? 'currentColor' : 'none'}
-                                aria-hidden="true"
-                              />
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </details>
-              );
-            })
-          )}
-        </div>
-
+        <MizitoNav />
         {/* Bottom `همکارانم` section */}
         <section
           aria-label="همکارانم"
