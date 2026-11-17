@@ -27,6 +27,7 @@ import { UserSearchInput } from '@/shared/ui/UserSearchInput';
 import { AuthImage } from '@/shared/ui/AuthImage';
 import { REGION_LOCK } from '@/app/regionLock';
 import { toPersianDigits } from '@/shared/lib/jalali';
+import { useOpenColleagueDm } from '@/features/projects/workspace/hooks/useOpenColleagueDm';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -93,15 +94,33 @@ interface AvatarProps {
   member: ProjectMember;
   size?: number;
   className?: string;
+  /** When set, the avatar is a button that opens a 1:1 DM with this member. */
+  onClick?: () => void;
 }
 
-function Avatar({ member, size = 32, className = '' }: AvatarProps) {
+function Avatar({ member, size = 32, className = '', onClick }: AvatarProps) {
+  const interactiveProps = onClick
+    ? {
+        role: 'button' as const,
+        tabIndex: 0,
+        'aria-label': `گفتگوی مستقیم با ${member.full_name || member.email}`,
+        onClick,
+        onKeyDown: (e: { key: string; preventDefault: () => void }) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
+        },
+      }
+    : {
+        role: 'img' as const,
+        'aria-label': `${member.full_name || member.email} (${member.role})`,
+      };
   return (
     <div
-      role="img"
-      aria-label={`${member.full_name || member.email} (${member.role})`}
+      {...interactiveProps}
       title={`${member.full_name || member.email} - ${member.role}`}
-      className={`inline-flex items-center justify-center rounded-full border-2 border-white text-white font-semibold select-none ${className}`}
+      className={`inline-flex items-center justify-center rounded-full border-2 border-white text-white font-semibold select-none ${onClick ? 'cursor-pointer' : ''} ${className}`}
       style={{
         width: size,
         height: size,
@@ -368,6 +387,7 @@ export function TeamStrip({
 }: TeamStripProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const openDm = useOpenColleagueDm(currentUserId);
   const [listOpen, setListOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [addError, setAddError] = useState<string | undefined>();
@@ -458,7 +478,17 @@ export function TeamStrip({
               })}
             </span>
           ) : (
-            visible.map((m) => <Avatar key={m.user_id} member={m} />)
+            visible.map((m) => (
+              <Avatar
+                key={m.user_id}
+                member={m}
+                onClick={
+                  currentUserId && m.user_id !== currentUserId
+                    ? () => void openDm(m.user_id)
+                    : undefined
+                }
+              />
+            ))
           )}
         </div>
         {overflowCount > 0 && (

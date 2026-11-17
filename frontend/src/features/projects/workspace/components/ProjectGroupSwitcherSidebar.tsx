@@ -6,6 +6,7 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
+import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
 import type { ProjectSwitcherCategory, ProjectTaskItem, WorkspaceMember } from '../types';
 
 const DEFAULT_PINNED_PROJECT_NAME = 'پیگیری اداری';
@@ -187,6 +188,7 @@ export function ProjectGroupSwitcherSidebar({
 }: ProjectGroupSwitcherSidebarProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const localPins = usePinnedProjects(currentUserId, projects);
+  const openDm = useOpenColleagueDm(currentUserId);
   const effectivePinnedIds = pinnedProjectIds ?? localPins.pinnedIds;
   const effectiveTogglePin = onTogglePin ?? localPins.togglePin;
 
@@ -443,6 +445,20 @@ export function ProjectGroupSwitcherSidebar({
                       key={member.user_id}
                       className="flex items-center gap-2 rounded-md px-1.5 py-1 hover:bg-[#f5f6f8]"
                       data-testid={`switcher-colleague-${member.user_id}`}
+                      role={isMe ? undefined : 'button'}
+                      tabIndex={isMe ? undefined : 0}
+                      aria-label={isMe ? undefined : `گفتگوی مستقیم با ${displayName}`}
+                      onClick={isMe ? undefined : () => void openDm(member.user_id)}
+                      onKeyDown={
+                        isMe
+                          ? undefined
+                          : (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                void openDm(member.user_id);
+                              }
+                            }
+                      }
                     >
                       <div className="relative h-7 w-7 shrink-0 rounded-full bg-[#e5e7eb] text-[#4b5563]">
                         <UserAvatar
