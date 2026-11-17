@@ -19,6 +19,13 @@ import {
 import { apiGet } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
+import {
+  getAttachmentCount,
+  getChecklistCounts,
+  getTaskProgressPercent,
+  matchesTaskDueFilters,
+  matchesTaskSearch,
+} from '../lib/taskListFilters';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import {
@@ -75,6 +82,8 @@ export function ProjectTasksTab({
   const [searchText, setSearchText] = useState('');
   const [assigneeFilter, setAssigneeFilter] = useState<string>('');
   const [priorityFilter, setPriorityFilter] = useState<string>('');
+  const [hasDueFilter, setHasDueFilter] = useState(false);
+  const [overdueFilter, setOverdueFilter] = useState(false);
   const [popoverOpenFallback, setPopoverOpenFallback] = useState(false);
 
   const [filesDrawerOpen, setFilesDrawerOpen] = useState(false);
@@ -238,7 +247,7 @@ export function ProjectTasksTab({
   };
 
   const filteredAndSorted = useMemo(() => {
-    const q = searchText.trim().toLowerCase();
+    const q = searchText.trim();
     const list = tasks.filter((task) => {
       if (isTopicConversationTask(task)) return false;
       if (task.project_id && task.project_id !== projectId) return false;
@@ -253,11 +262,18 @@ export function ProjectTasksTab({
       if (assigneeFilter && task.responsible_id !== assigneeFilter) return false;
       if (priorityFilter && (task.priority ?? 'normal') !== priorityFilter) return false;
 
-      if (q) {
-        const titleMatch = (task.title ?? '').toLowerCase().includes(q);
-        const descMatch = (task.description ?? '').toLowerCase().includes(q);
-        if (!titleMatch && !descMatch) return false;
+      const isOverdue = !isDone && state === 'delayed';
+      if (
+        !matchesTaskDueFilters(
+          task,
+          { hasDueOnly: hasDueFilter, overdueOnly: overdueFilter },
+          isOverdue,
+        )
+      ) {
+        return false;
       }
+
+      if (q && !matchesTaskSearch(task, q)) return false;
       return true;
     });
 
@@ -283,6 +299,8 @@ export function ProjectTasksTab({
     viewFilter,
     assigneeFilter,
     priorityFilter,
+    hasDueFilter,
+    overdueFilter,
     searchText,
     sortKey,
   ]);
@@ -324,7 +342,66 @@ export function ProjectTasksTab({
     },
   ].filter((g) => g.items.length > 0);
 
-  const hasSubFilter = Boolean(searchText.trim() || assigneeFilter || priorityFilter);
+  const hasSubFilter = Boolean(
+    searchText.trim() || assigneeFilter || priorityFilter || hasDueFilter || overdueFilter,
+  );
+
+  const clearSubFilters = () => {
+    setSearchText('');
+    setAssigneeFilter('');
+    setPriorityFilter('');
+    setHasDueFilter(false);
+    setOverdueFilter(false);
+  };
+
+  const priorityLabelByValue: Record<string, string> = {
+    urgent: 'فوری',
+    high: 'بالا',
+    normal: 'معمولی',
+    low: 'کم',
+  };
+  const assigneeChipLabel = assigneeFilter
+    ? (() => {
+        const member = assignableMembers(members).find((m) => m.user_id === assigneeFilter);
+        return member ? memberLabel(member) : 'مسئول';
+      })()
+    : '';
+
+  const activeFilterChips: Array<{ key: string; label: string; onRemove: () => void }> = [
+    ...(searchText.trim()
+      ? [
+          {
+            key: 'search',
+            label: `جستجو: ${searchText.trim()}`,
+            onRemove: () => setSearchText(''),
+          },
+        ]
+      : []),
+    ...(priorityFilter
+      ? [
+          {
+            key: 'priority',
+            label: `اولویت: ${priorityLabelByValue[priorityFilter] ?? priorityFilter}`,
+            onRemove: () => setPriorityFilter(''),
+          },
+        ]
+      : []),
+    ...(assigneeFilter
+      ? [
+          {
+            key: 'assignee',
+            label: `مسئول: ${assigneeChipLabel}`,
+            onRemove: () => setAssigneeFilter(''),
+          },
+        ]
+      : []),
+    ...(hasDueFilter
+      ? [{ key: 'has-due', label: 'دارای زمان', onRemove: () => setHasDueFilter(false) }]
+      : []),
+    ...(overdueFilter
+      ? [{ key: 'overdue', label: 'دارای تاخیر', onRemove: () => setOverdueFilter(false) }]
+      : []),
+  ];
 
   return (
     <div
@@ -410,11 +487,7 @@ export function ProjectTasksTab({
                 {hasSubFilter && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setSearchText('');
-                      setAssigneeFilter('');
-                      setPriorityFilter('');
-                    }}
+                    onClick={clearSubFilters}
                     className="text-[11px] text-[#d9534f] hover:underline"
                   >
                     پاک کردن
@@ -428,7 +501,7 @@ export function ProjectTasksTab({
                   type="search"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="جستجو در عنوان یا شرح..."
+                  placeholder="جستجوی وظایف"
                   aria-label="جستجو در وظایف"
                   data-testid="tasks-filter-search"
                   className="h-8 w-full rounded border border-[#e5e7eb] ps-7 pe-2 text-[12px]"
@@ -449,6 +522,27 @@ export function ProjectTasksTab({
                   <option value="normal">معمولی</option>
                   <option value="low">کم</option>
                 </select>
+              </div>
+
+              <div className="flex flex-col gap-1.5 text-[12px] text-[#1f2937]">
+                <label className="inline-flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={hasDueFilter}
+                    onChange={(e) => setHasDueFilter(e.target.checked)}
+                    data-testid="tasks-filter-has-due"
+                  />
+                  <span>دارای زمان</span>
+                </label>
+                <label className="inline-flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={overdueFilter}
+                    onChange={(e) => setOverdueFilter(e.target.checked)}
+                    data-testid="tasks-filter-overdue"
+                  />
+                  <span>دارای تاخیر</span>
+                </label>
               </div>
 
               {members.length > 0 && (
@@ -539,6 +633,34 @@ export function ProjectTasksTab({
         </section>
       )}
 
+      {activeFilterChips.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-1.5 border-b border-[#e5e7eb] bg-white px-3 py-2"
+          data-testid="tasks-active-filter-chips"
+        >
+          {activeFilterChips.map((chip) => (
+            <button
+              key={chip.key}
+              type="button"
+              onClick={chip.onRemove}
+              data-testid={`tasks-filter-chip-${chip.key}`}
+              className="inline-flex items-center gap-1 rounded-full border border-[#3078ab]/30 bg-[#e8f2fa] px-2 py-0.5 text-[11px] text-[#3078ab]"
+            >
+              <span>{chip.label}</span>
+              <span aria-hidden="true">×</span>
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={clearSubFilters}
+            data-testid="tasks-filter-chips-clear"
+            className="text-[11px] text-[#d9534f] hover:underline"
+          >
+            پاک کردن
+          </button>
+        </div>
+      )}
+
       {/* Compact grouped task list */}
       <div className="mz-scroll-area flex-1 p-3 space-y-4">
         {groups.length === 0 ? (
@@ -563,6 +685,9 @@ export function ProjectTasksTab({
                   const assignee = task.responsible_id
                     ? membersById.get(task.responsible_id)
                     : undefined;
+                  const checklistCounts = getChecklistCounts(task.checklist);
+                  const attachmentCount = getAttachmentCount(task);
+                  const progressPercent = getTaskProgressPercent(task);
 
                   return (
                     <li
@@ -624,6 +749,42 @@ export function ProjectTasksTab({
                             className="rounded bg-[#e5e7eb] px-1.5 py-0.5 text-[10.5px] font-medium text-[#4b5563]"
                           >
                             {toPersianDigits(extraLabelCount)} تا بیشتر...
+                          </span>
+                        )}
+
+                        {checklistCounts.total > 0 && (
+                          <span
+                            data-testid={`tasks-row-checklist-${task.id}`}
+                            className="rounded bg-[#f5f6f8] px-1.5 py-0.5 text-[10.5px] tabular-nums text-[#4b5563]"
+                          >
+                            {toPersianDigits(checklistCounts.done)}/{toPersianDigits(checklistCounts.total)} چک‌لیست
+                          </span>
+                        )}
+
+                        {attachmentCount > 0 && (
+                          <span
+                            data-testid={`tasks-row-attachments-${task.id}`}
+                            className="rounded bg-[#f5f6f8] px-1.5 py-0.5 text-[10.5px] tabular-nums text-[#4b5563]"
+                          >
+                            {toPersianDigits(attachmentCount)} پیوست
+                          </span>
+                        )}
+
+                        {task.weight != null && (
+                          <span
+                            data-testid={`tasks-row-weight-${task.id}`}
+                            className="rounded bg-[#f5f6f8] px-1.5 py-0.5 text-[10.5px] tabular-nums text-[#4b5563]"
+                          >
+                            وزن {toPersianDigits(task.weight)}
+                          </span>
+                        )}
+
+                        {progressPercent !== null && (
+                          <span
+                            data-testid={`tasks-row-progress-${task.id}`}
+                            className="rounded bg-[#e8f2fa] px-1.5 py-0.5 text-[10.5px] tabular-nums text-[#3078ab]"
+                          >
+                            {toPersianDigits(progressPercent)}٪
                           </span>
                         )}
 
