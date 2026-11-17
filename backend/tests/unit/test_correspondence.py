@@ -466,3 +466,79 @@ class TestListStatusFilter:
         # The status query param is regex-validated, so an unknown value is a
         # 422 rather than a silent full-list fallback.
         assert resp.status_code == 422, resp.text
+
+
+class TestGeneralProjectReadAccess:
+    """Staff who are not owner or team member can READ the general project
+    (``MZ-GENERAL``) letters. Every other project and every write route keeps
+    the membership check.
+    """
+
+    async def _seed(self, db_session):
+        from app.modules.team_chat.service import GENERAL_PROJECT_CODE
+
+        owner_id = await _make_user(db_session)
+        staff_id = await _make_user(db_session, email="staff@example.com")
+        general = Project(name="General", owner_id=owner_id, project_code=GENERAL_PROJECT_CODE)
+        other = Project(name="Other", owner_id=owner_id, project_code="OTHER-1")
+        db_session.add_all([general, other])
+        await db_session.flush()
+        service = CorrespondenceService(db_session)
+        items = {}
+        for key, project in (("general", general), ("other", other)):
+            items[key] = await service.create_correspondence(
+                CorrespondenceCreate(
+                    project_id=project.id,
+                    direction="incoming",
+                    subject=f"{key} letter",
+                    correspondence_type="letter",
+                ),
+                user_id=str(owner_id),
+            )
+        await db_session.commit()
+        return str(staff_id), general.id, other.id, items["general"].id
+
+    @pytest.mark.asyncio
+    async def test_non_member_staff_can_list_general_project(self, db_session):
+        staff, general_id, _other_id, _item_id = await self._seed(db_session)
+        app = _build_app(db_session, caller_id=staff)
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/v1/correspondence/?project_id={general_id}")
+        assert resp.status_code == 200, resp.text
+        assert resp.json()["total"] == 1
+
+    @pytest.mark.asyncio
+    async def test_non_member_staff_can_get_general_project_letter(self, db_session):
+        staff, _general_id, _other_id, item_id = await self._seed(db_session)
+        app = _build_app(db_session, caller_id=staff)
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/v1/correspondence/{item_id}")
+        assert resp.status_code == 200, resp.text
+
+    @pytest.mark.asyncio
+    async def test_non_member_still_blocked_on_other_project(self, db_session):
+        staff, _general_id, other_id, _item_id = await self._seed(db_session)
+        app = _build_app(db_session, caller_id=staff)
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.get(f"/v1/correspondence/?project_id={other_id}")
+        assert resp.status_code == 404, resp.text
+
+    @pytest.mark.asyncio
+    async def test_non_member_write_to_general_project_still_blocked(self, db_session):
+        staff, general_id, _other_id, _item_id = await self._seed(db_session)
+        app = _build_app(db_session, caller_id=staff)
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            resp = await client.post(
+                "/v1/correspondence/",
+                json={
+                    "project_id": str(general_id),
+                    "direction": "incoming",
+                    "subject": "intruder write",
+                    "correspondence_type": "letter",
+                },
+            )
+        assert resp.status_code == 404, resp.text
