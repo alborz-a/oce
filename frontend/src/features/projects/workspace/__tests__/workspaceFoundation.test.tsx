@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
 import type { Project } from '@/features/projects/api';
 import { computeProjectWorkspaceStats } from '../hooks/useProjectWorkspaceStats';
 import { ProjectGroupSwitcherSidebar } from '../components/ProjectGroupSwitcherSidebar';
@@ -43,7 +44,11 @@ function renderWithQuery(ui: React.ReactElement) {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return render(<QueryClientProvider client={qc}>{ui}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={qc}>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </QueryClientProvider>,
+  );
 }
 
 describe('Project Workspace Foundation Components', () => {
@@ -51,7 +56,7 @@ describe('Project Workspace Foundation Components', () => {
     window.localStorage.clear();
   });
 
-  it('ProjectGroupSwitcherSidebar defaults پیگیری اداری pinned, filters via <search>, toggles pin, and renders همکارانم', () => {
+  it('ProjectGroupSwitcherSidebar renders the Mizito nav items and همکارانم', () => {
     const projects: Project[] = [
       makeProject({ id: 'p-edari', name: 'پیگیری اداری' }),
       makeProject({ id: 'p-basij', name: 'بسیج 18' }),
@@ -99,26 +104,19 @@ describe('Project Workspace Foundation Components', () => {
       />,
     );
 
-    // پیگیری اداری is auto-pinned inside pinned section
-    const pinnedSection = screen.getByTestId('switcher-section-pinned');
-    expect(pinnedSection).toHaveTextContent('پیگیری اداری');
+    // Mizito nav replaces the project search and groups; پروژه‌ها item routes to /projects
+    expect(screen.getByTestId('mizito-nav')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'داشبورد' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'گفتگو' })).toHaveAttribute('href', '/chat');
+    expect(screen.getByRole('link', { name: 'پروژه‌ها' })).toHaveAttribute('href', '/projects');
+    expect(screen.getByRole('link', { name: 'وظایف' })).toHaveAttribute('href', '/tasks');
+    expect(screen.getByRole('link', { name: 'نامه‌ها' })).toHaveAttribute('href', '/correspondence');
+    expect(screen.queryByTestId('switcher-search-input')).not.toBeInTheDocument();
 
     // Hidden Mizito Importer is stripped for non-admin; colleague task subtitle appears
     expect(screen.queryByText('Mizito Importer')).not.toBeInTheDocument();
     expect(screen.getByText('محبوبه کرامت')).toBeInTheDocument();
     expect(screen.getByText('دریافت گواهی عدم خلاف')).toBeInTheDocument();
-
-    // Pin toggle on بسیج 18 persists in localStorage
-    fireEvent.click(screen.getByTestId('switcher-pin-p-basij'));
-    expect(pinnedSection).toHaveTextContent('بسیج ۱۸');
-
-    // Search filters list
-    fireEvent.change(screen.getByTestId('switcher-search-input'), {
-      target: { value: 'بسیج' },
-    });
-    expect(screen.queryByTestId('switcher-project-p-edari')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByTestId('switcher-project-p-basij'));
-    expect(onSelectProject).toHaveBeenCalledWith('p-basij');
   });
 
   it('ProjectRightSummaryPanel renders all-done green double check when remainingCount === 0 and board click switches to board tab', () => {

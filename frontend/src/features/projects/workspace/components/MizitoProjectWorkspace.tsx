@@ -1,3 +1,4 @@
+import { Menu } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -188,6 +189,9 @@ export function MizitoProjectWorkspace({
       )}
 
       <main className="mz-main-canvas">
+        <button type="button" className="mz-switcher-trigger" aria-label="منوی پروژه‌ها و همکاران" onClick={() => setSwitcherOpen(true)}>
+          <Menu size={18} aria-hidden="true" />
+        </button>
         <MizitoTopTabAndFilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}

@@ -47,6 +47,7 @@
   --mz-project: #3078ab;       --mz-project-ch: 48 120 171;
   --mz-task: #04c39a;          --mz-task-ch: 4 195 154;
   --mz-inbox: #ff8c7e;         --mz-inbox-ch: 255 140 126;
+  --mz-chat: #4b9fff;          --mz-chat-ch: 75 159 255;
   --mz-purple: #ba68c8;        --mz-purple-ch: 186 104 200;
   --mz-pink: #ff88b0;          --mz-pink-ch: 255 136 176;
   --mz-chat: #4b9fff;          --mz-chat-ch: 75 159 255;
@@ -491,4 +492,55 @@
 .mizito-workspace-light .mz-micro-text {
   font-size: 11px;
   line-height: 1.4;
+}
+
+/* Mizito nav (P5 port). Values from mizito-design-assets/tokens/layout.json .bl-sidenav. */
+.mizito-workspace-light .mz-nav {
+  padding-top: 17px;
+  font-size: 13px;
+  direction: rtl;
+}
+.mizito-workspace-light .mz-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 3px;
+  color: var(--mz-text);
+  font-size: 13px;
+  text-decoration: none;
+}
+.mizito-workspace-light .mz-nav-item[aria-current='page'] {
+  font-weight: 700;
+}
+.mizito-workspace-light .mz-nav .mz-dot {
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: 4px;
+  flex: 0 0 18px;
+}
+.mizito-workspace-light .mz-nav hr {
+  max-inline-size: 292px;
+  margin: 10px 0;
+  border: 0;
+  border-top: 1px solid var(--mz-border);
+}
+.mizito-workspace-light .mz-switcher-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  margin: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mz-text);
+}
+@media (min-width: 1024px) {
+  .mizito-workspace-light .mz-switcher-trigger {
+    display: none;
+  }
 }
