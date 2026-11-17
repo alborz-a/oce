@@ -456,6 +456,7 @@ export function ProjectBoardTab({
                     <div
                       style={{ width: `${remainingPct}%` }}
                       className="flex items-center justify-center bg-[#d5d8dc] text-[9px] font-semibold text-[#374151] tabular-nums"
+                    >
                       {remainingPct >= 14 ? `${toPersianDigits(remainingPct)}٪` : null}
                     </div>
                   )}
