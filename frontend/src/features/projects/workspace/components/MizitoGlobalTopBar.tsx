@@ -1,4 +1,5 @@
-import { Bell, HelpCircle, Menu, Search, Settings } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, ChevronDown, HelpCircle, Menu, Search, Settings } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -9,19 +10,22 @@ export interface MizitoGlobalTopBarProps {
   onMenuClick: () => void;
 }
 
-const FALLBACK_BRAND = 'پورتال رویال استار';
+const FALLBACK_BRAND = 'رویال استارز';
 
-/** Global dark-blue top bar of the Mizito workspace (menu, brand, search, quick icons, avatar). */
+/** Global dark-blue top bar of the Mizito workspace (menu, logo + company dropdown, search, quick icons, avatar). */
 export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
   const navigate = useNavigate();
   const fullName = useAuthStore((s) => s.userFullName);
+  const logout = useAuthStore((s) => s.logout);
   const company = useBrandingStore((s) => s.companyName.trim());
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const openSearch = () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
   };
   const iconBtn =
     'inline-flex h-8 w-8 items-center justify-center rounded-full text-white/85 hover:bg-white/15 hover:text-white';
+  const menuItem = 'block w-full px-3 py-2 text-start text-[13px] text-[#37474f] hover:bg-[#f2f4f7]';
 
   return (
     <header
@@ -33,12 +37,52 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
       <button type="button" onClick={onMenuClick} aria-label="منو" className={iconBtn}>
         <Menu size={20} />
       </button>
-      <span className="hidden text-[17px] font-bold md:block">{company || 'OCE'}</span>
-      <span className="hidden text-[12.5px] text-white/80 md:inline">{company ? '' : FALLBACK_BRAND}</span>
-      <span className="flex min-w-0 items-center gap-2 md:hidden" data-testid="mizito-mobile-brand">
-        <Logo size="xs" />
-        <span className="truncate whitespace-nowrap text-[15px] font-bold">رویال استارز</span>
-      </span>
+
+      <div className="relative flex min-w-0 items-center">
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          data-testid="mizito-brand"
+          className="flex min-w-0 items-center gap-2 rounded-md px-1 py-1 hover:bg-white/10"
+        >
+          <Logo size="xs" />
+          <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
+          <ChevronDown size={14} className="shrink-0 text-white/80" />
+        </button>
+        {menuOpen && (
+          <div
+            role="menu"
+            data-testid="mizito-brand-menu"
+            className="absolute start-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 shadow-lg"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              className={menuItem}
+              onClick={() => {
+                setMenuOpen(false);
+                navigate('/profile');
+              }}
+            >
+              پروفایل
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              className={menuItem}
+              onClick={() => {
+                setMenuOpen(false);
+                logout();
+                window.location.href = '/login';
+              }}
+            >
+              خروج
+            </button>
+          </div>
+        )}
+      </div>
 
       <button
         type="button"
