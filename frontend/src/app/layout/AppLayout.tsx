@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Sidebar, FloatingRecentButton } from './Sidebar';
 import { Header, resolvePageTitleKey } from './Header';
 import { MizitoGlobalTopBar } from '@/features/projects/workspace/components/MizitoGlobalTopBar';
+import { toggleMizitoSwitcher } from '@/features/projects/workspace/mizitoSwitcherBridge';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { DesktopToolbar } from './DesktopToolbar';
 import { FeedbackDialog } from '@/shared/ui';
@@ -172,7 +173,12 @@ export function AppLayout({ title, children }: AppLayoutProps) {
             chrome. */}
         <DesktopToolbar />
         {workspaceActive ? (
-          <MizitoGlobalTopBar onMenuClick={openSidebar} />
+          <MizitoGlobalTopBar
+            onMenuClick={() => {
+              if (!toggleMizitoSwitcher()) openSidebar();
+            }}
+            onOpenAppMenu={openSidebar}
+          />
         ) : (
           <Header
             title={title}
