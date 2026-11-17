@@ -98,7 +98,7 @@ export function StreamPhotoBubbleCard({
                   <AuthImage
                     src={getThumbUrl(photo)}
                     alt={photo.caption || photo.filename || 'تصویر پروژه'}
-                    className="mz-media-block h-auto max-h-[260px] w-full object-cover"
+                    className="mz-media-block aspect-[4/3] w-[260px] max-w-full rounded-[6px] object-cover shadow-md"
                     placeholder={
                       <div className="flex h-40 w-full items-center justify-center bg-[#f2f4f7] text-[#909090]">
                         <ImageIcon size={24} />
