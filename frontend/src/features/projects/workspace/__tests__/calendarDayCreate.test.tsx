@@ -27,6 +27,13 @@ describe('calendar day label helpers', () => {
   });
 });
 
+function firstDayCell(): HTMLElement {
+  const dayButtons = screen.getAllByRole('button', { name: /^ایجاد وظیفه برای/ });
+  const first = dayButtons[0];
+  if (!first) throw new Error('no day cells rendered');
+  return first;
+}
+
 describe('ProjectCalendarTab day click creates task', () => {
   beforeEach(() => {
     tasksApi.createTask.mockClear();
@@ -43,13 +50,12 @@ describe('ProjectCalendarTab day click creates task', () => {
       />,
     );
 
-    const dayButtons = screen.getAllByRole('button', { name: /^ایجاد وظیفه برای/ });
-    expect(dayButtons.length).toBeGreaterThan(0);
-    const cellTestId = dayButtons[0].getAttribute('data-testid') ?? '';
+    const dayCell = firstDayCell();
+    const cellTestId = dayCell.getAttribute('data-testid') ?? '';
     const isoDate = cellTestId.replace('calendar-cell-', '');
     expect(isoDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 
-    fireEvent.click(dayButtons[0]);
+    fireEvent.click(dayCell);
     const dialog = screen.getByTestId('calendar-create-dialog');
     expect(dialog).toBeInTheDocument();
 
@@ -72,8 +78,7 @@ describe('ProjectCalendarTab day click creates task', () => {
 
   it('keyboard Enter on a focused day cell opens the create dialog', () => {
     render(<ProjectCalendarTab projectId="p-1" tasks={[]} />);
-    const dayButtons = screen.getAllByRole('button', { name: /^ایجاد وظیفه برای/ });
-    fireEvent.keyDown(dayButtons[0], { key: 'Enter' });
+    fireEvent.keyDown(firstDayCell(), { key: 'Enter' });
     expect(screen.getByTestId('calendar-create-dialog')).toBeInTheDocument();
   });
 });
