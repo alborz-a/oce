@@ -2,7 +2,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, FocusEvent, InputHTMLAttributes } from 'react';
 import clsx from 'clsx';
+import { createPortal } from 'react-dom';
 import { REGION_LOCK } from '@/app/regionLock';
+import { useFloatingPosition } from '@/shared/ui/floatingPosition';
 import {
   PERSIAN_MONTH_NAMES,
   PERSIAN_WEEKDAY_NAMES,
@@ -84,10 +86,14 @@ function JalaliDateInputInner({
   ...rest
 }: JalaliDateInputProps) {
   const [open, setOpen] = useState(false);
-  const [dropUp, setDropUp] = useState(false);
   const [inner, setInner] = useState<string | null>(valueProp ?? defaultValue ?? null);
+  // Popup is portaled out of the modal's overflow box. Inside a showModal() dialog
+  // (top layer) the host must be that dialog, otherwise body-level popups sit under it.
+  const [portalHost, setPortalHost] = useState<HTMLElement>(() => document.body);
   const value = valueProp !== undefined ? valueProp : inner;
   const rootRef = useRef<HTMLDivElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+  const popupStyle = useFloatingPosition(open, rootRef, popupRef, 'bottom');
   const sel = parseIso(value);
   const base = sel ?? parseIso(todayIso())!;
   const baseJ = gregorianToJalali(base.gy, base.gm, base.gd);
@@ -96,7 +102,9 @@ function JalaliDateInputInner({
   useEffect(() => {
     if (!open) return;
     const onDown = (ev: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(ev.target as Node)) setOpen(false);
+      const t = ev.target as Node;
+      if (rootRef.current?.contains(t) || popupRef.current?.contains(t)) return;
+      setOpen(false);
     };
     const onKey = (ev: KeyboardEvent) => {
       if (ev.key === 'Escape') setOpen(false);
@@ -141,8 +149,7 @@ function JalaliDateInputInner({
   const openPopup = () => {
     if (disabled || readOnly) return;
     setView({ jy: baseJ.jy, jm: baseJ.jm });
-    const rect = rootRef.current?.getBoundingClientRect();
-    setDropUp(!!rect && window.innerHeight - rect.bottom < 320 && rect.top > 320);
+    setPortalHost((rootRef.current?.closest('dialog') as HTMLElement | null) ?? document.body);
     setOpen((o) => !o);
   };
 
@@ -170,11 +177,13 @@ function JalaliDateInputInner({
         {display || <span className="text-content-tertiary">{placeholder ?? '----/--/--'}</span>}
       </button>
       {name ? <input type="hidden" name={name} value={value ?? ''} /> : null}
-      {open && (
+      {open && createPortal(
         <div
+          ref={popupRef}
           role="dialog"
           dir="rtl"
-          className={clsx('absolute z-50 w-64 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg', dropUp ? 'bottom-full mb-1' : 'mt-1')}
+          style={popupStyle ?? { position: 'fixed', top: 0, left: 0, visibility: 'hidden' }}
+          className="w-64 rounded-lg border border-border-light bg-surface-primary p-3 shadow-lg"
         >
           <div className="mb-2 flex items-center justify-between">
             <button type="button" onClick={() => shift(-1)} aria-label="ماه قبل" className="rounded px-2 py-1 hover:bg-surface-secondary">
@@ -230,7 +239,8 @@ function JalaliDateInputInner({
               </button>
             )}
           </div>
-        </div>
+        </div>,
+        portalHost,
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   AtSign,
   CalendarPlus,
+  Check,
   CheckSquare,
   FileUp,
   LayoutGrid,
@@ -193,7 +194,14 @@ export function ProjectStreamComposer({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [fallbackPopover, setFallbackPopover] = useState<'mention' | 'emoji' | null>(null);
   useAnchoredPopover(emojiTriggerRef, emojiPopoverRef, fallbackPopover === 'emoji');
-  useAnchoredPopover(mentionTriggerRef, mentionPopoverRef, fallbackPopover === 'mention');
+  useAnchoredPopover(mentionTriggerRef, mentionPopoverRef, fallbackPopover === 'mention', 'top');
+  const [mentionQuery, setMentionQuery] = useState('');
+  const mentionQueryNorm = mentionQuery.trim().toLowerCase();
+  const filteredMembers = members.filter((m) => {
+    if (!mentionQueryNorm) return true;
+    const label = (m.full_name || m.email || '').toLowerCase();
+    return label.includes(mentionQueryNorm);
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Quick Task Dialog state
@@ -656,10 +664,21 @@ export function ProjectStreamComposer({
                 fallbackPopover === 'mention' ? 'block' : ''
               }`}
             >
+              <input
+                type="search"
+                dir="rtl"
+                value={mentionQuery}
+                onChange={(e) => setMentionQuery(e.target.value)}
+                placeholder="نام کاربر را وارد نمایید"
+                aria-label="جستجوی همکار"
+                data-testid="composer-mention-search"
+                className="mb-1.5 h-7 w-full rounded border border-[#e5e7eb] bg-[#f5f6f8] px-2 text-[12px] text-[#374151] outline-none focus:border-[#3078ab] focus:bg-white"
+              />
               <div className="mb-1 text-[11px] font-bold text-[#5b5e66]">همکاران پروژه</div>
               <ul className="space-y-0.5">
-                {members.map((m) => {
+                {filteredMembers.map((m) => {
                   const name = m.full_name || m.email || 'همکار';
+                  const checked = mentions.includes(m.user_id);
                   return (
                     <li key={m.user_id}>
                       <button
@@ -667,7 +686,25 @@ export function ProjectStreamComposer({
                         onClick={() => insertToken(`@${name}`, m.user_id)}
                         className="flex w-full items-center gap-2 rounded px-2 py-1 text-start text-[12px] text-[#374151] hover:bg-[#f5f6f8]"
                       >
+                        <span
+                          aria-hidden="true"
+                          className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-sm border ${
+                            checked ? 'border-[#3078ab] bg-[#3078ab] text-white' : 'border-[#c4c9d1] bg-white'
+                          }`}
+                        >
+                          {checked ? <Check size={10} /> : null}
+                        </span>
+                        <UserAvatar
+                          url={m.avatar_url}
+                          alt={name}
+                          className="h-5 w-5 shrink-0 rounded-full object-cover"
+                        />
                         <span className="truncate">{name}</span>
+                        {m.role ? (
+                          <span className="ms-auto shrink-0 rounded-full bg-[#eef3f8] px-1.5 text-[10px] text-[#3078ab]">
+                            {m.role}
+                          </span>
+                        ) : null}
                       </button>
                     </li>
                   );
