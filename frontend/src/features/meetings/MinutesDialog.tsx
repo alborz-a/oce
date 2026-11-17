@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   FileDown,
   Loader2,
+  Printer,
   RefreshCw,
   Save,
   Send,
@@ -71,6 +72,24 @@ async function downloadMinutesPdf(meetingId: string): Promise<void> {
   const disposition = res.headers.get('Content-Disposition');
   const filename = disposition?.match(/filename="?(.+?)"?$/)?.[1] || `minutes_${meetingId}.pdf`;
   triggerDownload(blob, filename);
+}
+
+// Print opens the window synchronously in the click handler (popup blockers
+// reject a window opened after an await), then the PDF is loaded into it and
+// printed once it has loaded. The caller closes the window on failure.
+async function printMinutesPdf(meetingId: string, win: Window): Promise<void> {
+  const token = useAuthStore.getState().accessToken;
+  const res = await fetch(getMinutesPdfUrl(meetingId), {
+    method: 'GET',
+    headers: { Accept: 'application/pdf', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+  });
+  if (!res.ok) throw new Error('PDF print failed');
+  const blob = await res.blob();
+  win.location.href = URL.createObjectURL(blob);
+  win.onload = () => {
+    win.focus();
+    win.print();
+  };
 }
 
 export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: MinutesDialogProps) {
@@ -226,6 +245,31 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
       }),
   });
 
+  const printMut = useMutation({
+    mutationFn: async (win: Window) => {
+      try {
+        // Same save-first rule as Export PDF: the PDF is rendered from the saved row.
+        if (minutes && !issued) {
+          const saved = await updateMinutes(meetingId, {
+            content: buildContent(minutes.content),
+            ...(nextDate ? { next_meeting_date: nextDate } : {}),
+          });
+          setMinutesData(saved);
+        }
+        await printMinutesPdf(meetingId, win);
+      } catch (e) {
+        win.close();
+        throw e;
+      }
+    },
+    onError: (e: Error) =>
+      addToast({
+        type: 'error',
+        title: t('meetings.print_failed', { defaultValue: 'چاپ صورتجلسه انجام نشد' }),
+        message: e.message,
+      }),
+  });
+
   const updateAgenda = (idx: number, patch: Partial<MinutesAgendaLine>) => {
     setAgenda((prev) => prev.map((item, i) => (i === idx ? { ...item, ...patch } : item)));
   };
@@ -238,7 +282,8 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
     saveMut.isPending ||
     issueMut.isPending ||
     distributeMut.isPending ||
-    exportMut.isPending;
+    exportMut.isPending ||
+    printMut.isPending;
 
   const footer = (
     <div className="flex items-center justify-between gap-2 w-full flex-wrap">
@@ -256,6 +301,31 @@ export function MinutesDialog({ meetingId, projectId, meetingTitle, onClose }: M
               <FileDown size={14} className="me-1.5" />
             )}
             {t('meetings.export_pdf', { defaultValue: 'Export PDF' })}
+          </Button>
+        )}
+        {minutes && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              // Opened here, before any await, so the popup blocker allows it.
+              const win = window.open('', '_blank');
+              if (!win) {
+                addToast({
+                  type: 'error',
+                  title: t('meetings.print_failed', { defaultValue: 'چاپ صورتجلسه انجام نشد' }),
+                  message: t('meetings.print_blocked', {
+                    defaultValue: 'مرورگر پنجره را بست. اجازهٔ پنجرهٔ بازشو را بدهید.',
+                  }),
+                });
+                return;
+              }
+              printMut.mutate(win);
+            }}
+            disabled={busy}
+          >
+            <Printer size={14} className="me-1.5" />
+            {t('meetings.print', { defaultValue: 'چاپ' })}
           </Button>
         )}
         {minutes && issued && (
