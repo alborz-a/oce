@@ -3364,6 +3364,10 @@ function writeOceViewPreferred(oce: boolean): void {
 export function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const isSystemAdmin = useIsSystemAdmin();
+  const userRole = useAuthStore((s) => s.userRole);
+  // Engineering mode (OCE view): system admin and manager roles.
+  const canEngineeringMode =
+    isSystemAdmin || (userRole ?? '').trim().toLowerCase() === 'manager';
   const [oceView, setOceView] = useState<boolean>(readOceViewPreferred);
 
   const switchView = useCallback((oce: boolean) => {
@@ -3371,7 +3375,7 @@ export function ProjectDetailPage() {
     writeOceViewPreferred(oce);
   }, []);
 
-  if (isSystemAdmin && oceView) {
+  if (canEngineeringMode && oceView) {
     return (
       <>
         <div dir="rtl" className="flex justify-start px-4 pt-2">
@@ -3387,7 +3391,7 @@ export function ProjectDetailPage() {
   return (
     <MizitoProjectWorkspace
       projectId={projectId}
-      canSwitchToEngineering={isSystemAdmin}
+      canSwitchToEngineering={canEngineeringMode}
       onSwitchToEngineering={() => switchView(true)}
     />
   );

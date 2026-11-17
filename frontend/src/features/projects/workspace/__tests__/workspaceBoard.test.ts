@@ -97,7 +97,8 @@ describe('ProjectBoardTab (Tab 3 بورد پروژه)', () => {
     // Both columns rendered + focusedBoardKey scrolled
     expect(screen.getByTestId('board-column-برای انجام')).toBeInTheDocument();
     expect(screen.getByTestId('board-column-سرداران 2')).toBeInTheDocument();
-    expect(screen.getByTestId('board-column-سرداران 2').className).toContain('ring-[#3078ab]/30');
+    expect(screen.getByTestId('board-column-سرداران 2').className).not.toContain('ring-[#3078ab]');
+    expect(screen.getByTestId('board-column-سرداران 2').className).not.toContain('border-[#3078ab]');
 
     // Card details: labels, delayed due badge, checklist item
     expect(screen.getByText('دفتر فنی')).toBeInTheDocument();

@@ -3,9 +3,8 @@ import {
   ArrowLeftRight,
   CalendarClock,
   Check,
-  CheckSquare,
+  MoreHorizontal,
   Plus,
-  Square,
   X,
 } from 'lucide-react';
 import {
@@ -393,7 +392,6 @@ export function ProjectBoardTab({
               })
             : allColTasks;
 
-          const isFocused = focusedBoardKey === colName;
           const isDropTarget = dragOverCol === colName;
 
           return (
@@ -422,35 +420,34 @@ export function ProjectBoardTab({
                 if (task) void handleMoveTask(task, colName);
               }}
               className={`flex max-h-full w-[290px] shrink-0 flex-col rounded-lg border bg-white transition-shadow ${
-                isFocused
-                  ? 'border-[#3078ab] ring-2 ring-[#3078ab]/30'
-                  : isDropTarget
-                    ? 'border-[#04c39a] ring-2 ring-[#04c39a]/30'
-                    : 'border-[#e5e7eb]'
+                isDropTarget
+                  ? 'border-[#04c39a] ring-2 ring-[#04c39a]/30'
+                  : 'border-[#e5e7eb]'
               }`}
             >
-              {/* Column Header + 2-segment progress bar + inline add trigger */}
-              <div className="shrink-0 rounded-t-lg border-b border-[#f0f2f5] border-t-[3px] border-t-[#04c39a] bg-[#e8f6f3] p-2.5">
+              {/* Column Header (name + 3-dot menu) + thin progress bar + inline add trigger */}
+              <div className="shrink-0 rounded-t-lg border-b border-[#f0f2f5] bg-white px-3 pb-2.5 pt-3">
                 <div className="mb-2 flex items-center justify-between gap-2">
-                  <h3 className="truncate text-[12.5px] font-bold text-[#1f2937]">
+                  <h3 className="truncate text-[13px] font-bold text-[#1f2937]">
                     {toPersianDigits(colName)} ({toPersianDigits(totalCount)})
                   </h3>
-                  {colName === DEFAULT_BOARD_NAME && (
-                    <span className="shrink-0 rounded bg-[#f2f4f7] px-1.5 py-0.5 text-[10px] text-[#6b7280]">
-                      پیش‌فرض
-                    </span>
-                  )}
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    {colName === DEFAULT_BOARD_NAME && (
+                      <span className="text-[10.5px] text-[#9ca3af]">پیش‌فرض</span>
+                    )}
+                    <MoreHorizontal size={16} aria-hidden="true" className="text-[#6b7280]" />
+                  </div>
                 </div>
 
-                {/* 2-segment progress bar: % done (#00b4d8) / % remaining (#d5d8dc) */}
+                {/* Thin progress bar: % done (#00b4d8) / % remaining (#d5d8dc) */}
                 <div
-                  className="flex h-[13px] w-full overflow-hidden rounded-full bg-[#d5d8dc]"
+                  className="flex h-3 w-full overflow-hidden rounded-full bg-[#d5d8dc]"
                   data-testid={`board-column-progress-${colName}`}
                 >
                   {donePct > 0 && (
                     <div
                       style={{ width: `${donePct}%` }}
-                      className="flex items-center justify-center bg-[#00b4d8] text-[9.5px] font-semibold text-white tabular-nums"
+                      className="flex items-center justify-center bg-[#00b4d8] text-[9px] font-semibold text-white tabular-nums"
                     >
                       {donePct >= 14 ? `${toPersianDigits(donePct)}٪` : null}
                     </div>
@@ -458,7 +455,7 @@ export function ProjectBoardTab({
                   {remainingPct > 0 && (
                     <div
                       style={{ width: `${remainingPct}%` }}
-                      className="flex items-center justify-center bg-[#d5d8dc] text-[9.5px] font-semibold text-[#374151] tabular-nums"
+                      className="flex items-center justify-center bg-[#d5d8dc] text-[9px] font-semibold text-[#374151] tabular-nums"
                     >
                       {remainingPct >= 14 ? `${toPersianDigits(remainingPct)}٪` : null}
                     </div>
@@ -509,7 +506,7 @@ export function ProjectBoardTab({
                       setQuickAddTitle('');
                     }}
                     data-testid={`board-add-task-${colName}`}
-                    className="mt-2 flex w-full items-center justify-center gap-1 rounded-md border border-dashed border-[#d5d8dc] py-1 text-[11.5px] font-medium text-[#5b5e66] hover:border-[#3078ab] hover:bg-[#f5f6f8] hover:text-[#3078ab]"
+                    className="mt-2 flex w-full items-center justify-center gap-1 rounded-md border border-[#d5d8dc] bg-white py-1.5 text-[11.5px] font-medium text-[#5b5e66] hover:bg-[#f5f6f8]"
                   >
                     <Plus size={13} aria-hidden="true" />
                     <span>وظیفه جدید</span>
@@ -551,7 +548,7 @@ export function ProjectBoardTab({
                         className={`rounded-lg border p-2.5 shadow-xs transition-colors ${
                           isDelayed
                             ? 'border-[#d9534f]/60 border-s-[3px] border-s-[#d9534f] bg-[#fffafa]'
-                            : 'border-[#e5e7eb] border-s-[3px] border-s-[#04c39a] bg-white hover:border-[#3078ab]/50'
+                            : 'border-[#e5e7eb] border-s-[3px] border-s-[#04c39a] bg-white hover:shadow-sm'
                         }`}
                       >
                         {/* Top row: check + title + avatar */}
@@ -562,20 +559,20 @@ export function ProjectBoardTab({
                             aria-pressed={isDone}
                             aria-label={isDone ? 'لغو تکمیل وظیفه' : 'تکمیل وظیفه'}
                             data-testid={`board-card-complete-${task.id}`}
-                            className={`mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                            className={`mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${
                               isDone
-                                ? 'border-[#04c39a] bg-[#04c39a] text-white'
+                                ? 'border-[#04c39a] bg-white text-[#04c39a]'
                                 : 'border-[#cbd5e1] bg-white text-transparent hover:border-[#04c39a]'
                             }`}
                           >
-                            <Check size={11} strokeWidth={3} aria-hidden="true" />
+                            <Check size={10} strokeWidth={2.5} aria-hidden="true" />
                           </button>
 
                           <button
                             type="button"
                             onClick={() => onSelectTask?.(task)}
                             data-testid={`board-card-title-${task.id}`}
-                            className={`min-w-0 flex-1 text-start text-[12.5px] font-semibold leading-snug hover:text-[#3078ab] ${
+                            className={`min-w-0 flex-1 text-start text-[12.5px] font-bold leading-snug hover:text-[#3078ab] ${
                               isDone ? 'text-[#909090] line-through' : 'text-[#1f2937]'
                             }`}
                           >
@@ -585,12 +582,12 @@ export function ProjectBoardTab({
                           {(assignee || task.assigned_to_name) && (
                             <div
                               title={assignee?.full_name || task.assigned_to_name || ''}
-                              className="h-6 w-6 shrink-0 rounded-full bg-[#e5e7eb] text-[#4b5563]"
+                              className="h-5 w-5 shrink-0 rounded-full bg-[#e5e7eb] text-[#4b5563]"
                             >
                               <UserAvatar
                                 url={assignee?.avatar_url}
                                 alt={assignee?.full_name || task.assigned_to_name || 'مسئول'}
-                                className="h-6 w-6 rounded-full object-cover"
+                                className="h-5 w-5 rounded-full object-cover"
                               />
                             </div>
                           )}
@@ -623,8 +620,8 @@ export function ProjectBoardTab({
                             {labels.map((lbl) => (
                               <span
                                 key={lbl.text}
-                                style={{ backgroundColor: lbl.color }}
-                                className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-white"
+                                style={{ backgroundColor: `${lbl.color}26`, color: lbl.color }}
+                                className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
                               >
                                 {toPersianDigits(lbl.text)}
                               </span>
@@ -635,7 +632,7 @@ export function ProjectBoardTab({
                         {/* Inline Checklist */}
                         {checklist.length > 0 && (
                           <ul
-                            className="mt-2 space-y-1 rounded-md border border-[#f0f2f5] bg-[#f9fafb] p-1.5"
+                            className="mt-2 divide-y divide-[#f0f2f5] overflow-hidden rounded-md border border-[#e5e7eb] bg-white"
                             data-testid={`board-card-checklist-${task.id}`}
                           >
                             {checklist.map((item, idx) => {
@@ -649,19 +646,18 @@ export function ProjectBoardTab({
                                       void handleToggleChecklistItem(task, checklist, idx)
                                     }
                                     data-testid={`board-card-checkitem-${task.id}-${idx}`}
-                                    className="flex w-full items-center gap-1.5 text-start text-[11px] text-[#374151] hover:text-[#3078ab]"
+                                    className="flex w-full items-center gap-1.5 px-2 py-1.5 text-start text-[11px] text-[#374151] hover:text-[#3078ab]"
                                   >
-                                    {checked ? (
-                                      <CheckSquare
-                                        size={13}
-                                        className="shrink-0 text-[#04c39a]"
-                                      />
-                                    ) : (
-                                      <Square
-                                        size={13}
-                                        className="shrink-0 text-[#9ca3af]"
-                                      />
-                                    )}
+                                    <span
+                                      aria-hidden="true"
+                                      className={`inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
+                                        checked
+                                          ? 'border-[#04c39a] text-[#04c39a]'
+                                          : 'border-[#cbd5e1] text-transparent'
+                                      }`}
+                                    >
+                                      <Check size={9} strokeWidth={2.5} />
+                                    </span>
                                     <span
                                       className={`truncate ${
                                         checked ? 'text-[#909090] line-through' : ''
