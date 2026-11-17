@@ -118,6 +118,19 @@ def _to_response(item: object) -> CorrespondenceResponse:
     )
 
 
+async def _is_general_project(session: SessionDep, project_id: uuid.UUID) -> bool:
+    """True when ``project_id`` is the shared general project (``MZ-GENERAL``).
+
+    Every logged-in staff member may READ its letters; membership is skipped
+    for it on the read routes only. Write routes keep ``verify_project_access``.
+    """
+    from app.modules.projects.models import Project
+    from app.modules.team_chat.service import GENERAL_PROJECT_CODE
+
+    project = await session.get(Project, project_id)
+    return project is not None and project.project_code == GENERAL_PROJECT_CODE
+
+
 @router.get("/", response_model=CorrespondenceListResponse)
 async def list_correspondences(
     session: SessionDep,
@@ -141,7 +154,8 @@ async def list_correspondences(
     returns that count instead of discarding it, so a caller can tell a
     complete log from a truncated one.
     """
-    await verify_project_access(project_id, user_id, session)
+    if not await _is_general_project(session, project_id):
+        await verify_project_access(project_id, user_id, session)
     items, total = await service.list_correspondences(
         project_id,
         offset=offset,
@@ -180,7 +194,8 @@ async def get_correspondence(
     service: CorrespondenceService = Depends(_get_service),
 ) -> CorrespondenceResponse:
     correspondence = await service.get_correspondence(correspondence_id)
-    await verify_project_access(correspondence.project_id, str(user_id), session)
+    if not await _is_general_project(session, correspondence.project_id):
+        await verify_project_access(correspondence.project_id, str(user_id), session)
     return _to_response(correspondence)
 
 
