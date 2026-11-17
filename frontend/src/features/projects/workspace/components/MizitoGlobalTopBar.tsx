@@ -7,13 +7,16 @@ import { useBrandingStore } from '@/stores/useBrandingStore';
 import { Logo } from '@/shared/ui';
 
 export interface MizitoGlobalTopBarProps {
+  /** Hamburger click: opens the Mizito switcher drawer (host decides the target). */
   onMenuClick: () => void;
+  /** Opens the OCE app menu; offered as an item in the brand dropdown. */
+  onOpenAppMenu?: () => void;
 }
 
 const FALLBACK_BRAND = 'رویال استارز';
 
 /** Global dark-blue top bar of the Mizito workspace (menu, logo + company dropdown, search, quick icons, avatar). */
-export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
+export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalTopBarProps) {
   const navigate = useNavigate();
   const fullName = useAuthStore((s) => s.userFullName);
   const logout = useAuthStore((s) => s.logout);
@@ -57,6 +60,19 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
             data-testid="mizito-brand-menu"
             className="absolute start-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 shadow-lg"
           >
+            {onOpenAppMenu && (
+              <button
+                type="button"
+                role="menuitem"
+                className={menuItem}
+                onClick={() => {
+                  setMenuOpen(false);
+                  onOpenAppMenu();
+                }}
+              >
+                منوی برنامه
+              </button>
+            )}
             <button
               type="button"
               role="menuitem"

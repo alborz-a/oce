@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiDelete, apiGet } from '@/shared/lib/api';
 import { projectsApi } from '@/features/projects/api';
@@ -94,7 +95,7 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
     renameMutation.mutate(next);
   };
 
-  return (
+  return createPortal(
     <div className="ps-modal-backdrop" data-testid="project-settings-backdrop">
       <div className="ps-modal" role="dialog" aria-modal="true" aria-label="تنظیمات پروژه" dir="rtl">
         <div className="ps-modal-header">
@@ -206,6 +207,7 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
           </section>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

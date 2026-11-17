@@ -1,5 +1,5 @@
-import { Menu } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiGet } from '@/shared/lib/api';
@@ -67,6 +67,7 @@ export function MizitoProjectWorkspace({
   const [activeTab, setActiveTab] = useState<WorkspaceTabKey>('group');
   const [filters, setFilters] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);
   const [switcherOpen, setSwitcherOpen] = useState(false);
+  useEffect(() => registerMizitoSwitcher(() => setSwitcherOpen((open) => !open)), []);
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
@@ -189,9 +190,6 @@ export function MizitoProjectWorkspace({
       )}
 
       <main className="mz-main-canvas">
-        <button type="button" className="mz-switcher-trigger" aria-label="منوی پروژه‌ها و همکاران" onClick={() => setSwitcherOpen(true)}>
-          <Menu size={18} aria-hidden="true" />
-        </button>
         <MizitoTopTabAndFilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
