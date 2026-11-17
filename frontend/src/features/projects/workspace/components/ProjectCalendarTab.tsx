@@ -1,5 +1,11 @@
-import { useMemo, useState } from 'react';
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
+import {
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  X,
+} from 'lucide-react';
 import {
   PERSIAN_MONTH_NAMES,
   PERSIAN_WEEKDAY_NAMES,
@@ -14,12 +20,23 @@ import {
   type TaskWorkState,
 } from '../hooks/useProjectWorkspaceStats';
 import type { ProjectTaskItem } from '../types';
+import { createTask, updateTask } from '@/features/tasks/api';
 
 export interface ProjectCalendarTabProps {
   projectId: string;
   tasks: ProjectTaskItem[];
   onSelectTask?: (task: ProjectTaskItem) => void;
+  onTasksChanged?: () => void;
   projectName?: string;
+}
+
+export function formatCalendarDayJalali(jy: number, jm: number, jd: number): string {
+  const monthName = PERSIAN_MONTH_NAMES[jm - 1] ?? '';
+  return `${toPersianDigits(jd)} ${monthName} ${toPersianDigits(jy)}`;
+}
+
+export function buildCalendarDayAriaLabel(jy: number, jm: number, jd: number): string {
+  return `ایجاد وظیفه برای ${formatCalendarDayJalali(jy, jm, jd)}`;
 }
 
 export type CalendarDateField = 'due_date' | 'reminder_or_due' | 'start_date';
@@ -160,6 +177,7 @@ export function ProjectCalendarTab({
   projectId,
   tasks,
   onSelectTask,
+  onTasksChanged,
 }: ProjectCalendarTabProps) {
   const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const initialJalali = useMemo(() => dateToJalali(new Date()), []);
@@ -170,6 +188,48 @@ export function ProjectCalendarTab({
   const [showFullTitles, setShowFullTitles] = useState(true);
   const [dateField, setDateField] = useState<CalendarDateField>('due_date');
   const [statusFilter, setStatusFilter] = useState<CalendarStatusFilter>('all');
+  const [createCell, setCreateCell] = useState<JalaliCalendarCell | null>(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [creating, setCreating] = useState(false);
+
+  const openCreateForCell = (cell: JalaliCalendarCell) => {
+    setNewTitle('');
+    setCreateCell(cell);
+  };
+
+  const closeCreate = () => {
+    if (creating) return;
+    setCreateCell(null);
+  };
+
+  const handleCreateSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!createCell || !newTitle.trim() || creating) return;
+    setCreating(true);
+    try {
+      const created = await createTask({
+        project_id: projectId,
+        title: newTitle.trim(),
+        task_type: 'task',
+        priority: 'normal',
+        due_date: createCell.isoDate,
+        metadata: {
+          mizito_board: 'برای انجام',
+          weight: 1,
+        },
+      });
+      if (created?.id) {
+        await updateTask(created.id, { status: 'open' }).catch(() => undefined);
+      }
+      setNewTitle('');
+      setCreateCell(null);
+      onTasksChanged?.();
+    } catch {
+      // Keep the dialog open so the user can retry.
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const workTasks = useMemo(
     () =>
@@ -413,8 +473,19 @@ export function ProjectCalendarTab({
               return (
                 <div
                   key={`${cell.jy}-${cell.jm}-${cell.jd}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={buildCalendarDayAriaLabel(cell.jy, cell.jm, cell.jd)}
+                  onClick={() => openCreateForCell(cell)}
+                  onKeyDown={(e: KeyboardEvent<HTMLDivElement>) => {
+                    if (e.target !== e.currentTarget) return;
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openCreateForCell(cell);
+                    }
+                  }}
                   data-testid={`calendar-cell-${cell.isoDate}`}
-                  className={`flex min-w-0 flex-col border-b border-e border-[#e5e7eb] p-1.5 last:border-e-0 ${
+                  className={`flex min-w-0 cursor-pointer flex-col border-b border-e border-[#e5e7eb] p-1.5 last:border-e-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#3078ab] ${
                     cell.isCurrentMonth ? 'bg-white' : 'bg-[#f9fafb] text-[#9ca3af]'
                   } ${cell.isToday ? 'ring-1 ring-inset ring-[#3078ab]/40 bg-[#f0f7ff]/40' : ''}`}
                 >
@@ -444,7 +515,10 @@ export function ProjectCalendarTab({
                         <button
                           key={task.id}
                           type="button"
-                          onClick={() => onSelectTask?.(task)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSelectTask?.(task);
+                          }}
                           data-testid={`calendar-task-${task.id}`}
                           className={`flex w-full items-start gap-1 rounded border px-1.5 py-0.5 text-start text-[11px] leading-snug transition-colors hover:brightness-95 ${STATE_PILL_STYLES[st]}`}
                         >
@@ -466,6 +540,82 @@ export function ProjectCalendarTab({
           </div>
         </div>
       </div>
+
+      {createCell && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
+          data-testid="calendar-create-backdrop"
+          onClick={closeCreate}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="calendar-create-heading"
+            data-testid="calendar-create-dialog"
+            className="w-full max-w-[420px] overflow-hidden rounded-xl border border-[#e5e7eb] bg-white text-[#1f2937] shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-[#e5e7eb] bg-[#f5f6f8] px-4 py-3">
+              <h2 id="calendar-create-heading" className="text-[14px] font-bold text-[#1f2937]">
+                ایجاد وظیفه جدید
+              </h2>
+              <button
+                type="button"
+                onClick={closeCreate}
+                aria-label="بستن فرم ایجاد وظیفه"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb]"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <form onSubmit={(e) => void handleCreateSubmit(e)} className="space-y-3 p-4">
+              <div>
+                <label
+                  htmlFor="calendar-create-title"
+                  className="mb-1 block text-[11.5px] font-semibold text-[#4b5563]"
+                >
+                  عنوان وظیفه
+                </label>
+                <input
+                  id="calendar-create-title"
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  required
+                  autoFocus
+                  data-testid="calendar-create-title"
+                  className="w-full rounded-md border border-[#d5d8dc] px-2.5 py-1.5 text-[12.5px] focus:border-[#3078ab] focus:outline-none"
+                />
+              </div>
+              <div data-testid="calendar-create-due">
+                <span className="mb-1 block text-[11.5px] font-semibold text-[#4b5563]">
+                  زمان سررسید
+                </span>
+                <span className="text-[12.5px] text-[#1f2937] tabular-nums">
+                  {formatCalendarDayJalali(createCell.jy, createCell.jm, createCell.jd)}
+                </span>
+              </div>
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={closeCreate}
+                  className="rounded-md border border-[#e5e7eb] bg-white px-3 py-1.5 text-[12px] text-[#4b5563] hover:bg-[#f2f4f7]"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating || !newTitle.trim()}
+                  data-testid="calendar-create-submit"
+                  className="rounded-md bg-[#3078ab] px-3 py-1.5 text-[12px] font-semibold text-white disabled:opacity-50"
+                >
+                  {creating ? 'در حال ذخیره…' : 'ذخیره وظیفه'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

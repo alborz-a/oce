@@ -217,6 +217,7 @@ export function MizitoProjectWorkspace({
             tasks={tasks}
             projectName={project?.name}
             onSelectTask={setSelectedTask}
+            onTasksChanged={onTasksChanged}
           />
         )}
         {activeTab === 'gantt' && (
