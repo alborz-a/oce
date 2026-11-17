@@ -11,7 +11,7 @@ export default {
         // .mz-shell (hex vars + `-ch` RGB triplets). Same function-form as oe.
         // Add a token by adding its name here and its vars in workspace.css.
         mz: Object.fromEntries(
-          ['appbar', 'primary', 'primary-hover', 'indigo-dark', 'text', 'muted', 'border', 'bg-subtle', 'project', 'task', 'inbox', 'purple', 'pink', 'chat'].map((k) => [
+          ['appbar', 'primary', 'primary-hover', 'indigo-dark', 'text', 'muted', 'border', 'bg-subtle', 'project', 'task', 'inbox', 'purple', 'pink', 'chat', 'progress-done', 'progress-overdue', 'progress-planned', 'progress-nodate', 'value', 'star'].map((k) => [
             k,
             ({ opacityValue }) =>
               opacityValue === undefined
