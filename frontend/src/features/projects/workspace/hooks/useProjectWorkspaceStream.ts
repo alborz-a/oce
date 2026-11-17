@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { apiGet } from '@/shared/lib/api';
 import { isHiddenSystemUser } from '@/shared/lib/hiddenUsers';
+import { IMPORTER_FALLBACK_NAME, isImporter, parseImporterPrefix } from '../lib/importerAuthor';
 import type { ChatMessage } from '@/modules/team-chat/types';
 import type {
   ProjectDocumentItem,
@@ -234,10 +235,6 @@ function resolveItemDateKey(iso: string): string {
   return `${y}-${m}-${day}`;
 }
 
-// Importer-written text starts with «real name» — <jalali date> <body>.
-const REPORTER_HEADER_RE =
-  /^«([^»]+)»\s*—\s*(?:[۰-۹0-9]{4}\/[۰-۹0-9]{1,2}\/[۰-۹0-9]{1,2}(?:\s+[۰-۹0-9]{1,2}:[۰-۹0-9]{2})?\s*)?/;
-
 /**
  * Replace the hidden importer name ("Mizito Importer") or an empty name with the
  * real reporter name from the text header, and strip that header from the body.
@@ -251,9 +248,9 @@ export function resolveReporter(
   const trimmed = resolvedName.trim();
   const hidden = !trimmed || isHiddenSystemUser({ full_name: trimmed });
   if (!hidden) return { name: resolvedName, body: text };
-  const match = REPORTER_HEADER_RE.exec(text);
-  if (!match) return { name: fallbackName, body: text };
-  return { name: (match[1] ?? '').trim(), body: text.slice(match[0].length) };
+  const { senderName, rest } = parseImporterPrefix(text);
+  if (senderName === null) return { name: fallbackName, body: text };
+  return { name: senderName, body: rest };
 }
 
 export function isVideoStreamItem(item: StreamItem): boolean {
@@ -325,7 +322,8 @@ export function buildStreamItems({
 } {
   const memberNameById = new Map<string, string>();
   for (const m of members) {
-    if (m.user_id) {
+    // Importer is never shown by name; its rows fall back to the «name» prefix.
+    if (m.user_id && !isImporter(m.user_id)) {
       memberNameById.set(String(m.user_id), m.full_name || m.email || 'کاربر');
     }
   }
@@ -372,7 +370,7 @@ export function buildStreamItems({
         metaAuthor.trim() ||
         '',
       msg.text,
-      'کاربر',
+      isImporter(authorId) ? IMPORTER_FALLBACK_NAME : 'کاربر',
     );
     const authorName = reporter.name;
     const isCurrentUser = Boolean(currentUserId && authorId === currentUserId);
@@ -560,8 +558,23 @@ export function buildStreamItems({
         (authorId ? memberNameById.get(authorId) : undefined) ||
         '',
       c.text,
+      isImporter(authorId) ? IMPORTER_FALLBACK_NAME : 'همکار',
     );
     const actorName = reporter.name;
+    // Placeholder «گفتگوی پروژه» topic tasks: comments are plain chat messages.
+    if (task?.task_type === 'topic' || taskTitle === 'گفتگوی پروژه') {
+      items.push({
+        id: `comment:${c.id}`,
+        kind: 'chat',
+        createdAt: c.created_at,
+        authorId,
+        authorName: actorName,
+        isCurrentUser: Boolean(currentUserId && authorId === currentUserId),
+        text: reporter.body,
+        reactions: parseReactions(c.metadata?.reactions),
+      });
+      continue;
+    }
     items.push({
       id: `comment:${c.id}`,
       kind: 'task_activity',
