@@ -274,7 +274,7 @@ export function MizitoTopTabAndFilterBar({
             className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 text-[11.5px] font-medium text-[#2b4162] hover:border-[#3078ab] hover:bg-[#e8f2fa] hover:text-[#3078ab] transition-colors whitespace-nowrap"
           >
             <Compass size={13} aria-hidden="true" />
-            <span>نمای مهندسی OCE</span>
+            <span>ورود به حالت مهندسی</span>
           </button>
         )}
       </div>
