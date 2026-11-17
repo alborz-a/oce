@@ -360,7 +360,7 @@ export function ProjectBoardTab({
               checked={hideDoneCards}
               onChange={(e) => setHideDoneCards(e.target.checked)}
               data-testid="board-hide-done-toggle"
-              className="h-3.5 w-3.5 accent-[#3078ab]"
+              className="h-3.5 w-3.5 accent-mz-project"
             />
             <span>مخفی کردن کارهای انجام‌شده</span>
           </label>
@@ -421,7 +421,7 @@ export function ProjectBoardTab({
               }}
               className={`flex max-h-full w-[290px] shrink-0 flex-col rounded-lg border bg-white transition-shadow ${
                 isDropTarget
-                  ? 'border-[#04c39a] ring-2 ring-[#04c39a]/30'
+                  ? 'border-mz-task ring-2 ring-mz-task/30'
                   : 'border-[#e5e7eb]'
               }`}
             >
@@ -475,14 +475,14 @@ export function ProjectBoardTab({
                       placeholder="عنوان وظیفه جدید..."
                       aria-label="عنوان وظیفه جدید"
                       data-testid={`board-quick-add-input-${colName}`}
-                      className="h-8 w-full rounded-md border border-[#3078ab] px-2.5 text-[12px] text-[#1f2937] focus:outline-none"
+                      className="h-8 w-full rounded-md border border-mz-project px-2.5 text-[12px] text-[#1f2937] focus:outline-none"
                     />
                     <div className="flex items-center gap-1.5">
                       <button
                         type="submit"
                         disabled={!quickAddTitle.trim() || submitting}
                         data-testid={`board-quick-add-submit-${colName}`}
-                        className="rounded bg-[#04c39a] px-2.5 py-1 text-[11px] font-semibold text-white disabled:opacity-50"
+                        className="rounded bg-mz-task px-2.5 py-1 text-[11px] font-semibold text-white disabled:opacity-50"
                       >
                         افزودن
                       </button>
@@ -548,7 +548,7 @@ export function ProjectBoardTab({
                         className={`rounded-lg border p-2.5 shadow-xs transition-colors ${
                           isDelayed
                             ? 'border-[#d9534f]/60 border-s-[3px] border-s-[#d9534f] bg-[#fffafa]'
-                            : 'border-[#e5e7eb] border-s-[3px] border-s-[#04c39a] bg-white hover:shadow-sm'
+                            : 'border-[#e5e7eb] border-s-[3px] border-s-mz-task bg-white hover:shadow-sm'
                         }`}
                       >
                         {/* Top row: check + title + avatar */}
@@ -561,8 +561,8 @@ export function ProjectBoardTab({
                             data-testid={`board-card-complete-${task.id}`}
                             className={`mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${
                               isDone
-                                ? 'border-[#04c39a] bg-white text-[#04c39a]'
-                                : 'border-[#cbd5e1] bg-white text-transparent hover:border-[#04c39a]'
+                                ? 'border-mz-task bg-white text-mz-task'
+                                : 'border-[#cbd5e1] bg-white text-transparent hover:border-mz-task'
                             }`}
                           >
                             <Check size={10} strokeWidth={2.5} aria-hidden="true" />
@@ -572,7 +572,7 @@ export function ProjectBoardTab({
                             type="button"
                             onClick={() => onSelectTask?.(task)}
                             data-testid={`board-card-title-${task.id}`}
-                            className={`min-w-0 flex-1 text-start text-[12.5px] font-bold leading-snug hover:text-[#3078ab] ${
+                            className={`min-w-0 flex-1 text-start text-[12.5px] font-bold leading-snug hover:text-mz-project ${
                               isDone ? 'text-[#909090] line-through' : 'text-[#1f2937]'
                             }`}
                           >
@@ -646,13 +646,13 @@ export function ProjectBoardTab({
                                       void handleToggleChecklistItem(task, checklist, idx)
                                     }
                                     data-testid={`board-card-checkitem-${task.id}-${idx}`}
-                                    className="flex w-full items-center gap-1.5 px-2 py-1.5 text-start text-[11px] text-[#374151] hover:text-[#3078ab]"
+                                    className="flex w-full items-center gap-1.5 px-2 py-1.5 text-start text-[11px] text-[#374151] hover:text-mz-project"
                                   >
                                     <span
                                       aria-hidden="true"
                                       className={`inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
                                         checked
-                                          ? 'border-[#04c39a] text-[#04c39a]'
+                                          ? 'border-mz-task text-mz-task'
                                           : 'border-[#cbd5e1] text-transparent'
                                       }`}
                                     >
@@ -685,7 +685,7 @@ export function ProjectBoardTab({
                               value={colName}
                               onChange={(e) => void handleMoveTask(task, e.target.value)}
                               data-testid={`board-card-move-${task.id}`}
-                              className="rounded border border-[#e5e7eb] bg-[#f5f6f8] px-1.5 py-0.5 text-[10.5px] text-[#4b5563] focus:border-[#3078ab] focus:outline-none"
+                              className="rounded border border-[#e5e7eb] bg-[#f5f6f8] px-1.5 py-0.5 text-[10.5px] text-[#4b5563] focus:border-mz-project focus:outline-none"
                             >
                               {columns.map((target) => (
                                 <option key={target} value={target}>
@@ -709,7 +709,7 @@ export function ProjectBoardTab({
           {addingList ? (
             <form
               onSubmit={handleCreateColumn}
-              className="rounded-lg border border-[#3078ab] bg-white p-2.5 space-y-2"
+              className="rounded-lg border border-mz-project bg-white p-2.5 space-y-2"
             >
               <input
                 type="text"
@@ -719,14 +719,14 @@ export function ProjectBoardTab({
                 placeholder="نام لیست جدید..."
                 aria-label="نام لیست جدید"
                 data-testid="board-new-list-input"
-                className="h-8 w-full rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#1f2937] focus:border-[#3078ab] focus:outline-none"
+                className="h-8 w-full rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#1f2937] focus:border-mz-project focus:outline-none"
               />
               <div className="flex items-center gap-1.5">
                 <button
                   type="submit"
                   disabled={!newListName.trim()}
                   data-testid="board-new-list-submit"
-                  className="rounded bg-[#3078ab] px-3 py-1 text-[11.5px] font-semibold text-white disabled:opacity-50"
+                  className="rounded bg-mz-project px-3 py-1 text-[11.5px] font-semibold text-white disabled:opacity-50"
                 >
                   ایجاد لیست
                 </button>
@@ -748,7 +748,7 @@ export function ProjectBoardTab({
               type="button"
               onClick={() => setAddingList(true)}
               data-testid="board-add-list-button"
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#cbd5e1] bg-white/80 px-3 py-2.5 text-[12.5px] font-medium text-[#5b5e66] hover:border-[#3078ab] hover:bg-white hover:text-[#3078ab]"
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#cbd5e1] bg-white/80 px-3 py-2.5 text-[12.5px] font-medium text-[#5b5e66] hover:border-mz-project hover:bg-white hover:text-mz-project"
             >
               <Plus size={15} aria-hidden="true" />
               <span>افزودن لیست جدید</span>

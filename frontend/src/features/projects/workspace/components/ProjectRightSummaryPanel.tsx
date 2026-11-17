@@ -258,7 +258,7 @@ export function ProjectRightSummaryPanel({
           onClick={onToggleCollapse}
           aria-expanded="false"
           aria-label="باز کردن پنل اطلاعات پروژه"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] hover:text-[#3078ab]"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] hover:text-mz-project"
         >
           <ChevronLeft size={17} />
         </button>
@@ -289,7 +289,7 @@ export function ProjectRightSummaryPanel({
           </button>
         )}
 
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#3078ab] text-[11px] font-bold text-white">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-mz-project text-[11px] font-bold text-white">
           {avatarUrl ? (
             <AuthImage
               src={avatarUrl}
@@ -332,7 +332,7 @@ export function ProjectRightSummaryPanel({
             onClick={onOpenSettings}
             aria-label="تنظیمات پروژه و اعضا"
             data-testid="summary-settings-button"
-            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#3078ab]"
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project"
           >
             <Settings size={15} />
           </button>
@@ -507,7 +507,7 @@ export function ProjectRightSummaryPanel({
                         type="button"
                         onClick={() => onBoardClick?.(board.key)}
                         data-testid={`summary-board-row-${board.key}`}
-                        className="w-full rounded-md px-1.5 py-1 text-center transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3078ab]"
+                        className="w-full rounded-md px-1.5 py-1 text-center transition-colors hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-mz-project"
                       >
                         <div className="mb-1 flex items-center justify-between gap-2 px-0.5">
                           <span className="truncate text-[11.5px] font-medium text-[#374151]">
