@@ -536,18 +536,38 @@ export function TaskQuickDetailDialog({
                   htmlFor="task-detail-progress"
                   className="mb-1 block text-[11px] font-medium text-[#5b5e66]"
                 >
-                  درصد پیشرفت ({toPersianDigits(progress)}٪)
+                  درصد پیشرفت
                 </label>
-                <input
-                  id="task-detail-progress"
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={progress}
-                  onChange={(e) => setProgress(Number(e.target.value))}
-                  data-testid="task-detail-progress-input"
-                  className="h-8 w-full rounded-md border border-[#e5e7eb] px-2 text-[12px] tabular-nums"
-                />
+                <div className="flex items-center gap-2">
+                  <div
+                    role="progressbar"
+                    aria-label="نوار درصد پیشرفت"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={progress}
+                    data-testid="task-detail-progress-bar"
+                    className="relative h-5 flex-1 overflow-hidden rounded bg-[#e5e7eb]"
+                  >
+                    <div
+                      className="h-full bg-[#04c39a] transition-[width] duration-200"
+                      style={{ width: `${progress}%` }}
+                    />
+                    <span className="absolute inset-0 flex items-center justify-center text-[10.5px] font-semibold tabular-nums text-[#1f2937]">
+                      {toPersianDigits(progress)}٪
+                    </span>
+                  </div>
+                  <input
+                    id="task-detail-progress"
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={progress}
+                    onChange={(e) => setProgress(Number(e.target.value))}
+                    data-testid="task-detail-progress-input"
+                    aria-label="ویرایش درصد پیشرفت"
+                    className="h-8 w-16 shrink-0 rounded-md border border-[#e5e7eb] px-2 text-[12px] tabular-nums"
+                  />
+                </div>
               </div>
 
               <div>
@@ -611,14 +631,20 @@ export function TaskQuickDetailDialog({
 
             {/* Checklist editor */}
             <div className="rounded-lg border border-[#e5e7eb] bg-[#f9fafb] p-2.5">
-              <div className="mb-2 text-[11.5px] font-semibold text-[#374151]">
-                چک‌لیست ({toPersianDigits(checklist.length)})
+              <div className="mb-2 flex items-center gap-2 text-[11.5px] font-semibold text-[#374151]">
+                <span>چک‌لیست</span>
+                <span
+                  data-testid="task-detail-checklist-count"
+                  className="inline-flex min-w-[22px] items-center justify-center rounded-full bg-[#e8f2fa] px-1.5 text-[10.5px] font-semibold tabular-nums text-[#3078ab]"
+                >
+                  {toPersianDigits(checklist.length)}
+                </span>
               </div>
-              <ul className="space-y-1">
+              <ul className="space-y-1.5">
                 {checklist.map((item, idx) => (
                   <li
                     key={item.id ?? `detail-chk-${idx}`}
-                    className="flex items-center justify-between gap-2 rounded bg-white px-2 py-1 text-[12px]"
+                    className="flex items-center justify-between gap-2 rounded-md border border-[#e5e7eb] bg-white px-2.5 py-1.5 text-[12px]"
                   >
                     <button
                       type="button"
@@ -654,7 +680,16 @@ export function TaskQuickDetailDialog({
                 ))}
               </ul>
 
-              <div className="mt-2 flex items-center gap-1.5">
+              <div className="mt-1.5 flex items-center gap-2 rounded-md border border-dashed border-[#d1d5db] bg-white px-2.5 py-1.5">
+                <button
+                  type="button"
+                  onClick={handleAddChecklistItem}
+                  aria-label="افزودن مورد به چک‌لیست"
+                  data-testid="task-detail-checklist-add-row"
+                  className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-[#3078ab] hover:bg-[#e8f2fa]"
+                >
+                  <Plus size={14} />
+                </button>
                 <input
                   type="text"
                   value={newCheckItem}
@@ -666,17 +701,9 @@ export function TaskQuickDetailDialog({
                     }
                   }}
                   placeholder="افزودن مورد به چک‌لیست..."
-                  aria-label="افزودن مورد به چک‌لیست"
-                  className="h-7 flex-1 rounded border border-[#e5e7eb] bg-white px-2 text-[11.5px] focus:border-[#3078ab] focus:outline-none"
+                  aria-label="متن مورد جدید چک‌لیست"
+                  className="h-6 min-w-0 flex-1 bg-transparent px-1 text-[12px] focus:outline-none"
                 />
-                <button
-                  type="button"
-                  onClick={handleAddChecklistItem}
-                  className="inline-flex h-7 items-center gap-1 rounded bg-[#e8f2fa] px-2 text-[11px] font-medium text-[#3078ab]"
-                >
-                  <Plus size={12} />
-                  <span>افزودن</span>
-                </button>
               </div>
             </div>
 
