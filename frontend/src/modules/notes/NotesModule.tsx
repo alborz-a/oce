@@ -227,3 +227,5 @@ function NoteEditorDialog({ initial, busy, onCancel, onSave }: NoteEditorDialogP
     </div>
   );
 }
+
+export default NotesModule;

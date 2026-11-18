@@ -7,7 +7,7 @@ export function projectInitials(name: string): string {
   if (!trimmed) return '';
   const words = trimmed.split(/\s+/);
   if (words.length >= 2) {
-    return `${words[0].charAt(0)}${words[1].charAt(0)}`;
+    return `${words[0]?.charAt(0) ?? ''}${words[1]?.charAt(0) ?? ''}`;
   }
   return Array.from(trimmed).slice(0, 2).join('');
 }

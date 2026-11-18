@@ -128,3 +128,5 @@ export function MonitoringModule() {
     </MizitoPageShell>
   );
 }
+
+export default MonitoringModule;

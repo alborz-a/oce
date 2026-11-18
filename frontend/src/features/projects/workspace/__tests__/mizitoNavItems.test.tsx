@@ -31,7 +31,7 @@ describe('MizitoNav drawer items', () => {
       const link = links[index];
       expect(link).toHaveAttribute('href', item.href);
       expect(link).toHaveTextContent(item.label);
-      expect(link.querySelector('.mz-icon')?.textContent).toBe(item.icon);
+      expect(link?.querySelector('.mz-icon')?.textContent).toBe(item.icon);
     });
   });
 });

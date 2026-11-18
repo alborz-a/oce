@@ -91,3 +91,5 @@ export function CustomersModule() {
     </MizitoPageShell>
   );
 }
+
+export default CustomersModule;
