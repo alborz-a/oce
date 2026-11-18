@@ -84,6 +84,8 @@ export interface StreamItem {
   reactions?: StreamReactionMap;
   rawChatMessage?: ChatMessage;
   rawPhotos?: ProjectPhotoItem[];
+  /** Photo ids from `document_ids` not in the loaded lists; loaded one by one by id in the card. */
+  pendingPhotoIds?: string[];
   rawDocument?: ProjectDocumentItem;
   /** Unresolved `[فایل: name]` tags from chat text, rendered as file chips. */
   rawFiles?: RawFileChip[];

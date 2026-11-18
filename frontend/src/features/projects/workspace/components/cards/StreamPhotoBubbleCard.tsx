@@ -6,6 +6,7 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../../types';
 import { parseRawFileTags } from '../../lib/rawFileTag';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
+import { PendingPhotoTile } from '../PendingPhotoTile';
 import { formatStreamTime, getInitials, StreamCardFooterBar } from './StreamChatMessageCard';
 
 async function sharePhotoLink(url: string): Promise<void> {
@@ -58,6 +59,7 @@ export function StreamPhotoBubbleCard({
   const photos = item.rawPhotos ?? [];
   const visiblePhotos = photos.slice(0, 4);
   const extraCount = Math.max(0, photos.length - visiblePhotos.length);
+  const pendingPhotoIds = item.pendingPhotoIds ?? [];
   const sharedCaption =
     parseRawFileTags(item.text ?? '').text.trim() ||
     photos.find((p) => Boolean(p.caption?.trim()))?.caption?.trim() ||
@@ -92,6 +94,9 @@ export function StreamPhotoBubbleCard({
 
         <div className="w-[270px] max-w-full overflow-hidden rounded-[8px] border border-[#e0e0e0] bg-white p-1.5 shadow-[0_1px_1px_rgba(0,0,0,0.04)]">
           <div className="space-y-1.5">
+            {pendingPhotoIds.map((photoId) => (
+              <PendingPhotoTile key={`pending-${photoId}`} photoId={photoId} />
+            ))}
             {visiblePhotos.map((photo, idx) => {
               const isOverflowTile = idx === visiblePhotos.length - 1 && extraCount > 0;
               return (
