@@ -591,6 +591,8 @@ export function buildStreamItems({
     const actorName = reporter.name;
     // Placeholder «گفتگوی پروژه» topic tasks: comments are plain chat messages.
     if (task?.task_type === 'topic' || taskTitle === 'گفتگوی پروژه') {
+      // Raw `[فایل: …]` tags must become chips here too; this path skipped the parser before.
+      const topicParse = parseRawFileTags(reporter.body);
       items.push({
         id: `comment:${c.id}`,
         kind: 'chat',
@@ -598,7 +600,8 @@ export function buildStreamItems({
         authorId,
         authorName: actorName,
         isCurrentUser: Boolean(currentUserId && authorId === currentUserId),
-        text: reporter.body,
+        text: topicParse.text,
+        rawFiles: topicParse.files.length > 0 ? topicParse.files : undefined,
         reactions: parseReactions(c.metadata?.reactions),
       });
       continue;

@@ -208,3 +208,31 @@ describe('extractChatEvents', () => {
     expect(extractChatEvents('سلام')).toEqual({ labels: [], rest: 'سلام' });
   });
 });
+
+describe('parseRawFileTags prod shapes (space in name, repeated trailing name)', () => {
+  const key = 'mizito/general/chats/2024-01/files/abc_General schedule.xlsx General schedule.xlsx';
+
+  it('single line: tag + key with spaces leaves no raw text and one chip', () => {
+    const parsed = parseRawFileTags(`[فایل: General schedule.xlsx] ${key}`);
+    expect(parsed.text).toBe('');
+    expect(parsed.files).toEqual([
+      { name: 'General schedule.xlsx', key, icon: 'description' },
+    ]);
+  });
+
+  it('multi-line: tag line followed by key line leaves no raw text and one chip', () => {
+    const parsed = parseRawFileTags(`[فایل: General schedule.xlsx]\n${key}`);
+    expect(parsed.text).toBe('');
+    expect(parsed.files).toEqual([
+      { name: 'General schedule.xlsx', key, icon: 'description' },
+    ]);
+  });
+
+  it('topic-comment shape: two tagged files keep no raw key text', () => {
+    const text =
+      '[فایل: CV Mechanical.pdf] mizito/general/chats/x/abc_CV Mechanical.pdf CV Mechanical.pdf\n[فایل: Works.xlsx] mizito/general/chats/y/z_Works.xlsx Works.xlsx';
+    const parsed = parseRawFileTags(text);
+    expect(parsed.text).toBe('');
+    expect(parsed.files.map((f) => f.name)).toEqual(['CV Mechanical.pdf', 'Works.xlsx']);
+  });
+});

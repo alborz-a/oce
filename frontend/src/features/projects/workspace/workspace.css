@@ -597,7 +597,14 @@
   flex-shrink: 0;
 }
 
-/* ── Brand logo outline (O16): keeps the blue-on-blue Royal Stars logo visible ── */
+/* ── Brand logo outline (O16): global scope, keeps the blue-on-blue Royal Stars logo visible ── */
+.mz-brand-logo {
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+  outline: 1px solid #fff;
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
 .mizito-workspace-light .mz-brand-logo {
   filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
 }
