@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { apiGet, apiPatch, apiPost } from '@/shared/lib/api';
 import type { Page } from '@/shared/lib/api';
+import { toPersianDigits } from '@/shared/lib/jalali';
+import { MzIcon } from '@/features/projects/workspace/components/MzIcon';
 import { fetchDocuments, uploadDocument } from '@/features/documents/api';
 import { Composer } from './Composer';
 import { MessageList } from './MessageList';
@@ -154,9 +156,22 @@ export default function TeamChatModule() {
   const docNames = useMemo(() => Object.fromEntries(docs.map((d) => [d.id, d.name])), [docs]);
   void apiPatch; // message editing UI is a follow-up; the API is ready
 
+  const activeTitle = active ? (active.kind === 'company' ? t('team_chat.company', { defaultValue: 'شرکت' }) : active.name) : '';
+  const titleIcon = !active
+    ? { name: 'person', color: undefined as string | undefined }
+    : active.name.includes('دستیار میزیتو')
+      ? { name: 'assistant', color: '#c2185b' }
+      : active.kind === 'company'
+        ? { name: 'apartment', color: undefined }
+        : active.kind === 'project'
+          ? { name: 'folder', color: undefined }
+          : active.kind === 'group'
+            ? { name: 'group', color: undefined }
+            : { name: 'person', color: undefined };
+
   return (
     <div className="flex h-[calc(100vh-8rem)] min-h-[420px]" dir="rtl" data-testid="team-chat">
-      <div className="w-64 shrink-0">
+      <div className={active ? 'hidden md:block w-full md:w-64 shrink-0' : 'w-full md:w-64 shrink-0'}>
         <RoomList
           rooms={rooms}
           activeId={activeId}
@@ -167,9 +182,25 @@ export default function TeamChatModule() {
           onNewGroup={newGroup}
         />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="border-b border-border-light px-3 py-2 text-sm font-semibold" dir="auto">
-          {active ? (active.kind === 'company' ? t('team_chat.company', { defaultValue: 'شرکت' }) : active.name) : t('team_chat.pick', { defaultValue: 'یک گفتگو را انتخاب کنید' })}
+      <div className={active ? 'flex min-w-0 flex-1 flex-col' : 'hidden md:flex min-w-0 flex-1 flex-col'}>
+        <div className="flex items-center gap-2 border-b border-border-light px-3 py-2 text-sm font-semibold" dir="auto">
+          {active ? (
+            <>
+              <button type="button" aria-label="بستن گفتگو" onClick={() => { setActiveId(undefined); navigate('/chat'); }}>
+                <MzIcon name="close" size={20} />
+              </button>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: '#1f5c88' }}>
+                {activeTitle.charAt(0)}
+              </span>
+              <MzIcon name={titleIcon.name} size={18} color={titleIcon.color} />
+              <span className="truncate">{activeTitle}</span>
+              {!!active.member_ids?.length && (
+                <span className="text-xs font-normal text-content-tertiary">{toPersianDigits(active.member_ids.length)} نفر عضو</span>
+              )}
+            </>
+          ) : (
+            t('team_chat.pick', { defaultValue: 'یک گفتگو را انتخاب کنید' })
+          )}
         </div>
         {status !== 'open' && (
           <div className="bg-amber-50 px-3 py-1 text-xs text-amber-800" data-testid="offline-banner">
@@ -179,7 +210,7 @@ export default function TeamChatModule() {
         {error && <div className="px-3 py-1 text-xs text-red-600">{error}</div>}
         {active ? (
           <>
-            <MessageList messages={messages} hasMore={hasMore} loadingOlder={loadingOlder} onLoadOlder={loadOlder} documentNames={docNames} />
+            <MessageList messages={messages} hasMore={hasMore} loadingOlder={loadingOlder} onLoadOlder={loadOlder} documentNames={docNames} projectId={active.project_id ?? undefined} />
             <Composer documents={docs} onSend={send} onUpload={active.kind === 'project' ? upload : undefined} />
           </>
         ) : (

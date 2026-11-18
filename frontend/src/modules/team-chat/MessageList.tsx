@@ -4,6 +4,7 @@ import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { displayName } from '@/features/projects/workspace/lib/importerAuthor';
 import { parseRawFileTags } from '@/features/projects/workspace/lib/rawFileTag';
+import { ChatRichMessageBody } from '@/shared/ui/ChatEntityCards';
 import type { ChatMessage } from './types';
 
 export function formatStamp(iso: string): string {
@@ -20,10 +21,11 @@ interface Props {
   loadingOlder: boolean;
   onLoadOlder: () => void;
   documentNames?: Record<string, string>;
+  projectId?: string;
 }
 
 /** Messages oldest-first; scrolling to the top loads the older page (infinite scroll upward). */
-export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, documentNames = {} }: Props) {
+export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, documentNames = {}, projectId }: Props) {
   const { t } = useTranslation();
   const boxRef = useRef<HTMLDivElement | null>(null);
   const stickRef = useRef(true);
@@ -74,11 +76,7 @@ export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, docu
                 {quoted.author_name}: {parseRawFileTags(quoted.text).text.slice(0, 120)}
               </div>
             )}
-            {m.text && (
-              <p dir="auto" className="whitespace-pre-wrap break-words text-sm">
-                {parseRawFileTags(m.text).text}
-              </p>
-            )}
+            {m.text && <ChatRichMessageBody text={m.text} projectId={projectId} />}
             {m.document_ids.length > 0 && (
               <div className="mt-1 flex flex-wrap gap-2">
                 {m.document_ids.map((id) => (
