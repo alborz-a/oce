@@ -200,8 +200,8 @@ const RFIDetailPage = lazy(() =>
 const SubmittalsPage = lazy(() =>
   import('@/features/submittals/SubmittalsPage').then((m) => ({ default: m.SubmittalsPage }))
 );
-const CorrespondencePage = lazy(() =>
-  import('@/features/correspondence/CorrespondencePage').then((m) => ({ default: m.CorrespondencePage }))
+const MizitoCorrespondencePage = lazy(() =>
+  import('@/features/projects/workspace/components/MizitoCorrespondencePage').then((m) => ({ default: m.MizitoCorrespondencePage }))
 );
 // International delivery / authority modules (frontends added this wave).
 const AuthoritySubmissionPage = lazy(() =>
@@ -1443,8 +1443,8 @@ export default function App() {
         <Route path="/rfi/:rfiId" element={<P title="RFI"><RFIDetailPage /></P>} />
         <Route path="/projects/:projectId/submittals" element={<P title="Submittals"><SubmittalsPage /></P>} />
         <Route path="/submittals" element={<P title="Submittals"><SubmittalsPage /></P>} />
-        <Route path="/projects/:projectId/correspondence" element={<P title="Correspondence"><CorrespondencePage /></P>} />
-        <Route path="/correspondence" element={<P title="Correspondence"><CorrespondencePage /></P>} />
+        <Route path="/projects/:projectId/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
+        <Route path="/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
         <Route path="/projects/:projectId/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/projects/:projectId/review-authority" element={<P title="Review Authority"><ReviewAuthorityPage /></P>} />
