@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { MzIcon } from './MzIcon';
-import { BarChart2, CheckCircle2, ClipboardList, FileText, ImageIcon, PanelRight, Video } from 'lucide-react';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -43,16 +42,16 @@ const WORKSPACE_TABS: readonly TabDef[] = [
 interface KindIconDef {
   kind: StreamFilterState['kind'];
   label: string;
-  Icon: typeof CheckCircle2;
+  icon: string;
 }
 
 const KIND_FILTERS: readonly KindIconDef[] = [
-  { kind: 'tasks', label: 'فقط وظایف و گزارش‌ها', Icon: CheckCircle2 },
-  { kind: 'minutes', label: 'فقط صورتجلسه‌ها و اسناد متنی', Icon: ClipboardList },
-  { kind: 'documents', label: 'فقط فایل‌ها و PDF', Icon: FileText },
-  { kind: 'photos', label: 'فقط عکس‌ها و آلبوم‌ها', Icon: ImageIcon },
-  { kind: 'videos', label: 'فقط پیام‌های جلسه ویدیویی', Icon: Video },
-  { kind: 'polls', label: 'نظرسنجی و وضعیت ویژه', Icon: BarChart2 },
+  { kind: 'tasks', label: 'فقط وظایف و گزارش‌ها', icon: 'check_circle' },
+  { kind: 'minutes', label: 'فقط صورتجلسه‌ها و اسناد متنی', icon: 'assignment' },
+  { kind: 'documents', label: 'فقط فایل‌ها و PDF', icon: 'description' },
+  { kind: 'photos', label: 'فقط عکس‌ها و آلبوم‌ها', icon: 'image' },
+  { kind: 'videos', label: 'فقط پیام‌های جلسه ویدیویی', icon: 'videocam' },
+  { kind: 'polls', label: 'نظرسنجی و وضعیت ویژه', icon: 'bar_chart' },
 ];
 
 export function MizitoTopTabAndFilterBar({
@@ -96,7 +95,7 @@ export function MizitoTopTabAndFilterBar({
             aria-label="باز کردن پنل اطلاعات پروژه"
             className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] md:hidden"
           >
-            <PanelRight size={17} />
+            <MzIcon name="view_sidebar" size={17} />
           </button>
         )}
 
@@ -198,7 +197,7 @@ export function MizitoTopTabAndFilterBar({
                   <MzIcon name="event_note" size={15} />
                 </button>
 
-                {KIND_FILTERS.map(({ kind, label, Icon }) => {
+                {KIND_FILTERS.map(({ kind, label, icon }) => {
                   const active = filters.kind === kind;
                   return (
                     <button
@@ -215,7 +214,7 @@ export function MizitoTopTabAndFilterBar({
                           : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                       }`}
                     >
-                      <Icon size={15} />
+                      <MzIcon name={icon} size={15} />
                     </button>
                   );
                 })}
