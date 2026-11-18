@@ -50,8 +50,8 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
     <header
       dir="rtl"
       data-testid="mizito-global-topbar"
-      className="sticky top-0 z-40 flex h-[52px] items-center gap-3 px-4 text-white"
-      style={{ background: '#2b4162' }}
+      className="sticky top-0 z-40 flex h-14 items-center gap-3 px-4 text-white"
+      style={{ background: '#4285f4' }}
     >
       <button type="button" onClick={onMenuClick} aria-label="منو" className={iconBtn}>
         <MzIcon name="menu" size={20} />

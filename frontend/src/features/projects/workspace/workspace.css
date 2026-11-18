@@ -64,7 +64,8 @@
   color-scheme: light;
 
   /* ── Mizito Light Theme Tokens (§3.1) ───────────────────────────────── */
-  --mz-topbar-bg: #2b4162;
+  --mz-topbar-bg: #4285f4;
+  --oe-header-height: 56px;
   --mz-canvas-bg: #ffffff;
   --mz-surface-subtle: #f5f6f8;
   --mz-surface-muted: #f2f4f7;
@@ -107,8 +108,8 @@
 
   display: flex;
   flex-direction: row;
-  block-size: calc(100dvh - var(--oe-header-height, 52px));
-  height: calc(100dvh - var(--oe-header-height, 52px));
+  block-size: calc(100dvh - var(--oe-header-height, 56px));
+  height: calc(100dvh - var(--oe-header-height, 56px));
   min-block-size: 0;
   overflow: hidden;
   position: relative;
@@ -196,7 +197,7 @@
 @media (max-width: 1023.98px) {
   .mizito-workspace-light .mz-switcher-col {
     position: fixed;
-    inset-block-start: var(--oe-header-height, 52px);
+    inset-block-start: var(--oe-header-height, 56px);
     inset-block-end: 0;
     inset-inline-start: 0;
     z-index: 45;
@@ -213,7 +214,7 @@
   .mizito-workspace-light .mz-drawer-backdrop[data-open='true'] {
     display: block;
     position: fixed;
-    inset-block-start: var(--oe-header-height, 52px);
+    inset-block-start: var(--oe-header-height, 56px);
     inset-block-end: 0;
     inset-inline: 0;
     z-index: 44;
@@ -236,7 +237,7 @@
   .mizito-workspace-light .mz-summary-col[data-mobile-open='true'] {
     display: flex;
     position: fixed;
-    inset-block-start: var(--oe-header-height, 52px);
+    inset-block-start: var(--oe-header-height, 56px);
     inset-block-end: 0;
     inset-inline-start: 0;
     z-index: 45;

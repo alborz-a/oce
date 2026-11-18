@@ -6,6 +6,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { MizitoNav } from '../components/MizitoNav';
 import { MizitoCorrespondencePage } from '../components/MizitoCorrespondencePage';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
+import { useProjectContextStore } from '@/stores/useProjectContextStore';
 
 vi.mock('@/features/correspondence/CorrespondencePage', () => ({
   CorrespondencePage: () => <div data-testid="correspondence-body" />,
@@ -34,7 +35,20 @@ function renderLettersPage(path: string) {
 }
 
 describe('نامه‌ها nav item target', () => {
-  it('links the right-panel «نامه‌ها» item to /correspondence', () => {
+  it('links the right-panel «نامه‌ها» item to the active project letters route', () => {
+    useProjectContextStore.getState().setActiveProject('p1', 'Project 1');
+    render(
+      <MemoryRouter>
+        <MizitoNav />
+      </MemoryRouter>,
+    );
+    const link = screen.getByRole('link', { name: 'نامه‌ها' });
+    expect(link).toHaveAttribute('href', '/projects/p1/correspondence');
+    useProjectContextStore.getState().clearProject();
+  });
+
+  it('falls back to /correspondence when no project is active', () => {
+    useProjectContextStore.getState().clearProject();
     render(
       <MemoryRouter>
         <MizitoNav />
