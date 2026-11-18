@@ -599,7 +599,7 @@
 
 /* ── Brand logo (O16): 44px of the 52px header, 2px white stroke so it never blends into the blue bar ── */
 .mz-brand-logo {
-  border: 2px solid #fff;
+  filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff);
   border-radius: 6px;
   padding: 1px;
   box-sizing: border-box;

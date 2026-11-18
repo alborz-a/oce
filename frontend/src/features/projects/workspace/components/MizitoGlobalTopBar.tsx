@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MzIcon } from './MzIcon';
+import '../workspace.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
