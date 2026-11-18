@@ -117,16 +117,20 @@ async def test_group_needs_membership_unless_manager(session):
     assert g.id in {r["id"] for r in await s.list_rooms(BOB)}
 
 
-async def test_channel_listed_for_members_and_only_owner_posts(session):
+async def test_channel_listed_for_members_and_any_member_posts(session):
     s = TeamChatService(session)
     ch = await s.create_room("channel", "اعلان", [ALICE, BOB], ALICE)
     assert ch.kind == "channel"
     assert ch.id in {r["id"] for r in await s.list_rooms(BOB)}
+    # plain member (not owner/manager) can post in a channel
+    m_bob = await s.post_message(ch.id, BOB, "سلام", None, [], [])
+    assert m_bob["text"] == "سلام"
+    m_alice = await s.post_message(ch.id, ALICE, "خبر", None, [], [])
+    assert m_alice["text"] == "خبر"
+    # non-member is still refused by the membership check (404 "Room not found", not a post)
     with pytest.raises(HTTPException) as e:
-        await s.post_message(ch.id, BOB, "سلام", None, [], [])
-    assert e.value.status_code == 403
-    m = await s.post_message(ch.id, ALICE, "خبر", None, [], [])
-    assert m["text"] == "خبر"
+        await s.post_message(ch.id, CAROL, "نه", None, [], [])
+    assert e.value.status_code == 404
 
 
 async def test_message_carries_author_title_from_registration(session):
