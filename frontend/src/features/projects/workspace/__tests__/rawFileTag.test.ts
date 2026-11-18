@@ -72,9 +72,12 @@ describe('parseRawFileTags', () => {
     expect(fileIconForName('clip.MOV')).toBe('movie');
   });
 
-  it('leaves a line with no tag untouched even when a key appears alone', () => {
+  it('turns a bare key line with no tag into a chip', () => {
     const text = 'mizito/general/chats/r/files/x.pdf';
-    expect(parseRawFileTags(text)).toEqual({ text, files: [] });
+    expect(parseRawFileTags(text)).toEqual({
+      text: '',
+      files: [{ name: 'x.pdf', key: text, icon: 'picture_as_pdf' }],
+    });
   });
 
   it('turns a tag-less key line with junk prefix into a chip and drops the prefix', () => {
@@ -97,9 +100,16 @@ describe('parseRawFileTags', () => {
     });
   });
 
-  it('does not treat a closed bracket prefix before a key as junk', () => {
+  it('keeps a closed bracket prefix before a key as caption text', () => {
     const text = '[Ali] mizito/general/chats/r1/files/a.pdf';
-    expect(parseRawFileTags(text)).toEqual({ text, files: [] });
+    expect(parseRawFileTags(text)).toEqual({
+      text: '[Ali]',
+      files: [{ name: 'a.pdf', key: 'mizito/general/chats/r1/files/a.pdf', icon: 'picture_as_pdf' }],
+    });
+  });
+
+  it('strips raw tag and key from a caption-only text (stream card use)', () => {
+    expect(parseRawFileTags('عکس جلسه [فایل: m.jpg] mizito/general/chats/r/files/m.jpg').text).toBe('عکس جلسه');
   });
 
   it('parses a tag split over lines (multi-line tag + key on the next line)', () => {

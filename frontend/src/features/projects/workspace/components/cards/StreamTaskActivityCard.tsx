@@ -1,4 +1,5 @@
 import type { StreamItem } from '../../types';
+import { parseRawFileTags } from '../../lib/rawFileTag';
 import { formatStreamTime, StreamCardFooterBar } from './StreamChatMessageCard';
 
 export interface StreamTaskActivityCardProps {
@@ -21,7 +22,7 @@ export function StreamTaskActivityCard({
   const taskTitle = activity?.taskTitle || 'وظیفه';
   const actorName = activity?.actorName || item.authorName || 'همکار';
   const actionText = activity?.actionText || 'را تغییر داد';
-  const reportText = activity?.reportText ?? (activity?.isReport ? item.text : undefined);
+  const reportText = activity?.reportText ?? (activity?.isReport ? parseRawFileTags(item.text ?? '').text : undefined);
   const isReport = Boolean(activity?.isReport || reportText);
   const timeText = formatStreamTime(item.createdAt);
 

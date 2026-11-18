@@ -3,6 +3,7 @@ import { FileDown, FileText, Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
+import { parseRawFileTags } from '../../lib/rawFileTag';
 import { formatStreamTime, getInitials, StreamCardFooterBar } from './StreamChatMessageCard';
 
 export interface StreamDocumentCardProps {
@@ -33,12 +34,13 @@ export function StreamDocumentCard({
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const doc = item.rawDocument;
-  const fileName = doc?.name || item.text || 'فایل پروژه';
+  const captionText = parseRawFileTags(item.text ?? '').text.trim();
+  const fileName = doc?.name || captionText || 'فایل پروژه';
   const fileSize = doc?.file_size ?? doc?.size_bytes ?? 0;
   const ext = (doc?.extension || fileName.split('.').pop() || '').toUpperCase().slice(0, 5);
   const caption =
-    item.text && item.text.trim() !== fileName.trim()
-      ? item.text.trim()
+    captionText && captionText !== fileName.trim()
+      ? captionText
       : doc?.description?.trim() || '';
   const downloadUrl =
     doc?.download_url || (doc?.id ? `/api/v1/documents/${doc.id}/download/` : '');

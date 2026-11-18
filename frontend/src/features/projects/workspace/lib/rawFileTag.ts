@@ -7,7 +7,7 @@
  * - a key with a junk prefix such as `[Name(login) (1 mizito/general/chats/...`;
  * - a markdown link `[text](mizito/general/chats/...)`;
  * - a URL that ends with the key (`https://host/.../mizito/general/chats/...`).
- * A bare key with no tag and no junk prefix stays raw (pinned by tests).
+ * - a bare key anywhere, with or without a tag (chip; caption text before it is kept).
  * Pure functions only.
  */
 
@@ -97,7 +97,6 @@ export function parseRawFileTags(text: string): RawFileParseResult {
 
   let out = '';
   let cursor = 0;
-  let sawTag = false;
 
   for (let i = 0; i < hits.length; i++) {
     const hit = hits[i];
@@ -106,7 +105,6 @@ export function parseRawFileTags(text: string): RawFileParseResult {
     cursor = hit.end;
 
     if (hit.kind === 'tag') {
-      sawTag = true;
       const next = hits[i + 1];
       let key: string | null = null;
       // Key attaches to the tag when only whitespace (incl. line breaks) separates them.
@@ -121,19 +119,14 @@ export function parseRawFileTags(text: string): RawFileParseResult {
     }
 
     if (hit.kind === 'md') {
-      sawTag = true;
       addFile(hit.name.trim() || keyBasename(hit.key), hit.key);
       continue;
     }
 
-    // Bare key: only after a tag in this message, or with a junk or URL prefix on its line.
+    // Bare key: always a file. Drop a URL or junk prefix on its line; keep caption text.
     const lineStart = out.lastIndexOf('\n') + 1;
     const linePart = out.slice(lineStart);
     const hasUrl = URL_TAIL_RE.test(linePart);
-    if (!sawTag && !hasUrl && !JUNK_PREFIX_RE.test(linePart)) {
-      out += hit.key;
-      continue;
-    }
     let kept = hasUrl ? linePart.replace(URL_TAIL_RE, '') : linePart;
     if (JUNK_PREFIX_RE.test(kept)) kept = '';
     out = out.slice(0, lineStart) + kept;
