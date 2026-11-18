@@ -5,12 +5,11 @@ import {
   Check,
   CheckSquare,
   FileUp,
-  LayoutGrid,
   Paperclip,
-  Send,
   Smile,
   X,
 } from 'lucide-react';
+import { MzIcon } from './MzIcon';
 import { uploadDocument } from '@/features/documents/api';
 import { createMeeting, type MeetingType } from '@/features/meetings/api';
 import { createTask, updateTask } from '@/features/tasks/api';
@@ -513,7 +512,7 @@ export function ProjectStreamComposer({
                 data-testid="composer-mobile-menu-btn"
                 className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
               >
-                <LayoutGrid size={16} />
+                <MzIcon name="apps" size={20} />
               </button>
               {mobileMenuOpen && (
                 <div
@@ -754,7 +753,7 @@ export function ProjectStreamComposer({
               data-testid="composer-send-btn"
               className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#3078ab] text-white hover:brightness-95 disabled:bg-[#d5d8dc] disabled:text-[#909090]"
             >
-              <Send size={14} className="rtl:-scale-x-100" />
+              <MzIcon name="send" size={20} flipRtl />
             </button>
           </div>
         </div>

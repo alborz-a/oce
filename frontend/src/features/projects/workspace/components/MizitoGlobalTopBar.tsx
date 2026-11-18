@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, ChevronDown, HelpCircle, Menu, Search, Settings } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -38,7 +38,7 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
       style={{ background: '#2b4162' }}
     >
       <button type="button" onClick={onMenuClick} aria-label="منو" className={iconBtn}>
-        <Menu size={20} />
+        <MzIcon name="menu" size={20} />
       </button>
 
       <div className="relative flex min-w-0 items-center">
@@ -52,7 +52,7 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
         >
           <Logo size="xs" />
           <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
-          <ChevronDown size={14} className="shrink-0 text-white/80" />
+          <MzIcon name="arrow_drop_down" size={14} className="shrink-0 text-white/80" />
         </button>
         {menuOpen && (
           <div
@@ -111,7 +111,7 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
 
       <div className="flex items-center gap-1 md:ms-0 ms-auto">
         <button type="button" onClick={() => navigate('/notifications')} aria-label="اعلان‌ها" className={iconBtn}>
-          <Bell size={17} />
+          <MzIcon name="notifications" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/tasks')} aria-label="وظایف" className={iconBtn}>
           <MzIcon name="bookmark" size={17} />
@@ -120,10 +120,10 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
           <MzIcon name="chat" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/settings')} aria-label="تنظیمات" className={iconBtn}>
-          <Settings size={17} />
+          <MzIcon name="settings" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/profile')} aria-label="راهنما" className={iconBtn}>
-          <HelpCircle size={17} />
+          <MzIcon name="help" size={17} />
         </button>
         <button
           type="button"
