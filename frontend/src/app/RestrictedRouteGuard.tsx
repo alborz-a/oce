@@ -5,7 +5,8 @@ import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { projectsApi } from '@/features/projects/api';
 import { isRestrictedRouteAllowed } from './restrictedRoutes';
 import { isAdminOnlyRoute } from './adminRoutes';
-import { isSystemAdminRole } from '@/shared/lib/systemAdmin';
+import { isSystemAdminRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
+import { isNormalUserRouteAllowed } from './normalUserRoutes';
 
 /**
  * In restricted mode a blocked route redirects to the user's project page.
@@ -19,7 +20,11 @@ export function RestrictedRouteGuard({ children }: { children: ReactNode }) {
   const role = useAuthStore((s) => s.userRole);
   // A role not yet known is let through (the backend still refuses); a known non-admin is not.
   const adminBlocked = !!role && !isSystemAdminRole(role) && isAdminOnlyRoute(pathname);
-  const blocked = (restricted && !isRestrictedRouteAllowed(pathname)) || adminBlocked;
+  const normal = useIsNormalUser();
+  // Normal users (not admin/manager) get the Mizito-only allowlist; admin and manager keep the existing rules.
+  const blocked = normal
+    ? !isNormalUserRouteAllowed(pathname)
+    : (restricted && !isRestrictedRouteAllowed(pathname)) || adminBlocked;
 
   useEffect(() => {
     if (!blocked || activeId || firstId) return;
