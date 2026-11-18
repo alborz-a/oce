@@ -8,16 +8,14 @@ import { apiGet } from '@/shared/lib/api';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 
 export interface MizitoGlobalTopBarProps {
-  /** Hamburger click: opens the Mizito switcher drawer (host decides the target). */
+  /** Hamburger click: opens the Mizito switcher drawer (host decides the target). Single hamburger on mobile and desktop. */
   onMenuClick: () => void;
-  /** Opens the OCE app menu; offered as an item in the brand dropdown. */
-  onOpenAppMenu?: () => void;
 }
 
 const FALLBACK_BRAND = 'رویال استارز';
 
-/** Global dark-blue top bar of the Mizito workspace (menu, logo + company dropdown, search, quick icons, avatar). */
-export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalTopBarProps) {
+/** Global dark-blue top bar of the Mizito workspace (menu, logo + plain title, search, quick icons, avatar with user menu). */
+export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
   const navigate = useNavigate();
   const fullName = useAuthStore((s) => s.userFullName);
   const logout = useAuthStore((s) => s.logout);
@@ -59,63 +57,9 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
         <MzIcon name="menu" size={20} />
       </button>
 
-      <div className="relative flex min-w-0 items-center">
-        <button
-          type="button"
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-haspopup="menu"
-          aria-expanded={menuOpen}
-          data-testid="mizito-brand"
-          className="flex min-w-0 items-center gap-2 rounded-md px-1 py-1 hover:bg-white/10"
-        >
-          <img src={logoDataUrl ?? '/company-logo.svg'} alt="" className="h-6 w-6 shrink-0 object-contain" />
-          <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
-          <MzIcon name="arrow_drop_down" size={14} className="shrink-0 text-white/80" />
-        </button>
-        {menuOpen && (
-          <div
-            role="menu"
-            data-testid="mizito-brand-menu"
-            className="absolute start-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 shadow-lg"
-          >
-            {onOpenAppMenu && (
-              <button
-                type="button"
-                role="menuitem"
-                className={menuItem}
-                onClick={() => {
-                  setMenuOpen(false);
-                  onOpenAppMenu();
-                }}
-              >
-                منوی برنامه
-              </button>
-            )}
-            <button
-              type="button"
-              role="menuitem"
-              className={menuItem}
-              onClick={() => {
-                setMenuOpen(false);
-                navigate('/profile');
-              }}
-            >
-              پروفایل
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              className={menuItem}
-              onClick={() => {
-                setMenuOpen(false);
-                logout();
-                window.location.href = '/login';
-              }}
-            >
-              خروج
-            </button>
-          </div>
-        )}
+      <div className="flex min-w-0 items-center gap-2" data-testid="mizito-brand">
+        <img src={logoDataUrl ?? '/company-logo.svg'} alt="" className="mz-brand-logo h-6 w-6 shrink-0 object-contain" />
+        <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
       </div>
 
       <button
@@ -143,18 +87,54 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
         <button type="button" onClick={() => navigate('/profile')} aria-label="راهنما" className={iconBtn}>
           <MzIcon name="help" size={17} />
         </button>
-        <button
-          type="button"
-          onClick={() => navigate('/profile')}
-          aria-label="پروفایل"
-          className="ms-1 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#e0e3e8] text-[13px] font-bold text-[#37474f] shadow-[0_1px_3px_rgba(0,0,0,.28)]"
-        >
-          {avatarUrl ? (
-            <UserAvatar url={avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
-          ) : (
-            (fullName ?? '؟').trim().charAt(0)
+        <div className="relative ms-1 flex items-center">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label="منوی کاربر"
+            data-testid="mizito-avatar"
+            className="inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#e0e3e8] text-[13px] font-bold text-[#37474f] shadow-[0_1px_3px_rgba(0,0,0,.28)]"
+          >
+            {avatarUrl ? (
+              <UserAvatar url={avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
+            ) : (
+              (fullName ?? '؟').trim().charAt(0)
+            )}
+          </button>
+          {menuOpen && (
+            <div
+              role="menu"
+              data-testid="mizito-user-menu"
+              className="absolute end-0 top-full z-50 mt-2 w-48 rounded-md bg-white py-1 shadow-lg"
+            >
+              <button
+                type="button"
+                role="menuitem"
+                className={menuItem}
+                onClick={() => {
+                  setMenuOpen(false);
+                  navigate('/profile');
+                }}
+              >
+                پروفایل
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                className={menuItem}
+                onClick={() => {
+                  setMenuOpen(false);
+                  logout();
+                  window.location.href = '/login';
+                }}
+              >
+                خروج
+              </button>
+            </div>
           )}
-        </button>
+        </div>
       </div>
     </header>
   );

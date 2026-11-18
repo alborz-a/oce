@@ -202,7 +202,6 @@ export function MizitoProjectWorkspace({
           }
           canSwitchToEngineering={canSwitchToEngineering}
           onSwitchToEngineering={onSwitchToEngineering}
-          onOpenMobileSwitcher={() => setSwitcherOpen(true)}
           onOpenMobileSummary={() => setSummaryOpen(true)}
         />
         {activeTab === 'group' && (
