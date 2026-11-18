@@ -3,6 +3,7 @@ import { CalendarDays, ClipboardList, FileDown, Loader2, Users } from 'lucide-re
 import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
+import { parseRawFileTags } from '../../lib/rawFileTag';
 import { formatStreamTime, StreamCardFooterBar } from './StreamChatMessageCard';
 
 export interface StreamMeetingMinutesCardProps {
@@ -22,7 +23,8 @@ export function StreamMeetingMinutesCard({
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const meeting = item.rawMeeting;
-  const title = meeting?.title || item.text || 'صورتجلسه پروژه';
+  const captionText = parseRawFileTags(item.text ?? '').text.trim();
+  const title = meeting?.title || captionText || 'صورتجلسه پروژه';
   const dateLabel = formatJalali(meeting?.date || item.createdAt, 'long');
   const timeText = formatStreamTime(item.createdAt);
   const attendees = meeting?.attendees ?? [];
@@ -94,9 +96,9 @@ export function StreamMeetingMinutesCard({
           {timeText && <span className="mz-time-muted ms-auto">{timeText}</span>}
         </div>
 
-        {item.text && item.text.trim() !== title.trim() && (
+        {captionText && captionText !== title.trim() && (
           <p className="mt-2 whitespace-pre-wrap break-words text-[12.5px] leading-relaxed text-black/75">
-            {item.text}
+            {captionText}
           </p>
         )}
 

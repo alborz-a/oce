@@ -6,7 +6,8 @@ import type { StreamItem, StreamReactionMap } from '../../types';
 import { useOpenDmForColleague } from '../../context/WorkspaceDmContext';
 import { extractImageUrls, isBareImageUrlMessage } from '../../lib/chatPhotoUrls';
 import type { RawFileChip } from '../../lib/rawFileTag';
-import { chatEventLabel } from '../../lib/chatEventLine';
+import { extractChatEvents } from '../../lib/chatEventLine';
+import { rawFileQuotePreview } from '../../lib/rawFileTag';
 import { apiGet } from '@/shared/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
@@ -343,7 +344,9 @@ export function StreamChatMessageCard({
   const isEdited = Boolean(item.rawChatMessage?.edited_at);
 
   const quoteAuthor = replyTarget?.authorName || item.replyTo?.authorName || item.quotedEntity?.title || '';
-  const quoteText = replyTarget?.text || item.replyTo?.text || item.quotedEntity?.subtitle || '';
+  const quoteText = rawFileQuotePreview(
+    replyTarget?.text || item.replyTo?.text || item.quotedEntity?.subtitle || '',
+  );
   const quotedTaskId =
     item.quotedEntity?.kind === 'task_activity'
       ? item.quotedEntity.id
@@ -359,18 +362,23 @@ export function StreamChatMessageCard({
     setEditing(false);
   };
 
-  const eventLabel = chatEventLabel(item.text);
-  if (eventLabel) {
-    return (
+  const eventInfo = extractChatEvents(item.text);
+  const bodyText = eventInfo.labels.length > 0 ? eventInfo.rest : (item.text ?? '');
+  const eventPills =
+    eventInfo.labels.length > 0 ? (
       <div className="relative mb-2 mt-[31px] w-full" data-testid={`stream-event-${item.id}`}>
         <div className="meeting-system-message">
-          <span>{eventLabel}</span>
+          {eventInfo.labels.map((label, idx) => (
+            <span key={idx}>{label}</span>
+          ))}
         </div>
       </div>
-    );
-  }
+    ) : null;
+  if (eventPills && !bodyText) return eventPills;
 
   return (
+    <>
+    {eventPills}
     <article
       className={`group flex w-full items-end gap-2 ${
         item.isCurrentUser ? 'chat-item-right justify-start' : 'chat-item-left justify-end'
@@ -408,10 +416,10 @@ export function StreamChatMessageCard({
             )}
 
             <RawFileChips files={item.rawFiles} />
-            <ImageUrlFrames text={item.text} />
-            {!isBareImageUrlMessage(item.text) && (
+            <ImageUrlFrames text={bodyText} />
+            {!isBareImageUrlMessage(bodyText) && (
               <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
-                {item.text ?? ''}
+                {bodyText}
               </p>
             )}
 
@@ -498,10 +506,10 @@ export function StreamChatMessageCard({
             ) : (
               <>
                 <RawFileChips files={item.rawFiles} />
-                <ImageUrlFrames text={item.text} />
-                {!isBareImageUrlMessage(item.text) && (
+                <ImageUrlFrames text={bodyText} />
+                {!isBareImageUrlMessage(bodyText) && (
                   <p className="whitespace-pre-wrap break-words text-[13px] leading-[1.6] text-black/85">
-                    {item.text ?? ''}
+                    {bodyText}
                   </p>
                 )}
               </>
@@ -540,5 +548,6 @@ export function StreamChatMessageCard({
         </div>
       )}
     </article>
+    </>
   );
 }

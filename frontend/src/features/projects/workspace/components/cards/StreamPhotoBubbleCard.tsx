@@ -4,6 +4,7 @@ import { MzIcon } from '../MzIcon';
 import { AuthImage } from '@/shared/ui';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../../types';
+import { parseRawFileTags } from '../../lib/rawFileTag';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
 import { formatStreamTime, getInitials, StreamCardFooterBar } from './StreamChatMessageCard';
 
@@ -58,7 +59,7 @@ export function StreamPhotoBubbleCard({
   const visiblePhotos = photos.slice(0, 4);
   const extraCount = Math.max(0, photos.length - visiblePhotos.length);
   const sharedCaption =
-    item.text?.trim() ||
+    parseRawFileTags(item.text ?? '').text.trim() ||
     photos.find((p) => Boolean(p.caption?.trim()))?.caption?.trim() ||
     '';
   const timeText = formatStreamTime(item.createdAt);

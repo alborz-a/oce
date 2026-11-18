@@ -15,6 +15,7 @@ import { createMeeting, type MeetingType } from '@/features/meetings/api';
 import { createTask, updateTask } from '@/features/tasks/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { assignableMembers, memberLabel } from '@/shared/lib/assignableMembers';
+import { rawFileQuotePreview } from '../lib/rawFileTag';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
@@ -348,7 +349,7 @@ export function ProjectStreamComposer({
 
   const mentionableTasks = tasks.filter((t) => !isTopicConversationTask(t)).slice(0, 8);
   const replyPreviewText =
-    replyTo?.text ||
+    (replyTo?.text ? rawFileQuotePreview(replyTo.text) : '') ||
     replyTo?.rawTaskActivity?.reportText ||
     replyTo?.rawTaskActivity?.taskTitle ||
     replyTo?.rawDocument?.name ||

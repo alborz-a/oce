@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { displayName } from '@/features/projects/workspace/lib/importerAuthor';
+import { parseRawFileTags } from '@/features/projects/workspace/lib/rawFileTag';
 import type { ChatMessage } from './types';
 
 export function formatStamp(iso: string): string {
@@ -70,12 +71,12 @@ export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, docu
             </div>
             {quoted && (
               <div dir="auto" className="my-1 border-s-2 border-oe-blue ps-2 text-xs text-content-tertiary" data-testid="reply-quote">
-                {quoted.author_name}: {quoted.text.slice(0, 120)}
+                {quoted.author_name}: {parseRawFileTags(quoted.text).text.slice(0, 120)}
               </div>
             )}
             {m.text && (
               <p dir="auto" className="whitespace-pre-wrap break-words text-sm">
-                {m.text}
+                {parseRawFileTags(m.text).text}
               </p>
             )}
             {m.document_ids.length > 0 && (
