@@ -78,9 +78,8 @@ describe('RawFileChips', () => {
     mockApiGet.mockRejectedValue(new Error('network'));
     renderChips([{ name: 'عکس.jpg', key: KEY, icon: 'image' }]);
 
-    const chip = await screen.findByRole('button', { name: 'عکس.jpg' });
-    await waitFor(() => expect(chip).toBeDisabled());
-    expect(screen.getByText('تصویر در دسترس نیست')).toBeInTheDocument();
+    expect(await screen.findByText('تصویر در دسترس نیست')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'عکس.jpg' })).toBeDisabled();
     expect(mockApiGet).toHaveBeenCalledTimes(1);
   });
 });

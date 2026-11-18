@@ -63,7 +63,7 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
   const [busy, setBusy] = useState(false);
   const key = file.key;
   const isImage = Boolean(key) && RAW_IMAGE_RE.test(file.name.trim());
-  const { data, isError } = useQuery({
+  const { data, isError, isSuccess } = useQuery({
     queryKey: ['chat-file-url', key],
     queryFn: () => apiGet<ChatFileUrlResponse>(chatFileUrlPath(key ?? '')),
     enabled: isImage && Boolean(key),
@@ -73,7 +73,7 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
   const imageUrl = data?.url ?? null;
 
   if (isImage && key) {
-    if (isError || !imageUrl) {
+    if (isError || (isSuccess && !imageUrl)) {
       return (
         <button
           type="button"
@@ -92,9 +92,14 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
           type="button"
           className="im-entity-photo"
           onClick={() => setOpen(true)}
+          disabled={!imageUrl}
           aria-label={file.name}
         >
-          <img src={imageUrl} alt={file.name} loading="lazy" />
+          {imageUrl ? (
+            <img src={imageUrl} alt={file.name} loading="lazy" />
+          ) : (
+            <MzIcon name="image" size={28} />
+          )}
         </button>
         {open && imageUrl && (
           <ChatPhotoLightbox
