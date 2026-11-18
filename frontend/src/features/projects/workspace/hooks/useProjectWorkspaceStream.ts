@@ -397,6 +397,8 @@ export function buildStreamItems({
     const attachedPhotos: ProjectPhotoItem[] = [];
     const seenAttachedPhotoIds = new Set<string>();
     const attachedDocs: ProjectDocumentItem[] = [];
+    // Ids outside the loaded photo/doc lists: the card loads them by id (presigned URL, lazily).
+    const pendingPhotoIds: string[] = [];
 
     for (const rawId of msg.document_ids ?? []) {
       const id = String(rawId);
@@ -420,10 +422,12 @@ export function buildStreamItems({
         } else {
           attachedDocs.push(doc);
         }
+      } else if (!pendingPhotoIds.includes(id)) {
+        pendingPhotoIds.push(id);
       }
     }
 
-    if (attachedPhotos.length > 0 && attachedDocs.length === 0) {
+    if ((attachedPhotos.length > 0 || pendingPhotoIds.length > 0) && attachedDocs.length === 0) {
       items.push({
         id: msg.id,
         kind: 'photo',
@@ -436,6 +440,7 @@ export function buildStreamItems({
         reactions,
         rawChatMessage: msg,
         rawPhotos: attachedPhotos,
+        pendingPhotoIds,
       });
       continue;
     }
@@ -456,7 +461,7 @@ export function buildStreamItems({
           rawDocument: doc,
         });
       });
-      if (attachedPhotos.length > 0) {
+      if (attachedPhotos.length > 0 || pendingPhotoIds.length > 0) {
         items.push({
           id: `${msg.id}:photos`,
           kind: 'photo',
@@ -467,10 +472,14 @@ export function buildStreamItems({
           text: msgBody,
           rawChatMessage: msg,
           rawPhotos: attachedPhotos,
+          pendingPhotoIds,
         });
       }
       continue;
     }
+
+    // Empty text and no attachment (e.g. importer rows with no photo id): nothing to show.
+    if (!msgBody.trim() && rawFileParse.files.length === 0) continue;
 
     items.push({
       id: msg.id,
@@ -961,32 +970,6 @@ export function useProjectWorkspaceStream({
   useEffect(() => {
     void refresh();
   }, [refresh]);
-
-  const lastMissingDocIdsRef = useRef<string>('');
-  useEffect(() => {
-    const knownIds = new Set<string>();
-    for (const photo of sources.photos) {
-      knownIds.add(String(photo.id));
-      if (photo.document_id) knownIds.add(String(photo.document_id));
-    }
-    for (const doc of sources.documents) {
-      knownIds.add(String(doc.id));
-    }
-
-    const missingIds = new Set<string>();
-    for (const msg of roomMessages) {
-      for (const rawId of msg.document_ids ?? []) {
-        const id = String(rawId);
-        if (!knownIds.has(id)) missingIds.add(id);
-      }
-    }
-    if (missingIds.size === 0) return;
-
-    const missingKey = [...missingIds].sort().join(',');
-    if (missingKey === lastMissingDocIdsRef.current) return;
-    lastMissingDocIdsRef.current = missingKey;
-    void refresh();
-  }, [roomMessages, sources, refresh]);
 
   // New task created (composer invalidation or tasks poll) -> re-fetch timeline once
   // so the audit row for the create action shows in the feed. First mount is skipped
