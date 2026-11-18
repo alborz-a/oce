@@ -63,15 +63,29 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
   const [busy, setBusy] = useState(false);
   const key = file.key;
   const isImage = Boolean(key) && RAW_IMAGE_RE.test(file.name.trim());
-  const { data } = useQuery({
+  const { data, isError, isSuccess } = useQuery({
     queryKey: ['chat-file-url', key],
     queryFn: () => apiGet<ChatFileUrlResponse>(chatFileUrlPath(key ?? '')),
     enabled: isImage && Boolean(key),
     staleTime: 0,
+    retry: false,
   });
   const imageUrl = data?.url ?? null;
 
   if (isImage && key) {
+    if (isError || (isSuccess && !imageUrl)) {
+      return (
+        <button
+          type="button"
+          disabled
+          aria-label={file.name}
+          className="flex max-w-full items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-start text-[13px] text-black/85 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <MzIcon name="image" size={18} />
+          <span className="min-w-0 truncate">تصویر در دسترس نیست</span>
+        </button>
+      );
+    }
     return (
       <>
         <button
