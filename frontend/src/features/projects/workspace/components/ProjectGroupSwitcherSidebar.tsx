@@ -142,6 +142,8 @@ export interface ProjectGroupSwitcherSidebarProps {
   pinnedProjectIds?: string[];
   onTogglePin?: (projectId: string) => void;
   className?: string;
+  /** Forwarded to MizitoNav: the single nav item to highlight (e.g. `/correspondence`). */
+  navActiveTo?: string;
 }
 
 
@@ -153,6 +155,7 @@ export function ProjectGroupSwitcherSidebar({
   mobileOpen = false,
   onMobileClose,
   className = '',
+  navActiveTo,
 }: ProjectGroupSwitcherSidebarProps) {
   const openDm = useOpenDmForColleague(currentUserId);
 
@@ -202,7 +205,7 @@ export function ProjectGroupSwitcherSidebar({
           </button>
         </div>
 
-        <MizitoNav />
+        <MizitoNav activeTo={navActiveTo} />
         {/* Bottom `همکارانم` section */}
         <section
           aria-label="همکارانم"
