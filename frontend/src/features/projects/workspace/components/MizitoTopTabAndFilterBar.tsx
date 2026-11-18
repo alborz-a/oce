@@ -10,7 +10,6 @@ import {
   FileText,
   GanttChart,
   Image as ImageIcon,
-  Menu,
   MessageSquare,
   PanelRight,
   Search,
@@ -35,7 +34,6 @@ export interface MizitoTopTabAndFilterBarProps {
   canSwitchToEngineering?: boolean;
   onSwitchToEngineering?: () => void;
   /** Responsive triggers on narrow viewports. */
-  onOpenMobileSwitcher?: () => void;
   onOpenMobileSummary?: () => void;
   /** Optional callbacks when sender or date icon is clicked in built-in bar. */
   onSenderFilterClick?: () => void;
@@ -80,7 +78,6 @@ export function MizitoTopTabAndFilterBar({
   filterSlot,
   canSwitchToEngineering = false,
   onSwitchToEngineering,
-  onOpenMobileSwitcher,
   onOpenMobileSummary,
   onSenderFilterClick,
   onDateFilterClick,
@@ -107,17 +104,6 @@ export function MizitoTopTabAndFilterBar({
     >
       {/* Start (Right in RTL): responsive toggles + 5 primary Mizito tabs */}
       <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
-        {onOpenMobileSwitcher && (
-          <button
-            type="button"
-            onClick={onOpenMobileSwitcher}
-            aria-label="باز کردن فهرست گروه‌ها و همکاران"
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] lg:hidden"
-          >
-            <Menu size={17} />
-          </button>
-        )}
-
         {onOpenMobileSummary && (
           <button
             type="button"

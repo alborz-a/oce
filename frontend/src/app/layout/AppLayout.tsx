@@ -177,7 +177,6 @@ export function AppLayout({ title, children }: AppLayoutProps) {
             onMenuClick={() => {
               if (!toggleMizitoSwitcher()) openSidebar();
             }}
-            onOpenAppMenu={openSidebar}
           />
         ) : (
           <Header

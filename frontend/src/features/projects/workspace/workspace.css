@@ -110,7 +110,7 @@
   block-size: calc(100dvh - var(--oe-header-height, 52px));
   height: calc(100dvh - var(--oe-header-height, 52px));
   min-block-size: 0;
-  overflow: clip;
+  overflow: hidden;
   position: relative;
   box-sizing: border-box;
 }
@@ -588,3 +588,16 @@
 .im-entity-photo{display:block;width:260px;height:195px;max-width:100%;padding:0;border:1px solid rgba(0,0,0,.1);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.03);cursor:pointer}
 .im-entity-photo img{display:block;width:100%;height:100%;object-fit:cover}
 .im-entity-photo:disabled{cursor:default}
+
+/* ── Fixed app shell (O10): header, tabs and filter bar shrink-0; only list/board scrolls ── */
+.mizito-workspace-light.mz-shell {
+  overflow: hidden;
+}
+.mizito-workspace-light .mz-top-tabbar {
+  flex-shrink: 0;
+}
+
+/* ── Brand logo outline (O16): keeps the blue-on-blue Royal Stars logo visible ── */
+.mizito-workspace-light .mz-brand-logo {
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}
