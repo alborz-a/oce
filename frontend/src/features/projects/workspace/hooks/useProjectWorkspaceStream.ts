@@ -328,6 +328,19 @@ export function buildStreamItems({
       memberNameById.set(String(m.user_id), m.full_name || m.email || 'کاربر');
     }
   }
+  // Sender photos come from the members list already loaded for the project (no per-message request).
+  // Importer rows have no member id, so they match by display name.
+  const avatarById = new Map<string, string>();
+  const avatarByName = new Map<string, string>();
+  for (const m of members) {
+    const url = typeof m.avatar_url === 'string' ? m.avatar_url.trim() : '';
+    if (!url) continue;
+    if (m.user_id && !isImporter(m.user_id)) avatarById.set(String(m.user_id), url);
+    const fullName = (m.full_name ?? '').trim();
+    if (fullName && !avatarByName.has(fullName)) avatarByName.set(fullName, url);
+  }
+  const authorAvatarFor = (id: string | null, name: string): string | null =>
+    (id && avatarById.get(id)) || avatarByName.get(name.trim()) || null;
 
   const taskById = new Map<string, ProjectTaskItem>();
   for (const t of tasks) {
@@ -465,6 +478,7 @@ export function buildStreamItems({
       createdAt: msg.created_at,
       authorId,
       authorName,
+      authorAvatarUrl: authorAvatarFor(authorId, authorName),
       isCurrentUser,
       text: msgBody,
       quotedEntity,
