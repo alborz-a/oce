@@ -32,7 +32,7 @@ import { useOfflineSync } from '@/shared/hooks/useOnlineStatus';
 import { usePartnerPackLocale } from '@/shared/hooks/usePartnerPackLocale';
 import { useBrandingStore } from '@/stores/useBrandingStore';
 import { useReviewPromptStore } from '@/stores/useReviewPromptStore';
-import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
+import { useIsSystemAdmin, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { useGlobalPresenceSocket } from '@/features/global_presence';
 
 interface AppLayoutProps {
@@ -45,6 +45,8 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const isRTL = useIsRTL();
   const isSystemAdmin = useIsSystemAdmin();
+  // Normal users (not admin/manager) see only the Mizito chrome: no OCE sidebar, header, toolbar or floating OCE buttons.
+  const normalUser = useIsNormalUser();
   const location = useLocation();
   const workspaceActive = useWorkspaceChromeStore((st) => st.active);
   const backdropVariant = backdropVariantForPath(location.pathname);
@@ -149,6 +151,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           In LTR the sidebar is anchored left; in RTL it is anchored right.
           The CSS rules in index.css handle the `start-0`→`end-0` flip for
           `.oe-sidebar` when `dir="rtl"` is set on <html>. */}
+      {!normalUser && (
       <div
         ref={sidebarRef}
         className={clsx(
@@ -161,6 +164,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
       >
         <Sidebar onClose={closeSidebar} />
       </div>
+      )}
 
       {/* Main area — offset from the sidebar side (left in LTR, right in RTL).
           Consistent padding (px-4 sm:px-7) across all modules.
@@ -171,8 +175,8 @@ export function AppLayout({ title, children }: AppLayoutProps) {
             address field, open-in-browser, favorites). Renders null in the
             normal web build. Sits above the Header so it reads as window
             chrome. */}
-        <DesktopToolbar />
-        {workspaceActive ? (
+        {!normalUser && <DesktopToolbar />}
+        {workspaceActive || normalUser ? (
           <MizitoGlobalTopBar
             onMenuClick={() => {
               if (!toggleMizitoSwitcher()) openSidebar();
@@ -208,7 +212,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
       <GlobalCatalogueInstallIndicator />
 
       {/* Floating Recent button — bottom-right corner */}
-      {!workspaceActive && <FloatingRecentButton />}
+      {!workspaceActive && !normalUser && <FloatingRecentButton />}
 
       {/* AI assistant — the round button and the dock it opens (Alt+A
           toggles it too). The dock pushes the page aside on wide screens
@@ -227,7 +231,7 @@ export function AppLayout({ title, children }: AppLayoutProps) {
           once per signed-in session (App.tsx `AppShell`), and every piece of
           state the card needs lives in useReviewPromptStore anyway, not in
           the component. */}
-      {!workspaceActive && <ReviewPromptCard />}
+      {!workspaceActive && !normalUser && <ReviewPromptCard />}
 
       {/* Global onboarding tour (ProductTour) mounts once at App.tsx
           top level — moving it out of here was the fix for

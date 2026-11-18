@@ -38,6 +38,7 @@ import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { isEngineeringRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
@@ -244,8 +245,8 @@ const PostCalcPage = lazy(() =>
 );
 // Delivery-lifecycle registers (backend modules oe_site_inventory / oe_site_prep /
 // oe_temporary_works / oe_interface_management / oe_defects_liability).
-const ProfilePage = lazy(() =>
-  import('@/features/profile/ProfilePage').then((m) => ({ default: m.ProfilePage }))
+const MizitoProfilePage = lazy(() =>
+  import('@/features/projects/workspace/components/MizitoProfilePage').then((m) => ({ default: m.MizitoProfilePage }))
 );
 const SiteInventoryPage = lazy(() =>
   import('@/features/site-inventory/SiteInventoryPage').then((m) => ({ default: m.SiteInventoryPage }))
@@ -890,6 +891,7 @@ function BimRulesRoute() {
 function GlobalShortcuts() {
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const normalUser = useIsNormalUser();
 
   const handleToggleShortcuts = useCallback(() => {
     setShortcutsOpen((prev) => !prev);
@@ -968,7 +970,7 @@ function GlobalShortcuts() {
   return (
     <>
       <ShortcutsDialog open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
-      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+      {!normalUser && <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />}
       <GlobalSearchModal />
     </>
   );
@@ -1037,8 +1039,8 @@ function WorkspaceHomeRedirect() {
 
 function DashboardRoute() {
   const [searchParams] = useSearchParams();
-  const restrictedMode = useAuthStore((s) => s.restrictedMode);
-  if (!restrictedMode && searchParams.get('engineering') === '1') {
+  const userRole = useAuthStore((s) => s.userRole);
+  if (isEngineeringRole(userRole) && searchParams.get('engineering') === '1') {
     return <P title="Dashboard"><DashboardPage /></P>;
   }
   return <WorkspaceHomeRedirect />;
@@ -1730,7 +1732,7 @@ export default function App() {
         <Route path="/find" element={<P title="Find Records"><RetrievalPage /></P>} />
         <Route path="/projects/:projectId/find" element={<P title="Find Records"><RetrievalPage /></P>} />
         <Route path="/estimates" element={<Navigate to="/boq" replace />} />
-        <Route path="/profile" element={<P title="Profile"><ProfilePage /></P>} />
+        <Route path="/profile" element={<P title="Profile"><MizitoProfilePage /></P>} />
         <Route path="/notifications" element={<P title="Notifications"><NotificationsPage /></P>} />
 
         {/* Plugin module routes — lazy-loaded */}

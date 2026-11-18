@@ -26,7 +26,7 @@ beforeEach(() => {
 describe('RestrictedRouteGuard', () => {
   it('renders children when route is allowed', () => {
     render(
-      <MemoryRouter initialEntries={['/photos']}>
+      <MemoryRouter initialEntries={['/projects/p1']}>
         <RestrictedRouteGuard>
           <div>Photos Content</div>
         </RestrictedRouteGuard>
