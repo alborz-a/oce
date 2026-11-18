@@ -435,7 +435,7 @@ export function ProjectStreamComposer({
         </div>
 
         {/* Capsule input + inner icon controls */}
-        <div className="relative flex min-w-0 flex-1 items-center gap-1 rounded-[20px] border border-[#e5e7eb] bg-[#f5f6f8] px-3 py-1 focus-within:border-[#3078ab] focus-within:bg-white">
+        <div className="relative flex min-w-0 flex-1 items-center gap-1 min-h-[46px] rounded-[20px] border border-[#dcdcdc] bg-white px-3 py-1 focus-within:border-[#00bcd4]">
           <textarea
             ref={textareaRef}
             rows={1}

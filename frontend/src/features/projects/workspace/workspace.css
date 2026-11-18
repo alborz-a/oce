@@ -597,14 +597,10 @@
   flex-shrink: 0;
 }
 
-/* ── Brand logo outline (O16): global scope, keeps the blue-on-blue Royal Stars logo visible ── */
+/* ── Brand logo (O16): 44px of the 52px header, 2px white stroke so it never blends into the blue bar ── */
 .mz-brand-logo {
-  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
-  outline: 1px solid #fff;
-  outline-offset: 1px;
-  border-radius: 4px;
-}
-
-.mizito-workspace-light .mz-brand-logo {
-  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+  border: 2px solid #fff;
+  border-radius: 6px;
+  padding: 1px;
+  box-sizing: border-box;
 }
