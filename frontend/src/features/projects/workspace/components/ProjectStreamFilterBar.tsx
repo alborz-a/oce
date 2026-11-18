@@ -1,17 +1,6 @@
 import { useId, useRef, useState } from 'react';
-import {
-  BarChart2,
-  CalendarDays,
-  Check,
-  CheckCircle2,
-  ClipboardList,
-  FileText,
-  Image as ImageIcon,
-  Search,
-  User,
-  Video,
-  X,
-} from 'lucide-react';
+import { Check, X } from 'lucide-react';
+import { MzIcon } from './MzIcon';
 import { isoToJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
 import {
@@ -35,16 +24,17 @@ export interface ProjectStreamFilterBarProps {
 interface KindToggleDef {
   kind: StreamFilterState['kind'];
   label: string;
-  Icon: typeof CheckCircle2;
+  /** Material Icons ligature name rendered via MzIcon. */
+  ligature: string;
 }
 
 const KIND_TOGGLES: readonly KindToggleDef[] = [
-  { kind: 'tasks', label: 'فقط وظایف و گزارش‌ها', Icon: CheckCircle2 },
-  { kind: 'minutes', label: 'فقط صورتجلسه‌ها و اسناد متنی', Icon: ClipboardList },
-  { kind: 'documents', label: 'فقط فایل‌ها و PDF', Icon: FileText },
-  { kind: 'photos', label: 'فقط عکس‌ها و آلبوم‌ها', Icon: ImageIcon },
-  { kind: 'videos', label: 'فقط پیام‌های جلسه ویدیویی', Icon: Video },
-  { kind: 'polls', label: 'نظرسنجی و وضعیت ویژه', Icon: BarChart2 },
+  { kind: 'tasks', label: 'فقط وظایف و گزارش‌ها', ligature: 'check_circle' },
+  { kind: 'minutes', label: 'فقط صورتجلسه‌ها و اسناد متنی', ligature: 'assignment' },
+  { kind: 'documents', label: 'فقط فایل‌ها و PDF', ligature: 'description' },
+  { kind: 'photos', label: 'فقط عکس‌ها و آلبوم‌ها', ligature: 'image' },
+  { kind: 'videos', label: 'فقط پیام‌های جلسه ویدیویی', ligature: 'videocam' },
+  { kind: 'polls', label: 'نظرسنجی و وضعیت ویژه', ligature: 'bar_chart' },
 ];
 
 function toIsoDate(d: Date): string {
@@ -141,11 +131,7 @@ export function ProjectStreamFilterBar({
       data-testid="project-stream-filter-bar"
     >
       <search className="relative flex items-center" aria-label="فیلتر پیام‌ها">
-        <Search
-          size={14}
-          className="pointer-events-none absolute start-2.5 text-[#909090]"
-          aria-hidden="true"
-        />
+        <MzIcon name="search" size={14} className="pointer-events-none absolute start-2.5 text-[#909090]" />
         <input
           ref={searchInputRef}
           type="search"
@@ -167,7 +153,7 @@ export function ProjectStreamFilterBar({
           aria-label="جستجوی متنی"
           className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#5b5e66] transition-colors hover:bg-white hover:text-[#3078ab]"
         >
-          <Search size={14} />
+          <MzIcon name="search" size={14} />
         </button>
 
         {/* 2. Sender picker popover */}
@@ -188,7 +174,7 @@ export function ProjectStreamFilterBar({
                 : 'text-[#5b5e66] hover:bg-white hover:text-[#3078ab]'
             }`}
           >
-            <User size={14} />
+            <MzIcon name="person" size={14} />
           </button>
 
           <div
@@ -287,7 +273,7 @@ export function ProjectStreamFilterBar({
                 : 'text-[#5b5e66] hover:bg-white hover:text-[#3078ab]'
             }`}
           >
-            <CalendarDays size={14} />
+            <MzIcon name="event" size={14} />
           </button>
 
           <div
@@ -382,7 +368,7 @@ export function ProjectStreamFilterBar({
         </div>
 
         {/* 4..9. Content-type toggles */}
-        {KIND_TOGGLES.map(({ kind, label, Icon }) => {
+        {KIND_TOGGLES.map(({ kind, label, ligature }) => {
           const active = filter.kind === kind;
           return (
             <button
@@ -398,7 +384,7 @@ export function ProjectStreamFilterBar({
                   : 'text-[#5b5e66] hover:bg-white hover:text-[#3078ab]'
               }`}
             >
-              <Icon size={14} />
+              <MzIcon name={ligature} size={14} />
             </button>
           );
         })}
