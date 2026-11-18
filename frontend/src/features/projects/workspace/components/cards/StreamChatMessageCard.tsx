@@ -1,5 +1,4 @@
 import { useState, type KeyboardEvent } from 'react';
-import { Trash2 } from 'lucide-react';
 import { MzIcon } from '../MzIcon';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
@@ -275,7 +274,7 @@ export function StreamCardFooterBar({
             aria-label="حذف"
             data-testid="stream-chat-delete"
           >
-            <Trash2 size={11} />
+            <MzIcon name="delete" size={11} />
             <span>حذف</span>
           </button>
         )}

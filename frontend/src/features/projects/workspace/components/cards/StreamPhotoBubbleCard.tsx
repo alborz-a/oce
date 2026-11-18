@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { CheckCheck } from 'lucide-react';
 import { MzIcon } from '../MzIcon';
 import { AuthImage } from '@/shared/ui';
 import { toPersianDigits } from '@/shared/lib/jalali';
@@ -162,7 +161,7 @@ export function StreamPhotoBubbleCard({
         {item.isCurrentUser && timeText && (
           <div className="mt-1 flex items-center gap-1 px-1 text-[11px] text-black/50">
             <span className="mz-time-muted">{timeText}</span>
-            <CheckCheck size={14} className="text-[#3078ab]" aria-label="دیده شده" />
+            <MzIcon name="done_all" size={14} className="text-[#3078ab]" aria-label="دیده شده" />
           </div>
         )}
 

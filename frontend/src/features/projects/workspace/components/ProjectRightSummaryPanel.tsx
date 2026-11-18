@@ -1,5 +1,4 @@
 import { MzIcon } from './MzIcon';
-import { ArrowRight, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Project } from '@/features/projects/api';
 import { TeamStrip } from '@/features/projects/components/TeamStrip';
@@ -266,7 +265,7 @@ export function ProjectRightSummaryPanel({
             data-testid="summary-back-button"
             className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] hover:text-[#1f2937]"
           >
-            <ArrowRight size={17} />
+            <MzIcon name="arrow_forward" size={17} />
           </button>
         )}
 
@@ -285,9 +284,8 @@ export function ProjectRightSummaryPanel({
           title={project.name}
         >
           <span className="min-w-0 truncate">{toPersianDigits(project.name)}</span>
-          <Star
+          <MzIcon name="star"
             size={13}
-            fill="currentColor"
             aria-hidden="true"
             data-testid="summary-star-badge"
             className="shrink-0 text-mz-star"

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { Download, RotateCcw, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { wrapIndex, type LightboxPhotoRef } from '../lib/chatPhotoUrls';
 import { rotateBy, stepZoom } from '../lib/lightboxTransform';
@@ -144,19 +143,19 @@ export function ChatPhotoLightbox({ photos, index, onClose, onIndexChange }: Cha
             aria-label="دانلود"
             className={toolbarBtn}
           >
-            <Download size={18} />
+            <MzIcon name="download" size={18} />
           </a>
           <button type="button" aria-label="چرخش به چپ" className={toolbarBtn} onClick={() => setRotation((r) => rotateBy(r, -90))}>
-            <RotateCcw size={18} />
+            <MzIcon name="rotate_left" size={18} />
           </button>
           <button type="button" aria-label="چرخش به راست" className={toolbarBtn} onClick={() => setRotation((r) => rotateBy(r, 90))}>
-            <RotateCw size={18} />
+            <MzIcon name="rotate_right" size={18} />
           </button>
           <button type="button" aria-label="کوچک‌نمایی" className={toolbarBtn} onClick={() => setZoom((z) => stepZoom(z, -1))}>
-            <ZoomOut size={18} />
+            <MzIcon name="zoom_out" size={18} />
           </button>
           <button type="button" aria-label="بزرگ‌نمایی" className={toolbarBtn} onClick={() => setZoom((z) => stepZoom(z, 1))}>
-            <ZoomIn size={18} />
+            <MzIcon name="zoom_in" size={18} />
           </button>
         </div>
       </div>

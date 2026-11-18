@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { ArrowLeftRight, CalendarClock } from 'lucide-react';
 import {
   completeTask,
   createTask,
@@ -606,7 +605,7 @@ export function ProjectBoardTab({
                                     : 'border-[#e5e7eb] bg-[#f5f6f8] text-[#4b5563]'
                                 }`}
                               >
-                                <CalendarClock size={11} aria-hidden="true" />
+                                <MzIcon name="schedule" size={11} aria-hidden="true" />
                                 <span>مهلت: {formatJalali(task.due_date, 'short')}</span>
                               </span>
                             )}
@@ -669,7 +668,7 @@ export function ProjectBoardTab({
                         {/* Accessible Move-to-Column selector */}
                         {columns.length > 1 && (
                           <div className="mt-2 flex items-center justify-end gap-1 border-t border-[#f0f2f5] pt-1.5">
-                            <ArrowLeftRight
+                            <MzIcon name="swap_horiz"
                               size={11}
                               aria-hidden="true"
                               className="text-[#909090]"

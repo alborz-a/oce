@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MzIcon } from '../MzIcon';
-import { FileDown, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
@@ -72,7 +72,7 @@ export function StreamMeetingMinutesCard({
               disabled={downloading}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-[#3078ab]/30 bg-white px-2.5 py-1 text-[11.5px] font-medium text-[#3078ab] transition-colors hover:bg-[#3078ab]/5 disabled:opacity-50"
             >
-              {downloading ? <Loader2 size={13} className="animate-spin" /> : <FileDown size={13} />}
+              {downloading ? <Loader2 size={13} className="animate-spin" /> : <MzIcon name="file_download" size={13} />}
               <span>دانلود PDF صورتجلسه</span>
             </button>
           )}

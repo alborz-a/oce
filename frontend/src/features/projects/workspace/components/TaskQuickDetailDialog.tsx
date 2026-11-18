@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { Bell, MessageSquarePlus, Printer, Send, Square, Tag, Trash2 } from 'lucide-react';
 import {
   completeTask,
   deleteTask,
@@ -493,7 +492,7 @@ export function TaskQuickDetailDialog({
                     data-testid="task-detail-print-item"
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] text-[#374151] hover:bg-[#f5f6f8]"
                   >
-                    <Printer size={15} />
+                    <MzIcon name="print" size={15} />
                     چاپ
                   </button>
                   <button
@@ -504,7 +503,7 @@ export function TaskQuickDetailDialog({
                     data-testid="task-detail-delete-item"
                     className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-[13px] text-[#b91c1c] hover:bg-[#fef2f2] disabled:opacity-50"
                   >
-                    <Trash2 size={15} />
+                    <MzIcon name="delete" size={15} />
                     حذف
                   </button>
                 </div>
@@ -554,7 +553,7 @@ export function TaskQuickDetailDialog({
                   data-testid="task-detail-labels-trigger"
                   className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#374151] hover:bg-[#f3f4f6]"
                 >
-                  <Tag size={14} />
+                  <MzIcon name="label" size={14} />
                   برچسب
                 </button>
                 <button
@@ -565,7 +564,7 @@ export function TaskQuickDetailDialog({
                   data-testid="task-detail-reminder-trigger"
                   className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[#e5e7eb] px-2.5 text-[12px] text-[#374151] hover:bg-[#f3f4f6]"
                 >
-                  <Bell size={14} />
+                  <MzIcon name="notifications" size={14} />
                   یادآوری
                 </button>
               </div>
@@ -586,7 +585,7 @@ export function TaskQuickDetailDialog({
                       data-testid="task-detail-reminder-chip"
                       className="inline-flex items-center gap-1 rounded-full border border-[#e5e7eb] px-2 py-0.5 text-[11px] text-[#374151]"
                     >
-                      <Bell size={11} />
+                      <MzIcon name="notifications" size={11} />
                       {formatReminderLabel(remindAt)}
                       <button
                         type="button"
@@ -985,7 +984,7 @@ export function TaskQuickDetailDialog({
                       {item.completed ? (
                         <MzIcon name="checklist_rtl" size={14} className="shrink-0 text-[#04c39a]" />
                       ) : (
-                        <Square size={14} className="shrink-0 text-[#9ca3af]" />
+                        <MzIcon name="check_box_outline_blank" size={14} className="shrink-0 text-[#9ca3af]" />
                       )}
                       <span className={item.completed ? 'text-[#909090] line-through' : ''}>
                         {toPersianDigits(item.text)}
@@ -999,7 +998,7 @@ export function TaskQuickDetailDialog({
                       }
                       className="text-[#9ca3af] hover:text-[#d9534f]"
                     >
-                      <Trash2 size={13} />
+                      <MzIcon name="delete" size={13} />
                     </button>
                   </li>
                 ))}
@@ -1073,7 +1072,7 @@ export function TaskQuickDetailDialog({
           {/* Comments / گزارش جدید section */}
           <section className="border-t border-[#e5e7eb] pt-3" aria-label="گزارش‌های وظیفه">
             <h3 className="mb-2 flex items-center gap-1.5 text-[12.5px] font-bold text-[#374151]">
-              <MessageSquarePlus size={14} className="text-[#3078ab]" />
+              <MzIcon name="add_comment" size={14} className="text-[#3078ab]" />
               <span>گزارش جدید و نظرات</span>
             </h3>
 
@@ -1118,7 +1117,7 @@ export function TaskQuickDetailDialog({
                 data-testid="task-detail-report-submit"
                 className="inline-flex h-8 items-center gap-1 rounded-full bg-[#3078ab] px-3 text-[11.5px] font-semibold text-white disabled:opacity-50"
               >
-                <Send size={13} aria-hidden="true" />
+                <MzIcon name="send" size={13} aria-hidden="true" />
                 <span>ثبت گزارش</span>
               </button>
             </form>

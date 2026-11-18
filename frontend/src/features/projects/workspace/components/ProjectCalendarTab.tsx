@@ -1,6 +1,5 @@
 import { useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { MzIcon } from './MzIcon';
-import { CalendarIcon } from 'lucide-react';
 import {
   PERSIAN_MONTH_NAMES,
   PERSIAN_WEEKDAY_NAMES,
@@ -327,7 +326,7 @@ export function ProjectCalendarTab({
           </label>
 
           <div className="inline-flex items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-white px-2 py-1 text-[11.5px] text-[#4b5563]">
-            <CalendarIcon size={13} aria-hidden="true" className="text-[#3078ab]" />
+            <MzIcon name="calendar_today" size={13} aria-hidden="true" className="text-[#3078ab]" />
             <span>نمایش بر اساس:</span>
             <select
               value={dateField}

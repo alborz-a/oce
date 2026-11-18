@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { MzIcon } from './MzIcon';
-import { BarChart2, Calendar, CheckCircle2, ClipboardList, Columns3, Compass, FileText, GanttChart, ImageIcon, MessageSquare, PanelRight, Video } from 'lucide-react';
+import { BarChart2, Calendar, CheckCircle2, ClipboardList, Columns3, FileText, GanttChart, ImageIcon, MessageSquare, PanelRight, Video } from 'lucide-react';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -242,7 +242,7 @@ export function MizitoTopTabAndFilterBar({
             data-testid="switch-to-engineering-view"
             className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 text-[11.5px] font-medium text-[#2b4162] hover:border-mz-project hover:bg-[#e8f2fa] hover:text-mz-project transition-colors whitespace-nowrap"
           >
-            <Compass size={13} aria-hidden="true" />
+            <MzIcon name="explore" size={13} aria-hidden="true" />
             <span>ورود به حالت مهندسی</span>
           </button>
         )}

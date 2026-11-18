@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MzIcon } from '../MzIcon';
-import { FileDown, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
@@ -106,7 +106,7 @@ export function StreamDocumentCard({
               {downloading ? (
                 <Loader2 size={18} className="animate-spin" />
               ) : downloadUrl ? (
-                <FileDown size={20} />
+                <MzIcon name="file_download" size={20} />
               ) : (
                 <MzIcon name="description" size={18} />
               )}
