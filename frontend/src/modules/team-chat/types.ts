@@ -1,6 +1,6 @@
 // Team chat shared types (mirror backend/app/modules/team_chat/schemas.py).
 
-export type RoomKind = 'company' | 'project' | 'group' | 'dm';
+export type RoomKind = 'company' | 'project' | 'group' | 'dm' | 'channel';
 
 export interface ChatRoom {
   id: string;
@@ -17,6 +17,7 @@ export interface ChatMessage {
   room_id: string;
   author_id?: string | null;
   author_name: string;
+  author_title?: string | null;
   text: string;
   reply_to_id?: string | null;
   document_ids: string[];
@@ -32,6 +33,12 @@ export type ChatEvent =
   | { event: 'message.edited'; message: ChatMessage }
   | { event: 'message.deleted'; message_id: string }
   | { event: 'room.read'; room_id: string };
+
+export interface Colleague {
+  id: string;
+  full_name: string;
+  job_title?: string | null;
+}
 
 export interface ProjectDocument {
   id: string;

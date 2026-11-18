@@ -763,6 +763,15 @@ async def get_my_project_caps(
     )
 
 
+def _metadata_with_job_title(base: dict | None, title: str | None) -> dict:
+    """Copy of the metadata blob with registration.job_title set. A new dict, so SQLAlchemy sees the change."""
+    merged = dict(base or {})
+    reg = dict(merged.get("registration") or {})
+    reg["job_title"] = (title or "").strip()
+    merged["registration"] = reg
+    return merged
+
+
 @router.patch("/me/", response_model=UserResponse)
 async def update_me(
     data: UserUpdate,
@@ -808,6 +817,13 @@ async def update_me(
                 continue
             merged[key] = value
         fields["metadata_"] = merged
+
+    if "job_title" in fields:
+        title = fields.pop("job_title")
+        base = fields.get("metadata_")
+        if base is None:
+            base = (await service.get_user(uuid.UUID(user_id))).metadata_
+        fields["metadata_"] = _metadata_with_job_title(base, title)
 
     user = await service.update_profile(uuid.UUID(user_id), **fields)
     return UserResponse.model_validate(user)
@@ -1788,6 +1804,10 @@ async def update_user(
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already in use")
     if "mobile" in fields and fields["mobile"] == "":
         fields["mobile"] = None
+    if "job_title" in fields:
+        title = fields.pop("job_title")
+        target = await service.get_user(user_id)
+        fields["metadata_"] = _metadata_with_job_title(target.metadata_, title)
     user = await service.update_profile(user_id, **fields)
     return redact_model(UserResponse.model_validate(user), subject_id=user.id, viewer_id=viewer_id)
 

@@ -9,6 +9,7 @@ import { fetchDocuments, uploadDocument } from '@/features/documents/api';
 import { Composer } from './Composer';
 import { MessageList } from './MessageList';
 import { RoomList } from './RoomList';
+import { NewChatDialog, type NewChatMode } from './NewChatDialog';
 import { useChatSocket } from './useChatSocket';
 import type { ChatEvent, ChatMessage, ChatRoom, ProjectDocument } from './types';
 
@@ -32,6 +33,8 @@ export default function TeamChatModule() {
   const [loadingOlder, setLoadingOlder] = useState(false);
   const [docs, setDocs] = useState<ProjectDocument[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [dialogMode, setDialogMode] = useState<NewChatMode | null>(null);
+  const [me, setMe] = useState<{ id: string } | null>(null);
   const activeRef = useRef<string | undefined>(activeId);
   activeRef.current = activeId;
 
@@ -56,6 +59,10 @@ export default function TeamChatModule() {
   useEffect(() => {
     void loadRooms();
   }, [loadRooms]);
+
+  useEffect(() => {
+    apiGet<{ id: string }>('/v1/users/me/').then(setMe).catch(() => {});
+  }, []);
 
   // /projects/:projectId/chat opens (and creates) the project's room
   useEffect(() => {
@@ -144,11 +151,7 @@ export default function TeamChatModule() {
     }
   };
 
-  const newGroup = async () => {
-    const name = window.prompt(t('team_chat.group_name', { defaultValue: 'نام گروه' }));
-    if (!name) return;
-    const me = await apiGet<{ id: string }>('/v1/users/me/');
-    const r = await apiPost<ChatRoom>('/v1/team-chat/rooms/', { kind: 'group', name, member_ids: [me.id] });
+  const onCreated = async (r: ChatRoom) => {
     await loadRooms();
     navigate(`/chat/${r.id}`);
   };
@@ -167,7 +170,9 @@ export default function TeamChatModule() {
           ? { name: 'folder', color: undefined }
           : active.kind === 'group'
             ? { name: 'group', color: undefined }
-            : { name: 'person', color: undefined };
+            : active.kind === 'channel'
+              ? { name: 'record_voice_over', color: undefined }
+              : { name: 'person', color: undefined };
 
   return (
     <div className="flex h-[calc(100vh-8rem)] min-h-[420px]" dir="rtl" data-testid="team-chat">
@@ -179,9 +184,19 @@ export default function TeamChatModule() {
             setActiveId(r.id);
             navigate(`/chat/${r.id}`);
           }}
-          onNewGroup={newGroup}
+          onNewDm={() => setDialogMode('dm')}
+          onNewGroup={() => setDialogMode('group')}
+          onNewChannel={() => setDialogMode('channel')}
         />
       </div>
+      {dialogMode && me && (
+        <NewChatDialog
+          mode={dialogMode}
+          me={me}
+          onClose={() => setDialogMode(null)}
+          onCreated={onCreated}
+        />
+      )}
       <div className={active ? 'flex min-w-0 flex-1 flex-col' : 'hidden md:flex min-w-0 flex-1 flex-col'}>
         <div className="flex items-center gap-2 border-b border-border-light px-3 py-2 text-sm font-semibold" dir="auto">
           {active ? (

@@ -8,6 +8,8 @@ import type { RawFileChip } from '../../lib/rawFileTag';
 import { extractChatEvents } from '../../lib/chatEventLine';
 import { rawFileQuotePreview } from '../../lib/rawFileTag';
 import { apiGet } from '@/shared/lib/api';
+import { useJobTitles } from '@/shared/lib/useJobTitles';
+import { JobTitleBadge } from '@/shared/ui/JobTitleBadge';
 import { useQuery } from '@tanstack/react-query';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
 import { useToastStore } from '@/stores/useToastStore';
@@ -370,6 +372,10 @@ export function StreamChatMessageCard({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(item.text ?? '');
   const openDm = useOpenDmForColleague(currentUserId);
+  const jobTitles = useJobTitles();
+  const authorTitle = item.authorId
+    ? jobTitles.byId.get(item.authorId) ?? jobTitles.byName.get((item.authorName || '').trim())
+    : jobTitles.byName.get((item.authorName || '').trim());
   const senderId = item.authorId && item.authorId !== currentUserId ? item.authorId : null;
   const senderClickProps = senderId
     ? {
@@ -439,6 +445,7 @@ export function StreamChatMessageCard({
               {...senderClickProps}
             >
               {item.authorName}
+              <JobTitleBadge title={authorTitle} />
             </span>
           )}
           <div className="chat-item-body px-3.5 py-2 shadow-[0_1px_1px_rgba(0,0,0,0.04)]">

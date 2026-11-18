@@ -123,6 +123,16 @@ class User(Base):
         stamp = int(self.updated_at.timestamp()) if getattr(self, "updated_at", None) else 0
         return f"/api/v1/users/{self.id}/avatar?v={stamp}"
 
+    @property
+    def job_title(self) -> str | None:
+        """Job title from metadata (top level, then registration), or None. Read-only."""
+        meta = self.metadata_ or {}
+        return (
+            str(meta.get("job_title") or "").strip()
+            or str((meta.get("registration") or {}).get("job_title") or "").strip()
+            or None
+        )
+
     def __repr__(self) -> str:
         return f"<User {self.email} ({self.role})>"
 

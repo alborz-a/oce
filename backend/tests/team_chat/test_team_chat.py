@@ -117,6 +117,46 @@ async def test_group_needs_membership_unless_manager(session):
     assert g.id in {r["id"] for r in await s.list_rooms(BOB)}
 
 
+async def test_channel_listed_for_members_and_only_owner_posts(session):
+    s = TeamChatService(session)
+    ch = await s.create_room("channel", "اعلان", [ALICE, BOB], ALICE)
+    assert ch.kind == "channel"
+    assert ch.id in {r["id"] for r in await s.list_rooms(BOB)}
+    with pytest.raises(HTTPException) as e:
+        await s.post_message(ch.id, BOB, "سلام", None, [], [])
+    assert e.value.status_code == 403
+    m = await s.post_message(ch.id, ALICE, "خبر", None, [], [])
+    assert m["text"] == "خبر"
+
+
+async def test_message_carries_author_title_from_registration(session):
+    from app.modules.users.models import User
+
+    s = TeamChatService(session)
+    alice = await session.get(User, ALICE)
+    alice.metadata_ = {"registration": {"job_title": "  مهندس  "}}
+    company = await s.company_room()
+    m_alice = await s.post_message(company.id, ALICE, "الف", None, [], [])
+    m_bob = await s.post_message(company.id, BOB, "ب", None, [], [])
+    assert m_alice["author_title"] == "مهندس"
+    assert m_bob["author_title"] is None
+
+
+async def test_list_colleagues_excludes_self_inactive_and_hidden(session):
+    from app.modules.users.models import User
+
+    session.add(User(id=uuid.uuid4(), email="gone@x.co", hashed_password="x", full_name="غایب", role="viewer", is_active=False))
+    hidden = uuid.uuid4()
+    session.add(User(id=hidden, email="qa.hidden@x.co", hashed_password="x", full_name="qa.hidden", role="viewer", is_active=True))
+    await session.flush()
+    s = TeamChatService(session)
+    names = {c.full_name for c in await s.list_colleagues(BOB)}
+    assert "باب" not in names and "غایب" not in names and "qa.hidden" not in names
+    assert "آلیس" in names
+    assert hidden not in {c.id for c in await s.list_colleagues(BOB, {"role": "viewer"})}
+    assert hidden in {c.id for c in await s.list_colleagues(ADMIN, {"role": "admin"})}
+
+
 async def test_paging_oldest_first_with_before_cursor(session):
     s = TeamChatService(session)
     company = await s.company_room()
