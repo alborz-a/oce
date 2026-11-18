@@ -1,7 +1,13 @@
 /**
  * Raw file tags left in imported chat text by the Mizito importer when the
- * file row could not be resolved: `[فایل: <name>]` optionally followed on the
- * same line by the storage key `mizito/general/chats/...` (to end of line).
+ * file row could not be resolved. Shapes handled:
+ * - `[فایل: <name>]` optionally followed by the storage key `mizito/general/chats/...`
+ *   (key runs to end of line); the tag and key may be split over several lines;
+ * - a key on its own line right after a tag line;
+ * - a key with a junk prefix such as `[Name(login) (1 mizito/general/chats/...`;
+ * - a markdown link `[text](mizito/general/chats/...)`;
+ * - a URL that ends with the key (`https://host/.../mizito/general/chats/...`).
+ * A bare key with no tag and no junk prefix stays raw (pinned by tests).
  * Pure functions only.
  */
 
@@ -20,11 +26,12 @@ export interface RawFileParseResult {
   files: RawFileChip[];
 }
 
-const TAG_RE = /\[فایل:\s*([^\]\n]*?)\s*\]/g;
-const KEY_MARKER = 'mizito/general/chats/';
 const TAG_MARKER = '[فایل:';
+const KEY_MARKER = 'mizito/general/chats/';
 /** Junk left before a bare key: an opened but never closed bracket, e.g. `[Name(login) (1 `. */
 const JUNK_PREFIX_RE = /^\s*\[[^\]\n]*$/;
+/** A URL token at the end of the text before a key. */
+const URL_TAIL_RE = /\S*https?:\/\/\S*$/;
 
 const PDF_EXT = ['pdf'];
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'bmp'];
@@ -43,66 +50,113 @@ export function fileIconForName(name: string): string {
   return 'description';
 }
 
+interface RawHit {
+  kind: 'tag' | 'md' | 'key';
+  start: number;
+  end: number;
+  /** Tag name (tag) or link text (md). */
+  name: string;
+  /** Storage key (md and key). */
+  key: string;
+}
+
+function keyBasename(key: string): string {
+  return key.slice(key.lastIndexOf('/') + 1).trim();
+}
+
 /**
- * Extract raw file tags from text. Lines without a tag are returned unchanged.
- * A same-line key belongs to the last tag on that line; earlier tags get key null.
- * Lines left empty after removal are dropped.
+ * Extract raw file tags from text. Returns the text unchanged (files empty) when no
+ * file shape is found. Otherwise returns caption text without tags, keys and
+ * blank lines, plus one chip per file.
  */
 export function parseRawFileTags(text: string): RawFileParseResult {
   if (!text || (!text.includes(TAG_MARKER) && !text.includes(KEY_MARKER))) {
     return { text, files: [] };
   }
 
+  const hitRe =
+    /\[فایل:\s*([^\]]{0,300}?)\s*\]|\[([^[\]\n]{0,200})\]\((mizito\/general\/chats\/[^)\n]*)\)|mizito\/general\/chats\/[^\n]*/g;
+  const hits: RawHit[] = [];
+  for (let m = hitRe.exec(text); m; m = hitRe.exec(text)) {
+    const start = m.index;
+    const end = start + m[0].length;
+    if (m[1] !== undefined) {
+      hits.push({ kind: 'tag', start, end, name: m[1], key: '' });
+    } else if (m[3] !== undefined) {
+      hits.push({ kind: 'md', start, end, name: m[2] ?? '', key: m[3].trim() });
+    } else {
+      hits.push({ kind: 'key', start, end, name: '', key: m[0].trim() });
+    }
+  }
+
   const files: RawFileChip[] = [];
-  const outLines: string[] = [];
+  const addFile = (name: string, key: string | null) => {
+    if (!name) return;
+    files.push({ name, key, icon: fileIconForName(name) });
+  };
 
-  for (const line of text.split('\n')) {
-    if (!line.includes(TAG_MARKER)) {
-      // Tag-less key line with a junk prefix such as `[Name(login) (1 mizito/general/chats/...`:
-      // the prefix is an unclosed bracket and is dropped; the file name comes from the key.
-      const keyAt = line.indexOf(KEY_MARKER);
-      if (keyAt > 0 && JUNK_PREFIX_RE.test(line.slice(0, keyAt))) {
-        const key = line.slice(keyAt).trim();
-        const name = key.slice(key.lastIndexOf('/') + 1).trim();
-        if (name) files.push({ name, key, icon: fileIconForName(name) });
-        continue;
+  let out = '';
+  let cursor = 0;
+  let sawTag = false;
+
+  for (let i = 0; i < hits.length; i++) {
+    const hit = hits[i];
+    if (!hit) continue;
+    out += text.slice(cursor, hit.start);
+    cursor = hit.end;
+
+    if (hit.kind === 'tag') {
+      sawTag = true;
+      const next = hits[i + 1];
+      let key: string | null = null;
+      // Key attaches to the tag when only whitespace (incl. line breaks) separates them.
+      const gap = next?.kind === 'key' ? text.slice(hit.end, next.start) : '';
+      if (next?.kind === 'key' && (/^\s*$/.test(gap) || /^\s*https?:\/\/\S*$/.test(gap))) {
+        key = next.key;
+        cursor = next.end;
+        i++;
       }
-      outLines.push(line);
+      addFile(hit.name.replace(/\s*\n\s*/g, ' ').trim(), key);
       continue;
     }
 
-    const keyIdx = line.indexOf(KEY_MARKER);
-    const head = keyIdx >= 0 ? line.slice(0, keyIdx) : line;
-    const key = keyIdx >= 0 ? line.slice(keyIdx).trim() : null;
-
-    const names: string[] = [];
-    const cleaned = head.replace(TAG_RE, (_match, name: string) => {
-      names.push(name.trim());
-      return '';
-    });
-
-    if (names.length === 0) {
-      // Key-only or malformed line: keep the original line untouched.
-      outLines.push(line);
+    if (hit.kind === 'md') {
+      sawTag = true;
+      addFile(hit.name.trim() || keyBasename(hit.key), hit.key);
       continue;
     }
 
-    names.forEach((name, idx) => {
-      if (!name) return;
-      const isLast = idx === names.length - 1;
-      files.push({
-        name,
-        key: isLast ? key : null,
-        icon: fileIconForName(name),
-      });
-    });
-
-    const caption = cleaned.trim();
-    if (caption) outLines.push(caption);
+    // Bare key: only after a tag in this message, or with a junk or URL prefix on its line.
+    const lineStart = out.lastIndexOf('\n') + 1;
+    const linePart = out.slice(lineStart);
+    const hasUrl = URL_TAIL_RE.test(linePart);
+    if (!sawTag && !hasUrl && !JUNK_PREFIX_RE.test(linePart)) {
+      out += hit.key;
+      continue;
+    }
+    let kept = hasUrl ? linePart.replace(URL_TAIL_RE, '') : linePart;
+    if (JUNK_PREFIX_RE.test(kept)) kept = '';
+    out = out.slice(0, lineStart) + kept;
+    addFile(keyBasename(hit.key), hit.key);
   }
+  out += text.slice(cursor);
 
-  if (files.length === 0 && outLines.join('\n') === text) {
-    return { text, files: [] };
-  }
-  return { text: outLines.join('\n').trim(), files };
+  if (files.length === 0) return { text, files: [] };
+
+  const cleaned = out
+    .split('\n')
+    .map((line) => line.replace(/[ \t]{2,}/g, ' ').trim())
+    .filter((line) => line !== '')
+    .join('\n');
+  return { text: cleaned, files };
+}
+
+/**
+ * Text to show for a quoted or replied message: parsed caption, or a short file
+ * label when the quoted text is only a file tag or key.
+ */
+export function rawFileQuotePreview(text: string): string {
+  const parsed = parseRawFileTags(text);
+  if (parsed.text) return parsed.text;
+  return parsed.files.length > 0 ? '📎 فایل' : text;
 }

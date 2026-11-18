@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { fileIconForName, parseRawFileTags } from '../lib/rawFileTag';
+import { fileIconForName, parseRawFileTags, rawFileQuotePreview } from '../lib/rawFileTag';
+import { extractChatEvents } from '../lib/chatEventLine';
 
 describe('parseRawFileTags', () => {
   it('returns text unchanged when there is no tag', () => {
@@ -99,5 +100,101 @@ describe('parseRawFileTags', () => {
   it('does not treat a closed bracket prefix before a key as junk', () => {
     const text = '[Ali] mizito/general/chats/r1/files/a.pdf';
     expect(parseRawFileTags(text)).toEqual({ text, files: [] });
+  });
+
+  it('parses a tag split over lines (multi-line tag + key on the next line)', () => {
+    const text = '«مهدی قدیری» — 1403/04/14\n[فایل: عکس\n1.jpg] mizito/general/chats/r/files/عکس 1.jpg';
+    expect(parseRawFileTags(text)).toEqual({
+      text: '«مهدی قدیری» — 1403/04/14',
+      files: [{ name: 'عکس 1.jpg', key: 'mizito/general/chats/r/files/عکس 1.jpg', icon: 'image' }],
+    });
+  });
+
+  it('attaches a key on its own line right after a tag line', () => {
+    const text = '[فایل: a.pdf]\nmizito/general/chats/r/files/a.pdf';
+    expect(parseRawFileTags(text)).toEqual({
+      text: '',
+      files: [{ name: 'a.pdf', key: 'mizito/general/chats/r/files/a.pdf', icon: 'picture_as_pdf' }],
+    });
+  });
+
+  it('parses a markdown link to the storage key', () => {
+    const text = 'فایل [گزارش](mizito/general/chats/r/files/g.pdf) را ببینید';
+    expect(parseRawFileTags(text)).toEqual({
+      text: 'فایل را ببینید',
+      files: [{ name: 'گزارش', key: 'mizito/general/chats/r/files/g.pdf', icon: 'picture_as_pdf' }],
+    });
+  });
+
+  it('uses the key basename when the markdown link text is empty', () => {
+    const text = '[](mizito/general/chats/r/files/b.mp4)';
+    expect(parseRawFileTags(text)).toEqual({
+      text: '',
+      files: [{ name: 'b.mp4', key: 'mizito/general/chats/r/files/b.mp4', icon: 'movie' }],
+    });
+  });
+
+  it('strips a URL in front of a key and keeps the key as the file', () => {
+    const text = 'متن https://files.example.test/mizito/general/chats/r/files/c.jpg';
+    expect(parseRawFileTags(text)).toEqual({
+      text: 'متن',
+      files: [
+        {
+          name: 'c.jpg',
+          key: 'mizito/general/chats/r/files/c.jpg',
+          icon: 'image',
+        },
+      ],
+    });
+    const withTag = '[فایل: c.jpg] https://files.example.test/mizito/general/chats/r/files/c.jpg';
+    expect(parseRawFileTags(withTag).files).toEqual([
+      { name: 'c.jpg', key: 'mizito/general/chats/r/files/c.jpg', icon: 'image' },
+    ]);
+  });
+
+  it('keeps caption text before and after a key in one message', () => {
+    const text = '[فایل: a.docx] متن mizito/general/chats/r/files/x.docx';
+    expect(parseRawFileTags(text)).toEqual({
+      text: 'متن',
+      files: [
+        { name: 'a.docx', key: null, icon: 'description' },
+        { name: 'x.docx', key: 'mizito/general/chats/r/files/x.docx', icon: 'description' },
+      ],
+    });
+  });
+
+  it('turns a key after a tag line into a chip even when text follows it on the next line', () => {
+    const text = '[فایل: a.pdf]\nmizito/general/chats/r/files/a.pdf\nخط توضیح';
+    expect(parseRawFileTags(text)).toEqual({
+      text: 'خط توضیح',
+      files: [{ name: 'a.pdf', key: 'mizito/general/chats/r/files/a.pdf', icon: 'picture_as_pdf' }],
+    });
+  });
+});
+
+describe('rawFileQuotePreview', () => {
+  it('returns plain quoted text unchanged', () => {
+    expect(rawFileQuotePreview('سلام')).toBe('سلام');
+  });
+
+  it('returns the caption of a quoted tag message', () => {
+    expect(rawFileQuotePreview('توضیح [فایل: a.pdf] mizito/general/chats/r/files/a.pdf')).toBe('توضیح');
+  });
+
+  it('returns a file label when the quote is only a tag and key', () => {
+    expect(rawFileQuotePreview('[فایل: a.pdf] mizito/general/chats/r/files/a.pdf')).toBe('📎 فایل');
+  });
+});
+
+describe('extractChatEvents', () => {
+  it('splits an event line from following text', () => {
+    expect(extractChatEvents('[رویداد: DeleteUser]\nمتن بعدی')).toEqual({
+      labels: ['کاربر حذف شد'],
+      rest: 'متن بعدی',
+    });
+  });
+
+  it('returns no labels for plain text', () => {
+    expect(extractChatEvents('سلام')).toEqual({ labels: [], rest: 'سلام' });
   });
 });
