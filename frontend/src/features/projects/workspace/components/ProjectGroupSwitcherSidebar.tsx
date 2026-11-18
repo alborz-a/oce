@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { MzIcon } from './MzIcon';
+import { useAnchoredPopover } from '../hooks/useAnchoredPopover';
 import type { Project } from '@/features/projects/api';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { toPersianDigits } from '@/shared/lib/jalali';
@@ -162,6 +164,40 @@ export function ProjectGroupSwitcherSidebar({
   const openDm = useOpenDmForColleague(currentUserId);
 
   const visibleMembers = useVisibleMembers(members);
+
+  // «ارسال پیام شخصی» colleague picker (⊕ in همکارانم header)
+  const [dmPickerOpen, setDmPickerOpen] = useState(false);
+  const [dmQuery, setDmQuery] = useState('');
+  const dmTriggerRef = useRef<HTMLButtonElement>(null);
+  const dmPopoverRef = useRef<HTMLDivElement>(null);
+  useAnchoredPopover(dmTriggerRef, dmPopoverRef, dmPickerOpen);
+
+  useEffect(() => {
+    if (!dmPickerOpen) return;
+    const onPointerDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (dmPopoverRef.current?.contains(target) || dmTriggerRef.current?.contains(target)) return;
+      setDmPickerOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDmPickerOpen(false);
+    };
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [dmPickerOpen]);
+
+  const dmPickerMembers = useMemo(() => {
+    const q = dmQuery.trim().toLowerCase();
+    return visibleMembers.filter((m) => {
+      if (currentUserId && m.user_id === currentUserId) return false;
+      if (!q) return true;
+      return `${m.full_name ?? ''} ${m.email ?? ''}`.toLowerCase().includes(q);
+    });
+  }, [visibleMembers, currentUserId, dmQuery]);
   const presenceUsers = useGlobalPresenceStore((s) => s.users);
 
   const derivedTasksByUser = useMemo(() => {
@@ -219,8 +255,26 @@ export function ProjectGroupSwitcherSidebar({
               <MzIcon name="group" size={13} />
               <span>همکارانم</span>
             </span>
-            <span className="text-[11px] font-normal opacity-85 tabular-nums">
-              {toPersianDigits(visibleMembers.length)}
+            <span className="flex items-center gap-1">
+              <span className="text-[11px] font-normal opacity-85 tabular-nums">
+                {toPersianDigits(visibleMembers.length)}
+              </span>
+              <button
+                ref={dmTriggerRef}
+                type="button"
+                aria-label="ارسال پیام شخصی"
+                title="ارسال پیام شخصی"
+                aria-haspopup="dialog"
+                aria-expanded={dmPickerOpen}
+                data-testid="switcher-new-dm-trigger"
+                onClick={() => {
+                  setDmQuery('');
+                  setDmPickerOpen((v) => !v);
+                }}
+                className="inline-flex h-5 w-5 items-center justify-center rounded-md hover:bg-[#f2f4f7]"
+              >
+                <MzIcon name="add_circle_outline" size={15} />
+              </button>
             </span>
           </div>
 
@@ -296,6 +350,52 @@ export function ProjectGroupSwitcherSidebar({
           </div>
         </section>
       </aside>
+
+      {dmPickerOpen &&
+        createPortal(
+          <div
+            ref={dmPopoverRef}
+            role="dialog"
+            aria-label="ارسال پیام شخصی"
+            data-testid="switcher-new-dm-picker"
+            className="fixed z-[1000] w-64 rounded-lg border border-[#e5e7eb] bg-white p-2 shadow-lg"
+          >
+            <div className="mb-1.5 text-[12px] font-semibold text-[#1f2937]">ارسال پیام شخصی</div>
+            <input
+              type="search"
+              value={dmQuery}
+              onChange={(e) => setDmQuery(e.target.value)}
+              placeholder="نام کاربر را وارد نمایید"
+              aria-label="نام کاربر را وارد نمایید"
+              data-testid="switcher-new-dm-search"
+              className="mb-1.5 h-7 w-full rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2 text-[12px] text-[#1f2937] placeholder:text-[#909090] focus:border-mz-project focus:outline-none"
+            />
+            <ul className="max-h-60 space-y-0.5 overflow-y-auto">
+              {dmPickerMembers.map((member) => {
+                const displayName = member.full_name || member.email;
+                return (
+                  <li key={member.user_id}>
+                    <button
+                      type="button"
+                      data-testid={`switcher-new-dm-option-${member.user_id}`}
+                      onClick={() => {
+                        setDmPickerOpen(false);
+                        void openDm(member.user_id);
+                      }}
+                      className="flex w-full items-center rounded-md px-1.5 py-1 text-start text-[12px] text-[#1f2937] hover:bg-[#f5f6f8]"
+                    >
+                      <span className="truncate">{displayName}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            {dmPickerMembers.length === 0 && (
+              <p className="py-2 text-center text-[11px] text-[#909090]">کاربری یافت نشد</p>
+            )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
