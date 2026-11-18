@@ -18,6 +18,7 @@ export interface User {
   is_active: boolean;
   last_login_at: string | null;
   timezone: string;
+  job_title?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -27,6 +28,7 @@ export interface UserAdminUpdate {
   role?: UserRole;
   is_active?: boolean;
   locale?: string;
+  job_title?: string | null;
 }
 
 export interface InviteUserPayload {

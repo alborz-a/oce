@@ -24,7 +24,7 @@ class RoomResponse(BaseModel):
 
 
 class RoomCreate(BaseModel):
-    kind: Literal["group", "dm"]
+    kind: Literal["group", "dm", "channel"]
     name: str = Field(default="", max_length=255)
     member_ids: list[uuid.UUID] = Field(default_factory=list)
 
@@ -50,12 +50,19 @@ class MessageResponse(BaseModel):
     room_id: uuid.UUID
     author_id: uuid.UUID | None = None
     author_name: str = ""
+    author_title: str | None = None
     text: str
     reply_to_id: uuid.UUID | None = None
     document_ids: list[uuid.UUID] = Field(default_factory=list)
     created_at: datetime
     edited_at: datetime | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class ColleagueResponse(BaseModel):
+    id: uuid.UUID
+    full_name: str
+    job_title: str | None = None
 
 
 class ImportMessage(BaseModel):

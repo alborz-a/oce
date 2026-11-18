@@ -16,7 +16,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from app.dependencies import accessible_project_ids, verify_project_access
 from app.modules.team_chat.hub import chat_hub
 from app.modules.team_chat.models import ChatMember, ChatMessage, ChatRoom
-from app.modules.team_chat.schemas import MAX_TEXT, ImportRequest, ImportResult
+from app.modules.team_chat.schemas import MAX_TEXT, ColleagueResponse, ImportRequest, ImportResult
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +32,15 @@ def _uuid(v: Any) -> uuid.UUID:
 def _not_found() -> HTTPException:
     # 404 (not 403) keeps room existence from leaking, like every project route.
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Room not found")
+
+
+def _job_title(user: Any) -> str | None:
+    meta = getattr(user, "metadata_", None) or {}
+    return (
+        str(meta.get("job_title") or "").strip()
+        or str((meta.get("registration") or {}).get("job_title") or "").strip()
+        or None
+    )
 
 
 class TeamChatService:
@@ -59,6 +68,14 @@ class TeamChatService:
 
         rows = (await self.session.execute(select(User.id, User.full_name, User.email).where(User.id.in_(ids)))).all()
         return {r[0]: (r[1] or (r[2] or "").split("@")[0]) for r in rows}
+
+    async def _titles(self, ids: set[uuid.UUID]) -> dict[uuid.UUID, str | None]:
+        if not ids:
+            return {}
+        from app.modules.users.models import User
+
+        rows = (await self.session.execute(select(User).where(User.id.in_(ids)))).scalars()
+        return {u.id: _job_title(u) for u in rows}
 
     # ── rooms ──────────────────────────────────────────────────────────
     async def company_room(self) -> ChatRoom:
@@ -95,6 +112,10 @@ class TeamChatService:
     async def _is_member(self, room_id: uuid.UUID, user_id: uuid.UUID) -> bool:
         q = select(ChatMember.id).where(ChatMember.room_id == room_id, ChatMember.user_id == user_id)
         return (await self.session.execute(q)).first() is not None
+
+    async def _member(self, room_id: uuid.UUID, user_id: uuid.UUID) -> ChatMember | None:
+        q = select(ChatMember).where(ChatMember.room_id == room_id, ChatMember.user_id == user_id)
+        return (await self.session.execute(q)).scalars().first()
 
     async def _ensure_member(self, room_id: uuid.UUID, user_id: uuid.UUID, role: str = "member") -> ChatMember:
         q = select(ChatMember).where(ChatMember.room_id == room_id, ChatMember.user_id == user_id)
@@ -168,7 +189,7 @@ class TeamChatService:
             return await self._get_or_create_dm(ids, str(user_id))
         if not name.strip():
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="A group needs a name")
-        room = ChatRoom(kind="group", name=name.strip(), created_by=str(user_id))
+        room = ChatRoom(kind="channel" if kind == "channel" else "group", name=name.strip(), created_by=str(user_id))
         self.session.add(room)
         await self.session.flush()
         for uid in ids:
@@ -196,7 +217,7 @@ class TeamChatService:
         mq = (
             select(ChatRoom)
             .join(ChatMember, ChatMember.room_id == ChatRoom.id)
-            .where(ChatMember.user_id == user_id, ChatRoom.kind.in_(("group", "dm")))
+            .where(ChatMember.user_id == user_id, ChatRoom.kind.in_(("group", "dm", "channel")))
         )
         others = list((await self.session.execute(mq)).scalars())
         rooms = [company, *projects, *others]
@@ -228,15 +249,37 @@ class TeamChatService:
             })
         return out
 
+    # ── colleagues ─────────────────────────────────────────────────────
+    async def list_colleagues(self, viewer: uuid.UUID, payload: Any = None) -> list[ColleagueResponse]:
+        from app.core.hidden_users import is_hidden_system_user, viewer_is_admin
+        from app.modules.users.models import User
+
+        q = (
+            select(User)
+            .where(User.is_active.is_(True), User.id != viewer)
+            .order_by(User.full_name, User.id)
+            .limit(500)
+        )
+        is_admin = viewer_is_admin(payload)
+        rows = (await self.session.execute(q)).scalars()
+        return [
+            ColleagueResponse(id=u.id, full_name=u.full_name or "", job_title=_job_title(u))
+            for u in rows
+            if is_admin or not is_hidden_system_user(u.email, u.full_name)
+        ]
+
     # ── messages ───────────────────────────────────────────────────────
     async def _serialize(self, msgs: list[ChatMessage]) -> list[dict[str, Any]]:
-        names = await self._names({m.author_id for m in msgs if m.author_id})
+        authors = {m.author_id for m in msgs if m.author_id}
+        names = await self._names(authors)
+        titles = await self._titles(authors)
         out = []
         for m in msgs:
             meta = dict(m.metadata_ or {})
             out.append({
                 "id": m.id, "room_id": m.room_id, "author_id": m.author_id,
                 "author_name": names.get(m.author_id) or str(meta.get("author_name") or ""),
+                "author_title": titles.get(m.author_id),
                 "text": m.text, "reply_to_id": m.reply_to_id,
                 "document_ids": [_uuid(d) for d in (m.document_ids or [])],
                 "created_at": m.created_at, "edited_at": m.edited_at, "metadata": meta,
@@ -291,6 +334,10 @@ class TeamChatService:
         metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         room = await self.require_access(room_id, user_id)
+        if room.kind == "channel":
+            poster = await self._member(room_id, user_id)
+            if (poster is None or poster.role != "owner") and await self._role(user_id) not in ("manager", "admin"):
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="فقط مدیر کانال می‌تواند پیام ارسال کند")
         text = (text or "").strip()
         if not text and not document_ids:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty message")

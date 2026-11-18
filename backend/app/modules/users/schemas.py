@@ -305,10 +305,18 @@ class UserUpdate(BaseModel):
     number_format: str | None = Field(default=None, max_length=20)
     date_format: str | None = Field(default=None, max_length=20)
     currency_code: str | None = Field(default=None, max_length=10)
+    job_title: str | None = Field(default=None, max_length=255)
 
     @field_validator("full_name")
     @classmethod
     def _sanitize_full_name(cls, v: str | None) -> str | None:
+        if v is not None:
+            return _sanitize_name(v)
+        return v
+
+    @field_validator("job_title")
+    @classmethod
+    def _sanitize_job_title(cls, v: str | None) -> str | None:
         if v is not None:
             return _sanitize_name(v)
         return v
@@ -324,10 +332,18 @@ class UserAdminUpdate(BaseModel):
     email: EmailStr | None = None
     # Iranian mobile for login by mobile + password. "" clears it.
     mobile: str | None = Field(default=None, max_length=32)
+    job_title: str | None = Field(default=None, max_length=255)
 
     @field_validator("full_name")
     @classmethod
     def _sanitize_full_name(cls, v: str | None) -> str | None:
+        if v is not None:
+            return _sanitize_name(v)
+        return v
+
+    @field_validator("job_title")
+    @classmethod
+    def _sanitize_job_title(cls, v: str | None) -> str | None:
         if v is not None:
             return _sanitize_name(v)
         return v
@@ -371,6 +387,7 @@ class UserResponse(BaseModel):
     date_format: str
     currency_code: str
     avatar_url: str | None = None
+    job_title: str | None = None
     created_at: datetime
     updated_at: datetime
 

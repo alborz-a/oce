@@ -22,6 +22,8 @@ import { ChatRichMessageBody } from './ChatEntityCards';
 import clsx from 'clsx';
 import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
+import { useJobTitles } from '@/shared/lib/useJobTitles';
+import { JobTitleBadge } from '@/shared/ui/JobTitleBadge';
 
 // -- Types -------------------------------------------------------------------
 
@@ -127,6 +129,8 @@ interface CommentItemProps {
   comment: CommentData;
   /** Resolved author label (full name / email), or the short id fallback. */
   displayName: string;
+  /** Job title of the author, shown as a badge next to the name. */
+  jobTitle?: string | null;
   isReply?: boolean;
   onReply: (commentId: string) => void;
   onEdit: (commentId: string, newText: string) => void;
@@ -139,6 +143,7 @@ interface CommentItemProps {
 function CommentItem({
   comment,
   displayName,
+  jobTitle,
   isReply = false,
   onReply,
   onEdit,
@@ -228,6 +233,7 @@ function CommentItem({
           >
             {displayName}
           </span>
+          <JobTitleBadge title={jobTitle} />
           <span className="text-2xs text-content-quaternary">
             {formatTimeAgo(comment.created_at, t)}
           </span>
@@ -363,6 +369,7 @@ export function CommentThread({ entityType, entityId, className, projectId }: Co
     (authorId: string): string => userById.get(authorId) ?? authorId.slice(0, 8),
     [userById],
   );
+  const jobTitles = useJobTitles();
 
   const comments = data?.items ?? [];
   const total = data?.total ?? 0;
@@ -571,6 +578,7 @@ export function CommentThread({ entityType, entityId, className, projectId }: Co
                 comment={comment}
                 projectId={projectId}
                 displayName={displayAuthor(comment.author_id)}
+                jobTitle={jobTitles.byId.get(comment.author_id)}
                 onReply={handleReply}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
@@ -585,6 +593,7 @@ export function CommentThread({ entityType, entityId, className, projectId }: Co
                       comment={reply}
                       projectId={projectId}
                       displayName={displayAuthor(reply.author_id)}
+                      jobTitle={jobTitles.byId.get(reply.author_id)}
                       isReply
                       onReply={handleReply}
                       onEdit={handleEdit}

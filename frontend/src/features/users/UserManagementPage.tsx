@@ -230,6 +230,65 @@ const PRESET_OPTIONS: { key: 'all' | 'viewer' | 'minimal' }[] = [
  * WideModal.
  */
 
+function JobTitleModal({
+  user,
+  onClose,
+  onSubmit,
+  isPending,
+}: {
+  user: User;
+  onClose: () => void;
+  onSubmit: (jobTitle: string | null) => void;
+  isPending: boolean;
+}) {
+  const { t } = useTranslation();
+  const [value, setValue] = useState(user.job_title ?? '');
+  const inputId = `job_title_${user.id}`;
+
+  return (
+    <WideModal
+      open
+      onClose={onClose}
+      title={t('users.edit_job_title', { defaultValue: 'ویرایش عنوان شغلی' })}
+      subtitle={user.full_name}
+      size="sm"
+      busy={isPending}
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={isPending}>
+            {t('common.cancel', { defaultValue: 'انصراف' })}
+          </Button>
+          <Button
+            variant="primary"
+            disabled={isPending}
+            loading={isPending}
+            onClick={() => {
+              const trimmed = value.trim();
+              onSubmit(trimmed === '' ? null : trimmed);
+            }}
+          >
+            {t('common.save', { defaultValue: 'ذخیره' })}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-1.5">
+        <label htmlFor={inputId} className="text-sm font-medium text-content-secondary">
+          {t('users.job_title', { defaultValue: 'عنوان شغلی' })}
+        </label>
+        <input
+          id={inputId}
+          type="text"
+          value={value}
+          maxLength={255}
+          onChange={(e) => setValue(e.target.value)}
+          className="w-full px-3 py-2 rounded-lg border border-border bg-surface-primary text-sm"
+        />
+      </div>
+    </WideModal>
+  );
+}
+
 function InviteModal({
   onClose,
   onSubmit,
@@ -763,6 +822,7 @@ export function UserManagementPage() {
   const [filterActive, setFilterActive] = useState<'all' | 'active' | 'inactive'>('all');
   const [showInvite, setShowInvite] = useState(false);
   const [accessUser, setAccessUser] = useState<User | null>(null);
+  const [jobTitleUser, setJobTitleUser] = useState<User | null>(null);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users', filterActive],
@@ -792,6 +852,23 @@ export function UserManagementPage() {
       updateUser(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
+      addToast({ type: 'success', title: t('users.updated', { defaultValue: 'User updated' }) });
+    },
+    onError: (e: Error) => {
+      addToast({
+        type: 'error',
+        title: t('common.error', { defaultValue: 'Error' }),
+        message: e.message,
+      });
+    },
+  });
+
+  const jobTitleMut = useMutation({
+    mutationFn: ({ id, job_title }: { id: string; job_title: string | null }) =>
+      updateUser(id, { job_title }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setJobTitleUser(null);
       addToast({ type: 'success', title: t('users.updated', { defaultValue: 'User updated' }) });
     },
     onError: (e: Error) => {
@@ -1098,7 +1175,24 @@ export function UserManagementPage() {
                         >
                           {user.full_name?.[0]?.toUpperCase() || '?'}
                         </div>
-                        <span className="font-medium">{user.full_name}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">{user.full_name}</span>
+                            <button
+                              type="button"
+                              data-testid="edit-job-title"
+                              aria-label={t('users.edit_job_title', { defaultValue: 'ویرایش عنوان شغلی' })}
+                              title={t('users.edit_job_title', { defaultValue: 'ویرایش عنوان شغلی' })}
+                              onClick={() => setJobTitleUser(user)}
+                              className="p-0.5 rounded text-content-quaternary hover:text-content-primary hover:bg-surface-secondary"
+                            >
+                              <Edit3 size={12} />
+                            </button>
+                          </div>
+                          {user.job_title && (
+                            <div className="text-xs text-content-tertiary truncate">{user.job_title}</div>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 py-2.5 text-content-secondary">
@@ -1228,6 +1322,15 @@ export function UserManagementPage() {
       </div>
 
       {/* Invite Modal */}
+      {jobTitleUser && (
+        <JobTitleModal
+          user={jobTitleUser}
+          onClose={() => setJobTitleUser(null)}
+          onSubmit={(job_title) => jobTitleMut.mutate({ id: jobTitleUser.id, job_title })}
+          isPending={jobTitleMut.isPending}
+        />
+      )}
+
       {showInvite && (
         <InviteModal
           onClose={() => setShowInvite(false)}

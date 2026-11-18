@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { MzIcon } from '@/features/projects/workspace/components/MzIcon';
+import { JobTitleBadge } from '@/shared/ui/JobTitleBadge';
+import { useJobTitles } from '@/shared/lib/useJobTitles';
 import type { ChatRoom, RoomKind } from './types';
 
-const KIND_ORDER: Record<RoomKind, number> = { company: 0, project: 1, group: 2, dm: 3 };
+const KIND_ORDER: Record<RoomKind, number> = { company: 0, project: 1, group: 2, channel: 3, dm: 4 };
 
 /** Company room first, then projects, groups and direct messages; newest activity first inside a kind. */
 export function orderRooms(rooms: ChatRoom[]): ChatRoom[] {
@@ -35,6 +37,8 @@ function roomIcon(r: ChatRoom): { name: string; color?: string } {
       return { name: 'folder' };
     case 'group':
       return { name: 'group' };
+    case 'channel':
+      return { name: 'record_voice_over' };
     default:
       return { name: 'person' };
   }
@@ -55,18 +59,19 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [fabOpen, setFabOpen] = useState(false);
+  const jobTitles = useJobTitles();
   const label = (r: ChatRoom) =>
     r.kind === 'company' ? t('team_chat.company', { defaultValue: 'شرکت' }) : r.name || t('team_chat.unnamed', { defaultValue: 'بدون نام' });
 
   const q = query.trim().toLowerCase();
   const visible = orderRooms(rooms)
-    .filter((r) => (tab === 'all' ? true : tab === 'groups' ? r.kind === 'group' : r.kind === 'dm'))
+    .filter((r) => (tab === 'all' ? true : tab === 'groups' ? r.kind === 'group' || r.kind === 'channel' : r.kind === 'dm'))
     .filter((r) => label(r).toLowerCase().includes(q));
 
-  const newItems: { key: string; icon: string; text: string; short: string; handler?: () => void; soon: boolean }[] = [
-    { key: 'dm', icon: 'person', text: 'ارسال پیام شخصی', short: 'پیام شخصی', handler: onNewDm, soon: true },
-    { key: 'group', icon: 'group_add', text: 'ایجاد گروه گفتگو', short: 'ایجاد گروه گفتگو', handler: onNewGroup, soon: false },
-    { key: 'channel', icon: 'record_voice_over', text: 'ایجاد کانال', short: 'ایجاد کانال', handler: onNewChannel, soon: true },
+  const newItems: { key: string; icon: string; text: string; short: string; handler?: () => void }[] = [
+    { key: 'dm', icon: 'person', text: 'ارسال پیام شخصی', short: 'پیام شخصی', handler: onNewDm },
+    { key: 'group', icon: 'group_add', text: 'ایجاد گروه گفتگو', short: 'ایجاد گروه گفتگو', handler: onNewGroup },
+    { key: 'channel', icon: 'record_voice_over', text: 'ایجاد کانال', short: 'ایجاد کانال', handler: onNewChannel },
   ];
 
   return (
@@ -121,8 +126,6 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
                 <button
                   key={item.key}
                   type="button"
-                  disabled={!item.handler}
-                  title={!item.handler && item.soon ? 'به‌زودی' : undefined}
                   onClick={() => {
                     setMenuOpen(false);
                     item.handler?.();
@@ -153,8 +156,11 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <MzIcon name={ic.name} size={18} color={ic.color} />
-                  <span dir="auto" className="truncate">
-                    {label(r)}
+                  <span className="flex min-w-0 flex-col">
+                    <span dir="auto" className="truncate">
+                      {label(r)}
+                    </span>
+                    {r.kind === 'dm' && <JobTitleBadge title={jobTitles.byName.get(r.name.trim())} />}
                   </span>
                 </span>
                 {r.unread > 0 && (
@@ -197,8 +203,6 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
               <button
                 type="button"
                 aria-label={item.text}
-                disabled={!item.handler}
-                title={!item.handler && item.soon ? 'به‌زودی' : undefined}
                 onClick={() => {
                   setFabOpen(false);
                   item.handler?.();

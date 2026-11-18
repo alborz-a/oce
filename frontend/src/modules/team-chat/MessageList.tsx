@@ -5,6 +5,7 @@ import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { displayName } from '@/features/projects/workspace/lib/importerAuthor';
 import { parseRawFileTags } from '@/features/projects/workspace/lib/rawFileTag';
 import { ChatRichMessageBody } from '@/shared/ui/ChatEntityCards';
+import { JobTitleBadge } from '@/shared/ui/JobTitleBadge';
 import type { ChatMessage } from './types';
 
 export function formatStamp(iso: string): string {
@@ -68,6 +69,7 @@ export function MessageList({ messages, hasMore, loadingOlder, onLoadOlder, docu
               <span className="font-semibold text-content-secondary" dir="auto">
                 {displayName(m.author_name, m.author_id)}
               </span>
+              <JobTitleBadge title={m.author_title} />
               <span>{formatStamp(m.created_at)}</span>
               {m.edited_at && <span>{t('team_chat.edited', { defaultValue: 'ویرایش‌شده' })}</span>}
             </div>

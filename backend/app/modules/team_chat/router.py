@@ -31,6 +31,7 @@ from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermissio
 from app.core.project_roles import get_project_caps
 from app.modules.team_chat.hub import chat_hub
 from app.modules.team_chat.schemas import (
+    ColleagueResponse,
     ImportRequest,
     ImportResult,
     MessageCreate,
@@ -57,6 +58,19 @@ def _room_response(r: dict[str, Any]) -> RoomResponse:
 @router.get("/rooms/", response_model=list[RoomResponse], dependencies=[Depends(RequirePermission("team_chat.read"))])
 async def list_rooms(user_id: CurrentUserId, svc: TeamChatService = Depends(_svc)) -> list[RoomResponse]:
     return [_room_response(r) for r in await svc.list_rooms(uuid.UUID(str(user_id)))]
+
+
+@router.get(
+    "/colleagues/",
+    response_model=list[ColleagueResponse],
+    dependencies=[Depends(RequirePermission("team_chat.read"))],
+)
+async def list_colleagues(
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    svc: TeamChatService = Depends(_svc),
+) -> list[ColleagueResponse]:
+    return await svc.list_colleagues(uuid.UUID(str(user_id)), payload)
 
 
 @router.get(
