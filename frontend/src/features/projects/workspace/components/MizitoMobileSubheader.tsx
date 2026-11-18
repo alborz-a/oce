@@ -16,6 +16,11 @@ export interface MizitoMobileSubheaderProps {
 export function MizitoMobileSubheader({ project, onOpenSettings, onStartMeeting }: MizitoMobileSubheaderProps) {
   const navigate = useNavigate();
   const avatarUrl = typeof project.avatar_url === 'string' && project.avatar_url.trim() ? project.avatar_url.trim() : null;
+  const initialsAvatar = (
+    <span className="mz-mobile-subheader-avatar" aria-hidden="true">
+      {projectInitials(project.name)}
+    </span>
+  );
 
   return (
     <div className="mz-mobile-subheader" dir="rtl" data-testid="mobile-subheader">
@@ -30,11 +35,14 @@ export function MizitoMobileSubheader({ project, onOpenSettings, onStartMeeting 
       </button>
 
       {avatarUrl ? (
-        <AuthImage src={avatarUrl} alt={project.name} className="mz-mobile-subheader-avatar object-cover" />
+        <AuthImage
+          src={avatarUrl}
+          alt={project.name}
+          className="mz-mobile-subheader-avatar object-cover"
+          fallback={initialsAvatar}
+        />
       ) : (
-        <span className="mz-mobile-subheader-avatar" aria-hidden="true">
-          {projectInitials(project.name)}
-        </span>
+        initialsAvatar
       )}
 
       <MzIcon name="star" size={13} color="#fb0" />

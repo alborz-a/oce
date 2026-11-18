@@ -237,9 +237,6 @@ export function MizitoProjectWorkspace({
             setCompanyChatOpen(false);
             setActiveTab(tab);
           }}
-          projectName={project?.name}
-          projectAvatarUrl={String(project?.metadata?.avatar_url ?? '').trim() || null}
-          onBack={() => navigate('/projects')}
           filters={filters}
           onFiltersChange={setFilters}
           filterSlot={
