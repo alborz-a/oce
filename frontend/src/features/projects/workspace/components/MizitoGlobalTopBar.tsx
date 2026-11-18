@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Search } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -67,7 +66,7 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
         onClick={openSearch}
         className="ms-auto hidden h-8 w-[280px] items-center gap-2 rounded-md bg-white/15 px-3 text-[12.5px] text-white/80 hover:bg-white/25 md:flex"
       >
-        <Search size={14} />
+        <MzIcon name="search" size={14} />
         <span>جستجو</span>
       </button>
 

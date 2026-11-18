@@ -1,18 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import {
-  Bell,
-  Check,
-  CheckSquare,
-  MessageSquarePlus,
-  MoreHorizontal,
-  Plus,
-  Printer,
-  Send,
-  Square,
-  Tag,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { Bell, MessageSquarePlus, Printer, Send, Square, Tag, Trash2 } from 'lucide-react';
 import {
   completeTask,
   deleteTask,
@@ -490,7 +478,7 @@ export function TaskQuickDetailDialog({
                 data-testid="task-detail-actions-button"
                 className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#1f2937]"
               >
-                <MoreHorizontal size={16} />
+                <MzIcon name="more_horiz" size={16} />
               </button>
               {showActionsMenu && (
                 <div
@@ -530,7 +518,7 @@ export function TaskQuickDetailDialog({
             data-testid="task-detail-close-button"
             className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#1f2937]"
           >
-            <X size={16} />
+            <MzIcon name="close" size={16} />
           </button>
         </div>
       </div>
@@ -606,7 +594,7 @@ export function TaskQuickDetailDialog({
                         aria-label="حذف یادآوری"
                         className="inline-flex h-4 w-4 items-center justify-center rounded hover:bg-[#e5e7eb]"
                       >
-                        <X size={11} />
+                        <MzIcon name="close" size={11} />
                       </button>
                     </span>
                   )}
@@ -995,7 +983,7 @@ export function TaskQuickDetailDialog({
                       className="flex min-w-0 flex-1 items-center gap-1.5 text-start"
                     >
                       {item.completed ? (
-                        <CheckSquare size={14} className="shrink-0 text-[#04c39a]" />
+                        <MzIcon name="checklist_rtl" size={14} className="shrink-0 text-[#04c39a]" />
                       ) : (
                         <Square size={14} className="shrink-0 text-[#9ca3af]" />
                       )}
@@ -1025,7 +1013,7 @@ export function TaskQuickDetailDialog({
                   data-testid="task-detail-checklist-add-row"
                   className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-[#3078ab] hover:bg-[#e8f2fa]"
                 >
-                  <Plus size={14} />
+                  <MzIcon name="add" size={14} />
                 </button>
                 <input
                   type="text"
@@ -1058,7 +1046,7 @@ export function TaskQuickDetailDialog({
                 data-testid="task-detail-complete-button"
                 className="inline-flex items-center gap-1.5 rounded-md bg-[#04c39a] px-3 py-1.5 text-[12px] font-semibold text-white disabled:opacity-50"
               >
-                <Check size={14} aria-hidden="true" />
+                <MzIcon name="check" size={14} />
                 <span>تکمیل وظیفه</span>
               </button>
 

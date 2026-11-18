@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import {
-  AtSign,
-  CalendarPlus,
-  Check,
-  CheckSquare,
-  FileUp,
-  Paperclip,
-  Smile,
-  X,
-} from 'lucide-react';
+import { AtSign, CalendarPlus, FileUp, Paperclip } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { uploadDocument } from '@/features/documents/api';
 import { createMeeting, type MeetingType } from '@/features/meetings/api';
@@ -398,7 +389,7 @@ export function ProjectStreamComposer({
             data-testid="composer-cancel-reply"
             className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded text-[#6b7280] hover:bg-[#e5e7eb]"
           >
-            <X size={13} />
+            <MzIcon name="close" size={13} />
           </button>
         </div>
       )}
@@ -421,7 +412,7 @@ export function ProjectStreamComposer({
                 }
                 className="text-[#909090] hover:text-[#d9534f]"
               >
-                <X size={11} />
+                <MzIcon name="close" size={11} />
               </button>
             </span>
           ))}
@@ -531,7 +522,7 @@ export function ProjectStreamComposer({
                       emojiTriggerRef.current?.click();
                     }}
                   >
-                    <Smile size={14} className="shrink-0" />
+                    <MzIcon name="insert_emoticon" size={14} className="shrink-0" />
                     <span>افزودن ایموجی</span>
                   </button>
                   <button
@@ -571,7 +562,7 @@ export function ProjectStreamComposer({
                       setTaskModalOpen(true);
                     }}
                   >
-                    <CheckSquare size={14} className="shrink-0" />
+                    <MzIcon name="checklist_rtl" size={14} className="shrink-0" />
                     <span>+ وظیفه</span>
                   </button>
                   <button
@@ -607,7 +598,7 @@ export function ProjectStreamComposer({
               data-testid="composer-emoji-btn"
               className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
             >
-              <Smile size={16} />
+              <MzIcon name="insert_emoticon" size={16} />
             </button>
 
             <div
@@ -692,7 +683,7 @@ export function ProjectStreamComposer({
                             checked ? 'border-[#3078ab] bg-[#3078ab] text-white' : 'border-[#c4c9d1] bg-white'
                           }`}
                         >
-                          {checked ? <Check size={10} /> : null}
+                          {checked ? <MzIcon name="check" size={10} /> : null}
                         </span>
                         <UserAvatar
                           url={m.avatar_url}
@@ -723,7 +714,7 @@ export function ProjectStreamComposer({
                           onClick={() => insertToken(`«${t.title}»`)}
                           className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-start text-[11.5px] text-[#3078ab] hover:bg-[#f5f6f8]"
                         >
-                          <CheckSquare size={12} className="shrink-0" />
+                          <MzIcon name="checklist_rtl" size={12} className="shrink-0" />
                           <span className="truncate">{toPersianDigits(t.title)}</span>
                         </button>
                       </li>
@@ -781,7 +772,7 @@ export function ProjectStreamComposer({
             aria-label="بستن"
             className="inline-flex h-7 w-7 items-center justify-center rounded text-[#6b7280] hover:bg-[#e5e7eb]"
           >
-            <X size={15} />
+            <MzIcon name="close" size={15} />
           </button>
         </div>
         <form onSubmit={(e) => void handleCreateTask(e)} className="space-y-3 p-4">
@@ -877,7 +868,7 @@ export function ProjectStreamComposer({
             aria-label="بستن"
             className="inline-flex h-7 w-7 items-center justify-center rounded text-[#6b7280] hover:bg-[#e5e7eb]"
           >
-            <X size={15} />
+            <MzIcon name="close" size={15} />
           </button>
         </div>
         <form onSubmit={(e) => void handleCreateMeeting(e)} className="space-y-3 p-4">

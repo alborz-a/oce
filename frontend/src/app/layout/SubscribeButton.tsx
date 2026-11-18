@@ -2,7 +2,8 @@
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mail, Check } from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { Mail } from 'lucide-react';
 import clsx from 'clsx';
 import { openLink } from '@/shared/lib/desktop';
 
@@ -100,7 +101,7 @@ function SubscribeButtonUpstream() {
         )}
       >
         {subscribed ? (
-          <Check size={16} strokeWidth={1.75} />
+          <MzIcon name="check" size={16} />
         ) : (
           <Mail size={16} strokeWidth={1.75} />
         )}

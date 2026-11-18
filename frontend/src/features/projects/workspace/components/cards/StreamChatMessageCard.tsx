@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent } from 'react';
-import { Check, Pencil, SmilePlus, Trash2, X } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { MzIcon } from '../MzIcon';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem, StreamReactionMap } from '../../types';
@@ -205,7 +205,7 @@ export function StreamCardFooterBar({
           aria-label="واکنش"
           aria-expanded={pickerOpen}
         >
-          <SmilePlus size={12} />
+          <MzIcon name="insert_emoticon" size={12} />
           <span>واکنش</span>
         </button>
 
@@ -216,7 +216,7 @@ export function StreamCardFooterBar({
             className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-[#6b7280] transition-colors hover:bg-black/5 hover:text-[#3078ab]"
             aria-label="ویرایش"
           >
-            <Pencil size={11} />
+            <MzIcon name="edit" size={11} />
             <span>ویرایش</span>
           </button>
         )}
@@ -490,7 +490,7 @@ export function StreamChatMessageCard({
                     }}
                     className="inline-flex items-center gap-1 rounded border border-[#e0e0e0] bg-white px-2 py-0.5 text-[11px] text-black/70 hover:bg-[#f5f6f8]"
                   >
-                    <X size={11} />
+                    <MzIcon name="close" size={11} />
                     <span>انصراف</span>
                   </button>
                   <button
@@ -498,7 +498,7 @@ export function StreamChatMessageCard({
                     onClick={handleSaveEdit}
                     className="inline-flex items-center gap-1 rounded bg-[#3078ab] px-2.5 py-0.5 text-[11px] font-medium text-white hover:brightness-95"
                   >
-                    <Check size={11} />
+                    <MzIcon name="check" size={11} />
                     <span>ذخیره</span>
                   </button>
                 </div>

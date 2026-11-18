@@ -1,14 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  RotateCcw,
-  RotateCw,
-  X,
-  ZoomIn,
-  ZoomOut,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { Download, RotateCcw, RotateCw, ZoomIn, ZoomOut } from 'lucide-react';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { wrapIndex, type LightboxPhotoRef } from '../lib/chatPhotoUrls';
 import { rotateBy, stepZoom } from '../lib/lightboxTransform';
@@ -82,7 +74,7 @@ export function ChatPhotoLightbox({ photos, index, onClose, onIndexChange }: Cha
           aria-label="بستن"
           className="absolute start-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/75"
         >
-          <X size={20} />
+          <MzIcon name="close" size={20} />
         </button>
 
         <div className="relative flex min-h-0 w-full flex-1 items-center justify-center px-16">
@@ -93,7 +85,7 @@ export function ChatPhotoLightbox({ photos, index, onClose, onIndexChange }: Cha
               aria-label="تصویر قبلی"
               className="absolute start-3 top-1/2 z-10 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/75"
             >
-              <ChevronRight size={22} />
+              <MzIcon name="chevron_right" size={22} />
             </button>
           )}
 
@@ -112,7 +104,7 @@ export function ChatPhotoLightbox({ photos, index, onClose, onIndexChange }: Cha
               aria-label="تصویر بعدی"
               className="absolute end-3 top-1/2 z-10 -translate-y-1/2 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/75"
             >
-              <ChevronLeft size={22} />
+              <MzIcon name="chevron_right" size={22} className="icon-flip-horizontal" />
             </button>
           )}
         </div>

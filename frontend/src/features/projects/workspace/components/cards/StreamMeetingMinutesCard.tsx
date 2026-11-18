@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { CalendarDays, ClipboardList, FileDown, Loader2, Users } from 'lucide-react';
+import { MzIcon } from '../MzIcon';
+import { FileDown, Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { formatJalali, toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
@@ -56,7 +57,7 @@ export function StreamMeetingMinutesCard({
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#6ab04c]/15 px-2.5 py-0.5 text-[11px] font-semibold text-[#47812f]">
-              <ClipboardList size={12} />
+              <MzIcon name="assignment" size={12} />
               <span>صورتجلسه</span>
             </span>
             <h4 className="truncate text-[13.5px] font-semibold text-black/85">{title}</h4>
@@ -79,13 +80,13 @@ export function StreamMeetingMinutesCard({
 
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11.5px] text-[#6b7280]">
           <span className="inline-flex items-center gap-1">
-            <CalendarDays size={12} />
+            <MzIcon name="event_note" size={12} />
             <span>{dateLabel}</span>
           </span>
 
           {attendees.length > 0 && (
             <span className="inline-flex items-center gap-1">
-              <Users size={12} />
+              <MzIcon name="group" size={12} />
               <span>
                 حاضرین: {visibleAttendees.join('، ')}
                 {remainingAttendees > 0 ? ` و +${toPersianDigits(remainingAttendees)} نفر` : ''}

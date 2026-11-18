@@ -1,12 +1,5 @@
-import {
-  ArrowRight,
-  CheckCheck,
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  Video,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { ArrowRight, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Project } from '@/features/projects/api';
 import { TeamStrip } from '@/features/projects/components/TeamStrip';
@@ -248,7 +241,7 @@ export function ProjectRightSummaryPanel({
           aria-label="باز کردن پنل اطلاعات پروژه"
           className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[#5b5e66] hover:bg-[#f2f4f7] hover:text-mz-project"
         >
-          <ChevronLeft size={17} />
+          <MzIcon name="chevron_right" size={17} className="icon-flip-horizontal" />
         </button>
       </aside>
     );
@@ -310,7 +303,7 @@ export function ProjectRightSummaryPanel({
             data-testid="summary-collapse-button"
             className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#1f2937] md:inline-flex"
           >
-            <ChevronRight size={15} />
+            <MzIcon name="chevron_right" size={15} />
           </button>
         )}
 
@@ -321,7 +314,7 @@ export function ProjectRightSummaryPanel({
             aria-label="بستن پنل اطلاعات پروژه"
             className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] md:hidden"
           >
-            <X size={15} />
+            <MzIcon name="close" size={15} />
           </button>
         )}
       </div>
@@ -351,7 +344,7 @@ export function ProjectRightSummaryPanel({
               className="mz-online-meeting-btn"
               data-testid="online-meeting-button"
             >
-              <Video size={14} aria-hidden="true" />
+              <MzIcon name="videocam" size={14} />
               <span>جلسه آنلاین</span>
             </button>
           </div>
@@ -372,7 +365,7 @@ export function ProjectRightSummaryPanel({
                 className="mt-3 flex items-center justify-center text-[#8bc34a]"
                 data-testid="summary-all-done-check"
               >
-                <CheckCheck size={44} strokeWidth={2.2} aria-hidden="true" />
+                <MzIcon name="done_all" size={44} />
               </div>
             </div>
           ) : (

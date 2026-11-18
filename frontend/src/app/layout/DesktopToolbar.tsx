@@ -16,17 +16,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  ArrowLeft,
-  ArrowRight,
-  RotateCw,
-  Home,
-  Globe,
-  Star,
-  ChevronDown,
-  Trash2,
-  RefreshCw,
-} from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { ArrowRight, RotateCw, Globe, Star, Trash2, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
 import { isTauri, openAppInBrowser } from '@/shared/lib/desktop';
 import {
@@ -145,7 +136,7 @@ export function DesktopToolbar() {
         aria-label={t('desktop.back', { defaultValue: 'Back' })}
         title={t('desktop.back', { defaultValue: 'Back' })}
       >
-        <ArrowLeft size={15} strokeWidth={1.9} className="rtl:rotate-180" />
+        <MzIcon name="arrow_back" size={15} className="rtl:rotate-180" />
       </button>
       <button
         type="button"
@@ -172,7 +163,7 @@ export function DesktopToolbar() {
         aria-label={t('desktop.home', { defaultValue: 'Home' })}
         title={t('desktop.home', { defaultValue: 'Home' })}
       >
-        <Home size={14} strokeWidth={1.9} />
+        <MzIcon name="home" size={14} />
       </button>
 
       <div className="mx-1 h-4 w-px bg-border-light" aria-hidden />
@@ -234,7 +225,7 @@ export function DesktopToolbar() {
           aria-label={t('desktop.favorites', { defaultValue: 'Favorites' })}
           title={t('desktop.favorites', { defaultValue: 'Favorites' })}
         >
-          <ChevronDown size={13} strokeWidth={2} />
+          <MzIcon name="arrow_drop_down" size={13} />
         </button>
 
         {favOpen && (

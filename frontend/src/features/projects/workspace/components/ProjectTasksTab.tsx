@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import {
-  ArrowUpDown,
-  CalendarClock,
-  Check,
-  Filter,
-  FolderOpen,
-  Plus,
-  Printer,
-  Search,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { ArrowUpDown, CalendarClock, FolderOpen, Printer } from 'lucide-react';
 import {
   createTask,
   completeTask,
@@ -433,7 +424,7 @@ export function ProjectTasksTab({
             data-testid="tasks-create-button"
             className="inline-flex items-center gap-1 rounded-md bg-[#04c39a] px-3 py-1.5 text-[12px] font-semibold text-white hover:brightness-95"
           >
-            <Plus size={14} aria-hidden="true" />
+            <MzIcon name="add" size={14} />
             <span>ایجاد وظیفه</span>
           </button>
 
@@ -466,7 +457,7 @@ export function ProjectTasksTab({
                 : 'border-[#e5e7eb] bg-white text-[#4b5563] hover:bg-[#f2f4f7]'
             }`}
           >
-            <Filter size={13} aria-hidden="true" />
+            <MzIcon name="filter_list" size={13} />
             <span>فیلتر</span>
           </button>
 
@@ -496,7 +487,7 @@ export function ProjectTasksTab({
               </div>
 
               <div className="relative flex items-center">
-                <Search size={13} className="pointer-events-none absolute start-2 text-[#909090]" />
+                <MzIcon name="search" size={13} className="pointer-events-none absolute start-2 text-[#909090]" />
                 <input
                   type="search"
                   value={searchText}
@@ -611,7 +602,7 @@ export function ProjectTasksTab({
               aria-label="بستن فهرست فایل‌ها"
               className="text-[#6b7280] hover:text-[#1f2937]"
             >
-              <X size={14} />
+              <MzIcon name="close" size={14} />
             </button>
           </div>
           {loadingFiles ? (
@@ -708,7 +699,7 @@ export function ProjectTasksTab({
                               : 'border-[#cbd5e1] bg-white text-transparent hover:border-[#04c39a]'
                           }`}
                         >
-                          <Check size={12} strokeWidth={3} aria-hidden="true" />
+                          <MzIcon name="check" size={12} />
                         </button>
 
                         <button
@@ -840,7 +831,7 @@ export function ProjectTasksTab({
             aria-label="بستن فرم ایجاد وظیفه"
             className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb]"
           >
-            <X size={16} />
+            <MzIcon name="close" size={16} />
           </button>
         </div>
 
