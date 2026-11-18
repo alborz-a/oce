@@ -39,6 +39,8 @@ import { getVatPercent } from '../boq/boqHelpers';
 import { TranslationSettingsTab } from '../translation';
 import { MethodologyActiveCard } from '../methodology/MethodologyActiveCard';
 import { ProjectSubdivisionCard } from './ProjectSubdivisionCard';
+import { ProjectMembersCard } from './components/ProjectMembersCard';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { ruleSetLabel } from '../validation/ruleSetLabels';
 import {
   listComplianceRulePacks,
@@ -1109,6 +1111,26 @@ export function ProjectSettingsPage() {
       {/* The id="methodology" anchor is the deep-link target from the
           methodologies hub ("set which one a project uses in Settings"). */}
       <MethodologyActiveCard projectId={project.id} />
+      {/* ── Project members (add / remove) ─────────────────────────────── */}
+      {(() => {
+        let isOwnerOrAdmin = false;
+        try {
+          const token = useAuthStore.getState().accessToken;
+          const payload = (token?.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
+          const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+          const json = JSON.parse(atob(padded)) as { sub?: string; role?: string };
+          isOwnerOrAdmin = json.role === 'admin' || (!!json.sub && json.sub === project.owner_id);
+        } catch {
+          isOwnerOrAdmin = false;
+        }
+        return (
+          <ProjectMembersCard
+            projectId={project.id}
+            canManage={isOwnerOrAdmin}
+            canGrantElevated={isOwnerOrAdmin}
+          />
+        );
+      })()}
 
       {/* ── Custom units (#93 item 3) ───────────────────────────────────── */}
       <Card padding="lg">
