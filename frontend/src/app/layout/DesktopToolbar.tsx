@@ -17,7 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { ArrowRight, RotateCw, Home, Globe, Star, Trash2, RefreshCw } from 'lucide-react';
+import { ArrowRight, RotateCw, Globe, Star, Trash2, RefreshCw } from 'lucide-react';
 import clsx from 'clsx';
 import { isTauri, openAppInBrowser } from '@/shared/lib/desktop';
 import {

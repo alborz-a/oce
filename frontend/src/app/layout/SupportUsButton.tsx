@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { Star, Github, Twitter, Linkedin, Heart, HandCoins, X, ExternalLink, Copy, Megaphone, Mail, Send, ArrowRight, Sparkles, MessageSquareQuote } from 'lucide-react';
+import { Star, Github, Twitter, Linkedin, Heart, HandCoins, ExternalLink, Copy, Megaphone, Mail, Send, ArrowRight, Sparkles, MessageSquareQuote } from 'lucide-react';
 import clsx from 'clsx';
 import { apiGet } from '@/shared/lib/api';
 import { copyToClipboard } from '@/shared/lib/browser';

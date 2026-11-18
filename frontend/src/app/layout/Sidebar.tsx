@@ -7,7 +7,7 @@ import { CustomBranding } from './CustomBranding';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { FolderOpen, Table2, CalendarDays, Boxes, Settings, Info, Sparkles, X, ClipboardList, Users, HelpCircle, Pin, PinOff, EyeOff, Pencil, Github, Loader2, LayoutGrid, GraduationCap, FolderKanban, Camera, MessageSquare, FileText } from 'lucide-react';
+import { type LucideIcon, FolderOpen, Table2, CalendarDays, Boxes, Settings, Info, Sparkles, ClipboardList, Users, HelpCircle, Pin, PinOff, EyeOff, Pencil, Github, Loader2, LayoutGrid, GraduationCap, FolderKanban, Camera, MessageSquare, FileText } from 'lucide-react';
 import { LEARN_GROUP_ID, navGroups, type NavGroup, type NavItem } from './navCatalog';
 import { routeBackendOff } from './routeBackendModules';
 

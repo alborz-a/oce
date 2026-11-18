@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { Search, LogOut, User, Menu, MessageSquarePlus, FolderOpen, XCircle, Bug, BookOpen, Loader2, Upload, HelpCircle, GraduationCap, Mail, ExternalLink, Github, Sun, Moon, Monitor, Globe } from 'lucide-react';
+import { LogOut, Menu, MessageSquarePlus, FolderOpen, XCircle, Bug, BookOpen, Loader2, Upload, HelpCircle, GraduationCap, Mail, ExternalLink, Github, Sun, Moon, Monitor, Globe } from 'lucide-react';
 
 import clsx from 'clsx';
 import { SUPPORTED_LANGUAGES, getLanguageByCode, changeLanguage } from '../i18n';

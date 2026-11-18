@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { RouteIcon, ArrowRight, Sparkles, MapPin, GraduationCap } from 'lucide-react';
+import { type LucideIcon, RouteIcon, ArrowRight, Sparkles, MapPin, GraduationCap } from 'lucide-react';
 import {
   JOURNEY_ARCS,
   JOURNEY_PHASES,
