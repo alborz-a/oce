@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { FolderKanban, Printer, ZoomIn } from 'lucide-react';
+import { FolderKanban } from 'lucide-react';
 import { GanttChart, type GanttActivity, type ViewMode } from '@/shared/ui/Gantt';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import {
@@ -249,7 +249,7 @@ export function ProjectGanttTab({
           {/* Scale selector: روزانه / هفتگی / ماهانه */}
           <div className="inline-flex items-center gap-1 rounded-md border border-[#e5e7eb] bg-white p-0.5">
             <span className="inline-flex items-center gap-1 px-2 text-[11.5px] text-[#5b5e66]">
-              <ZoomIn size={13} aria-hidden="true" className="text-[#3078ab]" />
+              <MzIcon name="zoom_in" size={13} aria-hidden="true" className="text-[#3078ab]" />
               <span>بزرگنمایی:</span>
             </span>
             {ZOOM_LABELS.map(({ mode, label }) => {
@@ -304,7 +304,7 @@ export function ProjectGanttTab({
             data-testid="gantt-print-button"
             className="inline-flex items-center gap-1 rounded-md border border-[#e5e7eb] bg-white px-2.5 py-1 text-[11.5px] font-medium text-[#4b5563] hover:bg-[#f2f4f7]"
           >
-            <Printer size={13} aria-hidden="true" />
+            <MzIcon name="print" size={13} aria-hidden="true" />
             <span>چاپ</span>
           </button>
         </div>

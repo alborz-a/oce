@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { AtSign, CalendarPlus, FileUp, Paperclip } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { uploadDocument } from '@/features/documents/api';
 import { createMeeting, type MeetingType } from '@/features/meetings/api';
@@ -402,7 +401,7 @@ export function ProjectStreamComposer({
               key={att.id}
               className="inline-flex items-center gap-1 rounded-full border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 py-0.5 text-[11px] text-[#374151]"
             >
-              <Paperclip size={11} className="text-[#3078ab]" />
+              <MzIcon name="attach_file" size={11} className="text-[#3078ab]" />
               <span className="max-w-[160px] truncate">{att.name}</span>
               <button
                 type="button"
@@ -535,7 +534,7 @@ export function ProjectStreamComposer({
                       mentionTriggerRef.current?.click();
                     }}
                   >
-                    <AtSign size={14} className="shrink-0" />
+                    <MzIcon name="alternate_email" size={14} className="shrink-0" />
                     <span>منشن همکار یا وظیفه</span>
                   </button>
                   <button
@@ -549,7 +548,7 @@ export function ProjectStreamComposer({
                       fileInputRef.current?.click();
                     }}
                   >
-                    <Paperclip size={14} className="shrink-0" />
+                    <MzIcon name="attach_file" size={14} className="shrink-0" />
                     <span>پیوست عکس یا فایل</span>
                   </button>
                   <button
@@ -575,7 +574,7 @@ export function ProjectStreamComposer({
                       setMinutesModalOpen(true);
                     }}
                   >
-                    <CalendarPlus size={14} className="shrink-0" />
+                    <MzIcon name="event" size={14} className="shrink-0" />
                     <span>+ صورتجلسه</span>
                   </button>
                 </div>
@@ -641,7 +640,7 @@ export function ProjectStreamComposer({
               data-testid="composer-mention-btn"
               className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab]"
             >
-              <AtSign size={16} />
+              <MzIcon name="alternate_email" size={16} />
             </button>
 
             <div
@@ -733,7 +732,7 @@ export function ProjectStreamComposer({
               data-testid="composer-attach-btn"
               className="hidden md:inline-flex h-7 w-7 items-center justify-center rounded-full text-[#6b7280] hover:bg-[#e5e7eb] hover:text-[#3078ab] disabled:opacity-50"
             >
-              {uploading ? <FileUp size={16} /> : <Paperclip size={16} />}
+              {uploading ? <MzIcon name="upload_file" size={16} /> : <MzIcon name="attach_file" size={16} />}
             </button>
 
             {/* Send button */}
@@ -855,7 +854,7 @@ export function ProjectStreamComposer({
       >
         <div className="flex items-center justify-between border-b border-[#e5e7eb] bg-[#f5f6f8] px-4 py-3">
           <h2 id={minutesHeadingId} className="flex items-center gap-1.5 text-[13.5px] font-bold text-[#1f2937]">
-            <CalendarPlus size={15} className="text-[#3078ab]" />
+            <MzIcon name="event" size={15} className="text-[#3078ab]" />
             <span>ثبت صورتجلسه پروژه</span>
           </h2>
           <button

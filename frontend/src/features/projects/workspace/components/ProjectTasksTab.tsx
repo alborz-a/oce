@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { ArrowUpDown, CalendarClock, FolderOpen, Printer } from 'lucide-react';
 import {
   createTask,
   completeTask,
@@ -434,7 +433,7 @@ export function ProjectTasksTab({
             data-testid="tasks-files-button"
             className="inline-flex items-center gap-1.5 rounded-md border border-[#3078ab]/30 bg-[#3078ab] px-3 py-1.5 text-[12px] font-medium text-white hover:brightness-95"
           >
-            <FolderOpen size={14} aria-hidden="true" />
+            <MzIcon name="folder_open" size={14} aria-hidden="true" />
             <span>مشاهده فایل‌ها</span>
           </button>
         </div>
@@ -558,7 +557,7 @@ export function ProjectTasksTab({
           </div>
 
           <div className="inline-flex items-center gap-1 rounded-md border border-[#e5e7eb] bg-white px-2 py-1 text-[12px] text-[#4b5563]">
-            <ArrowUpDown size={13} aria-hidden="true" className="text-[#6b7280]" />
+            <MzIcon name="swap_vert" size={13} aria-hidden="true" className="text-[#6b7280]" />
             <span>مرتب‌سازی:</span>
             <select
               value={sortKey}
@@ -580,7 +579,7 @@ export function ProjectTasksTab({
             aria-label="چاپ فهرست وظایف"
             className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[#e5e7eb] bg-white text-[#4b5563] hover:bg-[#f2f4f7]"
           >
-            <Printer size={14} />
+            <MzIcon name="print" size={14} />
           </button>
         </div>
       </div>
@@ -787,7 +786,7 @@ export function ProjectTasksTab({
                                 : 'border-[#e5e7eb] bg-[#f5f6f8] text-[#4b5563]'
                             }`}
                           >
-                            <CalendarClock size={11} aria-hidden="true" />
+                            <MzIcon name="schedule" size={11} aria-hidden="true" />
                             <span>{formatJalali(task.due_date, 'short')}</span>
                           </span>
                         )}

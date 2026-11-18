@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { getPhotoFileUrl } from '@/features/documents/api';
 import type { ChatRoom } from '@/modules/team-chat/types';
@@ -26,6 +25,7 @@ import {
 } from './ProjectStreamComposer';
 import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
 import { ProjectStreamList } from './ProjectStreamList';
+import { MzIcon } from './MzIcon';
 import { TaskQuickDetailDialog } from './TaskQuickDetailDialog';
 
 const EMPTY_TASKS: ProjectTaskItem[] = [];
@@ -207,7 +207,7 @@ export function ProjectGroupTab({
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#4b5563] hover:bg-[#f5f6f8]"
             data-testid="workspace-dm-back"
           >
-            <ArrowRight size={16} aria-hidden="true" />
+            <MzIcon name="arrow_forward" size={16} aria-hidden="true" />
           </button>
           <UserAvatar
             url={dm.peerAvatarUrl}
