@@ -1,4 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
+import { useProjectContextStore } from '@/stores/useProjectContextStore';
 
 interface NavItemProps {
   to: string;
@@ -39,6 +40,9 @@ export function MizitoNav({
   activeTo,
 }: { onOpenCompanyChat?: () => void; activeTo?: string } = {}) {
   const forced = (to: string) => (activeTo === undefined ? null : activeTo === to);
+  const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
+  // Project-scoped letters link so RestrictedRouteGuard keeps the user in the active project.
+  const lettersTo = activeProjectId ? `/projects/${activeProjectId}/correspondence` : '/correspondence';
   return (
     <nav className="mz-nav" aria-label="منوی میزیتو" data-testid="mizito-nav">
       <NavItem to="/" end label="داشبورد" dot="var(--mz-primary)" active={forced('/')} />
@@ -58,7 +62,7 @@ export function MizitoNav({
       )}
       <NavItem to="/projects" label="پروژه‌ها" dot="var(--mz-project)" active={forced('/projects')} />
       <NavItem to="/tasks" label="وظایف" dot="var(--mz-task)" active={forced('/tasks')} />
-      <NavItem to="/correspondence" label="نامه‌ها" dot="var(--mz-inbox)" active={forced('/correspondence')} />
+      <NavItem to={lettersTo} label="نامه‌ها" dot="var(--mz-inbox)" active={forced('/correspondence')} />
       <hr />
     </nav>
   );
