@@ -76,6 +76,7 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, rf"^documents/{_ID}/activity/?$"),
     _rule(_R, r"^file-tags/by-file/?$"),
     _rule(_R, r"^documents/photos(/.*)?$"),
+    _rule(_R, r"^documents/chat-file-url/?$"),
     # document upload, patch, delete
     _rule(frozenset({"POST"}), r"^documents/upload/?$"),
     _rule(frozenset({"PATCH"}), rf"^documents/{_ID}/?$"),

@@ -73,4 +73,14 @@ describe('RawFileChips', () => {
     expect(mockApiGet).not.toHaveBeenCalled();
     expect(useToastStore.getState().toasts).toHaveLength(1);
   });
+
+  it('shows a disabled unavailable chip when the image presign fails', async () => {
+    mockApiGet.mockRejectedValue(new Error('network'));
+    renderChips([{ name: 'عکس.jpg', key: KEY, icon: 'image' }]);
+
+    const chip = await screen.findByRole('button', { name: 'عکس.jpg' });
+    await waitFor(() => expect(chip).toBeDisabled());
+    expect(screen.getByText('تصویر در دسترس نیست')).toBeInTheDocument();
+    expect(mockApiGet).toHaveBeenCalledTimes(1);
+  });
 });
