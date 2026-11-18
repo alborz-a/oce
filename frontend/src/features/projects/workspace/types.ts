@@ -70,6 +70,8 @@ export interface StreamItem {
   createdAt: string;
   authorId?: string | null;
   authorName: string;
+  /** Sender photo (`avatar_url` of the matching project member), null when none. */
+  authorAvatarUrl?: string | null;
   isCurrentUser: boolean;
   text?: string;
   replyTo?: {

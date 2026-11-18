@@ -11,6 +11,8 @@ import { rawFileQuotePreview } from '../../lib/rawFileTag';
 import { apiGet } from '@/shared/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
+import { useToastStore } from '@/stores/useToastStore';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
 
 const RAW_IMAGE_RE = /\.(jpe?g|png|gif|heic|jfif|webp)$/i;
 
@@ -22,22 +24,43 @@ function chatFileUrlPath(key: string): string {
   return `/v1/documents/chat-file-url/?key=${encodeURIComponent(key)}`;
 }
 
-/** Download an imported chat file: the blank tab is opened first so the popup blocker allows it. */
-async function openChatFile(key: string): Promise<void> {
+/**
+ * Open an imported chat file in a new tab (PDFs show inline, other types download).
+ * The blank tab is opened first, synchronously in the click, so the popup blocker allows it.
+ * Resolves false when the file cannot be opened.
+ */
+async function openChatFile(key: string): Promise<boolean> {
   const win = window.open('', '_blank');
   if (win) win.opener = null;
   try {
     const res = await apiGet<ChatFileUrlResponse>(chatFileUrlPath(key));
-    if (res.url && win) win.location.href = res.url;
-    else win?.close();
+    if (!res.url) {
+      win?.close();
+      return false;
+    }
+    if (win) {
+      win.location.href = res.url;
+      return true;
+    }
+    return false;
   } catch {
     win?.close();
+    return false;
   }
+}
+
+function notifyChatFileError(fileName: string): void {
+  useToastStore.getState().addToast({
+    type: 'error',
+    title: 'باز کردن فایل ناموفق بود',
+    message: fileName,
+  });
 }
 
 /** One unresolved `[فایل: …]` entity: framed photo for image extensions, file chip otherwise. */
 function RawFileEntity({ file }: { file: RawFileChip }) {
   const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
   const key = file.key;
   const isImage = Boolean(key) && RAW_IMAGE_RE.test(file.name.trim());
   const { data } = useQuery({
@@ -79,11 +102,20 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
   return (
     <button
       type="button"
-      disabled={!key}
+      aria-busy={busy}
+      disabled={busy}
       onClick={() => {
-        if (key) void openChatFile(key);
+        if (!key) {
+          notifyChatFileError(file.name);
+          return;
+        }
+        setBusy(true);
+        void openChatFile(key).then((ok) => {
+          setBusy(false);
+          if (!ok) notifyChatFileError(file.name);
+        });
       }}
-      className="flex max-w-full items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-start text-[13px] text-black/85 disabled:cursor-default"
+      className={`flex max-w-full cursor-pointer items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-start text-[13px] text-black/85 hover:bg-black/[0.06] disabled:cursor-progress disabled:opacity-60 ${busy ? 'animate-pulse' : ''}`}
     >
       <MzIcon name={file.icon} size={18} />
       <span className="min-w-0 truncate">{file.name}</span>
@@ -92,7 +124,7 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
 }
 
 /** File entities for unresolved `[فایل: …]` chat tags. */
-function RawFileChips({ files }: { files?: RawFileChip[] }) {
+export function RawFileChips({ files }: { files?: RawFileChip[] }) {
   if (!files || files.length === 0) return null;
   return (
     <div className="mb-1 flex flex-col gap-1">
@@ -443,11 +475,19 @@ export function StreamChatMessageCard({
 
       {!item.isCurrentUser && (
         <div
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#3078ab]/15 text-[11px] font-semibold text-[#3078ab] ${senderId ? 'cursor-pointer' : ''}`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#3078ab]/15 text-[11px] font-semibold text-[#3078ab] ${senderId ? 'cursor-pointer' : ''}`}
           data-testid={`stream-avatar-${item.id}`}
           {...(senderId ? senderClickProps : { 'aria-hidden': true })}
         >
-          {getInitials(item.authorName)}
+          {item.authorAvatarUrl ? (
+            <UserAvatar
+              url={item.authorAvatarUrl}
+              alt={item.authorName}
+              className="h-full w-full rounded-full object-cover"
+            />
+          ) : (
+            getInitials(item.authorName)
+          )}
         </div>
       )}
 
