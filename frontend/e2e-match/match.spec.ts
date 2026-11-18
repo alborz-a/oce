@@ -78,7 +78,7 @@ test.describe('match-elements visual', () => {
     // Close
     await page.keyboard.press('Escape');
     await page.waitForTimeout(200);
-    const close = page.locator('aside >> button >> svg.lucide-x').first();
+    const close = page.locator('aside >> button >> span.mz-icon:text-is("close")').first();
     if (await close.isVisible().catch(() => false)) {
       await close.locator('..').click().catch(() => null);
     }

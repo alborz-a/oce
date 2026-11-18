@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { MzIcon } from './MzIcon';
-import { FolderKanban } from 'lucide-react';
 import { GanttChart, type GanttActivity, type ViewMode } from '@/shared/ui/Gantt';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import {
@@ -241,7 +240,7 @@ export function ProjectGanttTab({
         <div className="flex flex-wrap items-center gap-2.5">
           {projectName && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2b4162] px-3 py-1 text-[11.5px] font-semibold text-white">
-              <FolderKanban size={13} aria-hidden="true" />
+              <MzIcon name="folder" size={13} />
               <span>{toPersianDigits(projectName)}</span>
             </span>
           )}

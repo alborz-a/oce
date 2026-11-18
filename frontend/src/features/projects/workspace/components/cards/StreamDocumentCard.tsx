@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { MzIcon } from '../MzIcon';
-import { Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
@@ -104,7 +103,7 @@ export function StreamDocumentCard({
               className="flex h-10 w-10 shrink-0 flex-col items-center justify-center rounded-lg bg-[#f5f6f8] text-[#3078ab] transition-colors hover:bg-[#e8f2fa] disabled:opacity-50"
             >
               {downloading ? (
-                <Loader2 size={18} className="animate-spin" />
+                <MzIcon name="autorenew" size={18} className="animate-spin" />
               ) : downloadUrl ? (
                 <MzIcon name="file_download" size={20} />
               ) : (

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { MzIcon } from './MzIcon';
-import { Loader2 } from 'lucide-react';
 import { dateToJalali, PERSIAN_MONTH_NAMES, toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../types';
 import { StreamChatMessageCard } from './cards/StreamChatMessageCard';
@@ -256,7 +255,7 @@ export function ProjectStreamList({
             className="inline-flex items-center gap-1.5 rounded-full border border-[#e0e0e0] bg-[#f5f6f8] px-4 py-1 text-[12px] font-medium text-[#3078ab] transition-colors hover:bg-[#e8f2fa] disabled:opacity-50"
           >
             {loadingMore ? (
-              <Loader2 size={14} className="animate-spin" />
+              <MzIcon name="autorenew" size={14} className="animate-spin" />
             ) : (
               <MzIcon name="arrow_drop_up" size={14} />
             )}
@@ -270,7 +269,7 @@ export function ProjectStreamList({
           className="flex h-full min-h-[220px] flex-col items-center justify-center gap-2 text-[#909090]"
           data-testid="stream-loading"
         >
-          <Loader2 size={24} className="animate-spin text-[#3078ab]" />
+          <MzIcon name="autorenew" size={24} className="animate-spin text-[#3078ab]" />
           <span className="text-[12.5px]">در حال بارگذاری جریان پروژه...</span>
         </div>
       ) : items.length === 0 && accessDenied ? (
