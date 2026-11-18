@@ -126,9 +126,10 @@ export function ProjectStreamFilterBar({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5"
+      className="flex flex-wrap items-center gap-1.5 rounded-[4px] border border-[#e0e0e0] bg-white px-2 py-0.5"
       data-testid="project-stream-filter-bar"
     >
+      <span className="shrink-0 text-[12px] text-black/60">فیلتر پیام‌ها:</span>
       <search className="relative flex items-center" aria-label="فیلتر پیام‌ها">
         <MzIcon name="search" size={14} className="pointer-events-none absolute start-2.5 text-[#909090]" />
         <input
@@ -138,12 +139,12 @@ export function ProjectStreamFilterBar({
           onChange={(e) => onChange({ ...filter, search: e.target.value })}
           placeholder="فیلتر پیام‌ها"
           aria-label="فیلتر پیام‌ها"
-          className="h-8 w-44 rounded-full border border-[#e0e0e0] bg-[#f5f6f8] pe-3 ps-8 text-[12px] text-black/85 placeholder:text-[#909090] focus:w-56 focus:border-[#3078ab] focus:bg-white focus:outline-none sm:w-48"
+          className="h-7 w-32 rounded-none border-0 bg-transparent pe-3 ps-8 text-[12px] text-black/85 placeholder:text-[#909090] focus:w-40 focus:outline-none"
         />
       </search>
 
       {/* 9-icon Mizito stream filter toolbar */}
-      <div className="flex items-center gap-0.5 rounded-full border border-[#e5e7eb] bg-[#f5f6f8] px-1 py-0.5">
+      <div className="flex items-center gap-0.5 px-1 py-0.5">
         {/* 1. Focus text search */}
         <button
           type="button"

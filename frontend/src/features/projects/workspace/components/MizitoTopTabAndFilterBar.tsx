@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { MzIcon } from './MzIcon';
-import { BarChart2, Calendar, CheckCircle2, ClipboardList, Columns3, FileText, GanttChart, ImageIcon, MessageSquare, PanelRight, Video } from 'lucide-react';
+import { BarChart2, CheckCircle2, ClipboardList, FileText, ImageIcon, PanelRight, Video } from 'lucide-react';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -27,16 +27,17 @@ export interface MizitoTopTabAndFilterBarProps {
 interface TabDef {
   key: WorkspaceTabKey;
   label: string;
-  Icon: typeof MessageSquare;
+  icon: string;
+  rotate?: boolean;
   color: string;
 }
 
 const WORKSPACE_TABS: readonly TabDef[] = [
-  { key: 'group', color: '#4b9fff', label: 'گروه پروژه', Icon: MessageSquare },
-  { key: 'tasks', color: '#546e7a', label: 'وظایف پروژه', Icon: CheckCircle2 },
-  { key: 'board', color: '#5c6bc0', label: 'بورد پروژه', Icon: Columns3 },
-  { key: 'calendar', color: '#6ab04c', label: 'تقویم پروژه', Icon: Calendar },
-  { key: 'gantt', color: '#3078ab', label: 'گانت پروژه', Icon: GanttChart },
+  { key: 'group', color: '#4b9fff', label: 'گروه پروژه', icon: 'forum' },
+  { key: 'tasks', color: '#0f9d58', label: 'وظایف پروژه', icon: 'offline_pin' },
+  { key: 'board', color: '#5c6bc0', label: 'بورد پروژه', icon: 'dns', rotate: true },
+  { key: 'calendar', color: '#689f38', label: 'تقویم پروژه', icon: 'today' },
+  { key: 'gantt', color: '#1f5c88', label: 'گانت پروژه', icon: 'dynamic_form' },
 ];
 
 interface KindIconDef {
@@ -104,7 +105,7 @@ export function MizitoTopTabAndFilterBar({
           aria-label="بخش‌های فضای کار پروژه"
           className="flex min-w-0 max-w-full items-center gap-0.5 overflow-x-auto"
         >
-          {WORKSPACE_TABS.map(({ key, label, Icon, color }) => {
+          {WORKSPACE_TABS.map(({ key, label, icon, rotate, color }) => {
             const isActive = activeTab === key;
             return (
               <button
@@ -116,7 +117,7 @@ export function MizitoTopTabAndFilterBar({
                 onClick={() => onTabChange(key)}
                 className={isActive ? 'submenu_tab submenu_tab--active' : 'submenu_tab'}
               >
-                <Icon size={16} aria-hidden="true" className="shrink-0" style={{ color }} />
+                <MzIcon name={icon} size={18} className="shrink-0" style={{ color, transform: rotate ? 'rotate(90deg)' : undefined }} />
                 <span>{label}</span>
               </button>
             );

@@ -57,34 +57,31 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
       </button>
 
       <div className="flex min-w-0 items-center gap-2" data-testid="mizito-brand">
-        <img src={logoDataUrl ?? '/company-logo.svg'} alt="" className="mz-brand-logo h-6 w-6 shrink-0 object-contain" />
+        <img src={logoDataUrl ?? '/company-logo.svg'} alt="" className="mz-brand-logo h-11 w-11 shrink-0 object-contain" />
         <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
       </div>
 
       <button
         type="button"
         onClick={openSearch}
-        className="ms-auto hidden h-8 w-[280px] items-center gap-2 rounded-md bg-white/15 px-3 text-[12.5px] text-white/80 hover:bg-white/25 md:flex"
+        className="ms-auto hidden h-8 w-[190px] items-center gap-2 rounded-[4px] bg-white/[0.16] px-3 text-[12.5px] text-white/80 hover:bg-white/25 md:flex"
       >
         <MzIcon name="search" size={14} />
         <span>جستجو</span>
       </button>
 
       <div className="flex items-center gap-1 md:ms-0 ms-auto">
-        <button type="button" onClick={() => navigate('/notifications')} aria-label="اعلان‌ها" className={iconBtn}>
-          <MzIcon name="notifications" size={17} />
-        </button>
         <button type="button" onClick={() => navigate('/tasks')} aria-label="وظایف" className={iconBtn}>
           <MzIcon name="bookmark" size={17} />
         </button>
+        <button type="button" onClick={() => navigate('/profile')} aria-label="راهنما" className={iconBtn}>
+          <MzIcon name="help" size={17} flipRtl />
+        </button>
         <button type="button" onClick={() => navigate('/projects')} aria-label="گفتگو" className={iconBtn}>
-          <MzIcon name="chat" size={17} />
+          <MzIcon name="question_answer" size={17} />
         </button>
         <button type="button" onClick={() => navigate('/settings')} aria-label="تنظیمات" className={iconBtn}>
           <MzIcon name="settings" size={17} />
-        </button>
-        <button type="button" onClick={() => navigate('/profile')} aria-label="راهنما" className={iconBtn}>
-          <MzIcon name="help" size={17} />
         </button>
         <div className="relative ms-1 flex items-center">
           <button
