@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Users, X } from 'lucide-react';
+import { MzIcon } from './MzIcon';
 import type { Project } from '@/features/projects/api';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { toPersianDigits } from '@/shared/lib/jalali';
@@ -141,6 +141,7 @@ export interface ProjectGroupSwitcherSidebarProps {
   onMobileClose?: () => void;
   pinnedProjectIds?: string[];
   onTogglePin?: (projectId: string) => void;
+  onOpenCompanyChat?: () => void;
   className?: string;
   /** Forwarded to MizitoNav: the single nav item to highlight (e.g. `/correspondence`). */
   navActiveTo?: string;
@@ -154,6 +155,7 @@ export function ProjectGroupSwitcherSidebar({
   teammateTaskMap,
   mobileOpen = false,
   onMobileClose,
+  onOpenCompanyChat,
   className = '',
   navActiveTo,
 }: ProjectGroupSwitcherSidebarProps) {
@@ -201,11 +203,11 @@ export function ProjectGroupSwitcherSidebar({
             className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-[#1f2937]"
             aria-label="بستن منوی پروژه‌ها"
           >
-            <X size={16} />
+            <MzIcon name="close" size={16} />
           </button>
         </div>
 
-        <MizitoNav activeTo={navActiveTo} />
+        <MizitoNav onOpenCompanyChat={onOpenCompanyChat} activeTo={navActiveTo} />
         {/* Bottom `همکارانم` section */}
         <section
           aria-label="همکارانم"
@@ -214,7 +216,7 @@ export function ProjectGroupSwitcherSidebar({
         >
           <div className="mz-colleague-header shrink-0">
             <span className="flex items-center gap-1.5">
-              <Users size={13} aria-hidden="true" />
+              <MzIcon name="group" size={13} />
               <span>همکارانم</span>
             </span>
             <span className="text-[11px] font-normal opacity-85 tabular-nums">

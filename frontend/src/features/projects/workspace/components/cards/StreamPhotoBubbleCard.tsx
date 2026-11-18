@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCheck, Share2 } from 'lucide-react';
+import { CheckCheck } from 'lucide-react';
 import { MzIcon } from '../MzIcon';
 import { AuthImage } from '@/shared/ui';
 import { toPersianDigits } from '@/shared/lib/jalali';
@@ -126,7 +126,7 @@ export function StreamPhotoBubbleCard({
                     }}
                     className="absolute end-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover/tile:opacity-100 focus-visible:opacity-100"
                   >
-                    <Share2 size={14} />
+                    <MzIcon name="share" size={14} />
                   </span>
                   {isOverflowTile && (
                     <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-base font-bold text-white">

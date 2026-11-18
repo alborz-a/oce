@@ -10,16 +10,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  ChevronDown,
-  ChevronUp,
-  X,
-  ExternalLink,
-  FileUp,
-} from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { Loader2, XCircle, ExternalLink, FileUp } from 'lucide-react';
 import { useUploadQueueStore } from '@/stores/useUploadQueueStore';
 
 export function FloatingQueuePanel() {
@@ -54,13 +46,13 @@ export function FloatingQueuePanel() {
             </>
           ) : (
             <>
-              <CheckCircle2 size={14} className="text-semantic-success" />
+              <MzIcon name="check_circle" size={14} className="text-semantic-success" />
               <span className="text-xs font-medium text-content-primary">
                 {completedTasks.length} {t('queue.done', { defaultValue: 'done' })}
               </span>
             </>
           )}
-          <ChevronUp size={12} className="text-content-tertiary" />
+          <MzIcon name="arrow_drop_up" size={12} className="text-content-tertiary" />
         </button>
       </div>
     );
@@ -74,7 +66,7 @@ export function FloatingQueuePanel() {
           {activeTasks.length > 0 ? (
             <Loader2 size={14} className="text-oe-blue animate-spin" />
           ) : (
-            <CheckCircle2 size={14} className="text-semantic-success" />
+            <MzIcon name="check_circle" size={14} className="text-semantic-success" />
           )}
           <span className="text-xs font-semibold text-content-primary">
             {activeTasks.length > 0
@@ -96,7 +88,7 @@ export function FloatingQueuePanel() {
             className="p-1 rounded hover:bg-surface-secondary text-content-tertiary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
             title={t('queue.minimize', { defaultValue: 'Minimize' })}
           >
-            <ChevronDown size={14} />
+            <MzIcon name="arrow_drop_down" size={14} />
           </button>
         </div>
       </div>
@@ -112,7 +104,7 @@ export function FloatingQueuePanel() {
             <div className="mt-0.5 shrink-0">
               {task.status === 'processing' && <Loader2 size={16} className="text-oe-blue animate-spin" />}
               {task.status === 'queued' && <FileUp size={16} className="text-content-tertiary" />}
-              {task.status === 'completed' && <CheckCircle2 size={16} className="text-semantic-success" />}
+              {task.status === 'completed' && <MzIcon name="check_circle" size={16} className="text-semantic-success" />}
               {task.status === 'error' && <XCircle size={16} className="text-semantic-error" />}
             </div>
 
@@ -173,7 +165,7 @@ export function FloatingQueuePanel() {
                 aria-label={t('common.remove', { defaultValue: 'Remove' })}
                 className="shrink-0 p-0.5 rounded hover:bg-surface-secondary text-content-quaternary mt-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue"
               >
-                <X size={12} />
+                <MzIcon name="close" size={12} />
               </button>
             )}
           </div>

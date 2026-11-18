@@ -4,7 +4,9 @@ import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Search, ChevronDown, ChevronRight, LogOut, User, Settings, Menu, MessageSquarePlus, FolderOpen, CheckCircle2, XCircle, Bug, BookOpen, Loader2, Upload, HelpCircle, GraduationCap, Mail, ExternalLink, Github, Sun, Moon, Monitor, Globe } from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { LogOut, Menu, MessageSquarePlus, FolderOpen, XCircle, Bug, BookOpen, Loader2, Upload, HelpCircle, GraduationCap, Mail, ExternalLink, Github, Sun, Moon, Monitor, Globe } from 'lucide-react';
+
 import clsx from 'clsx';
 import { SUPPORTED_LANGUAGES, getLanguageByCode, changeLanguage } from '../i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
@@ -419,12 +421,10 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             {/* Breadcrumb separator — only shown on lg+ where the page
                 title is visible. Subtle chevron so it reads as
                 "ProjectName › PageTitle" hierarchy. */}
-            <ChevronRight
+            <MzIcon name="chevron_right"
               size={14}
-              strokeWidth={1.75}
               className="hidden lg:block shrink-0 text-content-quaternary/60 rtl:rotate-180"
-              aria-hidden
-            />
+             />
             {/* text-base until xl: at lg widths the right cluster + project
                 pill left too little room and module names truncated to
                 "Estima..." (uniformity sweep S5 follow-up). */}
@@ -525,7 +525,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             'w-40 md:w-44 xl:w-56',
           )}
         >
-          <Search size={14} strokeWidth={1.75} className="shrink-0" />
+          <MzIcon name="search" size={14} className="shrink-0" />
           <span className="truncate">{t('common.search')}</span>
         </button>
 
@@ -538,7 +538,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             'h-8 w-8 items-center justify-center rounded-lg text-content-secondary hover:bg-surface-secondary transition-colors',
           )}
         >
-          <Search size={16} />
+          <MzIcon name="search" size={16} />
         </button>
 
         {/* Hairline divider between Zone 2 and Zone 3. */}
@@ -1218,7 +1218,7 @@ function LanguageSwitcher({
         )}
       >
         <CountryFlag code={currentLang.country} size={16} />
-        <ChevronDown size={11} className={clsx('transition-transform duration-fast', open && 'rotate-180')} aria-hidden="true" />
+        <MzIcon name="arrow_drop_down" size={11} className={clsx('transition-transform duration-fast', open && 'rotate-180')} />
       </button>
 
       {open && (
@@ -1569,7 +1569,7 @@ function UserMenu() {
             onClick={() => { setOpen(false); navigate('/profile'); }}
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
           >
-            <User size={14} className="text-content-tertiary" />
+            <MzIcon name="person" size={14} className="text-content-tertiary" />
             {t('auth.profile', 'Profile')}
           </button>
           {isSystemAdmin && (<button
@@ -1577,7 +1577,7 @@ function UserMenu() {
             onClick={() => { setOpen(false); navigate('/settings'); }}
             className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-content-primary hover:bg-surface-secondary transition-colors"
           >
-            <Settings size={14} className="text-content-tertiary" />
+            <MzIcon name="settings" size={14} className="text-content-tertiary" />
             {t('nav.settings', 'Settings')}
           </button>)}
           <div className="my-1 border-t border-border-light" role="separator" />
@@ -1839,10 +1839,10 @@ function ProjectSwitcher() {
           title={t('schedule.switch_project', { defaultValue: 'Switch Project' })}
           aria-label={t('schedule.switch_project', { defaultValue: 'Switch Project' })}
         >
-          <ChevronDown size={13} strokeWidth={2.25} className={clsx(
+          <MzIcon name="arrow_drop_down" size={13} className={clsx(
             'shrink-0 transition-transform duration-fast',
             open && 'rotate-180',
-          )} />
+          )}  />
         </button>
       </div>
 
@@ -1855,7 +1855,7 @@ function ProjectSwitcher() {
           </div>
           <div className="px-3 py-2 border-b border-border-light">
             <div className="relative">
-              <Search size={14} className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none" />
+              <MzIcon name="search" size={14} className="absolute start-2.5 top-1/2 -translate-y-1/2 text-content-quaternary pointer-events-none" />
               <input
                 ref={searchRef}
                 type="text"
@@ -2040,7 +2040,7 @@ function UploadQueueIndicator() {
                   <div className="shrink-0">
                     {task.status === 'processing' && <Loader2 size={14} className="text-oe-blue animate-spin" />}
                     {task.status === 'queued' && <Upload size={14} className="text-content-tertiary" />}
-                    {task.status === 'completed' && <CheckCircle2 size={14} className="text-semantic-success" />}
+                    {task.status === 'completed' && <MzIcon name="check_circle" size={14} className="text-semantic-success" />}
                     {task.status === 'error' && <XCircle size={14} className="text-semantic-error" />}
                   </div>
                   <div className="flex-1 min-w-0">

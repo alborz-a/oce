@@ -5,25 +5,8 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Star,
-  Github,
-  Twitter,
-  Linkedin,
-  Heart,
-  HandCoins,
-  X,
-  ExternalLink,
-  Copy,
-  Check,
-  Megaphone,
-  Mail,
-  Send,
-  Users,
-  ArrowRight,
-  Sparkles,
-  MessageSquareQuote,
-} from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { Star, Github, Twitter, Linkedin, Heart, HandCoins, ExternalLink, Copy, Megaphone, Mail, Send, ArrowRight, Sparkles, MessageSquareQuote } from 'lucide-react';
 import clsx from 'clsx';
 import { apiGet } from '@/shared/lib/api';
 import { copyToClipboard } from '@/shared/lib/browser';
@@ -344,7 +327,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             aria-label={t('common.close', { defaultValue: 'Close' })}
             className="absolute top-3 end-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-lg text-content-tertiary hover:text-content-primary hover:bg-surface-secondary transition-colors"
           >
-            <X size={18} />
+            <MzIcon name="close" size={18} />
           </button>
           <div className="relative px-6 sm:px-8 py-7 text-center">
             <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg mb-4">
@@ -496,7 +479,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
                 onClick={copyShareText}
                 className="inline-flex items-center gap-1.5 rounded-md border border-border-light bg-surface-primary px-3 py-1.5 text-xs font-medium text-content-primary hover:bg-sky-50 hover:border-sky-400 dark:hover:bg-sky-950/40 transition-colors"
               >
-                {copied ? <Check size={12} className="text-semantic-success" /> : <Copy size={12} />}
+                {copied ? <MzIcon name="check" size={12} className="text-semantic-success" /> : <Copy size={12} />}
                 {copied
                   ? t('support.share_copied', { defaultValue: 'Copied!' })
                   : t('support.share_copy', { defaultValue: 'Copy text + link' })}
@@ -633,7 +616,7 @@ function SupportUsModal({ onClose, copied, setCopied }: ModalProps) {
             }}
             className="group mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200 transition-colors"
           >
-            <Users size={13} strokeWidth={2} />
+            <MzIcon name="group" size={13} />
             {t('support.see_contributors', {
               defaultValue: 'See who is already building it with us',
             })}

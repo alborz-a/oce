@@ -6,39 +6,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { CustomBranding } from './CustomBranding';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  FolderOpen,
-  Table2,
-  CalendarDays,
-  Boxes,
-  Settings,
-  Info,
-  ChevronDown,
-  ChevronRight,
-  Sparkles,
-  X,
-  ClipboardList,
-  Users,
-  HelpCircle,
-  History,
-  Plus,
-  Search,
-  Pin,
-  PinOff,
-  Eye,
-  EyeOff,
-  Pencil,
-  Check,
-  Github,
-  Loader2,
-  LayoutGrid,
-  GraduationCap,
-  FolderKanban,
-  Camera,
-  MessageSquare,
-  FileText,
-  type LucideIcon,
-} from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { type LucideIcon, FolderOpen, Table2, CalendarDays, Boxes, Settings, Info, Sparkles, ClipboardList, Users, HelpCircle, Pin, PinOff, EyeOff, Pencil, Github, Loader2, LayoutGrid, GraduationCap, FolderKanban, Camera, MessageSquare, FileText } from 'lucide-react';
 import { LEARN_GROUP_ID, navGroups, type NavGroup, type NavItem } from './navCatalog';
 import { routeBackendOff } from './routeBackendModules';
 
@@ -1118,7 +1087,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             className="lg:hidden flex h-7 w-7 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
             aria-label={t('common.close')}
           >
-            <X size={16} />
+            <MzIcon name="close" size={16} />
           </button>
         )}
       </div>
@@ -1165,16 +1134,15 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             : 'translateY(-50%) translateX(50%)',
         }}
       >
-        <ChevronRight
+        <MzIcon name="chevron_right"
           size={12}
-          strokeWidth={2.5}
           style={{
             transform: isRTL
               ? (iconified ? 'rotate(180deg)' : 'rotate(0deg)')
               : (iconified ? 'rotate(0deg)' : 'rotate(180deg)'),
           }}
           className="transition-transform duration-200 ease-oe"
-        />
+         />
       </button>
 
       {/* Search-as-jumper — modern-SaaS-style. Triggers the existing global
@@ -1193,7 +1161,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           aria-label={t('common.search', { defaultValue: 'Search' })}
           title={iconified ? t('common.search', { defaultValue: 'Search' }) : undefined}
         >
-          <Search size={13} strokeWidth={1.75} className="shrink-0" />
+          <MzIcon name="search" size={13} className="shrink-0" />
           {!iconified && (
             <>
               <span className="truncate">
@@ -1353,15 +1321,13 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                     {t('sidebar.more_modules', { defaultValue: 'More modules' })}
                   </span>
                   <span className="shrink-0 text-[11px] tabular-nums text-content-tertiary">{new Intl.NumberFormat(getNumberLocale()).format(moreCount)}</span>
-                  <ChevronDown
+                  <MzIcon name="arrow_drop_down"
                     size={11}
-                    strokeWidth={2}
                     className={clsx(
                       'shrink-0 text-content-quaternary transition-transform duration-200',
                       !moreExpanded && '-rotate-90 rtl:rotate-90',
                     )}
-                    aria-hidden
-                  />
+                   />
                 </>
               )}
             </button>
@@ -1434,7 +1400,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-border-light bg-surface-secondary/30 px-2.5 py-1.5 text-[11px] font-medium text-content-secondary hover:border-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
               title={t('sidebar.show_hidden', { defaultValue: 'Show hidden' })}
             >
-              <Eye size={12} strokeWidth={2} />
+              <MzIcon name="visibility" size={12} />
               <span>
                 {t('sidebar.hidden_count', {
                   defaultValue: '{{count}} hidden',
@@ -1492,7 +1458,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 aria-label={t('sidebar.manage_modules', { defaultValue: 'Manage modules' })}
                 className="ms-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
               >
-                <Settings size={12} strokeWidth={2} aria-hidden />
+                <MzIcon name="settings" size={12} />
               </NavLink>
             )}
           </div>
@@ -1518,7 +1484,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
                 iconified ? 'h-7 w-7 justify-center' : 'w-full justify-center gap-1.5 px-2.5 py-1.5',
               )}
             >
-              <Pencil size={12} strokeWidth={2} aria-hidden />
+              <MzIcon name="edit" size={12} />
               {!iconified && (
                 <span className="text-[11px] font-medium">
                   {t('sidebar.edit_menu', { defaultValue: 'Edit menu' })}
@@ -1546,7 +1512,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             )}
           >
             <span className="shrink-0 flex h-7 w-7 items-center justify-center rounded-md bg-oe-blue/10 text-oe-blue group-hover:bg-oe-blue group-hover:text-white transition-colors">
-              <Plus size={14} strokeWidth={2.5} />
+              <MzIcon name="add" size={14} />
             </span>
             {!iconified && (
               <span className="min-w-0 flex-1">
@@ -1656,7 +1622,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               onClick={saveEditMode}
               className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-oe-blue/30 bg-oe-blue/10 px-2.5 py-2 text-xs font-medium text-oe-blue hover:bg-oe-blue/15 transition-colors"
             >
-              <Check size={12} strokeWidth={2.25} />
+              <MzIcon name="check" size={12} />
               <span>{t('sidebar.save', { defaultValue: 'Save' })}</span>
             </button>
             <button
@@ -1664,7 +1630,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               onClick={cancelEditMode}
               className="flex-1 flex items-center justify-center gap-1 rounded-lg border border-border-light bg-surface-secondary/60 px-2.5 py-2 text-xs font-medium text-content-secondary hover:bg-surface-secondary hover:text-content-primary transition-colors"
             >
-              <X size={12} strokeWidth={2.25} />
+              <MzIcon name="close" size={12} />
               <span>{t('sidebar.cancel', { defaultValue: 'Cancel' })}</span>
             </button>
             {editingHidden.length + editingHiddenGroups.length > 0 && (
@@ -1790,16 +1756,14 @@ function NavGroupSection({
             {label}
           </span>
         </span>
-        <ChevronDown
+        <MzIcon name="arrow_drop_down"
           size={11}
-          strokeWidth={2}
           className={clsx(
             'shrink-0 text-content-quaternary group-hover:text-content-secondary',
             'transition-transform duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)]',
             isCollapsed && '-rotate-90 rtl:rotate-90',
           )}
-          aria-hidden
-        />
+         />
       </button>
       {editMode && onToggleGroupHidden && (
         <button
@@ -1825,7 +1789,7 @@ function NavGroupSection({
           {isGroupHidden ? (
             <EyeOff size={12} strokeWidth={2} />
           ) : (
-            <Eye size={12} strokeWidth={2} />
+            <MzIcon name="visibility" size={12} />
           )}
         </button>
       )}
@@ -1925,7 +1889,7 @@ function LearnSection({
             }
             className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-content-tertiary transition-colors hover:bg-oe-blue/10 hover:text-oe-blue focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-oe-blue/40"
           >
-            {isGroupHidden ? <EyeOff size={12} strokeWidth={2} /> : <Eye size={12} strokeWidth={2} />}
+            {isGroupHidden ? <EyeOff size={12} strokeWidth={2} /> : <MzIcon name="visibility" size={12} />}
           </button>
         ) : (
           <>
@@ -2193,10 +2157,10 @@ function SidebarItem({
               )}
             >
               {kbdHint ?? (
-                <ChevronRight
+                <MzIcon name="chevron_right"
                   size={12}
                   className="oe-hover-arrow text-content-tertiary"
-                />
+                 />
               )}
             </span>
           )}
@@ -2254,7 +2218,7 @@ function SidebarItem({
             {isItemHidden ? (
               <EyeOff size={10} strokeWidth={2} />
             ) : (
-              <Eye size={10} strokeWidth={2} />
+              <MzIcon name="visibility" size={10} />
             )}
           </button>
         ) : (
@@ -2440,7 +2404,7 @@ function AdminGrid({
               </span>
               {editable && (
                 <span aria-hidden className="shrink-0 text-content-quaternary">
-                  {isHidden ? <EyeOff size={11} strokeWidth={2} /> : <Eye size={11} strokeWidth={2} />}
+                  {isHidden ? <EyeOff size={11} strokeWidth={2} /> : <MzIcon name="visibility" size={11} />}
                 </span>
               )}
             </button>
@@ -2483,7 +2447,7 @@ export function FloatingRecentButton() {
               title={t('common.close', { defaultValue: 'Close' })}
               className="p-0.5 rounded text-content-tertiary hover:text-content-primary"
             >
-              <X size={14} aria-hidden="true" />
+              <MzIcon name="close" size={14} />
             </button>
           </div>
           <ul className="py-1.5 max-h-60 overflow-y-auto">
@@ -2524,7 +2488,7 @@ export function FloatingRecentButton() {
         )}
         title={t('nav.recent', { defaultValue: 'Recent' })}
       >
-        <History size={18} strokeWidth={2} aria-hidden="true" />
+        <MzIcon name="history" size={18} />
       </button>
     </div>
   );

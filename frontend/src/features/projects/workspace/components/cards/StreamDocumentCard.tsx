@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FileDown, FileText, Loader2 } from 'lucide-react';
+import { MzIcon } from '../MzIcon';
+import { FileDown, Loader2 } from 'lucide-react';
 import { downloadWithAuth } from '@/shared/lib/api';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import type { StreamItem } from '../../types';
@@ -107,7 +108,7 @@ export function StreamDocumentCard({
               ) : downloadUrl ? (
                 <FileDown size={20} />
               ) : (
-                <FileText size={18} />
+                <MzIcon name="description" size={18} />
               )}
               {ext && !downloading && (
                 <span className="mt-0.5 text-[8.5px] font-bold leading-none text-[#757575]">

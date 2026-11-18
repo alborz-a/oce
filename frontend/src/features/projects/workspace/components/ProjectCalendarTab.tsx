@@ -1,11 +1,6 @@
 import { useMemo, useState, type FormEvent, type KeyboardEvent } from 'react';
-import {
-  Calendar as CalendarIcon,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { CalendarIcon } from 'lucide-react';
 import {
   PERSIAN_MONTH_NAMES,
   PERSIAN_WEEKDAY_NAMES,
@@ -348,7 +343,7 @@ export function ProjectCalendarTab({
           </div>
 
           <div className="inline-flex items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-white px-2 py-1 text-[11.5px] text-[#4b5563]">
-            <Filter size={13} aria-hidden="true" className="text-[#6b7280]" />
+            <MzIcon name="filter_list" size={13} className="text-[#6b7280]" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as CalendarStatusFilter)}
@@ -374,7 +369,7 @@ export function ProjectCalendarTab({
             data-testid="calendar-prev-month"
             className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-[#e5e7eb] bg-white text-[#4b5563] hover:bg-[#f2f4f7]"
           >
-            <ChevronRight size={15} />
+            <MzIcon name="chevron_right" size={15} />
           </button>
 
           <span
@@ -391,7 +386,7 @@ export function ProjectCalendarTab({
             data-testid="calendar-next-month"
             className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-[#e5e7eb] bg-white text-[#4b5563] hover:bg-[#f2f4f7]"
           >
-            <ChevronLeft size={15} />
+            <MzIcon name="chevron_right" size={15} className="icon-flip-horizontal" />
           </button>
 
           <button
@@ -565,7 +560,7 @@ export function ProjectCalendarTab({
                 aria-label="بستن فرم ایجاد وظیفه"
                 className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#e5e7eb]"
               >
-                <X size={16} />
+                <MzIcon name="close" size={16} />
               </button>
             </div>
             <form onSubmit={(e) => void handleCreateSubmit(e)} className="space-y-3 p-4">

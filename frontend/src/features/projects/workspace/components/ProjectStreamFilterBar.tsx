@@ -1,5 +1,4 @@
 import { useId, useRef, useState } from 'react';
-import { Check, X } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { isoToJalali, toPersianDigits } from '@/shared/lib/jalali';
 import { JalaliDateInput } from '@/shared/ui/JalaliDateInput';
@@ -222,7 +221,7 @@ export function ProjectStreamFilterBar({
                   }`}
                 >
                   <span>همه اعضا</span>
-                  {filter.senderId === null && <Check size={13} />}
+                  {filter.senderId === null && <MzIcon name="check" size={13} />}
                 </button>
               </li>
               {members.map((member) => {
@@ -246,7 +245,7 @@ export function ProjectStreamFilterBar({
                       }`}
                     >
                       <span className="truncate">{label}</span>
-                      {active && <Check size={13} />}
+                      {active && <MzIcon name="check" size={13} />}
                     </button>
                   </li>
                 );
@@ -400,7 +399,7 @@ export function ProjectStreamFilterBar({
             aria-label="پاک کردن فیلترها"
             className="inline-flex h-7 w-7 items-center justify-center rounded-full text-[#d9534f] transition-colors hover:bg-white"
           >
-            <X size={14} />
+            <MzIcon name="close" size={14} />
           </button>
         )}
       </div>

@@ -29,7 +29,9 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { Pencil, Upload, Trash2, X, Building2, FileText } from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { Upload, Trash2, Building2 } from 'lucide-react';
+
 import { useTranslation } from 'react-i18next';
 
 import { Logo } from '@/shared/ui';
@@ -226,7 +228,7 @@ export function CustomBranding({ iconified }: CustomBrandingProps) {
             defaultValue: 'Add your logo or company name',
           })}
         >
-          <Pencil size={13} strokeWidth={2.25} />
+          <MzIcon name="edit" size={13} />
         </button>
         )}
       </div>
@@ -401,7 +403,7 @@ function BrandingEditor({
             className="h-7 w-7 flex items-center justify-center rounded-lg text-content-tertiary hover:bg-surface-secondary hover:text-content-primary transition-colors"
             aria-label={t('common.close')}
           >
-            <X size={16} />
+            <MzIcon name="close" size={16} />
           </button>
         </header>
 
@@ -569,7 +571,7 @@ function BrandingEditor({
               className="mt-4 inline-flex items-center gap-1.5 text-xs text-oe-blue hover:underline"
               data-testid="branding-documents-link"
             >
-              <FileText size={13} />
+              <MzIcon name="description" size={13} />
               {t('branding.documents_link', {
                 defaultValue: 'Logo and company details for documents',
               })}

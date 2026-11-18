@@ -34,13 +34,28 @@ function NavItem({ to, label, dot, end = false, active = null }: NavItemProps) {
  * Mizito left-column nav (P5 port). Items without an OCE route are intentionally omitted.
  * `activeTo` (optional) forces exactly one item highlighted, e.g. `/correspondence` on the letters page.
  */
-export function MizitoNav({ activeTo }: { activeTo?: string } = {}) {
+export function MizitoNav({
+  onOpenCompanyChat,
+  activeTo,
+}: { onOpenCompanyChat?: () => void; activeTo?: string } = {}) {
   const forced = (to: string) => (activeTo === undefined ? null : activeTo === to);
   return (
     <nav className="mz-nav" aria-label="منوی میزیتو" data-testid="mizito-nav">
       <NavItem to="/" end label="داشبورد" dot="var(--mz-primary)" active={forced('/')} />
       <hr />
-      <NavItem to="/chat" label="گفتگو" dot="var(--mz-chat)" active={forced('/chat')} />
+      {onOpenCompanyChat ? (
+        <button
+          type="button"
+          className="mz-nav-item"
+          onClick={onOpenCompanyChat}
+          data-testid="mizito-nav-company-chat"
+        >
+          <span className="mz-dot" style={{ background: 'var(--mz-chat)' }} aria-hidden="true" />
+          <span>گفتگو</span>
+        </button>
+      ) : (
+        <NavItem to="/chat" label="گفتگو" dot="var(--mz-chat)" active={forced('/chat')} />
+      )}
       <NavItem to="/projects" label="پروژه‌ها" dot="var(--mz-project)" active={forced('/projects')} />
       <NavItem to="/tasks" label="وظایف" dot="var(--mz-task)" active={forced('/tasks')} />
       <NavItem to="/correspondence" label="نامه‌ها" dot="var(--mz-inbox)" active={forced('/correspondence')} />
