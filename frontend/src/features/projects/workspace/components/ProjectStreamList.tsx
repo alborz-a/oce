@@ -15,6 +15,8 @@ export interface ProjectStreamListProps {
   loading?: boolean;
   loadingMore?: boolean;
   hasMore?: boolean;
+  /** Project room refused with 403: show the permission message instead of the empty state. */
+  accessDenied?: boolean;
   onLoadMore?: () => void;
   onReply: (item: StreamItem) => void;
   onReact: (item: StreamItem, emoji: string) => void;
@@ -108,6 +110,7 @@ export function ProjectStreamList({
   loading = false,
   loadingMore = false,
   hasMore = false,
+  accessDenied = false,
   onLoadMore,
   onReply,
   onReact,
@@ -268,6 +271,14 @@ export function ProjectStreamList({
         >
           <Loader2 size={24} className="animate-spin text-[#3078ab]" />
           <span className="text-[12.5px]">در حال بارگذاری جریان پروژه...</span>
+        </div>
+      ) : items.length === 0 && accessDenied ? (
+        <div
+          className="flex h-full min-h-[220px] flex-col items-center justify-center gap-2 text-[#909090]"
+          data-testid="stream-access-denied"
+        >
+          <MessageSquare size={28} className="text-[#d5d8dc]" />
+          <span className="text-[13px]">شما اجازهٔ مشاهدهٔ گفتگوی این پروژه را ندارید. با مدیر پروژه تماس بگیرید.</span>
         </div>
       ) : items.length === 0 ? (
         <div

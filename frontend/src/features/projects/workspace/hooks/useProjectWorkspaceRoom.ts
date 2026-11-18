@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { apiDelete, apiGet, apiPatch, apiPost } from '@/shared/lib/api';
+import { ApiError, apiDelete, apiGet, apiPatch, apiPost } from '@/shared/lib/api';
 import { useChatSocket, type SocketStatus } from '@/modules/team-chat/useChatSocket';
 import type { ChatEvent, ChatMessage, ChatRoom } from '@/modules/team-chat/types';
 import type { StreamQuotedEntity, StreamReactionMap } from '../types';
@@ -24,6 +24,8 @@ export interface UseProjectWorkspaceRoomResult {
   messages: ChatMessage[];
   loading: boolean;
   error: string | null;
+  /** True when the project room request was refused with HTTP 403 (no chat.read capability). */
+  forbidden: boolean;
   socketStatus: SocketStatus;
   hasMore: boolean;
   loadingOlder: boolean;
@@ -98,6 +100,7 @@ export function useProjectWorkspaceRoom(
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [forbidden, setForbidden] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [loadingOlder, setLoadingOlder] = useState(false);
   const [initialLastReadAt, setInitialLastReadAt] = useState<string | null>(null);
@@ -151,6 +154,7 @@ export function useProjectWorkspaceRoom(
     setMessages([]);
     setHasMore(false);
     setError(null);
+    setForbidden(false);
     setInitialLastReadAt(null);
     setInitialUnreadCount(0);
     unreadCapturedForRoomRef.current = null;
@@ -203,9 +207,15 @@ export function useProjectWorkspaceRoom(
         if ((mergedRoom.unread ?? 0) > 0) {
           void markReadForRoom(mergedRoom.id);
         }
-      } catch {
+      } catch (err) {
         if (cancelled || activeProjectRef.current !== projectId) return;
-        setError('بارگذاری اتاق گفتگوی پروژه ممکن نشد.');
+        const isForbidden = err instanceof ApiError && err.status === 403;
+        setForbidden(isForbidden);
+        setError(
+          isForbidden
+            ? 'شما اجازهٔ مشاهدهٔ گفتگوی این پروژه را ندارید. با مدیر پروژه تماس بگیرید.'
+            : 'بارگذاری اتاق گفتگوی پروژه ممکن نشد.',
+        );
         setLoading(false);
       }
     })();
@@ -395,6 +405,7 @@ export function useProjectWorkspaceRoom(
     messages,
     loading,
     error,
+    forbidden,
     socketStatus,
     hasMore,
     loadingOlder,

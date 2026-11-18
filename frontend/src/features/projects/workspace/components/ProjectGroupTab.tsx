@@ -239,6 +239,7 @@ export function ProjectGroupTab({
         lastReadAt={room.initialLastReadAt}
         loading={room.loading || stream.loading}
         loadingMore={room.loadingOlder}
+        accessDenied={room.forbidden}
         hasMore={room.hasMore}
         onLoadMore={() => void room.loadOlder()}
         onReply={(item) => setReplyTo(item)}
