@@ -334,10 +334,6 @@ class TeamChatService:
         metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         room = await self.require_access(room_id, user_id)
-        if room.kind == "channel":
-            poster = await self._member(room_id, user_id)
-            if (poster is None or poster.role != "owner") and await self._role(user_id) not in ("manager", "admin"):
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="فقط مدیر کانال می‌تواند پیام ارسال کند")
         text = (text or "").strip()
         if not text and not document_ids:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty message")
