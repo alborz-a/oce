@@ -1,22 +1,6 @@
 import type { ReactNode } from 'react';
-import {
-  BarChart2,
-  Calendar,
-  CalendarDays,
-  CheckCircle2,
-  ClipboardList,
-  Columns3,
-  Compass,
-  FileText,
-  GanttChart,
-  Image as ImageIcon,
-  MessageSquare,
-  PanelRight,
-  Search,
-  User,
-  Video,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { BarChart2, Calendar, CheckCircle2, ClipboardList, Columns3, Compass, FileText, GanttChart, ImageIcon, MessageSquare, PanelRight, Video } from 'lucide-react';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -149,11 +133,10 @@ export function MizitoTopTabAndFilterBar({
               data-testid="topbar-default-stream-filter"
             >
               <search className="relative flex items-center">
-                <Search
+                <MzIcon name="search"
                   size={13}
-                  aria-hidden="true"
                   className="pointer-events-none absolute start-2.5 text-[#909090]"
-                />
+                 />
                 <input
                   type="search"
                   value={filters.search}
@@ -181,7 +164,7 @@ export function MizitoTopTabAndFilterBar({
                   }}
                   className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project"
                 >
-                  <Search size={15} />
+                  <MzIcon name="search" size={15} />
                 </button>
 
                 <button
@@ -196,7 +179,7 @@ export function MizitoTopTabAndFilterBar({
                       : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                   }`}
                 >
-                  <User size={15} />
+                  <MzIcon name="person" size={15} />
                 </button>
 
                 <button
@@ -211,7 +194,7 @@ export function MizitoTopTabAndFilterBar({
                       : 'text-[#6b7280] hover:bg-[#f2f4f7] hover:text-mz-project'
                   }`}
                 >
-                  <CalendarDays size={15} />
+                  <MzIcon name="event_note" size={15} />
                 </button>
 
                 {KIND_FILTERS.map(({ kind, label, Icon }) => {
@@ -245,7 +228,7 @@ export function MizitoTopTabAndFilterBar({
                     onClick={() => onFiltersChange?.(DEFAULT_STREAM_FILTERS)}
                     className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[#d9534f] hover:bg-[#fef2f2]"
                   >
-                    <X size={15} />
+                    <MzIcon name="close" size={15} />
                   </button>
                 )}
               </div>

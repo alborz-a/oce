@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { ChevronDown, ChevronLeft, FolderKanban, Printer, ZoomIn } from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { FolderKanban, Printer, ZoomIn } from 'lucide-react';
 import { GanttChart, type GanttActivity, type ViewMode } from '@/shared/ui/Gantt';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import {
@@ -352,9 +353,9 @@ export function ProjectGanttTab({
                         className="flex min-w-0 flex-1 items-center gap-1.5 text-start text-[12px] font-semibold text-[#1f2937] hover:text-[#3078ab]"
                       >
                         {isCollapsed ? (
-                          <ChevronLeft size={14} className="shrink-0 text-[#6b7280]" />
+                          <MzIcon name="chevron_right" size={14} className="icon-flip-horizontal shrink-0 text-[#6b7280]" />
                         ) : (
-                          <ChevronDown size={14} className="shrink-0 text-[#6b7280]" />
+                          <MzIcon name="arrow_drop_down" size={14} className="shrink-0 text-[#6b7280]" />
                         )}
                         <span className="truncate">{toPersianDigits(row.label)}</span>
                         <span className="shrink-0 text-[10.5px] font-normal text-[#909090] tabular-nums">

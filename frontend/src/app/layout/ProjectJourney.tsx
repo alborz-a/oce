@@ -6,16 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useIsSystemAdmin } from '@/shared/lib/systemAdmin';
-import {
-  Route as RouteIcon,
-  X,
-  ChevronDown,
-  ArrowRight,
-  Sparkles,
-  MapPin,
-  GraduationCap,
-  type LucideIcon,
-} from 'lucide-react';
+import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
+import { RouteIcon, ArrowRight, Sparkles, MapPin, GraduationCap } from 'lucide-react';
 import {
   JOURNEY_ARCS,
   JOURNEY_PHASES,
@@ -139,7 +131,7 @@ function ProjectJourneyButtonInner() {
       >
         <RouteIcon size={14} strokeWidth={1.75} className="shrink-0 text-oe-blue" aria-hidden />
         <span className="whitespace-nowrap text-xs font-semibold max-[399px]:sr-only">{label}</span>
-        <ChevronDown size={12} strokeWidth={2} className="shrink-0 text-content-quaternary" aria-hidden />
+        <MzIcon name="arrow_drop_down" size={12} className="shrink-0 text-content-quaternary" />
       </button>
       {open && (
         <ProjectJourneyPanel
@@ -282,7 +274,7 @@ function ProjectJourneyPanel({
               aria-label={t('common.close', { defaultValue: 'Close' })}
               className="flex h-8 w-8 items-center justify-center rounded-lg text-content-tertiary transition-colors hover:bg-surface-secondary hover:text-content-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-oe-blue/40"
             >
-              <X size={18} />
+              <MzIcon name="close" size={18} />
             </button>
           </div>
         </div>
@@ -682,12 +674,10 @@ function CasesPill({
       >
         <GraduationCap size={11} strokeWidth={2} aria-hidden />
         {count}
-        <ChevronDown
+        <MzIcon name="arrow_drop_down"
           size={10}
-          strokeWidth={2}
-          aria-hidden
           className={clsx('transition-transform', mode === 'open' && 'rotate-180')}
-        />
+         />
       </button>
 
       {mode !== 'closed' &&

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { ChevronUp, Loader2, MessageSquare } from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { Loader2 } from 'lucide-react';
 import { dateToJalali, PERSIAN_MONTH_NAMES, toPersianDigits } from '@/shared/lib/jalali';
 import type { ProjectPhotoItem, StreamItem } from '../types';
 import { StreamChatMessageCard } from './cards/StreamChatMessageCard';
@@ -257,7 +258,7 @@ export function ProjectStreamList({
             {loadingMore ? (
               <Loader2 size={14} className="animate-spin" />
             ) : (
-              <ChevronUp size={14} />
+              <MzIcon name="arrow_drop_up" size={14} />
             )}
             <span>بارگذاری پیام‌های قدیمی‌تر</span>
           </button>
@@ -277,7 +278,7 @@ export function ProjectStreamList({
           className="flex h-full min-h-[220px] flex-col items-center justify-center gap-2 text-[#909090]"
           data-testid="stream-access-denied"
         >
-          <MessageSquare size={28} className="text-[#d5d8dc]" />
+          <MzIcon name="chat" size={28} className="text-[#d5d8dc]" />
           <span className="text-[13px]">شما اجازهٔ مشاهدهٔ گفتگوی این پروژه را ندارید. با مدیر پروژه تماس بگیرید.</span>
         </div>
       ) : items.length === 0 ? (
@@ -285,7 +286,7 @@ export function ProjectStreamList({
           className="flex h-full min-h-[220px] flex-col items-center justify-center gap-2 text-[#909090]"
           data-testid="stream-empty"
         >
-          <MessageSquare size={28} className="text-[#d5d8dc]" />
+          <MzIcon name="chat" size={28} className="text-[#d5d8dc]" />
           <span className="text-[13px]">هنوز پیامی در این گروه ثبت نشده است.</span>
         </div>
       ) : (

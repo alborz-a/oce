@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ArrowLeftRight,
-  CalendarClock,
-  Check,
-  MoreHorizontal,
-  Plus,
-  X,
-} from 'lucide-react';
+import { MzIcon } from './MzIcon';
+import { ArrowLeftRight, CalendarClock } from 'lucide-react';
 import {
   completeTask,
   createTask,
@@ -435,7 +429,7 @@ export function ProjectBoardTab({
                     {colName === DEFAULT_BOARD_NAME && (
                       <span className="text-[10.5px] text-[#9ca3af]">پیش‌فرض</span>
                     )}
-                    <MoreHorizontal size={16} aria-hidden="true" className="text-[#6b7280]" />
+                    <MzIcon name="more_horiz" size={16} className="text-[#6b7280]" />
                   </div>
                 </div>
 
@@ -508,7 +502,7 @@ export function ProjectBoardTab({
                     data-testid={`board-add-task-${colName}`}
                     className="mt-2 flex w-full items-center justify-center gap-1 rounded-md border border-[#d5d8dc] bg-white py-1.5 text-[11.5px] font-medium text-[#5b5e66] hover:bg-[#f5f6f8]"
                   >
-                    <Plus size={13} aria-hidden="true" />
+                    <MzIcon name="add" size={13} />
                     <span>وظیفه جدید</span>
                   </button>
                 )}
@@ -565,7 +559,7 @@ export function ProjectBoardTab({
                                 : 'border-[#cbd5e1] bg-white text-transparent hover:border-mz-task'
                             }`}
                           >
-                            <Check size={10} strokeWidth={2.5} aria-hidden="true" />
+                            <MzIcon name="check" size={10} />
                           </button>
 
                           <button
@@ -656,7 +650,7 @@ export function ProjectBoardTab({
                                           : 'border-[#cbd5e1] text-transparent'
                                       }`}
                                     >
-                                      <Check size={9} strokeWidth={2.5} />
+                                      <MzIcon name="check" size={9} />
                                     </span>
                                     <span
                                       className={`truncate ${
@@ -739,7 +733,7 @@ export function ProjectBoardTab({
                   aria-label="بستن"
                   className="inline-flex h-7 w-7 items-center justify-center rounded text-[#6b7280] hover:bg-[#f2f4f7]"
                 >
-                  <X size={14} />
+                  <MzIcon name="close" size={14} />
                 </button>
               </div>
             </form>
@@ -750,7 +744,7 @@ export function ProjectBoardTab({
               data-testid="board-add-list-button"
               className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#cbd5e1] bg-white/80 px-3 py-2.5 text-[12.5px] font-medium text-[#5b5e66] hover:border-mz-project hover:bg-white hover:text-mz-project"
             >
-              <Plus size={15} aria-hidden="true" />
+              <MzIcon name="add" size={15} />
               <span>افزودن لیست جدید</span>
             </button>
           )}
