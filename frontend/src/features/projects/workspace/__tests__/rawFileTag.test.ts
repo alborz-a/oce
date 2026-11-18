@@ -75,4 +75,29 @@ describe('parseRawFileTags', () => {
     const text = 'mizito/general/chats/r/files/x.pdf';
     expect(parseRawFileTags(text)).toEqual({ text, files: [] });
   });
+
+  it('turns a tag-less key line with junk prefix into a chip and drops the prefix', () => {
+    const text = '[Ali Reza(ali) (1 mizito/general/chats/r1/files/عکس 2.jpg';
+    expect(parseRawFileTags(text)).toEqual({
+      text: '',
+      files: [
+        { name: 'عکس 2.jpg', key: 'mizito/general/chats/r1/files/عکس 2.jpg', icon: 'image' },
+      ],
+    });
+  });
+
+  it('keeps caption lines around a junk-prefixed key line', () => {
+    const text = 'سلام\n[Ali(ali) (1 mizito/general/chats/r1/files/sheet.xlsx\nخداحافظ';
+    expect(parseRawFileTags(text)).toEqual({
+      text: 'سلام\nخداحافظ',
+      files: [
+        { name: 'sheet.xlsx', key: 'mizito/general/chats/r1/files/sheet.xlsx', icon: 'description' },
+      ],
+    });
+  });
+
+  it('does not treat a closed bracket prefix before a key as junk', () => {
+    const text = '[Ali] mizito/general/chats/r1/files/a.pdf';
+    expect(parseRawFileTags(text)).toEqual({ text, files: [] });
+  });
 });

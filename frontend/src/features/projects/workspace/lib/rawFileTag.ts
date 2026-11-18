@@ -23,6 +23,8 @@ export interface RawFileParseResult {
 const TAG_RE = /\[فایل:\s*([^\]\n]*?)\s*\]/g;
 const KEY_MARKER = 'mizito/general/chats/';
 const TAG_MARKER = '[فایل:';
+/** Junk left before a bare key: an opened but never closed bracket, e.g. `[Name(login) (1 `. */
+const JUNK_PREFIX_RE = /^\s*\[[^\]\n]*$/;
 
 const PDF_EXT = ['pdf'];
 const IMAGE_EXT = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'bmp'];
@@ -47,13 +49,24 @@ export function fileIconForName(name: string): string {
  * Lines left empty after removal are dropped.
  */
 export function parseRawFileTags(text: string): RawFileParseResult {
-  if (!text || !text.includes(TAG_MARKER)) return { text, files: [] };
+  if (!text || (!text.includes(TAG_MARKER) && !text.includes(KEY_MARKER))) {
+    return { text, files: [] };
+  }
 
   const files: RawFileChip[] = [];
   const outLines: string[] = [];
 
   for (const line of text.split('\n')) {
     if (!line.includes(TAG_MARKER)) {
+      // Tag-less key line with a junk prefix such as `[Name(login) (1 mizito/general/chats/...`:
+      // the prefix is an unclosed bracket and is dropped; the file name comes from the key.
+      const keyAt = line.indexOf(KEY_MARKER);
+      if (keyAt > 0 && JUNK_PREFIX_RE.test(line.slice(0, keyAt))) {
+        const key = line.slice(keyAt).trim();
+        const name = key.slice(key.lastIndexOf('/') + 1).trim();
+        if (name) files.push({ name, key, icon: fileIconForName(name) });
+        continue;
+      }
       outLines.push(line);
       continue;
     }
