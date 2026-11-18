@@ -36,13 +36,20 @@ from app.core.storage import contained_upload_candidates, module_uploads_dir
 # Content-Type) have repeatedly been XSS sinks in audited modules. Real
 # correspondence attachments are PDFs, images, and Office docs (ZIP/OLE).
 ALLOWED_ATTACHMENT_TYPES = frozenset({"pdf", "png", "jpeg", "gif", "webp", "zip", "ole"})
-from app.dependencies import CurrentUserId, RequirePermission, SessionDep, verify_project_access
+from app.dependencies import (
+    CurrentUserId,
+    RequirePermission,
+    SessionDep,
+    accessible_project_ids,
+    verify_project_access,
+)
 from app.modules.documents import object_store
 from app.modules.correspondence.schemas import (
     CorrespondenceCreate,
     CorrespondenceListResponse,
     CorrespondenceResponse,
     CorrespondenceUpdate,
+    UnreadCountResponse,
 )
 from app.modules.correspondence.service import CorrespondenceService
 
@@ -185,6 +192,19 @@ async def create_correspondence(
     return _to_response(correspondence)
 
 
+@router.get("/unread-count/", response_model=UnreadCountResponse)
+async def get_unread_count(
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("correspondence.read")),
+    service: CorrespondenceService = Depends(_get_service),
+) -> UnreadCountResponse:
+    """Letters in the caller's accessible projects, not sent by the caller, with no read mark for the caller."""
+    project_ids = await accessible_project_ids(session, str(user_id))
+    count = await service.unread_letter_count(uuid.UUID(str(user_id)), project_ids)
+    return UnreadCountResponse(count=count)
+
+
 @router.get("/{correspondence_id}", response_model=CorrespondenceResponse)
 async def get_correspondence(
     correspondence_id: uuid.UUID,
@@ -196,7 +216,24 @@ async def get_correspondence(
     correspondence = await service.get_correspondence(correspondence_id)
     if not await _is_general_project(session, correspondence.project_id):
         await verify_project_access(correspondence.project_id, str(user_id), session)
+    # Opening a letter as a recipient marks it read (no response change).
+    if user_id and str(correspondence.created_by or "") != str(user_id):
+        await service.mark_letter_read(correspondence.id, uuid.UUID(str(user_id)))
     return _to_response(correspondence)
+
+
+@router.post("/{correspondence_id}/read/", status_code=204)
+async def mark_correspondence_read(
+    correspondence_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("correspondence.read")),
+    service: CorrespondenceService = Depends(_get_service),
+) -> None:
+    """Idempotent read mark for the caller. 404 when the caller has no access to the letter's project."""
+    correspondence = await service.get_correspondence(correspondence_id)
+    await verify_project_access(correspondence.project_id, str(user_id), session)
+    await service.mark_letter_read(correspondence.id, uuid.UUID(str(user_id)))
 
 
 @router.patch("/{correspondence_id}", response_model=CorrespondenceResponse)

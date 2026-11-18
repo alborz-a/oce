@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
+import { useSwitcherState } from '../hooks/useSwitcherState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { apiGet } from '@/shared/lib/api';
@@ -18,6 +19,8 @@ import {
 } from '../types';
 import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
 import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
+import { MizitoMobileSubheader } from './MizitoMobileSubheader';
+import { ProjectSettingsModal } from './ProjectSettingsModal';
 import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
@@ -67,9 +70,15 @@ export function MizitoProjectWorkspace({
 
   const [activeTab, setActiveTab] = useState<WorkspaceTabKey>('group');
   const [filters, setFilters] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);
-  const [switcherOpen, setSwitcherOpen] = useState(false);
-  useEffect(() => registerMizitoSwitcher(() => setSwitcherOpen((open) => !open)), []);
+  const {
+    open: switcherOpen,
+    setOpen: setSwitcherOpen,
+    desktopHidden,
+    onMenuClick: onSwitcherMenuClick,
+  } = useSwitcherState();
+  useEffect(() => registerMizitoSwitcher(onSwitcherMenuClick), [onSwitcherMenuClick]);
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [mobileSettingsOpen, setMobileSettingsOpen] = useState(false);
   const [focusedBoardKey, setFocusedBoardKey] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<ProjectTaskItem | null>(null);
   const [activeDm, setActiveDm] = useState<{
@@ -154,7 +163,12 @@ export function MizitoProjectWorkspace({
 
   return (
     <WorkspaceDmContext.Provider value={dmValue}>
-    <div className="mizito-workspace-light mz-shell font-mz" dir="rtl" data-testid="mizito-workspace">
+    <div
+      className="mizito-workspace-light mz-shell font-mz"
+      dir="rtl"
+      data-testid="mizito-workspace"
+      data-switcher-hidden={desktopHidden ? 'true' : undefined}
+    >
       <ProjectGroupSwitcherSidebar
         projects={projects}
         activeProjectId={projectId}
@@ -196,8 +210,27 @@ export function MizitoProjectWorkspace({
       ) : (
         <aside className="mz-summary-col" aria-busy="true" />
       )}
+      {project && (
+        <ProjectSettingsModal
+          open={mobileSettingsOpen}
+          onClose={() => setMobileSettingsOpen(false)}
+          projectId={project.id}
+          projectName={project.name}
+        />
+      )}
 
       <main className="mz-main-canvas">
+        {project && (
+          <MizitoMobileSubheader
+            project={{
+              id: project.id,
+              name: project.name,
+              avatar_url: typeof project.metadata?.avatar_url === 'string' ? project.metadata.avatar_url : null,
+            }}
+            onOpenSettings={() => setMobileSettingsOpen(true)}
+            onStartMeeting={() => navigate(`/projects/${projectId}/meetings`)}
+          />
+        )}
         <MizitoTopTabAndFilterBar
           activeTab={activeTab}
           onTabChange={(tab) => {

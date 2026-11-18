@@ -282,3 +282,8 @@ export function attachmentDisplayName(path: string): string {
   const parts = path.split('/');
   return parts[parts.length - 1] || path;
 }
+
+/** Mark a letter read for the caller (idempotent). Used when a letter is opened. */
+export async function markCorrespondenceRead(id: string): Promise<void> {
+  await apiPost<void>(`/v1/correspondence/${encodeURIComponent(id)}/read/`, {});
+}

@@ -7,8 +7,9 @@ Tables:
 """
 
 import uuid
+from datetime import UTC, datetime
 
-from sqlalchemy import JSON, ForeignKey, String, Text, UniqueConstraint
+from sqlalchemy import JSON, DateTime, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
@@ -105,3 +106,30 @@ class Correspondence(Base):
 
     def __repr__(self) -> str:
         return f"<Correspondence {self.reference_number} ({self.direction}/{self.correspondence_type})>"
+
+
+class CorrespondenceLetterRead(Base):
+    """One row per (letter, user) once that user has opened the letter.
+
+    Drives the per-user unread count. Absence of a row means unread.
+    Upsert-only: a second open of the same letter is a no-op.
+    """
+
+    __tablename__ = "oe_correspondence_letter_read"
+    __table_args__ = (UniqueConstraint("letter_id", "user_id", name="uq_oe_correspondence_letter_read_letter_user"),)
+
+    letter_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_correspondence_correspondence.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_users_user.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    read_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC)
+    )

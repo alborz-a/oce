@@ -51,7 +51,7 @@ export function MizitoGlobalTopBar({ onMenuClick }: MizitoGlobalTopBarProps) {
       dir="rtl"
       data-testid="mizito-global-topbar"
       className="sticky top-0 z-40 flex h-14 items-center gap-3 px-4 text-white"
-      style={{ background: '#4285f4' }}
+      style={{ background: '#1f5c88' }}
     >
       <button type="button" onClick={onMenuClick} aria-label="منو" className={iconBtn}>
         <MzIcon name="menu" size={20} />

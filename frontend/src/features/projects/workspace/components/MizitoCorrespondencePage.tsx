@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CorrespondencePage } from '@/features/correspondence/CorrespondencePage';
@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import '../workspace.css';
 import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
+import { useSwitcherState } from '../hooks/useSwitcherState';
 import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
 
 /**
@@ -19,7 +20,12 @@ export function MizitoCorrespondencePage() {
   const { projectId = '' } = useParams();
   const userId = useAuthStore((s) => s.userId) ?? '';
   const setChromeActive = useWorkspaceChromeStore((st) => st.setActive);
-  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const {
+    open: switcherOpen,
+    setOpen: setSwitcherOpen,
+    desktopHidden,
+    onMenuClick: onSwitcherMenuClick,
+  } = useSwitcherState();
 
   useEffect(() => {
     // Mirror MizitoProjectWorkspace: hide OCE chrome and force light tokens while mounted.
@@ -35,7 +41,7 @@ export function MizitoCorrespondencePage() {
     };
   }, [setChromeActive]);
 
-  useEffect(() => registerMizitoSwitcher(() => setSwitcherOpen((open) => !open)), []);
+  useEffect(() => registerMizitoSwitcher(onSwitcherMenuClick), [onSwitcherMenuClick]);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -53,7 +59,12 @@ export function MizitoCorrespondencePage() {
   );
 
   return (
-    <div className="mizito-workspace-light mz-shell font-mz" dir="rtl" data-testid="mizito-letters">
+    <div
+      className="mizito-workspace-light mz-shell font-mz"
+      dir="rtl"
+      data-testid="mizito-letters"
+      data-switcher-hidden={desktopHidden ? 'true' : undefined}
+    >
       <ProjectGroupSwitcherSidebar
         projects={projects}
         activeProjectId={projectId}
