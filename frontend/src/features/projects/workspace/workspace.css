@@ -292,6 +292,35 @@
   }
 }
 
+/* 390px tab-bar fit (mobile only): the tabs strip scrolls inside its own box and the page stays 390 wide. */
+@media (max-width: 767px) {
+  html,
+  body {
+    max-inline-size: 100vw;
+    overflow-x: hidden;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar {
+    max-inline-size: 100vw;
+    overflow-x: hidden;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar > div:first-child > nav[role='tablist'] {
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar > div:first-child > nav[role='tablist']::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mizito-workspace-light .mz-top-tabbar > div:first-child > nav[role='tablist'] > * {
+    flex-shrink: 0;
+  }
+}
+
 .mizito-workspace-light .submenu_tab {
   position: relative;
   display: inline-flex;
@@ -552,8 +581,8 @@
 }
 
 /* Imported Mizito chat event line (copied verbatim from mizito-design-assets/raw-css/app.css) */
-.meeting-system-message{position:absolute;top:-31px;left:0;color:#fff;right:0;text-align:center}
-.meeting-system-message span{background:rgba(255,255,255,.08);padding:0 10px;border-radius:2px}
+.meeting-system-message{position:static;left:0;right:0;margin:8px 0;color:#37474f;text-align:center}
+.meeting-system-message span{background:#e0e3e8;color:#37474f;padding:0 10px;border-radius:2px}
 
 /* Framed image for imported chat files: 260x195 */
 .im-entity-photo{display:block;width:260px;height:195px;max-width:100%;padding:0;border:1px solid rgba(0,0,0,.1);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.03);cursor:pointer}

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { MzIcon } from './MzIcon';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
-import { Logo } from '@/shared/ui';
+import { apiGet } from '@/shared/lib/api';
+import { UserAvatar } from '@/shared/ui/UserAvatar';
 
 export interface MizitoGlobalTopBarProps {
   /** Hamburger click: opens the Mizito switcher drawer (host decides the target). */
@@ -21,7 +22,24 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
   const fullName = useAuthStore((s) => s.userFullName);
   const logout = useAuthStore((s) => s.logout);
   const company = useBrandingStore((s) => s.companyName.trim());
+  const logoDataUrl = useBrandingStore((s) => s.logoDataUrl);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  // Same route as the OCE header (`/v1/users/me/`, `avatar_url`).
+  useEffect(() => {
+    let cancelled = false;
+    apiGet<{ avatar_url?: string | null }>('/v1/users/me/')
+      .then((me) => {
+        if (!cancelled) setAvatarUrl(me?.avatar_url ?? null);
+      })
+      .catch(() => {
+        if (!cancelled) setAvatarUrl(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openSearch = () => {
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
@@ -50,7 +68,7 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
           data-testid="mizito-brand"
           className="flex min-w-0 items-center gap-2 rounded-md px-1 py-1 hover:bg-white/10"
         >
-          <Logo size="xs" />
+          <img src={logoDataUrl ?? '/company-logo.svg'} alt="" className="h-6 w-6 shrink-0 object-contain" />
           <span className="truncate whitespace-nowrap text-[15px] font-bold">{company || FALLBACK_BRAND}</span>
           <MzIcon name="arrow_drop_down" size={14} className="shrink-0 text-white/80" />
         </button>
@@ -131,7 +149,11 @@ export function MizitoGlobalTopBar({ onMenuClick, onOpenAppMenu }: MizitoGlobalT
           aria-label="پروفایل"
           className="ms-1 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#e0e3e8] text-[13px] font-bold text-[#37474f] shadow-[0_1px_3px_rgba(0,0,0,.28)]"
         >
-          {(fullName ?? '؟').trim().charAt(0)}
+          {avatarUrl ? (
+            <UserAvatar url={avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
+          ) : (
+            (fullName ?? '؟').trim().charAt(0)
+          )}
         </button>
       </div>
     </header>
