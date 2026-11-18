@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { toPersianDigits } from '@/shared/lib/jalali';
 import { MzIcon } from './MzIcon';
@@ -58,9 +58,12 @@ export function MizitoNav({
   counts,
 }: { onOpenCompanyChat?: () => void; activeTo?: string; counts?: MizitoNavCounts } = {}) {
   const forced = (to: string) => (activeTo === undefined ? null : activeTo === to);
-  const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
+  // Current route project wins; the store can hold a stale project (O8, PR #124).
+  const { projectId: routeProjectId } = useParams();
+  const storeProjectId = useProjectContextStore((s) => s.activeProjectId);
+  const lettersProjectId = routeProjectId || storeProjectId;
   // Project-scoped letters link so RestrictedRouteGuard keeps the user in the active project.
-  const lettersTo = activeProjectId ? `/projects/${activeProjectId}/correspondence` : '/correspondence';
+  const lettersTo = lettersProjectId ? `/projects/${lettersProjectId}/correspondence` : '/correspondence';
   return (
     <nav className="mz-nav" aria-label="منوی میزیتو" data-testid="mizito-nav">
       <NavItem to="/" end label="داشبورد" icon="home" color="#db4437" active={forced('/')} />
