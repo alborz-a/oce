@@ -16,14 +16,14 @@ const DENIED_TEXT = 'شما اجازهٔ مشاهدهٔ گفتگوی این پر
 
 describe('ProjectStreamList access denied state', () => {
   it('shows the permission message instead of the empty state on 403', () => {
-    render(<ProjectStreamList projectId="p-1" items={[]} accessDenied />);
+    render(<ProjectStreamList projectId="p-1" items={[]} accessDenied onReply={vi.fn()} onReact={vi.fn()} />);
 
     expect(screen.getByTestId('stream-access-denied')).toHaveTextContent(DENIED_TEXT);
     expect(screen.queryByTestId('stream-empty')).not.toBeInTheDocument();
   });
 
   it('keeps the normal empty state when access is not denied', () => {
-    render(<ProjectStreamList projectId="p-1" items={[]} />);
+    render(<ProjectStreamList projectId="p-1" items={[]} onReply={vi.fn()} onReact={vi.fn()} />);
 
     expect(screen.getByTestId('stream-empty')).toBeInTheDocument();
     expect(screen.queryByTestId('stream-access-denied')).not.toBeInTheDocument();
