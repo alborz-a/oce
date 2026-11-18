@@ -21,7 +21,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
-import { Pencil, Plus, X, Trash2, UserPlus } from 'lucide-react';
+import { Pencil, Plus, X, ShieldCheck, UserPlus } from 'lucide-react';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { listTeams, updateMemberRole, type Team, type TeamRole } from '@/features/teams/api';
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog';
@@ -51,6 +51,7 @@ export interface ProjectMember {
  * Roles surfaced in the Add-Member modal. The backend accepts a wider
  * whitelist (see AddProjectMemberRequest); these are the user-facing labels.
  */
+const ROLE_LABELS_FA: Record<string, string> = { project_manager: 'مدیر پروژه', owner: 'مالک پروژه', lead: 'سرپرست', estimator: 'برآوردگر', member: 'عضو', viewer: 'بیننده' };
 const ROLE_CHOICES: readonly string[] = [
   'estimator',
   'viewer',
@@ -244,12 +245,15 @@ function MemberListModal({
                   {m.full_name || m.email}
                 </div>
                 <div className="text-xs text-content-tertiary truncate">
-                  {m.email} · {m.role}
+                  {m.email} · {ROLE_LABELS_FA[m.role] ?? m.role}
                   {m.is_owner ? (
                     <span className="ms-1 text-oe-blue">
                       ·{' '}
                       {t('projects.team.owner', { defaultValue: 'Owner' })}
                     </span>
+                  ) : null}
+                  {m.is_owner || m.role === 'project_manager' ? (
+                    <ShieldCheck size={14} aria-hidden="true" className="ms-1 inline" style={{ color: m.is_owner ? '#ffc107' : '#009688' }} />
                   ) : null}
                 </div>
               </div>
@@ -268,12 +272,7 @@ function MemberListModal({
                     ]),
                   ).map((r) => (
                     <option key={r} value={r}>
-                      {t(`projects.team.role.${r}`, {
-                        defaultValue:
-                          r === 'project_manager'
-                            ? 'Project manager'
-                            : r.charAt(0).toUpperCase() + r.slice(1),
-                      })}
+                      {ROLE_LABELS_FA[r] ?? r}
                     </option>
                   ))}
                 </select>
@@ -287,7 +286,7 @@ function MemberListModal({
                   })}
                   data-testid="team-strip-remove-btn"
                 >
-                  <Trash2 size={16} />
+                  <X size={16} />
                 </button>
               )}
             </li>
@@ -392,12 +391,7 @@ function AddMemberModal({
             >
               {ROLE_CHOICES.filter((r) => canGrantElevated || r !== 'project_manager').map((r) => (
                 <option key={r} value={r}>
-                  {t(`projects.team.role.${r}`, {
-                    defaultValue:
-                      r === 'project_manager'
-                        ? 'Project manager'
-                        : r.charAt(0).toUpperCase() + r.slice(1),
-                  })}
+                  {ROLE_LABELS_FA[r] ?? r}
                 </option>
               ))}
             </select>
