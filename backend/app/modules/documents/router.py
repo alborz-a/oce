@@ -1272,6 +1272,41 @@ async def photo_thumb_url(
     return PhotoUrlResponse(url=url)
 
 
+# ── Presigned Mizito general-chat file URLs ────────────────────────────
+
+_CHAT_FILE_KEY_PREFIX = "mizito/general/chats/"
+
+
+def _chat_file_key_ok(key: str) -> bool:
+    """Only keys under the imported general-chat prefix, with no traversal, double slash, backslash or control char."""
+    if not key.startswith(_CHAT_FILE_KEY_PREFIX) or len(key) <= len(_CHAT_FILE_KEY_PREFIX):
+        return False
+    if ".." in key or "//" in key or "\\" in key:
+        return False
+    return all(ord(ch) >= 32 and ord(ch) != 127 for ch in key)
+
+
+@router.get(
+    "/chat-file-url/",
+    response_model=PhotoUrlResponse,
+    dependencies=[Depends(RequirePermission("documents.read"))],
+)
+async def chat_file_url(
+    user_id: CurrentUserId,
+    key: str = Query(..., min_length=1, max_length=1024),
+) -> PhotoUrlResponse:
+    """Short-lived presigned GET for an imported general-chat file (``mizito/general/chats/...``) in the bucket."""
+    del user_id
+    if not _chat_file_key_ok(key):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid chat file key")
+    backend = object_store._imported_s3()
+    if backend is None:
+        return PhotoUrlResponse(url=None)
+    # The imported backend already carries the ``mizito`` key prefix, so pass the key without it.
+    url = backend.url_for(key[len("mizito/") :], expires_in=object_store.PRESIGN_TTL_S)
+    return PhotoUrlResponse(url=url)
+
+
 # ── Serve photo thumbnail ──────────────────────────────────────────────
 
 
