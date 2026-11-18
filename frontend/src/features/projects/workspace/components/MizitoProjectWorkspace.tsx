@@ -21,6 +21,7 @@ import { MizitoTopTabAndFilterBar } from './MizitoTopTabAndFilterBar';
 import { ProjectRightSummaryPanel } from './ProjectRightSummaryPanel';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
+import { CompanyChatPanel } from './CompanyChatPanel';
 import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
 import { WorkspaceDmContext, type WorkspaceDmValue } from '../context/WorkspaceDmContext';
 import type { ChatRoom } from '@/modules/team-chat/types';
@@ -76,6 +77,9 @@ export function MizitoProjectWorkspace({
     peerName: string;
     peerAvatarUrl: string | null;
   } | null>(null);
+
+  const [companyChatOpen, setCompanyChatOpen] = useState(false);
+  useEffect(() => setCompanyChatOpen(false), [projectId]);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -162,6 +166,10 @@ export function MizitoProjectWorkspace({
         onMobileClose={() => setSwitcherOpen(false)}
         pinnedProjectIds={pins.pinnedIds}
         onTogglePin={pins.togglePin}
+        onOpenCompanyChat={() => {
+          setActiveDm(null);
+          setCompanyChatOpen(true);
+        }}
       />
 
       {project ? (
@@ -192,7 +200,10 @@ export function MizitoProjectWorkspace({
       <main className="mz-main-canvas">
         <MizitoTopTabAndFilterBar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={(tab) => {
+            setCompanyChatOpen(false);
+            setActiveTab(tab);
+          }}
           filters={filters}
           onFiltersChange={setFilters}
           filterSlot={
@@ -204,7 +215,16 @@ export function MizitoProjectWorkspace({
           onSwitchToEngineering={onSwitchToEngineering}
           onOpenMobileSummary={() => setSummaryOpen(true)}
         />
-        {activeTab === 'group' && (
+        {companyChatOpen && (
+          <CompanyChatPanel
+            projectId={projectId}
+            currentUserId={userId}
+            currentUser={{ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }}
+            members={members}
+            onClose={() => setCompanyChatOpen(false)}
+          />
+        )}
+        {activeTab === 'group' && !companyChatOpen && (
           <ProjectGroupTab
             projectId={projectId}
             currentUserId={userId}
@@ -219,7 +239,7 @@ export function MizitoProjectWorkspace({
             onCloseDm={() => setActiveDm(null)}
           />
         )}
-        {activeTab === 'tasks' && (
+        {activeTab === 'tasks' && !companyChatOpen && (
           <ProjectTasksTab
             projectId={projectId}
             tasks={tasks}
@@ -228,7 +248,7 @@ export function MizitoProjectWorkspace({
             onSelectTask={setSelectedTask}
           />
         )}
-        {activeTab === 'board' && (
+        {activeTab === 'board' && !companyChatOpen && (
           <ProjectBoardTab
             projectId={projectId}
             tasks={tasks}
@@ -238,7 +258,7 @@ export function MizitoProjectWorkspace({
             onSelectTask={setSelectedTask}
           />
         )}
-        {activeTab === 'calendar' && (
+        {activeTab === 'calendar' && !companyChatOpen && (
           <ProjectCalendarTab
             projectId={projectId}
             tasks={tasks}
@@ -247,7 +267,7 @@ export function MizitoProjectWorkspace({
             onTasksChanged={onTasksChanged}
           />
         )}
-        {activeTab === 'gantt' && (
+        {activeTab === 'gantt' && !companyChatOpen && (
           <ProjectGanttTab
             projectId={projectId}
             tasks={tasks}

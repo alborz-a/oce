@@ -141,6 +141,7 @@ export interface ProjectGroupSwitcherSidebarProps {
   onMobileClose?: () => void;
   pinnedProjectIds?: string[];
   onTogglePin?: (projectId: string) => void;
+  onOpenCompanyChat?: () => void;
   className?: string;
 }
 
@@ -152,6 +153,7 @@ export function ProjectGroupSwitcherSidebar({
   teammateTaskMap,
   mobileOpen = false,
   onMobileClose,
+  onOpenCompanyChat,
   className = '',
 }: ProjectGroupSwitcherSidebarProps) {
   const openDm = useOpenDmForColleague(currentUserId);
@@ -202,7 +204,7 @@ export function ProjectGroupSwitcherSidebar({
           </button>
         </div>
 
-        <MizitoNav />
+        <MizitoNav onOpenCompanyChat={onOpenCompanyChat} />
         {/* Bottom `همکارانم` section */}
         <section
           aria-label="همکارانم"
