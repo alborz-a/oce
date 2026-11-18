@@ -550,3 +550,12 @@
     display: none;
   }
 }
+
+/* Imported Mizito chat event line (copied verbatim from mizito-design-assets/raw-css/app.css) */
+.meeting-system-message{position:absolute;top:-31px;left:0;color:#fff;right:0;text-align:center}
+.meeting-system-message span{background:rgba(255,255,255,.08);padding:0 10px;border-radius:2px}
+
+/* Framed image for imported chat files: 260x195 */
+.im-entity-photo{display:block;width:260px;height:195px;max-width:100%;padding:0;border:1px solid rgba(0,0,0,.1);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.03);cursor:pointer}
+.im-entity-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.im-entity-photo:disabled{cursor:default}

@@ -6,20 +6,97 @@ import type { StreamItem, StreamReactionMap } from '../../types';
 import { useOpenDmForColleague } from '../../context/WorkspaceDmContext';
 import { extractImageUrls, isBareImageUrlMessage } from '../../lib/chatPhotoUrls';
 import type { RawFileChip } from '../../lib/rawFileTag';
+import { chatEventLabel } from '../../lib/chatEventLine';
+import { apiGet } from '@/shared/lib/api';
+import { useQuery } from '@tanstack/react-query';
+import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
 
-/** File chips for unresolved `[فایل: …]` chat tags. Display only: no link, no click. */
+const RAW_IMAGE_RE = /\.(jpe?g|png|gif|heic|jfif|webp)$/i;
+
+interface ChatFileUrlResponse {
+  url: string | null;
+}
+
+function chatFileUrlPath(key: string): string {
+  return `/v1/documents/chat-file-url/?key=${encodeURIComponent(key)}`;
+}
+
+/** Download an imported chat file: the blank tab is opened first so the popup blocker allows it. */
+async function openChatFile(key: string): Promise<void> {
+  const win = window.open('', '_blank');
+  if (win) win.opener = null;
+  try {
+    const res = await apiGet<ChatFileUrlResponse>(chatFileUrlPath(key));
+    if (res.url && win) win.location.href = res.url;
+    else win?.close();
+  } catch {
+    win?.close();
+  }
+}
+
+/** One unresolved `[فایل: …]` entity: framed photo for image extensions, file chip otherwise. */
+function RawFileEntity({ file }: { file: RawFileChip }) {
+  const [open, setOpen] = useState(false);
+  const key = file.key;
+  const isImage = Boolean(key) && RAW_IMAGE_RE.test(file.name.trim());
+  const { data } = useQuery({
+    queryKey: ['chat-file-url', key],
+    queryFn: () => apiGet<ChatFileUrlResponse>(chatFileUrlPath(key ?? '')),
+    enabled: isImage && Boolean(key),
+    staleTime: 0,
+  });
+  const imageUrl = data?.url ?? null;
+
+  if (isImage && key) {
+    return (
+      <>
+        <button
+          type="button"
+          className="im-entity-photo"
+          onClick={() => setOpen(true)}
+          disabled={!imageUrl}
+          aria-label={file.name}
+        >
+          {imageUrl ? (
+            <img src={imageUrl} alt={file.name} loading="lazy" />
+          ) : (
+            <MzIcon name="image" size={28} />
+          )}
+        </button>
+        {open && imageUrl && (
+          <ChatPhotoLightbox
+            photos={[{ id: key, url: imageUrl, name: file.name }]}
+            index={0}
+            onClose={() => setOpen(false)}
+            onIndexChange={() => undefined}
+          />
+        )}
+      </>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={!key}
+      onClick={() => {
+        if (key) void openChatFile(key);
+      }}
+      className="flex max-w-full items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-start text-[13px] text-black/85 disabled:cursor-default"
+    >
+      <MzIcon name={file.icon} size={18} />
+      <span className="min-w-0 truncate">{file.name}</span>
+    </button>
+  );
+}
+
+/** File entities for unresolved `[فایل: …]` chat tags. */
 function RawFileChips({ files }: { files?: RawFileChip[] }) {
   if (!files || files.length === 0) return null;
   return (
     <div className="mb-1 flex flex-col gap-1">
       {files.map((file, idx) => (
-        <div
-          key={`${file.name}-${idx}`}
-          className="flex max-w-full items-center gap-2 rounded-lg border border-black/10 bg-black/[0.03] px-2.5 py-1.5 text-[13px] text-black/85"
-        >
-          <MzIcon name={file.icon} size={18} />
-          <span className="min-w-0 truncate">{file.name}</span>
-        </div>
+        <RawFileEntity key={`${file.name}-${idx}`} file={file} />
       ))}
     </div>
   );
@@ -281,6 +358,17 @@ export function StreamChatMessageCard({
     onEdit(item, trimmed);
     setEditing(false);
   };
+
+  const eventLabel = chatEventLabel(item.text);
+  if (eventLabel) {
+    return (
+      <div className="relative mb-2 mt-[31px] w-full" data-testid={`stream-event-${item.id}`}>
+        <div className="meeting-system-message">
+          <span>{eventLabel}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <article
