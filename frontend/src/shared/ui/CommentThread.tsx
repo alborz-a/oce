@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useHasPermission } from '@/shared/lib/permissionGates';
 import { MessageSquare, Send, Reply, Pencil, Trash2, X, Check } from 'lucide-react';
+import { ChatRichMessageBody } from './ChatEntityCards';
 import clsx from 'clsx';
 import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
 import { useToastStore } from '@/stores/useToastStore';
@@ -72,6 +73,7 @@ export interface CommentThreadProps {
   entityType: string;
   entityId: string;
   className?: string;
+  projectId?: string;
 }
 
 // -- Helpers -----------------------------------------------------------------
@@ -119,20 +121,6 @@ function avatarColor(authorId: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]!;
 }
 
-/** Highlight @mentions in text. */
-function renderTextWithMentions(text: string): React.ReactNode {
-  const parts = text.split(/(@\w[\w.]*)/g);
-  return parts.map((part, i) =>
-    part.startsWith('@') ? (
-      <span key={i} className="font-semibold text-oe-blue">
-        {part}
-      </span>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
-  );
-}
-
 // -- Single Comment ----------------------------------------------------------
 
 interface CommentItemProps {
@@ -144,6 +132,7 @@ interface CommentItemProps {
   onEdit: (commentId: string, newText: string) => void;
   onDelete: (commentId: string) => void;
   isNew?: boolean;
+  projectId?: string;
   t: ReturnType<typeof useTranslation>['t'];
 }
 
@@ -155,6 +144,7 @@ function CommentItem({
   onEdit,
   onDelete,
   isNew = false,
+  projectId,
   t,
 }: CommentItemProps) {
   const [editing, setEditing] = useState(false);
@@ -276,9 +266,7 @@ function CommentItem({
             </div>
           </div>
         ) : (
-          <p className="mt-0.5 text-xs text-content-secondary leading-relaxed whitespace-pre-wrap break-words">
-            {renderTextWithMentions(comment.text)}
-          </p>
+          <ChatRichMessageBody text={comment.text} projectId={projectId} className="mt-0.5" />
         )}
 
         {/* Actions */}
@@ -319,7 +307,7 @@ function CommentItem({
 
 // -- Main Component ----------------------------------------------------------
 
-export function CommentThread({ entityType, entityId, className }: CommentThreadProps) {
+export function CommentThread({ entityType, entityId, className, projectId }: CommentThreadProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
@@ -581,6 +569,7 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
             <div key={comment.id}>
               <CommentItem
                 comment={comment}
+                projectId={projectId}
                 displayName={displayAuthor(comment.author_id)}
                 onReply={handleReply}
                 onEdit={handleEdit}
@@ -594,6 +583,7 @@ export function CommentThread({ entityType, entityId, className }: CommentThread
                     <CommentItem
                       key={reply.id}
                       comment={reply}
+                      projectId={projectId}
                       displayName={displayAuthor(reply.author_id)}
                       isReply
                       onReply={handleReply}
