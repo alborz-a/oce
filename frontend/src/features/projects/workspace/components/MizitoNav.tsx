@@ -17,12 +17,24 @@ function NavItem({ to, label, dot, end = false }: NavItemProps) {
 }
 
 /** Mizito left-column nav (P5 port). Items without an OCE route are intentionally omitted. */
-export function MizitoNav() {
+export function MizitoNav({ onOpenCompanyChat }: { onOpenCompanyChat?: () => void } = {}) {
   return (
     <nav className="mz-nav" aria-label="منوی میزیتو" data-testid="mizito-nav">
       <NavItem to="/" end label="داشبورد" dot="var(--mz-primary)" />
       <hr />
-      <NavItem to="/chat" label="گفتگو" dot="var(--mz-chat)" />
+      {onOpenCompanyChat ? (
+        <button
+          type="button"
+          className="mz-nav-item"
+          onClick={onOpenCompanyChat}
+          data-testid="mizito-nav-company-chat"
+        >
+          <span className="mz-dot" style={{ background: 'var(--mz-chat)' }} aria-hidden="true" />
+          <span>گفتگو</span>
+        </button>
+      ) : (
+        <NavItem to="/chat" label="گفتگو" dot="var(--mz-chat)" />
+      )}
       <NavItem to="/projects" label="پروژه‌ها" dot="var(--mz-project)" />
       <NavItem to="/tasks" label="وظایف" dot="var(--mz-task)" />
       <NavItem to="/correspondence" label="نامه‌ها" dot="var(--mz-inbox)" />
