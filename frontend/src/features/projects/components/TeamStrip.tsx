@@ -21,7 +21,8 @@ import { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
-import { Pencil, Plus, X, ShieldCheck, UserPlus } from 'lucide-react';
+import { Plus, X, ShieldCheck, UserPlus } from 'lucide-react';
+import { MzIcon } from '@/features/projects/workspace/components/MzIcon';
 import { apiGet, apiPost, apiDelete } from '@/shared/lib/api';
 import { listTeams, updateMemberRole, type Team, type TeamRole } from '@/features/teams/api';
 import { ConfirmDialog } from '@/shared/ui/ConfirmDialog';
@@ -634,7 +635,7 @@ export function TeamStrip({
             aria-label={t('projects.team.edit_members', { defaultValue: 'تنظیمات پروژه' })}
             title={t('projects.team.edit_members', { defaultValue: 'تنظیمات پروژه' })}
           >
-            <Pencil size={20} aria-hidden="true" />
+            <MzIcon name="edit" size={20} />
           </button>
         )}
         {canManage && !isSummary && (

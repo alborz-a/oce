@@ -7,9 +7,22 @@ import { CustomBranding } from './CustomBranding';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { MzIcon } from '../../features/projects/workspace/components/MzIcon';
-import { type LucideIcon, FolderOpen, Table2, CalendarDays, Boxes, Settings, Info, Sparkles, ClipboardList, Users, HelpCircle, Pin, PinOff, EyeOff, Pencil, Github, Loader2, LayoutGrid, GraduationCap, FolderKanban, Camera, MessageSquare, FileText } from 'lucide-react';
+import { type LucideIcon, FolderOpen, Table2, CalendarDays, Boxes, Settings, Info, Sparkles, ClipboardList, Users, HelpCircle, Pin, PinOff, EyeOff, Github, Loader2, LayoutGrid, GraduationCap } from 'lucide-react';
 import { LEARN_GROUP_ID, navGroups, type NavGroup, type NavItem } from './navCatalog';
 import { routeBackendOff } from './routeBackendModules';
+
+// Material ligature glyph in the lucide-typed NavItem.icon slot: renders MzIcon, no lucide svg.
+const mzLigatureIcon = (name: string) => {
+  const Glyph = ({ size, className }: { size?: number; className?: string }) => (
+    <MzIcon name={name} size={size ?? 16} className={className} />
+  );
+  return Glyph as unknown as LucideIcon;
+};
+const NAV_GLYPH_FOLDER = mzLigatureIcon('folder');
+const NAV_GLYPH_CAMERA = mzLigatureIcon('photo_camera');
+const NAV_GLYPH_CHAT = mzLigatureIcon('chat');
+const NAV_GLYPH_DOCS = mzLigatureIcon('description');
+const NAV_GLYPH_EDIT = mzLigatureIcon('edit');
 
 // [RSC-IRAN] Exactly four restricted shell items (Step 5.3)
 const RESTRICTED_NAV_ITEMS: NavItem[] = [
@@ -17,25 +30,25 @@ const RESTRICTED_NAV_ITEMS: NavItem[] = [
     to: '/projects',
     labelKey: 'shell.projects_tasks',
     defaultLabel: 'پروژه‌ها و کارها',
-    icon: FolderKanban,
+    icon: NAV_GLYPH_FOLDER,
   },
   {
     to: '/photos',
     labelKey: 'shell.gallery',
     defaultLabel: 'گالری تصاویر',
-    icon: Camera,
+    icon: NAV_GLYPH_CAMERA,
   },
   {
     to: '/chat',
     labelKey: 'shell.chat',
     defaultLabel: 'گفتگو',
-    icon: MessageSquare,
+    icon: NAV_GLYPH_CHAT,
   },
   {
     to: '/files',
     labelKey: 'shell.documents',
     defaultLabel: 'مدارک',
-    icon: FileText,
+    icon: NAV_GLYPH_DOCS,
   },
 ];
 import { LEARN_ANCHOR_ATTR, anchorRect, flyLearn } from './learnFlight';
@@ -578,7 +591,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
   const editMenuGridItem: AdminGridItem = {
     labelKey: 'sidebar.edit_menu',
     to: '__edit_menu__',
-    icon: Pencil,
+    icon: NAV_GLYPH_EDIT,
     onClick: enterEditMode,
   };
   const adminGridWithEdit: AdminGridItem[] = useMemo(() => {
