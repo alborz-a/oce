@@ -4,14 +4,14 @@
 
 import uuid
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.attributes import set_committed_value
 from sqlalchemy.orm.util import identity_key
 from sqlalchemy.sql.elements import ClauseElement
 
-from app.modules.correspondence.models import Correspondence
+from app.modules.correspondence.models import Correspondence, CorrespondenceLetterRead
 
 
 class CorrespondenceRepository:
@@ -22,6 +22,46 @@ class CorrespondenceRepository:
 
     async def get_by_id(self, correspondence_id: uuid.UUID) -> Correspondence | None:
         return await self.session.get(Correspondence, correspondence_id)
+
+    async def unread_count(self, user_id: uuid.UUID, project_ids: set[uuid.UUID] | None) -> int:
+        """Letters in ``project_ids`` (``None`` = all, admin) not sent by the caller and not yet read by them."""
+        uid = str(user_id)
+        read_exists = (
+            select(CorrespondenceLetterRead.id)
+            .where(
+                CorrespondenceLetterRead.letter_id == Correspondence.id,
+                CorrespondenceLetterRead.user_id == user_id,
+            )
+            .exists()
+        )
+        stmt = select(func.count(Correspondence.id)).where(
+            or_(Correspondence.created_by.is_(None), Correspondence.created_by != uid),
+            ~read_exists,
+        )
+        if project_ids is not None:
+            if not project_ids:
+                return 0
+            stmt = stmt.where(Correspondence.project_id.in_(project_ids))
+        return int((await self.session.execute(stmt)).scalar_one())
+
+    async def get_read_mark(self, letter_id: uuid.UUID, user_id: uuid.UUID) -> CorrespondenceLetterRead | None:
+        stmt = select(CorrespondenceLetterRead).where(
+            CorrespondenceLetterRead.letter_id == letter_id,
+            CorrespondenceLetterRead.user_id == user_id,
+        )
+        return (await self.session.execute(stmt)).scalar_one_or_none()
+
+    async def mark_read(self, letter_id: uuid.UUID, user_id: uuid.UUID) -> None:
+        """Idempotent upsert of the (letter, user) read row. Race-safe via savepoint on the unique key."""
+        if await self.get_read_mark(letter_id, user_id) is not None:
+            return
+        try:
+            async with self.session.begin_nested():
+                self.session.add(CorrespondenceLetterRead(letter_id=letter_id, user_id=user_id))
+                await self.session.flush()
+        except IntegrityError:
+            # A concurrent request inserted the same row; the mark exists, which is the goal.
+            pass
 
     async def list_for_project(
         self,

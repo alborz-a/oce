@@ -72,7 +72,9 @@ import {
   type CorrespondenceStatus,
   type CreateCorrespondencePayload,
   type UpdateCorrespondencePayload,
+  markCorrespondenceRead,
 } from './api';
+import { LETTERS_UNREAD_COUNT_KEY } from '@/features/projects/workspace/hooks/useLettersUnreadCount';
 import { correspondenceGuide } from './correspondenceGuide';
 import { CreateTaskFromSourceDialog } from '@/features/tasks';
 import { InsightsPanel, InsightsToggleButton, useModuleInsights } from '@/features/insights';
@@ -1003,6 +1005,16 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
+  const qc = useQueryClient();
+  /** Opening a letter marks it read for the caller, then refreshes the nav unread badge. */
+  const toggleExpanded = () => {
+    if (!expanded) {
+      markCorrespondenceRead(item.id)
+        .then(() => qc.invalidateQueries({ queryKey: LETTERS_UNREAD_COUNT_KEY }))
+        .catch(() => undefined);
+    }
+    setExpanded((prev) => !prev);
+  };
   const [uploading, setUploading] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   // Undefined rather than a dash: these feed `title`, and a tooltip that
@@ -1040,8 +1052,8 @@ const CorrespondenceRow = React.memo(function CorrespondenceRow({
         tabIndex={0}
         aria-expanded={expanded}
         aria-label={t('correspondence.toggle_row', { defaultValue: 'Toggle details for {{ref}}', ref: item.reference_number })}
-        onClick={() => setExpanded((prev) => !prev)}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded((prev) => !prev); } }}
+        onClick={toggleExpanded}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleExpanded(); } }}
       >
         <ChevronRight
           size={14}

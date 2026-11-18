@@ -12,6 +12,9 @@ const ALLOWED: RegExp[] = [
   /^\/projects\/[^/]+\/correspondence(?:\/.*)?$/,
   /^\/correspondence$/,
   /^\/profile$/,
+  /^\/notes$/,
+  /^\/customers$/,
+  /^\/monitoring$/,
 ];
 
 /** True when `to` (path, optional ?query / #hash) is open to a normal user. */

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { ProfilePage } from '@/features/profile/ProfilePage';
@@ -7,6 +7,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import '../workspace.css';
 import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
+import { useSwitcherState } from '../hooks/useSwitcherState';
 import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
 
 /**
@@ -17,7 +18,12 @@ export function MizitoProfilePage() {
   const navigate = useNavigate();
   const userId = useAuthStore((s) => s.userId) ?? '';
   const setChromeActive = useWorkspaceChromeStore((st) => st.setActive);
-  const [switcherOpen, setSwitcherOpen] = useState(false);
+  const {
+    open: switcherOpen,
+    setOpen: setSwitcherOpen,
+    desktopHidden,
+    onMenuClick: onSwitcherMenuClick,
+  } = useSwitcherState();
 
   useEffect(() => {
     // Mirror MizitoCorrespondencePage: hide OCE chrome and force light tokens while mounted.
@@ -33,7 +39,7 @@ export function MizitoProfilePage() {
     };
   }, [setChromeActive]);
 
-  useEffect(() => registerMizitoSwitcher(() => setSwitcherOpen((open) => !open)), []);
+  useEffect(() => registerMizitoSwitcher(onSwitcherMenuClick), [onSwitcherMenuClick]);
 
   const projectsQuery = useQuery({
     queryKey: ['projects', 'workspace-switcher'],
@@ -51,7 +57,12 @@ export function MizitoProfilePage() {
   );
 
   return (
-    <div className="mizito-workspace-light mz-shell font-mz" dir="rtl" data-testid="mizito-profile">
+    <div
+      className="mizito-workspace-light mz-shell font-mz"
+      dir="rtl"
+      data-testid="mizito-profile"
+      data-switcher-hidden={desktopHidden ? 'true' : undefined}
+    >
       <ProjectGroupSwitcherSidebar
         projects={projects}
         activeProjectId=""

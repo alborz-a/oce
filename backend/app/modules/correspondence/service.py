@@ -141,6 +141,12 @@ class CorrespondenceService:
             )
         return correspondence
 
+    async def unread_letter_count(self, user_id: uuid.UUID, project_ids: set[uuid.UUID] | None) -> int:
+        return await self.repo.unread_count(user_id, project_ids)
+
+    async def mark_letter_read(self, correspondence_id: uuid.UUID, user_id: uuid.UUID) -> None:
+        await self.repo.mark_read(correspondence_id, user_id)
+
     async def list_correspondences(
         self,
         project_id: uuid.UUID,

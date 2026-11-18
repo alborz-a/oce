@@ -6,6 +6,7 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import { AuthImage } from '@/shared/ui/AuthImage';
 import type { ProjectSummaryStats, StatusBreakdown, WorkspaceMember } from '../types';
 import { ProjectSettingsModal } from './ProjectSettingsModal';
+import { projectInitials } from '../utils/projectInitials';
 
 export interface ProjectRightSummaryPanelProps {
   project: Project;
@@ -269,7 +270,7 @@ export function ProjectRightSummaryPanel({
           </button>
         )}
 
-        {avatarUrl && (
+        {avatarUrl ? (
           <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-mz-project">
             <AuthImage
               src={avatarUrl}
@@ -277,6 +278,10 @@ export function ProjectRightSummaryPanel({
               className="h-7 w-7 rounded-full object-cover"
             />
           </div>
+        ) : (
+          <span className="mz-project-avatar" data-testid="summary-project-avatar">
+            {projectInitials(project.name)}
+          </span>
         )}
 
         <h2
@@ -291,6 +296,16 @@ export function ProjectRightSummaryPanel({
             className="shrink-0 text-mz-star"
           />
         </h2>
+
+        <button
+          type="button"
+          className="edit_btn"
+          data-testid="summary-settings-gear"
+          aria-label="تنظیمات پروژه"
+          onClick={() => setSettingsOpen(true)}
+        >
+          <MzIcon name="settings" size={18} color="#909090" />
+        </button>
 
         {onToggleCollapse && (
           <button
@@ -333,6 +348,15 @@ export function ProjectRightSummaryPanel({
                 onEditClick={() => setSettingsOpen(true)}
               />
             </div>
+            <button
+              type="button"
+              className="edit_btn shrink-0 pt-0.5"
+              data-testid="summary-add-member"
+              aria-label="افزودن اعضا"
+              onClick={() => setSettingsOpen(true)}
+            >
+              <MzIcon name="person_add" size={18} color="#909090" />
+            </button>
           </div>
 
           <div className="mt-3 flex justify-center">

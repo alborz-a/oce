@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { MzIcon } from './MzIcon';
-import { AuthImage } from '@/shared/ui/AuthImage';
 import {
   DEFAULT_STREAM_FILTERS,
   type StreamFilterState,
@@ -22,10 +21,6 @@ export interface MizitoTopTabAndFilterBarProps {
   /** Optional callbacks when sender or date icon is clicked in built-in bar. */
   onSenderFilterClick?: () => void;
   onDateFilterClick?: () => void;
-  /** Mobile project subheader (md:hidden): project name, avatar photo URL, back to project list. */
-  projectName?: string;
-  projectAvatarUrl?: string | null;
-  onBack?: () => void;
 }
 
 interface TabDef {
@@ -45,14 +40,6 @@ const WORKSPACE_TABS: readonly TabDef[] = [
   { key: 'calendar', color: '#689f38', label: 'تقویم پروژه', icon: 'today' },
   { key: 'gantt', color: '#1f5c88', label: 'گانت پروژه', icon: 'dynamic_form', hiddenOnPhone: true },
 ];
-
-function getProjectInitials(name: string | undefined): string {
-  const words = (name ?? '').trim().split(/\s+/).filter(Boolean);
-  return words
-    .slice(0, 2)
-    .map((w) => Array.from(w)[0] ?? '')
-    .join('');
-}
 
 interface KindIconDef {
   kind: StreamFilterState['kind'];
@@ -80,9 +67,6 @@ export function MizitoTopTabAndFilterBar({
   onOpenMobileSummary,
   onSenderFilterClick,
   onDateFilterClick,
-  projectName,
-  projectAvatarUrl,
-  onBack,
 }: MizitoTopTabAndFilterBarProps) {
   const hasActiveFilter =
     filters.search.trim().length > 0 ||
@@ -100,54 +84,6 @@ export function MizitoTopTabAndFilterBar({
   };
 
   return (
-    <>
-    {/* Mobile project subheader (Mizito 390): back, avatar, name, disabled more_vert. No online-meeting button. */}
-    <div
-      className="flex items-center justify-between gap-2 px-2 py-1.5 md:hidden"
-      data-testid="mobile-project-subheader"
-    >
-      <div className="flex min-w-0 flex-1 items-center gap-1.5">
-        {onBack && (
-          <button
-            type="button"
-            onClick={onBack}
-            aria-label="بازگشت به پروژه‌ها"
-            data-testid="mobile-project-back"
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#5b5e66] hover:bg-[#f2f4f7]"
-          >
-            <MzIcon name="arrow_back" size={20} flipRtl />
-          </button>
-        )}
-        <div className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-mz-project text-[11px] font-bold text-white">
-          {projectAvatarUrl ? (
-            <AuthImage
-              src={projectAvatarUrl}
-              alt={projectName ?? ''}
-              className="h-7 w-7 rounded-full object-cover"
-            />
-          ) : (
-            <span>{getProjectInitials(projectName)}</span>
-          )}
-        </div>
-        <span
-          className="min-w-0 flex-1 truncate text-[14px] font-bold text-[#1f2937]"
-          title={projectName}
-          data-testid="mobile-project-name"
-        >
-          {projectName}
-        </span>
-      </div>
-      <button
-        type="button"
-        disabled
-        aria-label="تنظیمات پروژه"
-        title="تنظیمات پروژه"
-        data-testid="mobile-project-more"
-        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#909090] disabled:opacity-50"
-      >
-        <MzIcon name="more_vert" size={20} />
-      </button>
-    </div>
     <header
       className="mz-top-tabbar mz-shell font-mz"
       data-testid="mizito-top-tabbar"
@@ -315,6 +251,5 @@ export function MizitoTopTabAndFilterBar({
         )}
       </div>
     </header>
-    </>
   );
 }

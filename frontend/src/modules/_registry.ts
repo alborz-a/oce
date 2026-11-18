@@ -42,6 +42,9 @@ import { manifest as ddcIfcConverter } from './ddc-ifc-converter/manifest';
 import { manifest as ddcRvtConverter } from './ddc-rvt-converter/manifest';
 import { manifest as pipelines } from './pipelines/manifest';
 import { manifest as teamChat } from './team-chat/manifest';
+import { manifest as notes } from './notes/manifest';
+import { manifest as customers } from './customers/manifest';
+import { manifest as monitoring } from './monitoring/manifest';
 
 /* ── Registry ──────────────────────────────────────────────────────── */
 
@@ -64,6 +67,9 @@ export const MODULE_REGISTRY: ModuleManifest[] = [
   ddcRvtConverter,
   pipelines,
   teamChat,
+  notes,
+  customers,
+  monitoring,
 ];
 
 /* ── Helper functions ──────────────────────────────────────────────── */

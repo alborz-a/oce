@@ -194,3 +194,9 @@ class CorrespondenceListResponse(BaseModel):
     total: int = 0
     offset: int = 0
     limit: int = 50
+
+
+class UnreadCountResponse(BaseModel):
+    """Per-user unread letter count for the correspondence nav badge."""
+
+    count: int

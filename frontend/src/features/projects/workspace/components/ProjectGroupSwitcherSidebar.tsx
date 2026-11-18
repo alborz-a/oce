@@ -10,6 +10,8 @@ import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import { useOpenDmForColleague } from '../context/WorkspaceDmContext';
 import { MizitoNav } from './MizitoNav';
+import { useSidebarBadges } from '@/shared/hooks/useSidebarBadges';
+import { useLettersUnreadCount } from '../hooks/useLettersUnreadCount';
 import type { ProjectSwitcherCategory, ProjectTaskItem, WorkspaceMember } from '../types';
 
 const DEFAULT_PINNED_PROJECT_NAME = 'پیگیری اداری';
@@ -160,8 +162,11 @@ export function ProjectGroupSwitcherSidebar({
   onOpenCompanyChat,
   className = '',
   navActiveTo,
+  projects,
 }: ProjectGroupSwitcherSidebarProps) {
   const openDm = useOpenDmForColleague(currentUserId);
+  const badges = useSidebarBadges();
+  const lettersUnread = useLettersUnreadCount();
 
   const visibleMembers = useVisibleMembers(members);
 
@@ -243,7 +248,11 @@ export function ProjectGroupSwitcherSidebar({
           </button>
         </div>
 
-        <MizitoNav onOpenCompanyChat={onOpenCompanyChat} activeTo={navActiveTo} />
+        <MizitoNav
+          onOpenCompanyChat={onOpenCompanyChat}
+          activeTo={navActiveTo}
+          counts={{ tasks: badges.tasks, projects: projects?.length ?? 0, letters: lettersUnread }}
+        />
         {/* Bottom `همکارانم` section */}
         <section
           aria-label="همکارانم"

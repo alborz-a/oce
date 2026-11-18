@@ -1,20 +1,37 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
+import { toPersianDigits } from '@/shared/lib/jalali';
+import { MzIcon } from './MzIcon';
+
+export interface MizitoNavCounts {
+  tasks?: number;
+  projects?: number;
+  letters?: number;
+}
 
 interface NavItemProps {
   to: string;
   label: string;
-  dot: string;
+  icon: string;
+  color: string;
   end?: boolean;
   /** null: follow the router match. true/false: forced highlight (used by pages outside the nav's route). */
   active?: boolean | null;
+  /** Badge key (tasks|projects|letters) and its count; badge renders only when count > 0. */
+  badgeKey?: keyof MizitoNavCounts;
+  count?: number;
 }
 
-function NavItem({ to, label, dot, end = false, active = null }: NavItemProps) {
+function NavItem({ to, label, icon, color, end = false, active = null, badgeKey, count }: NavItemProps) {
   const content = (
     <>
-      <span className="mz-dot" style={{ background: dot }} aria-hidden="true" />
+      <MzIcon name={icon} size={24} color={color} />
       <span>{label}</span>
+      {badgeKey && count && count > 0 ? (
+        <span className="mz-nav-badge" data-testid={`mz-nav-badge-${badgeKey}`}>
+          {toPersianDigits(count)}
+        </span>
+      ) : null}
     </>
   );
   if (active === null) {
@@ -32,20 +49,21 @@ function NavItem({ to, label, dot, end = false, active = null }: NavItemProps) {
 }
 
 /**
- * Mizito left-column nav (P5 port). Items without an OCE route are intentionally omitted.
+ * Mizito left-column nav (P5 port).
  * `activeTo` (optional) forces exactly one item highlighted, e.g. `/correspondence` on the letters page.
  */
 export function MizitoNav({
   onOpenCompanyChat,
   activeTo,
-}: { onOpenCompanyChat?: () => void; activeTo?: string } = {}) {
+  counts,
+}: { onOpenCompanyChat?: () => void; activeTo?: string; counts?: MizitoNavCounts } = {}) {
   const forced = (to: string) => (activeTo === undefined ? null : activeTo === to);
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
   // Project-scoped letters link so RestrictedRouteGuard keeps the user in the active project.
   const lettersTo = activeProjectId ? `/projects/${activeProjectId}/correspondence` : '/correspondence';
   return (
     <nav className="mz-nav" aria-label="منوی میزیتو" data-testid="mizito-nav">
-      <NavItem to="/" end label="داشبورد" dot="var(--mz-primary)" active={forced('/')} />
+      <NavItem to="/" end label="داشبورد" icon="home" color="#db4437" active={forced('/')} />
       <hr />
       {onOpenCompanyChat ? (
         <button
@@ -54,15 +72,18 @@ export function MizitoNav({
           onClick={onOpenCompanyChat}
           data-testid="mizito-nav-company-chat"
         >
-          <span className="mz-dot" style={{ background: 'var(--mz-chat)' }} aria-hidden="true" />
+          <MzIcon name="chat" size={24} color="#4285f4" />
           <span>گفتگو</span>
         </button>
       ) : (
-        <NavItem to="/chat" label="گفتگو" dot="var(--mz-chat)" active={forced('/chat')} />
+        <NavItem to="/chat" label="گفتگو" icon="chat" color="#4285f4" active={forced('/chat')} />
       )}
-      <NavItem to="/projects" label="پروژه‌ها" dot="var(--mz-project)" active={forced('/projects')} />
-      <NavItem to="/tasks" label="وظایف" dot="var(--mz-task)" active={forced('/tasks')} />
-      <NavItem to={lettersTo} label="نامه‌ها" dot="var(--mz-inbox)" active={forced('/correspondence')} />
+      <NavItem to="/projects" label="پروژه‌ها" icon="library_books" color="#1f5c88" active={forced('/projects')} badgeKey="projects" count={counts?.projects} />
+      <NavItem to="/tasks" label="وظایف" icon="offline_pin" color="#0f9d58" active={forced('/tasks')} badgeKey="tasks" count={counts?.tasks} />
+      <NavItem to={lettersTo} label="نامه‌ها" icon="inbox" color="#ff6839" active={forced('/correspondence')} badgeKey="letters" count={counts?.letters} />
+      <NavItem to="/notes" label="یادداشتهای من" icon="assignment" color="#fb0" active={forced('/notes')} />
+      <NavItem to="/customers" label="پرونده مشتریان" icon="perm_contact_calendar" color="#607d8b" active={forced('/customers')} />
+      <NavItem to="/monitoring" label="مانیتورینگ" icon="assessment" color="#039be5" active={forced('/monitoring')} />
       <hr />
     </nav>
   );
