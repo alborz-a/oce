@@ -117,6 +117,7 @@ async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> 
                 created_at=membership.created_at,
                 avatar_url=user.avatar_url,
                 is_active=bool(getattr(user, "is_active", True)),
+                job_title=user.job_title,
             )
         )
         seen.add(user.id)
@@ -134,6 +135,7 @@ async def list_project_members(session: AsyncSession, project_id: uuid.UUID) -> 
                     role="owner",
                     is_owner=True,
                     is_active=bool(getattr(owner, "is_active", True)),
+                    job_title=owner.job_title,
                 ),
             )
 
