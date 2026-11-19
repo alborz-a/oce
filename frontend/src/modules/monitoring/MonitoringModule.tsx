@@ -7,6 +7,7 @@ import { isTopicConversationTask } from '@/features/projects/workspace/hooks/use
 import type { ProjectTaskItem, WorkspaceMember } from '@/features/projects/workspace/types';
 import { useVisibleMembers } from '@/shared/lib/hiddenUsers';
 import { toPersianDigits } from '@/shared/lib/jalali';
+import { getIntlLocale } from '@/shared/lib/intlLocale';
 import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { MizitoPageShell } from '@/modules/_shared/MizitoPageShell';
@@ -111,7 +112,7 @@ export function MonitoringModule() {
                     </td>
                     <td className="px-3 py-2 text-[#4b5563]">{r.task || '—'}</td>
                     <td className="px-3 py-2 text-[#607d8b] tabular-nums">
-                      {r.lastActive ? new Date(r.lastActive).toLocaleString('fa-IR') : '—'}
+                      {r.lastActive ? new Date(r.lastActive).toLocaleString(getIntlLocale()) : '—'}
                     </td>
                   </tr>
                 ))}
