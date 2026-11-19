@@ -22,7 +22,7 @@ describe('MizitoNav drawer items', () => {
       { label: 'پروژه‌ها', href: '/projects', icon: 'library_books' },
       { label: 'وظایف', href: '/tasks', icon: 'offline_pin' },
       { label: 'نامه‌ها', href: '/correspondence', icon: 'inbox' },
-      { label: 'یادداشتهای من', href: '/notes', icon: 'assignment' },
+      { label: 'یادداشت\u200cهای من', href: '/notes', icon: 'assignment' },
       { label: 'پرونده مشتریان', href: '/customers', icon: 'perm_contact_calendar' },
       { label: 'مانیتورینگ', href: '/monitoring', icon: 'assessment' },
     ];
