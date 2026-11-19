@@ -384,6 +384,15 @@ class TaskService:
             status=status_filter,
         )
 
+    async def my_task_counts(
+        self,
+        user_id: str,
+        *,
+        project_ids: set[uuid.UUID] | None,
+    ) -> tuple[int, int]:
+        """Overdue and open counts for the nav badges (see repository)."""
+        return await self.repo.count_my_open(user_id, project_ids=project_ids)
+
     async def _contact_assignee(self, contact_id: uuid.UUID, actor_id: str | None) -> dict[str, Any]:
         """The fields a contact pick writes on a task.
 

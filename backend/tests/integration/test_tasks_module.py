@@ -337,6 +337,28 @@ async def test_my_tasks_returns_only_callers_tasks(client, auth, project_id, use
     assert mine["id"] in ids
 
 
+@pytest.mark.asyncio
+async def test_my_counts_overdue_and_open(client, auth, project_id, user_id):
+    from datetime import UTC, datetime, timedelta
+
+    today = datetime.now(UTC).date()
+    before = (await client.get(f"{TASKS}/my-counts/", headers=auth)).json()
+    await _create_task(
+        client, auth, project_id, title="Late", responsible_id=user_id,
+        due_date=(today - timedelta(days=1)).isoformat(),
+    )
+    await _create_task(
+        client, auth, project_id, title="Later", responsible_id=user_id,
+        due_date=(today + timedelta(days=1)).isoformat(),
+    )
+    resp = await client.get(f"{TASKS}/my-counts/", headers=auth)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert set(body) == {"overdue", "open"}
+    assert body["overdue"] == before["overdue"] + 1
+    assert body["open"] == before["open"] + 1
+
+
 # ── Checklist progress computed field ──────────────────────────────────────
 
 

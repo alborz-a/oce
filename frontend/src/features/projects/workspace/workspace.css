@@ -570,6 +570,22 @@
   line-height: 18px;
   text-align: center;
 }
+.mizito-workspace-light .mz-nav-badges {
+  margin-inline-start: auto;
+  display: inline-flex;
+  gap: 4px;
+}
+.mizito-workspace-light .mz-nav-badges .mz-nav-badge {
+  margin-inline-start: 0;
+}
+.mizito-workspace-light .mz-nav-badge--red {
+  background: #f44336;
+  color: #fff;
+}
+.mizito-workspace-light .mz-nav-badge--green {
+  background: #0f9d58;
+  color: #fff;
+}
 
 /* Summary avatar (initials fallback), gear and add-member buttons (E3) */
 .mizito-workspace-light .mz-project-avatar {

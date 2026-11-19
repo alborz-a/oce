@@ -3,8 +3,9 @@
 """Tasks data access layer."""
 
 import uuid
+from datetime import UTC, datetime
 
-from sqlalchemy import func, or_, select, update
+from sqlalchemy import and_, case, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.attributes import set_committed_value
 from sqlalchemy.orm.util import identity_key
@@ -116,6 +117,39 @@ class TaskRepository:
         stmt = base.order_by(Task.created_at.desc()).offset(offset).limit(limit)
         result = await self.session.execute(stmt)
         return list(result.scalars().all()), total
+
+    async def count_my_open(
+        self,
+        user_id: str,
+        *,
+        project_ids: set[uuid.UUID] | None,
+    ) -> tuple[int, int]:
+        """Return ``(overdue, open)`` counts for tasks assigned to ``user_id``.
+
+        ``overdue``: not completed and ``due_date`` before today (UTC).
+        ``open``: not completed and ``due_date`` today or later.
+        Tasks without a due date count in neither. Due dates are ISO
+        ``yyyy-mm-dd`` strings, so string comparison is date order. One query.
+        ``project_ids=None`` means no project filter (admin).
+        """
+        today = datetime.now(UTC).date().isoformat()
+        not_done = Task.status != "completed"
+        stmt = select(
+            func.count(case((and_(not_done, Task.due_date < today), 1))),
+            func.count(case((and_(not_done, Task.due_date >= today), 1))),
+        ).where(
+            Task.responsible_id == user_id,
+            or_(
+                Task.is_private == False,  # noqa: E712
+                Task.created_by == user_id,
+            ),
+        )
+        if project_ids is not None:
+            if not project_ids:
+                return 0, 0
+            stmt = stmt.where(Task.project_id.in_(project_ids))
+        overdue, open_count = (await self.session.execute(stmt)).one()
+        return int(overdue), int(open_count)
 
     async def create(self, task: Task) -> Task:
         self.session.add(task)

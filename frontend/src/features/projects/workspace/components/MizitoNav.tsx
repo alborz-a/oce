@@ -4,9 +4,18 @@ import { toPersianDigits } from '@/shared/lib/jalali';
 import { MzIcon } from './MzIcon';
 
 export interface MizitoNavCounts {
-  tasks?: number;
+  /** My tasks not completed, due before today (red pill on وظایف). */
+  taskOverdue?: number;
+  /** My tasks not completed, due today or later (green pill on وظایف). */
+  taskOpen?: number;
   projects?: number;
   letters?: number;
+}
+
+interface NavPill {
+  key: string;
+  count?: number;
+  tone: 'red' | 'green';
 }
 
 interface NavItemProps {
@@ -17,12 +26,15 @@ interface NavItemProps {
   end?: boolean;
   /** null: follow the router match. true/false: forced highlight (used by pages outside the nav's route). */
   active?: boolean | null;
-  /** Badge key (tasks|projects|letters) and its count; badge renders only when count > 0. */
+  /** Badge key (projects|letters) and its count; badge renders only when count > 0. */
   badgeKey?: keyof MizitoNavCounts;
   count?: number;
+  /** Extra small pills after the label; each renders only when its count > 0. */
+  pills?: NavPill[];
 }
 
-function NavItem({ to, label, icon, color, end = false, active = null, badgeKey, count }: NavItemProps) {
+function NavItem({ to, label, icon, color, end = false, active = null, badgeKey, count, pills }: NavItemProps) {
+  const visiblePills = (pills ?? []).filter((p) => p.count && p.count > 0);
   const content = (
     <>
       <MzIcon name={icon} size={24} color={color} />
@@ -30,6 +42,19 @@ function NavItem({ to, label, icon, color, end = false, active = null, badgeKey,
       {badgeKey && count && count > 0 ? (
         <span className="mz-nav-badge" data-testid={`mz-nav-badge-${badgeKey}`}>
           {toPersianDigits(count)}
+        </span>
+      ) : null}
+      {visiblePills.length > 0 ? (
+        <span className="mz-nav-badges">
+          {visiblePills.map((p) => (
+            <span
+              key={p.key}
+              className={`mz-nav-badge mz-nav-badge--${p.tone}`}
+              data-testid={`mz-nav-badge-${p.key}`}
+            >
+              {toPersianDigits(p.count ?? 0)}
+            </span>
+          ))}
         </span>
       ) : null}
     </>
@@ -79,7 +104,17 @@ export function MizitoNav({
         <NavItem to="/chat" label="گفتگو" icon="chat" color="#4285f4" active={forced('/chat')} />
       )}
       <NavItem to="/projects" label="پروژه‌ها" icon="library_books" color="#1f5c88" active={forced('/projects')} badgeKey="projects" count={counts?.projects} />
-      <NavItem to="/tasks" label="وظایف" icon="offline_pin" color="#0f9d58" active={forced('/tasks')} badgeKey="tasks" count={counts?.tasks} />
+      <NavItem
+        to="/tasks"
+        label="وظایف"
+        icon="offline_pin"
+        color="#0f9d58"
+        active={forced('/tasks')}
+        pills={[
+          { key: 'task-overdue', count: counts?.taskOverdue, tone: 'red' },
+          { key: 'task-open', count: counts?.taskOpen, tone: 'green' },
+        ]}
+      />
       <NavItem to={lettersTo} label="نامه‌ها" icon="inbox" color="#ff6839" active={forced('/correspondence')} badgeKey="letters" count={counts?.letters} />
       <NavItem to="/notes" label="یادداشتهای من" icon="assignment" color="#fb0" active={forced('/notes')} />
       <NavItem to="/customers" label="پرونده مشتریان" icon="perm_contact_calendar" color="#607d8b" active={forced('/customers')} />

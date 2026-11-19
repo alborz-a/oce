@@ -219,6 +219,13 @@ class TaskListResponse(BaseModel):
     limit: int
 
 
+class TaskMyCountsResponse(BaseModel):
+    """Current user's overdue and open task counts (nav badges)."""
+
+    overdue: int = 0
+    open: int = 0
+
+
 class TaskStatsResponse(BaseModel):
     """Summary statistics for tasks in a project."""
 
