@@ -48,6 +48,11 @@ D = "/api/v1/"
         ("GET", f"{D}users/me/projects/{P}/caps"),
         ("GET", f"{D}correspondence/?project_id={P}&limit=100"),
         ("GET", f"{D}correspondence/{P}"),
+        ("GET", f"{D}notes/"),
+        ("POST", f"{D}notes/"),
+        ("PATCH", f"{D}notes/{P}/"),
+        ("DELETE", f"{D}notes/{P}/"),
+        ("GET", f"{D}teams/project/{P}"),
     ],
 )
 def test_staff_allowed(method, path):
@@ -77,6 +82,8 @@ def test_staff_allowed(method, path):
         ("POST", f"{D}correspondence/"),
         ("PATCH", f"{D}correspondence/{P}"),
         ("DELETE", f"{D}correspondence/{P}"),
+        ("POST", f"{D}teams/project/{P}"),
+        ("GET", f"{D}teams/project/{P}/roster"),
     ],
 )
 def test_staff_denied(method, path):

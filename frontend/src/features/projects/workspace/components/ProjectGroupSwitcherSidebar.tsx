@@ -350,6 +350,9 @@ export function ProjectGroupSwitcherSidebar({
                             <span className="shrink-0 text-[10.5px] text-mz-project">(من)</span>
                           )}
                         </div>
+                        {member.job_title ? (
+                          <p className="truncate text-[10.5px] text-[#909090]">{member.job_title}</p>
+                        ) : null}
                         {currentTask ? (
                           <p className="truncate text-[10.5px] text-[#909090]">
                             {toPersianDigits(currentTask)}

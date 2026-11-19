@@ -10,7 +10,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { apiGet } from '@/shared/lib/api';
-import { useAuthStore } from '@/stores/useAuthStore';
 
 export const LETTERS_UNREAD_COUNT_KEY = ['correspondence-unread-count'] as const;
 
@@ -22,7 +21,6 @@ export function useLettersUnreadCount(): number {
   const { data } = useQuery({
     queryKey: LETTERS_UNREAD_COUNT_KEY,
     queryFn: () => apiGet<UnreadCountResponse>('/v1/correspondence/unread-count/'),
-    enabled: !useAuthStore.getState().restrictedMode,
     staleTime: 30_000,
     refetchInterval: 60_000,
     refetchOnWindowFocus: false,

@@ -46,6 +46,8 @@ export interface ProjectMember {
   avatar_url?: string | null;
   /** false when the account is deactivated; undefined treated as active. */
   is_active?: boolean;
+  /** Job title from the user profile; null/absent when not set. */
+  job_title?: string | null;
 }
 
 /**

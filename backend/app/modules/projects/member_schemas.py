@@ -41,6 +41,8 @@ class ProjectMemberResponse(BaseModel):
     avatar_url: str | None = None
     # False when the user account is deactivated; the list is not filtered server-side.
     is_active: bool = True
+    # Job title from the user profile; None when not set.
+    job_title: str | None = None
 
 
 class AddProjectMemberRequest(BaseModel):

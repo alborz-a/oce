@@ -97,6 +97,11 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, r"^ai-estimator/embedding-model/status/?$"),
     # own notifications (the shell polls unread-count)
     _rule(_ANY, r"^notifications(/.*)?$"),
+    # personal notes: every query is scoped to the caller (owner_user_id)
+    _rule(_ANY, r"^notes/?$"),
+    _rule(_ANY, rf"^notes/{_ID}/?$"),
+    # project teams list: read only; service gates on project access (404 otherwise)
+    _rule(frozenset({"GET"}), rf"^teams/project/{_ID}/?$"),
     # shell: enabled-module list (read only)
     _rule(_R, r"^modules/?$"),
     # admin-controlled help banners: read only
