@@ -16,6 +16,7 @@ const ALLOWED: RegExp[] = [
   /^\/files$/,
   /^\/documents$/,
   /^\/notifications$/,
+  /^\/notes$/,
   /^\/profile$/,
 ];
 
