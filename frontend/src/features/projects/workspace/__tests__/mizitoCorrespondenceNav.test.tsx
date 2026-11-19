@@ -47,6 +47,20 @@ describe('نامه‌ها nav item target', () => {
     useProjectContextStore.getState().clearProject();
   });
 
+  it('prefers the current route project over a stale store project', () => {
+    useProjectContextStore.getState().setActiveProject('stale-store', 'Stale');
+    render(
+      <MemoryRouter initialEntries={['/projects/route-p9/settings']}>
+        <Routes>
+          <Route path="/projects/:projectId/*" element={<MizitoNav />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    const link = screen.getByRole('link', { name: 'نامه‌ها' });
+    expect(link).toHaveAttribute('href', '/projects/route-p9/correspondence');
+    useProjectContextStore.getState().clearProject();
+  });
+
   it('falls back to /correspondence when no project is active', () => {
     useProjectContextStore.getState().clearProject();
     render(

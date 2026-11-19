@@ -46,6 +46,7 @@ describe('ProjectGroupSwitcherSidebar new-DM picker', () => {
 
     const picker = screen.getByTestId('switcher-new-dm-picker');
     expect(picker).toBeInTheDocument();
+    expect(picker.parentElement).toBe(document.body);
     expect(screen.getByPlaceholderText('نام کاربر را وارد نمایید')).toBeInTheDocument();
     expect(screen.queryByTestId('switcher-new-dm-option-u-me')).not.toBeInTheDocument();
 
