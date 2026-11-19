@@ -10,7 +10,7 @@ import { useGlobalPresenceStore } from '@/stores/useGlobalPresenceStore';
 import { isTopicConversationTask } from '../hooks/useProjectWorkspaceStats';
 import { useOpenDmForColleague } from '../context/WorkspaceDmContext';
 import { MizitoNav } from './MizitoNav';
-import { useSidebarBadges } from '@/shared/hooks/useSidebarBadges';
+import { useMyTaskCounts } from '../hooks/useMyTaskCounts';
 import { useLettersUnreadCount } from '../hooks/useLettersUnreadCount';
 import type { ProjectSwitcherCategory, ProjectTaskItem, WorkspaceMember } from '../types';
 
@@ -165,7 +165,7 @@ export function ProjectGroupSwitcherSidebar({
   projects,
 }: ProjectGroupSwitcherSidebarProps) {
   const openDm = useOpenDmForColleague(currentUserId);
-  const badges = useSidebarBadges();
+  const myTaskCounts = useMyTaskCounts();
   const lettersUnread = useLettersUnreadCount();
 
   const visibleMembers = useVisibleMembers(members);
@@ -251,7 +251,12 @@ export function ProjectGroupSwitcherSidebar({
         <MizitoNav
           onOpenCompanyChat={onOpenCompanyChat}
           activeTo={navActiveTo}
-          counts={{ tasks: badges.tasks, projects: projects?.length ?? 0, letters: lettersUnread }}
+          counts={{
+            taskOverdue: myTaskCounts.overdue,
+            taskOpen: myTaskCounts.open,
+            projects: projects?.length ?? 0,
+            letters: lettersUnread,
+          }}
         />
         {/* Bottom `همکارانم` section */}
         <section

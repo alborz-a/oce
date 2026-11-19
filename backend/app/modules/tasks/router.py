@@ -31,7 +31,14 @@ from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, 
 from fastapi.responses import StreamingResponse
 
 from app.core.bulk_ops import BulkAssignRequest, BulkDeleteRequest, BulkStatusRequest
-from app.dependencies import CurrentUserId, CurrentUserPayload, RequirePermission, SessionDep, verify_project_access
+from app.dependencies import (
+    CurrentUserId,
+    CurrentUserPayload,
+    RequirePermission,
+    SessionDep,
+    accessible_project_ids,
+    verify_project_access,
+)
 from app.core.project_roles import get_project_caps, is_project_member
 from app.modules.tasks.models import is_task_assignee
 from app.modules.tasks.schemas import (
@@ -39,6 +46,7 @@ from app.modules.tasks.schemas import (
     TaskCompleteRequest,
     TaskCreate,
     TaskListResponse,
+    TaskMyCountsResponse,
     TaskResponse,
     TaskStatsResponse,
     TaskUpdate,
@@ -247,6 +255,18 @@ async def my_tasks(
         offset=offset,
         limit=limit,
     )
+
+
+@router.get("/my-counts/", response_model=TaskMyCountsResponse)
+async def my_task_counts(
+    user_id: CurrentUserId,
+    session: SessionDep,
+    service: TaskService = Depends(_get_service),
+) -> TaskMyCountsResponse:
+    """Overdue and open task counts for the current user, across accessible projects."""
+    project_ids = await accessible_project_ids(session, user_id)
+    overdue, open_count = await service.my_task_counts(user_id, project_ids=project_ids)
+    return TaskMyCountsResponse(overdue=overdue, open=open_count)
 
 
 @router.post("/", response_model=TaskResponse, status_code=201)

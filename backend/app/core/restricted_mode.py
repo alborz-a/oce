@@ -54,6 +54,7 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # tasks: read, create, update, delete, complete.
     _rule(_R, r"^tasks/?$"),
     _rule(_R, r"^tasks/(my-tasks|stats)/?$"),
+    _rule(_R, r"^tasks/my-counts/?$"),
     _rule(_R, rf"^tasks/{_ID}/?$"),
     _rule(frozenset({"POST"}), r"^tasks/?$"),
     _rule(frozenset({"PATCH"}), rf"^tasks/{_ID}/?$"),

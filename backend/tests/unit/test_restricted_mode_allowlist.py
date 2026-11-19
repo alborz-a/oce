@@ -17,6 +17,7 @@ D = "/api/v1/"
         ("GET", f"{D}projects/{P}/files/"),
         ("GET", f"{D}projects/{P}/files/tree/"),
         ("GET", f"{D}projects/{P}/files/locations/"),
+        ("GET", f"{D}tasks/my-counts/"),
         ("GET", f"{D}documents/photos/"),
         ("GET", f"{D}documents/photos/recent/"),
         ("GET", f"{D}documents/chat-file-url/"),
