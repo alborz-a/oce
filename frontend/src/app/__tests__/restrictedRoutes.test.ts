@@ -26,6 +26,7 @@ describe('isRestrictedRouteAllowed', () => {
       '/dashboard',
       '/notifications',
       '/profile',
+      '/colleagues',
     ]) {
       expect(ok(p)).toBe(true);
     }
