@@ -6,7 +6,7 @@ import { MizitoNav } from '../components/MizitoNav';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 
 describe('MizitoNav drawer items', () => {
-  it('renders 8 items in order with expected hrefs and material icon names', () => {
+  it('renders 9 items in order with expected hrefs and material icon names', () => {
     useProjectContextStore.getState().clearProject();
     render(
       <MemoryRouter>
@@ -14,7 +14,7 @@ describe('MizitoNav drawer items', () => {
       </MemoryRouter>,
     );
     const links = screen.getAllByRole('link');
-    expect(links).toHaveLength(8);
+    expect(links).toHaveLength(9);
 
     const expected = [
       { label: 'داشبورد', href: '/', icon: 'home' },
@@ -23,6 +23,7 @@ describe('MizitoNav drawer items', () => {
       { label: 'وظایف', href: '/tasks', icon: 'offline_pin' },
       { label: 'نامه‌ها', href: '/correspondence', icon: 'inbox' },
       { label: 'یادداشت\u200cهای من', href: '/notes', icon: 'assignment' },
+      { label: 'همکارانم', href: '/colleagues', icon: 'people' },
       { label: 'پرونده مشتریان', href: '/customers', icon: 'perm_contact_calendar' },
       { label: 'مانیتورینگ', href: '/monitoring', icon: 'assessment' },
     ];

@@ -186,6 +186,9 @@ const GeneratedModulePage = lazy(() =>
     default: m.GeneratedModulePage,
   }))
 );
+const MizitoColleaguesPage = lazy(() =>
+  import('@/features/projects/workspace/components/MizitoColleaguesPage').then((m) => ({ default: m.MizitoColleaguesPage }))
+);
 const ContactsPage = lazy(() =>
   import('@/features/contacts/ContactsPage').then((m) => ({ default: m.ContactsPage }))
 );
@@ -1447,6 +1450,7 @@ export default function App() {
         <Route path="/submittals" element={<P title="Submittals"><SubmittalsPage /></P>} />
         <Route path="/projects/:projectId/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
         <Route path="/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
+        <Route path="/colleagues" element={<P title="Colleagues"><MizitoColleaguesPage /></P>} />
         <Route path="/projects/:projectId/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/projects/:projectId/review-authority" element={<P title="Review Authority"><ReviewAuthorityPage /></P>} />

@@ -38,6 +38,7 @@ export interface Colleague {
   id: string;
   full_name: string;
   job_title?: string | null;
+  avatar_url?: string | null;
 }
 
 export interface ProjectDocument {

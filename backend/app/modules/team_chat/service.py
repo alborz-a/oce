@@ -263,7 +263,7 @@ class TeamChatService:
         is_admin = viewer_is_admin(payload)
         rows = (await self.session.execute(q)).scalars()
         return [
-            ColleagueResponse(id=u.id, full_name=u.full_name or "", job_title=_job_title(u))
+            ColleagueResponse(id=u.id, full_name=u.full_name or "", job_title=_job_title(u), avatar_url=u.avatar_url)
             for u in rows
             if is_admin or not is_hidden_system_user(u.email, u.full_name)
         ]

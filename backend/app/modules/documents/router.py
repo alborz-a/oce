@@ -1293,12 +1293,43 @@ def _chat_file_key_ok(key: str) -> bool:
 )
 async def chat_file_url(
     user_id: CurrentUserId,
+    session: SessionDep,
     key: str = Query(..., min_length=1, max_length=1024),
 ) -> PhotoUrlResponse:
-    """Short-lived presigned GET for an imported general-chat file (``mizito/general/chats/...``) in the bucket."""
-    del user_id
+    """Short-lived presigned GET for an imported general-chat file (``mizito/general/chats/...``) in the bucket.
+
+    The key maps to ``oe_documents_photo.file_path = '/data/photos/' + key``; the caller must pass the
+    same project check as ``/photos/{id}/file-url/``. No mapped photo: only a system admin gets through.
+    """
     if not _chat_file_key_ok(key):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid chat file key")
+    from sqlalchemy import select
+
+    from app.modules.documents.models import ProjectPhoto
+
+    project_ids = (
+        (
+            await session.execute(
+                select(ProjectPhoto.project_id).where(ProjectPhoto.file_path == "/data/photos/" + key).distinct()
+            )
+        )
+        .scalars()
+        .all()
+    )
+    if not project_ids:
+        if not await viewer_is_system_admin(session, str(user_id) if user_id else None):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Photo not found")
+    else:
+        last_exc: HTTPException | None = None
+        for project_id in project_ids:
+            try:
+                await verify_project_access(project_id, user_id, session, manager_read=True)
+                break
+            except HTTPException as exc:
+                last_exc = exc
+        else:
+            assert last_exc is not None
+            raise last_exc
     backend = object_store._imported_s3()
     if backend is None:
         return PhotoUrlResponse(url=None)
