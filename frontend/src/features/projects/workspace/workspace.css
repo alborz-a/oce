@@ -42,6 +42,7 @@
   --mz-indigo-dark: #2e3f50;   --mz-indigo-dark-ch: 46 63 80;
   --mz-text: #263648;          --mz-text-ch: 38 54 72;
   --mz-muted: #718096;         --mz-muted-ch: 113 128 150;
+  --mz-colleague-title: var(--mz-muted);
   --mz-border: #e5eaf0;        --mz-border-ch: 229 234 240;
   --mz-bg-subtle: #f5f7fa;     --mz-bg-subtle-ch: 245 247 250;
   --mz-project: #3078ab;       --mz-project-ch: 48 120 171;

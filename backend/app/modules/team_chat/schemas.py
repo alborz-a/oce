@@ -63,6 +63,7 @@ class ColleagueResponse(BaseModel):
     id: uuid.UUID
     full_name: str
     job_title: str | None = None
+    avatar_url: str | None = None
 
 
 class ImportMessage(BaseModel):

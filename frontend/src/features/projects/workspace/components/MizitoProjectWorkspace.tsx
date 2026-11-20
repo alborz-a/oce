@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
 import { useSwitcherState } from '../hooks/useSwitcherState';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { apiGet } from '@/shared/lib/api';
 import { fetchAllTasks } from '@/features/tasks/api';
 import { projectsApi, type Project } from '@/features/projects/api';
@@ -47,6 +47,7 @@ export function MizitoProjectWorkspace({
   onSwitchToEngineering,
 }: MizitoProjectWorkspaceProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const userId = useAuthStore((s) => s.userId) ?? '';
   const userFullName = useAuthStore((s) => s.userFullName);
@@ -154,6 +155,15 @@ export function MizitoProjectWorkspace({
   );
   const openColleagueDm = useOpenColleagueDm(userId, handleDmRoomOpened);
   const dmValue: WorkspaceDmValue = useMemo(() => ({ openDm: openColleagueDm }), [openColleagueDm]);
+
+  // «همکارانم» hands over a DM room via router state: show it in this shell, then clear the state.
+  useEffect(() => {
+    const dm = (location.state as { dm?: { room: ChatRoom; peerName: string; peerAvatarUrl: string | null } } | null)?.dm;
+    if (!dm) return;
+    setActiveDm(dm);
+    setActiveTab('group');
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.state, location.pathname, navigate]);
 
   const canManage = userRole === 'admin' || userRole === 'manager' || userRole === 'project_manager';
   const currentUser = useMemo(

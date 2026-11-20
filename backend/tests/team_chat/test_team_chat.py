@@ -161,6 +161,18 @@ async def test_list_colleagues_excludes_self_inactive_and_hidden(session):
     assert hidden in {c.id for c in await s.list_colleagues(ADMIN, {"role": "admin"})}
 
 
+async def test_list_colleagues_carries_avatar_url(session):
+    from app.modules.users.models import User
+
+    with_photo = uuid.uuid4()
+    session.add(User(id=with_photo, email="photo.colleague@x.co", hashed_password="x", full_name="عکس دار", role="viewer", is_active=True, avatar_path="avatars/p.jpg"))
+    await session.flush()
+    expected = await session.get(User, with_photo)
+    cols = {c.id: c for c in await TeamChatService(session).list_colleagues(BOB)}
+    assert cols[with_photo].avatar_url == expected.avatar_url and cols[with_photo].avatar_url.startswith(f"/api/v1/users/{with_photo}/avatar")
+    assert cols[ALICE].avatar_url is None
+
+
 async def test_paging_oldest_first_with_before_cursor(session):
     s = TeamChatService(session)
     company = await s.company_room()
