@@ -63,6 +63,7 @@ describe('normal user route allowlist', () => {
     expect(isNormalUserRouteAllowed('/profile')).toBe(true);
     expect(isNormalUserRouteAllowed('/projects')).toBe(true);
     expect(isNormalUserRouteAllowed('/colleagues')).toBe(true);
+    expect(isNormalUserRouteAllowed('/colleagues/abc')).toBe(true);
   });
 
   it('blocks OCE main-menu pages', () => {

@@ -476,6 +476,7 @@ export function ProjectStreamComposer({
 
           <div className="relative flex shrink-0 items-center gap-0.5">
             {/* Quick Task & Minutes pills (.project-buttons) */}
+            {projectId && (
             <div className="project-buttons hidden md:inline-flex me-1">
               <button
                 type="button"
@@ -492,6 +493,7 @@ export function ProjectStreamComposer({
                 + صورتجلسه
               </button>
             </div>
+            )}
 
             {/* Mobile (< md): one 9-dot menu holding the secondary composer buttons */}
             <div className="relative md:hidden">
@@ -537,6 +539,8 @@ export function ProjectStreamComposer({
                     <MzIcon name="alternate_email" size={14} className="shrink-0" />
                     <span>منشن همکار یا وظیفه</span>
                   </button>
+                  {projectId && (
+                  <>
                   <button
                     type="button"
                     role="menuitem"
@@ -577,6 +581,8 @@ export function ProjectStreamComposer({
                     <MzIcon name="event" size={14} className="shrink-0" />
                     <span>+ صورتجلسه</span>
                   </button>
+                  </>
+                  )}
                 </div>
               )}
             </div>
@@ -724,6 +730,7 @@ export function ProjectStreamComposer({
             </div>
 
             {/* File/Photo attachment button */}
+            {projectId && (
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -734,6 +741,7 @@ export function ProjectStreamComposer({
             >
               {uploading ? <MzIcon name="upload_file" size={16} /> : <MzIcon name="attach_file" size={16} />}
             </button>
+            )}
 
             {/* Send button */}
             <button

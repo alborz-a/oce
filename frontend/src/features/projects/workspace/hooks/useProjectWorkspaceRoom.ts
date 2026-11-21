@@ -159,7 +159,8 @@ export function useProjectWorkspaceRoom(
     setInitialUnreadCount(0);
     unreadCapturedForRoomRef.current = null;
 
-    if (!enabled || !projectId) {
+    // A direct room (DM) can load without a project: projectId may be empty when overrideRef is set.
+    if (!enabled || (!projectId && !overrideRef.current)) {
       setLoading(false);
       return;
     }
