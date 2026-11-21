@@ -1,0 +1,59 @@
+project: oce
+upstream:
+  url: https://github.com/datadrivenconstruction/OpenConstructionERP.git
+  remote_name: upstream
+  default_branch: main
+  tag_regex: '^v\d+\.\d+\.\d+$'
+ours:
+  branch: iran/patches
+base:
+  mode: explicit-tag
+  ref: v18.5.0
+units:
+  - name: oce
+    path: .
+    ledger: .fork-sync/ledger.yaml
+locales:
+  - glob: "backend/locales/*.json"
+    format: json
+    source_lang: en
+    target_lang: fa
+    key_style: nested
+  - glob: "frontend/src/app/locales/fa.ts"
+    format: ts-object
+    source_lang: en
+    target_lang: fa
+    key_style: flat
+  - glob: "frontend/src/app/companyInfo.fa.ts"
+    format: ts-object
+    source_lang: en
+    target_lang: fa
+    key_style: nested
+rtl:
+  css_globs:
+    - "frontend/src/**/*.css"
+    - "frontend/src/**/*.scss"
+  required_snippets: []
+iran_lock:
+  removed_pickers: []
+  forced_values: {}
+guard:
+  fail_on: [translation, rtl, iran-lock, branding, access, removed-feature, bugfix]
+  ignore:
+    - "**/*.lock"
+    - "**/package-lock.json"
+    - "**/yarn.lock"
+    - "**/pnpm-lock.yaml"
+    - "**/composer.lock"
+    - "**/poetry.lock"
+    - "**/vendor/**"
+    - "**/node_modules/**"
+    - "**/dist/**"
+    - "**/*.min.js"
+    - "**/*.min.css"
+    - "**/*.map"
+    - ".fork-sync/**"
+sync:
+  step_unit: release-tag
+  max_files_per_step_warn: 200
+  worktree_root: /mnt/archive/orca/home-workspaces/oce-fork-sync

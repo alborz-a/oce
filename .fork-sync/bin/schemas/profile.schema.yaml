@@ -1,0 +1,37 @@
+# forksync profile schema (documented key list). Checked by lib/common.load_profile.
+# Required keys are marked (required). Everything else gets the default shown.
+project: str                          # (required) fork name
+upstream:                             # (required)
+  url: str                            # (required) upstream git URL
+  remote_name: upstream               # default: upstream
+  default_branch: main                # default: main
+  tag_regex: '^v\d+\.\d+\.\d+$'       # default
+ours:                                 # (required)
+  branch: str                         # (required) fork branch name
+base:                                 # (required)
+  mode: merge-base | explicit-tag     # (required)
+  ref: str                            # required when mode is explicit-tag
+units:                                # default: one unit = {name: project, path: ., ledger: .fork-sync/ledger.yaml}
+  - name: str                         # (required)
+    path: str                         # (required) repo-relative, "." for root
+    ledger: str                       # (required) ledger path relative to unit path
+    upstream_url: str | null          # optional, submodules
+locales:                              # default []
+  - glob: str                         # (required) repo-relative glob, ** supported
+    format: yaml | json | ts-object   # (required)
+    source_lang: en                   # default
+    target_lang: fa                   # default
+    key_style: nested | flat          # default nested
+rtl:                                  # default {css_globs: [], required_snippets: []}
+  css_globs: [str]
+  required_snippets: [str]
+iran_lock:                            # default {removed_pickers: [], forced_values: {}}
+  removed_pickers: [str]
+  forced_values: {str: any}
+guard:                                # default below
+  fail_on: [translation, rtl, iran-lock, branding, access, removed-feature, bugfix]
+  farsi_regex: '[؀-ۿݐ-ݿࢠ-ࣿﭐ-﷿ﹰ-﻿]'
+sync:                                 # default below
+  step_unit: release-tag
+  max_files_per_step_warn: 200
+  worktree_root: str                  # e.g. /mnt/archive/orca/home-workspaces/<project>

@@ -1,0 +1,32 @@
+name: fork-guard
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "fork-sync/**"
+      - "sync/**"
+      - "iran/patches"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Fork ledger guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install guard dependencies
+        run: python -m pip install --disable-pip-version-check pyyaml
+
+      - name: Run fork guard
+        run: bash .fork-sync/run-guard.sh
