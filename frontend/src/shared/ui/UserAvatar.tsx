@@ -20,7 +20,7 @@ interface UserAvatarProps {
   url: string | null | undefined;
   /**
    * Shown when there is no picture or it cannot be loaded.
-   * Falls back to a neutral silhouette placeholder (never letter initials).
+   * Defaults to a neutral silhouette placeholder (never letter initials) when omitted.
    */
   fallback?: ReactNode;
   alt: string;
@@ -34,7 +34,7 @@ interface UserAvatarProps {
  *
  * When no picture is available, renders a neutral silhouette avatar placeholder (never a letter initial).
  */
-export function UserAvatar({ url, alt, className }: UserAvatarProps) {
+export function UserAvatar({ url, alt, className, fallback }: UserAvatarProps) {
   const [src, setSrc] = useState<string | null>(null);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export function UserAvatar({ url, alt, className }: UserAvatarProps) {
   }, [url]);
 
   if (!url || !src) {
-    return <NeutralAvatarPlaceholder className="h-full w-full p-1 text-current opacity-85" />;
+    return <>{fallback ?? <NeutralAvatarPlaceholder className="h-full w-full p-1 text-current opacity-85" />}</>;
   }
   return <img src={src} alt={alt} className={className ?? 'h-full w-full rounded-[inherit] object-cover'} />;
 }

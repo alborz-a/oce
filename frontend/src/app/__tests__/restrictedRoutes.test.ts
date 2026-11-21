@@ -27,6 +27,7 @@ describe('isRestrictedRouteAllowed', () => {
       '/notifications',
       '/profile',
       '/colleagues',
+      '/colleagues/abc',
     ]) {
       expect(ok(p)).toBe(true);
     }

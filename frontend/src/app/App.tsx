@@ -1451,6 +1451,7 @@ export default function App() {
         <Route path="/projects/:projectId/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
         <Route path="/correspondence" element={<P title="Correspondence"><MizitoCorrespondencePage /></P>} />
         <Route path="/colleagues" element={<P title="Colleagues"><MizitoColleaguesPage /></P>} />
+        <Route path="/colleagues/:roomId" element={<P title="Colleagues"><MizitoColleaguesPage /></P>} />
         <Route path="/projects/:projectId/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/authority-submissions" element={<P title="Authority Submissions"><AuthoritySubmissionPage /></P>} />
         <Route path="/projects/:projectId/review-authority" element={<P title="Review Authority"><ReviewAuthorityPage /></P>} />

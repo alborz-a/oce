@@ -13,7 +13,7 @@ const ALLOWED: RegExp[] = [
   /^\/correspondence$/,
   /^\/profile$/,
   /^\/notes$/,
-  /^\/colleagues$/,
+  /^\/colleagues(?:\/[^/]+)?$/,
   /^\/customers$/,
   /^\/monitoring$/,
 ];
