@@ -152,6 +152,7 @@ export function MizitoColleaguesPage() {
           peerAvatarUrl: peer?.avatar_url ?? null,
         }}
         onCloseDm={() => navigate('/colleagues')}
+        dmBackLabel="بازگشت به همکارانم"
       />
     );
   };
@@ -215,7 +216,7 @@ export function MizitoColleaguesPage() {
                     className="flex w-full items-center gap-3 px-2 py-2 text-right"
                     data-testid="colleague-row"
                   >
-                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full" data-testid="colleague-avatar">
+                    <div className="h-[40px] w-[40px] shrink-0 overflow-hidden rounded-full" data-testid="colleague-avatar">
                       <UserAvatar
                         url={c.avatar_url}
                         alt={c.full_name}

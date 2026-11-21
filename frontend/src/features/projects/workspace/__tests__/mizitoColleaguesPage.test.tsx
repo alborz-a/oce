@@ -38,11 +38,20 @@ vi.mock('../hooks/useOpenColleagueDm', () => ({
 }));
 
 // The real ProjectGroupTab pulls in the whole chat stack; here only its props and DM header are checked.
-let lastGroupTabProps: { projectId: string; dm?: { peerName: string } | null } | null = null;
+let lastGroupTabProps: {
+  projectId: string;
+  dm?: { peerName: string } | null;
+  dmBackLabel?: string;
+} | null = null;
 vi.mock('../components/ProjectGroupTab', () => ({
-  ProjectGroupTab: (props: { projectId: string; dm?: { peerName: string } | null }) => {
+  ProjectGroupTab: (props: { projectId: string; dm?: { peerName: string } | null; dmBackLabel?: string }) => {
     lastGroupTabProps = props;
-    return props.dm ? <div data-testid="workspace-dm-header">{props.dm.peerName}</div> : null;
+    return props.dm ? (
+      <div data-testid="workspace-dm-header">
+        {props.dm.peerName}
+        <button type="button" data-testid="workspace-dm-back" aria-label={props.dmBackLabel} />
+      </div>
+    ) : null;
   },
 }));
 
@@ -119,7 +128,7 @@ describe('MizitoColleaguesPage', () => {
     const wrappers = await screen.findAllByTestId('colleague-avatar');
     expect(wrappers).toHaveLength(3);
     for (const w of wrappers) {
-      expect(w).toHaveClass('h-10', 'w-10', 'shrink-0', 'overflow-hidden', 'rounded-full');
+      expect(w).toHaveClass('h-[40px]', 'w-[40px]', 'shrink-0', 'overflow-hidden', 'rounded-full');
     }
   });
 
@@ -156,6 +165,12 @@ describe('MizitoColleaguesPage', () => {
     expect(lastGroupTabProps?.projectId).toBe('');
     expect(lastGroupTabProps?.dm?.peerName).toBe('باب');
     expect(screen.queryByTestId('colleagues-search')).toBeNull();
+  });
+
+  it('DM back button is labelled as back to colleagues', async () => {
+    renderPage('/colleagues/room9');
+    expect(await screen.findByTestId('workspace-dm-back')).toHaveAttribute('aria-label', 'بازگشت به همکارانم');
+    expect(lastGroupTabProps?.dmBackLabel).toBe('بازگشت به همکارانم');
   });
 
   it('shows the Farsi error state when the colleague fetch fails', async () => {

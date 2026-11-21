@@ -49,6 +49,8 @@ export interface ProjectGroupTabProps {
   /** Direct chat with a colleague shown in place of the project room. */
   dm?: { room: ChatRoom; peerName: string; peerAvatarUrl?: string | null } | null;
   onCloseDm?: () => void;
+  /** Accessible label and tooltip for the DM back button. */
+  dmBackLabel?: string;
 }
 
 export function ProjectGroupTab({
@@ -63,6 +65,7 @@ export function ProjectGroupTab({
   showFilterBar = true,
   dm = null,
   onCloseDm,
+  dmBackLabel,
 }: ProjectGroupTabProps) {
   const [localFilter, setLocalFilter] = useState<StreamFilterState>(DEFAULT_STREAM_FILTERS);
   const filter = controlledFilter ?? localFilter;
@@ -203,7 +206,8 @@ export function ProjectGroupTab({
           <button
             type="button"
             onClick={onCloseDm}
-            aria-label="بازگشت به گفتگوی پروژه"
+            aria-label={dmBackLabel ?? 'بازگشت به گفتگوی پروژه'}
+            title={dmBackLabel ?? 'بازگشت به گفتگوی پروژه'}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#4b5563] hover:bg-[#f5f6f8]"
             data-testid="workspace-dm-back"
           >
