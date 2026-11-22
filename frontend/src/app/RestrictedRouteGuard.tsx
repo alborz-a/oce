@@ -18,7 +18,7 @@ export function RestrictedRouteGuard({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const [firstId, setFirstId] = useState<string | null>(null);
   const role = useAuthStore((s) => s.userRole);
-  // A role not yet known is let through (the backend still refuses); a known non-admin is not.
+  // A known non-admin is kept off admin-only routes (role unknown is handled below).
   const adminBlocked = !!role && !isSystemAdminRole(role) && isAdminOnlyRoute(pathname);
   const normal = useIsNormalUser();
   // Normal users (not admin/manager) get the Mizito-only allowlist; admin and manager keep the existing rules.
@@ -38,6 +38,9 @@ export function RestrictedRouteGuard({ children }: { children: ReactNode }) {
     };
   }, [blocked, activeId, firstId]);
 
+  // Role not known yet: render nothing. The page element is never mounted, so
+  // no OCE page can paint before the role decides (no flash, no lazy chunk fetch).
+  if (!role) return null;
   if (!blocked) return <>{children}</>;
   const id = activeId || firstId;
   if (id === null) return null; // still looking up the project
