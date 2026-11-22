@@ -25,6 +25,8 @@ from sqlalchemy import or_, select
 from sqlalchemy.exc import IntegrityError
 
 from app.core.hidden_users import is_hidden_system_user, viewer_is_admin
+from app.core.storage import contained_upload_candidates, module_uploads_dir
+from app.modules.documents import object_store
 from app.dependencies import (
     CurrentUserId,
     CurrentUserPayload,
@@ -481,7 +483,7 @@ async def unread_count(session, viewer: uuid.UUID) -> int:
     return len(set(incoming) - read)
 
 
-async def _labels_for(session, letter_ids: list[uuid.UUID]) -> dict[uuid.UUID, list[LabelOut]]:
+async def _labels_for(session, letter_ids: list[uuid.UUID], viewer: uuid.UUID) -> dict[uuid.UUID, list[LabelOut]]:
     out: dict[uuid.UUID, list[LabelOut]] = {}
     if not letter_ids:
         return out
@@ -489,7 +491,10 @@ async def _labels_for(session, letter_ids: list[uuid.UUID]) -> dict[uuid.UUID, l
         await session.execute(
             select(CorrespondenceLetterLabel.letter_id, CorrespondenceLabel.id, CorrespondenceLabel.name)
             .join(CorrespondenceLabel, CorrespondenceLabel.id == CorrespondenceLetterLabel.label_id)
-            .where(CorrespondenceLetterLabel.letter_id.in_(letter_ids))
+            .where(
+                CorrespondenceLetterLabel.letter_id.in_(letter_ids),
+                CorrespondenceLabel.created_by == viewer,
+            )
         )
     ).all()
     for letter_id, label_id, name in rows:
@@ -596,7 +601,7 @@ async def list_mailbox(
 
     latest_ids = [t["latest"].id for t in page]
     recipients = await _recipient_rows(session, latest_ids)
-    labels = await _labels_for(session, latest_ids)
+    labels = await _labels_for(session, latest_ids, viewer)
     user_ids: set[uuid.UUID] = set()
     for letter in (t["latest"] for t in page):
         user_ids.add(letter.sender_user_id)
@@ -636,6 +641,21 @@ async def list_mailbox(
     return items, total
 
 
+async def _attachment_size(path: str) -> int | None:
+    """Byte size of a stored attachment: object store head for ``s3:`` paths, stat for local paths, None if gone."""
+    if object_store.is_object_path(path):
+        try:
+            return await object_store.object_size(object_store.key_of(path))
+        except Exception:
+            return None
+    for candidate in contained_upload_candidates(path, module_uploads_dir()):
+        try:
+            return candidate.stat().st_size
+        except OSError:
+            continue
+    return None
+
+
 async def build_thread(session, root: Correspondence, viewer: uuid.UUID, is_admin: bool) -> ThreadOut:
     await _require_thread(session, root.thread_id, viewer, is_admin)
     await mark_thread_read(session, root.thread_id, viewer)
@@ -652,7 +672,7 @@ async def build_thread(session, root: Correspondence, viewer: uuid.UUID, is_admi
     )
     ids = [m.id for m in messages]
     recipients = await _recipient_rows(session, ids)
-    labels = await _labels_for(session, ids)
+    labels = await _labels_for(session, ids, viewer)
     user_ids = {m.sender_user_id for m in messages}
     for rows_ in recipients.values():
         user_ids.update(r.user_id for r in rows_)
@@ -684,7 +704,7 @@ async def build_thread(session, root: Correspondence, viewer: uuid.UUID, is_admi
                     AttachmentOut(
                         id=str(i),
                         name=Path(str(p)).name,
-                        size=None,
+                        size=await _attachment_size(str(p)),
                         download_url=f"/v1/correspondence/{m.id}/attachments/{i}",
                     )
                     for i, p in enumerate(m.attachments or [])
@@ -728,8 +748,19 @@ async def upload_letter_access(session, letter: Correspondence, user_id: Any, ve
     """Attachment upload: mailbox letters accept files from the sender only."""
     viewer = _as_uuid(user_id)
     if letter.sender_user_id is not None:
-        if letter.sender_user_id != viewer:
-            raise HTTPException(status_code=404, detail="Letter not found")
+        if letter.sender_user_id == viewer or await _viewer_is_admin_db(session, viewer):
+            return
+        raise HTTPException(status_code=403, detail="Only the sender can attach files")
+    await verify(letter.project_id, str(user_id), session)
+
+
+async def attachment_download_access(session, letter: Correspondence, user_id: Any, verify: Any = None) -> None:
+    """Attachment download: mailbox letters need thread participation (sender, recipient or admin), else 403."""
+    verify = verify or verify_project_access
+    viewer = _as_uuid(user_id)
+    if letter.sender_user_id is not None:
+        if not await thread_access(session, letter.thread_id, viewer, await _viewer_is_admin_db(session, viewer)):
+            raise HTTPException(status_code=403, detail="Access denied")
         return
     await verify(letter.project_id, str(user_id), session)
 
@@ -789,9 +820,20 @@ async def get_mailbox_unread(
 @mailbox_router.get("/labels/", response_model=list[LabelOut])
 async def list_labels(
     session: SessionDep,
+    user_id: CurrentUserId,
     _perm: None = Depends(RequirePermission("correspondence.read")),
 ) -> list[LabelOut]:
-    rows = (await session.execute(select(CorrespondenceLabel).order_by(CorrespondenceLabel.name))).scalars().all()
+    rows = (
+        (
+            await session.execute(
+                select(CorrespondenceLabel)
+                .where(CorrespondenceLabel.created_by == _as_uuid(user_id))
+                .order_by(CorrespondenceLabel.name)
+            )
+        )
+        .scalars()
+        .all()
+    )
     return [LabelOut(id=r.id, name=r.name) for r in rows]
 
 
@@ -804,7 +846,12 @@ async def create_label(
 ) -> LabelOut:
     name = data.name.strip()
     existing = (
-        await session.execute(select(CorrespondenceLabel).where(CorrespondenceLabel.name == name))
+        await session.execute(
+            select(CorrespondenceLabel).where(
+                CorrespondenceLabel.name == name,
+                CorrespondenceLabel.created_by == _as_uuid(user_id),
+            )
+        )
     ).scalar_one_or_none()
     if existing is not None:
         raise HTTPException(status_code=409, detail="Label already exists")
@@ -812,6 +859,78 @@ async def create_label(
     session.add(label)
     await session.flush()
     return LabelOut(id=label.id, name=label.name)
+
+
+@mailbox_router.post("/{letter_id}/labels/{label_id}/", status_code=204)
+async def attach_label(
+    letter_id: uuid.UUID,
+    label_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("correspondence.create")),
+) -> None:
+    viewer = _as_uuid(user_id)
+    letter = await _mailbox_letter_for_label(session, letter_id, viewer)
+    label = await _own_label(session, label_id, viewer)
+    link = (
+        await session.execute(
+            select(CorrespondenceLetterLabel).where(
+                CorrespondenceLetterLabel.letter_id == letter.id,
+                CorrespondenceLetterLabel.label_id == label.id,
+            )
+        )
+    ).scalar_one_or_none()
+    if link is None:
+        session.add(CorrespondenceLetterLabel(letter_id=letter.id, label_id=label.id))
+        await session.flush()
+
+
+@mailbox_router.delete("/{letter_id}/labels/{label_id}/", status_code=204)
+async def detach_label(
+    letter_id: uuid.UUID,
+    label_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    _perm: None = Depends(RequirePermission("correspondence.create")),
+) -> None:
+    viewer = _as_uuid(user_id)
+    letter = await _mailbox_letter_for_label(session, letter_id, viewer)
+    label = await _own_label(session, label_id, viewer)
+    link = (
+        await session.execute(
+            select(CorrespondenceLetterLabel).where(
+                CorrespondenceLetterLabel.letter_id == letter.id,
+                CorrespondenceLetterLabel.label_id == label.id,
+            )
+        )
+    ).scalar_one_or_none()
+    if link is not None:
+        await session.delete(link)
+        await session.flush()
+
+
+async def _mailbox_letter_for_label(session, letter_id: uuid.UUID, viewer: uuid.UUID) -> Correspondence:
+    letter = (
+        await session.execute(select(Correspondence).where(Correspondence.id == letter_id))
+    ).scalar_one_or_none()
+    if letter is None or letter.sender_user_id is None:
+        raise HTTPException(status_code=404, detail="Letter not found")
+    await _require_thread(session, letter.thread_id, viewer, await _viewer_is_admin_db(session, viewer))
+    return letter
+
+
+async def _own_label(session, label_id: uuid.UUID, viewer: uuid.UUID) -> CorrespondenceLabel:
+    label = (
+        await session.execute(
+            select(CorrespondenceLabel).where(
+                CorrespondenceLabel.id == label_id,
+                CorrespondenceLabel.created_by == viewer,
+            )
+        )
+    ).scalar_one_or_none()
+    if label is None:
+        raise HTTPException(status_code=404, detail="Label not found")
+    return label
 
 
 @mailbox_router.post("/compose/", response_model=LetterOut, status_code=201)
@@ -914,6 +1033,7 @@ __all__ = [
     "mailbox_router",
     "project_letter_access",
     "read_letter_access",
+    "attachment_download_access",
     "reject_mailbox_letter",
     "upload_letter_access",
 ]

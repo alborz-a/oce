@@ -145,11 +145,12 @@ class CorrespondenceLetterRecipient(Base):
 
 
 class CorrespondenceLabel(Base):
-    """Mailbox label («برچسب‌ها»). Names are unique across the workspace."""
+    """Mailbox label («برچسب‌ها»). Names are unique per owner (``created_by``)."""
 
     __tablename__ = "oe_correspondence_label"
+    __table_args__ = (UniqueConstraint("created_by", "name", name="uq_oe_correspondence_label_owner_name"),)
 
-    name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
     created_by: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True)
 
 

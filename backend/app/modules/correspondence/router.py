@@ -28,6 +28,7 @@ from app.core.file_signature import (
     require as require_signature,
 )
 from app.core.storage import contained_upload_candidates, module_uploads_dir
+from app.modules.documents.service import MAX_FILE_SIZE as MAX_ATTACHMENT_BYTES
 
 # Allow-list of magic-byte tokens we accept for correspondence attachments.
 # Deliberately tighter than the module-level ``ALLOWED_DOCUMENT_TYPES``:
@@ -46,6 +47,7 @@ from app.dependencies import (
 from app.modules.correspondence.mailbox import (
     mailbox_router,
     project_letter_access,
+    attachment_download_access,
     read_letter_access,
     reject_mailbox_letter,
     upload_letter_access,
@@ -308,7 +310,7 @@ async def upload_attachment(
     await upload_letter_access(session, existing, str(user_id), verify_project_access)
 
     try:
-        content = await file.read()
+        content = await file.read(MAX_ATTACHMENT_BYTES + 1)
     except Exception as exc:
         logger.exception(
             "Unable to read attachment upload for correspondence %s",
@@ -318,6 +320,12 @@ async def upload_attachment(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to read uploaded attachment",
         ) from exc
+
+    if len(content) > MAX_ATTACHMENT_BYTES:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"File too large (max {MAX_ATTACHMENT_BYTES // (1024 * 1024)} MB).",
+        )
 
     if not content:
         raise HTTPException(
@@ -418,7 +426,7 @@ async def download_attachment(
     symlink) before streaming, mirroring the Documents photo-serve gate.
     """
     existing = await service.get_correspondence(correspondence_id)
-    await read_letter_access(session, existing, str(user_id), verify_project_access)
+    await attachment_download_access(session, existing, str(user_id), verify_project_access)
 
     attachments = list(getattr(existing, "attachments", None) or [])
     if index < 0 or index >= len(attachments):
