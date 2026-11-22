@@ -3,7 +3,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { ShellLink as Link } from './letterShellLinks';
 import clsx from 'clsx';
 import {
   Mail,
@@ -1559,7 +1560,6 @@ function HowCorrespondenceWorks() {
 export function CorrespondencePage() {
   const { t } = useTranslation();
   const { projectId: routeProjectId } = useParams<{ projectId: string }>();
-  const navigate = useNavigate();
   const qc = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
   const activeProjectId = useProjectContextStore((s) => s.activeProjectId);
@@ -1852,20 +1852,7 @@ export function CorrespondencePage() {
             ? <IntroRichText text={t('correspondence.intro_more')} />
             : undefined
         }
-        links={[
-          {
-            label: t('transmittals.title', { defaultValue: 'Transmittals' }),
-            onClick: () => navigate('/transmittals'),
-          },
-          {
-            label: t('rfi.title', { defaultValue: 'RFIs' }),
-            onClick: () => navigate('/rfi'),
-          },
-          {
-            label: t('contacts.title', { defaultValue: 'Contacts' }),
-            onClick: () => navigate('/contacts'),
-          },
-        ]}
+        links={[]}
       >
         {t('correspondence.intro_body', {
           defaultValue:
