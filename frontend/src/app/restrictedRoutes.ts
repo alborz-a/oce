@@ -10,6 +10,7 @@ const ALLOWED: RegExp[] = [
   /^\/projects$/,
   /^\/projects\/(?!new(?:\/|$))[^/]+$/,
   /^\/projects\/[^/]+\/(?:tasks|files|chat|meetings|schedule|timeline|correspondence)(?:\/.*)?$/,
+  /^\/correspondence$/,
   /^\/files\/detail\/[^/]+\/[^/]+$/,
   /^\/tasks$/,
   /^\/photos$/,
