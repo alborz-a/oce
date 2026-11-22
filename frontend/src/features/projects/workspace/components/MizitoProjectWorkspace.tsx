@@ -7,6 +7,7 @@ import { apiGet } from '@/shared/lib/api';
 import { fetchAllTasks } from '@/features/tasks/api';
 import { projectsApi, type Project } from '@/features/projects/api';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { canSeeGantt } from '../ganttAccess';
 import '../workspace.css';
 import { useProjectWorkspaceStats } from '../hooks/useProjectWorkspaceStats';
 import { isSyntheticAlbumTask } from '../syntheticAlbumTask';
@@ -166,6 +167,10 @@ export function MizitoProjectWorkspace({
   }, [location.state, location.pathname, navigate]);
 
   const canManage = userRole === 'admin' || userRole === 'manager' || userRole === 'project_manager';
+  const showGantt = canSeeGantt(userRole);
+  useEffect(() => {
+    if (!showGantt && activeTab === 'gantt') setActiveTab('group');
+  }, [showGantt, activeTab]);
   const currentUser = useMemo(
     () => ({ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }),
     [userId, userFullName, userEmail],
@@ -243,6 +248,7 @@ export function MizitoProjectWorkspace({
         )}
         <MizitoTopTabAndFilterBar
           activeTab={activeTab}
+          showGantt={showGantt}
           onTabChange={(tab) => {
             setCompanyChatOpen(false);
             setActiveTab(tab);
@@ -310,7 +316,7 @@ export function MizitoProjectWorkspace({
             onTasksChanged={onTasksChanged}
           />
         )}
-        {activeTab === 'gantt' && !companyChatOpen && (
+        {activeTab === 'gantt' && showGantt && !companyChatOpen && (
           <ProjectGanttTab
             projectId={projectId}
             tasks={tasks}

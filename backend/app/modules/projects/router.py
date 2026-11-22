@@ -280,6 +280,7 @@ async def _verify_project_access(
     "/",
     response_model=ProjectResponse,
     status_code=201,
+    dependencies=[Depends(RequireRole("manager"))],
     summary="Create project",
     description="Create a new construction project. Sets the current user as owner. "
     "Configure region, classification standard, and currency for the project context.",
@@ -611,6 +612,7 @@ async def remove_demo_leftovers(
     "/{project_id}/duplicate/",
     response_model=ProjectResponse,
     status_code=201,
+    dependencies=[Depends(RequireRole("manager"))],
     summary="Duplicate project (deep clone)",
     description="Server-side deep-clone of a project including WBS tree, "
     "milestones, match-settings, custom fields, validation rule sets, "

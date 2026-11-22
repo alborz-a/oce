@@ -8,6 +8,8 @@ import {
 
 export interface MizitoTopTabAndFilterBarProps {
   activeTab: WorkspaceTabKey;
+  /** Gantt tab is shown only when true (global admin or manager). */
+  showGantt?: boolean;
   onTabChange: (tab: WorkspaceTabKey) => void;
   filters?: StreamFilterState;
   onFiltersChange?: (next: StreamFilterState) => void;
@@ -58,6 +60,7 @@ const KIND_FILTERS: readonly KindIconDef[] = [
 
 export function MizitoTopTabAndFilterBar({
   activeTab,
+  showGantt = false,
   onTabChange,
   filters = DEFAULT_STREAM_FILTERS,
   onFiltersChange,
@@ -106,7 +109,7 @@ export function MizitoTopTabAndFilterBar({
           aria-label="بخش‌های فضای کار پروژه"
           className="flex min-w-0 max-w-full items-center gap-0.5 overflow-x-auto"
         >
-          {WORKSPACE_TABS.map(({ key, label, icon, rotate, color, hiddenOnPhone }) => {
+          {WORKSPACE_TABS.filter(({ key }) => key !== 'gantt' || showGantt).map(({ key, label, icon, rotate, color, hiddenOnPhone }) => {
             const isActive = activeTab === key;
             return (
               <button
