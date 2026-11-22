@@ -45,7 +45,7 @@ describe('ProjectStreamFilterBar', () => {
       />,
     );
 
-    const searchInput = screen.getByPlaceholderText('فیلتر پیام‌ها');
+    const searchInput = screen.getByLabelText('فیلتر پیام‌ها');
     expect(searchInput.closest('search')).not.toBeNull();
 
     fireEvent.change(searchInput, { target: { value: 'کنتور' } });
