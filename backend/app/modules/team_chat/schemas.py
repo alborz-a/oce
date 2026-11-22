@@ -51,6 +51,7 @@ class MessageResponse(BaseModel):
     author_id: uuid.UUID | None = None
     author_name: str = ""
     author_title: str | None = None
+    avatar_url: str | None = None
     text: str
     reply_to_id: uuid.UUID | None = None
     document_ids: list[uuid.UUID] = Field(default_factory=list)

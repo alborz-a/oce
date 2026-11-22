@@ -18,6 +18,7 @@ export interface ChatMessage {
   author_id?: string | null;
   author_name: string;
   author_title?: string | null;
+  avatar_url?: string | null;
   text: string;
   reply_to_id?: string | null;
   document_ids: string[];

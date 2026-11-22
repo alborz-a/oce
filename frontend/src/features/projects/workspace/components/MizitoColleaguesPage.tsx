@@ -10,6 +10,7 @@ import type { ChatRoom, Colleague } from '@/modules/team-chat/types';
 import '../workspace.css';
 import { registerMizitoSwitcher } from '../mizitoSwitcherBridge';
 import { useSwitcherState } from '../hooks/useSwitcherState';
+import { useCurrentUserAvatar } from '../hooks/useCurrentUserAvatar';
 import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
 import { projectInitials } from '../utils/projectInitials';
 import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSwitcherSidebar';
@@ -118,9 +119,15 @@ export function MizitoColleaguesPage() {
 
   useEffect(() => registerMizitoSwitcher(onSwitcherMenuClick), [onSwitcherMenuClick]);
 
+  const currentUserAvatarUrl = useCurrentUserAvatar();
   const currentUser = useMemo(
-    () => ({ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }),
-    [userId, userFullName, userEmail],
+    () => ({
+      id: userId,
+      full_name: userFullName ?? undefined,
+      email: userEmail ?? undefined,
+      avatar_url: currentUserAvatarUrl,
+    }),
+    [userId, userFullName, userEmail, currentUserAvatarUrl],
   );
 
   const renderDm = () => {

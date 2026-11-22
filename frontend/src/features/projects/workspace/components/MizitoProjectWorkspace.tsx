@@ -26,6 +26,7 @@ import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
 import { CompanyChatPanel } from './CompanyChatPanel';
 import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
+import { useCurrentUserAvatar } from '../hooks/useCurrentUserAvatar';
 import { WorkspaceDmContext, type WorkspaceDmValue } from '../context/WorkspaceDmContext';
 import type { ChatRoom } from '@/modules/team-chat/types';
 import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
@@ -166,9 +167,15 @@ export function MizitoProjectWorkspace({
   }, [location.state, location.pathname, navigate]);
 
   const canManage = userRole === 'admin' || userRole === 'manager' || userRole === 'project_manager';
+  const currentUserAvatarUrl = useCurrentUserAvatar();
   const currentUser = useMemo(
-    () => ({ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }),
-    [userId, userFullName, userEmail],
+    () => ({
+      id: userId,
+      full_name: userFullName ?? undefined,
+      email: userEmail ?? undefined,
+      avatar_url: currentUserAvatarUrl,
+    }),
+    [userId, userFullName, userEmail, currentUserAvatarUrl],
   );
 
   return (
@@ -262,7 +269,7 @@ export function MizitoProjectWorkspace({
           <CompanyChatPanel
             projectId={projectId}
             currentUserId={userId}
-            currentUser={{ id: userId, full_name: userFullName ?? undefined, email: userEmail ?? undefined }}
+            currentUser={currentUser}
             members={members}
             onClose={() => setCompanyChatOpen(false)}
           />

@@ -77,6 +77,14 @@ class TeamChatService:
         rows = (await self.session.execute(select(User).where(User.id.in_(ids)))).scalars()
         return {u.id: _job_title(u) for u in rows}
 
+    async def _avatars(self, ids: set[uuid.UUID]) -> dict[uuid.UUID, str | None]:
+        if not ids:
+            return {}
+        from app.modules.users.models import User
+
+        rows = (await self.session.execute(select(User).where(User.id.in_(ids)))).scalars()
+        return {u.id: u.avatar_url for u in rows}
+
     # ── rooms ──────────────────────────────────────────────────────────
     async def company_room(self) -> ChatRoom:
         room = (await self.session.execute(select(ChatRoom).where(ChatRoom.kind == "company"))).scalars().first()
@@ -273,6 +281,7 @@ class TeamChatService:
         authors = {m.author_id for m in msgs if m.author_id}
         names = await self._names(authors)
         titles = await self._titles(authors)
+        avatars = await self._avatars(authors)
         out = []
         for m in msgs:
             meta = dict(m.metadata_ or {})
@@ -280,6 +289,7 @@ class TeamChatService:
                 "id": m.id, "room_id": m.room_id, "author_id": m.author_id,
                 "author_name": names.get(m.author_id) or str(meta.get("author_name") or ""),
                 "author_title": titles.get(m.author_id),
+                "avatar_url": avatars.get(m.author_id),
                 "text": m.text, "reply_to_id": m.reply_to_id,
                 "document_ids": [_uuid(d) for d in (m.document_ids or [])],
                 "created_at": m.created_at, "edited_at": m.edited_at, "metadata": meta,
