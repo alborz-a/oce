@@ -335,9 +335,9 @@ async def list_projects(
     filters to that exact status. Omitting ``status`` keeps the default
     behaviour: archived projects are excluded.
     """
-    # Global managers list every project too (read-only); owners and members
-    # are still the only filter for everyone else.
-    is_admin = payload.get("role") in ("admin", "manager")
+    # Only global admins list every project; owners and team members are the
+    # only filter for everyone else (global managers no longer see all projects).
+    is_admin = payload.get("role") == "admin"
     # ``all`` is a view sentinel, not a real status value - translate it into
     # "no status filter + include archived" so the listing spans every state.
     if status == "all":
@@ -678,7 +678,7 @@ async def list_project_members_endpoint(
     service: ProjectService = Depends(_get_service),
 ) -> list[ProjectMemberResponse]:
     """List members of a project. Accessible by owner, admin, or any team member."""
-    await _verify_project_access(service, project_id, user_id, session, payload, manager_read=True)
+    await _verify_project_access(service, project_id, user_id, session, payload)
     from app.modules.projects.member_service import list_project_members
 
     from app.core.hidden_users import viewer_is_admin
