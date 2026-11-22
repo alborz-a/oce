@@ -1344,6 +1344,10 @@ class ProjectCardMetrics(BaseModel):
     open_rfis: int = 0
     safety_incidents: int = 0
     progress_pct: float = 0.0
+    # Project picture (presigned, S3 only; None on local storage or no picture)
+    # and Mizito colour name, same source as ProjectResponse.
+    picture_url: str | None = None
+    color: str | None = None
 
 
 # ── Project backup / restore schemas ────────────────────────────────────
