@@ -250,8 +250,13 @@ class TeamChatService:
         return out
 
     # ── colleagues ─────────────────────────────────────────────────────
-    async def list_colleagues(self, viewer: uuid.UUID, payload: Any = None) -> list[ColleagueResponse]:
+    async def list_colleagues(
+        self, viewer: uuid.UUID, payload: Any = None, project_id: uuid.UUID | None = None
+    ) -> list[ColleagueResponse]:
         from app.core.hidden_users import is_hidden_system_user, viewer_is_admin
+        from app.modules.projects.models import Project
+        from app.modules.teams.access import member_project_ids_subquery
+        from app.modules.teams.models import Team, TeamMembership
         from app.modules.users.models import User
 
         q = (
@@ -261,6 +266,30 @@ class TeamChatService:
             .limit(500)
         )
         is_admin = viewer_is_admin(payload)
+        if not is_admin:
+            # Non-admins see only people who share at least one project with the viewer
+            # (project member or project owner). Shared project ids are collected first
+            # so the scope stays a plain list, not a correlated subquery.
+            shared = (
+                await self.session.execute(
+                    select(Project.id).where(
+                        or_(
+                            Project.id.in_(member_project_ids_subquery(viewer)),
+                            Project.owner_id == viewer,
+                        )
+                    )
+                )
+            ).scalars().all()
+            scope = set(shared)
+            if project_id is not None:
+                scope &= {project_id}
+            if not scope:
+                return []
+            member_ids = select(TeamMembership.user_id).join(Team, Team.id == TeamMembership.team_id).where(
+                Team.project_id.in_(scope)
+            )
+            owner_ids = select(Project.owner_id).where(Project.id.in_(scope))
+            q = q.where(or_(User.id.in_(member_ids), User.id.in_(owner_ids)))
         rows = (await self.session.execute(q)).scalars()
         return [
             ColleagueResponse(id=u.id, full_name=u.full_name or "", job_title=_job_title(u), avatar_url=u.avatar_url)

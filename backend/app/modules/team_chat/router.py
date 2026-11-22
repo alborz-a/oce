@@ -68,9 +68,10 @@ async def list_rooms(user_id: CurrentUserId, svc: TeamChatService = Depends(_svc
 async def list_colleagues(
     user_id: CurrentUserId,
     payload: CurrentUserPayload,
+    project_id: uuid.UUID | None = Query(default=None),
     svc: TeamChatService = Depends(_svc),
 ) -> list[ColleagueResponse]:
-    return await svc.list_colleagues(uuid.UUID(str(user_id)), payload)
+    return await svc.list_colleagues(uuid.UUID(str(user_id)), payload, project_id)
 
 
 @router.get(
