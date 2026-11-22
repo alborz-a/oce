@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { projectsApi, type Project } from '@/features/projects/api';
 import { apiGet } from '@/shared/lib/api';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
@@ -16,6 +16,8 @@ import { ProjectGroupSwitcherSidebar, usePinnedProjects } from './ProjectGroupSw
 import { ProjectGroupTab } from './ProjectGroupTab';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
 import type { ProjectTaskItem } from '../types';
+import { ConversationTabs } from './ConversationTabs';
+import { filterConversations, parseConversationTab, type ConversationTab } from '../utils/filterConversations';
 
 const NO_TASKS: ProjectTaskItem[] = [];
 const NO_MEMBERS: ProjectMemberSummary[] = [];
@@ -55,11 +57,10 @@ export function MizitoColleaguesPage() {
   });
   const colleagues: Colleague[] = useMemo(() => colleaguesQuery.data ?? [], [colleaguesQuery.data]);
 
-  // Open DM room: resolved from the rooms list so a hard reload of /colleagues/:roomId also works.
+  // Rooms list: feeds the «گروه‌ها» tab and resolves the open room, so a hard reload of /colleagues/:roomId also works.
   const roomsQuery = useQuery({
     queryKey: ['team-chat', 'colleague-rooms'],
     queryFn: () => apiGet<ChatRoom[]>('/v1/team-chat/rooms/'),
-    enabled: !!roomId,
   });
   const openRoom: ChatRoom | null = useMemo(
     () => (roomId ? (roomsQuery.data ?? []).find((r) => r.id === roomId) ?? null : null),
@@ -69,13 +70,27 @@ export function MizitoColleaguesPage() {
   const peerId = openRoom?.member_ids?.find((id) => id !== userId) ?? peerIdFromState;
   const peer = useMemo(() => colleagues.find((c) => c.id === peerId) ?? null, [colleagues, peerId]);
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return colleagues;
-    return colleagues.filter(
-      (c) => (c.full_name || '').toLowerCase().includes(q) || (c.job_title || '').toLowerCase().includes(q),
-    );
-  }, [colleagues, search]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = parseConversationTab(searchParams.get('tab'));
+  const setTab = useCallback(
+    (next: ConversationTab) => {
+      setSearchParams(
+        (prev) => {
+          const params = new URLSearchParams(prev);
+          if (next === 'all') params.delete('tab');
+          else params.set('tab', next);
+          return params;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
+  const { rooms: visibleRooms, colleagues: filtered } = useMemo(
+    () => filterConversations(tab, search, roomsQuery.data ?? [], colleagues),
+    [tab, search, roomsQuery.data, colleagues],
+  );
 
   const onOpenRoom = useCallback(
     (room: ChatRoom, otherUserId: string) => {
@@ -148,8 +163,8 @@ export function MizitoColleaguesPage() {
         showFilterBar={false}
         dm={{
           room: openRoom,
-          peerName: peer?.full_name || 'همکار',
-          peerAvatarUrl: peer?.avatar_url ?? null,
+          peerName: openRoom.kind === 'dm' ? peer?.full_name || 'همکار' : openRoom.name,
+          peerAvatarUrl: openRoom.kind === 'dm' ? (peer?.avatar_url ?? null) : null,
         }}
         onCloseDm={() => navigate('/colleagues')}
         dmBackLabel="بازگشت به همکارانم"
@@ -183,11 +198,13 @@ export function MizitoColleaguesPage() {
         ) : (
           <section className="flex h-full flex-col gap-3 p-4" data-testid="colleagues-page">
             <h1 className="text-lg font-semibold text-[#263648]">همکارانم</h1>
+            <ConversationTabs value={tab} onChange={setTab} />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="جستجو بر اساس نام یا سمت"
+              placeholder="فیلتر"
+              aria-label="فیلتر"
               className="w-full rounded border border-[#e5eaf0] px-3 py-2 text-sm"
               data-testid="colleagues-search"
             />
@@ -202,10 +219,32 @@ export function MizitoColleaguesPage() {
                 خطا در بارگذاری همکاران.
               </p>
             )}
-            {!colleaguesQuery.isLoading && !colleaguesQuery.isError && filtered.length === 0 && (
+            {!colleaguesQuery.isLoading && !colleaguesQuery.isError && filtered.length === 0 && visibleRooms.length === 0 && (
               <p className="text-sm text-[var(--mz-muted)]" data-testid="colleagues-empty">
                 همکاری پیدا نشد.
               </p>
+            )}
+            {visibleRooms.length > 0 && (
+              <ul className="flex flex-col divide-y divide-[#e5eaf0] overflow-y-auto" data-testid="conversations-groups-list">
+                {visibleRooms.map((room) => (
+                  <li key={room.id}>
+                    <button
+                      type="button"
+                      onClick={() => navigate(`/colleagues/${room.id}`)}
+                      className="flex w-full items-center gap-3 px-2 py-2 text-right"
+                      data-testid="conversation-group-row"
+                    >
+                      <span
+                        className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full bg-[var(--mz-appbar)] text-sm font-bold text-white"
+                        aria-hidden="true"
+                      >
+                        {projectInitials(room.name)}
+                      </span>
+                      <span className="truncate text-sm font-bold text-[#263648]">{room.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             )}
             <ul className="flex flex-col divide-y divide-[#e5eaf0] overflow-y-auto" data-testid="colleagues-list">
               {filtered.map((c) => (
@@ -235,7 +274,7 @@ export function MizitoColleaguesPage() {
                     <span className="flex min-w-0 flex-col">
                       <span className="truncate text-sm font-bold text-[#263648]">{c.full_name}</span>
                       {c.job_title && (
-                        <span className="truncate text-xs text-[var(--mz-colleague-title)]" data-testid="colleague-job-title">
+                        <span className="w-fit max-w-full truncate rounded-full bg-[#eef2f7] px-2 py-0.5 text-[11px] text-[var(--mz-colleague-title)]" data-testid="colleague-job-title">
                           {c.job_title}
                         </span>
                       )}

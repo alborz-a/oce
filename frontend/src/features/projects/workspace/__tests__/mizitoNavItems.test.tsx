@@ -18,7 +18,7 @@ describe('MizitoNav drawer items', () => {
 
     const expected = [
       { label: 'داشبورد', href: '/', icon: 'home' },
-      { label: 'گفتگو', href: '/chat', icon: 'chat' },
+      { label: 'گفتگو', href: '/colleagues', icon: 'chat' },
       { label: 'پروژه‌ها', href: '/projects', icon: 'library_books' },
       { label: 'وظایف', href: '/tasks', icon: 'offline_pin' },
       { label: 'نامه‌ها', href: '/correspondence', icon: 'inbox' },

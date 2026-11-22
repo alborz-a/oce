@@ -130,14 +130,14 @@ export function ProjectStreamFilterBar({
       data-testid="project-stream-filter-bar"
     >
       <span className="shrink-0 text-[12px] text-black/60">فیلتر پیام‌ها:</span>
-      <search className="relative flex items-center" aria-label="فیلتر پیام‌ها">
+      <search className="relative flex items-center">
         <MzIcon name="search" size={14} className="pointer-events-none absolute start-2.5 text-[#909090]" />
         <input
           ref={searchInputRef}
           type="search"
           value={filter.search}
           onChange={(e) => onChange({ ...filter, search: e.target.value })}
-          placeholder="فیلتر پیام‌ها"
+          placeholder=""
           aria-label="فیلتر پیام‌ها"
           className="h-7 w-32 rounded-none border-0 bg-transparent pe-3 ps-8 text-[12px] text-black/85 placeholder:text-[#909090] focus:w-40 focus:outline-none"
         />
