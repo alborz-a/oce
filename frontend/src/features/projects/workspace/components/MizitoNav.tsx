@@ -104,7 +104,7 @@ export function MizitoNav({
           <span>گفتگو</span>
         </button>
       ) : (
-        <NavItem to="/chat" label="گفتگو" icon="chat" color="#4285f4" active={forced('/chat')} />
+        <NavItem to="/colleagues" label="گفتگو" icon="chat" color="#4285f4" active={forced('/colleagues')} />
       )}
       <NavItem to="/projects" label="پروژه‌ها" icon="library_books" color="#1f5c88" active={forced('/projects')} badgeKey="projects" count={counts?.projects} />
       <NavItem
