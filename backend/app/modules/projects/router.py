@@ -85,6 +85,7 @@ from app.modules.projects.member_schemas import (
 )
 from app.modules.projects.module_presence import probe_project_modules
 from app.core.project_roles import get_project_caps, get_project_role, require_project_cap
+from app.modules.projects.picture import remove_picture, store_picture
 from app.modules.projects.schemas import (
     ComplianceRulePacksUpdate,
     FocusModePatch,
@@ -411,6 +412,73 @@ async def update_project(
     resp.my_project_role = role or ""
     resp.my_caps = sorted(caps)
     return resp
+
+
+# ── Project picture (avatar) ───────────────────────────────────────────
+
+
+async def _project_response_with_caps(
+    service: ProjectService,
+    session: AsyncSession,
+    user_id: str,
+    project_id: uuid.UUID,
+) -> ProjectResponse:
+    project = await service.get_project(project_id)
+    resp = ProjectResponse.model_validate(project)
+    role = await get_project_role(session, user_id, project_id)
+    caps = await get_project_caps(session, user_id, project_id)
+    resp.my_project_role = role or ""
+    resp.my_caps = sorted(caps)
+    return resp
+
+
+@router.post(
+    "/{project_id}/picture",
+    response_model=ProjectResponse,
+    summary="Upload project picture",
+    description="Upload a PNG, JPEG or WebP project picture (max 5 MB). "
+    "Manager-only: requires project.update. Stored under projects/<id>/picture.<ext>.",
+    dependencies=[Depends(require_project_cap("project.update"))],
+)
+async def upload_project_picture(
+    project_id: uuid.UUID,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    session: SessionDep,
+    file: UploadFile = File(...),
+    service: ProjectService = Depends(_get_service),
+) -> ProjectResponse:
+    """Store the project picture and return the project with a presigned picture_url."""
+    await _verify_project_updater(service, project_id, user_id, session, payload)
+    project = await service.get_project(project_id)
+    project.picture_key = await store_picture(project_id, file, project.picture_key)
+    await session.flush()
+    return await _project_response_with_caps(service, session, user_id, project_id)
+
+
+@router.delete(
+    "/{project_id}/picture",
+    response_model=ProjectResponse,
+    summary="Delete project picture",
+    description="Remove the project picture; the UI falls back to initials. "
+    "Manager-only: requires project.update.",
+    dependencies=[Depends(require_project_cap("project.update"))],
+)
+async def delete_project_picture(
+    project_id: uuid.UUID,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    session: SessionDep,
+    service: ProjectService = Depends(_get_service),
+) -> ProjectResponse:
+    """Clear the project picture key and delete the stored object."""
+    await _verify_project_updater(service, project_id, user_id, session, payload)
+    project = await service.get_project(project_id)
+    old_key = project.picture_key
+    project.picture_key = None
+    await session.flush()
+    await remove_picture(old_key)
+    return await _project_response_with_caps(service, session, user_id, project_id)
 
 
 # ── Delete (archive) ─────────────────────────────────────────────────────

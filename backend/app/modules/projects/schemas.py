@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator, model_validator
 
 from app.core.region_lock import LOCKED_CURRENCY, REGION_LOCK
 
@@ -692,6 +692,26 @@ class ProjectResponse(BaseModel):
     # Project capability fields [RSC-IRAN] (Step 4.6)
     my_project_role: str = ""
     my_caps: list[str] = Field(default_factory=list)
+
+    # Project picture (avatar). ``picture_key`` is read from the ORM and never
+    # serialised; ``picture_url`` is a short-lived presigned URL (S3 only, None
+    # on local storage). The bytes are never proxied through the API.
+    picture_key: str | None = Field(default=None, exclude=True)
+    picture_url: str | None = None
+    # Mizito colour name (grey, red, purple, light-blue, blue, green, red-dark, brown)
+    # taken from custom_fields.mizito.color; the frontend maps it to a hex value.
+    color: str | None = None
+
+    @model_validator(mode="after")
+    def _fill_picture_and_color(self) -> "ProjectResponse":
+        if self.picture_key and self.picture_url is None:
+            from app.modules.projects.picture import presigned_picture_url
+
+            self.picture_url = presigned_picture_url(self.picture_key)
+        mizito = (self.custom_fields or {}).get("mizito")
+        if isinstance(mizito, dict) and isinstance(mizito.get("color"), str):
+            self.color = mizito["color"]
+        return self
 
     # BUG-MATH04: defence-in-depth response strip - see BOQResponse for the
     # full rationale. ``ProjectCreate`` rejects HTML in ``name`` outright
