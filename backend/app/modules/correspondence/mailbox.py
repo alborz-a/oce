@@ -32,6 +32,7 @@ from app.dependencies import (
     SessionDep,
     verify_project_access,
 )
+from app.modules.correspondence.html_sanitize import plain_text_to_html, sanitize_html
 from app.modules.correspondence.models import (
     Correspondence,
     CorrespondenceLabel,
@@ -308,7 +309,7 @@ async def _add_message(
         correspondence_type="letter",
         sender_user_id=sender,
         thread_id=thread_id or letter_id,
-        body_html=body_html,
+        body_html=sanitize_html(body_html),
         created_by=str(sender),
         to_contact_ids=[],
         linked_document_ids=[],
@@ -370,7 +371,7 @@ async def forward_letter(
         session,
         sender=viewer,
         subject=root.subject,
-        body_html=note,
+        body_html=plain_text_to_html(note),
         thread_id=root.thread_id,
         to_ids=targets,
         kind=KIND_FORWARD,
@@ -677,7 +678,7 @@ async def build_thread(session, root: Correspondence, viewer: uuid.UUID, is_admi
                     )
                     for r in recipients.get(m.id, [])
                 ],
-                body_html=m.body_html or "",
+                body_html=sanitize_html(m.body_html),
                 sent_at=_iso(m.created_at),
                 attachments=[
                     AttachmentOut(

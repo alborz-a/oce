@@ -271,6 +271,24 @@ async def test_labels_filter_and_duplicate_name(session):
     assert dup.value.status_code == 409
 
 
+async def test_bodies_sanitized_on_write_and_read(session):
+    letter = await _compose(session, ALICE, [BOB], body='<p onclick="x()">hi</p><script>alert(1)</script>')
+    await session.commit()
+    await mb.forward_letter(session, BOB, False, letter.id, [CAROL], "<img src=x onerror=1>")
+    await session.commit()
+
+    thread = await mb.build_thread(session, letter, BOB, is_admin=False)
+    bodies = [m.body_html for m in thread.messages]
+    assert bodies[0] == "<p>hi</p>"
+    assert bodies[1] == "&lt;img src=x onerror=1&gt;"
+
+    # Legacy raw row written before the sanitizer existed: read path must still clean it.
+    letter.body_html = '<a href="javascript:alert(1)">x</a><script>y</script>'
+    await session.commit()
+    thread = await mb.build_thread(session, letter, BOB, is_admin=False)
+    assert thread.messages[0].body_html == "<a>x</a>"
+
+
 async def test_read_mark_is_idempotent(session):
     letter = await _compose(session, ALICE, [BOB])
     await session.commit()
