@@ -13,6 +13,8 @@ import { Card, Badge, EmptyState, Skeleton, Button, Breadcrumb, FileTypeChips, D
 import { PageHeader } from '@/shared/ui/PageHeader';
 import { DateDisplay } from '@/shared/ui/DateDisplay';
 import { apiGet } from '@/shared/lib/api';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import { fmtCompact, fmtNumber, fmtPercent } from '@/shared/lib/formatters';
 import { useNameCollator } from '@/shared/lib/collator';
@@ -419,6 +421,7 @@ type SortField = 'name' | 'total' | 'positions' | 'date';
 
 export function BOQListPage() {
   const { t } = useTranslation();
+  const userRole = useAuthStore((s) => s.userRole);
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -1216,10 +1219,10 @@ export function BOQListPage() {
           icon={<Table size={28} strokeWidth={1.5} />}
           title={t('boq.no_boqs', { defaultValue: 'No BOQs yet' })}
           description={t('boq.no_boqs_hint', { defaultValue: 'A Bill of Quantities is the foundation of your estimate. Start by creating a project, then add sections (trade groups) and positions (work items) with quantities and rates.' })}
-          action={{
+          action={canCreateProject(userRole) ? {
             label: t('boq.create_boq', { defaultValue: 'Create BOQ' }),
             onClick: () => navigate('/projects/new'),
-          }}
+          } : undefined}
         />
       ) : (
         <div className="space-y-6">

@@ -50,6 +50,7 @@ import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useCostDatabaseStore, REGION_MAP } from '@/stores/useCostDatabaseStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import type { CostItemMetadata, CertaintyBadge as CertaintyBadgeData, CostCatalog } from './api';
 import { buildBoqPositionDraft, massEffectiveUnitRate, type FullCostItem } from './addToBoqHelpers';
@@ -2255,9 +2256,11 @@ function AddToBOQModal({
             ) : (
               <div className="flex items-center gap-2">
                 <span className="text-xs text-content-tertiary">{t('projects.no_projects', 'No projects yet')}</span>
+                {canCreateProject(useAuthStore.getState().userRole) && (
                 <Button variant="primary" size="sm" onClick={() => { onClose(); navigate('/projects/new'); }}>
                   {t('projects.create_project', { defaultValue: 'Create Project' })}
                 </Button>
+                )}
               </div>
             )}
           </div>
