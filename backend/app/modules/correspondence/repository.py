@@ -37,6 +37,8 @@ class CorrespondenceRepository:
         stmt = select(func.count(Correspondence.id)).where(
             or_(Correspondence.created_by.is_(None), Correspondence.created_by != uid),
             ~read_exists,
+            # Mailbox letters (user-to-user) are counted by mailbox unread-count only.
+            Correspondence.sender_user_id.is_(None),
         )
         if project_ids is not None:
             if not project_ids:

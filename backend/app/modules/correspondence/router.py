@@ -43,7 +43,13 @@ from app.dependencies import (
     accessible_project_ids,
     verify_project_access,
 )
-from app.modules.documents import object_store
+from app.modules.correspondence.mailbox import (
+    mailbox_router,
+    project_letter_access,
+    read_letter_access,
+    reject_mailbox_letter,
+    upload_letter_access,
+)
 from app.modules.correspondence.schemas import (
     CorrespondenceCreate,
     CorrespondenceListResponse,
@@ -52,8 +58,10 @@ from app.modules.correspondence.schemas import (
     UnreadCountResponse,
 )
 from app.modules.correspondence.service import CorrespondenceService
+from app.modules.documents import object_store
 
 router = APIRouter(tags=["correspondence"])
+router.include_router(mailbox_router)
 logger = logging.getLogger(__name__)
 
 # On-disk storage for correspondence attachments. Path layout mirrors
@@ -214,6 +222,7 @@ async def get_correspondence(
     service: CorrespondenceService = Depends(_get_service),
 ) -> CorrespondenceResponse:
     correspondence = await service.get_correspondence(correspondence_id)
+    reject_mailbox_letter(correspondence)
     if not await _is_general_project(session, correspondence.project_id):
         await verify_project_access(correspondence.project_id, str(user_id), session)
     # Opening a letter as a recipient marks it read (no response change).
@@ -232,7 +241,7 @@ async def mark_correspondence_read(
 ) -> None:
     """Idempotent read mark for the caller. 404 when the caller has no access to the letter's project."""
     correspondence = await service.get_correspondence(correspondence_id)
-    await verify_project_access(correspondence.project_id, str(user_id), session)
+    await read_letter_access(session, correspondence, str(user_id), verify_project_access)
     await service.mark_letter_read(correspondence.id, uuid.UUID(str(user_id)))
 
 
@@ -246,7 +255,7 @@ async def update_correspondence(
     service: CorrespondenceService = Depends(_get_service),
 ) -> CorrespondenceResponse:
     existing = await service.get_correspondence(correspondence_id)
-    await verify_project_access(existing.project_id, str(user_id), session)
+    await project_letter_access(session, existing, str(user_id), verify_project_access)
     correspondence = await service.update_correspondence(correspondence_id, data)
     return _to_response(correspondence)
 
@@ -260,7 +269,7 @@ async def delete_correspondence(
     service: CorrespondenceService = Depends(_get_service),
 ) -> None:
     existing = await service.get_correspondence(correspondence_id)
-    await verify_project_access(existing.project_id, str(user_id), session)
+    await project_letter_access(session, existing, str(user_id), verify_project_access)
     await service.delete_correspondence(correspondence_id)
 
 
@@ -296,7 +305,7 @@ async def upload_attachment(
     # caller without access to the project never causes us to read the
     # body, hit the disk, or learn whether the correspondence exists.
     existing = await service.get_correspondence(correspondence_id)
-    await verify_project_access(existing.project_id, str(user_id), session)
+    await upload_letter_access(session, existing, str(user_id), verify_project_access)
 
     try:
         content = await file.read()
@@ -409,7 +418,7 @@ async def download_attachment(
     symlink) before streaming, mirroring the Documents photo-serve gate.
     """
     existing = await service.get_correspondence(correspondence_id)
-    await verify_project_access(existing.project_id, str(user_id), session)
+    await read_letter_access(session, existing, str(user_id), verify_project_access)
 
     attachments = list(getattr(existing, "attachments", None) or [])
     if index < 0 or index >= len(attachments):
