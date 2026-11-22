@@ -70,3 +70,35 @@ export function useMarkLetterRead() {
     onSuccess: invalidate,
   });
 }
+
+export const LETTERS_LABELS_KEY = ['letters-labels'] as const;
+
+export function useLabels() {
+  return useQuery({
+    queryKey: LETTERS_LABELS_KEY,
+    queryFn: () => lettersApi.labels(),
+    staleTime: 30_000,
+  });
+}
+
+export function useCreateLabel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (name: string) => lettersApi.createLabel(name),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: LETTERS_LABELS_KEY });
+    },
+  });
+}
+
+/** Attach or detach one label on one letter; invalidates mailbox and thread so chips refresh. */
+export function useToggleLetterLabel(letterId: string) {
+  const invalidate = useLettersInvalidate();
+  return useMutation({
+    mutationFn: (args: { labelId: string; attach: boolean }) =>
+      args.attach
+        ? lettersApi.attachLabel(letterId, args.labelId)
+        : lettersApi.detachLabel(letterId, args.labelId),
+    onSuccess: invalidate,
+  });
+}

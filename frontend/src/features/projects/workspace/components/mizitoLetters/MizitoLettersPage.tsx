@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MzIcon } from '../MzIcon';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
-import type { LetterListItem, MailboxBox, MailboxFilters } from './lettersApi';
+import type { LetterLabel, LetterListItem, MailboxBox, MailboxFilters } from './lettersApi';
 import { useMailbox } from './useLetters';
 import { formatLetterDate, formatLetterDateTime } from './lettersFormat';
 import { MizitoLetterDetail } from './MizitoLetterDetail';
 import { MizitoComposeLetterModal } from './MizitoComposeLetterModal';
+import { MizitoLabelsPanel } from './MizitoLabelsPanel';
 
-/** Tabs in spec order. «برچسب‌ها» is a dropdown (no mailbox box), kept as a visual tab for now. */
+/** Tabs in spec order. «برچسب‌ها» is not a mailbox box: it shows the labels panel and filters by label. */
 const TABS: { key: MailboxBox | 'labels'; label: string }[] = [
   { key: 'inbox', label: 'صندوق ورودی' },
   { key: 'outbox', label: 'صندوق خروجی' },
@@ -33,6 +34,8 @@ export function MizitoLettersPage() {
   const [filters, setFilters] = useState<MailboxFilters>({});
   const [filterOpen, setFilterOpen] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [view, setView] = useState<'mailbox' | 'labels'>('mailbox');
+  const [labelFilter, setLabelFilter] = useState<LetterLabel | null>(null);
   const mailbox = useMailbox(box, { limit: 50, ...filters });
   const items = mailbox.data?.items ?? [];
 
@@ -53,7 +56,7 @@ export function MizitoLettersPage() {
         <h1 className="mz-letters-title">کارتابل</h1>
         <nav className="mz-letters-tabs" role="tablist" aria-label="صندوق‌های نامه">
           {TABS.map((t) => {
-            const active = t.key !== 'labels' && t.key === box;
+            const active = t.key === 'labels' ? view === 'labels' : view === 'mailbox' && t.key === box;
             return (
               <button
                 key={t.key}
@@ -63,7 +66,12 @@ export function MizitoLettersPage() {
                 data-testid={`letters-tab-${t.key}`}
                 className={`mz-letters-tab${active ? ' is-active' : ''}`}
                 onClick={() => {
-                  if (t.key !== 'labels') setBox(t.key);
+                  if (t.key === 'labels') {
+                    setView('labels');
+                  } else {
+                    setView('mailbox');
+                    setBox(t.key);
+                  }
                 }}
               >
                 {t.label}
@@ -95,6 +103,33 @@ export function MizitoLettersPage() {
           <span>فیلتر نمایش نامه‌ها</span>
         </button>
       </div>
+
+      {labelFilter ? (
+        <div className="mz-letters-label-filter" data-testid="letters-label-filter">
+          <span>برچسب: {labelFilter.name}</span>
+          <button
+            type="button"
+            aria-label="حذف فیلتر برچسب"
+            onClick={() => {
+              setLabelFilter(null);
+              setFilters((f) => ({ ...f, label: undefined }));
+            }}
+          >
+            ×
+          </button>
+        </div>
+      ) : null}
+
+      {view === 'labels' ? (
+        <MizitoLabelsPanel
+          activeLabelId={labelFilter?.id ?? null}
+          onSelect={(l) => {
+            setLabelFilter(l);
+            setFilters((f) => ({ ...f, label: l.id }));
+            setView('mailbox');
+          }}
+        />
+      ) : null}
 
       {filterOpen ? (
         <div className="mz-letters-filter-panel" data-testid="letters-filter-panel">
@@ -133,6 +168,7 @@ export function MizitoLettersPage() {
         </div>
       ) : null}
 
+      {view === 'mailbox' ? (
       <section className="mz-letters-list" aria-label="فهرست نامه‌ها">
         {items.length > 0 ? <div className="mz-letters-group">نامه‌های قدیمی</div> : null}
         {mailbox.isError ? <p className="mz-letters-empty">خطا در بارگذاری نامه‌ها</p> : null}
@@ -170,6 +206,7 @@ export function MizitoLettersPage() {
           </button>
         ))}
       </section>
+      ) : null}
 
       {composeOpen ? <MizitoComposeLetterModal onClose={() => setComposeOpen(false)} /> : null}
     </div>

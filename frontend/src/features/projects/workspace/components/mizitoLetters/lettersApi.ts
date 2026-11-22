@@ -2,12 +2,18 @@
  * Contract client for the Mizito-style letters (کارتابل). Paths and shapes follow
  * /mnt/archive/rsd-reports/rsc/letters-spec.md (API contract section).
  */
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { API_BASE, apiDelete, apiGet, apiPost, fetchWithAuth } from '@/shared/lib/api';
 
 export type MailboxBox = 'inbox' | 'outbox' | 'paraph' | 'archived';
 
 export interface LetterRecipient {
   user_id: string;
+  name: string;
+}
+
+/** Per-user label as returned by the backend (`LabelOut`: id and name only, no color). */
+export interface LetterLabel {
+  id: string;
   name: string;
 }
 
@@ -25,7 +31,7 @@ export interface LetterListItem {
   attachments_count: number;
   direction: 'incoming' | 'outgoing';
   reference_number: string | null;
-  labels: string[];
+  labels: LetterLabel[];
 }
 
 export interface MailboxResponse {
@@ -66,7 +72,7 @@ export interface LetterThread {
   reference_number: string | null;
   letter_type: string | null;
   registered_at: string | null;
-  labels: string[];
+  labels: LetterLabel[];
   messages: LetterMessage[];
 }
 
@@ -114,4 +120,20 @@ export const lettersApi = {
   archive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/archive/`),
   unarchive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/unarchive/`),
   markRead: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/read/`),
+  labels: () => apiGet<LetterLabel[]>('/v1/correspondence/labels/'),
+  createLabel: (name: string) => apiPost<LetterLabel, { name: string }>('/v1/correspondence/labels/', { name }),
+  attachLabel: (letterId: string, labelId: string) =>
+    apiPost<unknown>(`/v1/correspondence/${seg(letterId)}/labels/${seg(labelId)}/`),
+  detachLabel: (letterId: string, labelId: string) =>
+    apiDelete<unknown>(`/v1/correspondence/${seg(letterId)}/labels/${seg(labelId)}/`),
+  /** Multipart upload, one file per call. Raw fetch because the JSON helpers do not send FormData. */
+  uploadAttachment: async (letterId: string, file: File): Promise<void> => {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetchWithAuth(`${API_BASE}/v1/correspondence/${seg(letterId)}/attachments/`, {
+      method: 'POST',
+      body: form,
+    });
+    if (!res.ok) throw new Error(`upload failed: ${res.status}`);
+  },
 };

@@ -5,6 +5,20 @@ import { sanitizeLetterHtml } from './lettersSanitize';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { MzIcon } from '../MzIcon';
 import { useComposeLetter } from './useLetters';
+import { lettersApi } from './lettersApi';
+
+type UploadStatus = 'pending' | 'uploading' | 'done' | 'failed';
+interface UploadItem {
+  file: File;
+  status: UploadStatus;
+}
+
+const UPLOAD_STATUS_TEXT: Record<UploadStatus, string> = {
+  pending: 'در انتظار ارسال',
+  uploading: 'در حال ارسال',
+  done: 'ارسال شد',
+  failed: 'خطا در ارسال',
+};
 
 export interface PickedRecipient {
   id: string;
@@ -32,19 +46,21 @@ export function RecipientPicker({
   onChange: (next: PickedRecipient[]) => void;
 }) {
   const [query, setQuery] = useState('');
+  const term = query.trim();
+  // Server-side search so users beyond the first page are reachable; no search term means no request.
   const directory = useQuery({
-    queryKey: RECIPIENT_DIRECTORY_KEY,
-    queryFn: () => apiGet<DirectoryUser[]>('/v1/users/?limit=100&is_active=true'),
+    queryKey: [...RECIPIENT_DIRECTORY_KEY, term],
+    queryFn: () =>
+      apiGet<DirectoryUser[]>(
+        `/v1/users/?${new URLSearchParams({ q: term, limit: '20', is_active: 'true' }).toString()}`,
+      ),
+    enabled: term.length > 0,
     staleTime: 60_000,
   });
   const matches = useMemo(() => {
-    const q = query.trim().toLowerCase();
     const picked = new Set(value.map((v) => v.id));
-    return (directory.data ?? [])
-      .filter((u) => u.is_active !== false && !picked.has(u.id))
-      .filter((u) => !q || u.full_name.toLowerCase().includes(q))
-      .slice(0, 8);
-  }, [directory.data, query, value]);
+    return (directory.data ?? []).filter((u) => u.is_active !== false && !picked.has(u.id)).slice(0, 8);
+  }, [directory.data, value]);
 
   return (
     <div className="mz-letters-picker" data-testid="letters-recipient-picker">
@@ -69,7 +85,7 @@ export function RecipientPicker({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      {query.trim() ? (
+      {term ? (
         <ul className="mz-letters-picker-list">
           {matches.map((u) => (
             <li key={u.id}>
@@ -156,13 +172,37 @@ export function MizitoComposeLetterModal({ onClose, onSent }: Props) {
   const [recipients, setRecipients] = useState<PickedRecipient[]>([]);
   const [bodyHtml, setBodyHtml] = useState('');
   const [bodyText, setBodyText] = useState('');
-  const [attachments, setAttachments] = useState<File[]>([]);
+  const [attachments, setAttachments] = useState<UploadItem[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [sentId, setSentId] = useState<string | null>(null);
   const compose = useComposeLetter();
 
   const canSend = subject.trim().length > 0 && recipients.length > 0 && bodyText.trim().length > 0;
 
+  const setStatus = (index: number, status: UploadStatus) =>
+    setAttachments((prev) => prev.map((x, j) => (j === index ? { ...x, status } : x)));
+
+  /** Uploads each non-done file in order, one request per file. Returns the failure count. */
+  const uploadFiles = async (letterId: string, items: UploadItem[]): Promise<number> => {
+    setUploading(true);
+    let failed = 0;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].status === 'done') continue;
+      setStatus(i, 'uploading');
+      try {
+        await lettersApi.uploadAttachment(letterId, items[i].file);
+        setStatus(i, 'done');
+      } catch {
+        failed += 1;
+        setStatus(i, 'failed');
+      }
+    }
+    setUploading(false);
+    return failed;
+  };
+
   const submit = () => {
-    if (!canSend || compose.isPending) return;
+    if (!canSend || compose.isPending || uploading || sentId) return;
     compose.mutate(
       {
         subject: subject.trim(),
@@ -173,7 +213,14 @@ export function MizitoComposeLetterModal({ onClose, onSent }: Props) {
       {
         onSuccess: (res) => {
           onSent?.(res.id);
-          onClose();
+          setSentId(res.id);
+          if (attachments.length === 0) {
+            onClose();
+            return;
+          }
+          void uploadFiles(res.id, attachments).then((failed) => {
+            if (failed === 0) onClose();
+          });
         },
       },
     );
@@ -225,15 +272,36 @@ export function MizitoComposeLetterModal({ onClose, onSent }: Props) {
               type="file"
               multiple
               aria-label="افزودن پیوست"
-              onChange={(e) => setAttachments(Array.from(e.target.files ?? []))}
+              disabled={uploading || sentId !== null}
+              onChange={(e) =>
+                setAttachments(Array.from(e.target.files ?? []).map((file) => ({ file, status: 'pending' as const })))
+              }
             />
           </label>
           {attachments.length > 0 ? (
-            <ul className="mz-letters-attachments">
-              {attachments.map((f) => (
-                <li key={f.name}>{f.name}</li>
+            <ul className="mz-letters-attachments" data-testid="letters-compose-attachments">
+              {attachments.map((item, i) => (
+                <li key={`${item.file.name}-${i}`} data-status={item.status}>
+                  <span>{item.file.name}</span>
+                  <span className="mz-letters-attach-status">{UPLOAD_STATUS_TEXT[item.status]}</span>
+                </li>
               ))}
             </ul>
+          ) : null}
+          {sentId && attachments.some((a) => a.status === 'failed') ? (
+            <button
+              type="button"
+              className="mz-letters-link"
+              data-testid="letters-compose-retry"
+              disabled={uploading}
+              onClick={() =>
+                void uploadFiles(sentId, attachments).then((failed) => {
+                  if (failed === 0) onClose();
+                })
+              }
+            >
+              تلاش دوباره برای پیوست‌های ناموفق
+            </button>
           ) : null}
         </Field>
 
@@ -245,7 +313,7 @@ export function MizitoComposeLetterModal({ onClose, onSent }: Props) {
             type="button"
             className="mz-letters-primary"
             data-testid="letters-compose-submit"
-            disabled={!canSend || compose.isPending}
+            disabled={!canSend || compose.isPending || uploading || sentId !== null}
             onClick={submit}
           >
             ارسال

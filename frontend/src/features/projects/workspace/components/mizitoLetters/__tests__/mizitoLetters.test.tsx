@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { apiGet, apiPost } from '@/shared/lib/api';
+import { apiGet, apiPost, fetchWithAuth } from '@/shared/lib/api';
 import { MizitoLettersPage } from '../MizitoLettersPage';
 import { MizitoComposeLetterModal } from '../MizitoComposeLetterModal';
 import { MizitoLetterDetail } from '../MizitoLetterDetail';
@@ -11,11 +11,14 @@ import { sanitizeLetterHtml } from '../lettersSanitize';
 vi.mock('@/shared/lib/api', () => ({
   apiGet: vi.fn(),
   apiPost: vi.fn(),
+  apiDelete: vi.fn(),
+  fetchWithAuth: vi.fn(),
   API_BASE: '',
 }));
 
 const apiGetMock = vi.mocked(apiGet);
 const apiPostMock = vi.mocked(apiPost);
+const fetchWithAuthMock = vi.mocked(fetchWithAuth);
 
 const ITEM_IN = {
   id: 'L1',
@@ -71,8 +74,13 @@ beforeEach(() => {
       return { items: [], total: 0 };
     }
     if (path === '/v1/correspondence/mailbox/unread-count/') return { count: 3 };
-    if (path === '/v1/users/?limit=100&is_active=true') {
+    if (path.startsWith('/v1/users/?')) {
+      // Search is server-side: the mock only answers when the q param is present.
+      if (!new URL(`http://x${path}`).searchParams.get('q')) return [];
       return [{ id: 'U9', full_name: 'ابراهیم رحمانی', job_title: 'مهندس عمران', avatar_url: null, is_active: true }];
+    }
+    if (path === '/v1/correspondence/labels/') {
+      return [{ id: 'LB1', name: 'مهم' }];
     }
     if (path === '/v1/correspondence/L1/thread/') {
       return {
@@ -98,6 +106,8 @@ beforeEach(() => {
     return {};
   });
   apiPostMock.mockResolvedValue({});
+  fetchWithAuthMock.mockReset();
+  fetchWithAuthMock.mockResolvedValue(new Response('{}', { status: 201 }));
 });
 
 describe('MizitoLettersPage', () => {
@@ -165,6 +175,48 @@ describe('MizitoComposeLetterModal', () => {
     await waitFor(() => expect(send.disabled).toBe(false));
   });
 
+  it('uploads each picked file to the letter after compose returns its id', async () => {
+    apiPostMock.mockResolvedValueOnce({ id: 'NEW' });
+    const onClose = vi.fn();
+    renderWith(<MizitoComposeLetterModal onClose={onClose} />);
+    fireEvent.change(screen.getByLabelText('موضوع'), { target: { value: 'موضوع تست' } });
+    fireEvent.change(screen.getByLabelText('جستجوی گیرنده'), { target: { value: 'ابراهیم' } });
+    fireEvent.click(await screen.findByTestId('letters-recipient-option'));
+    const body = screen.getByTestId('letters-compose-body');
+    body.innerHTML = '<p>متن نامه</p>';
+    fireEvent.input(body);
+    const f1 = new File(['a'], 'a.pdf', { type: 'application/pdf' });
+    const f2 = new File(['bb'], 'b.png', { type: 'image/png' });
+    fireEvent.change(screen.getByLabelText('افزودن پیوست'), { target: { files: [f1, f2] } });
+    fireEvent.click(screen.getByTestId('letters-compose-submit'));
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+    expect(apiPostMock).toHaveBeenCalledWith('/v1/correspondence/compose/', expect.anything());
+    expect(fetchWithAuthMock).toHaveBeenCalledTimes(2);
+    expect(fetchWithAuthMock.mock.calls[0][0]).toBe('/v1/correspondence/NEW/attachments/');
+    const sent = fetchWithAuthMock.mock.calls[0][1]?.body as FormData;
+    expect(sent.get('file')).toBe(f1);
+  });
+
+  it('keeps the modal open and offers retry when an upload fails', async () => {
+    apiPostMock.mockResolvedValueOnce({ id: 'NEW' });
+    fetchWithAuthMock.mockResolvedValueOnce(new Response('{}', { status: 500 }));
+    const onClose = vi.fn();
+    renderWith(<MizitoComposeLetterModal onClose={onClose} />);
+    fireEvent.change(screen.getByLabelText('موضوع'), { target: { value: 'موضوع تست' } });
+    fireEvent.change(screen.getByLabelText('جستجوی گیرنده'), { target: { value: 'ابراهیم' } });
+    fireEvent.click(await screen.findByTestId('letters-recipient-option'));
+    const body = screen.getByTestId('letters-compose-body');
+    body.innerHTML = '<p>متن نامه</p>';
+    fireEvent.input(body);
+    fireEvent.change(screen.getByLabelText('افزودن پیوست'), {
+      target: { files: [new File(['a'], 'a.pdf', { type: 'application/pdf' })] },
+    });
+    fireEvent.click(screen.getByTestId('letters-compose-submit'));
+    expect(await screen.findByTestId('letters-compose-retry')).toBeTruthy();
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByTestId('letters-compose-attachments').querySelector('li')?.dataset.status).toBe('failed');
+  });
+
   it('posts the compose contract body on send', async () => {
     apiPostMock.mockResolvedValueOnce({ id: 'NEW' });
     const onClose = vi.fn();
@@ -181,6 +233,34 @@ describe('MizitoComposeLetterModal', () => {
       '/v1/correspondence/compose/',
       expect.objectContaining({ subject: 'موضوع تست', to_user_ids: ['U9'], label_ids: [] }),
     );
+  });
+});
+
+describe('letter labels', () => {
+  it('creates a label from the labels tab and filters the mailbox by its id', async () => {
+    renderWith(<MizitoLettersPage />);
+    fireEvent.click(screen.getByTestId('letters-tab-labels'));
+    fireEvent.change(await screen.findByLabelText('نام برچسب جدید'), { target: { value: 'پیگیری' } });
+    fireEvent.click(screen.getByTestId('letters-label-create'));
+    await waitFor(() =>
+      expect(apiPostMock).toHaveBeenCalledWith('/v1/correspondence/labels/', { name: 'پیگیری' }),
+    );
+    fireEvent.click(await screen.findByTestId('letters-label-item'));
+    await waitFor(() =>
+      expect(
+        apiGetMock.mock.calls.some(
+          ([p]) => typeof p === 'string' && p.startsWith('/v1/correspondence/mailbox/?') && p.includes('label=LB1'),
+        ),
+      ).toBe(true),
+    );
+    expect(screen.getByTestId('letters-label-filter').textContent).toContain('مهم');
+  });
+
+  it('attaches a label to the open letter from the header picker', async () => {
+    renderWith(<MizitoLetterDetail letterId="L1" onBack={() => {}} />);
+    fireEvent.click(await screen.findByTestId('letter-label-add'));
+    fireEvent.click(await screen.findByLabelText('مهم'));
+    await waitFor(() => expect(apiPostMock).toHaveBeenCalledWith('/v1/correspondence/L1/labels/LB1/'));
   });
 });
 

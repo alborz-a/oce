@@ -2,20 +2,54 @@ import { useEffect, useState } from 'react';
 import { MzIcon } from '../MzIcon';
 import { sanitizeLetterHtml } from './lettersSanitize';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
-import { toPersianDigits } from '@/shared/lib/jalali';
+import { formatBytes } from '@/shared/lib/formatters';
 import {
   useArchiveLetter,
   useForwardLetter,
+  useLabels,
   useLetterThread,
   useMarkLetterRead,
   useReplyLetter,
+  useToggleLetterLabel,
 } from './useLetters';
 import { formatLetterAge, formatLetterDate, formatLetterDateTime } from './lettersFormat';
 import { RecipientPicker, type PickedRecipient } from './MizitoComposeLetterModal';
+import { LabelChip } from './MizitoLabelsPanel';
+import type { LetterLabel } from './lettersApi';
 
 interface Props {
   letterId: string;
   onBack: () => void;
+}
+
+/** Small picker under the header: tick a label to attach it to this letter, untick to detach. */
+function LetterLabelPicker({ letterId, attached }: { letterId: string; attached: LetterLabel[] }) {
+  const labels = useLabels();
+  const toggle = useToggleLetterLabel(letterId);
+  const attachedIds = new Set(attached.map((l) => l.id));
+  return (
+    <div className="mz-letters-label-picker" data-testid="letters-label-picker">
+      {labels.data && labels.data.length === 0 ? <p className="mz-letters-empty">برچسبی وجود ندارد</p> : null}
+      <ul>
+        {(labels.data ?? []).map((l) => (
+          <li key={l.id}>
+            <label>
+              <input
+                type="checkbox"
+                aria-label={l.name}
+                checked={attachedIds.has(l.id)}
+                disabled={toggle.isPending}
+                onChange={(e) => toggle.mutate({ labelId: l.id, attach: e.target.checked })}
+              />
+              <LabelChip label={l} />
+              <span>{l.name}</span>
+            </label>
+          </li>
+        ))}
+      </ul>
+      {toggle.isError ? <p className="mz-letters-empty">خطا در به‌روزرسانی برچسب</p> : null}
+    </div>
+  );
 }
 
 export function MizitoLetterDetail({ letterId, onBack }: Props) {
@@ -29,6 +63,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
   const [forwardNote, setForwardNote] = useState('');
   const [forwardTo, setForwardTo] = useState<PickedRecipient[]>([]);
   const [archived, setArchived] = useState(false);
+  const [labelPickerOpen, setLabelPickerOpen] = useState(false);
 
   useEffect(() => {
     markRead.mutate(letterId);
@@ -61,7 +96,13 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
           <h2 className="mz-letters-detail-subject">موضوع: {data.subject}</h2>
         </div>
         <div className="mz-letters-detail-head-left">
-          <button type="button" className="mz-letters-label-add">
+          <button
+            type="button"
+            className="mz-letters-label-add"
+            data-testid="letter-label-add"
+            aria-expanded={labelPickerOpen}
+            onClick={() => setLabelPickerOpen((v) => !v)}
+          >
             <span>برچسب‌ها: +</span>
           </button>
           <button
@@ -80,6 +121,8 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
           </button>
         </div>
       </header>
+
+      {labelPickerOpen ? <LetterLabelPicker letterId={letterId} attached={data.labels} /> : null}
 
       <div className="mz-letters-detail-body">
         <aside className="mz-letters-meta" data-testid="letter-meta">
@@ -119,7 +162,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
                   {m.attachments.map((a) => (
                     <li key={a.id}>
                       <a href={a.download_url}>{a.name}</a>
-                      <span>{toPersianDigits(Math.max(1, Math.round(a.size / 1024)))} KB</span>
+                      <span data-testid="letter-attachment-size">{formatBytes(a.size, 'fa-IR')}</span>
                     </li>
                   ))}
                 </ul>
