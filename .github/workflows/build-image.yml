@@ -86,6 +86,7 @@ jobs:
           cache-to: type=gha,mode=min
       # Production image (base + aioboto3). The server pulls this tag and never builds.
       - uses: docker/build-push-action@v6
+        if: github.ref == 'refs/heads/iran/patches'
         with:
           context: deploy/docker
           file: deploy/docker/Dockerfile.s3
