@@ -381,6 +381,11 @@ async def get_current_user_payload(
                 if is_restricted_user(user):
                     payload["restricted_mode"] = True
                     enforce_restricted_access(request.method, request.url.path)
+
+                # Staff (global role not admin/manager): /api/v1 scope is the Mizito shell only.
+                from app.core.staff_scope import enforce_staff_scope
+
+                enforce_staff_scope(user.role, request.url.path)
         except HTTPException:
             raise
         except Exception:
@@ -486,6 +491,7 @@ async def _optional_bearer_token(conn: HTTPConnection) -> str | None:
 
 
 async def get_optional_user_payload(
+    conn: HTTPConnection,
     token: Annotated[str | None, Depends(_optional_bearer_token)],
     settings: SettingsDep,
 ) -> dict[str, Any] | None:
@@ -503,14 +509,18 @@ async def get_optional_user_payload(
         return None
     try:
         payload = decode_access_token(token, settings)
-        await verify_user_exists_and_active(
+        user = await verify_user_exists_and_active(
             payload["sub"],
             issued_at=payload.get("iat"),
             session_id=payload.get("sid"),
         )
-        return payload
     except HTTPException:
         return None
+    # Staff scope gate on the optional-auth door too (outside the try, so the 403 is not swallowed).
+    from app.core.staff_scope import enforce_staff_scope
+
+    enforce_staff_scope(user.role, conn.url.path)
+    return payload
 
 
 # ── API-key auth (additive, JWT stays primary) ─────────────────────────────
