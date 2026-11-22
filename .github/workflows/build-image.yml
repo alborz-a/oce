@@ -1,13 +1,14 @@
 name: build-image
 on:
   push:
-    branches: [iran/patches]
+    branches: [iran/patches, 'ci/**']
   workflow_dispatch:
 permissions:
   contents: read
   packages: write
 jobs:
   checks:
+    if: github.repository == 'alborz-a/oce'
     name: Iran & Code Quality Checks
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -52,6 +53,7 @@ jobs:
         working-directory: frontend
 
   build:
+    if: github.repository == 'alborz-a/oce'
     name: Build & Push Docker Image
     needs: [checks]
     runs-on: ubuntu-latest
@@ -84,6 +86,7 @@ jobs:
           cache-to: type=gha,mode=min
       # Production image (base + aioboto3). The server pulls this tag and never builds.
       - uses: docker/build-push-action@v6
+        if: github.ref == 'refs/heads/iran/patches'
         with:
           context: deploy/docker
           file: deploy/docker/Dockerfile.s3
