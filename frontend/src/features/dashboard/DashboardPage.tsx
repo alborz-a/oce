@@ -10,6 +10,7 @@ import { APP_VERSION } from '@/shared/lib/version';
 import { useToastStore } from '@/stores/useToastStore';
 import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { useHasPermission } from '@/shared/lib/permissionGates';
 import { useMeOnboardingQueryKey } from '@/app/layout/meOnboardingQuery';
 import { fmtList, fmtFixed } from '@/shared/lib/formatters';
@@ -580,6 +581,7 @@ function OnboardingSteps({
   const navigate = useNavigate();
   const [demoModalOpen, setDemoModalOpen] = useState(false);
 
+  const userRole = useAuthStore((s) => s.userRole);
   const hasDatabase = Boolean(regionStats && regionStats.length > 0);
   const hasProjects = Boolean(projects && projects.length > 0);
   const hasBoqs = Boolean(boqs && boqs.length > 0);
@@ -669,7 +671,7 @@ function OnboardingSteps({
       buttonDefault: 'Create BOQ',
       done: hasBoqs,
       disabled: !hasProjects,
-      onClick: () => navigate(hasProjects ? '/projects' : '/projects/new'),
+      onClick: () => navigate(hasProjects || !canCreateProject(userRole) ? '/projects' : '/projects/new'),
     },
     {
       id: 6,
@@ -691,7 +693,7 @@ function OnboardingSteps({
       },
     },
   ];
-  const steps = allSteps.filter((s) => isSystemAdmin || s.id !== 3);
+  const steps = allSteps.filter((s) => (isSystemAdmin || s.id !== 3) && (canCreateProject(userRole) || s.id !== 4));
 
   return (
     <div>
@@ -1860,6 +1862,7 @@ function SystemStatusSummary({
 /* ── Quick Upload Card ────────────────────────────────────────────────── */
 
 function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
+  const userRole = useAuthStore((s) => s.userRole);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -2052,7 +2055,7 @@ function QuickUploadCard({ projects }: { projects?: ProjectSummary[] }) {
                 ))}
               </select>
             )}
-            {!hasProjects && (
+            {!hasProjects && canCreateProject(userRole) && (
               <button
                 type="button"
                 className="mt-2 inline-flex items-center gap-1 text-2xs font-medium text-oe-blue hover:text-oe-blue-text transition-colors"
@@ -2790,14 +2793,16 @@ function DashboardPageInner() {
           style={{ animationDelay: '100ms' }}
           data-testid="dashboard-tour-hero-actions"
         >
-          <Button
-            variant="primary"
-            size="md"
-            icon={<FolderPlus size={16} />}
-            onClick={() => navigate('/projects/new')}
-          >
-            {t('projects.new_project')}
-          </Button>
+          {canCreateProject(userRole) && (
+            <Button
+              variant="primary"
+              size="md"
+              icon={<FolderPlus size={16} />}
+              onClick={() => navigate('/projects/new')}
+            >
+              {t('projects.new_project')}
+            </Button>
+          )}
           <Button
             variant="secondary"
             size="md"
@@ -2810,7 +2815,7 @@ function DashboardPageInner() {
               if (target) {
                 navigate(`/projects/${target.id}/boq/new`);
               } else {
-                navigate('/projects/new');
+                navigate(canCreateProject(userRole) ? '/projects/new' : '/projects');
               }
             }}
             title={t('dashboard.new_estimate_hint', { defaultValue: 'Start a new Bill of Quantities for an existing project' })}
@@ -2825,7 +2830,7 @@ function DashboardPageInner() {
               if (lastBoq) { navigate(`/boq/${lastBoq.id}`); return; }
               const firstProject = projects?.[0];
               if (firstProject) navigate(`/projects/${firstProject.id}/boq/new`);
-              else navigate('/projects/new');
+              else navigate(canCreateProject(userRole) ? '/projects/new' : '/projects');
             }}
             title={
               lastBoq
@@ -2862,7 +2867,7 @@ function DashboardPageInner() {
               if (firstProject) {
                 navigate(`/projects/${firstProject.id}/boq/new`);
               } else {
-                navigate('/projects/new');
+                navigate(canCreateProject(userRole) ? '/projects/new' : '/projects');
               }
             }}
           />
@@ -3070,6 +3075,7 @@ function DashboardPageInner() {
 /* ── Projects List ────────────────────────────────────────────────────── */
 
 function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
+  const userRole = useAuthStore((s) => s.userRole);
   const { t } = useTranslation();
   const navigate = useNavigate();
   // BUG-UI01: install-demo mutation removed alongside the 3-tile empty
@@ -3117,10 +3123,12 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
           })}
           action={
             <div className="flex flex-col items-center gap-3">
-              <Button onClick={() => navigate('/projects/new')}>
-                <FolderPlus size={16} strokeWidth={1.75} />
-                {t('dashboard.empty.cta_create', { defaultValue: 'Create project' })}
-              </Button>
+              {canCreateProject(userRole) && (
+                <Button onClick={() => navigate('/projects/new')}>
+                  <FolderPlus size={16} strokeWidth={1.75} />
+                  {t('dashboard.empty.cta_create', { defaultValue: 'Create project' })}
+                </Button>
+              )}
               <p className="text-xs text-content-tertiary">
                 {t('dashboard.empty.demo_hint', {
                   defaultValue: 'Or load a demo project from Settings → Demo data',

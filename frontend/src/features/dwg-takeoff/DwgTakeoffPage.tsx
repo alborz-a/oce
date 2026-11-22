@@ -82,6 +82,8 @@ import { usePreferencesStore } from '@/stores/usePreferencesStore';
 import { useDisplayQuantity } from '@/shared/hooks/useDisplayQuantity';
 import { useDwgUploadStore } from '@/stores/useDwgUploadStore';
 import { apiGet } from '@/shared/lib/api';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { boqApi, normalizePositions, type Position } from '@/features/boq/api';
 import { projectsApi } from '@/features/projects/api';
 import { installBIMConverter } from '@/features/bim/api';
@@ -666,6 +668,7 @@ function OfflineReadyBadge({
 /* ── Component ─────────────────────────────────────────────────────── */
 
 export function DwgTakeoffPage() {
+  const userRole = useAuthStore((s) => s.userRole);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const addToast = useToastStore((s) => s.addToast);
@@ -5053,6 +5056,7 @@ export function DwgTakeoffPage() {
                           'Drawings have to live inside a project. Create one and you can come back to upload your DWG.',
                       })}
                     </p>
+                    {canCreateProject(userRole) && (
                     <button
                       type="button"
                       onClick={() => {
@@ -5064,6 +5068,7 @@ export function DwgTakeoffPage() {
                       <Plus size={12} />
                       {t('dwg_takeoff.create_project_cta', { defaultValue: 'Create project' })}
                     </button>
+                    )}
                   </div>
                 </div>
               ) : (

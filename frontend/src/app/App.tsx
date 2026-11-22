@@ -38,6 +38,7 @@ import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { isEngineeringRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -862,6 +863,13 @@ function AppShell() {
 // layout — it just publishes the page's header title to the surrounding
 // AppShell.  useLayoutEffect runs before paint so the heading swaps without a
 // visible flash of the previous page's title.
+/** Known staff (not admin/manager) are sent to the project list. An unknown role is let through; the backend refuses the create. */
+function CreateProjectGate({ children }: { children: React.ReactNode }) {
+  const role = useAuthStore((s) => s.userRole);
+  if (role && !canCreateProject(role)) return <Navigate to="/projects" replace />;
+  return <>{children}</>;
+}
+
 function P({ title, children }: { title: string; children: React.ReactNode }) {
   const setTitle = useContext(PageTitleContext);
   useLayoutEffect(() => {
@@ -1298,7 +1306,7 @@ export default function App() {
         <Route path="/projects/:projectId/bim/:modelId" element={<P title="BIM Viewer"><BIMPage /></P>} />
 
         <Route path="/projects" element={<P title="Projects"><ProjectsPage /></P>} />
-        <Route path="/projects/new" element={<P title="New Project"><CreateProjectPage /></P>} />
+        <Route path="/projects/new" element={<P title="New Project"><CreateProjectGate><CreateProjectPage /></CreateProjectGate></P>} />
         <Route path="/projects/:projectId" element={<P title="Project"><ProjectDetailPage /></P>} />
         <Route path="/projects/:projectId/settings" element={<P title="Project Settings"><ProjectSettingsPage /></P>} />
         <Route path="/projects/:projectId/timeline" element={<P title="Project Timeline"><TimelinePage /></P>} />
