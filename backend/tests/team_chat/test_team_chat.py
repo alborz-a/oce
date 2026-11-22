@@ -35,7 +35,7 @@ async def session():
 
     engine = create_async_engine("sqlite+aiosqlite:///:memory:")
     need: dict[str, object] = {}
-    todo = [t for t in Base.metadata.sorted_tables if t.name.startswith(("oe_team_chat", "oe_documents", "oe_users_user", "oe_notifications"))]
+    todo = [t for t in Base.metadata.sorted_tables if t.name.startswith(("oe_team_chat", "oe_documents", "oe_users_user", "oe_notifications", "oe_teams_", "oe_projects_project"))]
     while todo:
         t = todo.pop()
         if t.name not in need:
@@ -153,6 +153,7 @@ async def test_list_colleagues_excludes_self_inactive_and_hidden(session):
     hidden = uuid.uuid4()
     session.add(User(id=hidden, email="qa.hidden@x.co", hashed_password="x", full_name="qa.hidden", role="viewer", is_active=True))
     await session.flush()
+    await _share(session, P1, ALICE, [ALICE, BOB, hidden])
     s = TeamChatService(session)
     names = {c.full_name for c in await s.list_colleagues(BOB)}
     assert "باب" not in names and "غایب" not in names and "qa.hidden" not in names
@@ -167,10 +168,76 @@ async def test_list_colleagues_carries_avatar_url(session):
     with_photo = uuid.uuid4()
     session.add(User(id=with_photo, email="photo.colleague@x.co", hashed_password="x", full_name="عکس دار", role="viewer", is_active=True, avatar_path="avatars/p.jpg"))
     await session.flush()
+    await _share(session, P1, ALICE, [ALICE, BOB, with_photo])
     expected = await session.get(User, with_photo)
     cols = {c.id: c for c in await TeamChatService(session).list_colleagues(BOB)}
     assert cols[with_photo].avatar_url == expected.avatar_url and cols[with_photo].avatar_url.startswith(f"/api/v1/users/{with_photo}/avatar")
     assert cols[ALICE].avatar_url is None
+
+
+async def _share(session, project_id, owner, members):
+    """Create project (if missing), one team and memberships in the real teams tables."""
+    from app.modules.projects.models import Project
+    from app.modules.teams.models import Team, TeamMembership
+
+    if await session.get(Project, project_id) is None:
+        session.add(Project(id=project_id, name=f"project {project_id.hex[:6]}", owner_id=owner))
+        await session.flush()
+    team = Team(id=uuid.uuid4(), project_id=project_id, name="team")
+    session.add(team)
+    await session.flush()
+    for uid in members:
+        session.add(TeamMembership(team_id=team.id, user_id=uid, role="member"))
+    await session.flush()
+
+
+async def test_colleagues_only_from_shared_projects(session):
+    from app.modules.users.models import User
+
+    dan = uuid.uuid4()
+    session.add(User(id=dan, email="dan@x.co", hashed_password="x", full_name="دان", role="viewer", is_active=True))
+    await session.flush()
+    await _share(session, P1, ALICE, [ALICE, BOB])  # BOB shares P1 with ALICE
+    await _share(session, P2, CAROL, [CAROL, dan])  # CAROL and dan share P2, BOB is outside
+    names = {c.id for c in await TeamChatService(session).list_colleagues(BOB, {"role": "viewer"})}
+    assert ALICE in names
+    assert CAROL not in names and dan not in names
+
+
+async def test_project_owner_of_shared_project_is_visible(session):
+    dan = uuid.uuid4()
+    from app.modules.users.models import User
+
+    session.add(User(id=dan, email="dan2@x.co", hashed_password="x", full_name="دان۲", role="viewer", is_active=True))
+    await session.flush()
+    await _share(session, P1, CAROL, [BOB, dan])  # owner CAROL is not a member but owns P1
+    ids = {c.id for c in await TeamChatService(session).list_colleagues(BOB, {"role": "viewer"})}
+    assert CAROL in ids and dan in ids
+
+
+async def test_user_without_projects_sees_no_colleagues(session):
+    from app.modules.users.models import User
+
+    eve = uuid.uuid4()
+    session.add(User(id=eve, email="eve@x.co", hashed_password="x", full_name="ایو", role="viewer", is_active=True))
+    await session.flush()
+    await _share(session, P1, ALICE, [ALICE, BOB])
+    assert await TeamChatService(session).list_colleagues(eve, {"role": "viewer"}) == []
+
+
+async def test_admin_sees_every_active_user(session):
+    await _share(session, P1, ALICE, [ALICE, BOB])
+    ids = {c.id for c in await TeamChatService(session).list_colleagues(ADMIN, {"role": "admin"})}
+    assert {ALICE, BOB, CAROL} <= ids and ADMIN not in ids
+
+
+async def test_project_id_param_scopes_and_refuses_foreign_project(session):
+    await _share(session, P1, ALICE, [ALICE, BOB])
+    await _share(session, P2, CAROL, [CAROL])
+    s = TeamChatService(session)
+    own = {c.id for c in await s.list_colleagues(BOB, {"role": "viewer"}, P1)}
+    assert own == {ALICE}
+    assert await s.list_colleagues(BOB, {"role": "viewer"}, P2) == []
 
 
 async def test_paging_oldest_first_with_before_cursor(session):
