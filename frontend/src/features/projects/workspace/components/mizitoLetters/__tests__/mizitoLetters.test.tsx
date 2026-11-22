@@ -131,6 +131,18 @@ describe('MizitoLettersPage', () => {
     fireEvent.click(screen.getByTestId('letters-tab-archived'));
     expect(await screen.findByTestId('letters-empty')).toBeTruthy();
   });
+
+  it('ignores a traversal letter id in the URL and makes no id request', async () => {
+    renderWith(<MizitoLettersPage />, '/correspondence?letter=../../x');
+    await screen.findAllByTestId('letters-row');
+    expect(screen.queryByTestId('mizito-letter-detail')).toBeNull();
+    const paths = [
+      ...apiGetMock.mock.calls.map((c) => String(c[0])),
+      ...apiPostMock.mock.calls.map((c) => String(c[0])),
+    ];
+    expect(paths.some((p) => p.includes('..'))).toBe(false);
+    expect(paths.some((p) => /\/v1\/correspondence\/[^/]+\/(thread|read)\//.test(p))).toBe(false);
+  });
 });
 
 describe('MizitoComposeLetterModal', () => {

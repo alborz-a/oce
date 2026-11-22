@@ -27,7 +27,8 @@ function senderLabel(item: LetterListItem): string {
 
 export function MizitoLettersPage() {
   const [params, setParams] = useSearchParams();
-  const selectedId = params.get('letter');
+  const rawLetter = params.get('letter');
+  const selectedId = rawLetter && /^[A-Za-z0-9-]+$/.test(rawLetter) ? rawLetter : null;
   const [box, setBox] = useState<MailboxBox>('inbox');
   const [filters, setFilters] = useState<MailboxFilters>({});
   const [filterOpen, setFilterOpen] = useState(false);

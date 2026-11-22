@@ -86,6 +86,7 @@ export interface ComposeResponse {
 export function buildMailboxQuery(box: MailboxBox, f: MailboxFilters = {}): string {
   const params = new URLSearchParams({ box });
   if (f.label) params.set('label', f.label);
+  // URLSearchParams encodes values; label ids still pass through the same path as all other ids.
   if (f.q) params.set('q', f.q);
   if (f.unread) params.set('unread', 'true');
   if (f.from) params.set('from', f.from);
@@ -95,19 +96,22 @@ export function buildMailboxQuery(box: MailboxBox, f: MailboxFilters = {}): stri
   return `/v1/correspondence/mailbox/?${params.toString()}`;
 }
 
+/** Every id from the URL or state goes into a path through this; never raw. */
+const seg = (id: string) => encodeURIComponent(id);
+
 export const lettersApi = {
   mailbox: (box: MailboxBox, f?: MailboxFilters) => apiGet<MailboxResponse>(buildMailboxQuery(box, f)),
   unreadCount: () => apiGet<{ count: number }>('/v1/correspondence/mailbox/unread-count/'),
-  thread: (id: string) => apiGet<LetterThread>(`/v1/correspondence/${id}/thread/`),
+  thread: (id: string) => apiGet<LetterThread>(`/v1/correspondence/${seg(id)}/thread/`),
   compose: (body: ComposeBody) => apiPost<ComposeResponse, ComposeBody>('/v1/correspondence/compose/', body),
   reply: (id: string, body: string) =>
-    apiPost<unknown, { body: string }>(`/v1/correspondence/${id}/reply/`, { body }),
+    apiPost<unknown, { body: string }>(`/v1/correspondence/${seg(id)}/reply/`, { body }),
   forward: (id: string, toUserIds: string[], note: string) =>
-    apiPost<unknown, { to_user_ids: string[]; note: string }>(`/v1/correspondence/${id}/forward/`, {
+    apiPost<unknown, { to_user_ids: string[]; note: string }>(`/v1/correspondence/${seg(id)}/forward/`, {
       to_user_ids: toUserIds,
       note,
     }),
-  archive: (id: string) => apiPost<unknown>(`/v1/correspondence/${id}/archive/`),
-  unarchive: (id: string) => apiPost<unknown>(`/v1/correspondence/${id}/unarchive/`),
-  markRead: (id: string) => apiPost<unknown>(`/v1/correspondence/${id}/read/`),
+  archive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/archive/`),
+  unarchive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/unarchive/`),
+  markRead: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/read/`),
 };
