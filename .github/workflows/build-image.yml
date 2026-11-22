@@ -1,13 +1,14 @@
 name: build-image
 on:
   push:
-    branches: [iran/patches]
+    branches: [iran/patches, 'ci/**']
   workflow_dispatch:
 permissions:
   contents: read
   packages: write
 jobs:
   checks:
+    if: github.repository == 'alborz-a/oce'
     name: Iran & Code Quality Checks
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -52,6 +53,7 @@ jobs:
         working-directory: frontend
 
   build:
+    if: github.repository == 'alborz-a/oce'
     name: Build & Push Docker Image
     needs: [checks]
     runs-on: ubuntu-latest
