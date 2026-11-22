@@ -1,11 +1,10 @@
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { useNavigate } from 'react-router-dom';
 import { MzIcon } from './MzIcon';
-import { projectInitials } from '../utils/projectInitials';
 import { toPersianDigits } from '@/shared/lib/jalali';
-import { AuthImage } from '@/shared/ui/AuthImage';
 
 export interface MizitoMobileSubheaderProps {
-  project: { id: string; name: string; avatar_url?: string | null };
+  project: { id: string; name: string; picture_url?: string | null; color?: string | null };
   /** Opens ProjectSettingsModal (owned by MizitoProjectWorkspace). */
   onOpenSettings: () => void;
   /** Same handler as the summary panel online-meeting button. */
@@ -15,12 +14,6 @@ export interface MizitoMobileSubheaderProps {
 /** Mobile-only (<768px) project header row above the chat: back, avatar, title, meeting, more. */
 export function MizitoMobileSubheader({ project, onOpenSettings, onStartMeeting }: MizitoMobileSubheaderProps) {
   const navigate = useNavigate();
-  const avatarUrl = typeof project.avatar_url === 'string' && project.avatar_url.trim() ? project.avatar_url.trim() : null;
-  const initialsAvatar = (
-    <span className="mz-mobile-subheader-avatar" aria-hidden="true">
-      {projectInitials(project.name)}
-    </span>
-  );
 
   return (
     <div className="mz-mobile-subheader" dir="rtl" data-testid="mobile-subheader">
@@ -34,16 +27,7 @@ export function MizitoMobileSubheader({ project, onOpenSettings, onStartMeeting 
         <MzIcon name="arrow_back" size={24} color="#fff" flipRtl />
       </button>
 
-      {avatarUrl ? (
-        <AuthImage
-          src={avatarUrl}
-          alt={project.name}
-          className="mz-mobile-subheader-avatar object-cover"
-          fallback={initialsAvatar}
-        />
-      ) : (
-        initialsAvatar
-      )}
+      <ProjectAvatar name={project.name} pictureUrl={project.picture_url} color={project.color} size={32} />
 
       <MzIcon name="star" size={13} color="#fb0" />
 

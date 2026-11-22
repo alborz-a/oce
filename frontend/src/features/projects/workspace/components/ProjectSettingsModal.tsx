@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiDelete, apiGet } from '@/shared/lib/api';
 import { projectsApi } from '@/features/projects/api';
+import { useProjectCaps } from '@/shared/hooks/useProjectCaps';
+import { ProjectPictureControl } from './ProjectPictureControl';
 import { MzIcon } from './MzIcon';
 import { ProjectSettingsMembersPicker } from './ProjectSettingsMembersPicker';
 import '../project-settings.css';
@@ -46,6 +48,12 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
   const [titleDraft, setTitleDraft] = useState(projectName);
   const [showPicker, setShowPicker] = useState(false);
   const [archiveArmed, setArchiveArmed] = useState(false);
+  const { can: canProjectCap } = useProjectCaps(open ? projectId : null);
+  const projectQuery = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: () => projectsApi.get(projectId),
+    enabled: open,
+  });
 
   const membersQuery = useQuery({
     queryKey: ['project-settings-members', projectId],
@@ -136,6 +144,15 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
         </div>
 
         <div className="ps-body">
+          <section className="ps-section">
+            <ProjectPictureControl
+              projectId={projectId}
+              name={projectName}
+              pictureUrl={projectQuery.data?.picture_url ?? null}
+              color={projectQuery.data?.color ?? null}
+              canManage={canProjectCap('project.update')}
+            />
+          </section>
           <section className="ps-section">
             <div className="ps-section-title">
               <MzIcon name="tune" size={18} />

@@ -1,6 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
-import { apiGet, apiPost, apiPatch, apiDelete } from '@/shared/lib/api';
+import { apiGet, apiPost, apiPatch, apiDelete, fetchWithAuth } from '@/shared/lib/api';
 import { fetchProjectList, fetchProjectListByStatus } from '@/shared/lib/projectList';
 
 export interface ProjectAddress {
@@ -64,8 +64,37 @@ export interface Project {
   custom_units?: string[];
   /** Optional budget target / estimate ceiling (decimal-string). */
   budget_estimate?: string | null;
+  /** Presigned project picture URL (S3); null when no picture or on local storage. */
+  picture_url?: string | null;
+  /** Mizito colour name (grey, red, purple, light-blue, blue, green, red-dark, brown). */
+  color?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+/**
+ * Upload the project picture (PNG, JPEG or WebP, max 5 MB). Manager-only on the backend.
+ * Sends multipart, so the Content-Type header is left to the browser.
+ */
+export async function uploadProjectPicture(id: string, file: File): Promise<Project> {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetchWithAuth(`/api/v1/projects/${id}/picture`, { method: 'POST', body: form });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(typeof body?.detail === 'string' ? body.detail : res.statusText);
+  }
+  return body as Project;
+}
+
+/** Remove the project picture; the UI falls back to the colour initials. Manager-only. */
+export async function deleteProjectPicture(id: string): Promise<Project> {
+  const res = await fetchWithAuth(`/api/v1/projects/${id}/picture`, { method: 'DELETE' });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(typeof body?.detail === 'string' ? body.detail : res.statusText);
+  }
+  return body as Project;
 }
 
 export interface CreateProjectData {
@@ -275,6 +304,8 @@ export const projectsApi = {
   update: (id: string, data: UpdateProjectData) =>
     apiPatch<Project>(`/v1/projects/${id}`, data),
   archive: (id: string) => apiDelete(`/v1/projects/${id}`),
+  uploadPicture: (id: string, file: File) => uploadProjectPicture(id, file),
+  deletePicture: (id: string) => deleteProjectPicture(id),
   restore: (id: string) => apiPost<Project>(`/v1/projects/${id}/restore/`, {}),
   /**
    * Server-side deep-clone. The backend copies every column (incl.

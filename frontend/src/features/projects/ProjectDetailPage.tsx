@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { REGION_LOCK } from '@/app/regionLock';
 import { toPersianDigits } from '@/shared/lib/jalali'; // [RSC-IRAN]
 import React, { Component, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -1984,7 +1985,10 @@ function OceProjectDetailView() {
             ) : (
               <>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-bold text-content-primary">{REGION_LOCK ? toPersianDigits(project.name) : project.name}</h1>
+                  <div className="flex items-center gap-3">
+                    <ProjectAvatar name={project.name} pictureUrl={project.picture_url} color={project.color} size={44} />
+                    <h1 className="text-2xl font-bold text-content-primary">{REGION_LOCK ? toPersianDigits(project.name) : project.name}</h1>
+                  </div>
                   <ProjectStatusBadge status={project.status} size="md" />
                   {/* Owner/admin status picker (#274). Archiving stays its
                       own action (the project menu / list), so 'archived' is
