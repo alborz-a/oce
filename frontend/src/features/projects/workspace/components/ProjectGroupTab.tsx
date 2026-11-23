@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { getPhotoFileUrl } from '@/features/documents/api';
 import type { ChatRoom } from '@/modules/team-chat/types';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
+import { toPersianDigits } from '@/shared/lib/jalali';
 import { collectLightboxPhotos, type LightboxPhotoRef } from '../lib/chatPhotoUrls';
 import { ChatPhotoLightbox } from './ChatPhotoLightbox';
 import { useProjectWorkspaceRoom } from '../hooks/useProjectWorkspaceRoom';
@@ -47,7 +48,13 @@ export interface ProjectGroupTabProps {
   onFilterChange?: (next: StreamFilterState) => void;
   showFilterBar?: boolean;
   /** Direct chat with a colleague shown in place of the project room. */
-  dm?: { room: ChatRoom; peerName: string; peerAvatarUrl?: string | null } | null;
+  dm?: {
+    room: ChatRoom;
+    peerName: string;
+    peerAvatarUrl?: string | null;
+    /** Shown as «N نفر عضو» under the title when set (company chat). */
+    memberCount?: number;
+  } | null;
   onCloseDm?: () => void;
   /** Accessible label and tooltip for the DM back button. */
   dmBackLabel?: string;
@@ -211,7 +218,7 @@ export function ProjectGroupTab({
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#4b5563] hover:bg-[#f5f6f8]"
             data-testid="workspace-dm-back"
           >
-            <MzIcon name="arrow_forward" size={16} aria-hidden="true" />
+            <MzIcon name="close" size={16} aria-hidden="true" />
           </button>
           <UserAvatar
             url={dm.peerAvatarUrl}
@@ -222,7 +229,13 @@ export function ProjectGroupTab({
             <div className="truncate text-sm font-semibold text-[#1f2937]" data-testid="workspace-dm-title">
               {dm.peerName}
             </div>
-            <div className="text-[11px] text-[#909090]">گفتگوی مستقیم</div>
+            {dm.memberCount !== undefined ? (
+              <div className="text-[11px] text-[#c2410c]" data-testid="workspace-dm-member-count">
+                {toPersianDigits(dm.memberCount)} نفر عضو
+              </div>
+            ) : (
+              <div className="text-[11px] text-[#909090]">گفتگوی مستقیم</div>
+            )}
           </div>
         </div>
       )}

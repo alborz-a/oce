@@ -32,7 +32,7 @@ function roomIcon(r: ChatRoom): { name: string; color?: string } {
   if (r.name.includes('دستیار میزیتو')) return { name: 'assistant', color: '#c2185b' };
   switch (r.kind) {
     case 'company':
-      return { name: 'apartment' };
+      return { name: 'group' };
     case 'project':
       return { name: 'folder' };
     case 'group':
@@ -94,22 +94,27 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
               style={isActive ? { borderTopColor: tb.color } : undefined}
             >
               <MzIcon name={tb.icon} size={20} color={isActive ? tb.color : undefined} />
-              <span className={isActive ? '' : 'md:hidden'}>{tb.label}</span>
+              {isActive && <span>{tb.label}</span>}
             </button>
           );
         })}
       </div>
 
       <div className="flex items-center gap-2 px-2 py-2">
-        <input
-          type="text"
-          dir="auto"
-          placeholder="فیلتر"
-          aria-label="فیلتر"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 rounded-[4px] border border-[#e0e0e0] bg-white px-2 py-1 text-sm"
-        />
+        <div className="relative flex-1">
+          <input
+            type="text"
+            dir="auto"
+            placeholder="فیلتر"
+            aria-label="فیلتر"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full rounded-[4px] border border-[#e0e0e0] bg-white py-1 ps-2 pe-8 text-sm"
+          />
+          <span className="pointer-events-none absolute inset-y-0 end-2 flex items-center">
+            <MzIcon name="search" size={18} color="#757575" />
+          </span>
+        </div>
         <div className="relative hidden md:inline-flex">
           <button
             type="button"
@@ -155,9 +160,11 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
                 }`}
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <MzIcon name={ic.name} size={18} color={ic.color} />
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-secondary">
+                    <MzIcon name={ic.name} size={20} color={ic.color} />
+                  </span>
                   <span className="flex min-w-0 flex-col">
-                    <span dir="auto" className="truncate">
+                    <span dir="auto" className="truncate font-semibold">
                       {label(r)}
                     </span>
                     {r.kind === 'dm' && <JobTitleBadge title={jobTitles.byName.get(r.name.trim())} />}
@@ -174,16 +181,18 @@ export function RoomList({ rooms, activeId, onSelect, onNewGroup, onNewDm, onNew
         })}
       </ul>
 
-      {tab === 'groups' && onNewGroup && (
-        <button
-          type="button"
-          data-testid="room-new-group-footer"
-          onClick={onNewGroup}
-          className="sticky bottom-0 flex items-center justify-center gap-2 border-t border-border-light bg-white py-2 text-sm text-oe-blue"
-        >
-          <MzIcon name="group_add" size={20} />
-          گروه جدید
-        </button>
+      {onNewGroup && (
+        <div className="sticky bottom-0 flex items-center gap-2 border-t border-border-light bg-white px-2 py-2">
+          <button
+            type="button"
+            data-testid="room-new-group-footer"
+            onClick={onNewGroup}
+            className="flex items-center gap-1 rounded bg-oe-blue px-3 py-1 text-sm text-white"
+          >
+            <MzIcon name="group_add" size={18} color="#ffffff" />
+            گروه جدید
+          </button>
+        </div>
       )}
 
       <div className="md:hidden fixed bottom-4 left-4 z-30 flex flex-col-reverse gap-2">

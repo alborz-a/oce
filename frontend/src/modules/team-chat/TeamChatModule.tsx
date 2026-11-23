@@ -160,19 +160,6 @@ export default function TeamChatModule() {
   void apiPatch; // message editing UI is a follow-up; the API is ready
 
   const activeTitle = active ? (active.kind === 'company' ? t('team_chat.company', { defaultValue: 'شرکت' }) : active.name) : '';
-  const titleIcon = !active
-    ? { name: 'person', color: undefined as string | undefined }
-    : active.name.includes('دستیار میزیتو')
-      ? { name: 'assistant', color: '#c2185b' }
-      : active.kind === 'company'
-        ? { name: 'apartment', color: undefined }
-        : active.kind === 'project'
-          ? { name: 'folder', color: undefined }
-          : active.kind === 'group'
-            ? { name: 'group', color: undefined }
-            : active.kind === 'channel'
-              ? { name: 'record_voice_over', color: undefined }
-              : { name: 'person', color: undefined };
 
   return (
     <div className="flex h-[calc(100vh-8rem)] min-h-[420px]" dir="rtl" data-testid="team-chat">
@@ -207,11 +194,12 @@ export default function TeamChatModule() {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white" style={{ backgroundColor: '#1f5c88' }}>
                 {activeTitle.charAt(0)}
               </span>
-              <MzIcon name={titleIcon.name} size={18} color={titleIcon.color} />
-              <span className="truncate">{activeTitle}</span>
-              {!!active.member_ids?.length && (
-                <span className="text-xs font-normal text-content-tertiary">{toPersianDigits(active.member_ids.length)} نفر عضو</span>
-              )}
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate">{activeTitle}</span>
+                {!!active.member_ids?.length && (
+                  <span className="text-xs font-normal text-[#ff6839]">{toPersianDigits(active.member_ids.length)} نفر عضو</span>
+                )}
+              </span>
             </>
           ) : (
             t('team_chat.pick', { defaultValue: 'یک گفتگو را انتخاب کنید' })

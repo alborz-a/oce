@@ -50,7 +50,7 @@ export function CompanyChatPanel({
       tasks={EMPTY_TASKS}
       members={members}
       showFilterBar={false}
-      dm={{ room: roomQuery.data, peerName: 'شرکت', peerAvatarUrl: null }}
+      dm={{ room: roomQuery.data, peerName: 'شرکت', peerAvatarUrl: null, memberCount: members.length }}
       onCloseDm={onClose}
     />
   );
