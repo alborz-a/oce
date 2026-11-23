@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiDelete, apiGet } from '@/shared/lib/api';
+import { toPersianDigits } from '@/shared/lib/jalali';
 import { projectsApi } from '@/features/projects/api';
 import { useProjectCaps } from '@/shared/hooks/useProjectCaps';
 import { ProjectPictureControl } from './ProjectPictureControl';
@@ -37,10 +38,32 @@ function initialsOf(name: string): string {
   return name.trim().split(/\s+/).slice(0, 2).map((p) => p.charAt(0)).join('');
 }
 
+interface PsToggleProps {
+  label: string;
+  checked: boolean;
+  onChange: (next: boolean) => void;
+}
+
+/** Local green switch (role=switch). No backend endpoint exists for these flags yet. */
+function PsToggle({ label, checked, onChange }: PsToggleProps) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      className={checked ? 'ps-toggle is-on' : 'ps-toggle'}
+      onClick={() => onChange(!checked)}
+    >
+      <span className="ps-toggle-knob" aria-hidden="true" />
+    </button>
+  );
+}
+
 /**
- * Project settings modal (Mizito `md-dialog.modal-dialog-info`).
+ * Project settings modal (Mizito `md-dialog.modal-dialog-info`, light theme).
  * Wired only to existing OCE endpoints: projects PATCH/DELETE, members list/remove, member-candidates + members/bulk.
- * Sub-features without an endpoint are omitted (see PR body): photo, palette, groups, advanced, notifications.
+ * Sub-features without an endpoint are local UI only or omitted (see PR body): groups chip, palette, advanced settings handler.
  */
 export function ProjectSettingsModal({ open, onClose, projectId, projectName, onArchived }: ProjectSettingsModalProps) {
   const queryClient = useQueryClient();
@@ -48,6 +71,8 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
   const [titleDraft, setTitleDraft] = useState(projectName);
   const [showPicker, setShowPicker] = useState(false);
   const [archiveArmed, setArchiveArmed] = useState(false);
+  const [advancedOn, setAdvancedOn] = useState(false);
+  const [notifyOn, setNotifyOn] = useState(true);
   const { can: canProjectCap } = useProjectCaps(open ? projectId : null);
   const projectQuery = useQuery({
     queryKey: ['project', projectId],
@@ -107,6 +132,14 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
     <div className="ps-modal-backdrop" data-testid="project-settings-backdrop">
       <div className="ps-modal" role="dialog" aria-modal="true" aria-label="تنظیمات پروژه" dir="rtl">
         <div className="ps-modal-header">
+          <ProjectPictureControl
+            compact
+            projectId={projectId}
+            name={projectName}
+            pictureUrl={projectQuery.data?.picture_url ?? null}
+            color={projectQuery.data?.color ?? null}
+            canManage={canProjectCap('project.update')}
+          />
           <div className="ps-header-info">
             {editingTitle ? (
               <div className="ps-title-row">
@@ -144,24 +177,28 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
         </div>
 
         <div className="ps-body">
-          <section className="ps-section">
-            <ProjectPictureControl
-              projectId={projectId}
-              name={projectName}
-              pictureUrl={projectQuery.data?.picture_url ?? null}
-              color={projectQuery.data?.color ?? null}
-              canManage={canProjectCap('project.update')}
-            />
-          </section>
-          <section className="ps-section">
-            <div className="ps-section-title">
-              <MzIcon name="tune" size={18} />
+          <section className="ps-card">
+            <div className="ps-card-title">
+              <MzIcon name="tune" size={16} color="var(--ps-green)" />
               <span>تنظیمات پروژه</span>
             </div>
-            <button type="button" className="ps-action-row" aria-label="افزودن اعضا"
+            <div className="ps-row">
+              <span className="ps-row-label">
+                <MzIcon name="build" size={18} />
+                <span>پروژه پیشرفته</span>
+              </span>
+              <span className="ps-row-control">
+                <PsToggle label="پروژه پیشرفته" checked={advancedOn} onChange={setAdvancedOn} />
+                <button type="button" className="ps-green-btn">تنظیمات پروژه پیشرفته</button>
+              </span>
+            </div>
+            <div className="ps-divider" />
+            <button type="button" className="ps-row ps-row-action" aria-label="افزودن اعضا"
               onClick={() => setShowPicker((v) => !v)}>
-              <MzIcon name="person_add" size={18} />
-              <span>افزودن اعضا</span>
+              <span className="ps-row-label">
+                <MzIcon name="person_add" size={18} />
+                <span>افزودن اعضا</span>
+              </span>
             </button>
             {showPicker && (
               <ProjectSettingsMembersPicker
@@ -173,11 +210,22 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
                 }}
               />
             )}
+            <div className="ps-row">
+              <span className="ps-row-label">
+                <MzIcon name="chat_bubble_outline" size={18} />
+                <span>فعال بودن اعلانات (نوتیفیکیشن)</span>
+              </span>
+              <span className="ps-row-control">
+                <PsToggle label="فعال بودن اعلانات (نوتیفیکیشن)" checked={notifyOn} onChange={setNotifyOn} />
+              </span>
+            </div>
             {!archiveArmed ? (
-              <button type="button" className="ps-action-row is-danger" aria-label="آرشیو پروژه"
+              <button type="button" className="ps-row ps-row-action is-danger" aria-label="آرشیو پروژه"
                 onClick={() => setArchiveArmed(true)}>
-                <MzIcon name="archive" size={18} />
-                <span>آرشیو پروژه</span>
+                <span className="ps-row-label">
+                  <MzIcon name="archive" size={18} />
+                  <span>آرشیو پروژه</span>
+                </span>
               </button>
             ) : (
               <div className="ps-picker-actions">
@@ -192,11 +240,11 @@ export function ProjectSettingsModal({ open, onClose, projectId, projectName, on
             )}
           </section>
 
-          <section className="ps-section">
-            <div className="ps-section-title">
-              <MzIcon name="group" size={18} />
+          <section className="ps-card">
+            <div className="ps-card-title">
+              <MzIcon name="group" size={16} />
               <span>اعضای پروژه</span>
-              <span>({members.length} نفر)</span>
+              <span className="ps-card-count">({toPersianDigits(members.length)} نفر)</span>
             </div>
             <div className="ps-members-list">
               {members.map((m) => (
