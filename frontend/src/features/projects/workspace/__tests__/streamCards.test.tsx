@@ -277,6 +277,32 @@ describe('Phase 4 Stream Card Components', () => {
     });
   });
 
+  it('StreamDocumentCard hides the size line when the size is unknown (non-admin viewer gets file_size 0)', () => {
+    const item: StreamItem = {
+      id: 'doc-item-2',
+      kind: 'document',
+      createdAt: '2026-11-22T10:00:00Z',
+      authorName: 'کاربر',
+      isCurrentUser: false,
+      text: 'گزارش-روزانه.txt',
+      rawDocument: {
+        id: 'doc-43',
+        project_id: 'p-1',
+        name: 'گزارش-روزانه.txt',
+        file_size: 0,
+        extension: 'txt',
+      },
+    } as unknown as StreamItem;
+
+    render(
+      <StreamDocumentCard item={item} projectId="p-1" onReply={vi.fn()} onReact={vi.fn()} />,
+    );
+
+    expect(screen.getByText('گزارش-روزانه.txt')).toBeInTheDocument();
+    expect(screen.queryByText(/حجم فایل/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/KB/)).not.toBeInTheDocument();
+  });
+
   it('StreamMeetingMinutesCard displays attendees, Jalali date, and exports minutes PDF with auth', async () => {
     const onReply = vi.fn();
     const onReact = vi.fn();

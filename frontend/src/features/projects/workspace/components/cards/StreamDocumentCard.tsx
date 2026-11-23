@@ -88,9 +88,11 @@ export function StreamDocumentCard({
               >
                 {fileName}
               </div>
-              <div className="mt-0.5 text-[11.5px] font-medium text-[#00b4d8]">
-                حجم فایل: {formatDocumentSize(fileSize)}
-              </div>
+              {fileSize > 0 && (
+                <div className="mt-0.5 text-[11.5px] font-medium text-[#00b4d8]">
+                  حجم فایل: {formatDocumentSize(fileSize)}
+                </div>
+              )}
             </div>
 
             <button
