@@ -1119,7 +1119,8 @@ export function ProjectSettingsPage() {
           const payload = (token?.split('.')[1] ?? '').replace(/-/g, '+').replace(/_/g, '/');
           const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
           const json = JSON.parse(atob(padded)) as { sub?: string; role?: string };
-          isOwnerOrAdmin = json.role === 'admin' || (!!json.sub && json.sub === project.owner_id);
+          isOwnerOrAdmin =
+            json.role === 'admin' || json.role === 'manager' || (!!json.sub && json.sub === project.owner_id);
         } catch {
           isOwnerOrAdmin = false;
         }
