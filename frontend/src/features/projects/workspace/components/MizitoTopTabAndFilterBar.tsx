@@ -249,7 +249,7 @@ export function MizitoTopTabAndFilterBar({
             className="inline-flex h-7 items-center gap-1.5 rounded-md border border-[#e5e7eb] bg-[#f5f6f8] px-2.5 text-[11.5px] font-medium text-[#2b4162] hover:border-mz-project hover:bg-[#e8f2fa] hover:text-mz-project transition-colors whitespace-nowrap"
           >
             <MzIcon name="explore" size={13} aria-hidden="true" />
-            <span>ورود به حالت مهندسی</span>
+            <span>OCE</span>
           </button>
         )}
       </div>
