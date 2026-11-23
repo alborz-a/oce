@@ -207,7 +207,7 @@ async def test_access_denied_for_non_participant(session):
     # Attachments: sender only for upload; any participant for read/download.
     with pytest.raises(HTTPException) as upload_denied:
         await mb.upload_letter_access(session, letter, BOB)
-    assert upload_denied.value.status_code == 404
+    assert upload_denied.value.status_code == 403
     await mb.upload_letter_access(session, letter, ALICE)
 
     with pytest.raises(HTTPException) as read_denied:
@@ -254,7 +254,7 @@ async def test_unread_filter_search_and_date_range(session):
 
 
 async def test_labels_filter_and_duplicate_name(session):
-    label = CorrespondenceLabel(name="مهم")
+    label = CorrespondenceLabel(name="مهم", created_by=ALICE)
     session.add(label)
     await session.flush()
     await _compose(session, ALICE, [BOB], labels=[label.id])
