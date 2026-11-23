@@ -74,7 +74,7 @@ beforeEach(() => {
       return { items: [], total: 0 };
     }
     if (path === '/v1/correspondence/mailbox/unread-count/') return { count: 3 };
-    if (path.startsWith('/v1/users/?')) {
+    if (path.startsWith('/v1/correspondence/recipients/?')) {
       // Search is server-side: the mock only answers when the q param is present.
       if (!new URL(`http://x${path}`).searchParams.get('q')) return [];
       return [{ id: 'U9', full_name: 'ابراهیم رحمانی', job_title: 'مهندس عمران', avatar_url: null, is_active: true }];

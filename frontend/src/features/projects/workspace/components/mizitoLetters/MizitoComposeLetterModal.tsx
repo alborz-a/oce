@@ -52,7 +52,7 @@ export function RecipientPicker({
     queryKey: [...RECIPIENT_DIRECTORY_KEY, term],
     queryFn: () =>
       apiGet<DirectoryUser[]>(
-        `/v1/users/?${new URLSearchParams({ q: term, limit: '20', is_active: 'true' }).toString()}`,
+        `/v1/correspondence/recipients/?${new URLSearchParams({ q: term, limit: '20' }).toString()}`,
       ),
     enabled: term.length > 0,
     staleTime: 60_000,
@@ -100,7 +100,7 @@ export function RecipientPicker({
                   setQuery('');
                 }}
               >
-                <UserAvatar url={u.avatar_url} alt={u.full_name} className="mz-letters-avatar" />
+                <span className="mz-letters-avatar-box"><UserAvatar url={u.avatar_url} alt={u.full_name} className="mz-letters-avatar" /></span>
                 <span className="mz-letters-picker-name">{u.full_name}</span>
                 {u.job_title ? <span className="mz-letters-picker-title">{u.job_title}</span> : null}
               </button>

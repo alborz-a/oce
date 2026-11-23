@@ -817,6 +817,40 @@ async def get_mailbox_unread(
     return UnreadOut(count=await unread_count(session, _as_uuid(user_id)))
 
 
+class RecipientOut(BaseModel):
+    id: uuid.UUID
+    full_name: str
+    job_title: str | None = None
+    avatar_url: str | None = None
+
+
+@mailbox_router.get("/recipients/", response_model=list[RecipientOut])
+async def search_recipients(
+    session: SessionDep,
+    user_id: CurrentUserId,
+    q: str = Query("", max_length=80),
+    limit: int = Query(20, ge=1, le=50),
+    _perm: None = Depends(RequirePermission("correspondence.read")),
+) -> list[RecipientOut]:
+    """Letter recipient picker for staff: name, title and avatar only.
+
+    The general users list is closed to restricted staff, and it also carries
+    emails and roles that a recipient picker never needs.
+    """
+    from app.modules.users.models import User
+
+    term = q.strip()
+    stmt = select(User).where(User.is_active.is_(True), User.id != _as_uuid(user_id))
+    if term:
+        stmt = stmt.where(User.full_name.ilike(f"%{term}%"))
+    rows = (await session.execute(stmt.order_by(User.full_name).limit(limit * 2))).scalars().all()
+    return [
+        RecipientOut(id=u.id, full_name=u.full_name or u.email, job_title=u.job_title, avatar_url=u.avatar_url)
+        for u in rows
+        if not is_hidden_system_user(u.email, u.full_name)
+    ][:limit]
+
+
 @mailbox_router.get("/labels/", response_model=list[LabelOut])
 async def list_labels(
     session: SessionDep,

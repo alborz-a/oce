@@ -147,7 +147,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
                 <div className="mz-letters-age-chip">{formatLetterAge(m.sent_at)}</div>
               ) : null}
               <header className="mz-letters-message-head">
-                <UserAvatar url={m.sender_avatar_url} alt={m.sender_name} className="mz-letters-avatar" />
+                <span className="mz-letters-avatar-box"><UserAvatar url={m.sender_avatar_url} alt={m.sender_name} className="mz-letters-avatar" /></span>
                 <span className="mz-letters-message-from">
                   {`${m.sender_name} به ${m.recipients.map((r) => r.name).join('، ')}`}
                 </span>

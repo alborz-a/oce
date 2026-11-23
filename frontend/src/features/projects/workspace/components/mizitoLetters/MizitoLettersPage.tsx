@@ -187,7 +187,7 @@ export function MizitoLettersPage() {
             onClick={() => openLetter(item.id)}
           >
             <span className="mz-letters-row-sender">
-              <UserAvatar url={item.sender_avatar_url} alt={item.sender_name} className="mz-letters-avatar" />
+              <span className="mz-letters-avatar-box"><UserAvatar url={item.sender_avatar_url} alt={item.sender_name} className="mz-letters-avatar" /></span>
               <span>{senderLabel(item)}</span>
             </span>
             <span className="mz-letters-row-subject">
