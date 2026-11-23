@@ -218,7 +218,7 @@ export function MizitoLettersPage() {
             <span className="mz-letters-row-meta">
               {item.reference_number ? (
                 <span className="mz-letters-badge-registered" data-testid="letters-registered-badge">
-                  {`${item.reference_number} - ${formatLetterDate(item.sent_at)} | ${item.direction === 'outgoing' ? 'صادره' : 'وارده'}`}
+                  {`${item.letter_number ?? item.reference_number} - ${formatLetterDate(item.sent_at)} | ${item.direction === 'outgoing' ? 'صادره' : 'وارده'}`}
                 </span>
               ) : null}
               <span className="mz-letters-row-date">{formatLetterDateTime(item.sent_at)}</span>

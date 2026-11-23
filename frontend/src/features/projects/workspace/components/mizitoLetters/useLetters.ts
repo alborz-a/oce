@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LETTERS_UNREAD_COUNT_KEY } from '@/features/projects/workspace/hooks/useLettersUnreadCount';
-import { lettersApi, type MailboxBox, type MailboxFilters, type ComposeBody } from './lettersApi';
+import {
+  lettersApi,
+  type MailboxBox,
+  type MailboxFilters,
+  type ComposeBody,
+  type SecretariatPrefix,
+} from './lettersApi';
 
 export const LETTERS_MAILBOX_KEY = ['letters-mailbox'] as const;
 export const LETTERS_THREAD_KEY = ['letters-thread'] as const;
@@ -51,6 +57,14 @@ export function useForwardLetter(id: string) {
   return useMutation({
     mutationFn: (args: { toUserIds: string[]; note: string }) =>
       lettersApi.forward(id, args.toUserIds, args.note),
+    onSuccess: invalidate,
+  });
+}
+
+export function useRegisterLetter(id: string) {
+  const invalidate = useLettersInvalidate();
+  return useMutation({
+    mutationFn: (prefix: SecretariatPrefix) => lettersApi.register(id, prefix),
     onSuccess: invalidate,
   });
 }
