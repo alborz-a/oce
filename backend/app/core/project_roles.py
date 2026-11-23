@@ -399,6 +399,9 @@ def require_project_cap(cap: str):
         # Admin bypass
         if payload and payload.get("role") == "admin":
             return
+        # Global manager may manage project members on any project (same as admin for this cap only)
+        if cap == "members.manage" and payload and payload.get("role") == "manager":
+            return
 
         raw_pid = (
             request.path_params.get("project_id")

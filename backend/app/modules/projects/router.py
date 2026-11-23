@@ -202,6 +202,8 @@ async def _verify_project_member_manager(
 
     if await is_project_manager(session, project_id, uid):
         return await service.get_project(project_id)
+    if payload and payload.get("role") == "manager":
+        return await service.get_project(project_id)
     raise denied
 
 

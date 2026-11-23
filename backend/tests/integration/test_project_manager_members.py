@@ -243,3 +243,16 @@ async def test_plain_member_cannot_list_member_candidates(member_client: AsyncCl
     pid = seeded_ids["project_id"]
     resp = await member_client.get(f"/api/v1/projects/{pid}/member-candidates/")
     assert resp.status_code == 403, resp.text
+
+
+@pytest.mark.asyncio
+async def test_global_manager_can_add_member(temp_engine_and_factory, seeded_ids: dict[str, str]):
+    """Global JWT role ``manager`` (no team role on the project) may add members -> 201."""
+    _engine, factory = temp_engine_and_factory
+    transport = ASGITransport(app=_build_app(factory, seeded_ids["member_id"], role="manager"))
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        resp = await ac.post(
+            f"/api/v1/projects/{seeded_ids['project_id']}/members/",
+            json={"user_id": seeded_ids["invitee_id"], "role": "estimator"},
+        )
+    assert resp.status_code == 201, resp.text
