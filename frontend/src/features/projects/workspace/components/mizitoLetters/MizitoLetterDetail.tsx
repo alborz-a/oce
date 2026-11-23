@@ -162,7 +162,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
                   {m.attachments.map((a) => (
                     <li key={a.id}>
                       <a href={a.download_url}>{a.name}</a>
-                      <span data-testid="letter-attachment-size">{formatBytes(a.size, 'fa-IR')}</span>
+                      <span data-testid="letter-attachment-size">{formatBytes(a.size)}</span>
                     </li>
                   ))}
                 </ul>

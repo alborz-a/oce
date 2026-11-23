@@ -253,6 +253,8 @@ interface ProjectSummary {
   currency: string;
   locale?: string;
   created_at: string;
+  picture_url?: string | null;
+  color?: string | null;
   // Optional location fields - only present on /v1/projects/ payload
   // when the project has been geocoded. The map widget needs them.
   address?: {

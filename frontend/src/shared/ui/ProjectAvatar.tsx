@@ -12,7 +12,7 @@ export const PROJECT_COLOR_HEX: Record<string, string> = {
   brown: '#8B5E3C',
 };
 
-const FALLBACK_COLOR = PROJECT_COLOR_HEX.grey;
+const FALLBACK_COLOR = '#8A8F98';
 
 export function projectColorHex(color: string | null | undefined): string {
   if (!color) return FALLBACK_COLOR;

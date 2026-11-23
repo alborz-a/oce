@@ -106,6 +106,8 @@ interface Project {
   name: string;
   description: string;
   classification_standard: string;
+  picture_url?: string | null;
+  color?: string | null;
 }
 
 interface BOQListItem {

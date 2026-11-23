@@ -4,7 +4,7 @@ import { MzIcon } from './MzIcon';
 import { toPersianDigits } from '@/shared/lib/jalali';
 
 export interface MizitoMobileSubheaderProps {
-  project: { id: string; name: string; picture_url?: string | null; color?: string | null };
+  project: { id: string; name: string; picture_url?: string | null; avatar_url?: string | null; color?: string | null };
   /** Opens ProjectSettingsModal (owned by MizitoProjectWorkspace). */
   onOpenSettings: () => void;
   /** Same handler as the summary panel online-meeting button. */

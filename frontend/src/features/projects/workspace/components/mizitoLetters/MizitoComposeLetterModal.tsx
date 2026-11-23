@@ -187,10 +187,11 @@ export function MizitoComposeLetterModal({ onClose, onSent }: Props) {
     setUploading(true);
     let failed = 0;
     for (let i = 0; i < items.length; i++) {
-      if (items[i].status === 'done') continue;
+      const item = items[i];
+      if (!item || item.status === 'done') continue;
       setStatus(i, 'uploading');
       try {
-        await lettersApi.uploadAttachment(letterId, items[i].file);
+        await lettersApi.uploadAttachment(letterId, item.file);
         setStatus(i, 'done');
       } catch {
         failed += 1;

@@ -63,6 +63,8 @@ interface Project {
   description: string;
   classification_standard: string;
   currency: string;
+  picture_url?: string | null;
+  color?: string | null;
 }
 
 interface BOQ {

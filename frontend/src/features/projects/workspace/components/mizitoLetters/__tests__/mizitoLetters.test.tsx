@@ -119,9 +119,9 @@ describe('MizitoLettersPage', () => {
     expect(screen.getByText('فیلتر نمایش نامه‌ها')).toBeTruthy();
     const rows = await screen.findAllByTestId('letters-row');
     expect(rows).toHaveLength(2);
-    expect(rows[0].classList.contains('is-unread')).toBe(true);
-    expect(rows[1].textContent).toContain('من، ابراهیم');
-    expect(rows[1].textContent).toContain('ق- ۲۳۷ -۴۰۵');
+    expect(rows[0]?.classList.contains('is-unread')).toBe(true);
+    expect(rows[1]?.textContent).toContain('من، ابراهیم');
+    expect(rows[1]?.textContent).toContain('ق- ۲۳۷ -۴۰۵');
     expect(screen.getByText('نامه‌های قدیمی')).toBeTruthy();
   });
 
@@ -192,8 +192,8 @@ describe('MizitoComposeLetterModal', () => {
     await waitFor(() => expect(onClose).toHaveBeenCalled());
     expect(apiPostMock).toHaveBeenCalledWith('/v1/correspondence/compose/', expect.anything());
     expect(fetchWithAuthMock).toHaveBeenCalledTimes(2);
-    expect(fetchWithAuthMock.mock.calls[0][0]).toBe('/v1/correspondence/NEW/attachments/');
-    const sent = fetchWithAuthMock.mock.calls[0][1]?.body as FormData;
+    expect(fetchWithAuthMock.mock.calls[0]?.[0]).toBe('/v1/correspondence/NEW/attachments/');
+    const sent = fetchWithAuthMock.mock.calls[0]?.[1]?.body as FormData;
     expect(sent.get('file')).toBe(f1);
   });
 
