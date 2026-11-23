@@ -1264,11 +1264,21 @@ async def photo_thumb_url(
     """Presigned URL of the thumbnail (made in the bucket on first use), else of the full photo."""
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
-    url = await object_store.photo_thumb_presigned_url(photo.id, photo.file_path)
+    try:
+        url = await object_store.photo_thumb_presigned_url(photo.id, photo.file_path)
+    except Exception as exc:  # noqa: BLE001 - a thumbnail problem must never 500; use the full photo
+        logger.warning("photo thumb-url failed, falling back to full photo: %s", type(exc).__name__)
+        url = None
     if url is None:
-        url = await object_store.photo_presigned_url(
-            photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
-        )
+        try:
+            url = await object_store.photo_presigned_url(
+                photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
+            )
+        except HTTPException:
+            raise
+        except Exception as exc:  # noqa: BLE001 - client falls back to the API proxy
+            logger.warning("photo thumb-url full-photo presign failed: %s", type(exc).__name__)
+            url = None
     return PhotoUrlResponse(url=url)
 
 

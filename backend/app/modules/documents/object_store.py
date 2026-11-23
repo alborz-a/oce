@@ -277,7 +277,11 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
     """
     import asyncio
 
-    backend, key = _photo_backend_and_key(file_path)
+    try:
+        backend, key = _photo_backend_and_key(file_path)
+    except Exception as exc:  # noqa: BLE001 - storage not configured: caller falls back
+        logger.warning("photo thumbnail backend unavailable: %s", type(exc).__name__)
+        return None
     if backend is None or key is None:
         return None
     thumb_key = f"{_THUMB_KEY_DIR}/{photo_id}.jpg"
@@ -291,4 +295,8 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
     except Exception as exc:  # noqa: BLE001
         logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)
         return None
-    return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")
+    try:
+        return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("photo thumbnail presign failed: %s", type(exc).__name__)
+        return None

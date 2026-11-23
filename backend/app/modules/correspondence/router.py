@@ -23,6 +23,7 @@ from fastapi.responses import FileResponse
 from app.core.file_signature import (
     SIGNATURE_BYTES_REQUIRED,
     FileSignatureMismatch,
+    detect,
 )
 from app.core.file_signature import (
     require as require_signature,
@@ -36,7 +37,26 @@ from app.modules.documents.service import MAX_FILE_SIZE as MAX_ATTACHMENT_BYTES
 # an XML signature, and HTML payloads served back out (even with a benign
 # Content-Type) have repeatedly been XSS sinks in audited modules. Real
 # correspondence attachments are PDFs, images, and Office docs (ZIP/OLE).
-ALLOWED_ATTACHMENT_TYPES = frozenset({"pdf", "png", "jpeg", "gif", "webp", "zip", "ole"})
+ALLOWED_ATTACHMENT_TYPES = frozenset({"pdf", "png", "jpeg", "gif", "webp", "zip", "ole", "dwg", "dxf"})
+
+# Plain-text attachments (TXT, CSV) have no magic bytes, so they are accepted by extension
+# only when the body is clean UTF-8 text: no NUL byte and no markup (a leading "<" is refused).
+PLAIN_TEXT_ATTACHMENT_EXTENSIONS = frozenset({".txt", ".csv"})
+
+
+def _is_plain_text_attachment(content: bytes, filename: str | None) -> bool:
+    """True for a .txt/.csv upload whose body is plain UTF-8 text (no binary, no HTML/XML/SVG)."""
+    if Path(filename or "").suffix.lower() not in PLAIN_TEXT_ATTACHMENT_EXTENSIONS:
+        return False
+    if detect(content[:SIGNATURE_BYTES_REQUIRED]) is not None:
+        return False
+    if b"\x00" in content:
+        return False
+    try:
+        text = content.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return False
+    return not text.lstrip().startswith("<")
 from app.dependencies import (
     CurrentUserId,
     RequirePermission,
@@ -333,17 +353,18 @@ async def upload_attachment(
             detail="Uploaded file is empty",
         )
 
-    try:
-        require_signature(
-            content[:SIGNATURE_BYTES_REQUIRED],
-            ALLOWED_ATTACHMENT_TYPES,
-            filename=file.filename,
-        )
-    except FileSignatureMismatch as exc:
-        raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail=str(exc),
-        ) from exc
+    if not _is_plain_text_attachment(content, file.filename):
+        try:
+            require_signature(
+                content[:SIGNATURE_BYTES_REQUIRED],
+                ALLOWED_ATTACHMENT_TYPES,
+                filename=file.filename,
+            )
+        except FileSignatureMismatch as exc:
+            raise HTTPException(
+                status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+                detail=str(exc),
+            ) from exc
 
     # Server-derived filename. Extension is taken from the client-provided
     # name purely as a hint for OS file managers; the magic-byte gate
