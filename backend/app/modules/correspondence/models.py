@@ -32,10 +32,11 @@ class Correspondence(Base):
         ),
     )
 
-    project_id: Mapped[uuid.UUID] = mapped_column(
+    # NULL for mailbox letters (user-to-user, see ``sender_user_id``); those are never project-scoped.
+    project_id: Mapped[uuid.UUID | None] = mapped_column(
         GUID(),
         ForeignKey("oe_projects_project.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
     reference_number: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -104,8 +105,73 @@ class Correspondence(Base):
         server_default="{}",
     )
 
+    # Mailbox letters (نامه‌ها). NULL ``sender_user_id`` = project register row.
+    # ``thread_id`` = root letter id; every message of one thread shares it.
+    sender_user_id: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True, index=True)
+    thread_id: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True, index=True)
+    body_html: Mapped[str | None] = mapped_column(Text, nullable=True)
+
     def __repr__(self) -> str:
         return f"<Correspondence {self.reference_number} ({self.direction}/{self.correspondence_type})>"
+
+
+class CorrespondenceLetterRecipient(Base):
+    """Per-user participation in one mailbox message. ``kind``: sender | to | forward.
+
+    Drives inbox, outbox, paraph and archived boxes and the access check.
+    ``archived_at`` is set per recipient, so archiving never touches other users.
+    """
+
+    __tablename__ = "oe_correspondence_letter_recipient"
+    __table_args__ = (
+        UniqueConstraint("letter_id", "user_id", "kind", name="uq_oe_correspondence_letter_recipient"),
+    )
+
+    letter_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_correspondence_correspondence.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_users_user.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    kind: Mapped[str] = mapped_column(String(20), nullable=False)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    archived_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class CorrespondenceLabel(Base):
+    """Mailbox label («برچسب‌ها»). Names are unique per owner (``created_by``)."""
+
+    __tablename__ = "oe_correspondence_label"
+    __table_args__ = (UniqueConstraint("created_by", "name", name="uq_oe_correspondence_label_owner_name"),)
+
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    created_by: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True)
+
+
+class CorrespondenceLetterLabel(Base):
+    """Links a mailbox message to a label."""
+
+    __tablename__ = "oe_correspondence_letter_label"
+    __table_args__ = (UniqueConstraint("letter_id", "label_id", name="uq_oe_correspondence_letter_label"),)
+
+    letter_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_correspondence_correspondence.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    label_id: Mapped[uuid.UUID] = mapped_column(
+        GUID(),
+        ForeignKey("oe_correspondence_label.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
 
 
 class CorrespondenceLetterRead(Base):

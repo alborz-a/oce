@@ -220,6 +220,7 @@ ROUTER_HANDLERS: dict[str, list[str]] = {
         # Route census (test_object_scoped_routes_are_all_pinned)
         "download_attachment",
         "upload_attachment",
+        "mark_correspondence_read",
     ],
     "transmittals": [
         "get_transmittal",
@@ -462,6 +463,12 @@ _GUARD_WRAPPERS = frozenset(
         # bid and delegates to _verify_package_owner for its package.
         "_verify_package_owner",
         "_verify_bid_access",
+        # correspondence.mailbox access helpers. Each one either checks thread
+        # participation for mailbox letters or delegates to verify_project_access
+        # for legacy project rows. Used by upload/download/read handlers.
+        "read_letter_access",
+        "upload_letter_access",
+        "attachment_download_access",
     }
 )
 
