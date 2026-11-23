@@ -38,6 +38,7 @@ STAFF_API_PREFIXES: tuple[str, ...] = (
     "meetings",
     "teams",
     "notifications",
+    "global_presence",
     "correspondence",
     "notes",
     "contacts",
@@ -92,3 +93,8 @@ def enforce_staff_scope(role: object, path: str) -> None:
         status_code=status.HTTP_403_FORBIDDEN,
         detail="This area is not available for staff accounts",
     )
+
+
+def is_staff_ws_allowed(role: object, path: str) -> bool:
+    """WebSocket twin of :func:`enforce_staff_scope`: True when the socket path is open to this role."""
+    return not is_staff_role(role) or is_staff_path_allowed(path)

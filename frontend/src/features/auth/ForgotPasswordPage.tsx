@@ -4,10 +4,11 @@ import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Mail, CheckCircle2, Globe, ChevronDown } from 'lucide-react';
-import { Button, Input, Logo, CountryFlag } from '@/shared/ui';
+import { Button, Input, CountryFlag } from '@/shared/ui';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { AuthBackground } from './AuthBackground';
+import { CompanyBrand } from './CompanyBrand';
 
 export function ForgotPasswordPage() {
   const { t, i18n } = useTranslation();
@@ -98,7 +99,7 @@ export function ForgotPasswordPage() {
         {/* Logo — glow entrance */}
         <div className="mb-8 text-center animate-stagger-in" style={{ animationDelay: '0ms' }}>
           <div className="mx-auto mb-4 animate-logo-glow rounded-[20px] w-fit">
-            <Logo size="xl" animate className="mx-auto shadow-xl" />
+            <CompanyBrand />
           </div>
         </div>
 

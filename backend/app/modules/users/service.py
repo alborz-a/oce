@@ -192,8 +192,8 @@ def create_refresh_token(user: User, settings: Settings, *, sid: str | None = No
 RESET_TOKEN_LIFETIME_MINUTES = 15
 
 
-# Admin-issued links are handed over by hand instead of mailed, so they live longer.
-ADMIN_RESET_LINK_LIFETIME_MINUTES = 24 * 60
+# Admin-issued links are handed over by hand instead of mailed, so they live longer (default 30 days).
+ADMIN_RESET_LINK_LIFETIME_MINUTES = 30 * 24 * 60
 
 
 def create_reset_token(user: User, settings: Settings, *, lifetime_minutes: int | None = None) -> str:

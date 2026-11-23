@@ -34,6 +34,10 @@ vi.mock('../AuthBackground', () => ({
   AuthBackground: () => null,
 }));
 
+vi.mock('../CompanyBrand', () => ({
+  CompanyBrand: () => null,
+}));
+
 import { ResetPasswordPage } from '../ResetPasswordPage';
 import { useAuthStore } from '@/stores/useAuthStore';
 
@@ -78,6 +82,7 @@ function fillAndSubmit(password: string, confirm: string) {
 const consoleSpies: ReturnType<typeof vi.spyOn>[] = [];
 
 beforeEach(() => {
+  sessionStorage.clear();
   for (const method of ['log', 'info', 'warn', 'error', 'debug'] as const) {
     consoleSpies.push(vi.spyOn(console, method));
   }
@@ -241,5 +246,14 @@ describe('ResetPasswordPage', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('auth.server_error');
     expect(screen.getByLabelText('auth.reset_new_password')).toBeInTheDocument();
+  });
+});
+
+describe('ResetPasswordPage reload', () => {
+  it('keeps a still-valid link working after a reload stripped the token from the address bar', () => {
+    const first = renderAt(`/auth/reset?token=${TOKEN}`);
+    first.unmount();
+    renderAt('/auth/reset');
+    expect(screen.queryByText('auth.reset_link_invalid_title')).toBeNull();
   });
 });

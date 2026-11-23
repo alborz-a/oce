@@ -8,11 +8,12 @@ import {
   ShieldCheck, HardDrive, Zap, Globe2, Brain, Users,
   Building2, Briefcase, Search,
 } from 'lucide-react';
-import { Button, Input, LogoWithText, CountryFlag } from '@/shared/ui';
+import { Button, Input, CountryFlag } from '@/shared/ui';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { readRememberChoice, useAuthStore } from '@/stores/useAuthStore';
 import { AuthBackground } from './AuthBackground';
+import { CompanyBrand } from './CompanyBrand';
 import { meetsPasswordPolicy } from './passwordPolicy';
 
 export function RegisterPage() {
@@ -240,7 +241,7 @@ export function RegisterPage() {
         <div className="w-full max-w-[400px]">
           {/* Logo */}
           <div className="mb-5 flex flex-col items-center animate-stagger-in" style={{ animationDelay: '0ms' }}>
-            <LogoWithText size="md" animate />
+            <CompanyBrand />
             <p className="mt-1 text-xs text-content-tertiary">{t('app.tagline')}</p>
           </div>
 
