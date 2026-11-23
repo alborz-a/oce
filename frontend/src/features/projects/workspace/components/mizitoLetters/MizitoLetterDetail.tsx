@@ -5,6 +5,7 @@ import { UserAvatar } from '@/shared/ui/UserAvatar';
 import { formatBytes } from '@/shared/lib/formatters';
 import {
   useArchiveLetter,
+  useRegisterLetter,
   useForwardLetter,
   useLabels,
   useLetterThread,
@@ -58,6 +59,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
   const reply = useReplyLetter(letterId);
   const forward = useForwardLetter(letterId);
   const archive = useArchiveLetter(letterId);
+  const register = useRegisterLetter(letterId);
   const [replyText, setReplyText] = useState('');
   const [forwardOpen, setForwardOpen] = useState(false);
   const [forwardNote, setForwardNote] = useState('');
@@ -116,6 +118,17 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
           >
             {archived ? 'خروج از آرشیو' : 'آرشیو نامه'}
           </button>
+          {data.letter_number ? null : (
+            <button
+              type="button"
+              className="mz-letters-register"
+              data-testid="letter-register"
+              disabled={register.isPending}
+              onClick={() => register.mutate('ق')}
+            >
+              ثبت در دبیرخانه
+            </button>
+          )}
           <button type="button" className="mz-letters-kebab" aria-label="گزینه‌های بیشتر">
             <MzIcon name="more_vert" size={18} />
           </button>
@@ -136,7 +149,7 @@ export function MizitoLetterDetail({ letterId, onBack }: Props) {
             <dt>تاریخ ثبت</dt>
             <dd>{formatLetterDate(data.registered_at ?? sentAt)}</dd>
             <dt>شماره نامه</dt>
-            <dd>{data.reference_number ?? '—'}</dd>
+            <dd>{data.letter_number ?? data.reference_number ?? '—'}</dd>
           </dl>
         </aside>
 

@@ -11,13 +11,24 @@ import { MizitoLabelsPanel } from './MizitoLabelsPanel';
 import './letters.css';
 
 /** Tabs in spec order. «برچسب‌ها» is not a mailbox box: it shows the labels panel and filters by label. */
-const TABS: { key: MailboxBox | 'labels'; label: string }[] = [
+/** Registry tabs reuse the inbox/outbox data and keep only registered letters (reference_number set). */
+type BoxKey = MailboxBox | 'registered_in' | 'registered_out';
+
+const TABS: { key: BoxKey | 'labels'; label: string }[] = [
   { key: 'inbox', label: 'صندوق ورودی' },
   { key: 'outbox', label: 'صندوق خروجی' },
   { key: 'paraph', label: 'پاراف‌های من' },
+  { key: 'registered_in', label: 'نامه‌های ثبتی وارده' },
+  { key: 'registered_out', label: 'نامه‌های ثبتی صادره' },
   { key: 'labels', label: 'برچسب‌ها' },
   { key: 'archived', label: 'ورودی آرشیو شده' },
 ];
+
+function sourceBox(box: BoxKey): MailboxBox {
+  if (box === 'registered_in') return 'inbox';
+  if (box === 'registered_out') return 'outbox';
+  return box;
+}
 
 function senderLabel(item: LetterListItem): string {
   if (item.direction === 'outgoing') {
@@ -31,14 +42,20 @@ export function MizitoLettersPage() {
   const [params, setParams] = useSearchParams();
   const rawLetter = params.get('letter');
   const selectedId = rawLetter && /^[A-Za-z0-9-]+$/.test(rawLetter) ? rawLetter : null;
-  const [box, setBox] = useState<MailboxBox>('inbox');
+  const [box, setBox] = useState<BoxKey>('inbox');
   const [filters, setFilters] = useState<MailboxFilters>({});
   const [filterOpen, setFilterOpen] = useState(false);
   const [composeOpen, setComposeOpen] = useState(false);
   const [view, setView] = useState<'mailbox' | 'labels'>('mailbox');
   const [labelFilter, setLabelFilter] = useState<LetterLabel | null>(null);
-  const mailbox = useMailbox(box, { limit: 50, ...filters });
-  const items = mailbox.data?.items ?? [];
+  const mailbox = useMailbox(sourceBox(box), { limit: 50, ...filters });
+  const allItems = mailbox.data?.items ?? [];
+  const items =
+    box === 'registered_in'
+      ? allItems.filter((i) => i.reference_number && i.direction === 'incoming')
+      : box === 'registered_out'
+        ? allItems.filter((i) => i.reference_number && i.direction === 'outgoing')
+        : allItems;
 
   if (selectedId) {
     return (
@@ -201,7 +218,7 @@ export function MizitoLettersPage() {
             <span className="mz-letters-row-meta">
               {item.reference_number ? (
                 <span className="mz-letters-badge-registered" data-testid="letters-registered-badge">
-                  {`${item.direction === 'outgoing' ? 'صادره' : 'وارده'} | ${formatLetterDate(item.sent_at)} | ${item.reference_number}`}
+                  {`${item.letter_number ?? item.reference_number} - ${formatLetterDate(item.sent_at)} | ${item.direction === 'outgoing' ? 'صادره' : 'وارده'}`}
                 </span>
               ) : null}
               <span className="mz-letters-row-date">{formatLetterDateTime(item.sent_at)}</span>

@@ -17,7 +17,7 @@ import re
 import uuid
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -41,6 +41,11 @@ from app.modules.correspondence.models import (
     CorrespondenceLetterLabel,
     CorrespondenceLetterRead,
     CorrespondenceLetterRecipient,
+)
+from app.modules.correspondence.secretariat import (
+    DEFAULT_PREFIX,
+    letter_number_of,
+    register_letter,
 )
 
 KIND_SENDER = "sender"
@@ -87,6 +92,17 @@ class ForwardIn(BaseModel):
     note: str = Field(default="", max_length=5000)
 
 
+class RegisterIn(BaseModel):
+    prefix: Literal["ق", "خ", "ص", "د", "ن", "الف"] = DEFAULT_PREFIX
+
+
+class RegisterOut(BaseModel):
+    id: uuid.UUID
+    letter_number: str
+    register_type: int
+    secretariat_registered_at: str
+
+
 class MailboxItem(BaseModel):
     id: uuid.UUID
     thread_id: uuid.UUID
@@ -101,6 +117,8 @@ class MailboxItem(BaseModel):
     attachments_count: int
     direction: str
     reference_number: str
+    letter_number: str | None = None
+    register_type: int | None = None
     labels: list[LabelOut]
 
 
@@ -136,6 +154,9 @@ class ThreadOut(BaseModel):
     thread_id: uuid.UUID
     subject: str
     reference_number: str
+    letter_number: str | None = None
+    register_type: int | None = None
+    secretariat_registered_at: str | None = None
     letter_type: str
     registered_at: str
     labels: list[LabelOut]
@@ -635,6 +656,8 @@ async def list_mailbox(
                 attachments_count=len(letter.attachments or []),
                 direction="outgoing" if letter.sender_user_id == viewer else "incoming",
                 reference_number=letter.reference_number,
+                letter_number=letter_number_of(letter),
+                register_type=letter.secretariat_register_type,
                 labels=labels.get(letter.id, []),
             )
         )
@@ -716,6 +739,9 @@ async def build_thread(session, root: Correspondence, viewer: uuid.UUID, is_admi
         thread_id=root.thread_id,
         subject=root.subject,
         reference_number=root.reference_number,
+        letter_number=letter_number_of(root),
+        register_type=root.secretariat_register_type,
+        secretariat_registered_at=_iso(root.secretariat_registered_at) or None,
         letter_type=root.correspondence_type,
         registered_at=_iso(root.created_at),
         labels=list(thread_labels.values()),
@@ -1038,6 +1064,27 @@ async def forward(
         subject=letter.subject,
         reference_number=letter.reference_number,
         sent_at=_iso(letter.created_at),
+    )
+
+
+@mailbox_router.post("/{letter_id}/register/", response_model=RegisterOut)
+async def register(
+    letter_id: uuid.UUID,
+    session: SessionDep,
+    user_id: CurrentUserId,
+    payload: CurrentUserPayload,
+    data: RegisterIn = RegisterIn(),
+    _perm: None = Depends(RequirePermission("correspondence.create")),
+) -> RegisterOut:
+    viewer = _as_uuid(user_id)
+    root = await load_mailbox_letter(session, letter_id)
+    await _require_thread(session, root.thread_id, viewer, viewer_is_admin(payload))
+    letter = await register_letter(session, root, data.prefix, datetime.now(UTC))
+    return RegisterOut(
+        id=letter.id,
+        letter_number=letter_number_of(letter) or "",
+        register_type=letter.secretariat_register_type or 0,
+        secretariat_registered_at=_iso(letter.secretariat_registered_at),
     )
 
 

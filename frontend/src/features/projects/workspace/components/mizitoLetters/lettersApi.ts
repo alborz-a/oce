@@ -31,7 +31,20 @@ export interface LetterListItem {
   attachments_count: number;
   direction: 'incoming' | 'outgoing';
   reference_number: string | null;
+  /** Composed secretariat number, e.g. `ق- ۲۳۷ -۴۰۵`; null when not registered. */
+  letter_number?: string | null;
+  /** 1 = وارده, 2 = صادره; null when not registered. */
+  register_type?: number | null;
   labels: LetterLabel[];
+}
+
+export type SecretariatPrefix = 'ق' | 'خ' | 'ص' | 'د' | 'ن' | 'الف';
+
+export interface RegisterResponse {
+  id: string;
+  letter_number: string;
+  register_type: number;
+  secretariat_registered_at: string;
 }
 
 export interface MailboxResponse {
@@ -70,6 +83,9 @@ export interface LetterMessage {
 export interface LetterThread {
   subject: string;
   reference_number: string | null;
+  letter_number?: string | null;
+  register_type?: number | null;
+  secretariat_registered_at?: string | null;
   letter_type: string | null;
   registered_at: string | null;
   labels: LetterLabel[];
@@ -117,6 +133,8 @@ export const lettersApi = {
       to_user_ids: toUserIds,
       note,
     }),
+  register: (id: string, prefix: SecretariatPrefix) =>
+    apiPost<RegisterResponse, { prefix: SecretariatPrefix }>(`/v1/correspondence/${seg(id)}/register/`, { prefix }),
   archive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/archive/`),
   unarchive: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/unarchive/`),
   markRead: (id: string) => apiPost<unknown>(`/v1/correspondence/${seg(id)}/read/`),

@@ -9,7 +9,7 @@ Tables:
 import uuid
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, DateTime, ForeignKey, String, Text, UniqueConstraint
+from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database import GUID, Base
@@ -29,6 +29,11 @@ class Correspondence(Base):
             "project_id",
             "reference_number",
             name="uq_oe_correspondence_correspondence_project_reference",
+        ),
+        # Secretariat (دبیرخانه) number: one counter for all prefixes, so a number is never issued twice.
+        UniqueConstraint(
+            "secretariat_number",
+            name="uq_oe_correspondence_secretariat_number",
         ),
     )
 
@@ -110,6 +115,14 @@ class Correspondence(Base):
     sender_user_id: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True, index=True)
     thread_id: Mapped[uuid.UUID | None] = mapped_column(GUID(), nullable=True, index=True)
     body_html: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    # Secretariat registration («ثبت در دبیرخانه»). NULL = not registered.
+    # Displayed as ``<prefix>- <number> -<postfix>``; see ``secretariat.format_letter_number``.
+    secretariat_prefix: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    secretariat_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    secretariat_postfix: Mapped[str | None] = mapped_column(String(3), nullable=True)
+    secretariat_register_type: Mapped[int | None] = mapped_column(Integer, nullable=True)  # 1 وارده, 2 صادره
+    secretariat_registered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:
         return f"<Correspondence {self.reference_number} ({self.direction}/{self.correspondence_type})>"
