@@ -302,7 +302,7 @@ class TeamChatService:
         return [
             ColleagueResponse(id=u.id, full_name=u.full_name or "", job_title=_job_title(u), avatar_url=u.avatar_url)
             for u in rows
-            if is_admin or not is_hidden_system_user(u.email, u.full_name)
+            if not is_hidden_system_user(u.email, u.full_name)
         ]
 
     # ── messages ───────────────────────────────────────────────────────

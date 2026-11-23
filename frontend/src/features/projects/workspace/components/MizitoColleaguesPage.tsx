@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { projectsApi, type Project } from '@/features/projects/api';
 import { apiGet } from '@/shared/lib/api';
@@ -43,6 +43,7 @@ export function MizitoColleaguesPage() {
     desktopHidden,
     onMenuClick: onSwitcherMenuClick,
   } = useSwitcherState();
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [dmError, setDmError] = useState<string | null>(null);
 
@@ -97,9 +98,14 @@ export function MizitoColleaguesPage() {
   const onOpenRoom = useCallback(
     (room: ChatRoom, otherUserId: string) => {
       setSwitcherOpen(false);
+      // A DM created just now is not in the cached rooms list yet; without this the page says «گفتگو پیدا نشد».
+      queryClient.setQueryData<ChatRoom[]>(['team-chat', 'colleague-rooms'], (old) =>
+        old && !old.some((r) => r.id === room.id) ? [...old, room] : old ?? [room],
+      );
+      void queryClient.invalidateQueries({ queryKey: ['team-chat', 'colleague-rooms'] });
       navigate(`/colleagues/${room.id}`, { state: { peerId: otherUserId } });
     },
-    [navigate, setSwitcherOpen],
+    [navigate, setSwitcherOpen, queryClient],
   );
   const openDm = useOpenColleagueDm(userId, onOpenRoom);
 

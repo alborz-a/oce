@@ -40,11 +40,11 @@ beforeEach(() => {
 });
 
 describe('role helpers', () => {
-  it('admin and manager are engineering roles, others are normal users', () => {
+  it('admin is the only OCE user; manager and others use the Mizito shell', () => {
     expect(isEngineeringRole('admin')).toBe(true);
     expect(isEngineeringRole('Manager')).toBe(true);
     expect(isNormalUserRole('admin')).toBe(false);
-    expect(isNormalUserRole('manager')).toBe(false);
+    expect(isNormalUserRole('manager')).toBe(true);
     expect(isNormalUserRole('viewer')).toBe(true);
     expect(isNormalUserRole('editor')).toBe(true);
   });

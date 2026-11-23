@@ -31,8 +31,8 @@ def is_hidden_system_user(email: str | None, full_name: str | None) -> bool:
     return (
         e in HIDDEN_SYSTEM_EMAILS
         or n in HIDDEN_SYSTEM_NAMES
-        or e.startswith("qa.")
-        or n.startswith("qa.")
+        or e.startswith(("qa.", "qa-"))
+        or n.startswith(("qa.", "qa "))
     )
 
 

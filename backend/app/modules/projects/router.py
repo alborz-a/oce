@@ -866,18 +866,8 @@ async def bulk_add_project_members_endpoint(
     for member in data.members:
         _assert_member_role_grantable(project, user_id, payload, member.role)
 
-    # Gate the mass invite on CDE readiness (lazy import to avoid a load-time
-    # cycle between the projects and cde modules).
-    from app.modules.cde.service import CDEService
-
-    gate = await CDEService(session).evaluate_go_live_gate(project_id)
-    if not gate.allowed:
-        raise HTTPException(
-            status_code=409,
-            detail=(
-                f"CDE go-live gate: the common data environment is not ready to open to the whole team. {gate.reason}"
-            ),
-        )
+    # [RSC-IRAN] The CDE go-live gate no longer blocks adding members: the company does not run the CDE,
+    # and the gate made «افزودن اعضا» fail with a 409 for every project.
 
     from app.modules.projects.member_service import add_project_member
 

@@ -20,10 +20,13 @@ export function isEngineeringRole(role: string | null | undefined): boolean {
   return r === 'admin' || r === 'manager';
 }
 
-/** Normal user = a known role that is not admin/manager. Unknown role is not normal (not yet resolved). */
+/**
+ * Shell user = a known role that is not admin. Managers use the Mizito shell too (owner order 2026-11-23);
+ * they differ from staff only by the Gantt tab and member management. Unknown role is not normal (not yet resolved).
+ */
 export function isNormalUserRole(role: string | null | undefined): boolean {
   const r = (role ?? '').trim().toLowerCase();
-  return r !== '' && !isEngineeringRole(r);
+  return r !== '' && r !== 'admin';
 }
 
 /** Reactive hook: true for a normal user (Mizito-only landing and menus). */
