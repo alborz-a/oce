@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import time
 import uuid
 from types import SimpleNamespace
 
@@ -157,17 +159,73 @@ async def test_session_closed_before_bucket_presign(monkeypatch):
     assert seen == {"closed_at_thumb": True, "closed_at_presign": True}
 
 
+class _ThumbBe:
+    """Bucket stub: thumb existence is controlled by ``present``; ``exists`` can be made slow."""
+
+    def __init__(self, present=False, exists_delay=0.0):
+        self.present = present
+        self.exists_delay = exists_delay
+
+    async def exists(self, key):
+        if self.exists_delay:
+            await asyncio.sleep(self.exists_delay)
+        return self.present
+
+    def url_for(self, key, **kwargs):
+        return f"https://bucket.example/{key}"
+
+
+async def test_thumb_url_returns_thumb_when_present(monkeypatch):
+    monkeypatch.setattr(os_, "_imported_s3", lambda: _ThumbBe(present=True))
+    url = await os_.photo_thumb_presigned_url("p3", PHOTO_PATH)
+    assert url and url.endswith("p3.jpg")
+
+
+async def test_thumb_missing_returns_none_without_building_inline(monkeypatch):
+    built = []
+
+    async def _store(backend, key, thumb_key):
+        built.append(thumb_key)
+        return True
+
+    monkeypatch.setattr(os_, "_imported_s3", lambda: _ThumbBe(present=False))
+    monkeypatch.setattr(os_, "_store_thumb", _store)
+    # Request path returns None immediately; the build has not run inside the request.
+    assert await os_.photo_thumb_presigned_url("p4", PHOTO_PATH) is None
+    assert built == []
+    await asyncio.sleep(0.05)
+    assert built == [f"{os_._THUMB_KEY_DIR}/p4.jpg"]
+
+
+async def test_thumb_lookup_never_blocks_request_over_two_seconds(monkeypatch):
+    monkeypatch.setattr(os_, "_imported_s3", lambda: _ThumbBe(exists_delay=10.0))
+    started = time.monotonic()
+    assert await os_.photo_thumb_presigned_url("p5", PHOTO_PATH) is None
+    assert time.monotonic() - started < 2.5
+
+
+async def test_thumb_build_deduped_per_photo(monkeypatch):
+    calls = []
+    gate = asyncio.Event()
+
+    async def _slow_store(backend, key, thumb_key):
+        calls.append(thumb_key)
+        await gate.wait()
+        return True
+
+    monkeypatch.setattr(os_, "_imported_s3", lambda: _ThumbBe(present=False))
+    monkeypatch.setattr(os_, "_store_thumb", _slow_store)
+    for _ in range(5):
+        assert await os_.photo_thumb_presigned_url("p6", PHOTO_PATH) is None
+    await asyncio.sleep(0.02)
+    assert len(calls) == 1
+    gate.set()
+    await asyncio.sleep(0.02)
+    assert os_._THUMB_PENDING == set()
+
+
 async def test_thumb_builds_limited_to_four_concurrent(monkeypatch):
-    import asyncio
-
     state = {"now": 0, "peak": 0}
-
-    class _Be:
-        async def exists(self, key):
-            return False
-
-        def url_for(self, key, **kwargs):
-            return f"https://bucket.example/{key}"
 
     async def _slow_store(backend, key, thumb_key):
         state["now"] += 1
@@ -176,10 +234,12 @@ async def test_thumb_builds_limited_to_four_concurrent(monkeypatch):
         state["now"] -= 1
         return True
 
-    monkeypatch.setattr(os_, "_imported_s3", lambda: _Be())
+    monkeypatch.setattr(os_, "_imported_s3", lambda: _ThumbBe(present=False))
     monkeypatch.setattr(os_, "_store_thumb", _slow_store)
     urls = await asyncio.gather(
         *(os_.photo_thumb_presigned_url(uuid.uuid4(), PHOTO_PATH) for _ in range(12))
     )
-    assert all(urls)
-    assert state["peak"] == 4
+    assert not any(urls)  # all fall back to the full photo at once
+    await asyncio.sleep(0.2)
+    assert state["peak"] <= 4
+    assert os_._THUMB_PENDING == set()

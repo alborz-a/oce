@@ -14,8 +14,12 @@ import { useQuery } from '@tanstack/react-query';
 import { ChatPhotoLightbox } from '../ChatPhotoLightbox';
 import { useToastStore } from '@/stores/useToastStore';
 import { UserAvatar } from '@/shared/ui/UserAvatar';
+import { useNearViewport } from '@/shared/hooks/useNearViewport';
+import { presignRequestLimit } from '@/shared/lib/requestLimiter';
 
 const RAW_IMAGE_RE = /\.(jpe?g|png|gif|heic|jfif|webp)$/i;
+// Presigned URLs live 600 s on the server; reuse a fetched one for 5 min instead of refetching.
+const CHAT_FILE_URL_STALE_MS = 5 * 60 * 1000;
 
 interface ChatFileUrlResponse {
   url: string | null;
@@ -64,11 +68,13 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
   const [busy, setBusy] = useState(false);
   const key = file.key;
   const isImage = Boolean(key) && RAW_IMAGE_RE.test(file.name.trim());
+  // Presigned URL is fetched only once the photo is near the viewport (not for every row on screen).
+  const { ref: photoRef, near } = useNearViewport<HTMLButtonElement>('200px');
   const { data, isError, isSuccess } = useQuery({
     queryKey: ['chat-file-url', key],
-    queryFn: () => apiGet<ChatFileUrlResponse>(chatFileUrlPath(key ?? '')),
-    enabled: isImage && Boolean(key),
-    staleTime: 0,
+    queryFn: () => presignRequestLimit(() => apiGet<ChatFileUrlResponse>(chatFileUrlPath(key ?? ''))),
+    enabled: isImage && Boolean(key) && near,
+    staleTime: CHAT_FILE_URL_STALE_MS,
     retry: false,
   });
   const imageUrl = data?.url ?? null;
@@ -90,6 +96,7 @@ function RawFileEntity({ file }: { file: RawFileChip }) {
     return (
       <>
         <button
+          ref={photoRef}
           type="button"
           className="im-entity-photo"
           onClick={() => setOpen(true)}

@@ -273,11 +273,45 @@ async def _store_thumb(backend, key: str, thumb_key: str) -> bool:
     return True
 
 
-async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | None) -> str | None:
-    """Presigned URL of the photo's thumbnail in the bucket, made and stored there on first use.
+# Thumb keys with a build queued or running in the background (dedup: one build per photo).
+_THUMB_PENDING: set[str] = set()
+# Strong refs to background build tasks so they are not garbage collected mid-run.
+_THUMB_TASKS: set = set()
+# Max background builds queued or running; when full, new scheduling is skipped (next request retries).
+_THUMB_PENDING_CAP = 4
+# Hard cap on the thumb existence check inside a request, so a request never blocks on the bucket.
+_THUMB_EXISTS_TIMEOUT_S = 2.0
 
-    None when the photo is not bucket-backed or the thumbnail cannot be made (the caller then
-    presigns the full photo, or proxies).
+
+async def _build_thumb_in_background(backend, key: str, thumb_key: str) -> None:
+    """Make and store the thumbnail outside any request. Holds no DB session."""
+    try:
+        async with _thumb_build_lock(thumb_key):
+            async with _THUMB_BUILD_SEMAPHORE:
+                await _store_thumb(backend, key, thumb_key)
+    except Exception as exc:  # noqa: BLE001 - a later request schedules the build again
+        logger.warning("background photo thumbnail build failed: %s", type(exc).__name__)
+    finally:
+        _THUMB_PENDING.discard(thumb_key)
+
+
+def _schedule_thumb_build(backend, key: str, thumb_key: str) -> None:
+    """Queue a thumbnail build. Skipped when this thumb is already pending or the queue is full."""
+    import asyncio
+
+    if thumb_key in _THUMB_PENDING or len(_THUMB_PENDING) >= _THUMB_PENDING_CAP:
+        return
+    _THUMB_PENDING.add(thumb_key)
+    task = asyncio.create_task(_build_thumb_in_background(backend, key, thumb_key))
+    _THUMB_TASKS.add(task)
+    task.add_done_callback(_THUMB_TASKS.discard)
+
+
+async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | None) -> str | None:
+    """Presigned URL of the photo's thumbnail when it already exists in the bucket.
+
+    When it does not exist yet, the build is scheduled in the background and None is returned at once
+    (the caller presigns the full photo). None also when the photo is not bucket-backed or storage fails.
     """
     import asyncio
 
@@ -290,16 +324,12 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
         return None
     thumb_key = f"{_THUMB_KEY_DIR}/{photo_id}.jpg"
     try:
-        if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
-            async with _thumb_build_lock(thumb_key):
-                # Re-check under the lock: a concurrent caller may have stored the thumb already.
-                if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
-                    async with _THUMB_BUILD_SEMAPHORE:
-                        built = await _store_thumb(backend, key, thumb_key)
-                    if not built:
-                        return None
+        exists = await asyncio.wait_for(backend.exists(thumb_key), timeout=_THUMB_EXISTS_TIMEOUT_S)
     except Exception as exc:  # noqa: BLE001
-        logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)
+        logger.warning("photo thumbnail lookup failed: %s", type(exc).__name__)
+        return None
+    if not exists:
+        _schedule_thumb_build(backend, key, thumb_key)
         return None
     try:
         return backend.url_for(thumb_key, expires_in=PRESIGN_TTL_S, response_content_type="image/jpeg")

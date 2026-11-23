@@ -136,12 +136,14 @@ async def test_thumb_made_and_stored_once(monkeypatch):
         return True
 
     monkeypatch.setattr("app.modules.documents.service._generate_photo_thumbnail", fake_thumb)
-    url = await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg")
-    assert url == "https://bucket.example/_thumbs/p1.jpg?sig=x"
+    # Missing thumb: request returns None at once, the build runs in the background.
+    assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is None
+    await asyncio.sleep(0.05)
     assert be.put_calls == [("_thumbs/p1.jpg", b"jpegthumb", "image/jpeg")]
     be.thumb_exists = True
     be.put_calls.clear()
-    assert await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg") is not None
+    url = await os_.photo_thumb_presigned_url("p1", "/data/photos/mizito/g/a.jpg")
+    assert url == "https://bucket.example/_thumbs/p1.jpg?sig=x"
     assert be.put_calls == []
 
 
@@ -200,9 +202,11 @@ async def test_concurrent_first_views_build_thumb_once(monkeypatch):
     urls = await asyncio.gather(
         *(os_.photo_thumb_presigned_url("p9", "/data/photos/mizito/g/a.jpg") for _ in range(5))
     )
+    # Requests never wait for the build: all fall back to the full photo; one background build runs.
+    assert urls == [None] * 5
+    await asyncio.sleep(0.05)
     assert len(builds) == 1
     assert be.put_calls == 1
-    assert urls == ["https://bucket.example/_thumbs/p9.jpg"] * 5
     assert os_._THUMB_BUILD_LOCKS == {}
 
 

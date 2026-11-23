@@ -1,6 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { useEffect, useState } from 'react';
+import { presignRequestLimit } from '@/shared/lib/requestLimiter';
 import type { ImgHTMLAttributes, ReactNode } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 
@@ -111,7 +112,9 @@ async function fetchDirectUrl(src: string, headers: Record<string, string>): Pro
   if (pending) return pending;
   const request = (async (): Promise<string | null> => {
     try {
-      const res = await fetch(endpoint, { headers: { ...headers, Accept: 'application/json' } });
+      const res = await presignRequestLimit(() =>
+        fetch(endpoint, { headers: { ...headers, Accept: 'application/json' } }),
+      );
       if (res.status === 404) missing.add(src);
       if (!res.ok) return null;
       const body = (await res.json()) as { url?: string | null; expires?: number };
