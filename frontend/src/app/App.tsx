@@ -833,10 +833,17 @@ const PageTitleContext = createContext<(title: string) => void>(() => {});
 // would show a signed-out visitor a recovery card where the /login redirect
 // belongs.
 function AppShell() {
+  // Until the role is known the shell paints nothing: a staff user must never
+  // see the OCE sidebar or an OCE page before the role arrives.
+  const roleKnown = useAuthStore((s) => !!s.userRole);
+  return <RequireAuth>{roleKnown ? <ShellBody /> : <LoadingScreen />}</RequireAuth>;
+}
+
+function ShellBody() {
   const [title, setTitle] = useState('');
   const location = useLocation();
   return (
-    <RequireAuth>
+    <>
       <ErrorBoundary scope="app">
         <AppLayout title={title}>
           <Suspense fallback={<PageLoadingInline />}>
@@ -855,7 +862,7 @@ function AppShell() {
           </Suspense>
         </AppLayout>
       </ErrorBoundary>
-    </RequireAuth>
+    </>
   );
 }
 
