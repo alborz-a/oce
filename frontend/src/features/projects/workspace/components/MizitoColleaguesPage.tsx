@@ -18,6 +18,7 @@ import { ProjectGroupTab } from './ProjectGroupTab';
 import type { ProjectMemberSummary } from './ProjectBoardTab';
 import type { ProjectTaskItem } from '../types';
 import { ConversationTabs } from './ConversationTabs';
+import { MzIcon } from './MzIcon';
 import { filterConversations, parseConversationTab, type ConversationTab } from '../utils/filterConversations';
 
 const NO_TASKS: ProjectTaskItem[] = [];
@@ -206,15 +207,23 @@ export function MizitoColleaguesPage() {
           <section className="flex h-full flex-col gap-3 p-4" data-testid="colleagues-page">
             <h1 className="text-lg font-semibold text-[#263648]">همکارانم</h1>
             <ConversationTabs value={tab} onChange={setTab} />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="فیلتر"
-              aria-label="فیلتر"
-              className="w-full rounded border border-[#e5eaf0] px-3 py-2 text-sm"
-              data-testid="colleagues-search"
-            />
+            <div className="relative">
+              <MzIcon
+                name="search"
+                size={16}
+                aria-hidden="true"
+                className="pointer-events-none absolute start-2.5 top-1/2 -translate-y-1/2 text-[#909090]"
+              />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="فیلتر"
+                aria-label="فیلتر"
+                className="w-full rounded border border-[#e5eaf0] py-2 ps-8 pe-3 text-sm"
+                data-testid="colleagues-search"
+              />
+            </div>
             {dmError && (
               <p className="text-sm text-red-600" role="alert" data-testid="colleagues-dm-error">
                 {dmError}
@@ -247,6 +256,7 @@ export function MizitoColleaguesPage() {
                       >
                         {projectInitials(room.name)}
                       </span>
+                      <MzIcon name="group" size={16} aria-hidden="true" className="shrink-0 text-[var(--mz-appbar)]" />
                       <span className="truncate text-sm font-bold text-[#263648]">{room.name}</span>
                     </button>
                   </li>

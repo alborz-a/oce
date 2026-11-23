@@ -2,7 +2,7 @@ import { MzIcon } from './MzIcon';
 import type { ConversationTab } from '../utils/filterConversations';
 
 const TABS: { value: ConversationTab; label: string; icon?: string }[] = [
-  { value: 'all', label: 'همه' },
+  { value: 'all', label: 'همه', icon: 'chat' },
   { value: 'groups', label: 'گروه‌ها', icon: 'group' },
   { value: 'members', label: 'اعضا', icon: 'people' },
 ];
