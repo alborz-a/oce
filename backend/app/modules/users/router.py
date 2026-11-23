@@ -39,6 +39,7 @@ Endpoints:
 """
 
 import uuid
+from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Query, Request, UploadFile, status
@@ -683,6 +684,58 @@ async def reset_password(
 ) -> ResetPasswordResponse:
     """Reset password using a valid reset token."""
     return await service.reset_password(data)
+
+
+class AdminResetLinkResponse(BaseModel):
+    """One-time reset link for a user; the link is a secret, never log it."""
+
+    url: str
+    expires_at: datetime
+
+
+@router.post(
+    "/{user_id}/reset-link/",
+    response_model=AdminResetLinkResponse,
+    dependencies=[Depends(RequireRole("manager"))],
+)
+async def create_admin_reset_link(
+    user_id: uuid.UUID,
+    payload: CurrentUserPayload,
+    session: SessionDep,
+    settings: SettingsDep,
+    request: Request,
+    service: UserService = Depends(_get_service),
+) -> AdminResetLinkResponse:
+    """Admin or manager: mint a single-use, 24 h password-reset link for a user.
+
+    The link goes through the normal ``/auth/reset-password/`` flow, which makes
+    it single-use (``password_changed_at``). A manager cannot mint one for an
+    admin account, otherwise the role check could be bypassed by taking over
+    the admin password.
+    """
+    from app.core.audit import audit_log
+    from app.modules.users.service import ADMIN_RESET_LINK_LIFETIME_MINUTES, create_reset_token
+
+    target = await service.user_repo.get_by_id(user_id)
+    if target is None or not target.is_active:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    if str(target.role).lower() == "admin" and str(payload.get("role", "")).lower() != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only an admin can reset an admin")
+    token = create_reset_token(target, settings, lifetime_minutes=ADMIN_RESET_LINK_LIFETIME_MINUTES)
+    expires_at = datetime.now(UTC) + timedelta(minutes=ADMIN_RESET_LINK_LIFETIME_MINUTES)
+    await audit_log(
+        session,
+        action="admin_reset_link_created",
+        entity_type="user",
+        entity_id=str(target.id),
+        user_id=str(payload.get("sub")),
+        ip_address=client_identifier(request),
+        details={"expires_at": expires_at.isoformat()},
+    )
+    return AdminResetLinkResponse(
+        url=f"{settings.resolved_frontend_url}/auth/reset?token={token}",
+        expires_at=expires_at,
+    )
 
 
 # ── Current user ───────────────────────────────────────────────────────────

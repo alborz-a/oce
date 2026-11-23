@@ -53,6 +53,7 @@ import {
   deleteUser,
   inviteUser,
   getUserModuleAccess,
+  createResetLink,
   setUserModuleAccess,
   type User,
   type UserRole,
@@ -60,6 +61,7 @@ import {
   type ModuleAccess,
 } from './api';
 import { getIntlLocale } from '@/shared/lib/formatters';
+import { formatJalali } from '@/shared/lib/jalali';
 
 const inputCls =
   'h-10 w-full rounded-lg border border-border bg-surface-primary px-3 text-sm focus:outline-none focus:ring-2 focus:ring-oe-blue/30 focus:border-oe-blue';
@@ -985,6 +987,17 @@ export function UserManagementPage() {
     [deleteMut, currentUserId, confirm, t],
   );
 
+  const [resetLink, setResetLink] = useState<{ name: string; url: string; expires: string } | null>(null);
+  const resetLinkMut = useMutation({
+    mutationFn: (user: User) => createResetLink(user.id).then((r) => ({ user, r })),
+    onSuccess: ({ user, r }) =>
+      setResetLink({ name: user.full_name || user.email, url: r.url, expires: formatJalali(r.expires_at, 'long') }),
+    onError: (e: Error) => addToastRef.current({ type: 'error', title: 'خطا', message: e.message }),
+  });
+  const addToastGlobal = useToastStore((s) => s.addToast);
+  const addToastRef = useRef(addToastGlobal);
+  addToastRef.current = addToastGlobal;
+
   const filtered = useMemo(() => {
     if (!search) return users;
     const q = search.toLowerCase();
@@ -1013,6 +1026,39 @@ export function UserManagementPage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
+      {resetLink && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40"
+          role="dialog"
+          aria-modal="true"
+          dir="rtl"
+          data-testid="admin-reset-link-dialog"
+          onClick={() => setResetLink(null)}
+        >
+          <div className="w-[min(560px,92vw)] rounded-xl bg-white p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-base font-bold">لینک بازنشانی رمز برای {resetLink.name}</h3>
+            <p className="mt-1 text-xs text-gray-500">یک‌بار مصرف است و تا {resetLink.expires} اعتبار دارد. آن را فقط برای خود این فرد بفرستید.</p>
+            <input
+              readOnly
+              dir="ltr"
+              value={resetLink.url}
+              onFocus={(e) => e.currentTarget.select()}
+              className="mt-3 w-full rounded-md border border-gray-300 px-2 py-1.5 text-xs"
+            />
+            <div className="mt-3 flex justify-between">
+              <button
+                className="rounded-md bg-[#e8710a] px-4 py-1.5 text-sm font-semibold text-white"
+                onClick={() => void navigator.clipboard?.writeText(resetLink.url)}
+              >
+                کپی لینک
+              </button>
+              <button className="px-3 py-1.5 text-sm text-[#e8710a]" onClick={() => setResetLink(null)}>
+                بستن
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Breadcrumb — single-item trail auto-hides (canonical top block). */}
       <Breadcrumb
         items={[{ label: t('users.management', { defaultValue: 'User Management' }) }]}
@@ -1264,6 +1310,15 @@ export function UserManagementPage() {
                           {user.is_active
                             ? t('users.deactivate', { defaultValue: 'Deactivate' })
                             : t('users.activate', { defaultValue: 'Activate' })}
+                        </button>
+                        <button
+                          onClick={() => resetLinkMut.mutate(user)}
+                          disabled={resetLinkMut.isPending}
+                          data-testid="admin-reset-link-btn"
+                          className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-oe-blue hover:bg-surface-secondary transition-colors"
+                        >
+                          <Lock size={13} />
+                          ساخت لینک بازنشانی رمز
                         </button>
                         <button
                           onClick={() => handleDelete(user)}

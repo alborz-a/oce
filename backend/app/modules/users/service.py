@@ -192,7 +192,11 @@ def create_refresh_token(user: User, settings: Settings, *, sid: str | None = No
 RESET_TOKEN_LIFETIME_MINUTES = 15
 
 
-def create_reset_token(user: User, settings: Settings) -> str:
+# Admin-issued links are handed over by hand instead of mailed, so they live longer.
+ADMIN_RESET_LINK_LIFETIME_MINUTES = 24 * 60
+
+
+def create_reset_token(user: User, settings: Settings, *, lifetime_minutes: int | None = None) -> str:
     """Create a JWT password-reset token (see RESET_TOKEN_LIFETIME_MINUTES)."""
     now = datetime.now(UTC)
     payload = {
@@ -200,7 +204,7 @@ def create_reset_token(user: User, settings: Settings) -> str:
         "sub": str(user.id),
         "email": user.email,
         "iat": now,
-        "exp": now + timedelta(minutes=RESET_TOKEN_LIFETIME_MINUTES),
+        "exp": now + timedelta(minutes=lifetime_minutes or RESET_TOKEN_LIFETIME_MINUTES),
         "type": "reset",
         "jti": _new_jti(),
     }

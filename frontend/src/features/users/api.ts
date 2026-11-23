@@ -94,3 +94,13 @@ export async function setUserModuleAccess(
 ): Promise<UserModuleAccessPayload> {
   return apiPatch<UserModuleAccessPayload>(`/v1/users/${userId}/module-access/`, data);
 }
+
+export interface AdminResetLink {
+  url: string;
+  expires_at: string;
+}
+
+/** Admin or manager: one-time password-reset link (24 h) for a user. The link is a secret. */
+export async function createResetLink(id: string): Promise<AdminResetLink> {
+  return apiPost<AdminResetLink>(`/v1/users/${id}/reset-link/`, {});
+}

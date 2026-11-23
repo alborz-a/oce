@@ -35,6 +35,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # auth + own profile / avatar / own password / project caps
     _rule(_ANY, r"^users/auth(/.*)?$"),
     _rule(_ANY, r"^users/me(/.*)?$"),
+    # Admin/manager-issued password-reset link; RequireRole("manager") still gates it.
+    _rule(frozenset({"POST"}), rf"^users/{_ID}/reset-link/?$"),
     # other users' profile pictures (avatar image only; no user list, no edit)
     _rule(_R, rf"^users/{_ID}/avatar/?$"),
     # projects: read and update (list is membership-limited in the handler)
