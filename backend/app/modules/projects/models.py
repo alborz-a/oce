@@ -171,6 +171,9 @@ class Project(Base):
         JSON, nullable=True
     )
     work_calendar_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    # Object-store key of the project picture (avatar), e.g. projects/<id>/picture.png.
+    # NULL = no picture; the UI falls back to initials. Migration v3332.
+    picture_key: Mapped[str | None] = mapped_column(String(500), nullable=True, default=None)
 
     # ── v2.6.0 - multi-currency + per-project VAT (RFC 37, Issues #88/#89/#93) ──
     # ``fx_rates`` holds extra currencies the project uses alongside ``currency``

@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -276,6 +277,10 @@ interface ProjectCardMetrics {
   updated_at: string | null;
   boq_total_value: number | string;
   boq_count: number;
+  /** Presigned project picture URL when the backend returns one; initials otherwise. */
+  picture_url?: string | null;
+  /** Mizito colour name for the initials fallback. */
+  color?: string | null;
   position_count: number;
   open_tasks: number;
   open_rfis: number;
@@ -1695,6 +1700,8 @@ function ProjectMetricCards({
                   key={card.id}
                   id={card.id}
                   name={card.name}
+                  pictureUrl={card.picture_url}
+                  color={card.color}
                   description={card.description}
                   region={card.region}
                   currency={card.currency}
@@ -3164,8 +3171,8 @@ function ProjectsList({ projects }: { projects?: ProjectSummary[] }) {
           className="flex w-full items-center gap-4 px-6 py-3.5 text-start transition-all duration-normal ease-oe hover:bg-surface-secondary animate-stagger-in"
           style={{ animationDelay: `${300 + index * 60}ms` }}
         >
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-oe-blue-subtle text-oe-blue-text text-xs font-bold">
-            {p.name.charAt(0).toUpperCase()}
+          <div className="shrink-0">
+            <ProjectAvatar name={p.name} pictureUrl={p.picture_url} color={p.color} size={36} />
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-medium text-content-primary truncate">{p.name}</div>

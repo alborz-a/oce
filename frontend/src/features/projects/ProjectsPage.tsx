@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { useAuthStore } from '@/stores/useAuthStore';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -108,26 +109,6 @@ export function isProjectFilterActive(
 }
 
 // Region tags + colours are derived from actual project data — no
-// region-specific list is hard-coded in the default UI per the
-// "no country-specific standards or city names in default UI" rule.
-// Avatar colours cycle through a palette indexed by region string.
-const REGION_AVATAR_PALETTE = [
-  'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300',
-];
-
-function getRegionAvatarClass(region?: string): string {
-  if (!region) return 'bg-oe-blue-subtle text-oe-blue-text';
-  // Stable hash → palette index so the same region always renders the same colour.
-  let h = 0;
-  for (let i = 0; i < region.length; i++) h = (h * 31 + region.charCodeAt(i)) >>> 0;
-  return REGION_AVATAR_PALETTE[h % REGION_AVATAR_PALETTE.length] ?? 'bg-oe-blue-subtle text-oe-blue-text';
-}
 
 /**
  * A whole-number amount in the reader's language.
@@ -1413,8 +1394,8 @@ export function ProjectCard({
       )}
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
-          <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-base font-bold ring-1 ring-inset ring-white/40 dark:ring-white/5 shadow-sm transition-transform duration-normal ease-oe group-hover:scale-105 ${getRegionAvatarClass(project.region)}`}>
-            {project.name.charAt(0).toUpperCase()}
+          <div className="shrink-0 transition-transform duration-normal ease-oe group-hover:scale-105">
+            <ProjectAvatar name={project.name} pictureUrl={project.picture_url} color={project.color} size={44} />
           </div>
           <div className="flex items-center gap-1.5">
             {/* Surface any non-active status (on hold / finished / cancelled /

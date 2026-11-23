@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNowStrict, isValid as isValidDate, parseISO } from 'date-fns';
@@ -20,6 +21,10 @@ import { getDateFnsLocale } from '@/shared/lib/dateFnsLocale';
 export interface CompactProjectCardProps {
   id: string;
   name: string;
+  /** Presigned project picture URL; initials on the project colour when null. */
+  pictureUrl?: string | null;
+  /** Mizito colour name for the initials fallback. */
+  color?: string | null;
   description?: string;
   region?: string;
   currency?: string;
@@ -31,16 +36,6 @@ export interface CompactProjectCardProps {
   createdAt?: string | null;
   style?: React.CSSProperties;
 }
-
-const regionColorMap: Record<string, string> = {
-  DACH: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-  UK: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  US: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-  GULF: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
-  RU: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300',
-  NORDIC: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300',
-  DEFAULT: 'bg-gray-100 text-gray-700 dark:bg-gray-900/40 dark:text-gray-300',
-};
 
 // One of three places that turn a stored classification standard into a name
 // for a reader. All three held the same three entries while the picker on
@@ -70,11 +65,6 @@ const standardLabels: Record<string, string> = {
   nlsfb: 'NL/SfB',
 };
 
-function getRegionAvatarClass(region?: string): string {
-  if (region && regionColorMap[region]) return regionColorMap[region];
-  return 'bg-oe-blue-subtle text-oe-blue-text';
-}
-
 function formatCompactValue(raw: number | string | null | undefined): string {
   const value = typeof raw === 'number' ? raw : Number(raw ?? 0);
   if (!Number.isFinite(value)) return '0';
@@ -90,6 +80,8 @@ function formatCompactValue(raw: number | string | null | undefined): string {
 export function CompactProjectCard({
   id,
   name,
+  pictureUrl,
+  color,
   description,
   region,
   currency,
@@ -138,10 +130,8 @@ export function CompactProjectCard({
       >
         <div className="p-3.5">
           <div className="flex items-start justify-between gap-2">
-            <div
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold ring-1 ring-inset ring-white/40 dark:ring-white/5 shadow-sm transition-transform duration-normal ease-oe group-hover:scale-105 ${getRegionAvatarClass(region)}`}
-            >
-              {name.charAt(0).toUpperCase()}
+            <div className="shrink-0 transition-transform duration-normal ease-oe group-hover:scale-105">
+              <ProjectAvatar name={name} pictureUrl={pictureUrl} color={color} size={36} />
             </div>
             {status === 'archived' && (
               <span className="inline-flex items-center rounded-md bg-surface-secondary px-1.5 py-0.5 text-2xs font-medium text-content-tertiary">

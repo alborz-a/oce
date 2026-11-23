@@ -1,5 +1,6 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
+import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { useState, useMemo, useCallback, useEffect, useRef, memo, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -2688,8 +2689,8 @@ const ProjectCard = memo(function ProjectCard({
       onClick={handleClick}
     >
       <div className="flex items-center gap-3 px-5 py-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-oe-blue-subtle text-oe-blue-text font-bold">
-          {project.name.charAt(0).toUpperCase()}
+        <div className="shrink-0">
+          <ProjectAvatar name={project.name} pictureUrl={project.picture_url} color={project.color} size={40} />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="text-sm font-semibold text-content-primary truncate">
