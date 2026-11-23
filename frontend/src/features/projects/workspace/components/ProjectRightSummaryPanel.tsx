@@ -348,15 +348,6 @@ export function ProjectRightSummaryPanel({
                 onEditClick={() => setSettingsOpen(true)}
               />
             </div>
-            <button
-              type="button"
-              className="edit_btn shrink-0 pt-0.5"
-              data-testid="summary-add-member"
-              aria-label="افزودن اعضا"
-              onClick={() => setSettingsOpen(true)}
-            >
-              <MzIcon name="person_add" size={18} color="#909090" />
-            </button>
           </div>
 
           <div className="mt-3 flex justify-center">

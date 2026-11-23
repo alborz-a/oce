@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ProjectAvatar } from '@/shared/ui/ProjectAvatar';
 import { deleteProjectPicture, uploadProjectPicture } from '@/features/projects/api';
 import { invalidateProjectLists } from '@/features/projects/invalidateProjectLists';
+import { MzIcon } from './MzIcon';
 
 const ACCEPTED_TYPES = 'image/png,image/jpeg,image/webp';
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -16,13 +17,15 @@ export interface ProjectPictureControlProps {
   color?: string | null;
   /** Only project managers (project.update) see the upload and remove buttons. */
   canManage: boolean;
+  /** Header variant: 44px avatar with icon-only camera and remove buttons, no text labels. */
+  compact?: boolean;
 }
 
 /**
  * Project picture (avatar) preview with upload and remove controls for managers.
  * Non-managers see the avatar only.
  */
-export function ProjectPictureControl({ projectId, name, pictureUrl, color, canManage }: ProjectPictureControlProps) {
+export function ProjectPictureControl({ projectId, name, pictureUrl, color, canManage, compact = false }: ProjectPictureControlProps) {
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +80,42 @@ export function ProjectPictureControl({ projectId, name, pictureUrl, color, canM
   };
 
   const busy = uploadMutation.isPending || removeMutation.isPending;
+
+  const fileInput = (
+    <input
+      ref={inputRef}
+      type="file"
+      accept={ACCEPTED_TYPES}
+      className="hidden"
+      data-testid="project-picture-input"
+      onChange={onFileChange}
+    />
+  );
+
+  if (compact) {
+    return (
+      <div className="ps-pic-compact" data-testid="project-picture-control" dir="rtl">
+        <ProjectAvatar name={name} pictureUrl={pictureUrl} color={color} size={44} />
+        {canManage ? (
+          <div className="ps-pic-actions">
+            {fileInput}
+            <button type="button" className="ps-pic-btn" aria-label="انتخاب تصویر" title="انتخاب تصویر"
+              disabled={busy} onClick={() => inputRef.current?.click()}>
+              <MzIcon name="photo_camera" size={16} />
+            </button>
+            {pictureUrl ? (
+              <button type="button" className="ps-pic-btn is-danger" aria-label="حذف تصویر" title="حذف تصویر"
+                disabled={busy} onClick={() => removeMutation.mutate()}>
+                <MzIcon name="close" size={14} />
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+        {error ? <span role="alert" className="ps-pic-note is-error">{error}</span>
+          : notice ? <span role="status" className="ps-pic-note">{notice}</span> : null}
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-4" data-testid="project-picture-control" dir="rtl">
