@@ -7,6 +7,7 @@ bucket key is ``<prefix><logical key>``). Rows with an old local path keep worki
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import mimetypes
 import uuid
@@ -229,6 +230,9 @@ async def photo_presigned_url(file_path: str | None, filename: str, media_type: 
 # Each value is [lock, callers]; the entry is removed when the last caller leaves.
 _THUMB_BUILD_LOCKS: dict[str, list] = {}
 
+# At most 4 thumbnails download+resize at once, so a screen of many thumbnails cannot flood the bucket and CPU.
+_THUMB_BUILD_SEMAPHORE = asyncio.Semaphore(4)
+
 
 @asynccontextmanager
 async def _thumb_build_lock(thumb_key: str):
@@ -290,7 +294,9 @@ async def photo_thumb_presigned_url(photo_id: uuid.UUID | str, file_path: str | 
             async with _thumb_build_lock(thumb_key):
                 # Re-check under the lock: a concurrent caller may have stored the thumb already.
                 if not await asyncio.wait_for(backend.exists(thumb_key), timeout=_IMPORTED_S3_TIMEOUT_S):
-                    if not await _store_thumb(backend, key, thumb_key):
+                    async with _THUMB_BUILD_SEMAPHORE:
+                        built = await _store_thumb(backend, key, thumb_key)
+                    if not built:
                         return None
     except Exception as exc:  # noqa: BLE001
         logger.warning("photo thumbnail in bucket failed: %s", type(exc).__name__)

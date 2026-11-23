@@ -1244,6 +1244,7 @@ async def photo_file_url(
     """Presigned URL of the full photo, after the same project check as ``/file/``."""
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
+    await session.close()  # release the DB connection before the bucket call
     url = await object_store.photo_presigned_url(
         photo.file_path, _sanitize_filename(photo.filename or "photo.jpg"), _photo_media_type(photo.file_path)
     )
@@ -1264,6 +1265,8 @@ async def photo_thumb_url(
     """Presigned URL of the thumbnail (made in the bucket on first use), else of the full photo."""
     photo = await service.get_photo(photo_id)
     await verify_project_access(photo.project_id, user_id, session, manager_read=True)
+    # Last DB use: return the connection to the pool before the bucket work (thumb build can take seconds).
+    await session.close()
     try:
         url = await object_store.photo_thumb_presigned_url(photo.id, photo.file_path)
     except Exception as exc:  # noqa: BLE001 - a thumbnail problem must never 500; use the full photo
@@ -1340,6 +1343,7 @@ async def chat_file_url(
         else:
             assert last_exc is not None
             raise last_exc
+    await session.close()  # last DB use is above; free the connection before the bucket call
     backend = object_store._imported_s3()
     if backend is None:
         return PhotoUrlResponse(url=None)
