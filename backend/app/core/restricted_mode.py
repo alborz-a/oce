@@ -39,6 +39,8 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     _rule(_R, rf"^users/{_ID}/avatar/?$"),
     # projects: read and update (list is membership-limited in the handler)
     _rule(_R, r"^projects/?$"),
+    # dashboard cards: handler returns only projects the caller owns or is a member of
+    _rule(_R, r"^projects/dashboard/cards/?$"),
     _rule(_R, rf"^projects/{_ID}/?$"),
     _rule(frozenset({"PATCH"}), rf"^projects/{_ID}/?$"),
     _rule(_R, rf"^projects/{_ID}/members/?$"),

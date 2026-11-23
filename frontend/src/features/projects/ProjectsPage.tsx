@@ -206,6 +206,8 @@ export function ProjectsPage() {
     retry: false,
     staleTime: 5 * 60_000,
   });
+  // Create gate: only admin and manager see the create controls. Hidden while the role is still loading.
+  const canCreateProject = me?.role === 'admin' || me?.role === 'manager';
   const demoCount = useMemo(
     () => (projects ?? []).filter((p) => Boolean((p.metadata as Record<string, unknown> | null)?.demo_id)).length,
     [projects],
@@ -598,14 +600,16 @@ export function ProjectsPage() {
               content={projectsGuide}
               onCta={() => setCreateModalOpen(true)}
             />
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<FolderPlus size={16} />}
-              onClick={() => setCreateModalOpen(true)}
-            >
-              {t('projects.new_project')}
-            </Button>
+            {canCreateProject && (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<FolderPlus size={16} />}
+                onClick={() => setCreateModalOpen(true)}
+              >
+                {t('projects.new_project')}
+              </Button>
+            )}
           </div>
         }
       />
@@ -619,10 +623,14 @@ export function ProjectsPage() {
             : undefined
         }
         links={[
-          {
-            label: t('nav.projects_new', { defaultValue: 'New project' }),
-            onClick: () => setCreateModalOpen(true),
-          },
+          ...(canCreateProject
+            ? [
+                {
+                  label: t('nav.projects_new', { defaultValue: 'New project' }),
+                  onClick: () => setCreateModalOpen(true),
+                },
+              ]
+            : []),
           {
             label: t('nav.analytics', { defaultValue: 'Analytics' }),
             onClick: () => navigate('/analytics'),

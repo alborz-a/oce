@@ -56,7 +56,6 @@ def test_allowed(method, path):
         ("POST", P + "tasks/import/file/"),
         ("POST", P + "projects/"),
         ("DELETE", P + f"projects/{ID}"),
-        ("GET", P + "projects/dashboard/cards/"),
         ("GET", "/api/other"),
     ],
 )
@@ -110,3 +109,26 @@ def test_photo_file_and_document_download_check_membership():
     src = inspect.getsource(r)
     i = src.index('"/{document_id}/download')
     assert "verify_project_access" in src[i : i + 2500]
+
+
+def test_restricted_staff_can_read_dashboard_cards():
+    assert is_path_allowed("GET", P + "projects/dashboard/cards/")
+    assert is_path_allowed("GET", P + "projects/dashboard/cards")
+    enforce_restricted_access("GET", P + "projects/dashboard/cards/")  # no raise
+    # Still blocked: writes on the cards path and project-level writes outside the allowlist.
+    assert not is_path_allowed("POST", P + "projects/dashboard/cards/")
+    assert not is_path_allowed("DELETE", P + "projects/dashboard/cards/")
+    assert not is_path_allowed("POST", P + "projects/")
+    assert not is_path_allowed("DELETE", P + f"projects/{ID}")
+
+
+def test_dashboard_cards_handler_limits_non_admin_to_own_projects():
+    import inspect
+
+    from app.modules.projects import router as projects_router
+
+    src = inspect.getsource(projects_router.dashboard_cards)
+    # Non-admin branch: owner or member projects only, never the whole table.
+    assert "Project.owner_id == uid" in src
+    assert "member_project_ids_subquery(uid)" in src
+    assert src.index("if is_admin") < src.index("member_project_ids_subquery(uid)")
