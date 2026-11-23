@@ -8,6 +8,7 @@ import { formatLetterDate, formatLetterDateTime } from './lettersFormat';
 import { MizitoLetterDetail } from './MizitoLetterDetail';
 import { MizitoComposeLetterModal } from './MizitoComposeLetterModal';
 import { MizitoLabelsPanel } from './MizitoLabelsPanel';
+import './letters.css';
 
 /** Tabs in spec order. «برچسب‌ها» is not a mailbox box: it shows the labels panel and filters by label. */
 const TABS: { key: MailboxBox | 'labels'; label: string }[] = [
@@ -189,7 +190,14 @@ export function MizitoLettersPage() {
               <UserAvatar url={item.sender_avatar_url} alt={item.sender_name} className="mz-letters-avatar" />
               <span>{senderLabel(item)}</span>
             </span>
-            <span className="mz-letters-row-subject">{item.subject}</span>
+            <span className="mz-letters-row-subject">
+              {item.subject}
+              {(item.labels ?? []).map((l) => (
+                <span key={l.id} className="mz-letters-label-chip" data-testid="letters-row-label">
+                  {l.name}
+                </span>
+              ))}
+            </span>
             <span className="mz-letters-row-meta">
               {item.reference_number ? (
                 <span className="mz-letters-badge-registered" data-testid="letters-registered-badge">
