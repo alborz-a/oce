@@ -27,6 +27,7 @@ import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
 import { ProjectGroupTab } from './ProjectGroupTab';
 import { CompanyChatPanel } from './CompanyChatPanel';
 import { useOpenColleagueDm } from '../hooks/useOpenColleagueDm';
+import { useCurrentUserAvatar } from '../hooks/useCurrentUserAvatar';
 import { WorkspaceDmContext, type WorkspaceDmValue } from '../context/WorkspaceDmContext';
 import type { ChatRoom } from '@/modules/team-chat/types';
 import { ProjectStreamFilterBar } from './ProjectStreamFilterBar';
@@ -171,21 +172,15 @@ export function MizitoProjectWorkspace({
   useEffect(() => {
     if (!showGantt && activeTab === 'gantt') setActiveTab('group');
   }, [showGantt, activeTab]);
-  // Same query key as Header and Settings, so one request feeds all of them.
-  const { data: me } = useQuery({
-    queryKey: ['me'],
-    queryFn: () => apiGet<{ avatar_url?: string | null }>('/v1/users/me/'),
-    retry: false,
-    staleTime: 5 * 60_000,
-  });
+  const currentUserAvatarUrl = useCurrentUserAvatar();
   const currentUser = useMemo(
     () => ({
       id: userId,
       full_name: userFullName ?? undefined,
       email: userEmail ?? undefined,
-      avatar_url: me?.avatar_url ?? null,
+      avatar_url: currentUserAvatarUrl,
     }),
-    [userId, userFullName, userEmail, me?.avatar_url],
+    [userId, userFullName, userEmail, currentUserAvatarUrl],
   );
 
   return (

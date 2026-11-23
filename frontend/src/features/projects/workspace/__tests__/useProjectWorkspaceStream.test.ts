@@ -279,6 +279,30 @@ const ROOM_MESSAGES: ChatMessage[] = [
   },
 ];
 
+describe('chat message author avatar', () => {
+  it('prefers the message avatar_url and falls back to the members photo', () => {
+    const base = ROOM_MESSAGES[0]!;
+    const msgs: ChatMessage[] = [
+      { ...base, id: 'm-with', author_id: 'u-9', author_name: 'Zed', avatar_url: '/api/v1/users/u-9/avatar' },
+      { ...base, id: 'm-none', author_id: 'u-9', author_name: 'Zed', avatar_url: null },
+    ];
+    const members = [
+      ...MEMBERS,
+      { user_id: 'u-9', full_name: 'Zed', avatar_url: '/member-photo.jpg' } as unknown as ProjectMemberSummary,
+    ];
+    const { allItems } = buildStreamItems({
+      currentUserId: 'u-1',
+      roomMessages: msgs,
+      tasks: TASKS,
+      members,
+      sources: { comments: [], timeline: [], photos: [], documents: [], meetings: [] },
+    });
+    const byId = new Map(allItems.map((i) => [i.id, i]));
+    expect(byId.get('m-with')?.authorAvatarUrl).toBe('/api/v1/users/u-9/avatar');
+    expect(byId.get('m-none')?.authorAvatarUrl).toBe('/member-photo.jpg');
+  });
+});
+
 describe('buildStreamItems & filterStreamItems', () => {
   it('merges all sources chronologically, deduplicates linked/backfilled items, groups albums, and computes reply counts', () => {
     const { allItems, replyCountsByItemId } = buildStreamItems({

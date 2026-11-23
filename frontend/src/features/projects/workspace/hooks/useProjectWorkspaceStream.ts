@@ -487,7 +487,8 @@ export function buildStreamItems({
       createdAt: msg.created_at,
       authorId,
       authorName,
-      authorAvatarUrl: authorAvatarFor(authorId, authorName),
+      authorAvatarUrl:
+        (typeof msg.avatar_url === 'string' && msg.avatar_url.trim()) || authorAvatarFor(authorId, authorName),
       isCurrentUser,
       text: msgBody,
       quotedEntity,

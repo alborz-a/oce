@@ -146,6 +146,22 @@ async def test_message_carries_author_title_from_registration(session):
     assert m_bob["author_title"] is None
 
 
+async def test_message_carries_author_avatar_url_or_null(session):
+    from app.modules.users.models import User
+
+    s = TeamChatService(session)
+    alice = await session.get(User, ALICE)
+    alice.avatar_path = "avatars/alice.jpg"
+    bob = await session.get(User, BOB)
+    bob.avatar_path = None
+    company = await s.company_room()
+    m_alice = await s.post_message(company.id, ALICE, "الف", None, [], [])
+    m_bob = await s.post_message(company.id, BOB, "ب", None, [], [])
+    assert m_alice["avatar_url"] == alice.avatar_url
+    assert m_alice["avatar_url"].startswith(f"/api/v1/users/{ALICE}/avatar")
+    assert m_bob["avatar_url"] is None
+
+
 async def test_list_colleagues_excludes_self_inactive_and_hidden(session):
     from app.modules.users.models import User
 
