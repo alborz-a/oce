@@ -1088,6 +1088,22 @@ async def revoke_folder_permission_endpoint(
 # ── Dashboard Summary Cards (lightweight, single endpoint) ──────────────
 
 
+def _card_picture_and_color(project: object) -> tuple[str | None, str | None]:
+    """Presigned picture URL and Mizito colour for one dashboard card.
+
+    Same sources as ``ProjectResponse``: the URL comes from the shared presign
+    helper (None when there is no key or on local storage) and the colour from
+    ``custom_fields.mizito.color``.
+    """
+    from app.modules.projects.picture import presigned_picture_url
+
+    key = getattr(project, "picture_key", None)
+    picture_url = presigned_picture_url(key) if key else None
+    mizito = (getattr(project, "custom_fields", None) or {}).get("mizito")
+    color = mizito.get("color") if isinstance(mizito, dict) and isinstance(mizito.get("color"), str) else None
+    return picture_url, color
+
+
 @router.get(
     "/dashboard/cards/",
     response_model=list[ProjectCardMetrics],
@@ -1318,10 +1334,13 @@ async def dashboard_cards(
     result = []
     for p in all_projects:
         pid = str(p.id)
+        picture_url, color = _card_picture_and_color(p)
         result.append(
             {
                 "id": pid,
                 "name": p.name,
+                "picture_url": picture_url,
+                "color": color,
                 "description": p.description or "",
                 "region": p.region or "",
                 "currency": p.currency or "",
