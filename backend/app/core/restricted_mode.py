@@ -51,6 +51,12 @@ _ALLOWED: tuple[tuple[frozenset[str] | None, re.Pattern[str]], ...] = (
     # correspondence: read only. Every GET handler enforces verify_project_access
     # except the shared general project (MZ-GENERAL), which all staff may read.
     _rule(_R, r"^correspondence(/.*)?$"),
+    # letters (mailbox): compose, reply, forward, archive, read mark, labels, attachments.
+    # Access is limited per letter by the mailbox helpers (sender, recipients, admin).
+    _rule(frozenset({"POST"}), r"^correspondence/compose/?$"),
+    _rule(frozenset({"POST"}), rf"^correspondence/{_ID}/(read|reply|forward|archive|unarchive|attachments)/?$"),
+    _rule(frozenset({"POST"}), r"^correspondence/labels/?$"),
+    _rule(frozenset({"POST", "DELETE"}), rf"^correspondence/{_ID}/labels/{_ID}/?$"),
     # tasks: read, create, update, delete, complete.
     _rule(_R, r"^tasks/?$"),
     _rule(_R, r"^tasks/(my-tasks|stats)/?$"),
