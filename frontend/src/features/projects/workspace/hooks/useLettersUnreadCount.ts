@@ -20,7 +20,7 @@ interface UnreadCountResponse {
 export function useLettersUnreadCount(): number {
   const { data } = useQuery({
     queryKey: LETTERS_UNREAD_COUNT_KEY,
-    queryFn: () => apiGet<UnreadCountResponse>('/v1/correspondence/unread-count/'),
+    queryFn: () => apiGet<UnreadCountResponse>('/v1/correspondence/mailbox/unread-count/'),
     staleTime: 30_000,
     refetchInterval: 60_000,
     refetchOnWindowFocus: false,

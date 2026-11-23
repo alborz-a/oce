@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CorrespondencePage } from '@/features/correspondence/CorrespondencePage';
+import { MizitoLettersPage } from './mizitoLetters/MizitoLettersPage';
 import { projectsApi, type Project } from '@/features/projects/api';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useWorkspaceChromeStore } from '@/stores/useWorkspaceChromeStore';
@@ -77,7 +77,7 @@ export function MizitoCorrespondencePage() {
         navActiveTo="/correspondence"
       />
       <main className="mz-main-canvas">
-        <CorrespondencePage />
+        <MizitoLettersPage />
       </main>
     </div>
   );
