@@ -100,7 +100,7 @@ export interface AdminResetLink {
   expires_at: string;
 }
 
-/** Admin or manager: one-time password-reset link (24 h) for a user. The link is a secret. */
-export async function createResetLink(id: string): Promise<AdminResetLink> {
-  return apiPost<AdminResetLink>(`/v1/users/${id}/reset-link/`, {});
+/** Admin or manager: one-time password-reset link (1 / 7 / 30 / 90 days, default 30) for a user. The link is a secret. */
+export async function createResetLink(id: string, days: 1 | 7 | 30 | 90 = 30): Promise<AdminResetLink> {
+  return apiPost<AdminResetLink>(`/v1/users/${id}/reset-link/`, { days });
 }

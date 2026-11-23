@@ -988,8 +988,9 @@ export function UserManagementPage() {
   );
 
   const [resetLink, setResetLink] = useState<{ name: string; url: string; expires: string } | null>(null);
+  const [resetDays, setResetDays] = useState<1 | 7 | 30 | 90>(30);
   const resetLinkMut = useMutation({
-    mutationFn: (user: User) => createResetLink(user.id).then((r) => ({ user, r })),
+    mutationFn: (user: User) => createResetLink(user.id, resetDays).then((r) => ({ user, r })),
     onSuccess: ({ user, r }) =>
       setResetLink({ name: user.full_name || user.email, url: r.url, expires: formatJalali(r.expires_at, 'long') }),
     onError: (e: Error) => addToastRef.current({ type: 'error', title: 'خطا', message: e.message }),
@@ -1037,7 +1038,7 @@ export function UserManagementPage() {
         >
           <div className="w-[min(560px,92vw)] rounded-xl bg-white p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-base font-bold">لینک بازنشانی رمز برای {resetLink.name}</h3>
-            <p className="mt-1 text-xs text-gray-500">یک‌بار مصرف است و تا {resetLink.expires} اعتبار دارد. آن را فقط برای خود این فرد بفرستید.</p>
+            <p className="mt-1 text-xs text-gray-500">یک‌بار مصرف است و تا {resetLink.expires} اعتبار دارد (باز کردن لینک آن را مصرف نمی‌کند، فقط ذخیرهٔ رمز). آن را فقط برای خود این فرد بفرستید.</p>
             <input
               readOnly
               dir="ltr"
@@ -1311,6 +1312,18 @@ export function UserManagementPage() {
                             ? t('users.deactivate', { defaultValue: 'Deactivate' })
                             : t('users.activate', { defaultValue: 'Activate' })}
                         </button>
+                        <select
+                          aria-label="مدت اعتبار لینک"
+                          value={resetDays}
+                          onChange={(e) => setResetDays(Number(e.target.value) as 1 | 7 | 30 | 90)}
+                          className="rounded border border-gray-300 px-1 py-0.5 text-xs"
+                          data-testid="admin-reset-link-days"
+                        >
+                          <option value={1}>۱ روز</option>
+                          <option value={7}>۷ روز</option>
+                          <option value={30}>۳۰ روز</option>
+                          <option value={90}>۹۰ روز</option>
+                        </select>
                         <button
                           onClick={() => resetLinkMut.mutate(user)}
                           disabled={resetLinkMut.isPending}

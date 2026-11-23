@@ -143,3 +143,31 @@ async def test_expired_link_fails(http_client, staff):
     token = create_reset_token(user, get_settings(), lifetime_minutes=-5)
     r = await http_client.post("/api/v1/users/auth/reset-password/", json={"token": token, "new_password": "Whatever1234x"})
     assert r.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_link_survives_activity_and_other_links_then_burns_once(http_client, admin, staff):
+    """Opening the page / signing in / minting a second link never burns a link; only saving a password does."""
+    from datetime import datetime, timedelta
+
+    target = await _me(http_client, staff)
+    first = (await http_client.post(f"/api/v1/users/{target}/reset-link/", headers=_auth(admin), json={"days": 7})).json()
+    exp = datetime.fromisoformat(first["expires_at"].replace("Z", "+00:00"))
+    assert timedelta(days=6, hours=23) < exp - datetime.now(exp.tzinfo) <= timedelta(days=7, minutes=1)
+    # the "page opens" any number of times: nothing server side is consumed, and signing in does not burn it either
+    for _ in range(2):
+        r = await http_client.post("/api/v1/users/auth/login", json={"email": staff["X-Email"], "password": staff["X-Password"]})
+        assert r.status_code == 200
+    second = (await http_client.post(f"/api/v1/users/{target}/reset-link/", headers=_auth(admin))).json()
+    new_pw = f"Fresh{uuid.uuid4().hex[:6]}8y"
+    ok = await http_client.post("/api/v1/users/auth/reset-password/", json={"token": _token(first["url"]), "new_password": new_pw})
+    assert ok.status_code == 200, ok.text
+    for url in (first["url"], second["url"]):
+        used = await http_client.post("/api/v1/users/auth/reset-password/", json={"token": _token(url), "new_password": new_pw + "q"})
+        assert used.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_rejects_unknown_duration(http_client, admin, staff):
+    r = await http_client.post(f"/api/v1/users/{await _me(http_client, staff)}/reset-link/", headers=_auth(admin), json={"days": 2})
+    assert r.status_code == 422

@@ -619,6 +619,13 @@ async def resolve_api_key_principal(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User not found or inactive",
             )
+        # Same gates as the bearer-token door: a key never widens its owner.
+        from app.core.restricted_mode import enforce_restricted_access, is_restricted_user
+        from app.core.staff_scope import enforce_staff_scope
+
+        if is_restricted_user(user):
+            enforce_restricted_access(request.method, request.url.path)
+        enforce_staff_scope(user.role, request.url.path)
         return ApiKeyPrincipal(user=user, scopes=scopes)
 
 

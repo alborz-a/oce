@@ -348,6 +348,11 @@ async def notifications_ws(
     if payload is None:
         await refuse_socket(websocket, code=1008, reason="unauthenticated")
         return
+    from app.core.staff_scope import is_staff_ws_allowed
+
+    if not is_staff_ws_allowed(payload.get("role"), websocket.url.path):
+        await refuse_socket(websocket, code=1008, reason="not available for staff accounts")
+        return
 
     user_id_str = payload.get("sub")
     if not isinstance(user_id_str, str):

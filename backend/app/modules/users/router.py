@@ -686,6 +686,12 @@ async def reset_password(
     return await service.reset_password(data)
 
 
+class AdminResetLinkRequest(BaseModel):
+    """How long the link stays valid: 1, 7, 30 (default) or 90 days."""
+
+    days: Literal[1, 7, 30, 90] = 30
+
+
 class AdminResetLinkResponse(BaseModel):
     """One-time reset link for a user; the link is a secret, never log it."""
 
@@ -704,9 +710,10 @@ async def create_admin_reset_link(
     session: SessionDep,
     settings: SettingsDep,
     request: Request,
+    body: AdminResetLinkRequest | None = None,
     service: UserService = Depends(_get_service),
 ) -> AdminResetLinkResponse:
-    """Admin or manager: mint a single-use, 24 h password-reset link for a user.
+    """Admin or manager: mint a single-use password-reset link (default 30 days) for a user.
 
     The link goes through the normal ``/auth/reset-password/`` flow, which makes
     it single-use (``password_changed_at``). A manager cannot mint one for an
@@ -714,15 +721,17 @@ async def create_admin_reset_link(
     the admin password.
     """
     from app.core.audit import audit_log
-    from app.modules.users.service import ADMIN_RESET_LINK_LIFETIME_MINUTES, create_reset_token
+    from app.modules.users.service import create_reset_token
+
+    lifetime_minutes = (body.days if body else 30) * 24 * 60
 
     target = await service.user_repo.get_by_id(user_id)
     if target is None or not target.is_active:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if str(target.role).lower() == "admin" and str(payload.get("role", "")).lower() != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only an admin can reset an admin")
-    token = create_reset_token(target, settings, lifetime_minutes=ADMIN_RESET_LINK_LIFETIME_MINUTES)
-    expires_at = datetime.now(UTC) + timedelta(minutes=ADMIN_RESET_LINK_LIFETIME_MINUTES)
+    token = create_reset_token(target, settings, lifetime_minutes=lifetime_minutes)
+    expires_at = datetime.now(UTC) + timedelta(minutes=lifetime_minutes)
     await audit_log(
         session,
         action="admin_reset_link_created",
@@ -730,7 +739,7 @@ async def create_admin_reset_link(
         entity_id=str(target.id),
         user_id=str(payload.get("sub")),
         ip_address=client_identifier(request),
-        details={"expires_at": expires_at.isoformat()},
+        details={"expires_at": expires_at.isoformat(), "days": lifetime_minutes // 1440},
     )
     return AdminResetLinkResponse(
         url=f"{settings.resolved_frontend_url}/auth/reset?token={token}",

@@ -4,17 +4,20 @@ import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Lock, Eye, EyeOff, CheckCircle2, AlertTriangle, Globe, ChevronDown } from 'lucide-react';
-import { Button, Input, Logo, CountryFlag } from '@/shared/ui';
+import { Button, Input, CountryFlag } from '@/shared/ui';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { AuthBackground } from './AuthBackground';
+import { CompanyBrand } from './CompanyBrand';
 import { meetsPasswordPolicy } from './passwordPolicy';
 
 /** The route the password-reset email links to (backend users/service.py builds it). */
 export const RESET_PASSWORD_ROUTE = '/auth/reset';
 
 type View = 'form' | 'success' | 'invalid';
+
+const RESET_TOKEN_KEY = 'oe_reset_token';
 
 /** True when a 422 from the reset endpoint is about the token, not the password. */
 function isTokenValidationError(detail: unknown): boolean {
@@ -42,7 +45,21 @@ export function ResetPasswordPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [token] = useState(() => (searchParams.get('token') ?? '').trim());
+  // The address bar is stripped of the token below, so a reload, a back step or a
+  // second tab would lose it and call a still-valid link dead. Keep it for this
+  // tab only; it is cleared when the password is saved.
+  const [token] = useState(() => {
+    const fromUrl = (searchParams.get('token') ?? '').trim();
+    try {
+      if (fromUrl) {
+        sessionStorage.setItem(RESET_TOKEN_KEY, fromUrl);
+        return fromUrl;
+      }
+      return sessionStorage.getItem(RESET_TOKEN_KEY) ?? '';
+    } catch {
+      return fromUrl;
+    }
+  });
   const [view, setView] = useState<View>(() => (token ? 'form' : 'invalid'));
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -105,6 +122,11 @@ export function ResetPasswordPage() {
         // too, so the next screen is a sign-in with the new password and not
         // a dashboard that logs itself out on its first request.
         if (useAuthStore.getState().isAuthenticated) useAuthStore.getState().logout();
+        try {
+          sessionStorage.removeItem(RESET_TOKEN_KEY);
+        } catch {
+          // ignore
+        }
         setView('success');
         return;
       }
@@ -176,7 +198,7 @@ export function ResetPasswordPage() {
         {/* Logo — glow entrance */}
         <div className="mb-8 text-center animate-stagger-in" style={{ animationDelay: '0ms' }}>
           <div className="mx-auto mb-4 animate-logo-glow rounded-[20px] w-fit">
-            <Logo size="xl" animate className="mx-auto shadow-xl" />
+            <CompanyBrand />
           </div>
         </div>
 
