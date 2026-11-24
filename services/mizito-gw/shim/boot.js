@@ -23,5 +23,8 @@ XMLHttpRequest.prototype.send=function(){var x=this;try{if(same(x.__u))x.setRequ
 try{if(/^#\/ws\/im\/[0-9a-f]{24}$/.test(location.hash))location.hash=location.hash+'/'}catch(e){}
 // Hide workspace switcher/create card and support/help buttons that render after the CSS (class list mirrors brand.js HIDE_SEL).
 try{var SEL='__HIDE_SEL__';function hide(){try{var n=document.querySelectorAll(SEL);for(var i=0;i<n.length;i++)n[i].style.setProperty('display','none','important')}catch(e){}}
-var mo=new MutationObserver(function(){hide()});document.addEventListener('DOMContentLoaded',function(){hide();mo.observe(document.body,{childList:true,subtree:true})})}catch(e){}
+var FA='رویال استار',MZT=/م[یي]زِ?[كک]ار/,MZ=/م[یي]زِ?[كک]ار/g,REG='md-toolbar,.workspace_header,.bl-appbar,.active-workspace-container,.header_workspace_name,.menu-profile-container';
+function fixText(){try{var h=document.querySelector('h3.active-workspace-title');if(h&&h.textContent.trim()!==FA)h.textContent=FA;
+var rs=document.querySelectorAll(REG);for(var r=0;r<rs.length;r++){var w=document.createTreeWalker(rs[r],NodeFilter.SHOW_TEXT),t;while((t=w.nextNode())){if(MZT.test(t.nodeValue))t.nodeValue=t.nodeValue.replace(MZ,'').replace(/\s{2,}/g,' ')}}}catch(e){}}
+var mo=new MutationObserver(function(){hide();fixText()});document.addEventListener('DOMContentLoaded',function(){hide();mo.observe(document.body,{childList:true,subtree:true});hide();fixText()})}catch(e){}
 })();
