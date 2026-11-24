@@ -6,7 +6,7 @@ function toLogin(){var r=encodeURIComponent(location.pathname+location.search+lo
 if(!T){toLogin();return}
 try{localStorage.setItem('token',T);sessionStorage.setItem('token',T)}catch(e){}
 function tok(){try{return localStorage.getItem('oe_access_token')||T}catch(e){return T}}
-function same(u){return typeof u==='string'&&(u.charAt(0)==='/'||u.indexOf(O)===0)}
+function same(u){return typeof u==='string'&&((u.charAt(0)==='/'&&u.charAt(1)!=='/'&&u.charAt(1)!=='\\')||u===O||u.indexOf(O+'/')===0||u.indexOf(O+'?')===0)}
 var f=window.fetch;if(f)window.fetch=function(a,b){if(typeof a==='string'&&same(a)){b=b||{};b.headers=Object.assign({},b.headers||{},{Authorization:'Bearer '+tok()})}
   return f.call(this,a,b).then(function(r){if(r.status===401)toLogin();return r})};
 var xo=XMLHttpRequest.prototype.open,xs=XMLHttpRequest.prototype.send;
