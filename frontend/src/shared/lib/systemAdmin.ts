@@ -33,3 +33,8 @@ export function isNormalUserRole(role: string | null | undefined): boolean {
 export function useIsNormalUser(): boolean {
   return useAuthStore((s) => isNormalUserRole(s.userRole));
 }
+
+/** Manager role: normal user for routing, but the OCE sidebar and toolbar stay visible (owner order 2026-11-24). */
+export function isManagerRole(role: string | null | undefined): boolean {
+  return (role ?? '').trim().toLowerCase() === 'manager';
+}

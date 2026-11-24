@@ -31,8 +31,9 @@ import { useIsRTL } from '@/shared/hooks/useIsRTL';
 import { useOfflineSync } from '@/shared/hooks/useOnlineStatus';
 import { usePartnerPackLocale } from '@/shared/hooks/usePartnerPackLocale';
 import { useBrandingStore } from '@/stores/useBrandingStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { useReviewPromptStore } from '@/stores/useReviewPromptStore';
-import { useIsSystemAdmin, useIsNormalUser } from '@/shared/lib/systemAdmin';
+import { useIsSystemAdmin, useIsNormalUser, isManagerRole } from '@/shared/lib/systemAdmin';
 import { useGlobalPresenceSocket } from '@/features/global_presence';
 
 interface AppLayoutProps {
@@ -46,7 +47,9 @@ export function AppLayout({ title, children }: AppLayoutProps) {
   const isRTL = useIsRTL();
   const isSystemAdmin = useIsSystemAdmin();
   // Normal users (not admin/manager) see only the Mizito chrome: no OCE sidebar, header, toolbar or floating OCE buttons.
-  const normalUser = useIsNormalUser();
+  // Managers keep the normal OCE sidebar and toolbar (owner order 2026-11-24).
+  const isManager = useAuthStore((s) => isManagerRole(s.userRole));
+  const normalUser = useIsNormalUser() && !isManager;
   const location = useLocation();
   const workspaceActive = useWorkspaceChromeStore((st) => st.active);
   const backdropVariant = backdropVariantForPath(location.pathname);
