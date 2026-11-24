@@ -5,7 +5,7 @@ const BASE=process.env.MIZITO_BASE_PATH||'/mizito';
 const ROOT=process.env.MIRROR_DIR||path.join(__dirname,'mirror');
 const ctxlib=require('./lib/ctx'),{Unauthorized}=require('./lib/oce');
 const brand=require('./modules/brand'),chat=require('./modules/chat');
-const routes=Object.assign({},...['brand','chat','projects','tasks','letters','dashboard','misc'].map(m=>require('./modules/'+m).routes));
+const routes=Object.assign({},...['brand','chat','projects','tasks','letters','dashboard','misc','files'].map(m=>require('./modules/'+m).routes));
 const MIME={'.js':'application/javascript','.css':'text/css','.html':'text/html; charset=utf-8','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png','.gif':'image/gif','.webp':'image/webp','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.ico':'image/x-icon','.json':'application/json','.jpg':'image/jpeg'};
 const ABS=/(["'(=`])\/(assets\/|views\/|lib\/|c_\.js|a_\.js|app\.css|manifest\.webmanifest|sw\.js)/g;
 const HOSTS=/https?:\/\/(?:[a-z0-9-]+\.)*mizito\.ir/gi;
@@ -19,6 +19,7 @@ const srv=http.createServer((req,res)=>{
   let p=decodeURIComponent((req.url.split('?')[0]));
   if(p.startsWith(BASE+'/'))p=p.slice(BASE.length);
   if(p==='/healthz')return json(res,200,{ok:true});
+  if(require('./modules/files').raw(req,res,p,ctxlib,json))return;
   if(p.startsWith('/api/')||p.startsWith('/capi/')){
     const chunks=[];req.on('data',c=>chunks.push(c));req.on('end',async()=>{
       if(req.method==='OPTIONS')return send(res,204,'');
@@ -27,7 +28,9 @@ const srv=http.createServer((req,res)=>{
       catch(e){if(e instanceof Unauthorized)return json(res,401,{error:'unauthorized'});console.log('ERR',p,e.message);return json(res,500,{error:'upstream'})}
     });return;
   }
-  if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');const r=await chat.cdn(c,p.slice(5));
+  if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
+      if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},r.headers||{}));return res.end(r.body)}
+      if(r&&r.status){res.writeHead(r.status);return res.end()}
       if(r&&r.redirect){res.writeHead(302,{Location:r.redirect,'cache-control':'no-store'});return res.end()}
       if(r&&r.oceAvatar){const u=await c.oce.raw(r.oceAvatar.replace(/^\/api\/v1/,''));const b=Buffer.from(await u.arrayBuffer());res.writeHead(200,{'content-type':u.headers.get('content-type')||'image/webp','cache-control':'private, max-age=300'});return res.end(b)}
       const f=path.join(ROOT,'assets/img/person-logo.png');return send(res,200,fs.readFileSync(f),'image/png')}catch(e){return send(res,e instanceof Unauthorized?401:404,'')}})()}

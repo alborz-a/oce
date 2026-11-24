@@ -4,3 +4,4 @@
 set -eu
 SRC="${1:-/mnt/archive/tmp/mizito-c-spike-w2/mirror}"; DST="$(dirname "$0")/../mirror"
 mkdir -p "$DST"; tar -C "$SRC" --exclude='*.bak*' -cf - . | tar -C "$DST" -xf -
+[ -x "$(dirname "$0")/fetch-templates.sh" ] && "$(dirname "$0")/fetch-templates.sh" || true
