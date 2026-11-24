@@ -121,11 +121,6 @@ export function MizitoNav({
       <NavItem to={lettersTo} label="نامه‌ها" icon="inbox" color="#ff6839" active={forced('/correspondence')} badgeKey="letters" count={counts?.letters} />
       <NavItem to="/notes" label={"یادداشت\u200cهای من"} icon="assignment" color="#fb0" active={forced('/notes')} />
       <NavItem to="/colleagues" label="همکارانم" icon="people" color="#00acc1" active={forced('/colleagues')} />
-      {/* Full gateway section (real Mizito frontend on OCE data, same origin). Plain link: it is a separate app, not a router route. */}
-      <a className="mz-nav-item" href="/mizito/" data-testid="mz-nav-gateway">
-        <MzIcon name="dashboard" size={24} color="#7e57c2" />
-        <span>میزکار جدید</span>
-      </a>
       <NavItem to="/customers" label="پرونده مشتریان" icon="perm_contact_calendar" color="#607d8b" active={forced('/customers')} />
       <NavItem to="/monitoring" label="مانیتورینگ" icon="assessment" color="#039be5" active={forced('/monitoring')} />
       <hr />
