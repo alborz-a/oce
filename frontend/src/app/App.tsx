@@ -38,7 +38,8 @@ import { AdminOnly } from '@/shared/auth/AdminOnly';
 import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { readRememberChoice, useAuthStore } from '@/stores/useAuthStore';
+import { claimGatewayHomeRedirect, hasGatewayUiCookie, setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
 import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { isEngineeringRole, isManagerRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
@@ -1058,12 +1059,19 @@ function LegacyWorkspaceRedirect() {
   return <Navigate to={target ? `/projects/${target.id}` : '/projects'} replace />;
 }
 
-/** `/` for a logged-in user: full page load into the Mizito gateway (never the old shell by default). */
+/**
+ * `/` for a logged-in user. nginx serves the gateway at `/` once `oce_ui` is set.
+ * Cookie missing: set it and replace (one shot per tab session). Cookie present
+ * but the SPA still renders here: no redirect, render as before (loop guard).
+ */
 function WorkspaceHomeRedirect() {
   const userRole = useAuthStore((s) => s.userRole);
+  const accessToken = useAuthStore((s) => s.accessToken);
   useEffect(() => {
-    window.location.assign(resolvePostLoginLanding(userRole));
-  }, [userRole]);
+    if (!accessToken || hasGatewayUiCookie() || !claimGatewayHomeRedirect()) return;
+    setGatewayUiCookie(readRememberChoice());
+    window.location.replace(resolvePostLoginLanding(userRole));
+  }, [userRole, accessToken]);
   return <PageLoadingInline />;
 }
 

@@ -232,10 +232,10 @@ export default defineConfig({
       // server is HMR-driven and a stale workbox precache would mask
       // edits during development.  ``npm run build`` still emits both.
       devOptions: { enabled: false },
-      includeAssets: ['favicon.svg', 'pwa/*.svg'],
+      includeAssets: ['favicon.svg', 'pwa/*.svg', 'pwa/*.png', 'office-*.png'],
       manifest: {
-        name: 'OpenConstructionERP',
-        short_name: 'OCERP',
+        name: 'رویال استار',
+        short_name: 'رویال استار',
         description:
           'Open-source construction cost estimation, BIM takeoff, BOQ, tendering and field operations.',
         theme_color: '#0284c7',
@@ -246,11 +246,9 @@ export default defineConfig({
         scope: '/',
         lang: 'en',
         icons: [
-          { src: '/pwa/icon-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-          { src: '/pwa/icon-256.svg', sizes: '256x256', type: 'image/svg+xml', purpose: 'any' },
-          { src: '/pwa/icon-384.svg', sizes: '384x384', type: 'image/svg+xml', purpose: 'any' },
-          { src: '/pwa/icon-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
-          { src: '/pwa/icon-maskable-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' },
+          { src: '/pwa/office-icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/pwa/office-icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/pwa/office-icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
@@ -327,7 +325,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         // Don't try to fall back to /index.html for API routes or for
         // file/asset routes the SW doesn't precache.
-        navigateFallbackDenylist: [/^\/api\//, /^\/static\//, /^\/pwa\//, /^\/mizito(\/|$)/, /^\/socket\.io\//],
+        navigateFallbackDenylist: [/^\/api\//, /^\/static\//, /^\/pwa\//, /^\/_rs\//, /^\/$/, /^\/index\.html$/, /^\/socket\.io\//],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
