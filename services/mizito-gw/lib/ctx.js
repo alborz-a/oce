@@ -11,6 +11,6 @@ function tokenOf(req){const a=req.headers.authorization||'';const m=/^Bearer\s+(
 async function make(req,body){
   const oce=client(tokenOf(req));const me=await oce.me();
   let b={};try{b=JSON.parse(body||'{}')}catch(e){}if(!b||typeof b!=='object'||Array.isArray(b))b={};
-  return {oce,me,b,T,J,hex,WID,PLABEL,iso,label:label(me),isManager:me.role==='manager'||me.role==='owner'};
+  return {oce,me,b,T,J,hex,WID,PLABEL,iso,label:label(me),isManager:me.role==='manager'||me.role==='owner',tok:tokenOf(req)};
 }
 module.exports={make,label,LABEL_ROLES,WID,PLABEL,J,T,iso,tokenOf};

@@ -36,10 +36,10 @@ function cacheId(s){const m=/cache_id\W{1,4}(\d[\d.\-]*\d)/.exec(s)||/c_\.js\?v=
 function c_js(raw){return raw+`;try{var _o=location.origin;Config.App.api_url=_o;Config.App.cdn_url=_o;Config.App.io_url=_o;Config.App.domains=[location.hostname];Config.App.client_url=_o+'/#/';}catch(e){}`}
 module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,cacheId,FA,routes:{
   '/api/workspace/name':async c=>JSON.stringify(c.label),
-  // workspace switch: single workspace, nothing to switch to; answer the same workspace object as userId
   // Mizito session logout: no OCE logout endpoint exists (OCE clears its session client-side); answer ok so the app logout does not 404
   '/api/session/logout':async c=>({ok:true}),
-  '/api/workspace/switch':async c=>({ok:true,_id:WID,title:c.label,active:true,workspaces:[{_id:WID,title:c.label,active:true}]}),
+  // workspace switch (a_.js r(): setToken(b.token) then go('workspace_switching')). Single workspace: answer the current session token, never undefined (undefined cleared the session and looped Home <-> switch screen).
+  '/api/workspace/switch':async c=>({token:c.tok,ok:true,_id:WID,title:c.label,active:true,workspaces:[{_id:WID,title:c.label,active:true}]}),
   '/api/workspace/userId':async c=>{const w=c.J(c.T.userId);w.uid=c.me.hexId;w.wid=WID;w.phone='';
     if(module.exports.CACHE_ID)w.client_version=module.exports.CACHE_ID; // equals c_.js cache_id by construction
     w.workspaces=[{_id:WID,title:c.label,active:true}];

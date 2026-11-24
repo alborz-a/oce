@@ -170,3 +170,47 @@ test('workspace/switch answers 200 with the single workspace (no 404 in the cons
   const r=await raw('/api/workspace/switch',{method:'POST',headers:{authorization:'Bearer tokA','content-type':'application/json'},body:'{"id":"x"}'});
   assert.equal(r.status,200);const j=JSON.parse(r.body);assert.ok(j.ok);assert.ok(j._id);assert.equal(j.workspaces.length,1);assert.equal(j.workspaces[0]._id,j._id);
 });
+
+// ---- loop fix (2026-11-25): switch stub token, switch guard + loop breaker, header OCE button, tab title pin ----
+test('workspace switch stub answers session token and single workspace object',async()=>{
+  const brand=require('../modules/brand');const r=await brand.routes['/api/workspace/switch']({tok:'SESS-TOK',label:'رویال استار',WID:'x'});
+  assert.equal(r.token,'SESS-TOK');assert.equal(r.workspaces.length,1);assert.equal(r.workspaces[0]._id,r._id);assert.equal(r.workspaces[0].active,true);
+});
+function runShimDom(state){
+  const shimSrc=fs.readFileSync(path.join(__dirname,'..','shim','boot.js'),'utf8').replace('__OCE_LOGIN__','/login').replace('__HIDE_SEL__','.none');
+  const kids=state.kids,dcl=[],mos=[];
+  const mkStore=m=>({getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)});
+  const tb={appendChild:e=>{kids.push(e);return e}};
+  const doc={body:{},head:{},get title(){return state.title},set title(v){state.title=v},get cookie(){return ''},set cookie(v){state.cookies.push(String(v))},
+    getElementById:id=>kids.find(k=>k.id===id)||null,querySelector:s=>(s==='md-toolbar'||s==='md-toolbar .md-toolbar-tools')?tb:null,
+    querySelectorAll:()=>[],createElement:()=>({attrs:{},style:{},setAttribute(k,v){this.attrs[k]=v},addEventListener(t,f){state.listeners[t]=f}}),
+    addEventListener:(t,f)=>{if(t==='DOMContentLoaded')dcl.push(f)}};
+  const loc={origin:'https://p.test',pathname:'/',search:'',stop(){},assign(u){state.assigned.push(u)},replace(u){state.assigned.push(u)},
+    get hash(){return state.hash},set hash(v){state.hashSets.push(v);state.hash=v}};
+  const sandbox={location:loc,localStorage:mkStore(state.ls),sessionStorage:mkStore(state.ss),document:doc,
+    XMLHttpRequest:Object.assign(function(){},{prototype:{open(){},send(){},setRequestHeader(){},addEventListener(){}}}),window:{addEventListener(){},stop(){}},NodeFilter:{SHOW_TEXT:4},console,setTimeout:()=>0,clearTimeout(){},
+    MutationObserver:function(cb){mos.push(cb);this.observe=()=>{}}};
+  sandbox.window.document=doc;sandbox.window.location=loc;
+  vm.runInContext(shimSrc,vm.createContext(sandbox));
+  dcl.forEach(f=>f());
+  return {mos};
+}
+function domState(hash){return {kids:[],cookies:[],listeners:{},assigned:[],hash:hash||'#/ws/home',hashSets:[],title:'Mizito',ls:new Map([['oe_access_token','TOK']]),ss:new Map()}}
+test('shim header OCE button: inserted once, idempotent over DOM mutations, click expires oce_ui then opens /projects',()=>{
+  const st=domState();const run=runShimDom(st);
+  for(let i=0;i<3;i++)run.mos.forEach(cb=>cb([]));
+  const btns=st.kids.filter(k=>k.id==='rsd-gw-oce');assert.equal(btns.length,1);
+  assert.equal(btns[0].textContent,'ورود به OCE');assert.equal(btns[0].attrs.dir,'rtl');
+  st.listeners.click({preventDefault(){}});
+  assert.ok(st.cookies.some(c=>/^oce_ui=;.*Max-Age=0/.test(c)&&/Path=\//.test(c)));assert.deepEqual(st.assigned,['/projects']);
+});
+test('shim tab title pinned to رویال استار on mutation',()=>{
+  const st=domState();const run=runShimDom(st);assert.equal(st.title,'رویال استار');
+  st.title='OCE dashboard';run.mos.forEach(cb=>cb([]));assert.equal(st.title,'رویال استار');
+});
+test('shim switch guard: switch hash replaced with Home; breaker stops after 3 redirects in 10 s',()=>{
+  const st=domState('#/ws/choose');
+  for(let i=0;i<5;i++){st.hash='#/ws/choose';runShimDom(st)}
+  assert.equal(st.hashSets.filter(h=>h==='#/ws/home').length,3);
+  assert.equal(st.hash,'#/ws/choose');
+});

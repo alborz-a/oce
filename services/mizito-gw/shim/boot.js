@@ -28,10 +28,24 @@ var lgDone=false;function logoutDone(){if(lgDone)return;lgDone=true;clearOce();t
 function isLogoutUrl(u){return typeof u==='string'&&/\/(auth|session)\/logout(\?|\/|$)/.test(u)}
 try{document.addEventListener('click',function(e){var t=e.target;while(t&&t.nodeType===1){var ng=t.getAttribute&&t.getAttribute('ng-click');if(ng&&/(^|[^A-Za-z_])logout\(/.test(ng)){clearOce();setTimeout(logoutDone,4000);return}t=t.parentNode}},true)}catch(e){}
 try{if(/^#\/ws\/im\/[0-9a-f]{24}$/.test(location.hash))location.hash=location.hash+'/'}catch(e){}
+// Loop breaker: at most 3 shim redirects per 10 s. Beyond that the shim stops redirecting (no navigation).
+function redirOk(){try{var now=Date.now(),a=JSON.parse(sessionStorage.getItem('rsd_gw_redir')||'[]').filter(function(t){return now-t<10000});var ok=a.length<3;if(ok)a.push(now);sessionStorage.setItem('rsd_gw_redir',JSON.stringify(a));return ok}catch(e){return false}}
+// Single workspace: the switch screen never shows. Its hash route (workspace_switching, ws/choose) is replaced with Home.
+var SWITCH_RE=/#\/(workspace_switching|ws\/choose)/;
+function switchGuard(){try{if(SWITCH_RE.test(location.hash)&&redirOk())location.hash='#/ws/home'}catch(e){}}
+try{window.addEventListener('hashchange',switchGuard);switchGuard()}catch(e){}
+// Header button «ورود به OCE»: expire the gateway cookie oce_ui (nginx serves the gateway at / only while it is set), then open the OCE shell at /projects.
+var OCE_ID='rsd-gw-oce',OCE_HOME='/projects';
+function ensureOce(){try{if(document.getElementById(OCE_ID))return;var tb=document.querySelector('md-toolbar .md-toolbar-tools')||document.querySelector('md-toolbar');if(!tb)return;
+  var a=document.createElement('a');a.id=OCE_ID;a.href=OCE_HOME;a.textContent='ورود به OCE';a.setAttribute('dir','rtl');
+  a.setAttribute('style','margin:0 8px;padding:6px 12px;border:1px solid currentColor;border-radius:4px;color:inherit;font:inherit;text-decoration:none;white-space:nowrap;cursor:pointer;direction:rtl;align-self:center');
+  a.addEventListener('click',function(e){e.preventDefault();try{document.cookie='oce_ui=; Path=/; Max-Age=0; SameSite=Lax; Secure'}catch(x){}location.assign(OCE_HOME)});tb.appendChild(a)}catch(e){}}
+// Tab title: gateway shell keeps رویال استار on every route (Mizito a_.js sets document.title to the workspace name).
+var FA_TITLE='رویال استار';function pinTitle(){try{if(document.title!==FA_TITLE)document.title=FA_TITLE}catch(e){}}
 // Hide workspace switcher/create card and support/help buttons that render after the CSS (class list mirrors brand.js HIDE_SEL).
 try{var SEL='__HIDE_SEL__';function hide(){try{var n=document.querySelectorAll(SEL);for(var i=0;i<n.length;i++)n[i].style.setProperty('display','none','important')}catch(e){}}
 var FA='رویال استار',MZT=/م[یي]زِ?[كک]ار/,MZ=/م[یي]زِ?[كک]ار/g,REG='md-toolbar,.workspace_header,.bl-appbar,.active-workspace-container,.header_workspace_name,.menu-profile-container';
 function fixText(){try{var h=document.querySelector('h3.active-workspace-title');if(h&&h.textContent.trim()!==FA)h.textContent=FA;
 var rs=document.querySelectorAll(REG);for(var r=0;r<rs.length;r++){var w=document.createTreeWalker(rs[r],NodeFilter.SHOW_TEXT),t;while((t=w.nextNode())){if(MZT.test(t.nodeValue))t.nodeValue=t.nodeValue.replace(MZ,'').replace(/\s{2,}/g,' ')}}}catch(e){}}
-var mo=new MutationObserver(function(){hide();fixText()});document.addEventListener('DOMContentLoaded',function(){hide();mo.observe(document.body,{childList:true,subtree:true});hide();fixText()})}catch(e){}
+var mo=new MutationObserver(function(){hide();fixText();ensureOce();pinTitle()});document.addEventListener('DOMContentLoaded',function(){hide();mo.observe(document.body,{childList:true,subtree:true});hide();fixText();ensureOce();pinTitle();try{new MutationObserver(pinTitle).observe(document.head||document.documentElement,{childList:true,subtree:true,characterData:true})}catch(e){}})}catch(e){}
 })();
