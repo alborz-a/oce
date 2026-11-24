@@ -1,12 +1,11 @@
 // Chat domain: rooms/colleagues/messages straight from OCE team-chat with the caller's token. Reads and send.
 const {WID,PLABEL}=require('../lib/ctx');
 const {hex}=require('../lib/oce');
-const cacheMap=new WeakMap(); // oce client -> {rooms, colleagues, at}
-async function load(c){
-  let s=cacheMap.get(c.oce);if(s&&Date.now()-s.at<15000)return s;
+const {memo,drop}=require('../lib/cache');
+const load=c=>memo(c.oce.token,'chat',15000,()=>loadFresh(c));
+async function loadFresh(c){
   const [rooms,col]=await Promise.all([c.oce.get('/team-chat/rooms/'),c.oce.get('/team-chat/colleagues/')]);
-  s={rooms,col,at:Date.now(),roomBy:Object.fromEntries(rooms.map(r=>[hex(r.id),r])),colBy:Object.fromEntries(col.map(u=>[hex(u.id),u]))};
-  cacheMap.set(c.oce,s);return s}
+  return {rooms,col,at:Date.now(),roomBy:Object.fromEntries(rooms.map(r=>[hex(r.id),r])),colBy:Object.fromEntries(col.map(u=>[hex(u.id),u]))}}
 function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
   // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
   if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
@@ -23,14 +22,19 @@ function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   if(ids.length){const t='ph-'+String(ids[0]).replace(/-/g,'');o.media={_:'messageMediaPhoto',caption:m.text||'',photo:{_id:t,id:t,name:'a.webp',photo_medium:{content:t,size:-1,w:800,h:800,content_key:t},photo_large:{content:t,size:-1,w:800,h:800,content_key:t}}}}
   return o}
 async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialogId];if(!r)return [];
-  const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/');const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>x.created_at.localeCompare(y.created_at));
+  const a=await messages(c,r);
   const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message))}
+// whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
+const messages=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=null;
+  for(let i=0;i<20;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
+    const seen=new Set(all.map(m=>m.id));const fresh=a.filter(m=>!seen.has(m.id));all=fresh.concat(all);if(a.length<100||!fresh.length)break;before=a[0].id}
+  return all});
 const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
  '/api/chat/getDialogs':async c=>{const s=await load(c);return {dialogs:s.rooms.map(r=>dialog(c,r,s)).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
- '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);return r?dialog(c,r,await load(c)):{}},
- '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));
+ '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
+ '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
   // project rooms: participants and admins come from OCE project members (the list the settings modal shows)
   if(r.kind==='project'&&r.project_id){const P=require('./projects');const ms=await P.members(c,r.project_id);
     if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
@@ -40,7 +44,7 @@ const routes={
  '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},
  '/api/chat/seen':async c=>{const r=await roomOf(c,c.b.dialog);if(r)await c.oce.post('/team-chat/rooms/'+r.id+'/read/',{}).catch(()=>{});return {}},
  '/api/chat/send':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)throw new Error('unknown dialog');
-  const m=await c.oce.post('/team-chat/rooms/'+r.id+'/messages/',{text:c.b.message||'',reply_to_id:null,document_ids:[],mentions:[],metadata:{}});return message(m)},
+  const m=await c.oce.post('/team-chat/rooms/'+r.id+'/messages/',{text:c.b.message||'',reply_to_id:null,document_ids:[],mentions:[],metadata:{}});drop(c.oce.token,'msg:'+r.id);return message(m)},
 };
 // avatar / chat-photo redirects: presigned, per user
 async function cdn(c,name){
@@ -49,4 +53,4 @@ async function cdn(c,name){
   const m=/^(?:dl\/)?av-([0-9a-f]{24})$/.exec(name);if(m){const s=await load(c);const u=s.colBy[m[1]];
     if(u&&u.avatar_url)return {redirect:u.avatar_url.startsWith('http')?u.avatar_url:null,oceAvatar:u.avatar_url}}
   return null}
-module.exports={routes,cdn,load,message};
+module.exports={routes,cdn,load,message,messages};
