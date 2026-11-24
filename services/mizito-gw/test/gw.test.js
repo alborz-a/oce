@@ -75,6 +75,13 @@ test('socket: junk frames (null, non-array, non-string token) do not crash the s
   const ws=new WS('ws://127.0.0.1:'+GW+'/socket.io/?EIO=3&transport=websocket');await new Promise(r=>ws.on('open',r));
   for(const f of ['42null','42"x"','42{"a":1}','42[["authenticate"]]','42["authenticate",{"token":5}]','42[','4','']) ws.send(f);
   await new Promise(r=>setTimeout(r,150));assert.equal((await raw('/healthz')).status,200);ws.close()});
+test('socket: /_rs/socket.io and /socket.io both upgrade and send the engine.io open packet',async()=>{
+  for(const p of ['/_rs/socket.io/?EIO=3&transport=websocket','/socket.io/?EIO=3&transport=websocket']){
+    const ws=new WS('ws://127.0.0.1:'+GW+p);const first=await new Promise((ok,no)=>{ws.on('message',d=>ok(String(d)));ws.on('error',no);setTimeout(()=>no(new Error('timeout '+p)),5000)});
+    assert.match(first,/^0\{"sid":"[^"]+"/,p);ws.close()}});
+test('socket: upgrade on an unknown path is refused',async()=>{
+  const ws=new WS('ws://127.0.0.1:'+GW+'/foo/socket.io/?EIO=3&transport=websocket');
+  await assert.rejects(new Promise((ok,no)=>{ws.on('open',ok);ws.on('error',no);ws.on('unexpected-response',(q,s)=>no(new Error('http '+s.statusCode)))}))});
 test('dashboard summary is built from the caller, no frozen Mizito snapshot',async()=>{
   const r=await api('dashboard/getAllSummary','tokA');const j=JSON.parse(r.body);assert.ok(Array.isArray(j)&&j.length===1);assert.ok(!/ساختمانی|بیزینس/.test(r.body));assert.equal(j[0].task.overdue,0)});
 test('chat history pages past 100 and reports messages_count',async()=>{

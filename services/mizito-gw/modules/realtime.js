@@ -3,7 +3,8 @@ const WS=require('ws');const {client,hex,BASE}=require('../lib/oce');const {WID}
 const pkt=(ev,d)=>'42'+JSON.stringify([ev,d]);
 exports.attach=function(server){
   const wss=new WS.Server({noServer:true,maxPayload:65536});
-  server.on('upgrade',(req,sock,head)=>{if(!req.url.startsWith('/socket.io/'))return sock.destroy();wss.handleUpgrade(req,sock,head,ws=>wss.emit('connection',ws,req))});
+  const GWB=process.env.MIZITO_BASE_PATH||'/_rs';
+  server.on('upgrade',(req,sock,head)=>{let u=req.url||'';if(u.startsWith(GWB+'/'))u=u.slice(GWB.length);if(!u.startsWith('/socket.io/'))return sock.destroy();wss.handleUpgrade(req,sock,head,ws=>wss.emit('connection',ws,req))});
   wss.on('connection',ws=>{const c={ws,up:null,sid:Math.random().toString(36).slice(2,12)};
     ws.send('0'+JSON.stringify({sid:c.sid,upgrades:[],pingInterval:25000,pingTimeout:60000}));
     ws.on('message',buf=>{const s=String(buf);
