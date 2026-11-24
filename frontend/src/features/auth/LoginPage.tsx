@@ -19,7 +19,7 @@ import { BrandingEditorModal } from '@/app/layout/CustomBranding';
 import { extractErrorMessageFromBody } from '@/shared/lib/api';
 import { isTauri } from '@/shared/lib/desktop';
 import { HEX_PORTRAIT_ASPECT, HEX_PORTRAIT_CLIP } from '@/shared/lib/honeycomb';
-import { APP_VERSION } from '@/shared/lib/version';
+import { APP_LABEL } from '@/shared/lib/version';
 import { loginFailureKindFromResponse, loginRefusalKey } from './loginError';
 import { AuthBackground } from './AuthBackground';
 import {
@@ -1050,7 +1050,7 @@ export function LoginPage() {
 
           {/* Build version (RSD-x.y) */}
           <div dir="ltr" className="mt-3 text-center text-[10px] leading-none text-content-tertiary opacity-60">
-            {APP_VERSION}
+            {APP_LABEL}
           </div>
         </div>
       </div>

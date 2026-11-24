@@ -11,6 +11,17 @@
 export const APP_VERSION: string = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
 
 /**
+ * Visible release label: `RSD-x.y` (the CI release tag) reads as `RSC vx.y`.
+ * Any other value is shown unchanged.
+ */
+export function versionLabel(version: string): string {
+  const m = /^RSD-(\d+\.\d+)$/.exec(version);
+  return m ? `RSC v${m[1]}` : version;
+}
+
+export const APP_LABEL: string = versionLabel(APP_VERSION);
+
+/**
  * Stable build identifier for the frontend bundle.  Derived once at
  * design time from a fixed seed so the value is reproducible across
  * rebuilds and across environments — used by the bug reporter and
