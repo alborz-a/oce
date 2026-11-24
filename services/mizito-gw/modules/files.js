@@ -6,7 +6,9 @@ const crypto=require('crypto');
 const {BASE,hex}=require('../lib/oce');
 const PENDING=new Map(); // content id -> {user,name,mime,buf,at}
 const META=new Map();    // OCE photo uuid -> {name,mime,size} for imported attachments
-const TTL=3600000;
+const TTL=3600000, MAX_UPLOAD=+process.env.MAX_UPLOAD||26214400, MAX_PENDING_USER=8;
+const {Unauthorized}=require('../lib/oce');
+const cleanName=n=>String(n||'file').replace(/[\u0000-\u001f\u007f\\/"<>|:*?]/g,'_').replace(/^\.+/,'_').slice(0,150)||'file';
 const hex32=u=>String(u).replace(/-/g,'');
 const uuidOf=h=>h.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/,'$1-$2-$3-$4-$5');
 const isImg=(mime,name)=>/^image\/(png|jpe?g|webp|gif)/.test(mime||'')||/\.(png|jpe?g|webp|gif)$/i.test(name||'');
@@ -16,19 +18,19 @@ function mediaObj(id,name,mime,size,image){
   if(image){const ph={_id:id,id,name,photo_medium:{content:id,size,w:800,h:800,content_key:id},photo_large:{content:id,size,w:800,h:800,content_key:id}};return {_:'messageMediaPhoto',photo:ph}}
   return {_:'messageMediaDocument',document:{_id:id,id,name,size,mime_type:mime,content:id,file_name:name}};
 }
-const readBody=req=>new Promise(ok=>{const c=[];req.on('data',d=>c.push(d));req.on('end',()=>ok(Buffer.concat(c)))});
+const readBody=(req,max)=>new Promise((ok,no)=>{const c=[];let n=0;req.on('data',d=>{n+=d.length;if(n>max){c.length=0;req.removeAllListeners('data');req.resume();return no(Object.assign(new Error('too large'),{code:413}))}c.push(d)});req.on('end',()=>ok(Buffer.concat(c)));req.on('error',no)});
 
 // raw (pre-body) handler: multipart upload. Returns true when it took the request.
 function raw(req,res,p,ctxlib,json){
   if(!(req.method==='POST'&&p==='/api/content/upload'))return false;
   (async()=>{
-    const buf=await readBody(req);const c=await ctxlib.make(req,'');
+    const c=await ctxlib.make(req,'');const cl=+req.headers['content-length'];if(cl>MAX_UPLOAD+65536)return json(res,413,{error:'too large'});const buf=await readBody(req,MAX_UPLOAD+65536);
     const fd=await new Request('http://x/',{method:'POST',headers:{'content-type':req.headers['content-type']||''},body:buf,duplex:'half'}).formData();
     const f=fd.get('upload');if(!f||typeof f==='string')return json(res,200,{error:true,msg:'no file'});
-    sweep();const id='gw'+crypto.randomBytes(12).toString('hex');const b=Buffer.from(await f.arrayBuffer());
-    PENDING.set(id,{user:c.me.hexId,name:f.name,mime:f.type||'application/octet-stream',buf:b,at:Date.now()});
-    json(res,200,mediaObj(id,f.name,f.type,b.length,isImg(f.type,f.name)&&fd.get('sendAsFile')!=='true'));
-  })().catch(e=>{console.log('ERR upload',e.message);json(res,e.name==='Unauthorized'?401:500,{error:'upload'})});
+    if(f.size>MAX_UPLOAD)return json(res,413,{error:'too large'});sweep();let mine=0;for(const v of PENDING.values())if(v.user===c.me.hexId)mine++;if(mine>=MAX_PENDING_USER)return json(res,429,{error:'too many pending uploads'});const id='gw'+crypto.randomBytes(12).toString('hex');const b=Buffer.from(await f.arrayBuffer());
+    PENDING.set(id,{user:c.me.hexId,name:cleanName(f.name),mime:f.type||'application/octet-stream',buf:b,at:Date.now()});
+    json(res,200,mediaObj(id,cleanName(f.name),f.type,b.length,isImg(f.type,f.name)&&fd.get('sendAsFile')!=='true'));
+  })().catch(e=>{console.log('ERR upload',e.message);json(res,e instanceof Unauthorized?401:(e.code===413?413:500),{error:'upload'})});
   return true;
 }
 
@@ -80,7 +82,7 @@ async function cdn(c,name){
   }
   if((m=/^(?:dl\/)?ph-([0-9a-f]{32})$/.exec(name))){
     const u=uuidOf(m[1]);const j=await c.oce.get('/documents/photos/'+u+'/file-url/');const url=j.url||j.file_url||j.download_url;
-    if(url)return {redirect:url};
+    if(url&&/^https?:\/\//i.test(url))return {redirect:url};
     const r=await c.oce.raw('/documents/photos/'+u+'/file/');return {type:safeImg(r.headers.get('content-type')),body:Buffer.from(await r.arrayBuffer()),headers:SAFE_HDR};
   }
   return null;
