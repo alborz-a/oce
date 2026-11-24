@@ -19,6 +19,9 @@ const text=t=>/javascript|html|json|manifest|css/.test(t);
 function send(res,code,body,type,extra){if(code===200&&text(type||'')){body=Buffer.isBuffer(body)?body.toString():body;if(typeof body==='string'){if(/manifest/.test(type))body=brand.manifest(body,BASE);else if(/json/.test(type))body=brand.brand(body);else{body=brand.brandStatic(body);if(/javascript|html|css/.test(type))body=brand.neutralLinks(body).replace(ABS,'$1'+BASE+'/$2')}}}
   res.writeHead(code,Object.assign({'content-type':type||'text/plain','cache-control':'no-store'},SEC,extra||{}));res.end(body)}
 const json=(res,code,o)=>send(res,code,JSON.stringify(o),'application/json; charset=utf-8');
+// neutral person logo for any /cdn/av-* miss: always 200 image/png, never 404 or the upstream body
+function avPlaceholder(res){let b;try{b=fs.readFileSync(path.join(ROOT,'assets/img/person-logo.png'))}catch(e){b=ART_PH['.png']}
+  res.writeHead(200,Object.assign({'content-type':'image/png','cache-control':'no-store'},SEC));return res.end(b)}
 function readFileCached(f){return fs.readFileSync(f)}
 for(const f of ['c_.js','a_.js','index.html']){try{brand.CACHE_ID=brand.CACHE_ID||brand.cacheId(fs.readFileSync(path.join(ROOT,f),'utf8'))}catch(e){}}
 const srv=http.createServer((req,res)=>{
@@ -40,10 +43,15 @@ const srv=http.createServer((req,res)=>{
       if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},SEC,r.headers||{}));return res.end(r.body)}
       if(r&&r.status){res.writeHead(r.status);return res.end()}
       if(r&&r.redirect&&/^https?:\/\//i.test(r.redirect)){res.writeHead(302,{Location:r.redirect,'cache-control':'no-store'});return res.end()}
-      if(r&&r.oceAvatar){const ap=r.oceAvatar.replace(/^\/api\/v1/,'');if(!/^\/[A-Za-z0-9_\/.-]+$/.test(ap)||ap.includes('..')||ap.startsWith('//'))return send(res,404,'');const u=await c.oce.raw(ap);const b=Buffer.from(await u.arrayBuffer());const ct=u.headers.get('content-type')||'';res.writeHead(200,Object.assign({'content-type':/^image\/(png|jpe?g|webp|gif)/.test(ct)?ct.split(';')[0]:'application/octet-stream','cache-control':'private, max-age=300','content-security-policy':"sandbox; default-src 'none'"},SEC));return res.end(b)}
+      if(r&&r.oceAvatar){const ap=r.oceAvatar.replace(/^\/api\/v1/,'');
+        // every avatar miss answers 200 placeholder (was 404 for protocol-relative or query-bearing avatar_url, the cause of the 404 probe failures)
+        if(!/^\/[A-Za-z0-9_\/.-]+$/.test(ap)||ap.includes('..')||ap.startsWith('//'))return avPlaceholder(res);
+        const u=await c.oce.raw(ap);const b=Buffer.from(await u.arrayBuffer());const ct=(u.headers.get('content-type')||'').split(';')[0].trim();
+        if(!/^image\/(png|jpe?g|webp|gif)$/.test(ct))return avPlaceholder(res);
+        res.writeHead(200,Object.assign({'content-type':ct,'cache-control':'private, max-age=300','content-security-policy':"sandbox; default-src 'none'"},SEC));return res.end(b)}
       const f=path.join(ROOT,'assets/img/person-logo.png');return send(res,200,fs.readFileSync(f),'image/png')}catch(e){if(e instanceof Unauthorized)return send(res,401,'');
     // avatar with no OCE file: neutral placeholder, never 404 (OCE 404 on the avatar file throws in lib/oce)
-    if(/^\/cdn\/(dl\/)?av-/.test(p))return send(res,200,fs.readFileSync(path.join(ROOT,'assets/img/person-logo.png')),'image/png');return send(res,404,'')}})()}
+    if(/^\/cdn\/(dl\/)?av-/.test(p))return avPlaceholder(res);return send(res,404,'')}})()}
   if(p==='/')p='/index.html';
   // Royal Star replacements (committed) win over mirror assets with Mizito branding
   if(p.startsWith('/assets/img/')){const of=path.normalize(path.join(OVERRIDES,p.slice('/assets/img/'.length)));if(of.startsWith(OVERRIDES+path.sep)&&fs.existsSync(of))return send(res,200,fs.readFileSync(of),MIME[path.extname(of)]||'application/octet-stream')}

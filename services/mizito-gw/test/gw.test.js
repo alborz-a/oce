@@ -54,11 +54,14 @@ test('non-object JSON body does not 500-loop or crash',async()=>{
   const r=await raw('/api/chat/getHistory',{method:'POST',headers:{authorization:'Bearer tokA'},body:'null'});assert.equal(r.status,200)});
 test('me cache keyed by full token: same 40-char tail with other head is rejected',async()=>{
   await api('workspace/userId','tokA');const r=await api('workspace/userId','X'+'tokA');assert.equal(r.status,401)});
-test('avatar proxy: html upstream is never served as html; odd paths 404',async()=>{
+test('avatar proxy: html upstream is never served as html; every avatar miss answers 200 placeholder',async()=>{
   const r=await raw('/cdn/av-cccccccc0000000000000000',{headers:{authorization:'Bearer tokA'}});
-  assert.equal(r.status,200);assert.equal(r.headers['content-type'],'application/octet-stream');assert.equal(r.headers['x-content-type-options'],'nosniff');assert.match(r.headers['content-security-policy'],/sandbox/);
-  // 'dddd' avatar_url starts with // -> not proxied
-  const r2=await raw('/cdn/av-dddddddd0000000000000000',{headers:{authorization:'Bearer tokA'}});assert.ok(r2.status===404||r2.status===200);assert.notEqual(r2.status,302)});
+  assert.equal(r.status,200);assert.equal(r.headers['content-type'],'image/png');assert.equal(r.headers['x-content-type-options'],'nosniff');assert.equal(r.body,'PNG');
+  // 'dddd' avatar_url starts with // -> placeholder, never 404, never 302
+  const r2=await raw('/cdn/av-dddddddd0000000000000000',{headers:{authorization:'Bearer tokA'}});assert.equal(r2.status,200);assert.equal(r2.headers['content-type'],'image/png');assert.equal(r2.body,'PNG');
+  // unknown avatar id, and the dl/ form, also 200 image
+  for(const pth of ['/cdn/av-eeeeeeee0000000000000000','/cdn/dl/av-eeeeeeee0000000000000000']){const r3=await raw(pth,{headers:{authorization:'Bearer tokA'}});assert.equal(r3.status,200);assert.equal(r3.headers['content-type'],'image/png')}
+});
 test('non-http presigned redirect is dropped',async()=>{
   const r=await raw('/cdn/ph-'+'a'.repeat(32),{headers:{authorization:'Bearer tokA'}});assert.notEqual(r.status,302);assert.ok(!(r.headers.location||'').startsWith('javascript'))});
 test('upload: over the cap -> 413, filename sanitised',async()=>{
@@ -128,4 +131,42 @@ test('missing art images answer a 200 transparent placeholder, real files win, n
   assert.equal((await raw('/assets/img/../../../etc/none.png')).status,403);
   assert.equal((await raw('/views/missing.html')).status,404);
   assert.equal((await raw('/api/v1/none.png')).status,404);
+});
+
+// shim logout: runs shim/boot.js in a vm sandbox with fake browser globals. Checks OCE keys, oce_ui cookie, /login target, 401 path, no loop.
+function runShim(){
+  const mkStore=()=>{const m=new Map();return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k),_m:m}};
+  const ls=mkStore(),ss=mkStore();ls.setItem('oe_access_token','TOK-A');ls.setItem('oe_refresh_token','REF-A');
+  const cookies=[],lis={},timers=[],navs=[];let fetchStatus=200;const calls=[];
+  const doc={cookie:'',body:{},addEventListener:(t,f)=>{(lis[t]=lis[t]||[]).push(f)},querySelectorAll:()=>[],open(){},write(){},close(){}};
+  const sandbox={location:{origin:'https://p.test',pathname:'/_rs/',search:'',hash:'',replace:u=>navs.push(u),stop:()=>{}},localStorage:ls,sessionStorage:ss,document:new Proxy(doc,{set(t,k,v){if(k==='cookie')cookies.push(String(v));else t[k]=v;return true}}),
+    window:{stop(){},fetch:(a,b)=>{calls.push(a);return Promise.resolve({status:fetchStatus})}},XMLHttpRequest:function(){},NodeFilter:{SHOW_TEXT:4},MutationObserver:function(){this.observe=()=>{}},setTimeout:f=>{timers.push(f);return 0},clearTimeout(){}, console};
+  sandbox.window.XMLHttpRequest=sandbox.XMLHttpRequest;sandbox.XMLHttpRequest.prototype={open(){},send(){},setRequestHeader(){},addEventListener(){}};
+  sandbox.window.document=sandbox.document;sandbox.window.location=sandbox.location;
+  let src=fs.readFileSync(path.join(__dirname,'..','shim','boot.js'),'utf8').replace('__OCE_LOGIN__','/login').replace('__HIDE_SEL__','.none');
+  const ctx=vm.createContext(sandbox);vm.runInContext(src,ctx);
+  return {ls,ss,cookies,lis,timers,navs,calls,setStatus:s=>{fetchStatus=s},win:sandbox.window};
+}
+test('shim logout: API logout clears OCE keys and oce_ui cookie, then /login',async()=>{
+  const s=runShim();
+  await s.win.fetch('https://p.test/auth/logout',{method:'POST'});await new Promise(r=>setImmediate(r));
+  assert.equal(s.ls.getItem('oe_access_token'),null);assert.equal(s.ls.getItem('oe_refresh_token'),null);assert.equal(s.ls.getItem('token'),null);assert.equal(s.ss.getItem('oe_access_token'),null);
+  assert.ok(s.cookies.some(c=>/^oce_ui=;.*Max-Age=0/.test(c)&&/Path=\//.test(c)&&/Secure/.test(c)&&/SameSite=Lax/.test(c)));
+  assert.deepEqual(s.navs,['/login']);
+});
+test('shim logout: menu click (ng-click logout()) clears and goes to /login via timer fallback once',async()=>{
+  const s=runShim();const click=s.lis.click[0];
+  click({target:{nodeType:1,getAttribute:n=>n==='ng-click'?'logout()':null,parentNode:null}});
+  assert.equal(s.timers.length,1);s.timers[0]();s.timers[0]();
+  assert.equal(s.ls.getItem('oe_access_token'),null);assert.deepEqual(s.navs,['/login']);
+});
+test('shim 401 path clears oce_ui cookie and does not loop (guard -> error page, no second navigation)',async()=>{
+  const s=runShim();s.setStatus(401);
+  await s.win.fetch('https://p.test/_rs/api/x',{});await new Promise(r=>setImmediate(r));
+  assert.ok(s.cookies.some(c=>/^oce_ui=;.*Max-Age=0/.test(c)));assert.equal(s.ls.getItem('oe_access_token'),null);
+  assert.equal(s.navs.length,1);assert.match(s.navs[0],/^\/login\?next=/);
+});
+test('workspace/switch answers 200 with the single workspace (no 404 in the console)',async()=>{
+  const r=await raw('/api/workspace/switch',{method:'POST',headers:{authorization:'Bearer tokA','content-type':'application/json'},body:'{"id":"x"}'});
+  assert.equal(r.status,200);const j=JSON.parse(r.body);assert.ok(j.ok);assert.ok(j._id);assert.equal(j.workspaces.length,1);assert.equal(j.workspaces[0]._id,j._id);
 });
