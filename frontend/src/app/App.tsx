@@ -40,7 +40,7 @@ import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { canCreateProject } from '@/shared/lib/projectCreateAccess';
-import { isEngineeringRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
+import { isEngineeringRole, isManagerRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
 import { useThemeStore } from '@/stores/useThemeStore';
 import { useBrandingStore } from '@/stores/useBrandingStore';
@@ -910,7 +910,8 @@ function BimRulesRoute() {
 function GlobalShortcuts() {
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const normalUser = useIsNormalUser();
+  const role = useAuthStore((s) => s.userRole);
+  const normalUser = useIsNormalUser() && !isManagerRole(role);
 
   const handleToggleShortcuts = useCallback(() => {
     setShortcutsOpen((prev) => !prev);
