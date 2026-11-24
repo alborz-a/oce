@@ -42,6 +42,8 @@ const routes={
   return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:d.group_admins||[]})},
  '/api/chat/getHistory':async c=>history(c,c.b.dialog),
  '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},
+// fixDialogs: client only waits for it, then switches workspace; nothing to repair in OCE
+ '/api/chat/fixDialogs':async()=>({}),
  '/api/chat/seen':async c=>{const r=await roomOf(c,c.b.dialog);if(r)await c.oce.post('/team-chat/rooms/'+r.id+'/read/',{}).catch(()=>{});return {}},
  '/api/chat/send':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)throw new Error('unknown dialog');
   const m=await c.oce.post('/team-chat/rooms/'+r.id+'/messages/',{text:c.b.message||'',reply_to_id:null,document_ids:[],mentions:[],metadata:{}});drop(c.oce.token,'msg:'+r.id);return message(m)},
