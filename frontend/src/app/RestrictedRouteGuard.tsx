@@ -5,7 +5,7 @@ import { useProjectContextStore } from '@/stores/useProjectContextStore';
 import { projectsApi } from '@/features/projects/api';
 import { isRestrictedRouteAllowed } from './restrictedRoutes';
 import { isAdminOnlyRoute } from './adminRoutes';
-import { isSystemAdminRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
+import { isSystemAdminRole, isManagerRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { isNormalUserRouteAllowed } from './normalUserRoutes';
 
 /**
@@ -20,7 +20,8 @@ export function RestrictedRouteGuard({ children }: { children: ReactNode }) {
   const role = useAuthStore((s) => s.userRole);
   // A known non-admin is kept off admin-only routes (role unknown is handled below).
   const adminBlocked = !!role && !isSystemAdminRole(role) && isAdminOnlyRoute(pathname);
-  const normal = useIsNormalUser();
+  // Managers keep the OCE routes (owner order 2026-11-24): only non-manager normal users get the Mizito allowlist.
+  const normal = useIsNormalUser() && !isManagerRole(role);
   // Normal users (not admin/manager) get the Mizito-only allowlist; admin and manager keep the existing rules.
   const blocked = normal
     ? !isNormalUserRouteAllowed(pathname)

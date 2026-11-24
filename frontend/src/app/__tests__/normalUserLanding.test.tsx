@@ -98,4 +98,17 @@ describe('RestrictedRouteGuard for normal users', () => {
     expect(screen.getByText('page-content')).toBeTruthy();
     expect(screen.getByTestId('loc').textContent).toBe('/');
   });
+
+  it('manager keeps OCE pages (no redirect to the Mizito workspace)', () => {
+    useAuthStore.setState({ userRole: 'manager', restrictedMode: false });
+    renderAt('/');
+    expect(screen.getByText('page-content')).toBeTruthy();
+    expect(screen.getByTestId('loc').textContent).toBe('/');
+  });
+
+  it('manager is not redirected from an OCE route', () => {
+    useAuthStore.setState({ userRole: 'manager', restrictedMode: false });
+    renderAt('/photos');
+    expect(screen.getByTestId('loc').textContent).toBe('/photos');
+  });
 });
