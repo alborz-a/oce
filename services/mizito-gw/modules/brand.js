@@ -10,7 +10,7 @@ const SECTION=process.env.MIZITO_BASE_PATH||'/mizito';
 const OCE_LOGIN=process.env.OCE_LOGIN_PATH||'/login';
 const SHIM=fs.readFileSync(path.join(__dirname,'..','shim','boot.js'),'utf8').replace('__OCE_LOGIN__',OCE_LOGIN);
 function indexHtml(raw){
-  let s=raw.replace(/<head>/,'<head><script>'+SHIM+'</script>');
+  let s=raw.replace(/<head>/,'<head><style>.license{display:none!important}</style><script>'+SHIM+'</script>');
   s=s.replace(/<script async src="https:\/\/www\.googletagmanager[\s\S]*?<\/script>\s*<script>[\s\S]*?<\/script>/,'');
   return s;
 }
