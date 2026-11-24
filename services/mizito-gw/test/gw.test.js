@@ -42,7 +42,7 @@ test('malformed URL escape and NUL byte do not crash',async()=>{
   assert.equal((await raw('/healthz')).status,200);
 });
 test('static path traversal blocked',async()=>{
-  for(const p of ['/..%2f..%2fserver.js','/../server.js','/mizito/../server.js']){const r=await raw(p);assert.ok([403,404].includes(r.status),p+' '+r.status);assert.ok(!/srv\.listen/.test(r.body))}
+  for(const p of ['/..%2f..%2fserver.js','/../server.js','/_rs/../server.js']){const r=await raw(p);assert.ok([403,404].includes(r.status),p+' '+r.status);assert.ok(!/srv\.listen/.test(r.body))}
 });
 test('user B cannot read user A room (membership comes from OCE list)',async()=>{
   const a=await api('chat/getFullChat','tokA',{dialog:ROOM_A.replace(/-/g,'').slice(0,24)});assert.ok(a.body.includes('participants'));
@@ -97,3 +97,21 @@ test('shim: token only to same origin',()=>{
   vm.runInNewContext(src.replace('function same(u)','globalThis.__same=function same(u)').replace(/var f=window\.fetch;[\s\S]*$/,'})();'),Object.assign(ctx,{globalThis:ctx}));same=ctx.__same;
   assert.ok(same('/api/x'));assert.ok(same('https://portal.royalstars.co/api'));
   for(const u of ['//evil.com/x','/\\evil.com','https://portal.royalstars.co.evil.com/x','https://evil.com/','javascript:1'])assert.ok(!same(u),u)});
+
+test('manifest icons carry the BASE prefix and Royal Star name',async()=>{
+  fs.writeFileSync(path.join(mirror,'manifest.webmanifest'),JSON.stringify({name:'Mizito',short_name:'Mizito',icons:[{src:'/assets/img/icon-192.png',sizes:'192x192'},{src:'/assets/img/icon-512.png',sizes:'512x512'}]}));
+  const r=await raw('/manifest.webmanifest');const m=JSON.parse(r.body);
+  assert.strictEqual(m.name,'رویال استار');assert.strictEqual(m.short_name,'رویال استار');
+  for(const i of m.icons)assert.ok(i.src.startsWith('/_rs/assets/img/'),i.src);
+});
+test('splash loader is blanked in served index (no logo, no text, no dots)',async()=>{
+  const r=await raw('/_rs/');assert.strictEqual(r.status,200);
+  assert.ok(/\.loader\s*\*\{display:none!important\}/.test(r.body));
+  assert.ok(/<base href="\/_rs\/">/.test(r.body));assert.ok(!/mizito\.svg|app-loading-title/.test(r.body));
+});
+test('office icons served from overrides (favicon, apple-touch 152/167, 192, 512)',async()=>{
+  for(const p of ['/assets/img/icons/icon_152.png','/assets/img/icons/icon_167.png','/assets/img/icon-192.png','/assets/img/icon-512.png','/assets/img/favicon.ico']){
+    const r=await raw(p);assert.strictEqual(r.status,200,p);assert.ok(r.body.length>100,p);
+  }
+  const ico=await raw('/assets/img/favicon.ico');assert.match(String(ico.headers['content-type']),/image\/x-icon/);
+});

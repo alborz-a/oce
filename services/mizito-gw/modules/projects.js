@@ -12,6 +12,8 @@ async function counts(c){const a=await require('./tasks').mine(c);const per={};
   a.forEach(k=>{const p=per[hex(k.project_id)]=per[hex(k.project_id)]||{n:0,c:0};p.n++;if(k.status==='completed')p.c++});return per}
 const routes={
  '/api/projects/getList':async c=>{const p=await list(c);return {projects:p,project_status:p.map((x,i)=>({project_id:x._id,order:i}))}},
+// chatSummary: client reads counters after a chat; gateway has no per-chat task counts yet, so zero values (no 404)
+ '/api/projects/chatSummary':async()=>({me_completed:0,others_completed:0,me_completed_count:0,others_completed_count:0,me_remain_count:0}),
  '/api/projects/getListAdmin':async c=>list(c),
  '/api/projects/allSummary':async c=>{const t=c.J(c.T.summary),s0=t.summaries[0]||{};const [p,per]=await Promise.all([list(c),counts(c)]);
   t.summaries=p.map(pr=>{const o=c.J(s0),k=per[pr._id]||{n:0,c:0};Object.keys(o).forEach(x=>{if(typeof o[x]==='number')o[x]=0});

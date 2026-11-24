@@ -12,7 +12,7 @@ COPY scripts ./scripts
 COPY mirror ./mirror
 RUN find mirror -name '*.bak*' -delete
 RUN sh scripts/check-build.sh
-ENV PORT=18090 OCE_BASE=http://oce-app:8000 MIZITO_BASE_PATH=/mizito
+ENV PORT=18090 OCE_BASE=http://oce-app:8000 MIZITO_BASE_PATH=/_rs
 USER node
 EXPOSE 18090
 CMD ["node","server.js"]

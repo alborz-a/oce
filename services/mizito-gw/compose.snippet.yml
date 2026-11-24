@@ -4,7 +4,7 @@
     restart: unless-stopped
     environment:
       OCE_BASE: http://oce-app:8000
-      MIZITO_BASE_PATH: /mizito
+      MIZITO_BASE_PATH: /_rs
       LABEL_ROLES: owner,manager
     ports: ["127.0.0.1:18090:18090"]
     depends_on: [oce-app]
