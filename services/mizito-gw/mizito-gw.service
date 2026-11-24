@@ -1,4 +1,5 @@
 [Unit]
+StartLimitIntervalSec=0
 Description=mizito-gw (Mizito frontend on OCE)
 After=network-online.target docker.service
 Wants=network-online.target
@@ -13,6 +14,9 @@ RestartSec=3
 NoNewPrivileges=true
 ProtectSystem=full
 ProtectHome=true
+PrivateTmp=true
+MemoryMax=768M
+
 
 [Install]
 WantedBy=multi-user.target
