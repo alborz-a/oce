@@ -7,7 +7,9 @@ async function load(c){
   const [rooms,col]=await Promise.all([c.oce.get('/team-chat/rooms/'),c.oce.get('/team-chat/colleagues/')]);
   s={rooms,col,at:Date.now(),roomBy:Object.fromEntries(rooms.map(r=>[hex(r.id),r])),colBy:Object.fromEntries(col.map(u=>[hex(u.id),u]))};
   cacheMap.set(c.oce,s);return s}
-function dialog(c,r){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
+function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
+  // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
+  if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
   const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:Number(r.unread)||0,history_unread_count:0,
     messages_count:0,last_message_date:c.iso(r.last_message_at||r.created_at),pinned_messages:[],seen:[{user:c.me.hexId,seen_count:0}],labels:[],kicked:false,deleted:false,members:mem,group_admins:[],bots:[],meetings:[],tags:[]};
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
@@ -26,9 +28,9 @@ async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialog
 const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
- '/api/chat/getDialogs':async c=>{const s=await load(c);return {dialogs:s.rooms.map(r=>dialog(c,r)).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
- '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);return r?dialog(c,r):{}},
- '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r);return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:[]})},
+ '/api/chat/getDialogs':async c=>{const s=await load(c);return {dialogs:s.rooms.map(r=>dialog(c,r,s)).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
+ '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);return r?dialog(c,r,await load(c)):{}},
+ '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:[]})},
  '/api/chat/getHistory':async c=>history(c,c.b.dialog),
  '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},
  '/api/chat/seen':async c=>{const r=await roomOf(c,c.b.dialog);if(r)await c.oce.post('/team-chat/rooms/'+r.id+'/read/',{}).catch(()=>{});return {}},
