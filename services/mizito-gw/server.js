@@ -5,9 +5,9 @@ const BASE=process.env.MIZITO_BASE_PATH||'/mizito';
 const ROOT=process.env.MIRROR_DIR||path.join(__dirname,'mirror');
 const ctxlib=require('./lib/ctx'),{Unauthorized}=require('./lib/oce');
 const brand=require('./modules/brand'),chat=require('./modules/chat');
-const routes=Object.assign({},...['brand','chat','projects','tasks','letters','dashboard'].map(m=>require('./modules/'+m).routes));
+const routes=Object.assign({},...['brand','chat','projects','tasks','letters','dashboard','misc'].map(m=>require('./modules/'+m).routes));
 const MIME={'.js':'application/javascript','.css':'text/css','.html':'text/html; charset=utf-8','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png','.gif':'image/gif','.webp':'image/webp','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.ico':'image/x-icon','.json':'application/json','.jpg':'image/jpeg'};
-const ABS=/(["'(=])\/(assets\/|views\/|lib\/|cdn\/|api\/|capi\/|c_\.js|a_\.js|app\.css|manifest\.webmanifest|sw\.js)/g;
+const ABS=/(["'(=])\/(assets\/|views\/|lib\/|c_\.js|a_\.js|app\.css|manifest\.webmanifest|sw\.js)/g;
 const HOSTS=/https?:\/\/(?:[a-z0-9-]+\.)*mizito\.ir/gi;
 const text=t=>/javascript|html|json|manifest|css/.test(t);
 function send(res,code,body,type,extra){if(code===200&&text(type||'')){body=Buffer.isBuffer(body)?body.toString():body;if(typeof body==='string'){body=brand.brand(body);if(/javascript|html|css/.test(type))body=body.replace(HOSTS,'').replace(ABS,'$1'+BASE+'/$2')}}

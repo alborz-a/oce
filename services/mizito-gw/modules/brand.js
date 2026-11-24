@@ -22,5 +22,6 @@ module.exports={brand,indexHtml,c_js,cacheId,routes:{
   '/api/workspace/userId':async c=>{const w=c.J(c.T.userId);w.uid=c.me.hexId;w.wid=WID;w.phone='';
     if(module.exports.CACHE_ID)w.client_version=module.exports.CACHE_ID; // equals c_.js cache_id by construction
     w.workspaces=[{_id:WID,title:c.label,active:true}];
+    Object.assign(w,{wallpaper:'back-pattern',plan_upgrade_need:false,plan_is_demo:false,plan_ds_near_ex:false,plan_ds_ex:false,plan_storage_almost_full:false,remain_days:3650});
     w.access_admin=w.access_owner=c.isManager;return w},
 }};
