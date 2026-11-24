@@ -47,6 +47,17 @@ export function pickLandingProject<T extends LandingProjectSummary>(
   return edari ?? pool[0] ?? null;
 }
 
+/** Full gateway section (new Mizito app, services/mizito-gw). Every role lands here after login. */
+export const MIZITO_GATEWAY_LANDING = '/mizito/';
+
+/**
+ * Post-login landing decision: every role goes to the gateway, never to the old hand-built shell.
+ * Caller must do a full page load (window.location.assign), not a router navigate.
+ */
+export function resolvePostLoginLanding(_role?: string | null): string {
+  return MIZITO_GATEWAY_LANDING;
+}
+
 export async function resolveLandingProjectRoute(): Promise<string> {
   try {
     const projects = await fetchProjectList<LandingProjectSummary[]>();

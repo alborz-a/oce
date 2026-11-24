@@ -29,7 +29,7 @@ import {
 } from './desktopBootstrap';
 import { safeNextPath } from './nextPath';
 import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
-import { resolveLandingProjectRoute } from '@/features/projects/workspace/resolveLandingProjectRoute';
+import { resolvePostLoginLanding } from '@/features/projects/workspace/resolveLandingProjectRoute';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -224,8 +224,8 @@ export function LoginPage() {
         if (!isRestricted && status.onboarding_completed !== true) {
           navigate('/onboarding', { replace: true });
         } else {
-          const landing = await resolveLandingProjectRoute();
-          navigate(landing, { replace: true });
+          const landing = resolvePostLoginLanding();
+          window.location.assign(landing);
         }
       } catch {
         // Silent fallback to the manual login form.
@@ -308,8 +308,8 @@ export function LoginPage() {
       ) {
         navigate(nextPath, { replace: true });
       } else {
-        const landing = await resolveLandingProjectRoute();
-        navigate(landing, { replace: true });
+        const landing = resolvePostLoginLanding();
+        window.location.assign(landing);
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
@@ -374,8 +374,8 @@ export function LoginPage() {
       ) {
         navigate(nextPath, { replace: true });
       } else {
-        const landing = await resolveLandingProjectRoute();
-        navigate(landing, { replace: true });
+        const landing = resolvePostLoginLanding();
+        window.location.assign(landing);
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
