@@ -1,3 +1,5 @@
-# mizito-gw 1.0 status
-- Built: tree, modules (chat+realtime, projects, letters, tasks, dashboard, brand/shim), check script, Dockerfile, compose + nginx snippets.
-- Open: live browser verification (see report), gantt/settings members/letter compose/task writes deferred.
+# mizito-gw 1.0 status (2026-11-24)
+Done: tree + modules, per-user live OCE data (API verified as test user A: 9 colleagues, 5 dialogs, 3 projects, history; 401 without token), boot shim, check-build gate (OK), Dockerfile, compose + nginx snippets, cache_id == client_version (1.0.4-591).
+Browser (puppeteer, 127.0.0.1:18091/mizito/): token copied to localStorage+sessionStorage, 193 requests, 0 to *.mizito.ir, only own host, 0 page errors. NOT proven: UI render past splash "در حال ورود" (page never went idle, screenshot timed out). Needs real nginx + headed check.
+Section replaced: hand-built Mizito = routes /colleagues, /colleagues/:roomId, /correspondence (frontend/src/app/App.tsx:1466-1469; MizitoColleaguesPage, MizitoCorrespondencePage, mizitoSwitcherBridge in AppLayout.tsx). Kept as fallback; new section at /mizito/.
+Deferred: gantt phases/links, project settings members, letter compose, task writes; socket live-push untested; OCE menu entry to /mizito/ not added; mirror/ not in git (scripts/fetch-mirror.sh); a_.js still has mizito.ir href links (not requests).
