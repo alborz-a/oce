@@ -47,7 +47,7 @@ async function sendMedia(c,chat,room){
   if(image){const pr=await fetch(BASE+'/api/v1/documents/photos/upload/?project_id='+room.project_id,{method:'POST',headers:H,body:mk(text||p.name)});if(pr.ok)photoId=(await pr.json()).id}
   const sha=crypto.createHash('sha256').update(p.buf).digest('hex');
   const msg=await c.oce.post('/team-chat/rooms/'+room.id+'/messages/',{text,reply_to_id:null,document_ids:[doc.id],mentions:[],metadata:{files:[{document_id:doc.id,photo_id:photoId,name:p.name,mime:p.mime,size:p.buf.length,sha256:sha}]}});
-  PENDING.delete(cid);return expand(msg,0,chat.message)[0];
+  require('../lib/cache').drop(t,'msg:'+room.id);PENDING.delete(cid);return expand(msg,0,chat.message)[0];
 }
 
 // OCE message -> array of Mizito messages, one per attachment (caption on the first). `base` is chat.message.

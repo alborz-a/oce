@@ -2,12 +2,13 @@
 const {PLABEL}=require('../lib/ctx');const {hex}=require('../lib/oce');const chat=require('./chat');
 const COLORS=['blue','green','red','orange','purple','teal'];
 const ADMIN=['owner','lead','project_manager'];
-async function members(c,pid){try{const m=await c.oce.get('/projects/'+pid+'/members/');return Array.isArray(m)?m:[]}catch(e){return []}}
-async function list(c){const ps=await c.oce.get('/projects/?limit=200');const arr=Array.isArray(ps)?ps:(ps.items||[]);
+const {memo}=require('../lib/cache');
+async function members(c,pid){return memo(c.oce.token,'pm:'+pid,60000,async()=>{try{const m=await c.oce.get('/projects/'+pid+'/members/');return Array.isArray(m)?m:[]}catch(e){return []}})}
+async function list(c){const arr=await memo(c.oce.token,'projects',15000,()=>c.oce.pages('/projects/',200,2000));
   const s=await chat.load(c);const roomOf={};s.rooms.forEach(r=>{if(r.project_id)roomOf[hex(r.project_id)]=hex(r.id)});
   const act=arr.filter(p=>p.status!=='archived');const ms=await Promise.all(act.map(p=>members(c,p.id)));return act.map((p,i)=>{const o=c.J(c.T.project);o._id=hex(p.id);o.title=p.name;o.owner=p.owner_id?hex(p.owner_id):c.me.hexId;o.color=COLORS[i%6];
     o.deleted=false;o.labels=[PLABEL];o.members_admin=(ms[i]||[]).filter(m=>ADMIN.includes(m.role)).map(m=>hex(m.user_id));if(p.owner_id&&!o.members_admin.includes(hex(p.owner_id)))o.members_admin.push(hex(p.owner_id));o.kanban_boards=[{_id:hex(p.id).slice(0,23)+'b',title:'برای انجام',color:'green2'}];o.dialog=roomOf[hex(p.id)]||null;o.archived=false;return o})}
-async function counts(c){const t=await c.oce.get('/tasks/my-tasks/?limit=500');const a=Array.isArray(t)?t:(t.items||[]);const per={};
+async function counts(c){const a=await require('./tasks').mine(c);const per={};
   a.forEach(k=>{const p=per[hex(k.project_id)]=per[hex(k.project_id)]||{n:0,c:0};p.n++;if(k.status==='completed')p.c++});return per}
 const routes={
  '/api/projects/getList':async c=>{const p=await list(c);return {projects:p,project_status:p.map((x,i)=>({project_id:x._id,order:i}))}},
@@ -20,4 +21,5 @@ const routes={
  // deferred: phases/links need OCE schedule data; manager-only gate kept, empty groups otherwise
  '/api/projects/getGanttData':async c=>c.isManager?require('../shapes/projects_getGanttData.json'):{groups:[],links:[],error:'forbidden'},
 };
-module.exports={routes,list,members,ADMIN};
+const listRaw=c=>memo(c.oce.token,'projects',15000,()=>c.oce.pages('/projects/',200,2000));
+module.exports={routes,list,members,ADMIN,listRaw};

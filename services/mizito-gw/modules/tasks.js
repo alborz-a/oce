@@ -1,7 +1,8 @@
 // Tasks domain: OCE /tasks/ (reads: my-tasks; writes: add, save, setCompleted, comments) as the caller. Hex ids map to uuids only through lists OCE returns for this user.
 const {hex}=require('../lib/oce');
-async function mine(c){const t=await c.oce.get('/tasks/my-tasks/?limit=500');return Array.isArray(t)?t:(t.items||[])}
-function row(c,k){const o=c.J(c.T.task);o._id=hex(k.id);o.access_token=hex(k.id);o.title=k.title;o.notes=k.description||'';o.owner=k.created_by?hex(k.created_by):c.me.hexId;o.assignee=[c.me.hexId];o.assignee_last=[];o.responsible=null;
+const {memo}=require('../lib/cache');
+const mine=c=>memo(c.oce.token,'mine',10000,()=>c.oce.pages('/tasks/my-tasks/',500,5000));
+function row(c,k){const o=c.J(c.T.task);o._id=hex(k.id);o.access_token=hex(k.id);o.title=k.title;o.notes=k.description||'';o.owner=k.created_by?hex(k.created_by):c.me.hexId;o.assignee=[k.responsible_id?hex(k.responsible_id):null];o.assignee_last=[];o.responsible=null;
   o.progress=Math.round((k.checklist_progress||0)*100)/100;o.created_at=c.iso(k.created_at);o.modified_at=c.iso(k.updated_at);o.completed_by=[];o.completed_at=k.status==='completed'?c.iso(k.updated_at):null;
   o.project=hex(k.project_id);o.labels=[];o.attachments=[];o.has_attachments=false;o.deleted=false;o.completed=k.status==='completed';o.last_comment=null;o.has_comments=false;o.has_comments_with_deleted=false;o.dialog=null;o.dialog_message=null;o.checklist=[];
   if(k.due_date){o.alarm_at=new Date(k.due_date+'T08:00:00Z').toISOString();o.sort_date=o.alarm_at}else{o.alarm_at=null;o.sort_date=null}return o}
@@ -19,7 +20,7 @@ const routes={
 const fail=m=>({error:m});
 const deny=e=>/ 40[13]$/.test(e.message);
 const full=id=>String(id).replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/,'$1-$2-$3-$4-$5');
-async function projectUuid(c,h){const ps=await c.oce.get('/projects/?limit=200');const a=Array.isArray(ps)?ps:(ps.items||[]);const p=a.find(x=>hex(x.id)===String(h));return p?p.id:null}
+async function projectUuid(c,h){const a=await require('./projects').listRaw(c);const p=a.find(x=>hex(x.id)===String(h));return p?p.id:null}
 async function taskUuid(c,h){h=String(h||'');const t=(await mine(c)).find(k=>hex(k.id)===h);return t?t.id:null}
 const dueOf=d=>{if(!d)return null;const t=new Date(d);return isNaN(t)?null:t.toISOString().slice(0,10)};
 async function responsibleOf(c,b){const a=(b.assignee||[]).find(x=>x&&x!==-1);if(!a||a===c.me.hexId)return c.me.id;
@@ -54,5 +55,7 @@ const writes={
  '/api/tasks/editComment':async c=>{try{const id=await commentUuid(c,c.b.token,c.b.commentId);if(!id)return fail('گزارش پیدا نشد');const m=await c.oce.call('PATCH','/collaboration/comments/'+id,{text:String(c.b.newComment)});return commentRow(c,m)}catch(e){if(/oce 401/.test(e.message))throw e;return fail(deny(e)?'فقط نویسندهٔ گزارش می‌تواند آن را ویرایش کند':'ویرایش گزارش انجام نشد')}},
  '/api/tasks/deleteComment':async c=>{try{const id=await commentUuid(c,c.b.token,c.b.commentId);if(!id)return fail('گزارش پیدا نشد');await c.oce.call('DELETE','/collaboration/comments/'+id);return {}}catch(e){if(/oce 401/.test(e.message))throw e;return fail(deny(e)?'فقط نویسندهٔ گزارش می‌تواند آن را حذف کند':'حذف گزارش انجام نشد')}},
 };
+// writes invalidate the caller's cached task list
+for(const k of Object.keys(writes)){const f=writes[k];writes[k]=async c=>{try{return await f(c)}finally{require('../lib/cache').drop(c.oce.token,'mine')}}}
 Object.assign(routes,writes);
 module.exports={routes,mine,row};

@@ -14,7 +14,13 @@ function mock(){return new Promise(ok=>{oce=http.createServer((req,res)=>{
   if(p==='/team-chat/rooms/')return j(200,tok==='tokA'?[{id:ROOM_A,kind:'group',name:'g',member_ids:[TOK.tokA.id],project_id:null}]:[]);
   if(p==='/team-chat/colleagues/')return j(200,[{id:'cccccccc-0000-0000-0000-000000000003',full_name:'C Three',avatar_url:'/api/v1/documents/evil/file/'},{id:'dddddddd-0000-0000-0000-000000000004',full_name:'D Four',avatar_url:'//evil.example/x'}]);
   if(p==='/documents/evil/file/')return j(200,'<script>alert(1)</script>','text/html');
-  if(p.endsWith('/messages/')||p==='/tasks/my-tasks/')return j(200,[]);
+  const q=new URL(req.url,'http://x').searchParams,off=+q.get('offset')||0,lim=+q.get('limit')||50;const uid=n=>'%08x-0000-0000-0000-%012x'.replace('%08x',(n+0x10000000).toString(16)).replace('%012x',n.toString(16).padStart(12,'0'));
+  if(p==='/tasks/my-tasks/'){if(tok!=='tokA')return j(200,{items:[],total:0});const all=Array.from({length:600},(_,i)=>({id:uid(i),title:'t'+i,status:'open',project_id:uid(9000),responsible_id:i%2?TOK.tokA.id:null,due_date:null}));return j(200,{items:all.slice(off,off+Math.min(lim,500)),total:600})}
+  if(p==='/correspondence/mailbox/'){if(tok!=='tokA'||q.get('box')!=='inbox')return j(200,{items:[],total:0});const all=Array.from({length:250},(_,i)=>({id:uid(i),thread_id:uid(5000+i),subject:'s'+i,snippet:'x',sender_user_id:TOK.tokB.id,sent_at:'2026-11-01T00:00:00Z',unread:false,attachments_count:0,letter_number:null}));return j(200,{items:all.slice(off,off+Math.min(lim,100)),total:250})}
+  if(/^\/correspondence\/[0-9a-f-]{36}\/thread\/$/.test(p))return j(200,{id:p.split('/')[2],thread_id:uid(5000),subject:'s0',letter_number:'ق- ۲۳۷ -۴۰۵',register_type:2,messages:[{id:uid(1),sender_user_id:TOK.tokB.id,recipients:[{user_id:TOK.tokA.id,name:'A'}],body_html:'<p>سلام</p>',sent_at:'2026-11-01T00:00:00Z',attachments:[]},{id:uid(2),sender_user_id:TOK.tokA.id,recipients:[],body_html:'پاسخ',sent_at:'2026-11-02T00:00:00Z',attachments:[]}]});
+  if(p==='/projects/'){hits.push('PROJECTS');return j(200,{items:[{id:uid(9000),name:'P',owner_id:TOK.tokA.id,status:'active'}],total:1})}
+  if(/\/projects\/.*\/members\/$/.test(p)){hits.push('MEMBERS');return j(200,[])}
+  if(p.endsWith('/messages/')){const b=q.get('before');const all=Array.from({length:250},(_,i)=>({id:uid(100+i),room_id:ROOM_A,author_id:TOK.tokA.id,text:'m'+i,created_at:new Date(1.7e12+i*1000).toISOString(),document_ids:[]}));const end=b?all.findIndex(m=>m.id===b):all.length;return j(200,all.slice(Math.max(0,end-Math.min(lim,100)),end).reverse())}
   if(/\/file-url\/$/.test(p))return j(200,{url:'javascript:alert(1)'});
   j(404,{});
 });oce.listen(0,'127.0.0.1',ok)})}
@@ -68,6 +74,23 @@ test('socket: junk frames (null, non-array, non-string token) do not crash the s
   await new Promise(r=>setTimeout(r,150));assert.equal((await raw('/healthz')).status,200);ws.close()});
 test('dashboard summary is built from the caller, no frozen Mizito snapshot',async()=>{
   const r=await api('dashboard/getAllSummary','tokA');const j=JSON.parse(r.body);assert.ok(Array.isArray(j)&&j.length===1);assert.ok(!/ساختمانی|بیزینس/.test(r.body));assert.equal(j[0].task.overdue,0)});
+test('chat history pages past 100 and reports messages_count',async()=>{
+  const d=ROOM_A.replace(/-/g,'').slice(0,24);const h=JSON.parse((await api('chat/getHistory','tokA',{dialog:d})).body);assert.equal(h.length,250);
+  const v=JSON.parse((await api('chat/getChatView','tokA',{dialog:d})).body);assert.equal(v.messages_count,250);assert.equal(v.seen[0].seen_count,250)});
+test('tasks: pages past 500, assignee comes from responsible_id',async()=>{
+  const r=JSON.parse((await api('tasks/getAll','tokA',{})).body);assert.equal(r.length,600);
+  assert.deepEqual(r[1].assignee,[TOK.tokA.id.replace(/-/g,'').slice(0,24)]);assert.deepEqual(r[0].assignee,[null])});
+test('letters: pages past 100, getHistory returns thread shape',async()=>{
+  const r=JSON.parse((await api('inbox/getInbox','tokA',{mode:'inbox'})).body);assert.equal(r.length,250);
+  const h=JSON.parse((await api('inbox/getHistory','tokA',{thread:r[3].thread})).body);assert.ok(h._id&&h.subject==='s0'&&Array.isArray(h.messages)&&h.messages.length===1&&h.count===2&&h.secretariat.sec_number===237&&h.content.includes('سلام'));
+  assert.equal((await api('inbox/getHistory','tokB',{thread:r[3].thread})).body,'{}')});
+test('caches: repeated routes hit OCE once; cache is per token',async()=>{
+  hits.length=0;await api('projects/getList','tokA');await api('projects/getList','tokA');await api('projects/getList','tokA');
+  assert.equal(hits.filter(x=>x==='PROJECTS').length,1);assert.equal(hits.filter(x=>x==='MEMBERS').length,1);
+  const rooms0=hits.filter(x=>x.includes('/team-chat/rooms/ ')).length;await api('chat/getDialogs','tokA');await api('chat/getDialogs','tokA');assert.ok(hits.filter(x=>x.includes('/team-chat/rooms/ ')).length-rooms0<=1);
+  assert.equal(JSON.parse((await api('projects/getList','tokB')).body).projects.length,1)});
+test('nginx snippet carries body cap and rate limit',()=>{const n=fs.readFileSync(path.join(__dirname,'../nginx.snippet.conf'),'utf8');assert.match(n,/client_max_body_size 26m/);assert.match(n,/limit_req_zone/);assert.match(n,/map \$http_upgrade \$connection_upgrade/)});
+test('templates carry no real Mizito ObjectIds',()=>{const s=fs.readFileSync(path.join(__dirname,'../shapes/templates.json'),'utf8');assert.ok(!/\b6[0-9a-f]{23}\b/.test(s.replace(/\b0{0,}f[0-9a-f]{7}0{16}\b/g,'')))});
 test('shim: token only to same origin',()=>{
   const src=fs.readFileSync(path.join(__dirname,'../shim/boot.js'),'utf8');let same;
   const ctx={location:{origin:'https://portal.royalstars.co',pathname:'/',search:'',hash:'',replace(){}},localStorage:{getItem:()=>'t',setItem(){}},sessionStorage:{setItem(){}},XMLHttpRequest:function(){},window:{}};ctx.XMLHttpRequest.prototype={open(){},send(){}};

@@ -16,6 +16,8 @@ function client(token){
     return r.status===204?null:r.json();
   }
   const o={token,get:p=>call('GET',p),post:(p,b)=>call('POST',p,b),raw:p=>call('GET',p,null,true),call:(m,p,b)=>call(m,p,b)};
+  // all pages of an OCE list ({items,total}); stops at total, a short page, or `cap` rows
+  o.pages=async(p,size,cap)=>{const out=[];for(let off=0;off<cap;off+=size){const r=await o.get(p+(p.includes('?')?'&':'?')+'limit='+size+'&offset='+off);const a=Array.isArray(r)?r:(r.items||[]);out.push(...a);if(a.length<size||(r.total!=null&&out.length>=r.total))break}return out};
   o.me=async()=>{const k=keyOf(token),c=meCache.get(k);if(c&&c.exp>Date.now())return c.v;
     const u=await o.get('/users/me');const v={id:u.id,hexId:hex(u.id),role:u.role||null,name:u.full_name||u.name||u.email||'?',raw:u};
     sweepMe();meCache.set(k,{v,exp:Date.now()+ME_TTL});return v};
