@@ -950,7 +950,11 @@ async def update_task(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:module.tasks",
             )
-        if "task.manage" not in caps:
+        if (
+            "task.manage" not in caps
+            and existing.created_by != str(user_id)
+            and not is_task_assignee(existing, user_id)
+        ):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="project_capability_required:task.manage",
