@@ -157,7 +157,7 @@ test('shim logout: API logout clears OCE keys and oce_ui cookie, then /login',as
 test('shim logout: menu click (ng-click logout()) clears and goes to /login via timer fallback once',async()=>{
   const s=runShim();const click=s.lis.click[0];
   click({target:{nodeType:1,getAttribute:n=>n==='ng-click'?'logout()':null,parentNode:null}});
-  assert.equal(s.timers.length,1);s.timers[0]();s.timers[0]();
+  assert.equal(s.ls.getItem('oe_access_token'),null);assert.ok(s.cookies.some(c=>/^oce_ui=;.*Max-Age=0/.test(c)));assert.equal(s.timers.length,1);s.timers[0]();s.timers[0]();
   assert.equal(s.ls.getItem('oe_access_token'),null);assert.deepEqual(s.navs,['/login']);
 });
 test('shim 401 path clears oce_ui cookie and does not loop (guard -> error page, no second navigation)',async()=>{

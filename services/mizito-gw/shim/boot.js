@@ -23,10 +23,10 @@ var xo=XMLHttpRequest.prototype.open,xs=XMLHttpRequest.prototype.send;
 XMLHttpRequest.prototype.open=function(m,u){this.__u=u;return xo.apply(this,arguments)};
 XMLHttpRequest.prototype.send=function(){var x=this;try{if(same(x.__u))x.setRequestHeader('Authorization','Bearer '+tok())}catch(e){}
   x.addEventListener('load',function(){if(isLogoutUrl(x.__u))logoutDone();if(x.status===401&&same(x.__u))toLogin();else if(x.status>=200&&x.status<300&&same(x.__u))okSeen()});return xs.apply(this,arguments)};
-// Logout: the Mizito profile menu item (ng-click logout()) or any logout request ends the OCE session here, then OCE login. Fallback timer if no logout request follows the click.
+// Logout: the Mizito profile menu item (ng-click logout()) clears the OCE session at once (the app reloads /login, which kills timers), then OCE login. Logout requests also end here.
 var lgDone=false;function logoutDone(){if(lgDone)return;lgDone=true;clearOce();try{location.replace(LOGIN)}catch(e){}}
-function isLogoutUrl(u){return typeof u==='string'&&/\/auth\/logout(\?|\/|$)/.test(u)}
-try{document.addEventListener('click',function(e){var t=e.target;while(t&&t.nodeType===1){var ng=t.getAttribute&&t.getAttribute('ng-click');if(ng&&/(^|[^A-Za-z_])logout\(/.test(ng)){setTimeout(logoutDone,4000);return}t=t.parentNode}},true)}catch(e){}
+function isLogoutUrl(u){return typeof u==='string'&&/\/(auth|session)\/logout(\?|\/|$)/.test(u)}
+try{document.addEventListener('click',function(e){var t=e.target;while(t&&t.nodeType===1){var ng=t.getAttribute&&t.getAttribute('ng-click');if(ng&&/(^|[^A-Za-z_])logout\(/.test(ng)){clearOce();setTimeout(logoutDone,4000);return}t=t.parentNode}},true)}catch(e){}
 try{if(/^#\/ws\/im\/[0-9a-f]{24}$/.test(location.hash))location.hash=location.hash+'/'}catch(e){}
 // Hide workspace switcher/create card and support/help buttons that render after the CSS (class list mirrors brand.js HIDE_SEL).
 try{var SEL='__HIDE_SEL__';function hide(){try{var n=document.querySelectorAll(SEL);for(var i=0;i<n.length;i++)n[i].style.setProperty('display','none','important')}catch(e){}}

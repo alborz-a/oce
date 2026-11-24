@@ -37,6 +37,8 @@ function c_js(raw){return raw+`;try{var _o=location.origin;Config.App.api_url=_o
 module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,cacheId,FA,routes:{
   '/api/workspace/name':async c=>JSON.stringify(c.label),
   // workspace switch: single workspace, nothing to switch to; answer the same workspace object as userId
+  // Mizito session logout: no OCE logout endpoint exists (OCE clears its session client-side); answer ok so the app logout does not 404
+  '/api/session/logout':async c=>({ok:true}),
   '/api/workspace/switch':async c=>({ok:true,_id:WID,title:c.label,active:true,workspaces:[{_id:WID,title:c.label,active:true}]}),
   '/api/workspace/userId':async c=>{const w=c.J(c.T.userId);w.uid=c.me.hexId;w.wid=WID;w.phone='';
     if(module.exports.CACHE_ID)w.client_version=module.exports.CACHE_ID; // equals c_.js cache_id by construction
