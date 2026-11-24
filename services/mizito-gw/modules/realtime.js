@@ -21,6 +21,6 @@ function upstream(c,token){
   up.on('open',()=>up.send(JSON.stringify({type:'auth',token})));
   up.on('message',async buf=>{let e;try{e=JSON.parse(String(buf))}catch(x){return}
     if(e.event==='ready'){try{const rooms=await oce.get('/team-chat/rooms/');up.send(JSON.stringify({type:'subscribe',room_ids:rooms.map(r=>r.id)}))}catch(x){}}
-    if(e.event==='message.created'&&e.message&&c.ws.readyState===1)c.ws.send(pkt('m',{type:'chat_message',body:chat.message(e.message),workspace_id:WID}))});
+    if(e.event==='message.created'&&e.message&&c.ws.readyState===1){await require('./files').prefetch(ctx,[e.message]);for(const b of require('./files').expand(e.message,0,chat.message))c.ws.send(pkt('m',{type:'chat_message',body:b,workspace_id:WID}))}});
   up.on('close',()=>{c.up=null});up.on('error',()=>{});
 }

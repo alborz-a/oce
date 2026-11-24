@@ -24,7 +24,7 @@ function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   return o}
 async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialogId];if(!r)return [];
   const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/');const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>x.created_at.localeCompare(y.created_at));
-  return a.map((m,i)=>message(m,i+1))}
+  const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message))}
 const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
