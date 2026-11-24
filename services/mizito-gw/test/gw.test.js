@@ -14,7 +14,7 @@ function mock(){return new Promise(ok=>{oce=http.createServer((req,res)=>{
   if(p==='/team-chat/rooms/')return j(200,tok==='tokA'?[{id:ROOM_A,kind:'group',name:'g',member_ids:[TOK.tokA.id],project_id:null}]:[]);
   if(p==='/team-chat/colleagues/')return j(200,[{id:'cccccccc-0000-0000-0000-000000000003',full_name:'C Three',avatar_url:'/api/v1/documents/evil/file/'},{id:'dddddddd-0000-0000-0000-000000000004',full_name:'D Four',avatar_url:'//evil.example/x'}]);
   if(p==='/documents/evil/file/')return j(200,'<script>alert(1)</script>','text/html');
-  if(p.endsWith('/messages/'))return j(200,[]);
+  if(p.endsWith('/messages/')||p==='/tasks/my-tasks/')return j(200,[]);
   if(/\/file-url\/$/.test(p))return j(200,{url:'javascript:alert(1)'});
   j(404,{});
 });oce.listen(0,'127.0.0.1',ok)})}
@@ -66,6 +66,8 @@ test('socket: junk frames (null, non-array, non-string token) do not crash the s
   const ws=new WS('ws://127.0.0.1:'+GW+'/socket.io/?EIO=3&transport=websocket');await new Promise(r=>ws.on('open',r));
   for(const f of ['42null','42"x"','42{"a":1}','42[["authenticate"]]','42["authenticate",{"token":5}]','42[','4','']) ws.send(f);
   await new Promise(r=>setTimeout(r,150));assert.equal((await raw('/healthz')).status,200);ws.close()});
+test('dashboard summary is built from the caller, no frozen Mizito snapshot',async()=>{
+  const r=await api('dashboard/getAllSummary','tokA');const j=JSON.parse(r.body);assert.ok(Array.isArray(j)&&j.length===1);assert.ok(!/ساختمانی|بیزینس/.test(r.body));assert.equal(j[0].task.overdue,0)});
 test('shim: token only to same origin',()=>{
   const src=fs.readFileSync(path.join(__dirname,'../shim/boot.js'),'utf8');let same;
   const ctx={location:{origin:'https://portal.royalstars.co',pathname:'/',search:'',hash:'',replace(){}},localStorage:{getItem:()=>'t',setItem(){}},sessionStorage:{setItem(){}},XMLHttpRequest:function(){},window:{}};ctx.XMLHttpRequest.prototype={open(){},send(){}};

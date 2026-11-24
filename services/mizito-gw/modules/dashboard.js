@@ -1,5 +1,10 @@
-const tasks=require('./tasks');
-const routes={'/api/dashboard/getAllSummary':async c=>{const a=await tasks.mine(c);const s=c.J(c.T.dashboard);
-  const open=a.filter(k=>k.status!=='completed').length;for(const k of Object.keys(s))if(typeof s[k]==='number')s[k]=0;
-  if('tasks' in s)s.tasks=open;if('open_tasks' in s)s.open_tasks=open;return s}};
+// Dashboard summary: one workspace row built from the caller's own tasks and rooms (golden shape: array of {workspace_id,workspace_title,inbox,chat,task{today,overdue,with_time,no_time},meetings}).
+const tasks=require('./tasks'),chat=require('./chat');
+const {WID}=require('../lib/ctx');
+const routes={'/api/dashboard/getAllSummary':async c=>{
+  const [a,s]=await Promise.all([tasks.mine(c),chat.load(c)]);const open=a.filter(k=>k.status!=='completed');const today=new Date().toISOString().slice(0,10);
+  const t={today:0,overdue:0,with_time:0,no_time:0};
+  for(const k of open){if(!k.due_date){t.no_time++;continue}t.with_time++;const d=String(k.due_date).slice(0,10);if(d<today)t.overdue++;else if(d===today)t.today++}
+  const unread=s.rooms.reduce((n,r)=>n+(Number(r.unread)||0),0);
+  return [{workspace_id:WID,workspace_title:c.label,inbox:0,chat:unread,task:t,meetings:[]}]}};
 module.exports={routes};

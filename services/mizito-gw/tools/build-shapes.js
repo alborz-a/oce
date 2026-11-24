@@ -12,8 +12,8 @@ const out={
  project:scrub(pick('POST /api/projects/getList').projects[0]),
  summary:scrub(pick('POST /api/projects/allSummary')),
  letter:scrub(pick('POST /api/inbox/getInbox')[0]),
- task:scrub(pick('POST /api/tasks/upcoming',x=>x.req.includes('calendar_repeated'))[0]),
- dashboard:pick('POST /api/dashboard/getAllSummary')
+ task:scrub(pick('POST /api/tasks/upcoming',x=>x.req.includes('calendar_repeated'))[0])
+
 };
 // userId carries the client_version string; keep it verbatim (cache_id gate).
 out.userId.client_version=JSON.parse(I['POST /api/workspace/userId'][0].body).client_version;
