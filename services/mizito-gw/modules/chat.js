@@ -30,7 +30,12 @@ const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
  '/api/chat/getDialogs':async c=>{const s=await load(c);return {dialogs:s.rooms.map(r=>dialog(c,r,s)).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
  '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);return r?dialog(c,r,await load(c)):{}},
- '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:[]})},
+ '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));
+  // project rooms: participants and admins come from OCE project members (the list the settings modal shows)
+  if(r.kind==='project'&&r.project_id){const P=require('./projects');const ms=await P.members(c,r.project_id);
+    if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
+      d.group_admins=ms.filter(m=>P.ADMIN.includes(m.role)).map(m=>hex(m.user_id));const own=ms.find(m=>m.role==='owner');d.owner=own?hex(own.user_id):(d.group_admins[0]||c.me.hexId)}}
+  return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:d.group_admins||[]})},
  '/api/chat/getHistory':async c=>history(c,c.b.dialog),
  '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},
  '/api/chat/seen':async c=>{const r=await roomOf(c,c.b.dialog);if(r)await c.oce.post('/team-chat/rooms/'+r.id+'/read/',{}).catch(()=>{});return {}},
