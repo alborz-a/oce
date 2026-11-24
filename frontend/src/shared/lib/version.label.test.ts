@@ -3,7 +3,7 @@ import { versionLabel } from './version';
 
 describe('versionLabel', () => {
   it('maps RSD-x.y to RSC vx.y', () => {
-    expect(versionLabel('RSD-1.2')).toBe('RSC v1.2');
+    expect(versionLabel('RSD-1.3')).toBe('RSC v1.3');
     expect(versionLabel('RSD-10.0')).toBe('RSC v10.0');
   });
 
