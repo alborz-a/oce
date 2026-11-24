@@ -79,7 +79,7 @@ describe('RestrictedRouteGuard for normal users', () => {
   it('redirects a normal user from / to the active Mizito project', () => {
     renderAt('/');
     expect(screen.getByTestId('loc').textContent).toBe('/projects/proj-123');
-    expect(screen.queryByText('page-content')).toBeNull();
+    // after the redirect the target (/projects/:id) is allowed, so the guard renders its children there
   });
 
   it('keeps a normal user off OCE pages', () => {

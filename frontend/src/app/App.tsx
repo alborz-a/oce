@@ -7,6 +7,7 @@ import { AppLayout } from './layout';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import {
   pickLandingProject,
+  resolvePostLoginLanding,
   readLastActiveProjectId,
   saveLastActiveProjectId,
   type LandingProjectSummary,
@@ -1033,7 +1034,8 @@ function useDocumentDirection() {
   }, [i18n]);
 }
 
-function WorkspaceHomeRedirect() {
+/** Backup entry /legacy-mizito/: opens the old hand-built Mizito section (project workspace). */
+function LegacyWorkspaceRedirect() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: () => fetchProjectList<LandingProjectSummary[]>(),
@@ -1053,6 +1055,15 @@ function WorkspaceHomeRedirect() {
 
   if (isLoading) return <PageLoadingInline />;
   return <Navigate to={target ? `/projects/${target.id}` : '/projects'} replace />;
+}
+
+/** `/` for a logged-in user: full page load into the Mizito gateway (never the old shell by default). */
+function WorkspaceHomeRedirect() {
+  const userRole = useAuthStore((s) => s.userRole);
+  useEffect(() => {
+    window.location.assign(resolvePostLoginLanding(userRole));
+  }, [userRole]);
+  return <PageLoadingInline />;
 }
 
 function DashboardRoute() {
@@ -1271,6 +1282,8 @@ export default function App() {
           }
         />
 
+        <Route path="/legacy-mizito" element={<LegacyWorkspaceRedirect />} />
+        <Route path="/legacy-mizito/*" element={<LegacyWorkspaceRedirect />} />
         <Route path="/ai-estimate" element={<P title="AI Quick Estimate"><QuickEstimatePage /></P>} />
         <Route path="/ai-estimator" element={<P title="AI Estimate Builder"><AiEstimatorPage /></P>} />
         <Route path="/ai-agents" element={<P title="AI Agents"><AgentsPage /></P>} />
