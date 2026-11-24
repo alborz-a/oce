@@ -124,6 +124,12 @@ describe('PWA service worker configuration', () => {
     expect(config).toContain('urlPattern: isStaticAssetRequest');
   });
 
+  it('keeps the Mizito gateway out of the navigation fallback', () => {
+    // /mizito/ is served by the gateway, not this SPA. Without the denylist
+    // entry the root service worker answers /mizito/ with the OCE shell.
+    expect(config).toMatch(/navigateFallbackDenylist:[^\]]*\/\^\\\/mizito/);
+  });
+
   it('configures oce-i18n-locales cache', () => {
     expect(config).toContain("'oce-i18n-locales'");
   });

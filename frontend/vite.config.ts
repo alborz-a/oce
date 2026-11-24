@@ -327,7 +327,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         // Don't try to fall back to /index.html for API routes or for
         // file/asset routes the SW doesn't precache.
-        navigateFallbackDenylist: [/^\/api\//, /^\/static\//, /^\/pwa\//],
+        navigateFallbackDenylist: [/^\/api\//, /^\/static\//, /^\/pwa\//, /^\/mizito(\/|$)/, /^\/socket\.io\//],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
