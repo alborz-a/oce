@@ -14,9 +14,10 @@ function send(res,code,body,type,extra){if(code===200&&text(type||'')){body=Buff
   res.writeHead(code,Object.assign({'content-type':type||'text/plain','cache-control':'no-store'},extra||{}));res.end(body)}
 const json=(res,code,o)=>send(res,code,JSON.stringify(o),'application/json; charset=utf-8');
 function readFileCached(f){return fs.readFileSync(f)}
-try{const c=fs.readFileSync(path.join(ROOT,'c_.js'),'utf8');brand.CACHE_ID=brand.cacheId(c)||brand.CACHE_ID}catch(e){}
+for(const f of ['c_.js','a_.js','index.html']){try{brand.CACHE_ID=brand.CACHE_ID||brand.cacheId(fs.readFileSync(path.join(ROOT,f),'utf8'))}catch(e){}}
 const srv=http.createServer((req,res)=>{
   let p=decodeURIComponent((req.url.split('?')[0]));
+  if(p.startsWith(BASE+'/'))p=p.slice(BASE.length);
   if(p==='/healthz')return json(res,200,{ok:true});
   if(p.startsWith('/api/')||p.startsWith('/capi/')){
     const chunks=[];req.on('data',c=>chunks.push(c));req.on('end',async()=>{
