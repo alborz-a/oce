@@ -1,0 +1,10 @@
+# Add to the oce compose file (same network as oce-app).
+  mizito-gw:
+    image: ghcr.io/alborz-a/mizito-gw:1.0.0
+    restart: unless-stopped
+    environment:
+      OCE_BASE: http://oce-app:8000
+      MIZITO_BASE_PATH: /mizito
+      LABEL_ROLES: owner,manager
+    ports: ["127.0.0.1:18090:18090"]
+    depends_on: [oce-app]

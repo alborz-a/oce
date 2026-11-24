@@ -1,0 +1,21 @@
+// Projects domain: OCE /projects/ (scoped by OCE to the caller). Settings members, Gantt phases/links: deferred.
+const {PLABEL}=require('../lib/ctx');const {hex}=require('../lib/oce');const chat=require('./chat');
+const COLORS=['blue','green','red','orange','purple','teal'];
+async function list(c){const ps=await c.oce.get('/projects/?limit=200');const arr=Array.isArray(ps)?ps:(ps.items||[]);
+  const s=await chat.load(c);const roomOf={};s.rooms.forEach(r=>{if(r.project_id)roomOf[hex(r.project_id)]=hex(r.id)});
+  return arr.filter(p=>p.status!=='archived').map((p,i)=>{const o=c.J(c.T.project);o._id=hex(p.id);o.title=p.name;o.owner=p.owner_id?hex(p.owner_id):c.me.hexId;o.color=COLORS[i%6];
+    o.deleted=false;o.labels=[PLABEL];o.members_admin=[];o.kanban_boards=[{_id:hex(p.id).slice(0,23)+'b',title:'برای انجام',color:'green2'}];o.dialog=roomOf[hex(p.id)]||null;o.archived=false;return o})}
+async function counts(c){const t=await c.oce.get('/tasks/my-tasks/?limit=500');const a=Array.isArray(t)?t:(t.items||[]);const per={};
+  a.forEach(k=>{const p=per[hex(k.project_id)]=per[hex(k.project_id)]||{n:0,c:0};p.n++;if(k.status==='completed')p.c++});return per}
+const routes={
+ '/api/projects/getList':async c=>{const p=await list(c);return {projects:p,project_status:p.map((x,i)=>({project_id:x._id,order:i}))}},
+ '/api/projects/getListAdmin':async c=>list(c),
+ '/api/projects/allSummary':async c=>{const t=c.J(c.T.summary),s0=t.summaries[0]||{};const [p,per]=await Promise.all([list(c),counts(c)]);
+  t.summaries=p.map(pr=>{const o=c.J(s0),k=per[pr._id]||{n:0,c:0};Object.keys(o).forEach(x=>{if(typeof o[x]==='number')o[x]=0});
+   o.project=pr._id;o.name=pr.title;o.project_title=pr.title;o.total_tasks=o.total_tasks_count=k.n;o.others_completed=o.others_completed_count=k.c;o.is_archived=false;o.dialog=pr.dialog;o.boards={};o.last_completed=null;return o});return t},
+ '/api/labels/getAll':async c=>c.b.type==='project'?{labels:[{_id:PLABEL,title:'پروژه‌های اُ سی ای',color:'blue',type:'project',deleted:false}],label_status:[{label_id:PLABEL,order:0}]}:{labels:[],label_status:[]},
+ '/api/projects/get':async c=>{const id=String(c.b.projectId||c.b.project||c.b._id||'');return (await list(c)).find(x=>x._id===id)||{}},
+ // deferred: phases/links need OCE schedule data; manager-only gate kept, empty groups otherwise
+ '/api/projects/getGanttData':async c=>c.isManager?require('../shapes/projects_getGanttData.json'):{groups:[],links:[],error:'forbidden'},
+};
+module.exports={routes,list};
