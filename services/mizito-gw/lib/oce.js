@@ -12,7 +12,7 @@ function client(token){
     if(raw) return r;
     return r.status===204?null:r.json();
   }
-  const o={token,get:p=>call('GET',p),post:(p,b)=>call('POST',p,b),raw:p=>call('GET',p,null,true)};
+  const o={token,get:p=>call('GET',p),post:(p,b)=>call('POST',p,b),raw:p=>call('GET',p,null,true),call:(m,p,b)=>call(m,p,b)};
   o.me=async()=>{const k=token.slice(-40),c=meCache.get(k);if(c&&c.exp>Date.now())return c.v;
     const u=await o.get('/users/me');const v={id:u.id,hexId:hex(u.id),role:u.role||null,name:u.full_name||u.name||u.email||'?',raw:u};
     meCache.set(k,{v,exp:Date.now()+ME_TTL});return v};
