@@ -3384,7 +3384,7 @@ export function ProjectDetailPage() {
       <>
         <div dir="rtl" className="flex justify-start px-4 pt-2">
           <Button variant="secondary" size="sm" onClick={() => switchView(false)}>
-            نمای میزیتو
+            نمای رویال استار
           </Button>
         </div>
         <OceProjectDetailView />
