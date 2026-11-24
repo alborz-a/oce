@@ -67,19 +67,21 @@ async function prefetch(c,list){
     META.set(id,{name:j.filename||j.file_name||j.name||(j.file_path||'').split('/').pop()||'',mime:j.mime_type||j.content_type||'',size:j.file_size||-1})}catch(e){}}));
 }
 
+const SAFE_HDR={'x-content-type-options':'nosniff','content-security-policy':"sandbox; default-src 'none'"};
+const safeImg=t=>/^image\/(png|jpe?g|webp|gif)/.test(t||'')?t.split(';')[0]:'application/octet-stream';
 // /cdn/<name> additions: pending preview, dl-<doc> stream, ph-<photo> stream when OCE has no presigned url. Returns {status,type,body,headers} or null.
 async function cdn(c,name){
   let m;
-  if((m=/^(gw[0-9a-f]{24})$/.exec(name))){const f=PENDING.get(m[1]);return f&&f.user===c.me.hexId?{type:f.mime,body:f.buf}:{status:404}}
+  if((m=/^(gw[0-9a-f]{24})$/.exec(name))){const f=PENDING.get(m[1]);return f&&f.user===c.me.hexId?{type:safeImg(f.mime),body:f.buf,headers:SAFE_HDR}:{status:404}}
   if((m=/^dl\/dl-([0-9a-f]{32})$/.exec(name))||(m=/^dl-([0-9a-f]{32})$/.exec(name))){
     const r=await c.oce.raw('/documents/'+uuidOf(m[1])+'/download/');const body=Buffer.from(await r.arrayBuffer());
     const cd=r.headers.get('content-disposition')||'';const nm=(cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)/i)||[])[1]||'download.bin';
-    return {type:r.headers.get('content-type')||'application/octet-stream',body,headers:{'content-name':encodeURI(decodeURIComponent(nm)),'content-disposition':'attachment; filename="'+encodeURIComponent(decodeURIComponent(nm))+'"'}};
+    return {type:'application/octet-stream',body,headers:{...SAFE_HDR,'content-name':encodeURI(decodeURIComponent(nm)),'content-disposition':'attachment; filename="'+encodeURIComponent(decodeURIComponent(nm))+'"'}};
   }
   if((m=/^(?:dl\/)?ph-([0-9a-f]{32})$/.exec(name))){
     const u=uuidOf(m[1]);const j=await c.oce.get('/documents/photos/'+u+'/file-url/');const url=j.url||j.file_url||j.download_url;
     if(url)return {redirect:url};
-    const r=await c.oce.raw('/documents/photos/'+u+'/file/');return {type:r.headers.get('content-type')||'image/png',body:Buffer.from(await r.arrayBuffer())};
+    const r=await c.oce.raw('/documents/photos/'+u+'/file/');return {type:safeImg(r.headers.get('content-type')),body:Buffer.from(await r.arrayBuffer()),headers:SAFE_HDR};
   }
   return null;
 }
