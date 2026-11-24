@@ -115,3 +115,17 @@ test('office icons served from overrides (favicon, apple-touch 152/167, 192, 512
   }
   const ico=await raw('/assets/img/favicon.ico');assert.match(String(ico.headers['content-type']),/image\/x-icon/);
 });
+test('missing art images answer a 200 transparent placeholder, real files win, non-image stays 404',async()=>{
+  const cc={'cache-control':'public, max-age=300'};
+  const rb=p=>new Promise((ok,no)=>http.get({port:GW,host:'127.0.0.1',path:p},r=>{const c=[];r.on('data',d=>c.push(d));r.on('end',()=>ok({status:r.statusCode,headers:r.headers,buf:Buffer.concat(c)}))}).on('error',no));
+  const png=await rb('/assets/img/emoji/1f389.png');assert.equal(png.status,200);assert.equal(png.headers['content-type'],'image/png');assert.equal(png.headers['cache-control'],cc['cache-control']);assert.ok(png.buf.subarray(0,8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a])));
+  const bp=await raw('/_rs/assets/img/birthday_popper.svg');assert.equal(bp.status,200);assert.match(String(bp.headers['content-type']),/image\/svg\+xml/);assert.match(bp.body,/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"><\/svg>$/);
+  const bw=await rb('/_rs/assets/img/birthday_popper.webp');assert.equal(bw.status,200);assert.equal(bw.headers['content-type'],'image/webp');assert.equal(bw.buf.subarray(8,12).toString(),'WEBP');
+  const gif=await raw('/assets/img/x/none.gif');assert.equal(gif.status,200);assert.equal(gif.headers['content-type'],'image/gif');
+  const jpg=await raw('/assets/img/x/none.jpg');assert.equal(jpg.status,200);assert.equal(jpg.headers['content-type'],'image/jpeg');
+  const real=await raw('/assets/img/person-logo.png');assert.equal(real.status,200);assert.equal(real.body,'PNG');
+  assert.equal((await raw('/assets/img/notes.txt')).status,404);
+  assert.equal((await raw('/assets/img/../../../etc/none.png')).status,403);
+  assert.equal((await raw('/views/missing.html')).status,404);
+  assert.equal((await raw('/api/v1/none.png')).status,404);
+});
