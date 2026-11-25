@@ -17,9 +17,11 @@ function ctx(projects,stats,b={}){
       if(p.includes('/members/'))throw new Error('oce 404');
       if(p.startsWith('/tasks/my-tasks/'))throw new Error('must not call caller-only my-tasks');
       throw new Error('unexpected '+p)},
-    pages:async()=>projects};
+    pages:async p=>{if(p.startsWith('/tasks/?project_id=')){const id=new URL('http://x'+p).searchParams.get('project_id');if(!(id in stats))throw new Error('oce 403');return stats[id].tasks}return projects}};
   return {oce,b,J,T,me:{hexId:'0'.repeat(23)+'9',role:'member'},calls};
 }
+// project-wide task list fixture for stats (OCE GET /tasks/?project_id=, paged): n tasks, c completed
+const tk=(n,c)=>Array.from({length:n},(_,i)=>({status:i<c?'completed':'open',metadata:{},title:'t'+i}));
 const UUID=n=>`${String(n).padStart(8,"0")}-0000-4000-8000-000000000000`;
 const proj=(n,extra={})=>({id:UUID(n),name:'پروژه '+n,status:'active',owner_id:null,metadata:{},picture_url:null,...extra});
 
@@ -75,7 +77,7 @@ test('cover: picture_url -> cover_has_photo + cover_file; null keeps placeholder
 
 test('progress: allSummary uses project-wide /tasks/stats counts, not my-tasks',async()=>{
   const p1=proj(1),p2=proj(2),p3=proj(3,{status:'archived'});
-  const stats={[p1.id]:{total:10,completed_count:4,by_status:{}},[p2.id]:{total:0,completed_count:0}};
+  const stats={[p1.id]:{tasks:tk(10,4)},[p2.id]:{tasks:[]}};
   const c=ctx([p1,p2,p3],stats);
   const r=await routes['/api/projects/allSummary'](c);
   assert.equal(r.summaries.length,2);
@@ -90,7 +92,7 @@ test('progress: allSummary uses project-wide /tasks/stats counts, not my-tasks',
 
 test('progress: stats error for one project gives zeros, other projects unaffected',async()=>{
   const p1=proj(1),p2=proj(2);
-  const r=await routes['/api/projects/allSummary'](ctx([p1,p2],{[p1.id]:{total:5,completed_count:5}}));
+  const r=await routes['/api/projects/allSummary'](ctx([p1,p2],{[p1.id]:{tasks:tk(5,5)}}));
   const s2=r.summaries.find(s=>s.project===hex(p2.id));
   assert.equal(s2.total_tasks,0);
   assert.equal(s2.others_completed,0);

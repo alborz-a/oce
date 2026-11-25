@@ -1,7 +1,8 @@
 // Tasks domain: OCE /tasks/ (reads: my-tasks; writes: add, save, setCompleted, comments) as the caller. Hex ids map to uuids only through lists OCE returns for this user.
 const {hex}=require('../lib/oce');
 const {memo}=require('../lib/cache');
-const mine=c=>memo(c.oce.token,'mine',10000,()=>c.oce.pages('/tasks/my-tasks/',500,5000));
+const {filterSynthetic}=require('../lib/synthetic');
+const mine=c=>memo(c.oce.token,'mine',10000,async()=>filterSynthetic(await c.oce.pages('/tasks/my-tasks/',500,5000)));
 function row(c,k){const o=c.J(c.T.task);o._id=hex(k.id);o.access_token=hex(k.id);o.title=k.title;o.notes=k.description||'';o.owner=k.created_by?hex(k.created_by):c.me.hexId;o.assignee=[k.responsible_id?hex(k.responsible_id):null];o.assignee_last=[];o.responsible=null;
   o.progress=Math.round((k.checklist_progress||0)*100)/100;o.created_at=c.iso(k.created_at);o.modified_at=c.iso(k.updated_at);o.completed_by=[];o.completed_at=k.status==='completed'?c.iso(k.updated_at):null;
   o.project=hex(k.project_id);o.labels=[];o.attachments=[];o.has_attachments=false;o.deleted=false;o.completed=k.status==='completed';o.last_comment=null;o.has_comments=false;o.has_comments_with_deleted=false;o.dialog=null;o.dialog_message=null;o.checklist=[];

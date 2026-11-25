@@ -6,3 +6,5 @@
 - Update: `alb ssh --host oce --upload gw.tgz /tmp/gw.tgz`; extract into /opt/mizito-gw; `systemctl restart mizito-gw`.
 - Rollback: remove the two nginx locations, `systemctl disable --now mizito-gw`. Old /colleagues section is untouched.
 - Covers: /opt/mizito-gw/covers/<oce_project_id>.<jpg|jpeg|png|webp> (root-owned, 644, outside code dir; env MIZITO_COVER_DIR). Served at /_rs/cdn/cover/<id>. Interim until OCE GET picture route (RSD-1.4).
+
+- Synthetic task filter: env MIZITO_HIDE_SYNTHETIC_TASKS (default on; 0 disables, then restart). Rule in lib/synthetic.js. OCE data is not changed. Rollback = set 0 in /etc/mizito-gw.env and restart mizito-gw.
