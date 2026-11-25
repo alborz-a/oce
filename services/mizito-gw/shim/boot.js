@@ -35,7 +35,7 @@ var SWITCH_RE=/#\/(workspace_switching|ws\/choose)/;
 function switchGuard(){try{if(SWITCH_RE.test(location.hash)&&redirOk())location.hash='#/ws/home'}catch(e){}}
 try{window.addEventListener('hashchange',switchGuard);switchGuard()}catch(e){}
 // Tab title: gateway shell keeps رویال استار on every route (Mizito a_.js sets document.title to the workspace name).
-var FA_TITLE='رویال استار';var OLD_UI='__OLD_UI__'==='1';function pinTitle(){if(OLD_UI)return;try{if(document.title!==FA_TITLE)document.title=FA_TITLE}catch(e){}}
+var FA_TITLE='رویال استار';var OLD_UI='__OLD_UI__'==='1';var OLD_BRAND='__OLD_BRAND__'==='1';function pinTitle(){if(OLD_BRAND)return;try{if(document.title!==FA_TITLE)document.title=FA_TITLE}catch(e){}}
 // Hide workspace switcher/create card and support/help buttons that render after the CSS (class list mirrors brand.js HIDE_SEL).
 try{var SEL='__HIDE_SEL__';function hide(){try{var n=document.querySelectorAll(SEL);for(var i=0;i<n.length;i++)n[i].style.setProperty('display','none','important')}catch(e){}}
 var FA='رویال استار',MZT=/م[یي]زِ?[كک]ار/,MZ=/م[یي]زِ?[كک]ار/g,REG='md-toolbar,.workspace_header,.bl-appbar,.active-workspace-container,.header_workspace_name,.menu-profile-container';
