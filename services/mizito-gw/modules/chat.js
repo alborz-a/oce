@@ -59,7 +59,10 @@ const raw=(c,r,max=20)=>memo(c.oce.token,'msg:'+r.id+(max>20?':deep':''),10000,a
   for(let i=0;i<max;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
     const seen=new Set(all.map(m=>m.id));const fresh=a.filter(m=>!seen.has(m.id));all=fresh.concat(all);if(a.length<100||!fresh.length)break;before=a[0].id}
   return all});
+// MIZITO_COMPANY_HIDE_TEST_BEFORE (ISO): company-room messages without a mizito_id created before it are hidden (old Mizito has no such messages); unset = off
+const HIDE_TEST_BEFORE=process.env.MIZITO_COMPANY_HIDE_TEST_BEFORE||'';
 const messages=async(c,r)=>{let all=await raw(c,r);
+  if(r.kind==='company'&&HIDE_TEST_BEFORE)all=all.filter(m=>(m.metadata&&m.metadata.mizito_id)||String(m.created_at||'')>=HIDE_TEST_BEFORE);
   if(r.kind==='company'){const s=await load(c);const g=s.rooms.find(x=>x.kind==='project'&&x.name==='عمومی');
     if(g&&!PR.hiddenId(c,g.id)&&!all.some(isCoMsg)){const gm=await raw(c,g,80);all=all.concat(gm.filter(isCoMsg).map(m=>Object.assign({},m,{room_id:r.id})));all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}}
   else if(r.kind==='dm'){const s=await load(c),cm=canonMap(c,s);for(const x of s.rooms){if(x.kind==='dm'&&x.id!==r.id&&cm[x.id]===r.id&&!PR.hiddenId(c,x.id)){const o=await raw(c,x);all=all.concat(o.map(m=>Object.assign({},m,{room_id:r.id})))}}all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}
