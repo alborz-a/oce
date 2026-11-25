@@ -226,7 +226,7 @@ test('project dialog: getDialogs enriches members from OCE project members (both
   const d=out.dialogs.find(x=>x._id===hex(RID));
   assert.ok(d,'project dialog listed');
   assert.equal(d.is_project_group,true);assert.equal(d.title,'کنترل پروژه');
-  assert.deepEqual(d.labels.map(l=>l.title),['گروه الف']);
+  assert.equal(d.labels.length,1);assert.equal(typeof d.labels[0],'string');
   assert.deepEqual([...d.members].sort(),[hex(A),hex(B)].sort());
   assert.equal(d.owner,hex(A));assert.deepEqual(d.group_admins,[hex(A)]);
 });

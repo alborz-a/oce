@@ -26,13 +26,13 @@ const proj=(n,extra={})=>({id:UUID(n),name:'پروژه '+n,status:'active',owner
 test('group label: metadata.mizito_group -> stable {_id,title,color}; same title same id',async()=>{
   const c=ctx([proj(1,{metadata:{mizito_group:'گروه الف'}}),proj(2,{metadata:{mizito_group:'گروه الف'}}),proj(3,{metadata:{mizito_group:'گروه ب'}})],{});
   const out=await list(c);
+  // client resolves project labels by id string (getLabelFromHistory), so project.labels holds ids only
   const a=out[0].labels[0],b=out[2].labels[0];
-  assert.equal(typeof a,'object');
-  assert.equal(a.title,'گروه الف');
-  assert.match(a._id,/^[0-9a-f]{24}$/);
-  assert.equal(out[1].labels[0]._id,a._id);
-  assert.notEqual(b._id,a._id);
-  assert.deepEqual(groupLabel({metadata:{mizito_group:'گروه الف'}}),a);
+  assert.equal(typeof a,'string');
+  assert.match(a,/^[0-9a-f]{24}$/);
+  assert.equal(out[1].labels[0],a);
+  assert.notEqual(b,a);
+  assert.equal(groupLabel({metadata:{mizito_group:'گروه الف'}})._id,a);
 });
 
 test('group label: missing or blank metadata gives no label',async()=>{
@@ -48,7 +48,14 @@ test('labels/getAll: every distinct group only, label_status matches',async()=>{
   assert.ok(!ids.includes('0000000000000000000000a1'));
   assert.deepEqual(r.label_status.map(s=>s.label_id),ids);
   const pl=(await list(c)).find(p=>p.title==='پروژه 1').labels[0];
-  assert.ok(ids.includes(pl._id));
+  assert.ok(ids.includes(pl));
+});
+
+test('labels: every id in project labels exists in labels/getAll (ids are strings, no nulls)',async()=>{
+  const projs=[proj(1,{metadata:{mizito_group:'گروه الف'}}),proj(2,{metadata:{mizito_group:'گروه ب'}}),proj(3)];
+  const c=ctx(projs,{},{type:'project'});
+  const ids=new Set((await routes['/api/labels/getAll'](c)).labels.map(l=>l._id));
+  for(const p of await list(c))for(const id of p.labels){assert.equal(typeof id,'string');assert.ok(ids.has(id),p.title)}
 });
 
 test('labels/getAll: non-project type stays empty',async()=>{

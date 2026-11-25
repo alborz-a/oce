@@ -16,7 +16,7 @@ function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.
   else{d.title=r.name||'گروه';if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
   return d}
 // project rooms: members/admins/owner from OCE project members (the list the settings modal shows); used by getDialogs and getFullChat
-async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');d.labels=[];const pr=(await P.listRaw(c)).find(p=>hex(p.id)===hex(r.project_id));const g=pr?groupLabel(pr):null;if(g)d.labels=[g];
+async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');d.labels=[];const pr=(await P.listRaw(c)).find(p=>hex(p.id)===hex(r.project_id));const g=pr?groupLabel(pr):null;if(g)d.labels=[g._id];
   // card circle: Mizito reads the dialog photo (peerId "-<dialog>" -> AppChatsManager.getChat), so the project cover goes on the dialog too
   if(pr){const ph=coverPhoto(pr,hasCoverFile(String(pr.id)));if(ph)d.photo=ph}const ms=await P.members(c,r.project_id);
   if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
