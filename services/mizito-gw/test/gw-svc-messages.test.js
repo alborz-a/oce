@@ -29,3 +29,9 @@ test('normal text message unchanged',()=>{
   assert.equal(o.message,'سلام');
   assert.equal(o._,'message');
 });
+
+test('prefixed imported event (actor line + tag on last line) -> Farsi, no raw tag',()=>{
+  const o=message(base('«عارف رمضانی» — 1400/10/11 08:41\n[رویداد: messageActionChatAddUser]'));
+  assert.equal(o.message,'«عارف رمضانی» — 1400/10/11 08:41\nعضو جدید اضافه شد');
+  assert.ok(!/messageAction|رویداد/.test(o.message));
+});

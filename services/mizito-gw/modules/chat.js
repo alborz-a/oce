@@ -7,13 +7,21 @@ const load=c=>memo(c.oce.token,'chat',15000,()=>loadFresh(c));
 async function loadFresh(c){
   const [rooms,col]=await Promise.all([c.oce.get('/team-chat/rooms/'),c.oce.get('/team-chat/colleagues/')]);
   return {rooms,col,at:Date.now(),roomBy:Object.fromEntries(rooms.map(r=>[hex(r.id),r])),colBy:Object.fromEntries(col.map(u=>[hex(u.id),u]))}}
-function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
+const COMPANY_TITLE=process.env.MIZITO_COMPANY_TITLE||'شرکت ساختمانی رویال استار';
+// MIZITO_COMPANY_MEMBERS: comma list of OCE user uuids = old Mizito workspace members (empty = every visible colleague)
+const COMPANY_MEMBERS=(process.env.MIZITO_COMPANY_MEMBERS||'').split(',').map(x=>hex(x.trim())).filter(Boolean);
+const COMPANY_MID='chat:67dc270b7ccb82944b59ccae:';
+const isCoMsg=m=>String(((m||{}).metadata||{}).mizito_id||'').startsWith(COMPANY_MID);
+function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);
+  // company room = whole workspace (Mizito public group): every colleague the caller can see
+  if(r.kind==='company'&&s){const only=COMPANY_MEMBERS.length?new Set(COMPANY_MEMBERS):null;
+    for(const u of s.col){const h=hex(u.id);if((!only||only.has(h))&&!mem.includes(h))mem.push(h)}}if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
   // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
   if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
   const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:Number(r.unread)||0,history_unread_count:0,
     messages_count:0,last_message_date:c.iso(r.last_message_at||r.created_at),pinned_messages:[],seen:[{user:c.me.hexId,seen_count:0}],labels:[],kicked:false,deleted:false,members:mem,group_admins:[],bots:[],meetings:[],tags:[]};
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
-  else{d.title=r.name||'گروه';if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
+  else{d.title=r.kind==='company'?COMPANY_TITLE:(r.name||'گروه');if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
   return d}
 // project rooms: members/admins/owner from OCE project members (the list the settings modal shows); used by getDialogs and getFullChat
 async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');d.labels=[];const pr=(await P.listRaw(c)).find(p=>hex(p.id)===hex(r.project_id));const g=pr?groupLabel(pr):null;if(g)d.labels=[g._id];
@@ -26,11 +34,12 @@ function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J
   if(u.avatar_url){const t='av-'+hex(u.id);o.photo={_id:hex(u.id),name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}else delete o.photo;
   o.email='';o.phone='';o.username=u.full_name||'?';o.deleted=false;o.workspace_id=WID;return o}
 // Mizito service rows arrive as text '[رویداد: messageActionX]' (imported) or empty text. Map to Farsi; unknown/empty -> hidden (null).
-const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageActionChatAddUser:'عضو جدید اضافه شد',messageActionChatDeleteUser:'عضو حذف شد'};
-const svcEvent=t=>{const x=/^\s*\[رویداد:\s*([^\]\n]*?)\s*\]\s*$/.exec(String(t||''));return x?x[1]:null};
+const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageActionChatAddUser:'عضو جدید اضافه شد',messageActionChatDeleteUser:'عضو حذف شد',messageActionChatEditPhoto:'تصویر گروه تغییر کرد',messageActionChatEditTitle:'عنوان گروه تغییر کرد'};
+// imported rows: optional first line '«actor» — date', tag on the last line
+const svcEvent=t=>{const x=/^(?:([^\n]*)\n)?\s*\[رویداد:\s*([^\]\n]*?)\s*\]\s*$/.exec(String(t||''));return x?{ev:x[2],pre:(x[1]||'').trim()}:null};
 function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   const ev=svcEvent(m.text);let text=m.text||'';
-  if(ev!==null){text=SVC_TEXT[ev]||'';if(!text&&!ids.length)return null}
+  if(ev!==null){text=SVC_TEXT[ev.ev]||'';if(!text&&!ids.length)return null;if(text&&ev.pre)text=ev.pre+'\n'+text}
   else if(!text&&!ids.length)return null;
   const o={_id:hex(m.id),_:'message',dialog:hex(m.room_id),from:m.author_id?hex(m.author_id):'',message:text,date:new Date(m.created_at).toISOString(),msg_index:idx||0,workspace_id:WID,seen:[]};
   if(ids.length){const t='ph-'+String(ids[0]).replace(/-/g,'');o.media={_:'messageMediaPhoto',caption:m.text||'',photo:{_id:t,id:t,name:'a.webp',photo_medium:{content:t,size:-1,w:800,h:800,content_key:t},photo_large:{content:t,size:-1,w:800,h:800,content_key:t}}}}
@@ -39,10 +48,15 @@ async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialog
   const a=await messages(c,r);
   const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)}
 // whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
-const messages=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=null;
+const raw=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=null;
   for(let i=0;i<20;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
     const seen=new Set(all.map(m=>m.id));const fresh=a.filter(m=>!seen.has(m.id));all=fresh.concat(all);if(a.length<100||!fresh.length)break;before=a[0].id}
   return all});
+const messages=async(c,r)=>{let all=await raw(c,r);
+  if(r.kind==='company'){const s=await load(c);const g=s.rooms.find(x=>x.kind==='project'&&x.name==='عمومی');
+    if(g){const gm=await raw(c,g);all=all.concat(gm.filter(isCoMsg).map(m=>Object.assign({},m,{room_id:r.id})));all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}}
+  else if(r.kind==='project'&&r.name==='عمومی')all=all.filter(m=>!isCoMsg(m));
+  return all};
 const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 // Mizito keys DM dialogs by peerId (peer_user). Two DM rooms with the same peer make the client's dialog loader return undefined for the second one (chat bounces with TypeError undefined.dialog_type). Keep the first (newest, list is pre-sorted) per peer.
 function oneDmPerPeer(list){const seen=new Set();return list.filter(d=>{if(d.is_group)return true;const k=d.peer_user;if(!k)return true;if(seen.has(k))return false;seen.add(k);return true})}
