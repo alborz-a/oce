@@ -14,6 +14,11 @@ function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
   else{d.title=r.name||'گروه';if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id);d.labels=[PLABEL]}}
   return d}
+// project rooms: members/admins/owner from OCE project members (the list the settings modal shows); used by getDialogs and getFullChat
+async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');const ms=await P.members(c,r.project_id);
+  if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
+    d.group_admins=ms.filter(m=>P.ADMIN.includes(m.role)).map(m=>hex(m.user_id));const own=ms.find(m=>m.role==='owner');d.owner=own?hex(own.user_id):(d.group_admins[0]||c.me.hexId)}
+  return d}
 function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J(c.T.user);o._id=hex(u.id);o.first_name=p[0];o.last_name=p.slice(1).join(' ');
   if(u.avatar_url){const t='av-'+hex(u.id);o.photo={_id:hex(u.id),name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}else delete o.photo;
   o.email='';o.phone='';o.username=u.full_name||'?';o.deleted=false;o.workspace_id=WID;return o}
@@ -32,13 +37,10 @@ const messages=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],be
 const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
- '/api/chat/getDialogs':async c=>{const s=await load(c);return {dialogs:s.rooms.map(r=>dialog(c,r,s)).filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
+ '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(s.rooms.map(async r=>enrichProject(c,r,dialog(c,r,s))));return {dialogs:ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
  '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
-  // project rooms: participants and admins come from OCE project members (the list the settings modal shows)
-  if(r.kind==='project'&&r.project_id){const P=require('./projects');const ms=await P.members(c,r.project_id);
-    if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
-      d.group_admins=ms.filter(m=>P.ADMIN.includes(m.role)).map(m=>hex(m.user_id));const own=ms.find(m=>m.role==='owner');d.owner=own?hex(own.user_id):(d.group_admins[0]||c.me.hexId)}}
+  await enrichProject(c,r,d);
   return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:d.group_admins||[]})},
  '/api/chat/getHistory':async c=>history(c,c.b.dialog),
  '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},

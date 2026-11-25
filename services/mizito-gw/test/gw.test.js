@@ -221,3 +221,19 @@ test('shim switch guard: switch hash replaced with Home; breaker stops after 3 r
   assert.equal(st.hashSets.filter(h=>h==='#/ws/home').length,3);
   assert.equal(st.hash,'#/ws/choose');
 });
+
+test('project dialog: getDialogs enriches members from OCE project members (both users, owner, title, is_project_group)',async()=>{
+  const {routes}=require('../modules/chat.js');const {hex}=require('../lib/oce');
+  const PID='22222222-2222-2222-2222-222222222222',RID='33333333-3333-3333-3333-333333333333',A=TOK.tokA.id,B=TOK.tokB.id;
+  const c={oce:{token:'tokProjDlg',get:async p=>{
+    if(p==='/team-chat/rooms/')return [{id:RID,kind:'project',name:'کنترل پروژه',member_ids:[A],project_id:PID}];
+    if(p==='/team-chat/colleagues/')return [];
+    if(p==='/projects/'+PID+'/members/')return [{user_id:A,role:'owner'},{user_id:B,role:'member'}];
+    throw new Error('unexpected '+p)}},me:{id:A,hexId:hex(A),name:'A One'},iso:x=>x||'',J:x=>x};
+  const out=await routes['/api/chat/getDialogs'](c);
+  const d=out.dialogs.find(x=>x._id===hex(RID));
+  assert.ok(d,'project dialog listed');
+  assert.equal(d.is_project_group,true);assert.equal(d.title,'کنترل پروژه');
+  assert.deepEqual([...d.members].sort(),[hex(A),hex(B)].sort());
+  assert.equal(d.owner,hex(A));assert.deepEqual(d.group_admins,[hex(A)]);
+});
