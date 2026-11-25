@@ -1,5 +1,6 @@
 // Chat domain: rooms/colleagues/messages straight from OCE team-chat with the caller's token. Reads and send.
-const {WID,PLABEL}=require('../lib/ctx');
+const {WID}=require('../lib/ctx');
+const {groupLabel}=require('../lib/project-meta');
 const {hex}=require('../lib/oce');
 const {memo,drop}=require('../lib/cache');
 const load=c=>memo(c.oce.token,'chat',15000,()=>loadFresh(c));
@@ -12,10 +13,10 @@ function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);if(!mem.includes(c.
   const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:Number(r.unread)||0,history_unread_count:0,
     messages_count:0,last_message_date:c.iso(r.last_message_at||r.created_at),pinned_messages:[],seen:[{user:c.me.hexId,seen_count:0}],labels:[],kicked:false,deleted:false,members:mem,group_admins:[],bots:[],meetings:[],tags:[]};
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
-  else{d.title=r.name||'گروه';if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id);d.labels=[PLABEL]}}
+  else{d.title=r.name||'گروه';if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
   return d}
 // project rooms: members/admins/owner from OCE project members (the list the settings modal shows); used by getDialogs and getFullChat
-async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');const ms=await P.members(c,r.project_id);
+async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return d;const P=require('./projects');d.labels=[];const pr=(await P.listRaw(c)).find(p=>hex(p.id)===hex(r.project_id));const g=pr?groupLabel(pr):null;if(g)d.labels=[g];const ms=await P.members(c,r.project_id);
   if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
     d.group_admins=ms.filter(m=>P.ADMIN.includes(m.role)).map(m=>hex(m.user_id));const own=ms.find(m=>m.role==='owner');d.owner=own?hex(own.user_id):(d.group_admins[0]||c.me.hexId)}
   return d}

@@ -1,7 +1,7 @@
 // Offline tests: project group labels, cover, project-wide progress from OCE. Fake OCE client, no network.
 const test=require('node:test'),assert=require('node:assert');
 const {routes,list}=require('../modules/projects');
-const {PLABEL,J,T}=require('../lib/ctx');
+const {J,T}=require('../lib/ctx');
 const {hex}=require('../lib/oce');
 const {groupLabel}=require('../lib/project-meta');
 
@@ -35,17 +35,17 @@ test('group label: metadata.mizito_group -> stable {_id,title,color}; same title
   assert.deepEqual(groupLabel({metadata:{mizito_group:'گروه الف'}}),a);
 });
 
-test('group label: missing or blank metadata falls back to PLABEL',async()=>{
+test('group label: missing or blank metadata gives no label',async()=>{
   const c=ctx([proj(4),proj(5,{metadata:{mizito_group:'   '}}),proj(6,{metadata:{mizito_group:42}})],{});
-  for(const p of await list(c))assert.deepEqual(p.labels,[PLABEL],p.title);
+  for(const p of await list(c))assert.deepEqual(p.labels,[],p.title);
 });
 
-test('labels/getAll: PLABEL plus every distinct group, label_status matches',async()=>{
+test('labels/getAll: every distinct group only, label_status matches',async()=>{
   const c=ctx([proj(1,{metadata:{mizito_group:'گروه الف'}}),proj(2,{metadata:{mizito_group:'گروه الف'}}),proj(3,{metadata:{mizito_group:'گروه ب'}}),proj(4)],{},{type:'project'});
   const r=await routes['/api/labels/getAll'](c);
   const ids=r.labels.map(l=>l._id);
-  assert.equal(ids[0],PLABEL);
-  assert.equal(ids.length,3);
+  assert.equal(ids.length,2);
+  assert.ok(!ids.includes('0000000000000000000000a1'));
   assert.deepEqual(r.label_status.map(s=>s.label_id),ids);
   const pl=(await list(c)).find(p=>p.title==='پروژه 1').labels[0];
   assert.ok(ids.includes(pl._id));
