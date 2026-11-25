@@ -11,7 +11,8 @@ const pers=d=>new Intl.DateTimeFormat('en-u-ca-persian-nu-latn',{year:'numeric',
 const OD=require('../lib/owner-dash');
 // owner dashboard lists: resolve stored old-Mizito task ids to OCE tasks by metadata.mizito_id (open only)
 async function ownerList(c,kind){const ids=(OD.snap('dash-tasks',{})[kind])||[];if(!ids.length)return null;
-  const all=await memo(c.oce.token,'allTasks',60000,()=>c.oce.pages('/tasks/',500,20000));const by={};all.forEach(k=>{const m=k.metadata&&k.metadata.mizito_id;if(m)by[m]=k});
+  const all=await memo(c.oce.token,'ownerOpenTasks',120000,async()=>{const ps=await require('./projects').listRaw(c);const out=[];
+    for(let i=0;i<ps.length;i+=6){const r=await Promise.all(ps.slice(i,i+6).map(p=>c.oce.pages('/tasks/?project_id='+p.id+'&status=open',500,5000).catch(()=>[])));r.forEach(a=>out.push(...a))}return out});const by={};all.forEach(k=>{const m=k.metadata&&k.metadata.mizito_id;if(m)by[m]=k});
   return ids.map(i=>by[i]).filter(k=>k&&k.status!=='completed').map(k=>{const o=row(c,k);if(kind==='inbox')o.assignee=[c.me.hexId];else o.owner=c.me.hexId;return o})}
 const routes={
  '/api/tasks/upcoming':async c=>{if(OD.on(c)&&c.b.from_dashboard&&(c.b.inbox||c.b.outbox)){const l=await ownerList(c,c.b.inbox?'inbox':'outbox');if(l)return l}
