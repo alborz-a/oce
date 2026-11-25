@@ -6,7 +6,7 @@ const {memo}=require('../lib/cache');
 const {groupLabel,groupsOf,coverFields,coverPhoto}=require('../lib/project-meta');const {hasCoverFile}=require('../lib/cover-store');
 async function members(c,pid){return memo(c.oce.token,'pm:'+pid,60000,async()=>{try{const m=await c.oce.get('/projects/'+pid+'/members/');return Array.isArray(m)?m:[]}catch(e){return []}})}
 async function list(c){const arr=await memo(c.oce.token,'projects',15000,()=>c.oce.pages('/projects/',200,2000));
-  const s=await chat.load(c);const roomOf={};s.rooms.forEach(r=>{if(r.project_id)roomOf[hex(r.project_id)]=hex(r.id)});
+  const s=await chat.load(c);const roomOf={};s.rooms.forEach(r=>{if(r.project_id&&!require('../lib/private-rooms').hiddenId(c,r.id))roomOf[hex(r.project_id)]=hex(r.id)});
   const act=arr.filter(p=>p.status!=='archived');const ms=await Promise.all(act.map(p=>members(c,p.id)));return act.map((p,i)=>{const o=c.J(c.T.project);o._id=hex(p.id);o.title=p.name;o.owner=p.owner_id?hex(p.owner_id):c.me.hexId;o.color=COLORS[i%6];
     o.deleted=false;const g=groupLabel(p);o.labels=g?[g._id]:[];const hc=hasCoverFile(String(p.id));Object.assign(o,coverFields(p,hc));const ph=coverPhoto(p,hc);if(ph)o.photo=ph;o.members_admin=(ms[i]||[]).filter(m=>ADMIN.includes(m.role)).map(m=>hex(m.user_id));if(p.owner_id&&!o.members_admin.includes(hex(p.owner_id)))o.members_admin.push(hex(p.owner_id));o.kanban_boards=[{_id:hex(p.id).slice(0,23)+'b',title:'برای انجام',color:'green2'}];o.dialog=roomOf[hex(p.id)]||null;o.archived=false;return o})}
 // Project-wide task counts per project (all members, not caller-only): OCE GET /tasks/?project_id= paged, synthetic tasks hidden (lib/synthetic.js). Failure = zeros.

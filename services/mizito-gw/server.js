@@ -35,14 +35,14 @@ const srv=http.createServer((req,res)=>{
       if(big)return json(res,413,{error:'too large'});
       if(req.method==='OPTIONS')return send(res,204,'');
       const h=routes[p];if(!h)return json(res,404,{error:'not implemented in gateway',path:p});
-      try{const c=await ctxlib.make(req,Buffer.concat(chunks).toString());return json(res,200,await h(c))}
+      try{const c=await ctxlib.make(req,Buffer.concat(chunks).toString());if(require('./lib/private-rooms').hiddenId(c,c.b.dialog))return json(res,404,{error:'not found'});return json(res,200,await h(c))}
       catch(e){if(e instanceof Unauthorized)return json(res,401,{error:'unauthorized'});console.log('ERR',p,e.message);return json(res,500,{error:'upstream'})}
     });return;
   }
   if(p.startsWith('/cdn/cover/'))return require('./modules/cover').handle(res,p.slice('/cdn/cover/'.length),{make:()=>ctxlib.make(req,'')});
   // project photo object (photo_medium/photo_large content_key cv-<projectId>): same cover file, same owner check
   {const cid=require('./lib/project-meta').coverKeyId(p.slice(5));if(p.startsWith('/cdn/')&&cid)return require('./modules/cover').handle(res,cid,{make:()=>ctxlib.make(req,'')})}
-  if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
+  if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');if(await chat.hiddenDoc(c,p.slice(5)))return send(res,404,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
       if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},SEC,r.headers||{}));return res.end(r.body)}
       if(r&&r.status){res.writeHead(r.status);return res.end()}
       if(r&&r.redirect&&/^https?:\/\//i.test(r.redirect)){res.writeHead(302,{Location:r.redirect,'cache-control':'no-store'});return res.end()}
