@@ -237,3 +237,17 @@ test('project dialog: getDialogs enriches members from OCE project members (both
   assert.deepEqual([...d.members].sort(),[hex(A),hex(B)].sort());
   assert.equal(d.owner,hex(A));assert.deepEqual(d.group_admins,[hex(A)]);
 });
+
+test('project dialog: getChatView enriches members from OCE project members',async()=>{
+  const {routes}=require('../modules/chat.js');const {hex}=require('../lib/oce');
+  const PID='22222222-2222-2222-2222-222222222222',RID='33333333-3333-3333-3333-333333333333',A=TOK.tokA.id,B=TOK.tokB.id;
+  const c={oce:{token:'tokProjDlg',get:async p=>{
+    if(p==='/team-chat/rooms/')return [{id:RID,kind:'project',name:'کنترل پروژه',member_ids:[A],project_id:PID}];
+    if(p==='/team-chat/colleagues/')return [];
+    if(p==='/projects/'+PID+'/members/')return [{user_id:A,role:'owner'},{user_id:B,role:'member'}];
+    if(p.startsWith('/team-chat/rooms/'))return [];
+    throw new Error('unexpected '+p)}},me:{id:A,hexId:hex(A),name:'A One'},b:{dialog:hex(RID)},iso:x=>x||'',J:x=>x};
+  const d=await routes['/api/chat/getChatView'](c);
+  assert.equal(d._id,hex(RID));assert.equal(d.is_project_group,true);
+  assert.deepEqual([...d.members].sort(),[hex(A),hex(B)].sort());
+});

@@ -38,7 +38,7 @@ const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
  '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(s.rooms.map(async r=>enrichProject(c,r,dialog(c,r,s))));return {dialogs:ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')),pin_dialogs:[]}},
- '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
+ '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));await enrichProject(c,r,d);d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
   await enrichProject(c,r,d);
   return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:d.group_admins||[]})},
