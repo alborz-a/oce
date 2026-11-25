@@ -6,14 +6,14 @@ const mine=c=>memo(c.oce.token,'mine',10000,async()=>filterSynthetic(await c.oce
 function row(c,k){const o=c.J(c.T.task);o._id=hex(k.id);o.access_token=hex(k.id);o.title=k.title;o.notes=k.description||'';o.owner=k.created_by?hex(k.created_by):c.me.hexId;o.assignee=[k.responsible_id?hex(k.responsible_id):null];o.assignee_last=[];o.responsible=null;
   o.progress=Math.round((k.checklist_progress||0)*100)/100;o.created_at=c.iso(k.created_at);o.modified_at=c.iso(k.updated_at);o.completed_by=[];o.completed_at=k.status==='completed'?c.iso(k.updated_at):null;
   o.project=hex(k.project_id);o.labels=[];o.attachments=[];o.has_attachments=false;o.deleted=false;o.completed=k.status==='completed';o.last_comment=null;o.has_comments=false;o.has_comments_with_deleted=false;o.dialog=null;o.dialog_message=null;o.checklist=[];
-  if(k.due_date){o.alarm_at=new Date(k.due_date+'T08:00:00Z').toISOString();o.sort_date=o.alarm_at}else{o.alarm_at=null;o.sort_date=null}return o}
+  if(k.due_date){o.alarm_at=new Date(k.due_date+'T08:00:00Z').toISOString();o.sort_date=o.alarm_at;o.deadline=o.alarm_at;o.has_deadline=true;o.deadline_used=true}else{o.alarm_at=null;o.sort_date=null}return o}
 const pers=d=>new Intl.DateTimeFormat('en-u-ca-persian-nu-latn',{year:'numeric',month:'numeric'}).formatToParts(d).reduce((a,x)=>(a[x.type]=+x.value,a),{});
 const OD=require('../lib/owner-dash');
 // owner dashboard lists: resolve stored old-Mizito task ids to OCE tasks by metadata.mizito_id (open only)
-async function ownerList(c,kind){const ids=(OD.snap('dash-tasks',{})[kind])||[];if(!ids.length)return null;
+async function ownerList(c,kind){const col=(await require('./chat').load(c)).col;const ids=(OD.snap('dash-tasks',{})[kind])||[];if(!ids.length)return null;
   const all=await memo(c.oce.token,'ownerOpenTasks',120000,async()=>{const ps=await require('./projects').listRaw(c);const out=[];
     for(let i=0;i<ps.length;i+=6){const r=await Promise.all(ps.slice(i,i+6).map(p=>c.oce.pages('/tasks/?project_id='+p.id+'&status=open',500,5000).catch(()=>[])));r.forEach(a=>out.push(...a))}return out});const by={};all.forEach(k=>{const m=k.metadata&&k.metadata.mizito_id;if(m)by[m]=k});
-  return ids.map(i=>by[i]).filter(k=>k&&k.status!=='completed').map(k=>{const o=row(c,k);if(kind==='inbox')o.assignee=[c.me.hexId];else o.owner=c.me.hexId;return o})}
+  return ids.map(i=>by[i]).filter(k=>k&&k.status!=='completed').map(k=>{const o=row(c,k),m=k.metadata.mizito_id,sn=OD.snap('dash-tasks',{});const as=(sn.assignees||{})[m];if(as&&as.length)o.assignee=as.map(x=>OD.uid(c,x,col));else if(kind==='inbox')o.assignee=[c.me.hexId];if(kind==='outbox')o.owner=c.me.hexId;const dl=(sn.deadlines||{})[m];if(dl){o.deadline=dl;o.alarm_at=dl;o.sort_date=dl;o.has_deadline=o.deadline_used=true}return o})}
 const routes={
  '/api/tasks/upcoming':async c=>{if(OD.on(c)&&c.b.from_dashboard&&(c.b.inbox||c.b.outbox)){const l=await ownerList(c,c.b.inbox?'inbox':'outbox');if(l)return l}
   const all=await mine(c),open=all.filter(k=>k.status!=='completed'),f=c.b.filter||{};

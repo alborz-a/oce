@@ -54,7 +54,7 @@ const routes={
   if(!isLetterAdmin(c))return rows;
   const mz=(await mzRows(c)).filter(x=>(x.metadata||{}).box===box).map(x=>mzRow(c,x));
   return rows.concat(mz).sort((a,b)=>String(b.send_date||'').localeCompare(String(a.send_date||'')))},
- '/api/inbox/badge':async c=>{const r=await c.oce.get('/correspondence/mailbox/unread-count/');return {inbox_count:r.count||0}},
+ '/api/inbox/badge':async c=>{if(require('../lib/owner-dash').on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1')return {inbox_count:0};const r=await c.oce.get('/correspondence/mailbox/unread-count/');return {inbox_count:r.count||0}},
  '/api/inbox/send':async c=>{const b=c.b;if(!b.to||!b.to.length)return fail('گیرنده انتخاب نشده است');
   try{
     if(b.reply_to||b.thread){const l=await letterUuid(c,b.reply_to||b.thread);if(!l)return fail('نامه پیدا نشد');

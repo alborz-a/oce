@@ -19,7 +19,7 @@ function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);
     for(const u of s.col){const h=hex(u.id);if((!only||only.has(h))&&!mem.includes(h))mem.push(h)}}if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
   // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
   if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
-  const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:Number(r.unread)||0,history_unread_count:0,
+  const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:(OD.on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1')?0:(Number(r.unread)||0),history_unread_count:0,
     messages_count:0,last_message_date:c.iso(r.last_message_at||r.created_at),pinned_messages:[],seen:[{user:c.me.hexId,seen_count:0}],labels:[],kicked:false,deleted:false,members:mem,group_admins:[],bots:[],meetings:[],tags:[]};
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
   else{d.title=r.kind==='company'?COMPANY_TITLE:(r.name||'گروه');if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
@@ -42,7 +42,7 @@ const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageAction
 // imported rows: optional first line '«actor» — date', tag on the last line
 const svcEvent=t=>{const x=/^(?:([^\n]*)\n)?\s*\[رویداد:\s*([^\]\n]*?)\s*\]\s*$/.exec(String(t||''));return x?{ev:x[2],pre:(x[1]||'').trim()}:null};
 // deleted Mizito sender (no OCE account): display-only user so letters keep the sender's name
-function delUser(c,n){const LS=require('../lib/letter-senders');const p=n.trim().split(/\s+/);const o=c.J(c.T.user);o._id=LS.idOf(n);o.first_name=p[0];o.last_name=p.slice(1).join(' ');delete o.photo;o.email='';o.phone='';o.username=n;o.deleted=true;o.workspace_id=WID;return o}
+function delUser(c,n){const LS=require('../lib/letter-senders');const p=n.trim().split(/\s+/);const o=c.J(c.T.user);o._id=LS.idOf(n);o.first_name=p[0];o.last_name=p.slice(1).join(' ');delete o.photo;if(OD.on(c)&&OD.photoFile(n)){const t='av-'+o._id;o.photo={_id:o._id,name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}o.email='';o.phone='';o.username=n;o.deleted=true;o.workspace_id=WID;return o}
 function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   const ev=svcEvent(m.text);let text=m.text||'';
   if(ev!==null){text=SVC_TEXT[ev.ev]||'';if(!text&&!ids.length)return null;if(text&&ev.pre)text=ev.pre+'\n'+text}
@@ -94,7 +94,7 @@ async function cdn(c,name){
     const j=await c.oce.get('/documents/photos/'+u+'/file-url/');return {redirect:j.url||j.file_url||j.download_url||null}}
   const m=/^(?:dl\/)?av-([0-9a-f]{24})$/.exec(name);if(m){const s=await load(c);const u=s.colBy[m[1]];
     // OCE colleagues avatar_url is relative with a cache-buster: /api/v1/users/<id>/avatar?v=<stamp>. server.js rejects query strings, so strip it here.
-    if(!(u&&u.avatar_url)){const f=avFile(m[1])||(OD.on(c)&&u&&OD.photoFile(u.full_name));if(f)return {body:require('fs').readFileSync(f),type:'image/jpeg'}}
+    if(!(u&&u.avatar_url)){const f=avFile(m[1])||(OD.on(c)&&(u?OD.photoFile(u.full_name):OD.photoFileById(m[1])));if(f)return {body:require('fs').readFileSync(f),type:'image/jpeg'}}
     if(u&&u.avatar_url){const abs=/^https?:\/\//i.test(u.avatar_url);return {redirect:abs?u.avatar_url:null,oceAvatar:abs?null:u.avatar_url.split('?')[0]}}}
   return null}
 // document ids (dashless, lowercase) of messages in rooms hidden from this caller; /cdn ph-/dl- for these answer 404

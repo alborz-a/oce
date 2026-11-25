@@ -9,7 +9,11 @@ const routes={
  '/api/workspace/getPlans':k([]),
  // client: monitor customers list is an array (angular.forEach then a.customers = d)
  '/api/monitor/customers':R.guard('customers',[]),
- '/api/dashboard/getAllWorkspacesUsers':async c=>{const OD=require('../lib/owner-dash');if(!OD.on(c))return [];const r=await require('./chat').routes['/api/workspace/getUsers'](c);return [{workspace_id:c.WID,users:r.users.filter(u=>!u.deleted).map(u=>Object.assign({},u,{workspace_id:c.WID}))}]},'/api/dashboard/notifySeen':k(true),'/api/dashboard/getPending':k([]),
+ '/api/dashboard/getAllWorkspacesUsers':async c=>{const OD=require('../lib/owner-dash');if(!OD.on(c))return [];const r=await require('./chat').routes['/api/workspace/getUsers'](c);const us=r.users.filter(u=>!u.deleted);const ws=OD.snap('dash-wsusers',null);
+  if(!ws)return [{workspace_id:c.WID,users:us.map(u=>Object.assign({},u,{workspace_id:c.WID}))}];
+  const nm=u=>((u.first_name||'')+' '+(u.last_name||'')).trim();
+  return ws.map((w,i)=>{const last=i===ws.length-1,id=last?c.WID:w.workspace_id;const list=last?us:w.names.map(n=>us.find(u=>nm(u)===n||(n==='آرش پیرنیا'&&u._id===c.me.hexId))).filter(Boolean);return {workspace_id:id,users:list.map(u=>Object.assign({},u,{workspace_id:id}))}})},
+ '/api/dashboard/notifySeen':k(true),'/api/dashboard/getPending':k([]),
  // client getPlanInfo(true) (settings pages): loader clears loadingPlanInfo only when max_members_count is truthy, so the details branch must return non-null plan fields. owner_id = caller id (client compares it with getUserId()). No users field: client passes it to saveApiUsers as an array.
  '/api/workspace/planInfo':async c=>{const OD=require('../lib/owner-dash');const base=OD.on(c)&&OD.snap('dash-plan',null)?{used:OD.snap('dash-plan').used,volume:OD.snap('dash-plan').volume,remain_days:require('../lib/owner-dash').remainDays()}:{used:0,volume:1099511627776,remain_days:3650};
    if(!(c.b&&c.b.details))return base;
