@@ -13,8 +13,10 @@ function photoFile(name){if(!DIR||!name)return null;const n=names();const mid=Ob
 // last task line (old workspace/getUsers work_status) by full name
 function workStatus(name){const w=snap('dash-work',{});return w[String(name||'').trim()]||{}}
 // plan banner: days to expiry (negative = overdue) from MIZITO_PLAN_EXPIRED_AT (default 2026-10-30, old value -24 on 2026-11-23)
+// old workspace role title under the name in chat lists (old getUsers workspace_role_name), by full name
+function roleName(name){return snap('dash-roles',{})[String(name||'').trim()]||''}
 const remainDays=()=>Math.floor((Date.parse(process.env.MIZITO_PLAN_EXPIRED_AT||'2026-10-30T20:30:00Z')-Date.now())/864e5);
 // display-only (deleted) user id -> photo file: dd-id is idOf(name)
 function photoFileById(id){const LS=require('./letter-senders');const n=Object.values(names()).find(x=>LS.idOf(x)===id);return n?photoFile(n):null}
 const OLD=process.env.MIZITO_OLD_UI==='1';
-module.exports={on,snap,uid,names,extraNames,photoFile,photoFileById,workStatus,OLD,remainDays};
+module.exports={on,snap,uid,names,extraNames,photoFile,photoFileById,workStatus,roleName,OLD,remainDays};

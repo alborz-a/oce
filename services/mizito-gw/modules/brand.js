@@ -57,6 +57,6 @@ module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,
     if(module.exports.CACHE_ID)w.client_version=module.exports.CACHE_ID; // equals c_.js cache_id by construction
     w.workspaces=[{_id:WID,title:c.label,active:true}];
     Object.assign(w,{wallpaper:'back-pattern',plan_upgrade_need:false,plan_is_demo:false,plan_ds_near_ex:false,plan_ds_ex:false,plan_storage_almost_full:false,remain_days:3650});
-    {const OD=require('../lib/owner-dash');if(OD.on(c)){const ws=OD.snap('dash-workspaces',null);if(ws&&ws.length)w.workspaces=ws.map((x,i)=>({_id:i?x._id:WID,title:x.title,active:!i}));if(OD.snap('dash-plan',null)){w.plan_upgrade_need=true;w.remain_days=OD.remainDays()}}}
+    {const OD=require('../lib/owner-dash');if(OD.on(c)){const ws=OD.snap('dash-workspaces',null);if(ws&&ws.length)w.workspaces=ws.map((x,i)=>({_id:i?x._id:WID,title:x.title,active:!i}));w.access_workspace_role_names=true;if(OD.snap('dash-plan',null)){w.plan_upgrade_need=true;w.remain_days=OD.remainDays()}}}
     w.access_admin=w.access_owner=c.isManager;return w},
 }};
