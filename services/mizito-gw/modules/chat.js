@@ -25,13 +25,19 @@ async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return 
 function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J(c.T.user);o._id=hex(u.id);o.first_name=p[0];o.last_name=p.slice(1).join(' ');
   if(u.avatar_url){const t='av-'+hex(u.id);o.photo={_id:hex(u.id),name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}else delete o.photo;
   o.email='';o.phone='';o.username=u.full_name||'?';o.deleted=false;o.workspace_id=WID;return o}
+// Mizito service rows arrive as text '[رویداد: messageActionX]' (imported) or empty text. Map to Farsi; unknown/empty -> hidden (null).
+const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageActionChatAddUser:'عضو جدید اضافه شد',messageActionChatDeleteUser:'عضو حذف شد'};
+const svcEvent=t=>{const x=/^\s*\[رویداد:\s*([^\]\n]*?)\s*\]\s*$/.exec(String(t||''));return x?x[1]:null};
 function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
-  const o={_id:hex(m.id),_:'message',dialog:hex(m.room_id),from:m.author_id?hex(m.author_id):'',message:m.text||(ids.length?'':'[پیام سیستمی]'),date:new Date(m.created_at).toISOString(),msg_index:idx||0,workspace_id:WID,seen:[]};
+  const ev=svcEvent(m.text);let text=m.text||'';
+  if(ev!==null){text=SVC_TEXT[ev]||'';if(!text&&!ids.length)return null}
+  else if(!text&&!ids.length)return null;
+  const o={_id:hex(m.id),_:'message',dialog:hex(m.room_id),from:m.author_id?hex(m.author_id):'',message:text,date:new Date(m.created_at).toISOString(),msg_index:idx||0,workspace_id:WID,seen:[]};
   if(ids.length){const t='ph-'+String(ids[0]).replace(/-/g,'');o.media={_:'messageMediaPhoto',caption:m.text||'',photo:{_id:t,id:t,name:'a.webp',photo_medium:{content:t,size:-1,w:800,h:800,content_key:t},photo_large:{content:t,size:-1,w:800,h:800,content_key:t}}}}
   return o}
 async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialogId];if(!r)return [];
   const a=await messages(c,r);
-  const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message))}
+  const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)}
 // whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
 const messages=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=null;
   for(let i=0;i<20;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
