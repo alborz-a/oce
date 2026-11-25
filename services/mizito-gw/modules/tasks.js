@@ -8,13 +8,19 @@ function row(c,k){const o=c.J(c.T.task);o._id=hex(k.id);o.access_token=hex(k.id)
   o.project=hex(k.project_id);o.labels=[];o.attachments=[];o.has_attachments=false;o.deleted=false;o.completed=k.status==='completed';o.last_comment=null;o.has_comments=false;o.has_comments_with_deleted=false;o.dialog=null;o.dialog_message=null;o.checklist=[];
   if(k.due_date){o.alarm_at=new Date(k.due_date+'T08:00:00Z').toISOString();o.sort_date=o.alarm_at}else{o.alarm_at=null;o.sort_date=null}return o}
 const pers=d=>new Intl.DateTimeFormat('en-u-ca-persian-nu-latn',{year:'numeric',month:'numeric'}).formatToParts(d).reduce((a,x)=>(a[x.type]=+x.value,a),{});
+const OD=require('../lib/owner-dash');
+// owner dashboard lists: resolve stored old-Mizito task ids to OCE tasks by metadata.mizito_id (open only)
+async function ownerList(c,kind){const ids=(OD.snap('dash-tasks',{})[kind])||[];if(!ids.length)return null;
+  const all=await memo(c.oce.token,'allTasks',60000,()=>c.oce.pages('/tasks/',500,20000));const by={};all.forEach(k=>{const m=k.metadata&&k.metadata.mizito_id;if(m)by[m]=k});
+  return ids.map(i=>by[i]).filter(k=>k&&k.status!=='completed').map(k=>{const o=row(c,k);if(kind==='inbox')o.assignee=[c.me.hexId];else o.owner=c.me.hexId;return o})}
 const routes={
- '/api/tasks/upcoming':async c=>{const all=await mine(c),open=all.filter(k=>k.status!=='completed'),f=c.b.filter||{};
+ '/api/tasks/upcoming':async c=>{if(OD.on(c)&&c.b.from_dashboard&&(c.b.inbox||c.b.outbox)){const l=await ownerList(c,c.b.inbox?'inbox':'outbox');if(l)return l}
+  const all=await mine(c),open=all.filter(k=>k.status!=='completed'),f=c.b.filter||{};
   if(c.b.project_id)return open.filter(k=>hex(k.project_id)===String(c.b.project_id)).map(k=>row(c,k));
   if(f.calendar_year){const p=open.filter(k=>{if(!k.due_date)return false;const q=pers(new Date(k.due_date));return q.year===f.calendar_year&&q.month===f.calendar_month});return p.map(k=>row(c,k))}
   return open.filter(k=>!k.due_date).slice(0,40).concat(open.filter(k=>k.due_date).slice(0,20)).map(k=>row(c,k))},
  '/api/tasks/getAll':async c=>{const all=await mine(c);const pid=c.b.project?String(c.b.project):null;return all.filter(k=>!pid||hex(k.project_id)===pid).map(k=>row(c,k))},
- '/api/tasks/badge':async c=>{const a=await mine(c);return {today:0,count:a.filter(k=>k.status!=='completed').length,total_count:a.length}},
+ '/api/tasks/badge':async c=>{if(OD.on(c)){const b=OD.snap('dash-badge',null);if(b)return b}const a=await mine(c);return {today:0,count:a.filter(k=>k.status!=='completed').length,total_count:a.length}},
 };
 
 // ---- writes (OCE enforces project access and permissions; errors come back as {error} like Mizito) ----

@@ -2,7 +2,7 @@
 const {hex}=require('../lib/oce');const chat=require('./chat');
 const COLORS=['blue','green','red','orange','purple','teal'];
 const ADMIN=['owner','lead','project_manager'];
-const {memo}=require('../lib/cache');
+const {memo}=require('../lib/cache');const OD=require('../lib/owner-dash');
 const {groupLabel,groupsOf,coverFields,coverPhoto}=require('../lib/project-meta');const {hasCoverFile}=require('../lib/cover-store');
 async function members(c,pid){return memo(c.oce.token,'pm:'+pid,60000,async()=>{try{const m=await c.oce.get('/projects/'+pid+'/members/');return Array.isArray(m)?m:[]}catch(e){return []}})}
 async function list(c){const arr=await memo(c.oce.token,'projects',15000,()=>c.oce.pages('/projects/',200,2000));
@@ -20,7 +20,12 @@ const routes={
  '/api/projects/getListAdmin':async c=>list(c),
  '/api/projects/allSummary':async c=>{const t=c.J(c.T.summary),s0=t.summaries[0]||{};const raw=await listRaw(c);const [p,per]=await Promise.all([list(c),counts(c,raw.filter(x=>x.status!=='archived'))]);
   t.summaries=p.map(pr=>{const o=c.J(s0),k=per[pr._id]||{n:0,c:0};Object.keys(o).forEach(x=>{if(typeof o[x]==='number')o[x]=0});
-   o.project=pr._id;o.name=pr.title;o.project_title=pr.title;o.total_tasks=o.total_tasks_count=k.n;o.others_completed=o.others_completed_count=k.c;o.is_archived=false;o.dialog=pr.dialog;o.boards={};o.last_completed=null;return o});return t},
+   o.project=pr._id;o.name=pr.title;o.project_title=pr.title;o.total_tasks=o.total_tasks_count=k.n;o.others_completed=o.others_completed_count=k.c;o.is_archived=false;o.dialog=pr.dialog;o.boards={};o.last_completed=null;return o});
+   if(OD.on(c)){const a=OD.snap('dash-allsummary',null);if(a&&a.summaries){const by={};t.summaries.forEach(x=>{by[x.name]=x});const col=(await chat.load(c)).col;
+     const sm=a.summaries.map(sn=>{const g=by[sn.name];if(!g)return null;const o=Object.assign({},sn,{project:g.project,dialog:g.dialog,boards:g.boards||{},project_title:g.project_title||sn.name,is_archived:false});return o}).filter(Boolean);
+     if(sm.length){t.summaries=sm;if(a.max_delay){const md=c.J(a.max_delay);md.user=OD.uid(c,md.user,col);if(md.task){const tk=md.task;tk.owner=OD.uid(c,tk.owner,col);tk.assignee=(tk.assignee||[]).map(x=>OD.uid(c,x,col))}t.max_delay=md}
+     if(a.max_inbox_size)t.max_inbox_size={user:OD.uid(c,a.max_inbox_size.user,col),size:a.max_inbox_size.size}}}}
+   return t},
  '/api/labels/getAll':async c=>{if(c.b.type!=='project')return {labels:[],label_status:[]};const raw=(await listRaw(c)).filter(x=>x.status!=='archived');
    const all=groupsOf(raw).map(g=>({_id:g._id,title:g.title,color:g.color,type:'project',deleted:false}));
    return {labels:all,label_status:all.map((l,i)=>({label_id:l._id,order:i}))}},
