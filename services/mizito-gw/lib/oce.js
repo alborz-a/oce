@@ -2,7 +2,7 @@
 const BASE=(process.env.OCE_BASE||'http://oce-app:8000').replace(/\/$/,'');
 const hex=id=>String(id||'').replace(/-/g,'').slice(0,24);
 const crypto=require('crypto');
-const ME_TTL=60000, ME_MAX=2000, TIMEOUT=+process.env.OCE_TIMEOUT_MS||30000, meCache=new Map();
+const ME_TTL=60000, ME_MAX=2000, TIMEOUT=+process.env.OCE_TIMEOUT_MS||30000, meCache=new Map(), meInFlight=new Map();
 const keyOf=t=>crypto.createHash('sha256').update(t).digest('hex');
 function sweepMe(){const n=Date.now();for(const [k,v] of meCache)if(v.exp<=n)meCache.delete(k);while(meCache.size>=ME_MAX)meCache.delete(meCache.keys().next().value)}
 class Unauthorized extends Error{}
@@ -19,8 +19,10 @@ function client(token){
   // all pages of an OCE list ({items,total}); stops at total, a short page, or `cap` rows
   o.pages=async(p,size,cap)=>{const out=[];for(let off=0;off<cap;off+=size){const r=await o.get(p+(p.includes('?')?'&':'?')+'limit='+size+'&offset='+off);const a=Array.isArray(r)?r:(r.items||[]);out.push(...a);if(a.length<size||(r.total!=null&&out.length>=r.total))break}return out};
   o.me=async()=>{const k=keyOf(token),c=meCache.get(k);if(c&&c.exp>Date.now())return c.v;
-    const u=await o.get('/users/me');const v={id:u.id,hexId:hex(u.id),role:u.role||null,name:u.full_name||u.name||u.email||'?',raw:u};
-    sweepMe();meCache.set(k,{v,exp:Date.now()+ME_TTL});return v};
+    if(meInFlight.has(k))return meInFlight.get(k);
+    const p=(async()=>{const u=await o.get('/users/me');const v={id:u.id,hexId:hex(u.id),role:u.role||null,name:u.full_name||u.name||u.email||'?',raw:u};
+      sweepMe();meCache.set(k,{v,exp:Date.now()+ME_TTL});return v})();
+    meInFlight.set(k,p);try{return await p}finally{meInFlight.delete(k)}};
   return o;
 }
 module.exports={client,hex,Unauthorized,BASE,TIMEOUT};

@@ -71,6 +71,28 @@ async function prefetch(c,list){
 
 const SAFE_HDR={'x-content-type-options':'nosniff','content-security-policy':"sandbox; default-src 'none'"};
 const safeImg=t=>/^image\/(png|jpe?g|webp|gif)/.test(t||'')?t.split(';')[0]:'application/octet-stream';
+
+// same-origin photo cache: avoids CORS + reduces OCE load
+const PH_CACHE=new Map(),PH_MAX=200,PH_TTL=600000;
+const PH_INFLIGHT=new Map();
+let PH_SEM=0;const PH_SEM_MAX=6;
+const phEvict=()=>{if(PH_CACHE.size<=PH_MAX)return;const now=Date.now();for(const [k,v] of PH_CACHE)if(now-v.at>PH_TTL){PH_CACHE.delete(k);if(PH_CACHE.size<=PH_MAX)return}
+  if(PH_CACHE.size>PH_MAX){const it=PH_CACHE.keys().next();if(!it.done)PH_CACHE.delete(it.value)}};
+const phWait=()=>PH_SEM<PH_SEM_MAX?Promise.resolve():new Promise(r=>{const iv=setInterval(()=>{if(PH_SEM<PH_SEM_MAX){clearInterval(iv);r()}},50)});
+
+async function phFetch(c,uuid){
+  const cached=PH_CACHE.get(uuid);if(cached&&Date.now()-cached.at<PH_TTL)return cached;
+  if(PH_INFLIGHT.has(uuid))return PH_INFLIGHT.get(uuid);
+  const p=(async()=>{await phWait();PH_SEM++;try{
+    const j=await c.oce.get('/documents/photos/'+uuid+'/file-url/');const url=j.url||j.file_url||j.download_url;
+    let buf,ct;
+    if(url&&/^https?:\/\//i.test(url)){const r=await fetch(url,{signal:AbortSignal.timeout(15000)});buf=Buffer.from(await r.arrayBuffer());ct=r.headers.get('content-type')}
+    else{const r=await c.oce.raw('/documents/photos/'+uuid+'/file/');buf=Buffer.from(await r.arrayBuffer());ct=r.headers.get('content-type')}
+    const entry={type:safeImg(ct),body:buf,headers:{...SAFE_HDR,'cache-control':'private, max-age=86400'},at:Date.now()};
+    PH_CACHE.set(uuid,entry);phEvict();return entry;
+  }finally{PH_SEM--;PH_INFLIGHT.delete(uuid)}})();
+  PH_INFLIGHT.set(uuid,p);return p;
+}
 // /cdn/<name> additions: pending preview, dl-<doc> stream, ph-<photo> stream when OCE has no presigned url. Returns {status,type,body,headers} or null.
 async function cdn(c,name){
   let m;
@@ -81,9 +103,7 @@ async function cdn(c,name){
     return {type:'application/octet-stream',body,headers:{...SAFE_HDR,'content-name':encodeURI(decodeURIComponent(nm)),'content-disposition':'attachment; filename="'+encodeURIComponent(decodeURIComponent(nm))+'"'}};
   }
   if((m=/^(?:dl\/)?ph-([0-9a-f]{32})$/.exec(name))){
-    const u=uuidOf(m[1]);const j=await c.oce.get('/documents/photos/'+u+'/file-url/');const url=j.url||j.file_url||j.download_url;
-    if(url&&/^https?:\/\//i.test(url))return {redirect:url};
-    const r=await c.oce.raw('/documents/photos/'+u+'/file/');return {type:safeImg(r.headers.get('content-type')),body:Buffer.from(await r.arrayBuffer()),headers:SAFE_HDR};
+    const u=uuidOf(m[1]);return phFetch(c,u);
   }
   return null;
 }

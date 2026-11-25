@@ -28,6 +28,8 @@ const routes={
  '/api/monitor/chart/tasksAssigned':k({labels:[],values:[],all_count:0,user:{labels:[],values:[],all_count:0},total:{labels:[],values:[],all_count:0}}),
  '/api/payment/getReportDetails':k([]),
  '/api/chat/setTyping':k(true),'/api/chat/search':k([]),'/api/feedback/checkRequireParticipant':k({require:false}),'/api/dashboard/checkWhatsNew':k({count:0,message:null}),
+ '/api/dashboard/getAllBadges':async c=>[{workspace_id:c.WID,chat:0,inbox:0,task:0}],
+ '/api/support/clientOnlineHistory':k([]),
 };
 // monitoring charts: stored snapshots of old Mizito (manager only), empty shape otherwise
 for(const [ep,f] of [['chatMessages','chatMessages'],['inboxMessages','inboxMessages'],['tasksCreated','tasksCreated'],['tasksDone','tasksDone'],['customers','customers_chart'],['notes','notes_chart']])

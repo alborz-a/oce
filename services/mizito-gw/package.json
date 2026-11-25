@@ -1,1 +1,1 @@
-{"name":"mizito-gw","version":"1.0.0","private":true,"main":"server.js","scripts":{"check":"sh scripts/check-build.sh","test":"node --test test/gw.test.js","start":"node server.js"},"dependencies":{"ws":"8.18.0"}}
+{"name":"mizito-gw","version":"1.4.0","private":true,"main":"server.js","scripts":{"check":"sh scripts/check-build.sh","test":"node --test test/gw.test.js","start":"node server.js"},"dependencies":{"ws":"8.18.0"}}

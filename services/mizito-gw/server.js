@@ -1,7 +1,9 @@
-// mizito-gw 1.0: real Mizito frontend on the OCE backend. Per-user, live, same origin under BASE (default /_rs).
+// mizito-gw 1.4: real Mizito frontend on the OCE backend. Per-user, live, same origin under BASE (default /_rs).
 // No snapshot, no fixed credential, no service account, no request to any *.mizito.ir host.
 const http=require('http'),fs=require('fs'),path=require('path');
 const BASE=process.env.MIZITO_BASE_PATH||'/_rs';
+const GW_VER=require('./package.json').version||'1.4.0';
+const GW_DISP='RSD-'+GW_VER.split('.').slice(0,2).join('.');
 const ROOT=path.resolve(process.env.MIRROR_DIR||path.join(__dirname,'mirror'));
 const OVERRIDES=path.join(__dirname,'overrides');
 const ctxlib=require('./lib/ctx'),{Unauthorized}=require('./lib/oce');
@@ -9,6 +11,8 @@ const brand=require('./modules/brand'),chat=require('./modules/chat');
 const routes=Object.assign({},...['brand','chat','projects','tasks','letters','dashboard','misc','files'].map(m=>require('./modules/'+m).routes));
 const MIME={'.js':'application/javascript','.css':'text/css','.html':'text/html; charset=utf-8','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png','.gif':'image/gif','.webp':'image/webp','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.ico':'image/x-icon','.json':'application/json','.jpg':'image/jpeg'};
 const ABS=/(["'(=`])\/(assets\/|views\/|lib\/|c_\.js|a_\.js|app\.css|manifest\.webmanifest|sw\.js)/g;
+// Self-unregistering cleanup SW: clears rs-* caches and unregisters itself
+const CLEANUP_SW="self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('rs-')||k.includes('_rs')).map(k=>caches.delete(k)))).then(()=>self.registration.unregister()).then(()=>self.clients.matchAll()).then(cs=>cs.forEach(c=>{if(c.navigate)c.navigate(c.url)})))});";
 // missing art images under assets/img answer a tiny placeholder (200) instead of 404; real files and overrides win. jpg has no alpha (white 1x1).
 const ART_PH={'.png':Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg==','base64'),'.gif':Buffer.from('R0lGODlhAQABAIEAAAAAAAAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAgEAAEEBAA7','base64'),'.webp':Buffer.from('UklGRkAAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAIAAAAAAFZQOCAYAAAAMAEAnQEqAQABAAFAJiWkAANwAP79NmgA','base64'),'.jpg':Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigD//2Q==','base64'),'.svg':Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>')};
 const artPlaceholder=(p,f)=>{if(!p.startsWith('/assets/img/')||!f.startsWith(ROOT+path.sep+'assets'+path.sep+'img'+path.sep))return null;const e=path.extname(f).toLowerCase();return ART_PH[e]?e:null};
@@ -28,7 +32,8 @@ const srv=http.createServer((req,res)=>{
   let p;try{p=decodeURIComponent((req.url.split('?')[0]))}catch(e){return send(res,400,'')}
   if(p.indexOf('\0')>=0)return send(res,400,'');
   if(p.startsWith(BASE+'/'))p=p.slice(BASE.length);
-  if(p==='/healthz')return json(res,200,{ok:true});
+  if(p==='/healthz')return json(res,200,{ok:true,version:GW_VER,displayVersion:GW_DISP});
+  if(p==='/sw.js'||p==='/notification_service_worker.js')return send(res,200,CLEANUP_SW,'application/javascript',{'service-worker-allowed':BASE+'/','cache-control':'no-store'});
   if(require('./modules/files').raw(req,res,p,ctxlib,json))return;
   if(p.startsWith('/api/')||p.startsWith('/capi/')){
     const chunks=[];let n=0,big=false;req.on('data',c=>{n+=c.length;if(n>MAXBODY){big=true;chunks.length=0;return}chunks.push(c)});req.on('end',async()=>{
@@ -44,7 +49,7 @@ const srv=http.createServer((req,res)=>{
   {const cid=require('./lib/project-meta').coverKeyId(p.slice(5));if(p.startsWith('/cdn/')&&cid)return require('./modules/cover').handle(res,cid,{make:()=>ctxlib.make(req,'')})}
   if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');if(await chat.hiddenDoc(c,p.slice(5)))return send(res,404,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
       if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},SEC,r.headers||{}));return res.end(r.body)}
-      if(r&&r.status){res.writeHead(r.status);return res.end()}
+      if(r&&r.status){res.writeHead(r.status,r.headers||{});return res.end()}
       if(r&&r.redirect&&/^https?:\/\//i.test(r.redirect)){res.writeHead(302,{Location:r.redirect,'cache-control':'no-store'});return res.end()}
       if(r&&r.oceAvatar){const ap=r.oceAvatar.replace(/^\/api\/v1/,'');
         // every avatar miss answers 200 placeholder (was 404 for protocol-relative or query-bearing avatar_url, the cause of the 404 probe failures)
@@ -54,15 +59,17 @@ const srv=http.createServer((req,res)=>{
         res.writeHead(200,Object.assign({'content-type':ct,'cache-control':'private, max-age=300','content-security-policy':"sandbox; default-src 'none'"},SEC));return res.end(b)}
       const f=path.join(ROOT,'assets/img/person-logo.png');return send(res,200,fs.readFileSync(f),'image/png')}catch(e){if(e instanceof Unauthorized)return send(res,401,'');
     // avatar with no OCE file: neutral placeholder, never 404 (OCE 404 on the avatar file throws in lib/oce)
-    if(/^\/cdn\/(dl\/)?av-/.test(p))return avPlaceholder(res);return send(res,404,'')}})()}
+    if(/^\/cdn\/(dl\/)?av-/.test(p))return avPlaceholder(res);
+    if(e&&(e.name==='AbortError'||e.name==='TimeoutError'||/aborted|timeout/i.test(e.message))){res.writeHead(503,Object.assign({'retry-after':'2','cache-control':'no-store'},SEC));return res.end()}
+    return send(res,404,'')}})()}
   if(p==='/')p='/index.html';
   // Royal Star replacements (committed) win over mirror assets with Mizito branding
   if(p.startsWith('/assets/img/')){const of=path.normalize(path.join(OVERRIDES,p.slice('/assets/img/'.length)));if(of.startsWith(OVERRIDES+path.sep)&&fs.existsSync(of))return send(res,200,fs.readFileSync(of),MIME[path.extname(of)]||'application/octet-stream')}
   const f=path.normalize(path.join(ROOT,p));if(f!==ROOT&&!f.startsWith(path.resolve(ROOT)+path.sep))return send(res,403,'');
   fs.readFile(f,(e,d)=>{if(e){const ph=artPlaceholder(p,f);if(ph)return send(res,200,ART_PH[ph],MIME[ph],{'cache-control':'public, max-age=300'});return send(res,404,'')}const ext=path.extname(f);
     if(p==='/index.html')return send(res,200,brand.indexHtml(d.toString()).replace(/<head>/,'<head><base href="'+BASE+'/">'),MIME['.html']);
-    if(p==='/c_.js'){let s=d.toString().replace(HOSTS,'');s=brand.c_js(s).replace('Config.App.api_url=_o;Config.App.cdn_url=_o;','Config.App.api_url=_o+"'+BASE+'";Config.App.cdn_url=_o+"'+BASE+'";');return send(res,200,s,MIME['.js'])}
-    send(res,200,d,MIME[ext]||'application/octet-stream',p==='/sw.js'?{'service-worker-allowed':BASE+'/'}:null)});
+    if(p==='/c_.js'){let s=d.toString().replace(HOSTS,'');s=brand.c_js(s,BASE);return send(res,200,s,MIME['.js'])}
+    send(res,200,d,MIME[ext]||'application/octet-stream')});
 });
 srv.on('clientError',(e,s)=>{try{s.destroy()}catch(x){}});
 require('./modules/realtime').attach(srv);

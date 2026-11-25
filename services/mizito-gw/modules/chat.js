@@ -51,9 +51,10 @@ function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   const o={_id:hex(m.id),_:'message',dialog:hex(m.room_id),from:m.author_id?hex(m.author_id):'',message:text,date:new Date(m.created_at).toISOString(),msg_index:idx||0,workspace_id:WID,seen:[]};
   if(ids.length){const t='ph-'+String(ids[0]).replace(/-/g,'');o.media={_:'messageMediaPhoto',caption:m.text||'',photo:{_id:t,id:t,name:'a.webp',photo_medium:{content:t,size:-1,w:800,h:800,content_key:t},photo_large:{content:t,size:-1,w:800,h:800,content_key:t}}}}
   return o}
-async function history(c,dialogId){const r=await roomOf(c,dialogId);if(!r)return [];
-  const a=await messages(c,r);
-  const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)}
+async function history(c,dialogId,offset,limit){const r=await roomOf(c,dialogId);if(!r)return [];
+  const a=await messages(c,r);const off=Math.max(0,Number(offset)||0),lim=Math.max(1,Math.min(100,Number(limit)||15));
+  const end=Math.max(0,a.length-off),start=Math.max(0,end-lim),page=a.slice(start,end);
+  const F=require('./files');await F.prefetch(c,page);return page.flatMap((m,i)=>F.expand(m,start+i+1,message)).filter(Boolean)}
 // whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
 const raw=(c,r,max=20)=>memo(c.oce.token,'msg:'+r.id+(max>20?':deep':''),10000,async()=>{let all=[],before=null;
   for(let i=0;i<max;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
@@ -90,8 +91,8 @@ const routes={
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
   await enrichProject(c,r,d);
   return Object.assign({},d,{participants:d.members,participants_count:d.members.length,admins:d.group_admins||[]})},
- '/api/chat/getHistory':async c=>history(c,c.b.dialog),
- '/api/chat/getMessages':async c=>{const all=await history(c,c.b.dialog);return (c.b.mids||[]).map(i=>all.find(m=>m._id===i)).filter(Boolean)},
+ '/api/chat/getHistory':async c=>history(c,c.b.dialog,c.b.offset,c.b.limit||15),
+ '/api/chat/getMessages':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return [];const a=await messages(c,r);const mids=new Set(c.b.mids||[]);const hits=a.filter(m=>mids.has(hex(m.id)));const F=require('./files');await F.prefetch(c,hits);return hits.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)},
 // fixDialogs: client only waits for it, then switches workspace; nothing to repair in OCE
  '/api/chat/fixDialogs':async()=>({}),
  '/api/chat/seen':async c=>{const r=await roomOf(c,c.b.dialog);if(r)await c.oce.post('/team-chat/rooms/'+r.id+'/read/',{}).catch(()=>{});return {}},

@@ -20,11 +20,15 @@ if(OLD)HIDE_SEL.splice(0,HIDE_SEL.length,'.license');
 const HIDE_CSS=HIDE_SEL.join(',')+'{display:none!important}';
 // splash: loader keeps app background, no logo, no text, no dots (ng-hide still hides the box after boot)
 const LOADER_CSS='.loader{padding:0!important;background:#fff!important}.loader *{display:none!important}';
-const SHIM=fs.readFileSync(path.join(__dirname,'..','shim','boot.js'),'utf8').replace('__OCE_LOGIN__',OCE_LOGIN).replace('__OLD_UI__',OLD?'1':'').replace('__OLD_BRAND__',OLDB?'1':'').replace('__HIDE_SEL__',HIDE_SEL.join(',').replace(/'/g,"\\'"));
+const GW_VER=require('../package.json').version||'1.4.0';
+const GW_DISP='RSD-'+GW_VER.split('.').slice(0,2).join('.');
+const SHIM=fs.readFileSync(path.join(__dirname,'..','shim','boot.js'),'utf8').replace('__OCE_LOGIN__',OCE_LOGIN).replace('__OLD_UI__',OLD?'1':'').replace('__OLD_BRAND__',OLDB?'1':'').replace('__BASE__',SECTION).replace('__GW_VER__',GW_VER).replace('__GW_DISP__',GW_DISP).replace('__HIDE_SEL__',HIDE_SEL.join(',').replace(/'/g,"\\'"));
 const LOGO_SVG='assets/img/royal-star-logo.svg';
 function indexHtml(raw){
   let s=raw.replace(/<head>/,'<head><style>'+HIDE_CSS+LOADER_CSS+'</style><script>'+SHIM+'</script>');
   s=s.replace(/<script async src="https:\/\/www\.googletagmanager[\s\S]*?<\/script>\s*<script>[\s\S]*?<\/script>/,'');
+  s=s.replace(/<script>[^<]*navigator\.serviceWorker\.register\([^)]*\/sw\.js[^)]*\)[^<]*<\/script>/gi,'');
+  s=s.replace(/(src=["'](?:c_\.js|a_\.js)\?v=[^"'&]+)(["'])/g,'$1&gw='+GW_VER+'$2');
   if(!OLDB)s=s.replace(/assets\/img\/mizito_logo_full\.png(\?v=\d+)?/g,LOGO_SVG+'?v=1');
   if(!OLDB)s=s.replace(/<title>[\s\S]*?<\/title>/,'<title>'+FA+'</title>');
   s=s.replace(/<img class="app_logo" src="assets\/img\/mizito\.svg"\/>/,''); // splash logo node removed: nothing in app JS reads it
@@ -34,10 +38,10 @@ function indexHtml(raw){
 const MIZITO_URL_RE=/https?:\/\/(?:[a-z0-9-]+\.)*mizito\.ir[^"'\s)`]*/gi;
 function neutralLinks(s){return s.replace(MIZITO_URL_RE,'#')}
 // Manifest: Royal Star name, icons served from overrides.
-function manifest(raw,base){try{const m=JSON.parse(raw);m.name=FA;m.short_name=FA;m.lang='fa';m.dir='rtl';if(Array.isArray(m.icons))m.icons=m.icons.map(i=>Object.assign({},i,{src:typeof i.src==='string'&&i.src.startsWith('/')&&!i.src.startsWith('//')?(base||'')+i.src:i.src}));return JSON.stringify(m)}catch(e){return raw}}
+function manifest(raw,base){try{const m=JSON.parse(raw);m.name=FA;m.short_name=FA;m.lang='fa';m.dir='rtl';m.start_url=(base||'')+'/';m.scope=(base||'')+'/';if(Array.isArray(m.icons))m.icons=m.icons.map(i=>Object.assign({},i,{src:typeof i.src==='string'&&i.src.startsWith('/')&&!i.src.startsWith('//')?(base||'')+i.src:i.src}));return JSON.stringify(m)}catch(e){return raw}}
 // cache_id gate: Mizito reloads in a loop unless workspace/userId client_version == Config.App.cache_id.
 function cacheId(s){const m=/cache_id\W{1,4}(\d[\d.\-]*\d)/.exec(s)||/c_\.js\?v=(\d[\d.\-]*\d)/.exec(s);return m?m[1]:null}
-function c_js(raw){return raw+`;try{var _o=location.origin;Config.App.api_url=_o;Config.App.cdn_url=_o;Config.App.io_url=_o;Config.App.domains=[location.hostname];Config.App.client_url=_o+'/#/';}catch(e){}`}
+function c_js(raw,base){const b=base||'';return raw+`;try{var _o=location.origin;Config.App.api_url=_o+"${b}";Config.App.cdn_url=_o+"${b}";Config.App.io_url=_o;Config.App.domains=[location.hostname];Config.App.client_url=_o+"${b}/#/";}catch(e){}`}
 module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,cacheId,FA,routes:{
   '/api/workspace/name':async c=>c.label,
   // Mizito session logout: no OCE logout endpoint exists (OCE clears its session client-side); answer ok so the app logout does not 404
