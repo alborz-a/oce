@@ -22,6 +22,6 @@ function upstream(c,token){
   up.on('open',()=>up.send(JSON.stringify({type:'auth',token})));
   up.on('message',async buf=>{try{let e;try{e=JSON.parse(String(buf))}catch(x){return}
     if(e.event==='ready'){try{const rooms=await oce.get('/team-chat/rooms/');up.send(JSON.stringify({type:'subscribe',room_ids:rooms.map(r=>r.id)}))}catch(x){}}
-    if(e.event==='message.created'&&e.message&&c.ws.readyState===1){await require('./files').prefetch(ctx,[e.message]);for(const b of require('./files').expand(e.message,0,chat.message))c.ws.send(pkt('m',{type:'chat_message',body:b,workspace_id:WID}))}}catch(x){console.log('ERR realtime',x.message)}});
+    if(e.event==='message.created'&&e.message&&c.ws.readyState===1){try{const me=await oce.me(),cx={oce,me,iso:x=>x?new Date(x).toISOString():null},st=await chat.load(cx),k=chat.canonMap(cx,st)[e.message.room_id];if(k&&k!==e.message.room_id)e.message=Object.assign({},e.message,{room_id:k})}catch(x){}await require('./files').prefetch(ctx,[e.message]);for(const b of require('./files').expand(e.message,0,chat.message))c.ws.send(pkt('m',{type:'chat_message',body:b,workspace_id:WID}))}}catch(x){console.log('ERR realtime',x.message)}});
   up.on('close',()=>{c.up=null;try{if(c.ws.readyState===1)c.ws.close()}catch(x){}});up.on('error',()=>{});
 }

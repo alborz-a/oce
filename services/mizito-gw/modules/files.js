@@ -92,6 +92,6 @@ function mkRoutes(chat){return {
   '/api/content/getDownloadLink':async c=>String(c.b.content||''),
   '/api/chat/send':async c=>{
     const m=c.b.media;if(!m||!(m._==='messageMediaPhoto'||m._==='messageMediaDocument'))return chat.routes['/api/chat/send'](c);
-    const s=await chat.load(c);const r=s.roomBy[c.b.dialog];if(!r)throw new Error('unknown dialog');
+    const r=await chat.roomOf(c,c.b.dialog);if(!r)throw new Error('unknown dialog');
     return sendMedia(c,chat,r)}}}
 module.exports={raw,expand,prefetch,cdn,get routes(){return mkRoutes(require('./chat'))},isImg};

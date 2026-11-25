@@ -37,6 +37,8 @@ function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J
 const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageActionChatAddUser:'عضو جدید اضافه شد',messageActionChatDeleteUser:'عضو حذف شد',messageActionChatEditPhoto:'تصویر گروه تغییر کرد',messageActionChatEditTitle:'عنوان گروه تغییر کرد'};
 // imported rows: optional first line '«actor» — date', tag on the last line
 const svcEvent=t=>{const x=/^(?:([^\n]*)\n)?\s*\[رویداد:\s*([^\]\n]*?)\s*\]\s*$/.exec(String(t||''));return x?{ev:x[2],pre:(x[1]||'').trim()}:null};
+// deleted Mizito sender (no OCE account): display-only user so letters keep the sender's name
+function delUser(c,n){const LS=require('../lib/letter-senders');const p=n.trim().split(/\s+/);const o=c.J(c.T.user);o._id=LS.idOf(n);o.first_name=p[0];o.last_name=p.slice(1).join(' ');delete o.photo;o.email='';o.phone='';o.username=n;o.deleted=true;o.workspace_id=WID;return o}
 function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   const ev=svcEvent(m.text);let text=m.text||'';
   if(ev!==null){text=SVC_TEXT[ev.ev]||'';if(!text&&!ids.length)return null;if(text&&ev.pre)text=ev.pre+'\n'+text}
@@ -44,7 +46,7 @@ function message(m,idx){const ids=(m.document_ids||[]).filter(Boolean);
   const o={_id:hex(m.id),_:'message',dialog:hex(m.room_id),from:m.author_id?hex(m.author_id):'',message:text,date:new Date(m.created_at).toISOString(),msg_index:idx||0,workspace_id:WID,seen:[]};
   if(ids.length){const t='ph-'+String(ids[0]).replace(/-/g,'');o.media={_:'messageMediaPhoto',caption:m.text||'',photo:{_id:t,id:t,name:'a.webp',photo_medium:{content:t,size:-1,w:800,h:800,content_key:t},photo_large:{content:t,size:-1,w:800,h:800,content_key:t}}}}
   return o}
-async function history(c,dialogId){const s=await load(c);const r=s.roomBy[dialogId];if(!r)return [];
+async function history(c,dialogId){const r=await roomOf(c,dialogId);if(!r)return [];
   const a=await messages(c,r);
   const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)}
 // whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
@@ -55,13 +57,17 @@ const raw=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=
 const messages=async(c,r)=>{let all=await raw(c,r);
   if(r.kind==='company'){const s=await load(c);const g=s.rooms.find(x=>x.kind==='project'&&x.name==='عمومی');
     if(g){const gm=await raw(c,g);all=all.concat(gm.filter(isCoMsg).map(m=>Object.assign({},m,{room_id:r.id})));all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}}
+  else if(r.kind==='dm'){const s=await load(c),cm=canonMap(c,s);for(const x of s.rooms){if(x.kind==='dm'&&x.id!==r.id&&cm[x.id]===r.id){const o=await raw(c,x);all=all.concat(o.map(m=>Object.assign({},m,{room_id:r.id})))}}all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}
   else if(r.kind==='project'&&r.name==='عمومی')all=all.filter(m=>!isCoMsg(m));
   return all};
-const roomOf=async(c,id)=>{const s=await load(c);return s.roomBy[id]||null};
+// Two DM rooms with the same peer: getDialogs keeps one (oneDmPerPeer). Any later reference to the dropped room (opened chat, history, WS push) would make the client call chat.fixDialogs + workspace.switch in a loop, so every DM id resolves to the kept (canonical) room. Same order as getDialogs: newest first.
+function canonMap(c,s){if(s._canon)return s._canon;const dms=s.rooms.filter(r=>r.kind==='dm').map(r=>({r,d:dialog(c,r,s)})).sort((a,b)=>(b.d.last_message_date||'').localeCompare(a.d.last_message_date||''));
+  const seen={},map={};for(const x of dms){const k=x.d.peer_user;if(!k)continue;if(!seen[k])seen[k]=x.r.id;map[x.r.id]=seen[k]}return s._canon=map}
+const roomOf=async(c,id)=>{const s=await load(c);const r=s.roomBy[id]||null;if(r&&r.kind==='dm'){const k=canonMap(c,s)[r.id];if(k&&k!==r.id){console.log('dm-dup remap',hex(r.id),'->',hex(k));return s.rooms.find(x=>x.id===k)||r}}return r};
 // Mizito keys DM dialogs by peerId (peer_user). Two DM rooms with the same peer make the client's dialog loader return undefined for the second one (chat bounces with TypeError undefined.dialog_type). Keep the first (newest, list is pre-sorted) per peer.
 function oneDmPerPeer(list){const seen=new Set();return list.filter(d=>{if(d.is_group)return true;const k=d.peer_user;if(!k)return true;if(seen.has(k))return false;seen.add(k);return true})}
 const routes={
- '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});return {users:us.map(u=>mizUser(c,u)),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
+ '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});const del=require('../lib/letter-senders').names().map(n=>delUser(c,n));return {users:us.map(u=>mizUser(c,u)).concat(del),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
  '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(s.rooms.map(async r=>enrichProject(c,r,dialog(c,r,s))));return {dialogs:oneDmPerPeer(ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||''))),pin_dialogs:[]}},
  '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));await enrichProject(c,r,d);d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
@@ -83,4 +89,4 @@ async function cdn(c,name){
     // OCE colleagues avatar_url is relative with a cache-buster: /api/v1/users/<id>/avatar?v=<stamp>. server.js rejects query strings, so strip it here.
     if(u&&u.avatar_url){const abs=/^https?:\/\//i.test(u.avatar_url);return {redirect:abs?u.avatar_url:null,oceAvatar:abs?null:u.avatar_url.split('?')[0]}}}
   return null}
-module.exports={routes,cdn,load,message,messages};
+module.exports={routes,cdn,load,message,messages,canonMap,dialog,roomOf};

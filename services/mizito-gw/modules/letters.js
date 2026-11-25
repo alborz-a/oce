@@ -8,12 +8,12 @@ const FA='۰۱۲۳۴۵۶۷۸۹';
 const en=s=>String(s||'').replace(/[۰-۹]/g,d=>FA.indexOf(d));
 // "ق- ۲۳۷ -۴۰۵" -> {prefix:'ق',number:237,postfix:'405'}
 function parseNumber(ln){const m=/^\s*(\S+?)\s*-\s*(\d+)\s*-\s*(\d+)\s*$/.exec(en(ln));return m?{prefix:ln.trim().split('-')[0].trim(),number:+m[2],postfix:m[3]}:null}
-const {memo}=require('../lib/cache');
+const {memo}=require('../lib/cache');const LS=require('../lib/letter-senders');
 // all pages (OCE max 100 per page), capped at 2000 letters per box
 const mailbox=(c,box)=>memo(c.oce.token,'mb:'+box,10000,()=>c.oce.pages('/correspondence/mailbox/?box='+box,100,2000));
 function secOf(c,l,reg){const p=l.letter_number?parseNumber(l.letter_number):null;if(!p)return null;
   return {register_type:l.register_type||2,year:1000+(+p.postfix),sec_register_date:c.iso(reg||l.sent_at),sec_prefix:p.prefix,sec_number:p.number,sec_postfix:p.postfix}}
-function row(c,l){const o=c.J(c.T.letter);o._id=o.msg_id=hex(l.id);o.from=l.sender_user_id?hex(l.sender_user_id):'';o.subject=l.subject;o.raw_content=o.short_content=l.snippet||'';
+function row(c,l){const o=c.J(c.T.letter);o._id=o.msg_id=hex(l.id);o.from=l.sender_user_id?hex(l.sender_user_id):'';{const d=LS.senderOf(hex(l.id));if(d)o.from=d.id}o.subject=l.subject;o.raw_content=o.short_content=l.snippet||'';
   o.send_date=c.iso(l.sent_at);o.count=1;o.attachments_count=l.attachments_count||0;o.unread=!!l.unread;o.thread=hex(l.thread_id);o.labels=[];o.dialogs=[];
   const s=secOf(c,l);if(s)o.secretariat=s;else delete o.secretariat;return o}
 // hex (24 chars) -> uuid, only through lists OCE returned for this user
@@ -21,7 +21,7 @@ async function recipientUuids(c,hexIds){const r=await c.oce.get('/correspondence
   for(const h of hexIds){const u=a.find(x=>hex(x.id)===String(h));if(!u)return null;out.push(u.id)}return out}
 async function letterUuid(c,h){for(const box of ['inbox','outbox','archived','paraph']){const l=(await mailbox(c,box)).find(x=>hex(x.id)===String(h)||hex(x.thread_id)===String(h));if(l)return l}return null}
 const person=(p,seen)=>({user:hex(p.user_id),unread:!seen,_id:hex(p.user_id),seen_date:null});
-function msgRow(c,m,l,i){return {_id:hex(m.id),from:m.sender_user_id?hex(m.sender_user_id):'',to:(m.recipients||[]).map(p=>person(p,true)),receivers:(m.recipients||[]).map(p=>hex(p.user_id)),subject:l.subject,
+function msgRow(c,m,l,i){const d=LS.senderOf(hex(m.id));return {_id:hex(m.id),from:d?d.id:(m.sender_user_id?hex(m.sender_user_id):''),to:(m.recipients||[]).map(p=>person(p,true)),receivers:(m.recipients||[]).map(p=>hex(p.user_id)),subject:l.subject,
   send_date:c.iso(m.sent_at),content:m.body_html||'',reply_to:i?hex(l.thread_id):undefined,thread:hex(l.thread_id),short_content:plain(m.body_html).slice(0,40),is_seen:true,labels:[],labels_changed:[],dialogs:[],dialogs_changed:[],
   secretariat:secOf(c,l)||undefined,attachments:(m.attachments||[]).map((a,k)=>({_id:hex(m.id)+k,name:a.filename||a.name||'file',size:a.size||-1}))}}
 const plain=s=>String(s||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();

@@ -39,3 +39,10 @@ test('flag 0 counts include synthetic rows',()=>withFlag('0',()=>{
   assert.deepEqual(progressCounts(sample()),{n:6,c:3,p:50});
 }));
 test('empty list -> zeros',()=>withFlag(undefined,()=>assert.deepEqual(progressCounts([]),{n:0,c:0,p:0})));
+
+test('OCE-only test tasks are hidden (flag MIZITO_HIDE_TEST_TASKS)',()=>{
+  const S=require('../lib/synthetic');
+  const ts=[{title:'آزمون دسترسی — مهمت'},{title:'TEST-PARITY وظیفه آزمایشی'},{title:'TEST-DELETE-ME gw آراد'},{title:'وظیفه واقعی'}];
+  assert.deepEqual(S.filterSynthetic(ts).map(t=>t.title),['وظیفه واقعی']);
+  process.env.MIZITO_HIDE_TEST_TASKS='0';assert.equal(S.filterSynthetic(ts).length,4);delete process.env.MIZITO_HIDE_TEST_TASKS;
+});

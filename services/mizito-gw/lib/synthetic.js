@@ -4,10 +4,16 @@
 const SOURCES = new Set(['mizito-album', 'mizito-album-pilot']);
 const TITLE = 'گفتگوی پروژه';
 
+// OCE-only test tasks (never in Mizito): hidden too. Flag MIZITO_HIDE_TEST_TASKS (default on, '0' disables).
+const TEST_TITLE = /^(TEST-PARITY|TEST-DELETE-ME|آزمون دسترسی\s*[—-])/;
+const testEnabled = () => process.env.MIZITO_HIDE_TEST_TASKS !== '0';
+
 function enabled() { return process.env.MIZITO_HIDE_SYNTHETIC_TASKS !== '0'; }
 
 function isSynthetic(t) {
-  if (!enabled() || !t) return false;
+  if (!t) return false;
+  if (testEnabled() && TEST_TITLE.test(String(t.title || '').trim())) return true;
+  if (!enabled()) return false;
   const src = t.metadata && t.metadata.source;
   return SOURCES.has(src) || t.title === TITLE;
 }
