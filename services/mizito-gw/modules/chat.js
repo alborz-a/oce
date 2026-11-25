@@ -60,6 +60,7 @@ async function cdn(c,name){
   if(/^ph-[0-9a-f]{32}$/.test(name)){const u=name.slice(3).replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/,'$1-$2-$3-$4-$5');
     const j=await c.oce.get('/documents/photos/'+u+'/file-url/');return {redirect:j.url||j.file_url||j.download_url||null}}
   const m=/^(?:dl\/)?av-([0-9a-f]{24})$/.exec(name);if(m){const s=await load(c);const u=s.colBy[m[1]];
-    if(u&&u.avatar_url)return {redirect:u.avatar_url.startsWith('http')?u.avatar_url:null,oceAvatar:u.avatar_url}}
+    // OCE colleagues avatar_url is relative with a cache-buster: /api/v1/users/<id>/avatar?v=<stamp>. server.js rejects query strings, so strip it here.
+    if(u&&u.avatar_url){const abs=/^https?:\/\//i.test(u.avatar_url);return {redirect:abs?u.avatar_url:null,oceAvatar:abs?null:u.avatar_url.split('?')[0]}}}
   return null}
 module.exports={routes,cdn,load,message,messages};
