@@ -19,7 +19,7 @@ import { BrandingEditorModal } from '@/app/layout/CustomBranding';
 import { extractErrorMessageFromBody } from '@/shared/lib/api';
 import { isTauri } from '@/shared/lib/desktop';
 import { HEX_PORTRAIT_ASPECT, HEX_PORTRAIT_CLIP } from '@/shared/lib/honeycomb';
-import { APP_VERSION } from '@/shared/lib/version';
+import { APP_LABEL } from '@/shared/lib/version';
 import { loginFailureKindFromResponse, loginRefusalKey } from './loginError';
 import { AuthBackground } from './AuthBackground';
 import {
@@ -30,6 +30,7 @@ import {
 import { safeNextPath } from './nextPath';
 import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
 import { resolvePostLoginLanding } from '@/features/projects/workspace/resolveLandingProjectRoute';
+import { setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -224,8 +225,8 @@ export function LoginPage() {
         if (!isRestricted && status.onboarding_completed !== true) {
           navigate('/onboarding', { replace: true });
         } else {
-          const landing = resolvePostLoginLanding();
-          window.location.assign(landing);
+          setGatewayUiCookie(true);
+          window.location.replace(resolvePostLoginLanding());
         }
       } catch {
         // Silent fallback to the manual login form.
@@ -308,8 +309,8 @@ export function LoginPage() {
       ) {
         navigate(nextPath, { replace: true });
       } else {
-        const landing = resolvePostLoginLanding();
-        window.location.assign(landing);
+        setGatewayUiCookie(readRememberChoice());
+        window.location.replace(resolvePostLoginLanding());
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
@@ -374,8 +375,8 @@ export function LoginPage() {
       ) {
         navigate(nextPath, { replace: true });
       } else {
-        const landing = resolvePostLoginLanding();
-        window.location.assign(landing);
+        setGatewayUiCookie(readRememberChoice());
+        window.location.replace(resolvePostLoginLanding());
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
@@ -1050,7 +1051,7 @@ export function LoginPage() {
 
           {/* Build version (RSD-x.y) */}
           <div dir="ltr" className="mt-3 text-center text-[10px] leading-none text-content-tertiary opacity-60">
-            {APP_VERSION}
+            {APP_LABEL}
           </div>
         </div>
       </div>

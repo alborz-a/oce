@@ -27,6 +27,7 @@ D = "/api/v1/"
         ("POST", f"{D}correspondence/{L}/labels/{P}/"),
         ("DELETE", f"{D}correspondence/{L}/labels/{P}/"),
         ("POST", f"{D}correspondence/{L}/attachments/"),
+        ("POST", f"{D}correspondence/{L}/register/"),
         ("GET", f"{D}correspondence/{L}/attachments/0"),
     ],
 )
@@ -41,6 +42,8 @@ def test_staff_letters_allowed(method, path):
         ("DELETE", f"{D}correspondence/{L}"),
         ("POST", f"{D}correspondence/"),
         ("POST", f"{D}correspondence/{L}/unknown/"),
+        ("DELETE", f"{D}correspondence/{L}/register/"),
+        ("PATCH", f"{D}correspondence/{L}/register/"),
         ("DELETE", f"{D}projects/{P}"),
     ],
 )

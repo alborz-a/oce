@@ -18,7 +18,7 @@ import clsx from 'clsx';
 import { Card, Button, Badge, Breadcrumb, DismissibleInfo, IntroRichText } from '@/shared/ui';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { PageHeader } from '@/shared/ui/PageHeader';
-import { APP_VERSION } from '@/shared/lib/version';
+import { APP_LABEL } from '@/shared/lib/version';
 import { CheckForUpdatesButton, UpdateInlineNotice } from '@/shared/ui/UpdateChecker';
 import { Changelog, getRecentReleases } from './Changelog';
 import { ThirdPartyLicenses } from './ThirdPartyLicenses';
@@ -288,7 +288,7 @@ export function AboutPage() {
             {t('about.tagline', { defaultValue: 'The #1 open-source platform for construction cost estimation, project management and resource control' })}
           </p>
           <div className="mt-3 flex items-center justify-center lg:justify-start gap-3 text-sm text-content-tertiary">
-            <span className="font-mono">v{APP_VERSION}</span>
+            <span className="font-mono">{APP_LABEL}</span>
             <span>&middot;</span>
             <span>2026</span>
             <span>&middot;</span>

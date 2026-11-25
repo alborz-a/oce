@@ -31,7 +31,7 @@ import {
   getLastError,
   isLastErrorNetworkOnly,
 } from '@/shared/lib/errorLogger';
-import { APP_VERSION, APP_BUILD_FINGERPRINT } from '@/shared/lib/version';
+import { APP_LABEL, APP_VERSION, APP_BUILD_FINGERPRINT } from '@/shared/lib/version';
 import { useToastStore } from '@/stores/useToastStore';
 import { useI18nReady } from '@/shared/lib/useI18nReady';
 import { isTauri, openAppInBrowser, openLink } from '@/shared/lib/desktop';
@@ -1443,7 +1443,7 @@ function buildBugReportUrl(description: string): {
     description.trim(),
     '',
     '### Environment',
-    `- App version: ${APP_VERSION}`,
+    `- App version: ${APP_LABEL}`,
     `- Component: ${component}`,
     `- Page: ${window.location.pathname}${window.location.search}`,
     `- UI locale: ${uiLocale}`,

@@ -1,6 +1,7 @@
 // DDC-CWICR-OE: DataDrivenConstruction · OpenConstructionERP
 // Copyright (c) 2026 Artem Boiko / DataDrivenConstruction
 import { create } from 'zustand';
+import { clearGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
 
 /**
  * Decode the `role` claim from a JWT access token without external deps.
@@ -294,6 +295,7 @@ export function createAuthStore(env: AuthTabEnv) {
     /** Drop this tab's session without telling the others. */
     const clearSession = () => {
       epoch += 1;
+      clearGatewayUiCookie();
       endHandshake();
       lastHelloId = null;
       const session = env.session();

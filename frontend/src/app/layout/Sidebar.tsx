@@ -65,7 +65,7 @@ import { useNavPendingStore } from '@/shared/lib/navigationProgress';
 import { useRecentStore } from '@/stores/useRecentStore';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { getModuleNavItems } from '@/modules/_registry';
-import { APP_VERSION } from '@/shared/lib/version';
+import { APP_LABEL, APP_VERSION } from '@/shared/lib/version';
 import { useSidebarBadges } from '@/shared/hooks/useSidebarBadges';
 import { useHiddenModules } from '@/shared/hooks/useHiddenModules';
 import { useIsRTL } from '@/shared/hooks/useIsRTL';
@@ -1673,7 +1673,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
 
         {/* Build version (RSD-x.y) */}
         <div dir="ltr" className="pb-2 pt-1 text-center text-[10px] leading-none text-content-tertiary opacity-60">
-          {APP_VERSION}
+          {APP_LABEL}
         </div>
       </div>
       {/* Mounted at the aside root so the dialog escapes any

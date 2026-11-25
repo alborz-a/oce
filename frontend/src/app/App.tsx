@@ -7,6 +7,7 @@ import { AppLayout } from './layout';
 import { fetchProjectList } from '@/shared/lib/projectList';
 import {
   pickLandingProject,
+  resolvePostLoginLanding,
   readLastActiveProjectId,
   saveLastActiveProjectId,
   type LandingProjectSummary,
@@ -37,7 +38,8 @@ import { AdminOnly } from '@/shared/auth/AdminOnly';
 import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { readRememberChoice, useAuthStore } from '@/stores/useAuthStore';
+import { claimGatewayHomeRedirect, hasGatewayUiCookie, setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
 import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { isEngineeringRole, isManagerRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
@@ -1034,7 +1036,8 @@ function useDocumentDirection() {
   }, [i18n]);
 }
 
-function WorkspaceHomeRedirect() {
+/** Backup entry /legacy-mizito/: opens the old hand-built Mizito section (project workspace). */
+function LegacyWorkspaceRedirect() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: () => fetchProjectList<LandingProjectSummary[]>(),
@@ -1054,6 +1057,22 @@ function WorkspaceHomeRedirect() {
 
   if (isLoading) return <PageLoadingInline />;
   return <Navigate to={target ? `/projects/${target.id}` : '/projects'} replace />;
+}
+
+/**
+ * `/` for a logged-in user. nginx serves the gateway at `/` once `oce_ui` is set.
+ * Cookie missing: set it and replace (one shot per tab session). Cookie present
+ * but the SPA still renders here: no redirect, render as before (loop guard).
+ */
+function WorkspaceHomeRedirect() {
+  const userRole = useAuthStore((s) => s.userRole);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  useEffect(() => {
+    if (!accessToken || hasGatewayUiCookie() || !claimGatewayHomeRedirect()) return;
+    setGatewayUiCookie(readRememberChoice());
+    window.location.replace(resolvePostLoginLanding(userRole));
+  }, [userRole, accessToken]);
+  return <PageLoadingInline />;
 }
 
 function DashboardRoute() {
@@ -1272,6 +1291,8 @@ export default function App() {
           }
         />
 
+        <Route path="/legacy-mizito" element={<LegacyWorkspaceRedirect />} />
+        <Route path="/legacy-mizito/*" element={<LegacyWorkspaceRedirect />} />
         <Route path="/ai-estimate" element={<P title="AI Quick Estimate"><QuickEstimatePage /></P>} />
         <Route path="/ai-estimator" element={<P title="AI Estimate Builder"><AiEstimatorPage /></P>} />
         <Route path="/ai-agents" element={<P title="AI Agents"><AgentsPage /></P>} />
