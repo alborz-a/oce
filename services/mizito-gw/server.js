@@ -39,6 +39,7 @@ const srv=http.createServer((req,res)=>{
       catch(e){if(e instanceof Unauthorized)return json(res,401,{error:'unauthorized'});console.log('ERR',p,e.message);return json(res,500,{error:'upstream'})}
     });return;
   }
+  if(p.startsWith('/cdn/cover/'))return require('./modules/cover').handle(res,p.slice('/cdn/cover/'.length),{make:()=>ctxlib.make(req,'')});
   if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
       if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},SEC,r.headers||{}));return res.end(r.body)}
       if(r&&r.status){res.writeHead(r.status);return res.end()}

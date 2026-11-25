@@ -9,5 +9,6 @@ function groupLabel(p){const t=groupTitle(p);if(!t)return null;const h=hash(t);r
 // Distinct groups across OCE projects, first-seen order.
 function groupsOf(arr){const m=new Map();for(const p of arr){const g=groupLabel(p);if(g&&!m.has(g._id))m.set(g._id,g)}return [...m.values()]}
 // Cover: picture_url is the only OCE picture field. Null url = no cover (client keeps art placeholder).
-function coverFields(p){const u=(p&&p.picture_url)||null;return {cover_has_photo:!!u,cover_file:u,cover_variant:u?'photo_large':null}}
+// hasFile: gateway cover file exists for p.id (lib/cover-store). Served by modules/cover at BASE + /cdn/cover/<id>.
+function coverFields(p,hasFile){const u=(p&&p.picture_url)||null;if(!u&&hasFile&&p&&p.id)return {cover_has_photo:true,cover_file:(process.env.MIZITO_BASE_PATH||'/_rs')+'/cdn/cover/'+p.id,cover_variant:'photo_large'};return {cover_has_photo:!!u,cover_file:u,cover_variant:u?'photo_large':null}}
 module.exports={groupLabel,groupsOf,coverFields,groupTitle,COLORS};

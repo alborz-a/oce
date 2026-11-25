@@ -5,3 +5,4 @@
 - Health: `curl http://127.0.0.1:18090/healthz`. nginx: /mizito/ and /socket.io/ locations (backup /opt/mizito-gw/oce-nginx.bak-20261124).
 - Update: `alb ssh --host oce --upload gw.tgz /tmp/gw.tgz`; extract into /opt/mizito-gw; `systemctl restart mizito-gw`.
 - Rollback: remove the two nginx locations, `systemctl disable --now mizito-gw`. Old /colleagues section is untouched.
+- Covers: /opt/mizito-gw/covers/<oce_project_id>.<jpg|jpeg|png|webp> (root-owned, 644, outside code dir; env MIZITO_COVER_DIR). Served at /_rs/cdn/cover/<id>. Interim until OCE GET picture route (RSD-1.4).

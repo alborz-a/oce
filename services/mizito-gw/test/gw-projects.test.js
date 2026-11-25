@@ -89,3 +89,49 @@ test('progress: stats error for one project gives zeros, other projects unaffect
   assert.equal(s2.others_completed,0);
   assert.equal(r.summaries.find(s=>s.project===hex(p1.id)).others_completed,5);
 });
+
+// Covers: gateway cover dir (lib/cover-store), GET /cdn/cover/<id> (modules/cover), has-cover flag.
+{
+const fs=require('fs'),os=require('os'),path=require('path');
+const {coverFile,hasCoverFile}=require('../lib/cover-store');
+const {handle}=require('../modules/cover');
+const {coverFields}=require('../lib/project-meta');
+const {Unauthorized}=require('../lib/oce');
+const mkdir=()=>fs.mkdtempSync(path.join(os.tmpdir(),'gw-cover-'));
+const JPEG=Buffer.from('ffd8ffe000104a46494600010100000100010000ffd9','hex');
+const PNG=Buffer.from('89504e470d0a1a0a0000000d49484452','hex');
+function fakeRes(){const r={status:0,headers:{},body:null,writeHead(c,h){r.status=c;r.headers=h||{}},end(b){r.body=b===undefined?null:b}};return r}
+
+test('cover store: id validated, extension to content-type, missing and traversal rejected',()=>{
+  const dir=mkdir();const id=UUID(7);
+  fs.writeFileSync(path.join(dir,id+'.jpg'),JPEG);fs.writeFileSync(path.join(dir,UUID(8)+'.png'),PNG);
+  assert.deepEqual(coverFile(id,dir),{file:path.join(dir,id+'.jpg'),type:'image/jpeg'});
+  assert.equal(coverFile(UUID(8),dir).type,'image/png');
+  assert.equal(coverFile(UUID(9),dir),null);
+  assert.equal(coverFile('../'+id,dir),null);
+  assert.equal(coverFile(id+'/../x',dir),null);
+  assert.equal(coverFile('ABCDEF',dir),null);
+  assert.equal(hasCoverFile(id,dir),true);
+  assert.equal(hasCoverFile(UUID(9),dir),false);
+});
+
+test('cover route: serves bytes to owner, 404 missing/foreign/traversal, 401 without session',async()=>{
+  const dir=mkdir();const mine=UUID(1),other=UUID(2),none=UUID(3);
+  fs.writeFileSync(path.join(dir,mine+'.jpg'),JPEG);fs.writeFileSync(path.join(dir,other+'.jpg'),JPEG);
+  const make=async()=>ctx([proj(1),proj(3)],{});
+  let r=fakeRes();await handle(r,mine,{make,dir});
+  assert.equal(r.status,200);assert.equal(r.headers['content-type'],'image/jpeg');assert.equal(r.headers['cache-control'],'private, max-age=300');
+  assert.ok(Buffer.compare(r.body,JPEG)===0);
+  r=fakeRes();await handle(r,none,{make,dir});assert.equal(r.status,404);
+  r=fakeRes();await handle(r,other,{make,dir});assert.equal(r.status,404,'file exists but project not in caller list');
+  r=fakeRes();await handle(r,'../'+mine,{make,dir});assert.equal(r.status,404);
+  r=fakeRes();await handle(r,mine,{make:async()=>{throw new Unauthorized()},dir});assert.equal(r.status,401);
+});
+
+test('cover flag: file on disk gives cover_has_photo + BASE cover URL; picture_url still wins',()=>{
+  const id=UUID(4);
+  assert.deepEqual(coverFields(proj(4),true),{cover_has_photo:true,cover_file:'/_rs/cdn/cover/'+id,cover_variant:'photo_large'});
+  assert.equal(coverFields(proj(4),false).cover_has_photo,false);
+  assert.equal(coverFields(proj(4,{picture_url:'https://x/y.jpg'}),true).cover_file,'https://x/y.jpg');
+});
+}

@@ -3,12 +3,12 @@ const {PLABEL}=require('../lib/ctx');const {hex}=require('../lib/oce');const cha
 const COLORS=['blue','green','red','orange','purple','teal'];
 const ADMIN=['owner','lead','project_manager'];
 const {memo}=require('../lib/cache');
-const {groupLabel,groupsOf,coverFields}=require('../lib/project-meta');
+const {groupLabel,groupsOf,coverFields}=require('../lib/project-meta');const {hasCoverFile}=require('../lib/cover-store');
 async function members(c,pid){return memo(c.oce.token,'pm:'+pid,60000,async()=>{try{const m=await c.oce.get('/projects/'+pid+'/members/');return Array.isArray(m)?m:[]}catch(e){return []}})}
 async function list(c){const arr=await memo(c.oce.token,'projects',15000,()=>c.oce.pages('/projects/',200,2000));
   const s=await chat.load(c);const roomOf={};s.rooms.forEach(r=>{if(r.project_id)roomOf[hex(r.project_id)]=hex(r.id)});
   const act=arr.filter(p=>p.status!=='archived');const ms=await Promise.all(act.map(p=>members(c,p.id)));return act.map((p,i)=>{const o=c.J(c.T.project);o._id=hex(p.id);o.title=p.name;o.owner=p.owner_id?hex(p.owner_id):c.me.hexId;o.color=COLORS[i%6];
-    o.deleted=false;const g=groupLabel(p);o.labels=[g||PLABEL];Object.assign(o,coverFields(p));o.members_admin=(ms[i]||[]).filter(m=>ADMIN.includes(m.role)).map(m=>hex(m.user_id));if(p.owner_id&&!o.members_admin.includes(hex(p.owner_id)))o.members_admin.push(hex(p.owner_id));o.kanban_boards=[{_id:hex(p.id).slice(0,23)+'b',title:'برای انجام',color:'green2'}];o.dialog=roomOf[hex(p.id)]||null;o.archived=false;return o})}
+    o.deleted=false;const g=groupLabel(p);o.labels=[g||PLABEL];Object.assign(o,coverFields(p,hasCoverFile(String(p.id))));o.members_admin=(ms[i]||[]).filter(m=>ADMIN.includes(m.role)).map(m=>hex(m.user_id));if(p.owner_id&&!o.members_admin.includes(hex(p.owner_id)))o.members_admin.push(hex(p.owner_id));o.kanban_boards=[{_id:hex(p.id).slice(0,23)+'b',title:'برای انجام',color:'green2'}];o.dialog=roomOf[hex(p.id)]||null;o.archived=false;return o})}
 // Project-wide task counts per project (all members, not caller-only): OCE GET /tasks/stats/?project_id= (total, completed_count). Failure = zeros.
 async function stats(c,pid){return memo(c.oce.token,'pstats:'+pid,30000,async()=>{try{const s=await c.oce.get('/tasks/stats/?project_id='+pid);return {n:Number(s.total)||0,c:Number(s.completed_count)||0}}catch(e){return {n:0,c:0}}})}
 async function counts(c,raw){const ks=await Promise.all(raw.map(p=>stats(c,p.id)));const per={};raw.forEach((p,i)=>{per[hex(p.id)]=ks[i]});return per}
