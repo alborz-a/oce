@@ -40,6 +40,8 @@ const srv=http.createServer((req,res)=>{
     });return;
   }
   if(p.startsWith('/cdn/cover/'))return require('./modules/cover').handle(res,p.slice('/cdn/cover/'.length),{make:()=>ctxlib.make(req,'')});
+  // project photo object (photo_medium/photo_large content_key cv-<projectId>): same cover file, same owner check
+  {const cid=require('./lib/project-meta').coverKeyId(p.slice(5));if(p.startsWith('/cdn/')&&cid)return require('./modules/cover').handle(res,cid,{make:()=>ctxlib.make(req,'')})}
   if(p.startsWith('/cdn/')){return (async()=>{try{const c=await ctxlib.make(req,'');const r=await require('./modules/files').cdn(c,p.slice(5))||await chat.cdn(c,p.slice(5));
       if(r&&r.body){res.writeHead(r.status||200,Object.assign({'content-type':r.type||'application/octet-stream','content-length':r.body.length,'cache-control':'no-store'},SEC,r.headers||{}));return res.end(r.body)}
       if(r&&r.status){res.writeHead(r.status);return res.end()}

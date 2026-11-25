@@ -11,4 +11,9 @@ function groupsOf(arr){const m=new Map();for(const p of arr){const g=groupLabel(
 // Cover: picture_url is the only OCE picture field. Null url = no cover (client keeps art placeholder).
 // hasFile: gateway cover file exists for p.id (lib/cover-store). Served by modules/cover at BASE + /cdn/cover/<id>.
 function coverFields(p,hasFile){const u=(p&&p.picture_url)||null;if(!u&&hasFile&&p&&p.id)return {cover_has_photo:true,cover_file:(process.env.MIZITO_BASE_PATH||'/_rs')+'/cdn/cover/'+p.id,cover_variant:'photo_large'};return {cover_has_photo:!!u,cover_file:u,cover_variant:u?'photo_large':null}}
-module.exports={groupLabel,groupsOf,coverFields,groupTitle,COLORS};
+// Client photo object for a project with a gateway cover file. Same shape as the user avatar photo (modules/chat mizUser).
+// content_key cv-<projectId> is served by server.js /cdn/cv-<id> (owner-checked, lib/cover-store dir).
+function coverPhoto(p,hasFile){if(!hasFile||!p||!p.id)return null;const t='cv-'+String(p.id);const ph={content:t,size:-1,w:256,h:256,content_key:t};return {_id:String(p.id).replace(/-/g,''),name:'c.jpg',photo_medium:ph,photo_large:Object.assign({},ph)}}
+// cv-<projectId> content key (optional dl/ prefix) -> project id; null otherwise.
+function coverKeyId(k){const m=/^(?:dl\/)?cv-([0-9a-f-]{32,36})$/.exec(String(k||''));return m?m[1]:null}
+module.exports={groupLabel,groupsOf,coverFields,coverPhoto,coverKeyId,groupTitle,COLORS};

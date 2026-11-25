@@ -134,4 +134,23 @@ test('cover flag: file on disk gives cover_has_photo + BASE cover URL; picture_u
   assert.equal(coverFields(proj(4),false).cover_has_photo,false);
   assert.equal(coverFields(proj(4,{picture_url:'https://x/y.jpg'}),true).cover_file,'https://x/y.jpg');
 });
+
+test('project photo object: cover file gives photo_medium/photo_large cv-<id> keys, no file gives none',()=>{
+  const {coverPhoto,coverKeyId}=require('../lib/project-meta');
+  const id=UUID(5),p=proj(5);
+  assert.equal(coverPhoto(p,false),null);
+  const ph=coverPhoto(p,true);
+  assert.equal(ph._id,id.replace(/-/g,''));
+  assert.equal(ph.photo_medium.content_key,'cv-'+id);assert.equal(ph.photo_medium.content,'cv-'+id);
+  assert.equal(ph.photo_large.content_key,'cv-'+id);assert.equal(ph.photo_medium.size,-1);
+  assert.equal(ph.photo_medium.w,256);assert.equal(ph.photo_medium.h,256);
+  assert.equal(coverKeyId('cv-'+id),id);assert.equal(coverKeyId('dl/cv-'+id),id);
+  assert.equal(coverKeyId('av-'+'a'.repeat(24)),null);assert.equal(coverKeyId('cv-../x'),null);assert.equal(coverKeyId('cv-'+id+'/..'),null);
+});
+
+test('project photo object: list() adds photo only when cover file exists',async()=>{
+  const out=await list(ctx([proj(6),proj(7,{picture_url:'https://x/z.jpg'})],{}));
+  assert.equal(out[0].photo,undefined);
+  assert.equal(out[1].photo,undefined);
+});
 }
