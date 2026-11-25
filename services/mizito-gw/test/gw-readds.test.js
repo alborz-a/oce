@@ -25,3 +25,8 @@ test('monitor: past30 percents returns empty array; workspace returns object',as
 test('title source: label is always رویال استار, also for owner and manager roles',()=>{
   for(const role of ['owner','manager','member','customer'])assert.equal(label({role}),'رویال استار',role);
 });
+
+test('notes/getAll: empty array (client loadNotes iterates the result), no 404',async()=>{
+  const {routes:m}=require('../modules/misc');
+  assert.deepEqual(await m['/api/notes/getAll']({}),[]);
+});
