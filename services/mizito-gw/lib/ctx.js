@@ -5,7 +5,7 @@ const J=x=>JSON.parse(JSON.stringify(x));
 const LABEL_ROLES=(process.env.LABEL_ROLES||'owner,manager').split(',');
 const WID='0'.repeat(23)+'1';
 const PLABEL='0000000000000000000000a1';
-const label=me=>LABEL_ROLES.includes(me.role)?'OCE (RSC)':'رویال استار';
+const label=()=>'رویال استار'; // served title is always رویال استار (owner parity)
 const iso=s=>s?new Date(s).toISOString():null;
 function tokenOf(req){const a=req.headers.authorization||'';const m=/^Bearer\s+(\S+)$/i.exec(a);return m?m[1]:null}
 async function make(req,body){
