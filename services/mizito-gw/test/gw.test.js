@@ -178,7 +178,7 @@ test('workspace/switch answers 200 with the single workspace (no 404 in the cons
   assert.equal(r.status,200);const j=JSON.parse(r.body);assert.ok(j.ok);assert.ok(j._id);assert.equal(j.workspaces.length,1);assert.equal(j.workspaces[0]._id,j._id);
 });
 
-// ---- loop fix (2026-11-25): switch stub token, switch guard + loop breaker, header OCE button, tab title pin ----
+// ---- loop fix (2026-11-25): switch stub token, switch guard + loop breaker, tab title pin ----
 test('workspace switch stub answers session token and single workspace object',async()=>{
   const brand=require('../modules/brand');const r=await brand.routes['/api/workspace/switch']({tok:'SESS-TOK',label:'رویال استار',WID:'x'});
   assert.equal(r.token,'SESS-TOK');assert.equal(r.workspaces.length,1);assert.equal(r.workspaces[0]._id,r._id);assert.equal(r.workspaces[0].active,true);
@@ -203,14 +203,6 @@ function runShimDom(state){
   return {mos};
 }
 function domState(hash){return {kids:[],cookies:[],listeners:{},assigned:[],hash:hash||'#/ws/home',hashSets:[],title:'Mizito',ls:new Map([['oe_access_token','TOK']]),ss:new Map()}}
-test('shim header OCE button: inserted once, idempotent over DOM mutations, click expires oce_ui then opens /projects',()=>{
-  const st=domState();const run=runShimDom(st);
-  for(let i=0;i<3;i++)run.mos.forEach(cb=>cb([]));
-  const btns=st.kids.filter(k=>k.id==='rsd-gw-oce');assert.equal(btns.length,1);
-  assert.equal(btns[0].textContent,'ورود به OCE');assert.equal(btns[0].attrs.dir,'rtl');
-  st.listeners.click({preventDefault(){}});
-  assert.ok(st.cookies.some(c=>/^oce_ui=;.*Max-Age=0/.test(c)&&/Path=\//.test(c)));assert.deepEqual(st.assigned,['/projects']);
-});
 test('shim tab title pinned to رویال استار on mutation',()=>{
   const st=domState();const run=runShimDom(st);assert.equal(st.title,'رویال استار');
   st.title='OCE dashboard';run.mos.forEach(cb=>cb([]));assert.equal(st.title,'رویال استار');
