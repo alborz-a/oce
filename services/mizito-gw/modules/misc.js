@@ -9,7 +9,19 @@ const routes={
  // client: monitor customers list is an array (angular.forEach then a.customers = d)
  '/api/monitor/customers':k([]),
  '/api/dashboard/getAllWorkspacesUsers':k([]),'/api/dashboard/notifySeen':k(true),'/api/dashboard/getPending':k([]),
- '/api/workspace/planInfo':k({used:0,volume:1099511627776,remain_days:3650}),'/api/payment/getReportDetails':k([]),
+ // client getPlanInfo(true) (settings pages): loader clears loadingPlanInfo only when max_members_count is truthy, so the details branch must return non-null plan fields. owner_id = caller id (client compares it with getUserId()). No users field: client passes it to saveApiUsers as an array.
+ '/api/workspace/planInfo':async c=>{const base={used:0,volume:1099511627776,remain_days:3650};
+   if(!(c.b&&c.b.details))return base;
+   return Object.assign(base,{max_members_count:1000,max_members:1000,gift_members:0,max_file_size_mb:1024,max_inbox_size:1024,max_delay:0,max_nonzero_coeff:0,remain_in_board:0,plan_type:'enterprise',plan_code:'enterprise',plan_expired_at:'2099-12-31T23:59:59.000Z',is_enterprise_plan:true,business_type:'',owner_id:c.me&&c.me.hexId});
+ },
+ // client reads c.items (|| []), c.recordingStartedAt, hasMore, nextCursor
+ '/api/workspace/getSettingsHistory':async()=>({items:[],recordingStartedAt:null,hasMore:false,nextCursor:null}),
+ // client: deal and payment lists/statistics are arrays (angular.forEach / direct return)
+ '/api/deal/getAll':k([]),'/api/deal/getReportStatistics':k([]),'/api/payment/getReportStatistics':k([]),'/api/payment/getAllPayments':k([]),
+ // monitor user page: profile object; minutes list; tasksAssigned chart has labels/values plus user and total sub-charts (b.user.values, b.total.values)
+ '/api/monitor/user':k({}),'/api/monitor/minutes':k([]),
+ '/api/monitor/chart/tasksAssigned':k({labels:[],values:[],all_count:0,user:{labels:[],values:[],all_count:0},total:{labels:[],values:[],all_count:0}}),
+ '/api/payment/getReportDetails':k([]),
  '/api/chat/setTyping':k(true),'/api/chat/search':k([]),'/api/feedback/checkRequireParticipant':k({require:false}),'/api/dashboard/checkWhatsNew':k({count:0,message:null}),
 };
 module.exports={routes};
