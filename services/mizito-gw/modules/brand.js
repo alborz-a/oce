@@ -38,6 +38,15 @@ module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,
   '/api/workspace/name':async c=>JSON.stringify(c.label),
   // Mizito session logout: no OCE logout endpoint exists (OCE clears its session client-side); answer ok so the app logout does not 404
   '/api/session/logout':async c=>({ok:true}),
+  // Monitor page (a_.js monitor.workspace + monitor.chart.*): gateway has no monitor data yet, answer well-formed empty shapes instead of 404.
+  '/api/monitor/workspace':async c=>({}),
+  '/api/monitor/chart/chatMessages':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/inboxMessages':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/tasksCreated':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/tasksDone':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/customers':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/notes':async c=>({labels:[],values:[]}),
+  '/api/monitor/chart/getPast30DoneTasksPercents':async c=>[],
   // workspace switch (a_.js r(): setToken(b.token) then go('workspace_switching')). Single workspace: answer the current session token, never undefined (undefined cleared the session and looped Home <-> switch screen).
   '/api/workspace/switch':async c=>({token:c.tok,ok:true,_id:WID,title:c.label,active:true,workspaces:[{_id:WID,title:c.label,active:true}]}),
   '/api/workspace/userId':async c=>{const w=c.J(c.T.userId);w.uid=c.me.hexId;w.wid=WID;w.phone='';
