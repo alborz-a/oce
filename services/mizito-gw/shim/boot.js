@@ -35,11 +35,11 @@ var SWITCH_RE=/#\/(workspace_switching|ws\/choose)/;
 function switchGuard(){try{if(SWITCH_RE.test(location.hash)&&redirOk())location.hash='#/ws/home'}catch(e){}}
 try{window.addEventListener('hashchange',switchGuard);switchGuard()}catch(e){}
 // Tab title: gateway shell keeps رویال استار on every route (Mizito a_.js sets document.title to the workspace name).
-var FA_TITLE='رویال استار';function pinTitle(){try{if(document.title!==FA_TITLE)document.title=FA_TITLE}catch(e){}}
+var FA_TITLE='رویال استار';var OLD_UI='__OLD_UI__'==='1';function pinTitle(){if(OLD_UI)return;try{if(document.title!==FA_TITLE)document.title=FA_TITLE}catch(e){}}
 // Hide workspace switcher/create card and support/help buttons that render after the CSS (class list mirrors brand.js HIDE_SEL).
 try{var SEL='__HIDE_SEL__';function hide(){try{var n=document.querySelectorAll(SEL);for(var i=0;i<n.length;i++)n[i].style.setProperty('display','none','important')}catch(e){}}
 var FA='رویال استار',MZT=/م[یي]زِ?[كک]ار/,MZ=/م[یي]زِ?[كک]ار/g,REG='md-toolbar,.workspace_header,.bl-appbar,.active-workspace-container,.header_workspace_name,.menu-profile-container';
-function fixText(){try{var h=document.querySelector('h3.active-workspace-title');if(h&&h.textContent.trim()!==FA)h.textContent=FA;
+function fixText(){if(OLD_UI)return;try{var h=document.querySelector('h3.active-workspace-title');if(h&&h.textContent.trim()!==FA)h.textContent=FA;
 var rs=document.querySelectorAll(REG);for(var r=0;r<rs.length;r++){var w=document.createTreeWalker(rs[r],NodeFilter.SHOW_TEXT),t;while((t=w.nextNode())){if(MZT.test(t.nodeValue))t.nodeValue=t.nodeValue.replace(MZ,'').replace(/\s{2,}/g,' ')}}}catch(e){}}
 var mo=new MutationObserver(function(){hide();fixText();pinTitle()});document.addEventListener('DOMContentLoaded',function(){hide();mo.observe(document.body,{childList:true,subtree:true});hide();fixText();pinTitle();try{new MutationObserver(pinTitle).observe(document.head||document.documentElement,{childList:true,subtree:true,characterData:true})}catch(e){}})}catch(e){}
 })();

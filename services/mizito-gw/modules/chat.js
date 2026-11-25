@@ -31,10 +31,11 @@ async function enrichProject(c,r,d){if(r.kind!=='project'||!r.project_id)return 
   if(ms.length){d.members=ms.map(m=>hex(m.user_id));if(!d.members.includes(c.me.hexId))d.members.push(c.me.hexId);
     d.group_admins=ms.filter(m=>P.ADMIN.includes(m.role)).map(m=>hex(m.user_id));const own=ms.find(m=>m.role==='owner');d.owner=own?hex(own.user_id):(d.group_admins[0]||c.me.hexId)}
   return d}
+const OD=require('../lib/owner-dash');
 const AVD=process.env.MIZITO_DATA_DIR?require('path').join(process.env.MIZITO_DATA_DIR,'avatars'):'';
 const avFile=h=>{if(!AVD)return null;const f=require('path').join(AVD,h+'.jpg');return require('fs').existsSync(f)?f:null};
-function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J(c.T.user);o._id=hex(u.id);o.first_name=p[0];o.last_name=p.slice(1).join(' ');
-  if(u.avatar_url||avFile(hex(u.id))){const t='av-'+hex(u.id);o.photo={_id:hex(u.id),name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}else delete o.photo;
+function mizUser(c,u){const p=(u.full_name||'?').trim().split(/\s+/);const o=c.J(c.T.user);if(OD.on(c)){const w=OD.workStatus(u.full_name);if(w.last_working_on_title)o.work_status=w}o._id=hex(u.id);o.first_name=p[0];o.last_name=p.slice(1).join(' ');
+  if(u.avatar_url||avFile(hex(u.id))||(OD.on(c)&&OD.photoFile(u.full_name))){const t='av-'+hex(u.id);o.photo={_id:hex(u.id),name:'a.webp',photo_medium:{content:t,size:-1,w:173,h:173,content_key:t},photo_large:{content:t,size:-1,w:173,h:173,content_key:t}}}else delete o.photo;
   o.email='';o.phone='';o.username=u.full_name||'?';o.deleted=false;o.workspace_id=WID;return o}
 // Mizito service rows arrive as text '[رویداد: messageActionX]' (imported) or empty text. Map to Farsi; unknown/empty -> hidden (null).
 const SVC_TEXT={messageActionChatCreate:'گروه ساخته شد',messageActionChatAddUser:'عضو جدید اضافه شد',messageActionChatDeleteUser:'عضو حذف شد',messageActionChatEditPhoto:'تصویر گروه تغییر کرد',messageActionChatEditTitle:'عنوان گروه تغییر کرد'};
@@ -73,7 +74,7 @@ const roomOf=async(c,id)=>{const s=await load(c);const r=s.roomBy[id]||null;if(!
 // Mizito keys DM dialogs by peerId (peer_user). Two DM rooms with the same peer make the client's dialog loader return undefined for the second one (chat bounces with TypeError undefined.dialog_type). Keep the first (newest, list is pre-sorted) per peer.
 function oneDmPerPeer(list){const seen=new Set();return list.filter(d=>{if(d.is_group)return true;const k=d.peer_user;if(!k)return true;if(seen.has(k))return false;seen.add(k);return true})}
 const routes={
- '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});const del=[...new Set([...require('../lib/letter-senders').names(),...await require('./letters').mzNames(c)])].map(n=>delUser(c,n));return {users:us.map(u=>mizUser(c,u)).concat(del),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
+ '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});const del=[...new Set([...require('../lib/letter-senders').names(),...await require('./letters').mzNames(c),...(OD.on(c)?OD.extraNames():[])])].map(n=>delUser(c,n));return {users:us.map(u=>mizUser(c,u)).concat(del),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
  '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(PR.visibleRooms(c,s.rooms).map(async r=>enrichProject(c,r,dialog(c,r,s))));return {dialogs:oneDmPerPeer(ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||''))),pin_dialogs:[]}},
  '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));await enrichProject(c,r,d);d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
@@ -93,7 +94,7 @@ async function cdn(c,name){
     const j=await c.oce.get('/documents/photos/'+u+'/file-url/');return {redirect:j.url||j.file_url||j.download_url||null}}
   const m=/^(?:dl\/)?av-([0-9a-f]{24})$/.exec(name);if(m){const s=await load(c);const u=s.colBy[m[1]];
     // OCE colleagues avatar_url is relative with a cache-buster: /api/v1/users/<id>/avatar?v=<stamp>. server.js rejects query strings, so strip it here.
-    if(!(u&&u.avatar_url)){const f=avFile(m[1]);if(f)return {body:require('fs').readFileSync(f),type:'image/jpeg'}}
+    if(!(u&&u.avatar_url)){const f=avFile(m[1])||(OD.on(c)&&u&&OD.photoFile(u.full_name));if(f)return {body:require('fs').readFileSync(f),type:'image/jpeg'}}
     if(u&&u.avatar_url){const abs=/^https?:\/\//i.test(u.avatar_url);return {redirect:abs?u.avatar_url:null,oceAvatar:abs?null:u.avatar_url.split('?')[0]}}}
   return null}
 // document ids (dashless, lowercase) of messages in rooms hidden from this caller; /cdn ph-/dl- for these answer 404

@@ -9,9 +9,9 @@ const routes={
  '/api/workspace/getPlans':k([]),
  // client: monitor customers list is an array (angular.forEach then a.customers = d)
  '/api/monitor/customers':R.guard('customers',[]),
- '/api/dashboard/getAllWorkspacesUsers':k([]),'/api/dashboard/notifySeen':k(true),'/api/dashboard/getPending':k([]),
+ '/api/dashboard/getAllWorkspacesUsers':async c=>{const OD=require('../lib/owner-dash');if(!OD.on(c))return [];const r=await require('./chat').routes['/api/workspace/getUsers'](c);return [{workspace_id:c.WID,users:r.users.filter(u=>!u.deleted).map(u=>Object.assign({},u,{workspace_id:c.WID}))}]},'/api/dashboard/notifySeen':k(true),'/api/dashboard/getPending':k([]),
  // client getPlanInfo(true) (settings pages): loader clears loadingPlanInfo only when max_members_count is truthy, so the details branch must return non-null plan fields. owner_id = caller id (client compares it with getUserId()). No users field: client passes it to saveApiUsers as an array.
- '/api/workspace/planInfo':async c=>{const base={used:0,volume:1099511627776,remain_days:3650};
+ '/api/workspace/planInfo':async c=>{const OD=require('../lib/owner-dash');const base=OD.on(c)&&OD.snap('dash-plan',null)?{used:OD.snap('dash-plan').used,volume:OD.snap('dash-plan').volume,remain_days:require('../lib/owner-dash').remainDays()}:{used:0,volume:1099511627776,remain_days:3650};
    if(!(c.b&&c.b.details))return base;
    return Object.assign(base,{max_members_count:1000,max_members:1000,gift_members:0,max_file_size_mb:1024,max_inbox_size:1024,max_delay:0,max_nonzero_coeff:0,remain_in_board:0,plan_type:'enterprise',plan_code:'enterprise',plan_expired_at:'2099-12-31T23:59:59.000Z',is_enterprise_plan:true,business_type:'',owner_id:c.me&&c.me.hexId});
  },
