@@ -20,7 +20,7 @@ function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);
     if(only)for(const h of only)if(!mem.includes(h))mem.push(h)}if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
   // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
   if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
-  const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:(OD.on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1')?0:(Number(r.unread)||0),history_unread_count:0,
+  const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:(OD.on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1'&&r.kind==='dm')?0:(Number(r.unread)||0),history_unread_count:0,
     messages_count:0,last_message_date:c.iso(r.last_message_at||r.created_at),pinned_messages:[],seen:[{user:c.me.hexId,seen_count:0}],labels:[],kicked:false,deleted:false,members:mem,group_admins:[],bots:[],meetings:[],tags:[]};
   if(r.kind==='dm')d.peer_user=mem.find(x=>x!==c.me.hexId)||c.me.hexId;
   else{d.title=r.kind==='company'?COMPANY_TITLE:(r.name||'گروه');if(r.kind==='project'&&r.project_id){d.is_project_group=true;d.project_entity=hex(r.project_id)}}
@@ -79,7 +79,12 @@ const roomOf=async(c,id)=>{const s=await load(c);const r=s.roomBy[id]||null;if(!
 function oneDmPerPeer(list){const seen=new Set();return list.filter(d=>{if(d.is_group)return true;const k=d.peer_user;if(!k)return true;if(seen.has(k))return false;seen.add(k);return true})}
 const routes={
  '/api/workspace/getUsers':async c=>{const s=await load(c);const us=s.col.slice();if(!s.colBy[c.me.hexId])us.push({id:c.me.id,full_name:c.me.name});const del=[...new Set([...require('../lib/letter-senders').names(),...await require('./letters').mzNames(c),...(OD.on(c)?OD.extraNames():[])])].map(n=>delUser(c,n));return {users:us.map(u=>mizUser(c,u)).concat(del),user_status:us.map((u,i)=>({user_id:hex(u.id),order:i}))}},
- '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(PR.visibleRooms(c,s.rooms).map(async r=>enrichProject(c,r,dialog(c,r,s))));return {dialogs:oneDmPerPeer(ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||''))),pin_dialogs:[]}},
+ '/api/chat/getDialogs':async c=>{const s=await load(c);const ds=await Promise.all(PR.visibleRooms(c,s.rooms).map(async r=>enrichProject(c,r,dialog(c,r,s))));const out=oneDmPerPeer(ds.filter(d=>d&&typeof d==='object'&&d._id).sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||'')));
+  // owner old-UI parity: project badge counts one unread project room (old Arash value 1), imported history never inflates it
+  if(OD.on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1'){let seen=false;out.forEach(d=>{if(d.is_project_group||d.project_entity){if(!seen){d.unread_count=1;seen=true}else d.unread_count=0}else d.unread_count=0})}
+  // owner old-UI parity: the 77 CRM customer entities are chat dialogs in old Mizito (stored snapshot, managers' own data)
+  if(OD.on(c)){const cu=OD.snap('dash-customer-dialogs',[]);for(const d of cu){const x=c.J(d);x.seen=[{user:c.me.hexId,seen_count:x.messages_count||0}];out.push(x)}out.sort((a,b)=>(b.last_message_date||'').localeCompare(a.last_message_date||''))}
+  return {dialogs:out,pin_dialogs:[]}},
  '/api/chat/getChatView':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));await enrichProject(c,r,d);d.messages_count=(await messages(c,r)).length;d.seen=[{user:c.me.hexId,seen_count:d.messages_count}];return d},
  '/api/chat/getFullChat':async c=>{const r=await roomOf(c,c.b.dialog);if(!r)return {};const d=dialog(c,r,await load(c));d.messages_count=(await messages(c,r)).length;
   await enrichProject(c,r,d);

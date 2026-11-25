@@ -52,9 +52,9 @@ const routes={
   o.messages=ms.slice(1).map(m=>msgRow(c,m,Object.assign({},l,t,{thread_id:l.thread_id}),1));return o},
  '/api/inbox/getInbox':async c=>{const box=c.b.mode==='outbox'?'outbox':c.b.mode==='archived'?'archived':'inbox';const rows=(await mailbox(c,box)).map(l=>row(c,l));
   if(!isLetterAdmin(c))return rows;
-  const OD=require('../lib/owner-dash'),only=OD.on(c)&&box==='archived'?new Set(OD.snap('dash-letters',{}).archived||[]):null;
-  let mz=(await mzRows(c)).filter(x=>(x.metadata||{}).box===box&&(!only||!only.size||only.has((x.metadata||{}).mizito_id))).map(x=>mzRow(c,x));
-  if(only){const cap=OD.snap('dash-letters',{}).subjects||{},have={};rows.forEach(r=>{have[r.subject]=(have[r.subject]||0)+1});mz=mz.filter(m=>{have[m.subject]=(have[m.subject]||0)+1;return have[m.subject]<=(cap[m.subject]||0)})}
+  const OD=require('../lib/owner-dash'),LD=OD.on(c)?OD.snap('dash-letters',null):null,ids=LD&&LD[box],only=ids&&ids.length?new Set(ids):null;
+  let mz=(await mzRows(c)).filter(x=>(x.metadata||{}).box===box&&(!only||only.has((x.metadata||{}).mizito_id))).map(x=>mzRow(c,x));
+  if(only){const cap=LD[box+'_subjects']||{},have={};rows.forEach(r=>{have[r.subject]=(have[r.subject]||0)+1});mz=mz.filter(m=>{have[m.subject]=(have[m.subject]||0)+1;return have[m.subject]<=(cap[m.subject]||0)})}
   return rows.concat(mz).sort((a,b)=>String(b.send_date||'').localeCompare(String(a.send_date||'')))},
  '/api/inbox/badge':async c=>{if(require('../lib/owner-dash').on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1')return {inbox_count:0};const r=await c.oce.get('/correspondence/mailbox/unread-count/');return {inbox_count:r.count||0}},
  '/api/inbox/send':async c=>{const b=c.b;if(!b.to||!b.to.length)return fail('گیرنده انتخاب نشده است');

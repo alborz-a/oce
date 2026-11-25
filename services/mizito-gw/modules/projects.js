@@ -26,7 +26,7 @@ const routes={
      if(sm.length){t.summaries=sm;if(a.max_delay){const md=c.J(a.max_delay);md.user=OD.uid(c,md.user,col);if(md.task){const tk=md.task;const sn=a.summaries.find(x=>x.project===tk.project),g=sn&&by[nz(sn.name)];if(g){tk.project=g.project;tk.dialog=g.dialog}tk.owner=OD.uid(c,tk.owner,col);tk.assignee=(tk.assignee||[]).map(x=>OD.uid(c,x,col))}t.max_delay=md}
      if(a.max_inbox_size)t.max_inbox_size={user:OD.uid(c,a.max_inbox_size.user,col),size:a.max_inbox_size.size}}}}
    return t},
- '/api/labels/getAll':async c=>{if(c.b.type!=='project')return {labels:[],label_status:[]};const raw=(await listRaw(c)).filter(x=>x.status!=='archived');
+ '/api/labels/getAll':async c=>{if(c.b.type==='crm')return c.isManager?require('../lib/round2').get('crm_labels',{labels:[],label_status:[]}):{labels:[],label_status:[]};if(c.b.type!=='project')return {labels:[],label_status:[]};const raw=(await listRaw(c)).filter(x=>x.status!=='archived');
    const all=groupsOf(raw).map(g=>({_id:g._id,title:g.title,color:g.color,type:'project',deleted:false}));
    return {labels:all,label_status:all.map((l,i)=>({label_id:l._id,order:i}))}},
  '/api/projects/get':async c=>{const id=String(c.b.projectId||c.b.project||c.b._id||'');return (await list(c)).find(x=>x._id===id)||{}},

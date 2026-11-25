@@ -38,7 +38,7 @@ function manifest(raw,base){try{const m=JSON.parse(raw);m.name=FA;m.short_name=F
 function cacheId(s){const m=/cache_id\W{1,4}(\d[\d.\-]*\d)/.exec(s)||/c_\.js\?v=(\d[\d.\-]*\d)/.exec(s);return m?m[1]:null}
 function c_js(raw){return raw+`;try{var _o=location.origin;Config.App.api_url=_o;Config.App.cdn_url=_o;Config.App.io_url=_o;Config.App.domains=[location.hostname];Config.App.client_url=_o+'/#/';}catch(e){}`}
 module.exports={HIDE_SEL,brand,brandStatic,neutralLinks,manifest,indexHtml,c_js,cacheId,FA,routes:{
-  '/api/workspace/name':async c=>JSON.stringify(c.label),
+  '/api/workspace/name':async c=>c.label,
   // Mizito session logout: no OCE logout endpoint exists (OCE clears its session client-side); answer ok so the app logout does not 404
   '/api/session/logout':async c=>({ok:true}),
   // Monitor page (a_.js monitor.workspace + monitor.chart.*): gateway has no monitor data yet, answer well-formed empty shapes instead of 404.
