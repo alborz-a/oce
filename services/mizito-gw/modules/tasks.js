@@ -14,8 +14,15 @@ async function ownerList(c,kind){const col=(await require('./chat').load(c)).col
   const all=await memo(c.oce.token,'ownerOpenTasks',120000,async()=>{const ps=await require('./projects').listRaw(c);const out=[];
     for(let i=0;i<ps.length;i+=6){const r=await Promise.all(ps.slice(i,i+6).map(p=>c.oce.pages('/tasks/?project_id='+p.id+'&status=open',500,5000).catch(()=>[])));r.forEach(a=>out.push(...a))}return out});const by={};all.forEach(k=>{const m=k.metadata&&k.metadata.mizito_id;if(m)by[m]=k});
   return ids.map(i=>by[i]).filter(k=>k&&k.status!=='completed').map(k=>{const o=row(c,k),m=k.metadata.mizito_id,sn=OD.snap('dash-tasks',{});const as=(sn.assignees||{})[m];if(as&&as.length)o.assignee=as.map(x=>OD.uid(c,x,col));else if(kind==='inbox')o.assignee=[c.me.hexId];if(kind==='outbox')o.owner=c.me.hexId;const dl=(sn.deadlines||{})[m];if(dl){o.deadline=dl;o.alarm_at=dl;o.sort_date=dl;o.has_deadline=o.deadline_used=true}return o})}
+// manager monitoring list: tasks of every visible project (open, or done when filter.done_status), Mizito filter subset
+async function monitorList(c){const f=c.b.filter||{},st=f.done_status?'completed':'open';
+  const all=await memo(c.oce.token,'monTasks:'+st,120000,async()=>{const ps=await require('./projects').listRaw(c);const out=[];
+    for(let i=0;i<ps.length;i+=6){const r=await Promise.all(ps.slice(i,i+6).map(p=>c.oce.pages('/tasks/?project_id='+p.id+'&status='+st,500,5000).catch(()=>[])));r.forEach(a=>out.push(...a))}return filterSynthetic(out)});
+  const today=new Date().toISOString().slice(0,10),q=String(f.title||'').trim();
+  let l=all.filter(k=>(!f.project||hex(k.project_id)===String(f.project))&&(!f.assignee||(k.responsible_id&&hex(k.responsible_id)===String(f.assignee)))&&(!f.owner||(k.created_by&&hex(k.created_by)===String(f.owner)))&&(!f.overdue_status||(k.due_date&&String(k.due_date).slice(0,10)<today))&&(!q||String(k.title||'').includes(q)));
+  l.sort((a,b)=>String(b.updated_at||'').localeCompare(String(a.updated_at||'')));return l.slice(0,200).map(k=>row(c,k))}
 const routes={
- '/api/tasks/upcoming':async c=>{if(OD.on(c)&&c.b.from_dashboard&&(c.b.inbox||c.b.outbox)){const l=await ownerList(c,c.b.inbox?'inbox':'outbox');if(l)return l}
+ '/api/tasks/upcoming':async c=>{if(c.b.monitor_tasks&&c.isManager)return monitorList(c);if(OD.on(c)&&c.b.from_dashboard&&(c.b.inbox||c.b.outbox)){const l=await ownerList(c,c.b.inbox?'inbox':'outbox');if(l)return l}
   const all=await mine(c),open=all.filter(k=>k.status!=='completed'),f=c.b.filter||{};
   if(c.b.project_id)return open.filter(k=>hex(k.project_id)===String(c.b.project_id)).map(k=>row(c,k));
   if(f.calendar_year){const p=open.filter(k=>{if(!k.due_date)return false;const q=pers(new Date(k.due_date));return q.year===f.calendar_year&&q.month===f.calendar_month});return p.map(k=>row(c,k))}

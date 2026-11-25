@@ -16,7 +16,8 @@ const isCoMsg=m=>String(((m||{}).metadata||{}).mizito_id||'').startsWith(COMPANY
 function dialog(c,r,s){const mem=(r.member_ids||[]).map(hex);
   // company room = whole workspace (Mizito public group): every colleague the caller can see
   if(r.kind==='company'&&s){const only=COMPANY_MEMBERS.length?new Set(COMPANY_MEMBERS):null;
-    for(const u of s.col){const h=hex(u.id);if((!only||only.has(h))&&!mem.includes(h))mem.push(h)}}if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
+    for(const u of s.col){const h=hex(u.id);if((!only||only.has(h))&&!mem.includes(h))mem.push(h)}
+    if(only)for(const h of only)if(!mem.includes(h))mem.push(h)}if(!mem.includes(c.me.hexId))mem.push(c.me.hexId);
   // OCE returns empty member_ids for DMs and puts the peer's name in r.name: resolve the peer from the caller's colleagues.
   if(r.kind==='dm'&&s&&!mem.some(x=>x!==c.me.hexId)){const p=s.col.find(u=>u.full_name===r.name);if(p)mem.push(hex(p.id))}
   const d={_id:hex(r.id),is_group:r.kind!=='dm',is_public_group:r.kind==='company',is_customer_entity:false,unread_count:(OD.on(c)&&process.env.MIZITO_OWNER_ZERO_UNREAD==='1')?0:(Number(r.unread)||0),history_unread_count:0,
@@ -54,13 +55,13 @@ async function history(c,dialogId){const r=await roomOf(c,dialogId);if(!r)return
   const a=await messages(c,r);
   const F=require('./files');await F.prefetch(c,a);return a.flatMap((m,i)=>F.expand(m,i+1,message)).filter(Boolean)}
 // whole room history, paged backwards with the `before` cursor (OCE page max 100), capped at 2000
-const raw=(c,r)=>memo(c.oce.token,'msg:'+r.id,10000,async()=>{let all=[],before=null;
-  for(let i=0;i<20;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
+const raw=(c,r,max=20)=>memo(c.oce.token,'msg:'+r.id+(max>20?':deep':''),10000,async()=>{let all=[],before=null;
+  for(let i=0;i<max;i++){const l=await c.oce.get('/team-chat/rooms/'+r.id+'/messages/?limit=100'+(before?'&before='+before:''));const a=(Array.isArray(l)?l:(l.results||[])).slice().sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)));
     const seen=new Set(all.map(m=>m.id));const fresh=a.filter(m=>!seen.has(m.id));all=fresh.concat(all);if(a.length<100||!fresh.length)break;before=a[0].id}
   return all});
 const messages=async(c,r)=>{let all=await raw(c,r);
   if(r.kind==='company'){const s=await load(c);const g=s.rooms.find(x=>x.kind==='project'&&x.name==='عمومی');
-    if(g&&!PR.hiddenId(c,g.id)){const gm=await raw(c,g);all=all.concat(gm.filter(isCoMsg).map(m=>Object.assign({},m,{room_id:r.id})));all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}}
+    if(g&&!PR.hiddenId(c,g.id)&&!all.some(isCoMsg)){const gm=await raw(c,g,80);all=all.concat(gm.filter(isCoMsg).map(m=>Object.assign({},m,{room_id:r.id})));all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}}
   else if(r.kind==='dm'){const s=await load(c),cm=canonMap(c,s);for(const x of s.rooms){if(x.kind==='dm'&&x.id!==r.id&&cm[x.id]===r.id&&!PR.hiddenId(c,x.id)){const o=await raw(c,x);all=all.concat(o.map(m=>Object.assign({},m,{room_id:r.id})))}}all.sort((x,y)=>String(x.created_at).localeCompare(String(y.created_at)))}
   else if(r.kind==='project'&&r.name==='عمومی')all=all.filter(m=>!isCoMsg(m));
   return all};

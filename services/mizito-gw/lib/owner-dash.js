@@ -5,7 +5,7 @@ const snap=(n,d)=>R.get(n,d);
 const names=()=>snap('dash-users',{});
 // Mizito user id -> gateway user id: OCE colleague with same full name, else display-only deleted-user id (letter-senders idOf)
 function uid(c,mid,colleagues){const n=names()[mid];if(!n)return mid;const u=(colleagues||[]).find(x=>String(x.full_name||'').trim()===n);if(u)return String(u.id).replace(/-/g,'').slice(0,24);return require('./letter-senders').idOf(n)}
-const extraNames=()=>{const a=snap('dash-allsummary',{}),n=names(),o=[];const m=a.max_inbox_size&&a.max_inbox_size.user;if(m&&n[m])o.push(n[m]);return o};
+const extraNames=()=>{const a=snap('dash-allsummary',{}),n=names(),o=[];const m=a.max_inbox_size&&a.max_inbox_size.user;if(m&&n[m])o.push(n[m]);const w=snap('dash-wsusers',[]);w.slice(0,-1).forEach(x=>x.names.forEach(nm=>{if(nm&&nm!=='آرش پیرنیا')o.push(nm)}));return o};
 const fs=require('fs'),path=require('path');
 const DIR=process.env.MIZITO_DATA_DIR||'';
 // photo file of a colleague by full name (stored old-Mizito avatars: <dir>/avatars/<mizito id>.jpg)
