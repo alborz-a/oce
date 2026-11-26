@@ -323,6 +323,9 @@ export default defineConfig({
         // this raises it, it does not restate it.
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         navigateFallback: '/index.html',
+        // No directory-index mapping: with it the precache answers `/` with the cached OCE shell and nginx never sees the
+        // navigation, so the `oce_ui=1` cookie cannot route a returning Mizito-gateway user to the gateway shell.
+        directoryIndex: null,
         // Don't try to fall back to /index.html for API routes or for
         // file/asset routes the SW doesn't precache.
         navigateFallbackDenylist: [/^\/api\//, /^\/static\//, /^\/pwa\//, /^\/_rs\//, /^\/$/, /^\/index\.html$/, /^\/socket\.io\//],
