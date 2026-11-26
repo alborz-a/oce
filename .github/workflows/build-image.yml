@@ -96,5 +96,16 @@ jobs:
           tags: |
             ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
             ghcr.io/alborz-a/oce:latest-ir
+      # Temp ci/** branch: production-flavour image under the version tag only (no latest-ir).
+      - uses: docker/build-push-action@v6
+        if: startsWith(github.ref, 'refs/heads/ci/')
+        with:
+          context: deploy/docker
+          file: deploy/docker/Dockerfile.s3
+          push: true
+          build-args: |
+            BASE_IMAGE=ghcr.io/alborz-a/oce:sha-${{ github.sha }}
+          tags: |
+            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
       - name: Prune older build caches
         run: docker buildx prune -f
