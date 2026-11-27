@@ -186,6 +186,22 @@ export function LoginPage() {
     };
   }, []);
 
+  // The gateway bundle (a_.js, ~2.5 MB compressed) is the slow part of the first load after login:
+  // fetch it into the HTTP cache while the user types, so the full page load to `/` finds it cached.
+  useEffect(() => {
+    fetch('/_rs/index.html', { credentials: 'omit' })
+      .then((r) => r.text())
+      .then((h) => {
+        for (const m of h.matchAll(/(?:src|href)="((?:c_\.js|a_\.js|app\.css)\?[^"]+)"/g)) {
+          const l = document.createElement('link');
+          l.rel = 'prefetch';
+          l.href = `/_rs/${m[1]}`;
+          document.head.appendChild(l);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Desktop auto-bootstrap. Runs once on mount. On ANY failure it silently
   // falls back to the normal login form (clears `bootstrapping`); it never
   // surfaces an error to the user because manual login is always a valid path.
