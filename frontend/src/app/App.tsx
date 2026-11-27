@@ -39,7 +39,7 @@ import GlobalSearchModal from '@/features/search/GlobalSearchModal';
 import { useGlobalSearchStore } from '@/stores/useGlobalSearchStore';
 import { FloatingQueuePanel } from './layout/FloatingQueuePanel';
 import { readRememberChoice, useAuthStore } from '@/stores/useAuthStore';
-import { claimGatewayHomeRedirect, hasGatewayUiCookie, setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
+import { claimGatewayHomeRedirect, setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
 import { canCreateProject } from '@/shared/lib/projectCreateAccess';
 import { isEngineeringRole, isManagerRole, useIsNormalUser } from '@/shared/lib/systemAdmin';
 import { RestrictedRouteGuard } from './RestrictedRouteGuard';
@@ -1060,19 +1060,25 @@ function LegacyWorkspaceRedirect() {
 }
 
 /**
- * `/` for a logged-in user. nginx serves the gateway at `/` once `oce_ui` is set.
- * Cookie missing: set it and replace (one shot per tab session). Cookie present
- * but the SPA still renders here: no redirect, render as before (loop guard).
+ * `/` for a logged-in user. nginx serves the gateway at `/` once `oce_ui` is set, so any
+ * full page load of `/` ends there. Reached by an in-app navigation (or without the cookie):
+ * set the cookie and reload `/` (at most once per 60 s). A second arrival inside that window
+ * means the gateway did not take over: fall back to the project list, never an endless spinner.
  */
 function WorkspaceHomeRedirect() {
   const userRole = useAuthStore((s) => s.userRole);
   const accessToken = useAuthStore((s) => s.accessToken);
+  const [fallback, setFallback] = useState(false);
   useEffect(() => {
-    if (!accessToken || hasGatewayUiCookie() || !claimGatewayHomeRedirect()) return;
+    if (!accessToken) return;
+    if (!claimGatewayHomeRedirect()) {
+      setFallback(true);
+      return;
+    }
     setGatewayUiCookie(readRememberChoice());
     window.location.replace(resolvePostLoginLanding(userRole));
   }, [userRole, accessToken]);
-  return <PageLoadingInline />;
+  return fallback ? <LegacyWorkspaceRedirect /> : <PageLoadingInline />;
 }
 
 function DashboardRoute() {

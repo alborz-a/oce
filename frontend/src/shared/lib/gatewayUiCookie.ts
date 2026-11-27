@@ -38,15 +38,28 @@ export function clearGatewayUiCookie(): void {
 }
 
 /**
- * One-shot guard for the `/` redirect. Returns true only the first time per tab session.
+ * Guard for the `/` redirect: true if no claim happened in the last 60 s (per tab session).
+ * A stale claim no longer blocks it for the rest of the tab session, so `/` never spins for good.
  * If sessionStorage is unavailable it returns false, so no redirect loop can start.
  */
 export function claimGatewayHomeRedirect(): boolean {
   try {
-    if (sessionStorage.getItem(REDIRECT_FLAG)) return false;
-    sessionStorage.setItem(REDIRECT_FLAG, '1');
+    const last = Number(sessionStorage.getItem(REDIRECT_FLAG)) || 0;
+    if (last && Date.now() - last < 60_000) return false;
+    sessionStorage.setItem(REDIRECT_FLAG, String(Date.now()));
     return true;
   } catch {
     return false;
   }
+}
+
+/**
+ * Login success that ends in the gateway: set the routing cookie and blank the page
+ * BEFORE the auth store flips, so the SPA never paints its own dashboard/projects page
+ * for the moment before the full page load to `/`.
+ */
+export function beginGatewayHandoff(remember: boolean): void {
+  if (typeof document === 'undefined') return;
+  setGatewayUiCookie(remember);
+  document.documentElement.style.visibility = 'hidden';
 }

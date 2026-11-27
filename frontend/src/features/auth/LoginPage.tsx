@@ -30,7 +30,11 @@ import {
 import { safeNextPath } from './nextPath';
 import { isRestrictedRouteAllowed } from '@/app/restrictedRoutes';
 import { resolvePostLoginLanding } from '@/features/projects/workspace/resolveLandingProjectRoute';
-import { setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
+import { beginGatewayHandoff, setGatewayUiCookie } from '@/shared/lib/gatewayUiCookie';
+
+// Login that ends in the gateway (full page load to `/`), not in an in-app deep link.
+const leavesForGateway = (n: string | null | undefined): boolean =>
+  !n || n.startsWith('/#/ws') || n === '/' || n === '/dashboard' || n === '/onboarding';
 import { SUPPORTED_LANGUAGES } from '@/app/i18n';
 import { sortLanguagesByName } from '@/shared/lib/languageOrder';
 import { useThemeStore } from '@/stores/useThemeStore';
@@ -297,6 +301,7 @@ export function LoginPage() {
       }
       const data = await res.json();
       saveRememberChoice(rememberMe);
+      if (leavesForGateway(nextPath)) beginGatewayHandoff(rememberMe);
       setTokens(data.access_token, data.refresh_token, rememberMe, email);
       await useAuthStore.getState().syncRoleFromServer();
       const isRestricted = useAuthStore.getState().restrictedMode;
@@ -363,6 +368,7 @@ export function LoginPage() {
         return;
       }
       const data = await res.json();
+      if (leavesForGateway(nextPath)) beginGatewayHandoff(false);
       setTokens(data.access_token, data.refresh_token, false, demoEmail);
       await useAuthStore.getState().syncRoleFromServer();
       const isRestricted = useAuthStore.getState().restrictedMode;

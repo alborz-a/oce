@@ -36,6 +36,12 @@ describe('gatewayUiCookie', () => {
     expect(claimGatewayHomeRedirect()).toBe(false);
   });
 
+  it('claims again once the previous claim is older than 60 s', () => {
+    expect(claimGatewayHomeRedirect()).toBe(true);
+    sessionStorage.setItem('oce_gateway_home_redirect', String(Date.now() - 61_000));
+    expect(claimGatewayHomeRedirect()).toBe(true);
+  });
+
   it('re-arms the home redirect after clearing (logout then login)', () => {
     expect(claimGatewayHomeRedirect()).toBe(true);
     clearGatewayUiCookie();
