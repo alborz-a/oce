@@ -97,6 +97,7 @@ permissions:
 
 jobs:
   backend-full:
+    if: github.repository == 'datadrivenconstruction/OpenConstructionERP'
     name: Backend Full Suite (shard ${{ matrix.shard }}/32)
     runs-on: ubuntu-latest
     # Run serially this job never finished, so pytest-split fans the collected
@@ -276,7 +277,7 @@ jobs:
     # rather than when the shards do, which on run 33951533720 was 2h17m instead
     # of about 40 minutes. On a nightly nobody is waiting on that.
     needs: [backend-full, backend-full-cross-os]
-    if: always()
+    if: github.repository == 'datadrivenconstruction/OpenConstructionERP' && always()
     runs-on: ubuntu-latest
     permissions:
       # Only to read this run's own job list in the summary step below.
@@ -403,6 +404,7 @@ jobs:
           exit "$status"
 
   backend-full-cross-os:
+    if: github.repository == 'datadrivenconstruction/OpenConstructionERP'
     name: Backend Full Suite (${{ matrix.os }}, embedded PG)
     # Nightly cross-OS deep run: the full backend suite on the embedded
     # PostgreSQL the desktop and self-hosted builds ship (pixeltable-pgserver,

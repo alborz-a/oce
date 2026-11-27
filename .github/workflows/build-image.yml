@@ -1,0 +1,113 @@
+name: build-image
+on:
+  push:
+    branches: ['ci/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  # Public fork may only hold temporary ci/** branches pushed by ci-push.sh.
+  guard:
+    name: Ref guard (ci/** only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Fail on any ref that is not ci/**
+        run: |
+          case "$GITHUB_REF" in
+            refs/heads/ci/*) echo "ref ok: $GITHUB_REF" ;;
+            *) echo "::error::build-image runs only on ci/** branches (got $GITHUB_REF). Private code must not live on public branches."; exit 1 ;;
+          esac
+  checks:
+    needs: [guard]
+    if: github.repository == 'alborz-a/oce'
+    name: Iran & Code Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Iran Regional Checks
+        run: |
+          npm run check:iran
+          npm run check:fa
+
+      - name: Run Python Iran Primitives Test
+        run: |
+          python -c "from app.core.jalali import format_jalali; print(format_jalali('2026-10-11'))"
+          python -c "from app.core.digits import normalize_number_string; print(normalize_number_string('۱۲٬۳۴۵'))"
+        working-directory: backend
+
+      - name: Install Frontend Dependencies
+        run: npm ci --prefer-offline || npm install
+        working-directory: frontend
+
+      - name: Run Frontend Money Unit Tests (Vitest)
+        run: npx vitest run src/shared/lib/money.test.ts
+        working-directory: frontend
+
+      - name: Typecheck (fail fast before image build)
+        run: npm run typecheck
+        working-directory: frontend
+
+      - name: Iran lock unit tests (Vitest)
+        run: npx vitest run src/shared/ui/JalaliDateInput.test.tsx src/shared/ui/Gantt src/shared/lib/formatters.jalali.test.ts src/shared/lib/weekStart.test.ts src/shared/lib/__tests__/numbersAgreeAcrossSurfaces.test.tsx
+        working-directory: frontend
+
+  build:
+    if: github.repository == 'alborz-a/oce'
+    name: Build & Push Docker Image
+    needs: [checks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Free runner disk
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
+          df -h /
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read fork version
+        id: ver
+        run: echo "v=$(tr -d '[:space:]' < RSD_VERSION)" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/docker/Dockerfile.unified
+          push: true
+          build-args: |
+            APP_VERSION=${{ steps.ver.outputs.v }}
+          tags: |
+            ghcr.io/alborz-a/oce:sha-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=min
+      # Production image (base + aioboto3). The server pulls this tag and never builds.
+      - uses: docker/build-push-action@v6
+        if: startsWith(github.ref, 'refs/heads/ci/release-')
+        with:
+          context: deploy/docker
+          file: deploy/docker/Dockerfile.s3
+          push: true
+          build-args: |
+            BASE_IMAGE=ghcr.io/alborz-a/oce:sha-${{ github.sha }}
+          tags: |
+            ghcr.io/alborz-a/oce:${{ steps.ver.outputs.v }}
+            ghcr.io/alborz-a/oce:latest-ir
+      - name: Prune older build caches
+        run: docker buildx prune -f
