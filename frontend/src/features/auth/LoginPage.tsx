@@ -226,7 +226,7 @@ export function LoginPage() {
           navigate('/onboarding', { replace: true });
         } else {
           setGatewayUiCookie(true);
-          window.location.replace(resolvePostLoginLanding());
+          window.location.replace(nextPath && nextPath.startsWith('/#/ws') ? nextPath : resolvePostLoginLanding());
         }
       } catch {
         // Silent fallback to the manual login form.
@@ -301,7 +301,7 @@ export function LoginPage() {
       await useAuthStore.getState().syncRoleFromServer();
       const isRestricted = useAuthStore.getState().restrictedMode;
       if (
-        nextPath &&
+        nextPath && !nextPath.startsWith('/#/ws') &&
         nextPath !== '/' &&
         nextPath !== '/dashboard' &&
         nextPath !== '/onboarding' &&
@@ -310,7 +310,7 @@ export function LoginPage() {
         navigate(nextPath, { replace: true });
       } else {
         setGatewayUiCookie(readRememberChoice());
-        window.location.replace(resolvePostLoginLanding());
+        window.location.replace(nextPath && nextPath.startsWith('/#/ws') ? nextPath : resolvePostLoginLanding());
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));
@@ -367,7 +367,7 @@ export function LoginPage() {
       await useAuthStore.getState().syncRoleFromServer();
       const isRestricted = useAuthStore.getState().restrictedMode;
       if (
-        nextPath &&
+        nextPath && !nextPath.startsWith('/#/ws') &&
         nextPath !== '/' &&
         nextPath !== '/dashboard' &&
         nextPath !== '/onboarding' &&
@@ -376,7 +376,7 @@ export function LoginPage() {
         navigate(nextPath, { replace: true });
       } else {
         setGatewayUiCookie(readRememberChoice());
-        window.location.replace(resolvePostLoginLanding());
+        window.location.replace(nextPath && nextPath.startsWith('/#/ws') ? nextPath : resolvePostLoginLanding());
       }
     } catch {
       setError(t('auth.connection_error', 'Unable to connect to server. Please try again.'));

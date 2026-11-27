@@ -69,4 +69,9 @@ describe('safeNextPath', () => {
     expect(safeNextPath('?next=/registered-drawings')).toBe('/registered-drawings');
     expect(safeNextPath('?next=/logins-history')).toBe('/logins-history');
   });
+
+  it('keeps a hash-router gateway deep link like /#/ws/im/abc/', () => {
+    expect(safeNextPath('?next=/%23/ws/im/abc/')).toBe('/#/ws/im/abc/');
+    expect(safeNextPath('?next=/#/ws/im/abc/')).toBe('/#/ws/im/abc/');
+  });
 });
